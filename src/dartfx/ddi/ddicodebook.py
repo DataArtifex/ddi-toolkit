@@ -503,7 +503,7 @@ class codeBookType(baseElementType):
           self._valid_attributes.extend(["version", "codeBookAgency"])
 
      # HELPERS
-     def get_abstract(self) -> str|None:
+     def get_abstract(self) -> str:
           """Returns the abstract from the study description if it exists."""
           value = None
           if self.stdyDscr:
@@ -515,7 +515,7 @@ class codeBookType(baseElementType):
                          value = str(abstract._content)
           return value
 
-     def get_alternate_title(self) -> str|None:
+     def get_alternate_title(self) -> str:
           """Returns the alternate title from the study description if it exists."""
           value = None
           if self.stdyDscr:
@@ -634,7 +634,7 @@ class codeBookType(baseElementType):
                value[file["id"]] = file
           return value
 
-     def get_title(self) -> str|None:
+     def get_title(self) -> str:
           """Returns the title of the study."""
           value = None
           if self.stdyDscr:
@@ -648,7 +648,7 @@ class codeBookType(baseElementType):
                               value = str(titl._content)
           return value
      
-     def get_subtitle(self) -> str|None:
+     def get_subtitle(self) -> str:
           """Returns the subtitle of the study."""
           value = None
           if self.stdyDscr:
