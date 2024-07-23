@@ -1,0 +1,81 @@
+#!/usr/bin/env python
+
+"""
+Utility to convert DDI Codebook 2.5 to CDI
+"""
+import argparse
+import logging
+import os
+import xml.etree.ElementTree as ET
+from dartfx.ddi import ddicodebook
+
+NS= {'ddi25'}
+
+def ddicdump(args):
+    logging.info("ddi2cdi")
+    codebook = codebook.loadxml(args.ddifile)
+    codebook.dump()
+
+def ddicdd(args):
+    logging.info("ddicdd")
+    codebook = codebook.loadxml(args.ddifile)
+    print(codebook.get_data_dictionary(args.file, name_regex=args.name, label_regex=args.label, categories=args.categories, questions=args.questions, stats=args.stats))
+
+def ddic2cdi(args):
+    logging.info("ddi2cdi")
+    logging.error("ddic2cdi not implemented")
+
+def ddic2sql(args):
+    logging.info("ddi2sql")
+    logging.error("ddic2sql not implemented")
+    pass
+
+if __name__ == '__main__':
+    """Main"""
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+
+    # main parser
+    parser = argparse.ArgumentParser(prog="dditoolkit")
+    parser.add_argument("-ll","--loglevel", default='INFO', help="Log Level")
+    
+    subparsers = parser.add_subparsers(help="subparsers help")
+
+    # ddic2cdi
+    ddic2cdi_parser = subparsers.add_parser("ddic2cdi", help="Converts DDI-Codebook 2.5 XML file to CDI XML file")
+    ddic2cdi_parser.add_argument("ddifile", help="DDI Codebook 2.5 File")
+    ddic2cdi_parser.set_defaults(func=ddic2cdi)
+
+    # ddic2sql
+    ddic2sql_parser = subparsers.add_parser("ddic2sql", help="Converts DDI-Codebook 2.5 XML file to SQL")
+    ddic2sql_parser.add_argument("ddifile", help="DDI Codebook 2.5 document")
+    ddic2sql_parser.set_defaults(func=ddic2sql)
+
+    # ddi2cdump
+    ddic2cdi_parser = subparsers.add_parser("ddicdump", help="Dumps a DDI-Codebook to console")
+    ddic2cdi_parser.add_argument("ddifile", help="DDI Codebook 2.5 File")
+    ddic2cdi_parser.set_defaults(func=ddicdump)
+
+    # ddicdd
+    ddic2cdi_parser = subparsers.add_parser("ddicdd", help="Dumps the data dictionary")
+    ddic2cdi_parser.add_argument("ddifile", help="DDI Codebook 2.5 File")
+    ddic2cdi_parser.add_argument("--name", help="Match name regex")
+    ddic2cdi_parser.add_argument("--label", help="Match label regex")
+    ddic2cdi_parser.add_argument("--file", help="Filter data dictionary by file ID")
+    ddic2cdi_parser.add_argument("--categories", action="store_true", help="Include categories and values")
+    ddic2cdi_parser.add_argument("--questions", action="store_true", help="Include questions")
+    ddic2cdi_parser.add_argument("--stats", action="store_true", help="Include descriptive statistics")
+    ddic2cdi_parser.set_defaults(func=ddicdd)
+
+    # parse args
+    args = parser.parse_args()
+    print(args)
+
+    # setup logging
+    loglevel = getattr(logging, args.loglevel.upper(), None)
+    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=loglevel)
+    
+    # run command
+    if hasattr(args, 'func'):
+        args.func(args)
+    else:
+        parser.print_help()

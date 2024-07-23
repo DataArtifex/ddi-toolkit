@@ -1,0 +1,118 @@
+@base <http://example.org/ddi-cdi/gd63ygd8/> . 
+@prefix cdi: <http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/> .
+
+#
+# Person Unit Type
+#
+<PersonType> a cdi:UnitType;
+    cdi:name "Person". 
+
+#
+# Marital Status Classification
+#
+<MaritalStatusDomain> a cdi:SubstantiveConceptualDomain ;
+    cdi:takesConceptsFrom <MaritalStatusCategorySet> .
+
+# Martial Status: Categories
+<MaritalStatusCategorySet> a cdi:CategorySet;
+    cdi:has <MaritalStatusMarriedCategory>, <MaritalStatusSeparatedCategory>, <MaritalStatusDivorcedCategory>, <MaritalStatusWidowedCategory>, <MaritalStatusNeverCategory> ;
+    cdi:allowsDuplicates false .
+<MaritalStatusMarriedCategory> a cdi:Category;
+    cdi:name "Married" .
+<MaritalStatusDivorcedCategory> a cdi:Category;
+    cdi:name "Divorced" .
+<MaritalStatusSeparatedCategory> a cdi:Category;
+    cdi:name "Separated" .
+<MaritalStatusWidowedCategory> a cdi:Category;
+    cdi:name "Widowed" .
+<MaritalStatusNeverCategory> a cdi:Category;
+    cdi:name "Never Married" .
+
+# Martial Status: Numeric codes
+<MaritalStatusNumericCodeList> a cdi:CodeList;
+    cdi:name "Marital status numeric code list" ;
+    cdi:references <MaritalStatusCategorySet> ;
+    cdi:has <MaritalStatusCode1>, <MaritalStatusCode2>, <MaritalStatusCode3>, <MaritalStatusCode4>, <MaritalStatusCode5> ;
+    cdi:allowsDuplicates false .
+<MaritalStatusCode1> a cdi:Code;
+    cdi:uses [a cdi:Notation; cdi:content "1"] ;
+    cdi:denotes <MaritalStatusMarriedCategory> .
+<MaritalStatusCode2> a cdi:Code;
+    cdi:uses [a cdi:Notation; cdi:content "2"] ;
+    cdi:denotes <MaritalStatusSeparatedCategory> .
+<MaritalStatusCode3> a cdi:Code;
+    cdi:uses [a cdi:Notation; cdi:content "3"] ;
+    cdi:denotes <MaritalStatusDivorcedCategory> .
+<MaritalStatusCode4> a cdi:Code;
+    cdi:uses [a cdi:Notation; cdi:content "4"] ;
+    cdi:denotes <MaritalStatusWidowedCategory> .
+<MaritalStatusCode5> a cdi:Code;
+    cdi:uses [a cdi:Notation; cdi:content "5"] ;
+    cdi:denotes <MaritalStatusNeverCategory> .
+
+# Martial Status: Akphanumeric codes
+<MaritalStatusAlphanumericCodeList> a cdi:CodeList;
+    cdi:name "Marital status alphanumeric code list" ;
+    cdi:references <MaritalStatusCategorySet> ;
+    cdi:has <MaritalStatusCodeM>, <MaritalStatusCodeS>, <MaritalStatusCodeD>, <MaritalStatusCodeW>, <MaritalStatusCodeN> ;
+    cdi:allowsDuplicates false .
+<MaritalStatusCodeM> a cdi:Code ;
+    cdi:uses [a cdi:Notation; cdi:content "m"] ;
+    cdi:denotes <MaritalStatusMarriedCategory> .
+<MaritalStatusCodeS> a cdi:Code;
+    cdi:uses [a cdi:Notation; cdi:content "s"] ;
+    cdi:denotes <MaritalStatusSeparatedCategory> .
+<MaritalStatusCodeD> a cdi:Code;
+    cdi:uses [a cdi:Notation; cdi:content "d"] ;
+    cdi:denotes <MaritalStatusDivorcedCategory> .
+<MaritalStatusCodeW> a cdi:Code;
+    cdi:uses [a cdi:Notation; cdi:content "w"] ;
+    cdi:denotes <MaritalStatusWidowedCategory> .
+<MaritalStatusCodeN> a cdi:Code;
+    cdi:uses [a cdi:Notation; cdi:content "n"] ;
+    cdi:denotes <MaritalStatusNeverCategory> .
+
+# Marical Status: Numeric Value Domain
+<MaritalStatusNumericValueDomain> a cdi:SubstantiveValueDomain ;
+    cdi:substantiveConceptualDomain <MaritalStatusDomain> ;
+    cdi:takesValuesFrom <MaritalStatusNumericCodeList> .
+
+# Marical Status: Alphanumeric Value Domain
+<MaritalStatusAlphanumericValueDomain> a cdi:SubstantiveValueDomain;
+    cdi:substantiveConceptualDomain <MaritalStatusDomain> ;
+    cdi:takesValuesFrom <MaritalStatusAlphanumericCodeList> .
+
+#
+# Conceptual Variables
+#
+<LegalMaritalStatus> a cdi:ConceptualVariable ;
+    cdi:name "marital_status" ;
+    cdi:displayLabel "Marital Status" ;
+    cdi:measures <PersonType> ;
+    cdi:takesSubstantiveConceptsFrom <MaritalStatusDomain> .
+
+#
+# Represented Variables
+#
+<MaritalStatus1> a cdi:RepresentedVariable ;
+    cdi:isBasedOn <LegalMaritalStatus> ;
+    cdi:takesSubstantiveValuesFrom <MaritalStatusNumericValueDomain> ;
+    cdi:hasIntendedDataType: "nominal" .
+
+<MaritalStatus2> a cdi:RepresentedVariable;
+    cdi:isBasedOn <LegalMaritalStatus> ;
+    cdi:takesSubstantiveValuesFrom <MaritalStatusAlphanumericValueDomain> ;
+    cdi:hasIntendedDataType: "nominal" .
+
+#
+# Instance Variables
+#
+<MaritalStatus2004> a cdi:InstanceVariable;
+    cdi:isBasedOn <MaritalStatus1> .
+
+<MaritalStatus2008> a cdi:InstanceVariable;
+    cdi:isBasedOn <MaritalStatus2> .
+
+<MaritalStatus2018> a cdi:InstanceVariable;
+    cdi:isBasedOn <MaritalStatus2> .
+

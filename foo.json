@@ -1,0 +1,32 @@
+{
+    "displayLabel": [
+        {
+            "languageSpecificString": [
+                {
+                    "content": "Variable1"
+                }
+            ]
+        }
+    ],
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "6b767410-f3dc-4750-8117-15d8a7cda57e",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "0.0.0"
+        },
+        "nonDdiIdentifier": [
+            {
+                "type": "generic",
+                "value": "4e446431-98c5-440c-bbcf-3a2b4085f0f0"
+            }
+        ],
+        "uri": {
+            "value": "urn:uuid:1f9a47c2-3932-434d-a568-3a30a45806ed"
+        }
+    },
+    "name": [
+        {
+            "name": "V1"
+        }
+    ]
+}

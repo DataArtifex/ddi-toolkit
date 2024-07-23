@@ -1,0 +1,3962 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This file was produced automatically by the OpenDataForge
+ Codebook XML Generator v2015.07.10                       
+                                                          
+ For more information on our products or services visit	 
+ http://www.mtna.us.-->
+<ddi:codeBook version="2.5" ID="ANES1948" codeBookAgency="us.mtna" elementVersion="1.0.0" xmlns:ddi="ddi:codebook:2_5">
+  <ddi:docDscr>
+    <ddi:citation>
+      <ddi:titlStmt>
+        <ddi:titl>ANES 1948 Time Series Study</ddi:titl>
+      </ddi:titlStmt>
+      <ddi:prodStmt>
+        <ddi:prodDate date="2015-12-09 08:10:32">2015-12-09 08:10:32</ddi:prodDate>
+        <ddi:software version="1.0.0">SledgeHammer</ddi:software>
+      </ddi:prodStmt>
+    </ddi:citation>
+  </ddi:docDscr>
+  <ddi:stdyDscr>
+    <ddi:citation>
+      <ddi:titlStmt>
+        <ddi:titl>ANES 1948 Time Series Study</ddi:titl>
+        <ddi:altTitl>American National Election Study, 1948</ddi:altTitl>
+      </ddi:titlStmt>
+      <ddi:prodStmt/>
+    </ddi:citation>
+    <ddi:stdyInfo>
+      <ddi:abstract>This study is part of a time-series collection of national surveys fielded continuously since 1952. The election studies are designed to present data on Americans' social backgrounds, enduring political predispositions, social and political values, perceptions and evaluations of groups and candidates, opinions on questions of public policy, and participation in political life.</ddi:abstract>
+    </ddi:stdyInfo>
+  </ddi:stdyDscr>
+  <ddi:fileDscr ID="F1">
+    <ddi:fileTxt>
+      <ddi:fileName>NES1948.dta</ddi:fileName>
+      <ddi:dimensns>
+        <ddi:caseQnty>662</ddi:caseQnty>
+        <ddi:varQnty>67</ddi:varQnty>
+      </ddi:dimensns>
+      <ddi:fileType>Stata</ddi:fileType>
+    </ddi:fileTxt>
+  </ddi:fileDscr>
+  <ddi:dataDscr>
+    <ddi:var ID="fNuMk40jV2vQBozK" name="VVERSION" files="F1" dcml="0">
+      <ddi:location width="9" StartPos="1" EndPos="9"/>
+      <ddi:labl xml-lang="en">NES VERSION NUMBER</ddi:labl>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%9.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="jnLsUiIP87qGQC8v" name="VDSETNO" files="F1" dcml="0">
+      <ddi:location width="9" StartPos="10" EndPos="18"/>
+      <ddi:labl xml-lang="en">NES DATASET NUMBER</ddi:labl>
+      <ddi:varFormat type="character" schema="other" formatname="String">%9s</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="gzTZpbJPg6fZmaYC" name="V480001" files="F1" dcml="0">
+      <ddi:location width="9" StartPos="19" EndPos="27"/>
+      <ddi:labl xml-lang="en">ICPSR ARCHIVE NUMBER</ddi:labl>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%9.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="ud5xKvfsm8dCRCp3" name="V480002" files="F1" dcml="0">
+      <ddi:location width="9" StartPos="28" EndPos="36"/>
+      <ddi:labl xml-lang="en">INTERVIEW NUMBER</ddi:labl>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%9.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="M39SPjTQlxKgsei6" name="V480003" files="F1" dcml="0">
+      <ddi:location width="20" StartPos="37" EndPos="56"/>
+      <ddi:labl xml-lang="en">POP CLASSIFICATION</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. METROPOLITAN AREA</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. TOWN OR CITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. OPEN COUNTRY</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%20.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="PLhFsrK3gTo1kCsw" name="V480004" files="F1" dcml="0">
+      <ddi:location width="17" StartPos="57" EndPos="73"/>
+      <ddi:labl xml-lang="en">CODER</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. NAME NOT KNOWN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. NAME NOT KNOWN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. NAME NOT KNOWN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. NAME NOT KNOWN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. NAME NOT KNOWN</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%17.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="yNn4OeQEhOBq43P4" name="V480005" files="F1" dcml="0">
+      <ddi:location width="14" StartPos="74" EndPos="87"/>
+      <ddi:labl xml-lang="en">NUMBER OF CALLS TO R</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. ONE CALL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. TWO CALLS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. THREE CALLS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. FOUR CALLS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. FIVE CALLS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>6</ddi:catValu>
+        <ddi:labl xml-lang="en">6. SIX CALLS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>7</ddi:catValu>
+        <ddi:labl xml-lang="en">7. SEVEN CALLS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. EIGHT CALLS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%14.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="hFdQufzfDGnrqJdk" name="V480006" files="F1" dcml="0">
+      <ddi:location width="8" StartPos="88" EndPos="95"/>
+      <ddi:labl xml-lang="en">R REMEMBER PREVIOUS INT</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. YES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. NO</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%8.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="uKO9M1obtpU2AwfY" name="V480007" files="F1" dcml="0">
+      <ddi:location width="8" StartPos="96" EndPos="103"/>
+      <ddi:labl xml-lang="en">INTR INTERVIEW THIS R</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. YES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. NO</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%8.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="V7AhoKccjuAC3qsS" name="V480008" files="F1" dcml="0">
+      <ddi:location width="34" StartPos="104" EndPos="137"/>
+      <ddi:labl xml-lang="en">PRVS PRE-ELCTN R REINT</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. PREVIOUS RESPONDENT INTERVIEWED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. NOT AT HOME</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. REFUSED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. MOVED FROM THIS ADDRESS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. OTHER REASONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%34.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="aSKnFgMNwO1Yi176" name="V480009" files="F1" dcml="0">
+      <ddi:location width="41" StartPos="138" EndPos="178"/>
+      <ddi:labl xml-lang="en">R INT IN PRE/POSTELCTN</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. INTERVIEWED IN BOTH PRE AND POST</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. INTERVIEWED IN POST BUT NOT PRE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. PARTIALLY INTERVIEWED IN POST, INTERVI</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. PARTIALLY INTERVIEWED IN POST, NOT INT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%41.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="U1nVKPbem6ptHtji" name="V480010" files="F1" dcml="0">
+      <ddi:location width="41" StartPos="179" EndPos="219"/>
+      <ddi:labl xml-lang="en">RENT CNTRL KEPT/DROPPED</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. DEFINITELY SHOULD BE KEPT ON OR SHOULD</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. SHOULD BE KEPT WITH RESTRICTIONS, OR R</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. NEUTRAL, OR PRO-CON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. SHOULD BE DROPPED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%41.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="jLu7hyXuj3MEFm1N" name="V480011" files="F1" dcml="0">
+      <ddi:location width="41" StartPos="220" EndPos="260"/>
+      <ddi:labl xml-lang="en">GOVT CONTROL PRICES</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. SHOULD BE RE-INSTITUTED ON ALL OR MANY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. SHOULD BE RE-INSTITUTED ON ONE OR A FE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. NEUTRAL OR PRO-CON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. SHOULD BE RE-INSTITUTED ONLY IF PRESEN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. PRICE CONTROL SHOULD BE KEPT OFF</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%41.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="BOqtA6XUt8VWPqSo" name="V480012" files="F1" dcml="0">
+      <ddi:location width="41" StartPos="261" EndPos="301"/>
+      <ddi:labl xml-lang="en">WHAT TO DO W TFT-HT ACT</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. HAVE NOT HEARD ABOUT TAFT-HARTLEY ACT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. SHOULD BE LEFT ALONE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. SHOULD BE MODIFIED IN FAVOR OF MANAGEM</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. SHOULD BE MODIFIED IN FAVOR OF LABOR</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. SHOULD BE REPEALED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. HAVE HEARD OF TAFT-HARTLEY ACT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>6</ddi:catValu>
+        <ddi:labl xml-lang="en">6. HAVE HEARD OF TAFT-HARTLEY ACT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>7</ddi:catValu>
+        <ddi:labl xml-lang="en">7. SHOULD BE CHANGED, NA HOW</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. DON'T KNOW WHETHER HEARD ABOUT TAFT-HA</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA WHETHER HEARD ABOUT TAFT-HARTLEY AC</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%41.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="iKgHmRbO6YuttcrH" name="V480013" files="F1" dcml="0">
+      <ddi:location width="42" StartPos="302" EndPos="343"/>
+      <ddi:labl xml-lang="en">PRESLELCTN OTCM SURPRISE</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. SURPRISED -- THOUGHT PEOPLE WANTED CHA</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>11</ddi:catValu>
+        <ddi:labl xml-lang="en">11. SURPRISED -- EXPERTS, RADIO, PAPERS SA</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>12</ddi:catValu>
+        <ddi:labl xml-lang="en">12. SURPRISED -- DEWEY A BETTER MAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>13</ddi:catValu>
+        <ddi:labl xml-lang="en">13. SURPRISED -- TRUMAN RECORD BAD</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>14</ddi:catValu>
+        <ddi:labl xml-lang="en">14. SURPRISED -- OTHER, MISCELLANEOUS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>15</ddi:catValu>
+        <ddi:labl xml-lang="en">15. SURPRISED -- DON'T KNOW WHY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>19</ddi:catValu>
+        <ddi:labl xml-lang="en">19. SURPRISED -- NA WHY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. EXPECTED -- PEOPLE WANTED SAME ADMINIS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>21</ddi:catValu>
+        <ddi:labl xml-lang="en">21. EXPECTED -- SKEPTICAL OF RADIO, NEWSPA</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>22</ddi:catValu>
+        <ddi:labl xml-lang="en">22. EXPECTED -- REPUBLICANS OVER-CONFIDENT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>23</ddi:catValu>
+        <ddi:labl xml-lang="en">23. EXPECTED -- TRUMAN'S CAMPAIGN MORE EFF</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>24</ddi:catValu>
+        <ddi:labl xml-lang="en">24. EXPECTED -- TRUMAN A BETTER MAN OR BET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>25</ddi:catValu>
+        <ddi:labl xml-lang="en">25. EXPECTED -- PEOPLE OPPOSED TO 80TH CON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>26</ddi:catValu>
+        <ddi:labl xml-lang="en">26. EXPECTED -- PEOPLE VOTED IN ROOSEVELT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>27</ddi:catValu>
+        <ddi:labl xml-lang="en">27. EXPECTED -- LABOR, NEGRO, GOVERNMENT E</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>28</ddi:catValu>
+        <ddi:labl xml-lang="en">28. EXPECTED -- DK WHY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>29</ddi:catValu>
+        <ddi:labl xml-lang="en">29. EXPECTED -- NA WHY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>30</ddi:catValu>
+        <ddi:labl xml-lang="en">30. EXPECTED -- OTHER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>88</ddi:catValu>
+        <ddi:labl xml-lang="en">88. IGNORES POLITICS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>98</ddi:catValu>
+        <ddi:labl xml-lang="en">98. DON'T KNOW WHETHER SURPRISED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>99</ddi:catValu>
+        <ddi:labl xml-lang="en">99. NA WHETHER SURPRISED</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%42.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="rcsG2EF3VGWuz974" name="V480014a" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="344" EndPos="386"/>
+      <ddi:labl xml-lang="en">WHY PPL VTD FOR TRUMAN 1</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. BETTER MAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. EXPERIENCED, GOOD RECORD</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>30</ddi:catValu>
+        <ddi:labl xml-lang="en">30. TRUMAN PRO-LABOR, NEGRO, WORKING MAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>40</ddi:catValu>
+        <ddi:labl xml-lang="en">40. GOOD CAMPAIGN CONDUCTED BY TRUMAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>50</ddi:catValu>
+        <ddi:labl xml-lang="en">50. DEMOCRATS MEAN PROSPERITY, REPUBLICANS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>60</ddi:catValu>
+        <ddi:labl xml-lang="en">60. TRUMAN PRO RENT CONTROL, PRICE CONTROL,</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>70</ddi:catValu>
+        <ddi:labl xml-lang="en">70. ROOSEVELT TRADITION</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>80</ddi:catValu>
+        <ddi:labl xml-lang="en">80. PERSONAL ATTRIBUTES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>90</ddi:catValu>
+        <ddi:labl xml-lang="en">90. OTHER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>91</ddi:catValu>
+        <ddi:labl xml-lang="en">91. NO SECOND REASON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>98</ddi:catValu>
+        <ddi:labl xml-lang="en">98. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>99</ddi:catValu>
+        <ddi:labl xml-lang="en">99. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="RUNXH6OTXoPLhQKP" name="V480014b" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="387" EndPos="429"/>
+      <ddi:labl xml-lang="en">WHY PPL VTD FOR TRUMAN 2</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. BETTER MAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. EXPERIENCED, GOOD RECORD</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>30</ddi:catValu>
+        <ddi:labl xml-lang="en">30. TRUMAN PRO-LABOR, NEGRO, WORKING MAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>40</ddi:catValu>
+        <ddi:labl xml-lang="en">40. GOOD CAMPAIGN CONDUCTED BY TRUMAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>50</ddi:catValu>
+        <ddi:labl xml-lang="en">50. DEMOCRATS MEAN PROSPERITY, REPUBLICANS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>60</ddi:catValu>
+        <ddi:labl xml-lang="en">60. TRUMAN PRO RENT CONTROL, PRICE CONTROL,</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>70</ddi:catValu>
+        <ddi:labl xml-lang="en">70. ROOSEVELT TRADITION</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>80</ddi:catValu>
+        <ddi:labl xml-lang="en">80. PERSONAL ATTRIBUTES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>90</ddi:catValu>
+        <ddi:labl xml-lang="en">90. OTHER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>91</ddi:catValu>
+        <ddi:labl xml-lang="en">91. NO SECOND REASON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>98</ddi:catValu>
+        <ddi:labl xml-lang="en">98. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>99</ddi:catValu>
+        <ddi:labl xml-lang="en">99. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="WY4wwpGnFnLkrKRU" name="V480015a" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="430" EndPos="472"/>
+      <ddi:labl xml-lang="en">WHY PPL VTD AGNST TRUMAN 1</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. SMALL MAN, INADEQUATE BACKGROUND</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. CAN'T HANDLE SUBORDINATES, OR PICKED BA</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>30</ddi:catValu>
+        <ddi:labl xml-lang="en">30. CAN'T GET THINGS DONE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>40</ddi:catValu>
+        <ddi:labl xml-lang="en">40. PARTIAL TO LABOR, NEGRO, WORKING MAN, G</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>50</ddi:catValu>
+        <ddi:labl xml-lang="en">50. CAN'T GET ALONG WITH CONGRESS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>60</ddi:catValu>
+        <ddi:labl xml-lang="en">60. CIVIL RIGHTS PROGRAM</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>70</ddi:catValu>
+        <ddi:labl xml-lang="en">70. NOTHING SPECIAL ABOUT TRUMAN MADE PEOPL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>80</ddi:catValu>
+        <ddi:labl xml-lang="en">80. PERSONAL ATTRIBUTES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>90</ddi:catValu>
+        <ddi:labl xml-lang="en">90. OTHER REASONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>91</ddi:catValu>
+        <ddi:labl xml-lang="en">91. NO SECOND REASON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>98</ddi:catValu>
+        <ddi:labl xml-lang="en">98. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>99</ddi:catValu>
+        <ddi:labl xml-lang="en">99. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="mOpsrEUsuEU67C2E" name="V480015b" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="473" EndPos="515"/>
+      <ddi:labl xml-lang="en">WHY PPL VTD AGNST TRUMAN 2</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. SMALL MAN, INADEQUATE BACKGROUND</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. CAN'T HANDLE SUBORDINATES, OR PICKED BA</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>30</ddi:catValu>
+        <ddi:labl xml-lang="en">30. CAN'T GET THINGS DONE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>40</ddi:catValu>
+        <ddi:labl xml-lang="en">40. PARTIAL TO LABOR, NEGRO, WORKING MAN, G</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>50</ddi:catValu>
+        <ddi:labl xml-lang="en">50. CAN'T GET ALONG WITH CONGRESS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>60</ddi:catValu>
+        <ddi:labl xml-lang="en">60. CIVIL RIGHTS PROGRAM</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>70</ddi:catValu>
+        <ddi:labl xml-lang="en">70. NOTHING SPECIAL ABOUT TRUMAN MADE PEOPL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>80</ddi:catValu>
+        <ddi:labl xml-lang="en">80. PERSONAL ATTRIBUTES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>90</ddi:catValu>
+        <ddi:labl xml-lang="en">90. OTHER REASONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>91</ddi:catValu>
+        <ddi:labl xml-lang="en">91. NO SECOND REASON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>98</ddi:catValu>
+        <ddi:labl xml-lang="en">98. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>99</ddi:catValu>
+        <ddi:labl xml-lang="en">99. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="vvnJiPTnsdtSBFym" name="V480016a" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="516" EndPos="558"/>
+      <ddi:labl xml-lang="en">WHY PPL VTD FOR DEWEY 1</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. BETTER MAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. EXPERIENCED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>30</ddi:catValu>
+        <ddi:labl xml-lang="en">30. DEWEY PRO BUSINESS, WEALTHY, TRUMAN PRO</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>40</ddi:catValu>
+        <ddi:labl xml-lang="en">40. GOOD CAMPAIGN CONDUCTED BY DEWEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>50</ddi:catValu>
+        <ddi:labl xml-lang="en">50. REPUBLICANS BRING PROSPERITY, GOOD FOR</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>60</ddi:catValu>
+        <ddi:labl xml-lang="en">60. DEWEY PRO-80TH CONGRESS, TAFT-HARTLEY A</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>70</ddi:catValu>
+        <ddi:labl xml-lang="en">70. DEMOCRATS IN OFFICE TOO LONG</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>80</ddi:catValu>
+        <ddi:labl xml-lang="en">80. PERSONAL ATTRIBUTES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>90</ddi:catValu>
+        <ddi:labl xml-lang="en">90. OTHER REASONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>91</ddi:catValu>
+        <ddi:labl xml-lang="en">91. NO SECOND REASON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>98</ddi:catValu>
+        <ddi:labl xml-lang="en">98. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>99</ddi:catValu>
+        <ddi:labl xml-lang="en">99. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="aVRO14OPEI64SQ6Z" name="V480016b" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="559" EndPos="601"/>
+      <ddi:labl xml-lang="en">WHY PPL VTD FOR DEWEY 2</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. BETTER MAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. EXPERIENCED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>30</ddi:catValu>
+        <ddi:labl xml-lang="en">30. DEWEY PRO BUSINESS, WEALTHY, TRUMAN PRO</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>40</ddi:catValu>
+        <ddi:labl xml-lang="en">40. GOOD CAMPAIGN CONDUCTED BY DEWEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>50</ddi:catValu>
+        <ddi:labl xml-lang="en">50. REPUBLICANS BRING PROSPERITY, GOOD FOR</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>60</ddi:catValu>
+        <ddi:labl xml-lang="en">60. DEWEY PRO-80TH CONGRESS, TAFT-HARTLEY A</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>70</ddi:catValu>
+        <ddi:labl xml-lang="en">70. DEMOCRATS IN OFFICE TOO LONG</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>80</ddi:catValu>
+        <ddi:labl xml-lang="en">80. PERSONAL ATTRIBUTES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>90</ddi:catValu>
+        <ddi:labl xml-lang="en">90. OTHER REASONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>91</ddi:catValu>
+        <ddi:labl xml-lang="en">91. NO SECOND REASON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>98</ddi:catValu>
+        <ddi:labl xml-lang="en">98. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>99</ddi:catValu>
+        <ddi:labl xml-lang="en">99. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="l7JGVGQKgUOwfvtw" name="V480017a" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="602" EndPos="644"/>
+      <ddi:labl xml-lang="en">WHY PPL VTD AGNST DEWEY 1</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. INEXPERIENCED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. COLD PERSONALITY, INHUMAN, SUPERIOR, AP</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>30</ddi:catValu>
+        <ddi:labl xml-lang="en">30. PARTIAL TO BUSINESS, WALL STREET PRESID</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>40</ddi:catValu>
+        <ddi:labl xml-lang="en">40. OVER-CONFIDENT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>50</ddi:catValu>
+        <ddi:labl xml-lang="en">50. CONDUCTED POOR CAMPAIGN, NON-COMMITAL O</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>60</ddi:catValu>
+        <ddi:labl xml-lang="en">60. DEWEY PRO-80TH CONGRESS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>70</ddi:catValu>
+        <ddi:labl xml-lang="en">70. NOTHING SPECIAL ABOUT DEWEY MADE PEOPLE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>80</ddi:catValu>
+        <ddi:labl xml-lang="en">80. PERSONAL ATTRIBUTES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>90</ddi:catValu>
+        <ddi:labl xml-lang="en">90. OTHER REASONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>91</ddi:catValu>
+        <ddi:labl xml-lang="en">91. NO SECOND REASON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>98</ddi:catValu>
+        <ddi:labl xml-lang="en">98. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>99</ddi:catValu>
+        <ddi:labl xml-lang="en">99. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="roCXPpNyPcYD5wAp" name="V480017b" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="645" EndPos="687"/>
+      <ddi:labl xml-lang="en">WHY PPL VTD AGNST DEWEY 2</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. INEXPERIENCED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. COLD PERSONALITY, INHUMAN, SUPERIOR, AP</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>30</ddi:catValu>
+        <ddi:labl xml-lang="en">30. PARTIAL TO BUSINESS, WALL STREET PRESID</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>40</ddi:catValu>
+        <ddi:labl xml-lang="en">40. OVER-CONFIDENT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>50</ddi:catValu>
+        <ddi:labl xml-lang="en">50. CONDUCTED POOR CAMPAIGN, NON-COMMITAL O</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>60</ddi:catValu>
+        <ddi:labl xml-lang="en">60. DEWEY PRO-80TH CONGRESS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>70</ddi:catValu>
+        <ddi:labl xml-lang="en">70. NOTHING SPECIAL ABOUT DEWEY MADE PEOPLE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>80</ddi:catValu>
+        <ddi:labl xml-lang="en">80. PERSONAL ATTRIBUTES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>90</ddi:catValu>
+        <ddi:labl xml-lang="en">90. OTHER REASONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>91</ddi:catValu>
+        <ddi:labl xml-lang="en">91. NO SECOND REASON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>98</ddi:catValu>
+        <ddi:labl xml-lang="en">98. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>99</ddi:catValu>
+        <ddi:labl xml-lang="en">99. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="LEkUxN10A1kVj9zl" name="V480018" files="F1" dcml="0">
+      <ddi:location width="22" StartPos="688" EndPos="709"/>
+      <ddi:labl xml-lang="en">DID R VOTE/FOR WHOM</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. VOTED - FOR TRUMAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. VOTED - FOR DEWEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. VOTED - FOR WALLACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. VOTED - FOR OTHER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. VOTED - NA FOR WHOM</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>6</ddi:catValu>
+        <ddi:labl xml-lang="en">6. DID NOT VOTE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA WHETHER VOTED</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%22.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="xKBPVsGQYw84e2cE" name="V480019" files="F1" dcml="0">
+      <ddi:location width="41" StartPos="710" EndPos="750"/>
+      <ddi:labl xml-lang="en">WN DECIDE FOR WHOM TO VT</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NOT APPLICABLE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. KNEW ALL ALONG</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. DECIDED AT TIME OF CONVENTION</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. DECIDED AFTER CONVENTION, DURING CAMPA</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. DECIDED WITHIN TWO WEEKS OF ELECTION</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. DECIDED ON ELECTION DAY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. DON'T KNOW WHEN DECIDED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%41.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="xZjBurCq3q23Tdsv" name="V480020" files="F1" dcml="0">
+      <ddi:location width="32" StartPos="751" EndPos="782"/>
+      <ddi:labl xml-lang="en">CNSD VT FOR SOMEONE ELSE</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>11</ddi:catValu>
+        <ddi:labl xml-lang="en">11. DID NOT CONSIDER ANYONE ELSE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>12</ddi:catValu>
+        <ddi:labl xml-lang="en">12. CONSIDERED DEWEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>13</ddi:catValu>
+        <ddi:labl xml-lang="en">13. CONSIDERED WALLACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>14</ddi:catValu>
+        <ddi:labl xml-lang="en">14. CONSIDERED OTHER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>19</ddi:catValu>
+        <ddi:labl xml-lang="en">19. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>21</ddi:catValu>
+        <ddi:labl xml-lang="en">21. CONSIDERED TRUMAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>22</ddi:catValu>
+        <ddi:labl xml-lang="en">22. DID NOT CONSIDER ANYONE ELSE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>23</ddi:catValu>
+        <ddi:labl xml-lang="en">23. CONSIDERED WALLACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>24</ddi:catValu>
+        <ddi:labl xml-lang="en">24. CONSIDERED OTHER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>29</ddi:catValu>
+        <ddi:labl xml-lang="en">29. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>33</ddi:catValu>
+        <ddi:labl xml-lang="en">33. DID NOT CONSIDER ANYONE ELSE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>41</ddi:catValu>
+        <ddi:labl xml-lang="en">41. CONSIDERED TRUMAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>44</ddi:catValu>
+        <ddi:labl xml-lang="en">44. DID NOT CONSIDER ANYONE ELSE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>49</ddi:catValu>
+        <ddi:labl xml-lang="en">49. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>91</ddi:catValu>
+        <ddi:labl xml-lang="en">91. INAP</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%32.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="V8CpcohsWGhDC2q6" name="V480021a" files="F1" dcml="0">
+      <ddi:location width="41" StartPos="783" EndPos="823"/>
+      <ddi:labl xml-lang="en">XWHY DID NOT VT FOR HIM 1</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NOT APPLICABLE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. DISLIKED PERSONAL CHARACTERISTICS OF C</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. DID NOT THINK CANDIDATE HAD A CHANCE O</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. DISAGREED WITH PLATFORM OR POLICY - TO</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. DISAGREED WITH PLATFORM OR POLICY - TO</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. TAUTOLOGICAL - DIDN'T VOTE FOR CANDIDA</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>6</ddi:catValu>
+        <ddi:labl xml-lang="en">6. EFFECT OF CAMPAIGN CHANGED VOTE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>7</ddi:catValu>
+        <ddi:labl xml-lang="en">7. OTHER REASONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. DK WHY DECIDED NOT TO V4800OTE FOR HIM</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%41.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="tg5AwZfSWlQS6AUz" name="V480021b" files="F1" dcml="0">
+      <ddi:location width="41" StartPos="824" EndPos="864"/>
+      <ddi:labl xml-lang="en">XWHY DID NOT VT FOR HIM 2</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NOT APPLICABLE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. DISLIKED PERSONAL CHARACTERISTICS OF C</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. DID NOT THINK CANDIDATE HAD A CHANCE O</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. DISAGREED WITH PLATFORM OR POLICY - TO</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. DISAGREED WITH PLATFORM OR POLICY - TO</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. TAUTOLOGICAL - DIDN'T VOTE FOR CANDIDA</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>6</ddi:catValu>
+        <ddi:labl xml-lang="en">6. EFFECT OF CAMPAIGN CHANGED VOTE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>7</ddi:catValu>
+        <ddi:labl xml-lang="en">7. OTHER REASONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. DK WHY DECIDED NOT TO V4800OTE FOR HIM</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%41.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="ZyImivToEiTkKzK7" name="V480022a" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="865" EndPos="907"/>
+      <ddi:labl xml-lang="en">WHY VT THE WAY YOU DID 1</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. LIKED PERSONAL CHARACTERISTICS OF CANDI</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. THOUGHT HE WOULD BE ELECTED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>30</ddi:catValu>
+        <ddi:labl xml-lang="en">30. DOMESTIC PLATFORM AND ISSUES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>40</ddi:catValu>
+        <ddi:labl xml-lang="en">40. FOREIGN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>50</ddi:catValu>
+        <ddi:labl xml-lang="en">50. EFFECT OF CAMPAIGN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>60</ddi:catValu>
+        <ddi:labl xml-lang="en">60. UNDERDOG IDEA - NEWSPAPERS, RADIO, SAID</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>70</ddi:catValu>
+        <ddi:labl xml-lang="en">70. PARTY ALLEGIANCE - ALWAYS VOTE FOR SAME</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>80</ddi:catValu>
+        <ddi:labl xml-lang="en">80. TAUTOLOGICAL - VOTED FOR BEST MAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>90</ddi:catValu>
+        <ddi:labl xml-lang="en">90. OTHER REASON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>91</ddi:catValu>
+        <ddi:labl xml-lang="en">91. INAP</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>98</ddi:catValu>
+        <ddi:labl xml-lang="en">98. DK WHAT CAUSED DECISION</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>99</ddi:catValu>
+        <ddi:labl xml-lang="en">99. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="LoKaEMEq6Tum91t0" name="V480022b" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="908" EndPos="950"/>
+      <ddi:labl xml-lang="en">WHY VT THE WAY YOU DID 2</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. LIKED PERSONAL CHARACTERISTICS OF CANDI</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. THOUGHT HE WOULD BE ELECTED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>30</ddi:catValu>
+        <ddi:labl xml-lang="en">30. DOMESTIC PLATFORM AND ISSUES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>40</ddi:catValu>
+        <ddi:labl xml-lang="en">40. FOREIGN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>50</ddi:catValu>
+        <ddi:labl xml-lang="en">50. EFFECT OF CAMPAIGN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>60</ddi:catValu>
+        <ddi:labl xml-lang="en">60. UNDERDOG IDEA - NEWSPAPERS, RADIO, SAID</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>70</ddi:catValu>
+        <ddi:labl xml-lang="en">70. PARTY ALLEGIANCE - ALWAYS VOTE FOR SAME</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>80</ddi:catValu>
+        <ddi:labl xml-lang="en">80. TAUTOLOGICAL - VOTED FOR BEST MAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>90</ddi:catValu>
+        <ddi:labl xml-lang="en">90. OTHER REASON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>91</ddi:catValu>
+        <ddi:labl xml-lang="en">91. INAP</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>98</ddi:catValu>
+        <ddi:labl xml-lang="en">98. DK WHAT CAUSED DECISION</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>99</ddi:catValu>
+        <ddi:labl xml-lang="en">99. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="byBegeHZGUMm7mFv" name="V480023" files="F1" dcml="0">
+      <ddi:location width="21" StartPos="951" EndPos="971"/>
+      <ddi:labl xml-lang="en">VOTED STRAIGHT TICKET</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. INAP</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. TRUMAN - STRAIGHT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. TRUMAN - SPLIT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. DEWEY - STRAIGHT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. DEWEY - SPLIT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. WALLACE - STRAIGHT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>6</ddi:catValu>
+        <ddi:labl xml-lang="en">6. OTHER - STRAIGHT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>7</ddi:catValu>
+        <ddi:labl xml-lang="en">7. OTHER - SPLIT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%21.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="Z8KiL02qz9xyiwGO" name="V480024" files="F1" dcml="0">
+      <ddi:location width="10" StartPos="972" EndPos="981"/>
+      <ddi:labl xml-lang="en">R NOT VT-IF VT,FOR WHOM</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. INAP</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. TRUMAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. DEWEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. WALLACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>7</ddi:catValu>
+        <ddi:labl xml-lang="en">7. OTHER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%10.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="Ej0cxm2Y7vKw1Nxs" name="V480025a" files="F1" dcml="0">
+      <ddi:location width="42" StartPos="982" EndPos="1023"/>
+      <ddi:labl xml-lang="en">R NOT VT-WHY DID NOT VT 1</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. ILLNESS, SELF OR FAMILY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. WEATHER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>30</ddi:catValu>
+        <ddi:labl xml-lang="en">30. CROWDED POLLS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>40</ddi:catValu>
+        <ddi:labl xml-lang="en">40. DIDN'T THINK PREFERRED CANDIDATE HAD A</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>50</ddi:catValu>
+        <ddi:labl xml-lang="en">50. DIDN'T CARE WHO WON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>60</ddi:catValu>
+        <ddi:labl xml-lang="en">60. GENERAL LETHARGY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>70</ddi:catValu>
+        <ddi:labl xml-lang="en">70. OVER-CONFIDENCE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>80</ddi:catValu>
+        <ddi:labl xml-lang="en">80. NOT REGISTERED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>90</ddi:catValu>
+        <ddi:labl xml-lang="en">90. OTHER REASONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>91</ddi:catValu>
+        <ddi:labl xml-lang="en">91. INAP</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>98</ddi:catValu>
+        <ddi:labl xml-lang="en">98. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>99</ddi:catValu>
+        <ddi:labl xml-lang="en">99. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%42.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="j46wvcGt0xD79WvT" name="V480025b" files="F1" dcml="0">
+      <ddi:location width="42" StartPos="1024" EndPos="1065"/>
+      <ddi:labl xml-lang="en">R NOT VT-WHY DID NOT VT 2</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. ILLNESS, SELF OR FAMILY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. WEATHER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>30</ddi:catValu>
+        <ddi:labl xml-lang="en">30. CROWDED POLLS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>40</ddi:catValu>
+        <ddi:labl xml-lang="en">40. DIDN'T THINK PREFERRED CANDIDATE HAD A</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>50</ddi:catValu>
+        <ddi:labl xml-lang="en">50. DIDN'T CARE WHO WON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>60</ddi:catValu>
+        <ddi:labl xml-lang="en">60. GENERAL LETHARGY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>70</ddi:catValu>
+        <ddi:labl xml-lang="en">70. OVER-CONFIDENCE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>80</ddi:catValu>
+        <ddi:labl xml-lang="en">80. NOT REGISTERED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>90</ddi:catValu>
+        <ddi:labl xml-lang="en">90. OTHER REASONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>91</ddi:catValu>
+        <ddi:labl xml-lang="en">91. INAP</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>98</ddi:catValu>
+        <ddi:labl xml-lang="en">98. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>99</ddi:catValu>
+        <ddi:labl xml-lang="en">99. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%42.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="nrbS3Tktv7HQS6Cj" name="V480026" files="F1" dcml="0">
+      <ddi:location width="8" StartPos="1066" EndPos="1073"/>
+      <ddi:labl xml-lang="en">R NOT VT-WAS R REG TO VT</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. INAP</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. YES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. NO</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%8.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="mR4Set0azVMk3hTv" name="V480027" files="F1" dcml="0">
+      <ddi:location width="41" StartPos="1074" EndPos="1114"/>
+      <ddi:labl xml-lang="en">VTD IN PRVS PRESL ELCTN</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. VOTED PREVIOUSLY -- DEMOCRATIC</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. VOTED PREVIOUSLY -- REPUBLICAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. VOTED PREVIOUSLY -- OTHER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. VOTED PREVIOUSLY -- MORE THAN ONE PART</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. VOTED PREVIOUSLY -- NA HOW</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>6</ddi:catValu>
+        <ddi:labl xml-lang="en">6. HAVE NEVER VOTED PREVIOUS PRESIDENTIAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. DK WHETHER VOTED PREVIOUSLY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA WHETHER VOTED PREVIOUSLY</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%41.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="JJfpWr0pVMatcYER" name="V480028" files="F1" dcml="0">
+      <ddi:location width="41" StartPos="1115" EndPos="1155"/>
+      <ddi:labl xml-lang="en">VTD FOR WHOM IN 1944</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. VOTED IN 1944 - ROOSEVELT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. VOTED IN 1944 - DEWEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. VOTED IN 1944 - OTHER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. VOTED IN 1944 - NA FOR WHOM</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. DID NOT VOTE IN 1944</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. DON'T KNOW WHETHER VOTED IN 1944, OR '</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA WHETHER VOTED IN 1944</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%41.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="MVtZvjXRxdVzc3iM" name="V480029" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="1156" EndPos="1198"/>
+      <ddi:labl xml-lang="en">OCCUPATION OF HEAD</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. PROFESSIONAL, SEMI-PROFESSIONAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. SELF-EMPLOYED, MANAGERIAL, SUPERVISORY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>30</ddi:catValu>
+        <ddi:labl xml-lang="en">30. OTHER WHITE-COLLAR (CLERICAL, SALES, ET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>40</ddi:catValu>
+        <ddi:labl xml-lang="en">40. SKILLED AND SEMI-SKILLED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>60</ddi:catValu>
+        <ddi:labl xml-lang="en">60. PROTECTIVE SERVICE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>70</ddi:catValu>
+        <ddi:labl xml-lang="en">70. UNSKILLED, INCLUDING FARM AND SERVICE W</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>80</ddi:catValu>
+        <ddi:labl xml-lang="en">80. FARM OPERATORS AND MANAGERS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>92</ddi:catValu>
+        <ddi:labl xml-lang="en">92. STUDENT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>94</ddi:catValu>
+        <ddi:labl xml-lang="en">94. UNEMPLOYED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>95</ddi:catValu>
+        <ddi:labl xml-lang="en">95. RETIRED, TOO OLD OR UNABLE TO WORK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>96</ddi:catValu>
+        <ddi:labl xml-lang="en">96. HOUSEWIFE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>99</ddi:catValu>
+        <ddi:labl xml-lang="en">99. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="XRQSkkIJbD4kpFwV" name="V480030" files="F1" dcml="0">
+      <ddi:location width="8" StartPos="1199" EndPos="1206"/>
+      <ddi:labl xml-lang="en">HEAD BELONG TO LBR UN</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. YES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. NO</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%8.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="Xza08qQXIcfWsD1W" name="V480031a" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="1207" EndPos="1249"/>
+      <ddi:labl xml-lang="en">GRPS IDENTIFIED W TRUMAN 1</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NO GROUP, OR NO SECOND, THIRD GROUP</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. COMMON MAN, LITTLE PEOPLE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>11</ddi:catValu>
+        <ddi:labl xml-lang="en">11. ORGANIZED LABOR, UNIONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>12</ddi:catValu>
+        <ddi:labl xml-lang="en">12. FARMER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>13</ddi:catValu>
+        <ddi:labl xml-lang="en">13. GOVERNMENT WORKER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>14</ddi:catValu>
+        <ddi:labl xml-lang="en">14. BUSINESS, BIG MONEY, UPPER CLASSES, WAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>15</ddi:catValu>
+        <ddi:labl xml-lang="en">15. NEGROES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>16</ddi:catValu>
+        <ddi:labl xml-lang="en">16. JEWS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>17</ddi:catValu>
+        <ddi:labl xml-lang="en">17. MACHINE POLITICIANS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>18</ddi:catValu>
+        <ddi:labl xml-lang="en">18. SOUTH</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>19</ddi:catValu>
+        <ddi:labl xml-lang="en">19. LIBERALS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. CONSERVATIVES</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="PBxsPl0LtwBnaM0d" name="V480031b" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="1250" EndPos="1292"/>
+      <ddi:labl xml-lang="en">GRPS IDENTIFIED W TRUMAN 2</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NO GROUP, OR NO SECOND, THIRD GROUP</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. COMMON MAN, LITTLE PEOPLE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>11</ddi:catValu>
+        <ddi:labl xml-lang="en">11. ORGANIZED LABOR, UNIONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>12</ddi:catValu>
+        <ddi:labl xml-lang="en">12. FARMER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>13</ddi:catValu>
+        <ddi:labl xml-lang="en">13. GOVERNMENT WORKER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>14</ddi:catValu>
+        <ddi:labl xml-lang="en">14. BUSINESS, BIG MONEY, UPPER CLASSES, WAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>15</ddi:catValu>
+        <ddi:labl xml-lang="en">15. NEGROES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>16</ddi:catValu>
+        <ddi:labl xml-lang="en">16. JEWS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>17</ddi:catValu>
+        <ddi:labl xml-lang="en">17. MACHINE POLITICIANS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>18</ddi:catValu>
+        <ddi:labl xml-lang="en">18. SOUTH</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>19</ddi:catValu>
+        <ddi:labl xml-lang="en">19. LIBERALS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. CONSERVATIVES</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="ObV3l8D6UKRSYR9k" name="V480031c" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="1293" EndPos="1335"/>
+      <ddi:labl xml-lang="en">GRPS IDENTIFIED W TRUMAN 3</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NO GROUP, OR NO SECOND, THIRD GROUP</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. COMMON MAN, LITTLE PEOPLE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>11</ddi:catValu>
+        <ddi:labl xml-lang="en">11. ORGANIZED LABOR, UNIONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>12</ddi:catValu>
+        <ddi:labl xml-lang="en">12. FARMER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>13</ddi:catValu>
+        <ddi:labl xml-lang="en">13. GOVERNMENT WORKER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>14</ddi:catValu>
+        <ddi:labl xml-lang="en">14. BUSINESS, BIG MONEY, UPPER CLASSES, WAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>15</ddi:catValu>
+        <ddi:labl xml-lang="en">15. NEGROES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>16</ddi:catValu>
+        <ddi:labl xml-lang="en">16. JEWS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>17</ddi:catValu>
+        <ddi:labl xml-lang="en">17. MACHINE POLITICIANS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>18</ddi:catValu>
+        <ddi:labl xml-lang="en">18. SOUTH</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>19</ddi:catValu>
+        <ddi:labl xml-lang="en">19. LIBERALS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. CONSERVATIVES</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="f4lSXrcQvdBxyNQz" name="V480032a" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="1336" EndPos="1378"/>
+      <ddi:labl xml-lang="en">GRPS IDENTIFIED W DEWEY 1</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NO GROUP</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. COMMON MAN, LITTLE PEOPLE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>11</ddi:catValu>
+        <ddi:labl xml-lang="en">11. ORGANIZED LABOR, UNIONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>12</ddi:catValu>
+        <ddi:labl xml-lang="en">12. FARMER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>13</ddi:catValu>
+        <ddi:labl xml-lang="en">13. GOVERNMENT WORKER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>14</ddi:catValu>
+        <ddi:labl xml-lang="en">14. BUSINESS, BIG MONEY, UPPER CLASSES, WAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>15</ddi:catValu>
+        <ddi:labl xml-lang="en">15. NEGROES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>16</ddi:catValu>
+        <ddi:labl xml-lang="en">16. JEWS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>17</ddi:catValu>
+        <ddi:labl xml-lang="en">17. MACHINE POLITICIANS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>18</ddi:catValu>
+        <ddi:labl xml-lang="en">18. SOUTH</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>19</ddi:catValu>
+        <ddi:labl xml-lang="en">19. LIBERALS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. CONSERVATIVES</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="B9Z1fQ5GwbiPC02w" name="V480032b" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="1379" EndPos="1421"/>
+      <ddi:labl xml-lang="en">GRPS IDENTIFIED W DEWEY 2</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NO GROUP</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. COMMON MAN, LITTLE PEOPLE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>11</ddi:catValu>
+        <ddi:labl xml-lang="en">11. ORGANIZED LABOR, UNIONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>12</ddi:catValu>
+        <ddi:labl xml-lang="en">12. FARMER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>13</ddi:catValu>
+        <ddi:labl xml-lang="en">13. GOVERNMENT WORKER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>14</ddi:catValu>
+        <ddi:labl xml-lang="en">14. BUSINESS, BIG MONEY, UPPER CLASSES, WAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>15</ddi:catValu>
+        <ddi:labl xml-lang="en">15. NEGROES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>16</ddi:catValu>
+        <ddi:labl xml-lang="en">16. JEWS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>17</ddi:catValu>
+        <ddi:labl xml-lang="en">17. MACHINE POLITICIANS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>18</ddi:catValu>
+        <ddi:labl xml-lang="en">18. SOUTH</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>19</ddi:catValu>
+        <ddi:labl xml-lang="en">19. LIBERALS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. CONSERVATIVES</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="F2qndEXT5ofhwoSk" name="V480032c" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="1422" EndPos="1464"/>
+      <ddi:labl xml-lang="en">GRPS IDENTIFIED W DEWEY 3</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NO GROUP</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. COMMON MAN, LITTLE PEOPLE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>11</ddi:catValu>
+        <ddi:labl xml-lang="en">11. ORGANIZED LABOR, UNIONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>12</ddi:catValu>
+        <ddi:labl xml-lang="en">12. FARMER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>13</ddi:catValu>
+        <ddi:labl xml-lang="en">13. GOVERNMENT WORKER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>14</ddi:catValu>
+        <ddi:labl xml-lang="en">14. BUSINESS, BIG MONEY, UPPER CLASSES, WAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>15</ddi:catValu>
+        <ddi:labl xml-lang="en">15. NEGROES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>16</ddi:catValu>
+        <ddi:labl xml-lang="en">16. JEWS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>17</ddi:catValu>
+        <ddi:labl xml-lang="en">17. MACHINE POLITICIANS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>18</ddi:catValu>
+        <ddi:labl xml-lang="en">18. SOUTH</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>19</ddi:catValu>
+        <ddi:labl xml-lang="en">19. LIBERALS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. CONSERVATIVES</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="yQYBvlDshfH6f28U" name="V480033a" files="F1" dcml="0">
+      <ddi:location width="29" StartPos="1465" EndPos="1493"/>
+      <ddi:labl xml-lang="en">ISSUES CONNECTED W TRMN 1</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NO ISSUE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>6</ddi:catValu>
+        <ddi:labl xml-lang="en">6. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>7</ddi:catValu>
+        <ddi:labl xml-lang="en">7. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>11</ddi:catValu>
+        <ddi:labl xml-lang="en">11. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>12</ddi:catValu>
+        <ddi:labl xml-lang="en">12. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>13</ddi:catValu>
+        <ddi:labl xml-lang="en">13. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>14</ddi:catValu>
+        <ddi:labl xml-lang="en">14. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>15</ddi:catValu>
+        <ddi:labl xml-lang="en">15. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>16</ddi:catValu>
+        <ddi:labl xml-lang="en">16. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>17</ddi:catValu>
+        <ddi:labl xml-lang="en">17. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>18</ddi:catValu>
+        <ddi:labl xml-lang="en">18. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>19</ddi:catValu>
+        <ddi:labl xml-lang="en">19. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>21</ddi:catValu>
+        <ddi:labl xml-lang="en">21. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>22</ddi:catValu>
+        <ddi:labl xml-lang="en">22. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>23</ddi:catValu>
+        <ddi:labl xml-lang="en">23.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>24</ddi:catValu>
+        <ddi:labl xml-lang="en">24. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>25</ddi:catValu>
+        <ddi:labl xml-lang="en">25. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>26</ddi:catValu>
+        <ddi:labl xml-lang="en">26. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>27</ddi:catValu>
+        <ddi:labl xml-lang="en">27. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>28</ddi:catValu>
+        <ddi:labl xml-lang="en">28. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>29</ddi:catValu>
+        <ddi:labl xml-lang="en">29. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>30</ddi:catValu>
+        <ddi:labl xml-lang="en">30. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>31</ddi:catValu>
+        <ddi:labl xml-lang="en">31. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>32</ddi:catValu>
+        <ddi:labl xml-lang="en">32. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>33</ddi:catValu>
+        <ddi:labl xml-lang="en">33. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>34</ddi:catValu>
+        <ddi:labl xml-lang="en">34. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>35</ddi:catValu>
+        <ddi:labl xml-lang="en">35. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>36</ddi:catValu>
+        <ddi:labl xml-lang="en">36. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>37</ddi:catValu>
+        <ddi:labl xml-lang="en">37. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>38</ddi:catValu>
+        <ddi:labl xml-lang="en">38.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>39</ddi:catValu>
+        <ddi:labl xml-lang="en">39. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>40</ddi:catValu>
+        <ddi:labl xml-lang="en">40. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>41</ddi:catValu>
+        <ddi:labl xml-lang="en">41. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>42</ddi:catValu>
+        <ddi:labl xml-lang="en">42. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>43</ddi:catValu>
+        <ddi:labl xml-lang="en">43. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>44</ddi:catValu>
+        <ddi:labl xml-lang="en">44. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>45</ddi:catValu>
+        <ddi:labl xml-lang="en">45. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>51</ddi:catValu>
+        <ddi:labl xml-lang="en">51. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>52</ddi:catValu>
+        <ddi:labl xml-lang="en">52. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>53</ddi:catValu>
+        <ddi:labl xml-lang="en">53. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>54</ddi:catValu>
+        <ddi:labl xml-lang="en">54. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>55</ddi:catValu>
+        <ddi:labl xml-lang="en">55. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>56</ddi:catValu>
+        <ddi:labl xml-lang="en">56. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>57</ddi:catValu>
+        <ddi:labl xml-lang="en">57. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>58</ddi:catValu>
+        <ddi:labl xml-lang="en">58.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>59</ddi:catValu>
+        <ddi:labl xml-lang="en">59. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>60</ddi:catValu>
+        <ddi:labl xml-lang="en">60. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>61</ddi:catValu>
+        <ddi:labl xml-lang="en">61. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>62</ddi:catValu>
+        <ddi:labl xml-lang="en">62. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>63</ddi:catValu>
+        <ddi:labl xml-lang="en">63. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>64</ddi:catValu>
+        <ddi:labl xml-lang="en">64. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>65</ddi:catValu>
+        <ddi:labl xml-lang="en">65. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>66</ddi:catValu>
+        <ddi:labl xml-lang="en">66. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>67</ddi:catValu>
+        <ddi:labl xml-lang="en">67. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>68</ddi:catValu>
+        <ddi:labl xml-lang="en">68. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>69</ddi:catValu>
+        <ddi:labl xml-lang="en">69. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>70</ddi:catValu>
+        <ddi:labl xml-lang="en">70. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>71</ddi:catValu>
+        <ddi:labl xml-lang="en">71. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>72</ddi:catValu>
+        <ddi:labl xml-lang="en">72. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>73</ddi:catValu>
+        <ddi:labl xml-lang="en">73.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>74</ddi:catValu>
+        <ddi:labl xml-lang="en">74. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>75</ddi:catValu>
+        <ddi:labl xml-lang="en">75. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>76</ddi:catValu>
+        <ddi:labl xml-lang="en">76. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>77</ddi:catValu>
+        <ddi:labl xml-lang="en">77. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>78</ddi:catValu>
+        <ddi:labl xml-lang="en">78. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>79</ddi:catValu>
+        <ddi:labl xml-lang="en">79. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>80</ddi:catValu>
+        <ddi:labl xml-lang="en">80. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>81</ddi:catValu>
+        <ddi:labl xml-lang="en">81. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>82</ddi:catValu>
+        <ddi:labl xml-lang="en">82. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>83</ddi:catValu>
+        <ddi:labl xml-lang="en">83. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>84</ddi:catValu>
+        <ddi:labl xml-lang="en">84. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>85</ddi:catValu>
+        <ddi:labl xml-lang="en">85. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>86</ddi:catValu>
+        <ddi:labl xml-lang="en">86. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>87</ddi:catValu>
+        <ddi:labl xml-lang="en">87. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>88</ddi:catValu>
+        <ddi:labl xml-lang="en">88.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>89</ddi:catValu>
+        <ddi:labl xml-lang="en">89. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>90</ddi:catValu>
+        <ddi:labl xml-lang="en">90. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>91</ddi:catValu>
+        <ddi:labl xml-lang="en">91. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>92</ddi:catValu>
+        <ddi:labl xml-lang="en">92. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>93</ddi:catValu>
+        <ddi:labl xml-lang="en">93. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>94</ddi:catValu>
+        <ddi:labl xml-lang="en">94. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>95</ddi:catValu>
+        <ddi:labl xml-lang="en">95. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%29.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="Hgd8118J8vjFXeZE" name="V480033b" files="F1" dcml="0">
+      <ddi:location width="29" StartPos="1494" EndPos="1522"/>
+      <ddi:labl xml-lang="en">ISSUES CONNECTED W TRMN 2</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NO ISSUE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>6</ddi:catValu>
+        <ddi:labl xml-lang="en">6. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>7</ddi:catValu>
+        <ddi:labl xml-lang="en">7. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>11</ddi:catValu>
+        <ddi:labl xml-lang="en">11. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>12</ddi:catValu>
+        <ddi:labl xml-lang="en">12. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>13</ddi:catValu>
+        <ddi:labl xml-lang="en">13. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>14</ddi:catValu>
+        <ddi:labl xml-lang="en">14. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>15</ddi:catValu>
+        <ddi:labl xml-lang="en">15. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>16</ddi:catValu>
+        <ddi:labl xml-lang="en">16. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>17</ddi:catValu>
+        <ddi:labl xml-lang="en">17. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>18</ddi:catValu>
+        <ddi:labl xml-lang="en">18. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>19</ddi:catValu>
+        <ddi:labl xml-lang="en">19. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>21</ddi:catValu>
+        <ddi:labl xml-lang="en">21. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>22</ddi:catValu>
+        <ddi:labl xml-lang="en">22. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>23</ddi:catValu>
+        <ddi:labl xml-lang="en">23.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>24</ddi:catValu>
+        <ddi:labl xml-lang="en">24. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>25</ddi:catValu>
+        <ddi:labl xml-lang="en">25. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>26</ddi:catValu>
+        <ddi:labl xml-lang="en">26. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>27</ddi:catValu>
+        <ddi:labl xml-lang="en">27. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>28</ddi:catValu>
+        <ddi:labl xml-lang="en">28. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>29</ddi:catValu>
+        <ddi:labl xml-lang="en">29. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>30</ddi:catValu>
+        <ddi:labl xml-lang="en">30. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>31</ddi:catValu>
+        <ddi:labl xml-lang="en">31. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>32</ddi:catValu>
+        <ddi:labl xml-lang="en">32. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>33</ddi:catValu>
+        <ddi:labl xml-lang="en">33. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>34</ddi:catValu>
+        <ddi:labl xml-lang="en">34. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>35</ddi:catValu>
+        <ddi:labl xml-lang="en">35. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>36</ddi:catValu>
+        <ddi:labl xml-lang="en">36. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>37</ddi:catValu>
+        <ddi:labl xml-lang="en">37. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>38</ddi:catValu>
+        <ddi:labl xml-lang="en">38.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>39</ddi:catValu>
+        <ddi:labl xml-lang="en">39. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>40</ddi:catValu>
+        <ddi:labl xml-lang="en">40. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>41</ddi:catValu>
+        <ddi:labl xml-lang="en">41. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>42</ddi:catValu>
+        <ddi:labl xml-lang="en">42. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>43</ddi:catValu>
+        <ddi:labl xml-lang="en">43. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>44</ddi:catValu>
+        <ddi:labl xml-lang="en">44. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>45</ddi:catValu>
+        <ddi:labl xml-lang="en">45. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>51</ddi:catValu>
+        <ddi:labl xml-lang="en">51. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>52</ddi:catValu>
+        <ddi:labl xml-lang="en">52. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>53</ddi:catValu>
+        <ddi:labl xml-lang="en">53. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>54</ddi:catValu>
+        <ddi:labl xml-lang="en">54. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>55</ddi:catValu>
+        <ddi:labl xml-lang="en">55. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>56</ddi:catValu>
+        <ddi:labl xml-lang="en">56. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>57</ddi:catValu>
+        <ddi:labl xml-lang="en">57. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>58</ddi:catValu>
+        <ddi:labl xml-lang="en">58.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>59</ddi:catValu>
+        <ddi:labl xml-lang="en">59. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>60</ddi:catValu>
+        <ddi:labl xml-lang="en">60. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>61</ddi:catValu>
+        <ddi:labl xml-lang="en">61. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>62</ddi:catValu>
+        <ddi:labl xml-lang="en">62. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>63</ddi:catValu>
+        <ddi:labl xml-lang="en">63. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>64</ddi:catValu>
+        <ddi:labl xml-lang="en">64. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>65</ddi:catValu>
+        <ddi:labl xml-lang="en">65. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>66</ddi:catValu>
+        <ddi:labl xml-lang="en">66. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>67</ddi:catValu>
+        <ddi:labl xml-lang="en">67. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>68</ddi:catValu>
+        <ddi:labl xml-lang="en">68. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>69</ddi:catValu>
+        <ddi:labl xml-lang="en">69. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>70</ddi:catValu>
+        <ddi:labl xml-lang="en">70. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>71</ddi:catValu>
+        <ddi:labl xml-lang="en">71. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>72</ddi:catValu>
+        <ddi:labl xml-lang="en">72. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>73</ddi:catValu>
+        <ddi:labl xml-lang="en">73.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>74</ddi:catValu>
+        <ddi:labl xml-lang="en">74. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>75</ddi:catValu>
+        <ddi:labl xml-lang="en">75. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>76</ddi:catValu>
+        <ddi:labl xml-lang="en">76. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>77</ddi:catValu>
+        <ddi:labl xml-lang="en">77. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>78</ddi:catValu>
+        <ddi:labl xml-lang="en">78. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>79</ddi:catValu>
+        <ddi:labl xml-lang="en">79. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>80</ddi:catValu>
+        <ddi:labl xml-lang="en">80. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>81</ddi:catValu>
+        <ddi:labl xml-lang="en">81. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>82</ddi:catValu>
+        <ddi:labl xml-lang="en">82. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>83</ddi:catValu>
+        <ddi:labl xml-lang="en">83. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>84</ddi:catValu>
+        <ddi:labl xml-lang="en">84. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>85</ddi:catValu>
+        <ddi:labl xml-lang="en">85. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>86</ddi:catValu>
+        <ddi:labl xml-lang="en">86. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>87</ddi:catValu>
+        <ddi:labl xml-lang="en">87. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>88</ddi:catValu>
+        <ddi:labl xml-lang="en">88.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>89</ddi:catValu>
+        <ddi:labl xml-lang="en">89. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>90</ddi:catValu>
+        <ddi:labl xml-lang="en">90. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>91</ddi:catValu>
+        <ddi:labl xml-lang="en">91. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>92</ddi:catValu>
+        <ddi:labl xml-lang="en">92. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>93</ddi:catValu>
+        <ddi:labl xml-lang="en">93. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>94</ddi:catValu>
+        <ddi:labl xml-lang="en">94. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>95</ddi:catValu>
+        <ddi:labl xml-lang="en">95. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%29.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="Ld8mN90tcCcNuYJd" name="V480034a" files="F1" dcml="0">
+      <ddi:location width="29" StartPos="1523" EndPos="1551"/>
+      <ddi:labl xml-lang="en">ISSUES CONNECTED W DEWEY 1</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NO ISSUE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>6</ddi:catValu>
+        <ddi:labl xml-lang="en">6. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>7</ddi:catValu>
+        <ddi:labl xml-lang="en">7. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>11</ddi:catValu>
+        <ddi:labl xml-lang="en">11. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>12</ddi:catValu>
+        <ddi:labl xml-lang="en">12. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>13</ddi:catValu>
+        <ddi:labl xml-lang="en">13. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>14</ddi:catValu>
+        <ddi:labl xml-lang="en">14. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>15</ddi:catValu>
+        <ddi:labl xml-lang="en">15. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>16</ddi:catValu>
+        <ddi:labl xml-lang="en">16. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>17</ddi:catValu>
+        <ddi:labl xml-lang="en">17. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>18</ddi:catValu>
+        <ddi:labl xml-lang="en">18. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>19</ddi:catValu>
+        <ddi:labl xml-lang="en">19. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>21</ddi:catValu>
+        <ddi:labl xml-lang="en">21. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>22</ddi:catValu>
+        <ddi:labl xml-lang="en">22. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>23</ddi:catValu>
+        <ddi:labl xml-lang="en">23.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>24</ddi:catValu>
+        <ddi:labl xml-lang="en">24. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>25</ddi:catValu>
+        <ddi:labl xml-lang="en">25. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>26</ddi:catValu>
+        <ddi:labl xml-lang="en">26. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>27</ddi:catValu>
+        <ddi:labl xml-lang="en">27. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>28</ddi:catValu>
+        <ddi:labl xml-lang="en">28. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>29</ddi:catValu>
+        <ddi:labl xml-lang="en">29. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>30</ddi:catValu>
+        <ddi:labl xml-lang="en">30. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>31</ddi:catValu>
+        <ddi:labl xml-lang="en">31. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>32</ddi:catValu>
+        <ddi:labl xml-lang="en">32. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>33</ddi:catValu>
+        <ddi:labl xml-lang="en">33. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>34</ddi:catValu>
+        <ddi:labl xml-lang="en">34. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>35</ddi:catValu>
+        <ddi:labl xml-lang="en">35. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>36</ddi:catValu>
+        <ddi:labl xml-lang="en">36. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>37</ddi:catValu>
+        <ddi:labl xml-lang="en">37. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>38</ddi:catValu>
+        <ddi:labl xml-lang="en">38.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>39</ddi:catValu>
+        <ddi:labl xml-lang="en">39. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>40</ddi:catValu>
+        <ddi:labl xml-lang="en">40. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>41</ddi:catValu>
+        <ddi:labl xml-lang="en">41. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>42</ddi:catValu>
+        <ddi:labl xml-lang="en">42. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>43</ddi:catValu>
+        <ddi:labl xml-lang="en">43. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>44</ddi:catValu>
+        <ddi:labl xml-lang="en">44. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>45</ddi:catValu>
+        <ddi:labl xml-lang="en">45. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>51</ddi:catValu>
+        <ddi:labl xml-lang="en">51. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>52</ddi:catValu>
+        <ddi:labl xml-lang="en">52. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>53</ddi:catValu>
+        <ddi:labl xml-lang="en">53. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>54</ddi:catValu>
+        <ddi:labl xml-lang="en">54. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>55</ddi:catValu>
+        <ddi:labl xml-lang="en">55. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>56</ddi:catValu>
+        <ddi:labl xml-lang="en">56. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>57</ddi:catValu>
+        <ddi:labl xml-lang="en">57. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>58</ddi:catValu>
+        <ddi:labl xml-lang="en">58.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>59</ddi:catValu>
+        <ddi:labl xml-lang="en">59. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>60</ddi:catValu>
+        <ddi:labl xml-lang="en">60. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>61</ddi:catValu>
+        <ddi:labl xml-lang="en">61. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>62</ddi:catValu>
+        <ddi:labl xml-lang="en">62. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>63</ddi:catValu>
+        <ddi:labl xml-lang="en">63. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>64</ddi:catValu>
+        <ddi:labl xml-lang="en">64. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>65</ddi:catValu>
+        <ddi:labl xml-lang="en">65. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>66</ddi:catValu>
+        <ddi:labl xml-lang="en">66. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>67</ddi:catValu>
+        <ddi:labl xml-lang="en">67. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>68</ddi:catValu>
+        <ddi:labl xml-lang="en">68. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>69</ddi:catValu>
+        <ddi:labl xml-lang="en">69. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>70</ddi:catValu>
+        <ddi:labl xml-lang="en">70. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>71</ddi:catValu>
+        <ddi:labl xml-lang="en">71. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>72</ddi:catValu>
+        <ddi:labl xml-lang="en">72. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>73</ddi:catValu>
+        <ddi:labl xml-lang="en">73.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>74</ddi:catValu>
+        <ddi:labl xml-lang="en">74. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>75</ddi:catValu>
+        <ddi:labl xml-lang="en">75. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>76</ddi:catValu>
+        <ddi:labl xml-lang="en">76. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>77</ddi:catValu>
+        <ddi:labl xml-lang="en">77. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>78</ddi:catValu>
+        <ddi:labl xml-lang="en">78. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>79</ddi:catValu>
+        <ddi:labl xml-lang="en">79. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>80</ddi:catValu>
+        <ddi:labl xml-lang="en">80. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>81</ddi:catValu>
+        <ddi:labl xml-lang="en">81. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>82</ddi:catValu>
+        <ddi:labl xml-lang="en">82. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>83</ddi:catValu>
+        <ddi:labl xml-lang="en">83. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>84</ddi:catValu>
+        <ddi:labl xml-lang="en">84. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>85</ddi:catValu>
+        <ddi:labl xml-lang="en">85. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>86</ddi:catValu>
+        <ddi:labl xml-lang="en">86. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>87</ddi:catValu>
+        <ddi:labl xml-lang="en">87. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>88</ddi:catValu>
+        <ddi:labl xml-lang="en">88.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>89</ddi:catValu>
+        <ddi:labl xml-lang="en">89. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>90</ddi:catValu>
+        <ddi:labl xml-lang="en">90. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>91</ddi:catValu>
+        <ddi:labl xml-lang="en">91. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>92</ddi:catValu>
+        <ddi:labl xml-lang="en">92. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>93</ddi:catValu>
+        <ddi:labl xml-lang="en">93. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>94</ddi:catValu>
+        <ddi:labl xml-lang="en">94. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>95</ddi:catValu>
+        <ddi:labl xml-lang="en">95. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%29.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="QTchKaa3zFwl53of" name="V480034b" files="F1" dcml="0">
+      <ddi:location width="29" StartPos="1552" EndPos="1580"/>
+      <ddi:labl xml-lang="en">ISSUES CONNECTED W DEWEY 2</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NO ISSUE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>6</ddi:catValu>
+        <ddi:labl xml-lang="en">6. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>7</ddi:catValu>
+        <ddi:labl xml-lang="en">7. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>10</ddi:catValu>
+        <ddi:labl xml-lang="en">10. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>11</ddi:catValu>
+        <ddi:labl xml-lang="en">11. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>12</ddi:catValu>
+        <ddi:labl xml-lang="en">12. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>13</ddi:catValu>
+        <ddi:labl xml-lang="en">13. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>14</ddi:catValu>
+        <ddi:labl xml-lang="en">14. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>15</ddi:catValu>
+        <ddi:labl xml-lang="en">15. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>16</ddi:catValu>
+        <ddi:labl xml-lang="en">16. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>17</ddi:catValu>
+        <ddi:labl xml-lang="en">17. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>18</ddi:catValu>
+        <ddi:labl xml-lang="en">18. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>19</ddi:catValu>
+        <ddi:labl xml-lang="en">19. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>20</ddi:catValu>
+        <ddi:labl xml-lang="en">20. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>21</ddi:catValu>
+        <ddi:labl xml-lang="en">21. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>22</ddi:catValu>
+        <ddi:labl xml-lang="en">22. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>23</ddi:catValu>
+        <ddi:labl xml-lang="en">23.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>24</ddi:catValu>
+        <ddi:labl xml-lang="en">24. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>25</ddi:catValu>
+        <ddi:labl xml-lang="en">25. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>26</ddi:catValu>
+        <ddi:labl xml-lang="en">26. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>27</ddi:catValu>
+        <ddi:labl xml-lang="en">27. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>28</ddi:catValu>
+        <ddi:labl xml-lang="en">28. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>29</ddi:catValu>
+        <ddi:labl xml-lang="en">29. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>30</ddi:catValu>
+        <ddi:labl xml-lang="en">30. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>31</ddi:catValu>
+        <ddi:labl xml-lang="en">31. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>32</ddi:catValu>
+        <ddi:labl xml-lang="en">32. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>33</ddi:catValu>
+        <ddi:labl xml-lang="en">33. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>34</ddi:catValu>
+        <ddi:labl xml-lang="en">34. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>35</ddi:catValu>
+        <ddi:labl xml-lang="en">35. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>36</ddi:catValu>
+        <ddi:labl xml-lang="en">36. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>37</ddi:catValu>
+        <ddi:labl xml-lang="en">37. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>38</ddi:catValu>
+        <ddi:labl xml-lang="en">38.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>39</ddi:catValu>
+        <ddi:labl xml-lang="en">39. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>40</ddi:catValu>
+        <ddi:labl xml-lang="en">40. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>41</ddi:catValu>
+        <ddi:labl xml-lang="en">41. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>42</ddi:catValu>
+        <ddi:labl xml-lang="en">42. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>43</ddi:catValu>
+        <ddi:labl xml-lang="en">43. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>44</ddi:catValu>
+        <ddi:labl xml-lang="en">44. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>45</ddi:catValu>
+        <ddi:labl xml-lang="en">45. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>51</ddi:catValu>
+        <ddi:labl xml-lang="en">51. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>52</ddi:catValu>
+        <ddi:labl xml-lang="en">52. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>53</ddi:catValu>
+        <ddi:labl xml-lang="en">53. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>54</ddi:catValu>
+        <ddi:labl xml-lang="en">54. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>55</ddi:catValu>
+        <ddi:labl xml-lang="en">55. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>56</ddi:catValu>
+        <ddi:labl xml-lang="en">56. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>57</ddi:catValu>
+        <ddi:labl xml-lang="en">57. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>58</ddi:catValu>
+        <ddi:labl xml-lang="en">58.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>59</ddi:catValu>
+        <ddi:labl xml-lang="en">59. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>60</ddi:catValu>
+        <ddi:labl xml-lang="en">60. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>61</ddi:catValu>
+        <ddi:labl xml-lang="en">61. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>62</ddi:catValu>
+        <ddi:labl xml-lang="en">62. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>63</ddi:catValu>
+        <ddi:labl xml-lang="en">63. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>64</ddi:catValu>
+        <ddi:labl xml-lang="en">64. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>65</ddi:catValu>
+        <ddi:labl xml-lang="en">65. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>66</ddi:catValu>
+        <ddi:labl xml-lang="en">66. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>67</ddi:catValu>
+        <ddi:labl xml-lang="en">67. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>68</ddi:catValu>
+        <ddi:labl xml-lang="en">68. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>69</ddi:catValu>
+        <ddi:labl xml-lang="en">69. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>70</ddi:catValu>
+        <ddi:labl xml-lang="en">70. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>71</ddi:catValu>
+        <ddi:labl xml-lang="en">71. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>72</ddi:catValu>
+        <ddi:labl xml-lang="en">72. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>73</ddi:catValu>
+        <ddi:labl xml-lang="en">73.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>74</ddi:catValu>
+        <ddi:labl xml-lang="en">74. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>75</ddi:catValu>
+        <ddi:labl xml-lang="en">75. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>76</ddi:catValu>
+        <ddi:labl xml-lang="en">76. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>77</ddi:catValu>
+        <ddi:labl xml-lang="en">77. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>78</ddi:catValu>
+        <ddi:labl xml-lang="en">78. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>79</ddi:catValu>
+        <ddi:labl xml-lang="en">79. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>80</ddi:catValu>
+        <ddi:labl xml-lang="en">80. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>81</ddi:catValu>
+        <ddi:labl xml-lang="en">81. RENT CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>82</ddi:catValu>
+        <ddi:labl xml-lang="en">82. PRICE CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>83</ddi:catValu>
+        <ddi:labl xml-lang="en">83. TAFT-HARTLEY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>84</ddi:catValu>
+        <ddi:labl xml-lang="en">84. FARM PRICES AND SUPPORT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>85</ddi:catValu>
+        <ddi:labl xml-lang="en">85. LOWER INCOME TAX</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>86</ddi:catValu>
+        <ddi:labl xml-lang="en">86. CIVIL RIGHTS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>87</ddi:catValu>
+        <ddi:labl xml-lang="en">87. BALANCE BUDGET</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>88</ddi:catValu>
+        <ddi:labl xml-lang="en">88.(GOVERNMENT) HOUSING</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>89</ddi:catValu>
+        <ddi:labl xml-lang="en">89. DEFENSE ACTIVITY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>90</ddi:catValu>
+        <ddi:labl xml-lang="en">90. GOVERNMENT ATOMIC CONTROL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>91</ddi:catValu>
+        <ddi:labl xml-lang="en">91. NEW DEAL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>92</ddi:catValu>
+        <ddi:labl xml-lang="en">92. MARSHALL PLAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>93</ddi:catValu>
+        <ddi:labl xml-lang="en">93. FIRM RUSSIAN POLICY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>94</ddi:catValu>
+        <ddi:labl xml-lang="en">94. HELP ISRAEL (PALESTINE)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>95</ddi:catValu>
+        <ddi:labl xml-lang="en">95. PROMOTE PEACE</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%29.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="z2n5DGrKYnSdPSYK" name="V480035a" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="1581" EndPos="1623"/>
+      <ddi:labl xml-lang="en">PERSONAL ATTRIBUTE TRMN 1</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NO ATTRIBUTE MENTIONED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>11</ddi:catValu>
+        <ddi:labl xml-lang="en">11. HONEST, SINCERE, FAIR</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>12</ddi:catValu>
+        <ddi:labl xml-lang="en">12. EXPERIENCED, CAPABLE, COMPETENT, INTELL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>13</ddi:catValu>
+        <ddi:labl xml-lang="en">13. FEARLESS, SPUNKY, FIGHTING, AGGRESSIVE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>14</ddi:catValu>
+        <ddi:labl xml-lang="en">14. DOWN-TO-EARTH, COMMON TOUCH, UNDERSTAND</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>21</ddi:catValu>
+        <ddi:labl xml-lang="en">21. SHORT-TEMPERED, HOT-HEAD, SHOVES PEOPLE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>22</ddi:catValu>
+        <ddi:labl xml-lang="en">22. SMALL, INCOMPETENT, INEFFICIENT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>23</ddi:catValu>
+        <ddi:labl xml-lang="en">23. INDECISIVE, VACILLATING, DOESN'T KNOW H</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>24</ddi:catValu>
+        <ddi:labl xml-lang="en">24. FOPPISH, OVER-DRESSED, APPEARANCE ANTAG</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>25</ddi:catValu>
+        <ddi:labl xml-lang="en">25. SMUG, COMPLACENT, OVER-CONFIDENT, PATRO</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>26</ddi:catValu>
+        <ddi:labl xml-lang="en">26. INSINCERE, DECEPTIVE, TWO-FACED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>27</ddi:catValu>
+        <ddi:labl xml-lang="en">27. NON-COMMITTAL, BACKS AWAY FROM ISSUES,</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="iLKoB7Ut3T1zMcdS" name="V480035b" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="1624" EndPos="1666"/>
+      <ddi:labl xml-lang="en">PERSONAL ATTRIBUTE TRMN 2</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NO ATTRIBUTE MENTIONED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>11</ddi:catValu>
+        <ddi:labl xml-lang="en">11. HONEST, SINCERE, FAIR</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>12</ddi:catValu>
+        <ddi:labl xml-lang="en">12. EXPERIENCED, CAPABLE, COMPETENT, INTELL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>13</ddi:catValu>
+        <ddi:labl xml-lang="en">13. FEARLESS, SPUNKY, FIGHTING, AGGRESSIVE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>14</ddi:catValu>
+        <ddi:labl xml-lang="en">14. DOWN-TO-EARTH, COMMON TOUCH, UNDERSTAND</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>21</ddi:catValu>
+        <ddi:labl xml-lang="en">21. SHORT-TEMPERED, HOT-HEAD, SHOVES PEOPLE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>22</ddi:catValu>
+        <ddi:labl xml-lang="en">22. SMALL, INCOMPETENT, INEFFICIENT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>23</ddi:catValu>
+        <ddi:labl xml-lang="en">23. INDECISIVE, VACILLATING, DOESN'T KNOW H</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>24</ddi:catValu>
+        <ddi:labl xml-lang="en">24. FOPPISH, OVER-DRESSED, APPEARANCE ANTAG</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>25</ddi:catValu>
+        <ddi:labl xml-lang="en">25. SMUG, COMPLACENT, OVER-CONFIDENT, PATRO</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>26</ddi:catValu>
+        <ddi:labl xml-lang="en">26. INSINCERE, DECEPTIVE, TWO-FACED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>27</ddi:catValu>
+        <ddi:labl xml-lang="en">27. NON-COMMITTAL, BACKS AWAY FROM ISSUES,</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="gPanJ9rlIdky1Aye" name="V480036a" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="1667" EndPos="1709"/>
+      <ddi:labl xml-lang="en">PERSONAL ATTRIBUTE DEWEY 1</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NO ATTRIBUTE MENTIONED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>11</ddi:catValu>
+        <ddi:labl xml-lang="en">11. HONEST, SINCERE, FAIR</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>12</ddi:catValu>
+        <ddi:labl xml-lang="en">12. EXPERIENCED, CAPABLE, COMPETENT, INTELL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>13</ddi:catValu>
+        <ddi:labl xml-lang="en">13. FEARLESS, SPUNKY, FIGHTING, AGGRESSIVE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>14</ddi:catValu>
+        <ddi:labl xml-lang="en">14. DOWN-TO-EARTH, COMMON TOUCH, UNDERSTAND</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>21</ddi:catValu>
+        <ddi:labl xml-lang="en">21. SHORT-TEMPERED, HOT-HEAD, SHOVES PEOPLE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>22</ddi:catValu>
+        <ddi:labl xml-lang="en">22. SMALL, INCOMPETENT, INEFFICIENT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>23</ddi:catValu>
+        <ddi:labl xml-lang="en">23. INDECISIVE, VACILLATING, DOESN'T KNOW H</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>24</ddi:catValu>
+        <ddi:labl xml-lang="en">24. FOPPISH, OVER-DRESSED, APPEARANCE ANTAG</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>25</ddi:catValu>
+        <ddi:labl xml-lang="en">25. SMUG, COMPLACENT, OVER-CONFIDENT, PATRO</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>26</ddi:catValu>
+        <ddi:labl xml-lang="en">26. INSINCERE, DECEPTIVE, TWO-FACED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>27</ddi:catValu>
+        <ddi:labl xml-lang="en">27. NON-COMMITTAL, BACKS AWAY FROM ISSUES,</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="F2YQJwzqDdwXZIW0" name="V480036b" files="F1" dcml="0">
+      <ddi:location width="43" StartPos="1710" EndPos="1752"/>
+      <ddi:labl xml-lang="en">PERSONAL ATTRIBUTE DEWEY 2</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NO ATTRIBUTE MENTIONED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>11</ddi:catValu>
+        <ddi:labl xml-lang="en">11. HONEST, SINCERE, FAIR</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>12</ddi:catValu>
+        <ddi:labl xml-lang="en">12. EXPERIENCED, CAPABLE, COMPETENT, INTELL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>13</ddi:catValu>
+        <ddi:labl xml-lang="en">13. FEARLESS, SPUNKY, FIGHTING, AGGRESSIVE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>14</ddi:catValu>
+        <ddi:labl xml-lang="en">14. DOWN-TO-EARTH, COMMON TOUCH, UNDERSTAND</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>21</ddi:catValu>
+        <ddi:labl xml-lang="en">21. SHORT-TEMPERED, HOT-HEAD, SHOVES PEOPLE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>22</ddi:catValu>
+        <ddi:labl xml-lang="en">22. SMALL, INCOMPETENT, INEFFICIENT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>23</ddi:catValu>
+        <ddi:labl xml-lang="en">23. INDECISIVE, VACILLATING, DOESN'T KNOW H</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>24</ddi:catValu>
+        <ddi:labl xml-lang="en">24. FOPPISH, OVER-DRESSED, APPEARANCE ANTAG</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>25</ddi:catValu>
+        <ddi:labl xml-lang="en">25. SMUG, COMPLACENT, OVER-CONFIDENT, PATRO</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>26</ddi:catValu>
+        <ddi:labl xml-lang="en">26. INSINCERE, DECEPTIVE, TWO-FACED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>27</ddi:catValu>
+        <ddi:labl xml-lang="en">27. NON-COMMITTAL, BACKS AWAY FROM ISSUES,</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Float">%43.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="CGxAutwAdQJb9M8L" name="V480037" files="F1" dcml="0">
+      <ddi:location width="30" StartPos="1753" EndPos="1782"/>
+      <ddi:labl xml-lang="en">CMPN INCIDENTS MENTIONED</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NO INCIDENT MENTIONED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. DEWEY - TRAIN ENGINEER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. DEWEY - 3 SYLLABLE WORDS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. DEWEY - DEBATE WITH STASSEN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. DEWEY - PRESS CONFERENCE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. TRUMAN - VINSON-PRO</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>6</ddi:catValu>
+        <ddi:labl xml-lang="en">6. TRUMAN - VINSON-CON</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%30.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="x4HCiUOAtiZYuBe8" name="V480038" files="F1" dcml="0">
+      <ddi:location width="29" StartPos="1783" EndPos="1811"/>
+      <ddi:labl xml-lang="en">41-PRESLELCTN PLAN TO VT</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. ALMOST CERTAIN TO V4800OTE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. UNCERTAIN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. WON'T OR CAN'T VOTE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. DON'T KNOW</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%29.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="BNXSoKrf50UkX7oe" name="V480039" files="F1" dcml="0">
+      <ddi:location width="29" StartPos="1812" EndPos="1840"/>
+      <ddi:labl xml-lang="en">41-PLAN TO VT REP/DEM</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. INAP</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. DEMOCRATIC</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. PROGRESSIVE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. REPUBLICAN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. DIXIECRAT (STATES' RIGHTS)</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. OTHER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%29.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="priIBrqnlAxZy7Fd" name="V480040" files="F1" dcml="0">
+      <ddi:location width="41" StartPos="1841" EndPos="1881"/>
+      <ddi:labl xml-lang="en">41-USA'S CNCRN W OTHERS</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. AGREE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. AGREE WITH RESERVATIONS OR UNCERTAINTY</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. NEUTRAL OR MIXED PRO-CON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. DISAGREE WITH RESERVATIONS OR UNCERTAI</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. DISAGREE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%41.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="IyLn0KNsuzdeCgdG" name="V480041" files="F1" dcml="0">
+      <ddi:location width="36" StartPos="1882" EndPos="1917"/>
+      <ddi:labl xml-lang="en">41-SATISD USA TWRD RUSS</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. VERY SATISFIED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. SATISFIED WITH RESERVATIONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. NEUTRAL OR MIXED PRO-CON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. DISSATISFIED OR WITH RESERVATIONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. VERY DISSATISFIED</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%36.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="dO3PNET1ZbXg8Hst" name="V480042" files="F1" dcml="0">
+      <ddi:location width="21" StartPos="1918" EndPos="1938"/>
+      <ddi:labl xml-lang="en">41-INFORMATION LEVEL</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>0</ddi:catValu>
+        <ddi:labl xml-lang="en">0. NO INFORMATION</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. LOW INFORMATION</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. MEDIUM INFORMATION</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. HIGH INFORMATION</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%21.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="Jx3IZXZirdpl5pzP" name="V480043" files="F1" dcml="0">
+      <ddi:location width="41" StartPos="1939" EndPos="1979"/>
+      <ddi:labl xml-lang="en">41-USA GV IN,AGRT RUSS</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. APPROVE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. APPROVE WITH RESERVATIONS OR UNCERTAIN</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. NEUTRAL OR MIXED PRO-CON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. NO OR DISAPPROVE WITH RESERVATIONS OR</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. NO OR DISAPPROVE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>6</ddi:catValu>
+        <ddi:labl xml-lang="en">6. IT DEPENDS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. DON'T KNOW</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%41.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="QtFhO0Y8WZ4c4vEr" name="V480044" files="F1" dcml="0">
+      <ddi:location width="26" StartPos="1980" EndPos="2005"/>
+      <ddi:labl xml-lang="en">41-USA-RUSS AGRT VIA U.N</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. YES</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. YES, WITH RESERVATIONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. NEUTRAL, MIXED, PRO-CON</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. NO, WITH RESERVATIONS</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. NO</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>8</ddi:catValu>
+        <ddi:labl xml-lang="en">8. DK</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%26.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="wr3nFxu0ZraeazFE" name="V480045" files="F1" dcml="0">
+      <ddi:location width="9" StartPos="2006" EndPos="2014"/>
+      <ddi:labl xml-lang="en">SEX OF RESPONDENT</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. MALE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. FEMALE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%9.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="ho1CMy2AYE4Fkp01" name="V480046" files="F1" dcml="0">
+      <ddi:location width="8" StartPos="2015" EndPos="2022"/>
+      <ddi:labl xml-lang="en">RACE OF RESPONDENT</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. WHITE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. NEGRO</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. OTHER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%8.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="VU2nS3zAEmSjJqNA" name="V480047" files="F1" dcml="0">
+      <ddi:location width="14" StartPos="2023" EndPos="2036"/>
+      <ddi:labl xml-lang="en">AGE OF RESPONDENT</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. 18-24</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. 25-34</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. 35-44</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. 45-54</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. 55-64</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>6</ddi:catValu>
+        <ddi:labl xml-lang="en">6. 65 AND OVER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%14.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="o7TYGE92lQXXVhBV" name="V480048" files="F1" dcml="0">
+      <ddi:location width="15" StartPos="2037" EndPos="2051"/>
+      <ddi:labl xml-lang="en">EDUCATION OF RESPONDENT</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. GRADE SCHOOL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. HIGH SCHOOL</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. COLLEGE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%15.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="dbn1fBSZlQsVrEqW" name="V480049" files="F1" dcml="0">
+      <ddi:location width="16" StartPos="2052" EndPos="2067"/>
+      <ddi:labl xml-lang="en">TOTAL 1948 INCOME</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. UNDER $500</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2.$500-$999</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3.$1000-1999</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4.$2000-2999</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5.$3000-3999</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>6</ddi:catValu>
+        <ddi:labl xml-lang="en">6.$4000-4999</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>7</ddi:catValu>
+        <ddi:labl xml-lang="en">7.$5000 AND OVER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%16.0g</ddi:varFormat>
+    </ddi:var>
+    <ddi:var ID="emPyiXTeYB4WcxtW" name="V480050" files="F1" dcml="0">
+      <ddi:location width="13" StartPos="2068" EndPos="2080"/>
+      <ddi:labl xml-lang="en">RELIGIOUS PREFERENCE</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">1. PROTESTANT</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">2. CATHOLIC</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>3</ddi:catValu>
+        <ddi:labl xml-lang="en">3. JEWISH</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>4</ddi:catValu>
+        <ddi:labl xml-lang="en">4. OTHER</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>5</ddi:catValu>
+        <ddi:labl xml-lang="en">5. NONE</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">9. NA</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="numeric" schema="other" formatname="Byte">%13.0g</ddi:varFormat>
+    </ddi:var>
+  </ddi:dataDscr>
+</ddi:codeBook>
