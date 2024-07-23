@@ -22,7 +22,7 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install --upgrade pip
-        python3 -m pip install sphinx sphinx-rtd-theme
+        python3 -m pip install sphinx sphinx-rtd-theme myst_parser
 
     - name: Generate documentation
       run: |
