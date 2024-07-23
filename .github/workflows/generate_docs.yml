@@ -1,0 +1,32 @@
+name: Generate Documentation
+
+on:
+  push:
+    branches:
+      - main  # Adjust branch as needed
+  workflow_dispatch: # adds button to trigger workflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'  # This ensures Python 3
+
+    - name: Install dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        python3 -m pip install sphinx sphinx-rtd-theme
+
+    - name: Generate documentation
+      run: |
+        cd docs
+        python3 -m sphinx -b html source build/html
+
+  
