@@ -69,6 +69,14 @@ def loadxml(file) -> "codeBookType":
      ddicodebook.from_xml_element(root)
      return ddicodebook
 
+def loadxmlstring(xmlstring) -> "codeBookType":
+     """Loads a DDI codebook from an XML string.
+     """
+     root = ET.fromstring(xmlstring)
+     ddicodebook = codeBookType()
+     ddicodebook.from_xml_element(root)
+     return ddicodebook
+
 def get_mixed_content(element) -> str:
      """Returns the mixed content of an XML element as a concatenated and potentially multiline string.
 
@@ -433,6 +441,11 @@ class catgryType(baseElementType):
           self._valid_attributes.append("excls")
           self._valid_attributes.append("catgry")
           self._valid_attributes.append("level")
+
+          
+     @property
+     def is_missing(self):
+          return self._attributes.get("missing","N") == "Y"
 
 class catLevelType(baseElementType):
      def __init__(self, options=None):
@@ -1656,8 +1669,28 @@ class varType(baseElementType):
           self._valid_attributes.append("representationType")
           self._valid_attributes.append("otherRepresentationType")
 
-     
+     @property
+     def n_catgry(self) -> int:
+          if hasattr(self, "catgry") and self.catgry:
+               return len(self.catgry)
+          return 0
+
+     @property
+     def n_missing_catgry(self) -> int:
+          if self.n_catgry > 0:
+               n_missing = 0
+               for catgry in self.catgry:
+                    if catgry.is_missing:
+                         n_missing += 1
+               return n_missing
+          return 0
+
+     @property
+     def n_non_missing_catgry(self) -> int:
+          return self.n_catgry - self.n_missing_catgry
+    
      def get_catgry_checksum(self, include_code:bool=True, include_label:bool=True, method=None) -> str:
+          # TODO: compute checksum for catgry
           pass
 
      def get_label(self):

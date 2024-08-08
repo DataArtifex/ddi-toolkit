@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ddi:codeBook version="2.5" ID="simple_yndk" codeBookAgency="int.dartfx" elementVersion="1.0.0" xmlns:ddi="ddi:codebook:2_5">
+  <ddi:stdyDscr>
+    <ddi:citation>
+      <ddi:titlStmt>
+        <ddi:titl>A simple codebook</ddi:titl>
+      </ddi:titlStmt>
+      <ddi:prodStmt/>
+    </ddi:citation>
+  </ddi:stdyDscr>
+  <ddi:fileDscr ID="F1">
+    <ddi:fileTxt>
+      <ddi:fileName>F1.dat</ddi:fileName>
+    </ddi:fileTxt>
+  </ddi:fileDscr>
+  <ddi:dataDscr>
+    <ddi:var ID="V1" name="yesnodk" files="F1">
+      <ddi:labl xml-lang="en">Yes / No / Dont' know</ddi:labl>
+      <ddi:catgry>
+        <ddi:catValu>1</ddi:catValu>
+        <ddi:labl xml-lang="en">Yes</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry>
+        <ddi:catValu>2</ddi:catValu>
+        <ddi:labl xml-lang="en">No</ddi:labl>
+      </ddi:catgry>
+      <ddi:catgry missing="Y">
+        <ddi:catValu>9</ddi:catValu>
+        <ddi:labl xml-lang="en">Don't know</ddi:labl>
+      </ddi:catgry>
+      <ddi:varFormat type="character"/>
+    </ddi:var>
+  </ddi:dataDscr>
+</ddi:codeBook>

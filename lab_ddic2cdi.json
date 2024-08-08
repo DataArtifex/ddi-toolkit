@@ -1,0 +1,707 @@
+[
+{
+    "displayLabel": [
+        {
+            "languageSpecificString": [
+                {
+                    "content": "Yes / No / Dont' know"
+                }
+            ]
+        }
+    ],
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_InstanceVariable_V1",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "nonDdiIdentifier": [
+            {
+                "type": "ddi-codebook",
+                "value": "V1"
+            }
+        ],
+        "uri": {
+            "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_InstanceVariable_V1"
+        }
+    },
+    "name": [
+        {
+            "name": "yesnodk"
+        }
+    ],
+    "takesSubstantiveValues": [
+        {
+            "ddiReference": {
+                "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_SubstantiveValueDomain_V1",
+                "registrationAuthorityIdentifier": "int.dataartifex",
+                "versionIdentifier": "1"
+            },
+            "validType": [],
+            "isAssociationReference": true
+        }
+    ]
+},
+{
+    "displayLabel": [],
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_SubstantiveValueDomain_V1",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "nonDdiIdentifier": [],
+        "uri": {
+            "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_SubstantiveValueDomain_V1"
+        }
+    },
+    "recommendedDataType": [],
+    "takesValuesFrom": {
+        "ddiReference": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_CodeList_V1",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "validType": [],
+        "isAssociationReference": true
+    }
+},
+{
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_CodeList_V1",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "nonDdiIdentifier": [],
+        "uri": {
+            "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_CodeList_V1"
+        }
+    },
+    "name": [],
+    "referencesCategorySet": {
+        "ddiReference": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_CategorySet_V1",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "validType": [],
+        "isAssociationReference": true
+    },
+    "isDefinedByConcept": [],
+    "allowsDuplicates": false,
+    "hasCodePosition": [],
+    "hasCode": [
+        {
+            "ddiReference": {
+                "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Code_V1_1",
+                "registrationAuthorityIdentifier": "int.dataartifex",
+                "versionIdentifier": "1"
+            },
+            "validType": [],
+            "isAssociationReference": true
+        },
+        {
+            "ddiReference": {
+                "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Code_V1_2",
+                "registrationAuthorityIdentifier": "int.dataartifex",
+                "versionIdentifier": "1"
+            },
+            "validType": [],
+            "isAssociationReference": true
+        },
+        {
+            "ddiReference": {
+                "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Code_V1_9",
+                "registrationAuthorityIdentifier": "int.dataartifex",
+                "versionIdentifier": "1"
+            },
+            "validType": [],
+            "isAssociationReference": true
+        }
+    ]
+},
+{
+    "allowsDuplicates": false,
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_CategorySet_V1",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "nonDdiIdentifier": [],
+        "uri": {
+            "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_CategorySet_V1"
+        }
+    },
+    "hasCategory": [
+        {
+            "ddiReference": {
+                "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Category_V1_1",
+                "registrationAuthorityIdentifier": "int.dataartifex",
+                "versionIdentifier": "1"
+            },
+            "validType": [],
+            "isAssociationReference": true
+        },
+        {
+            "ddiReference": {
+                "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Category_V1_2",
+                "registrationAuthorityIdentifier": "int.dataartifex",
+                "versionIdentifier": "1"
+            },
+            "validType": [],
+            "isAssociationReference": true
+        },
+        {
+            "ddiReference": {
+                "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Category_V1_9",
+                "registrationAuthorityIdentifier": "int.dataartifex",
+                "versionIdentifier": "1"
+            },
+            "validType": [],
+            "isAssociationReference": true
+        }
+    ],
+    "hasCategoryPosition": []
+},
+{
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Code_V1_1",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "nonDdiIdentifier": [
+            {
+                "type": "code-value",
+                "value": "1"
+            }
+        ],
+        "uri": {
+            "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_Code_V1_1"
+        }
+    },
+    "denotesCategory": {
+        "ddiReference": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Category_V1_1",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "validType": [],
+        "isAssociationReference": true
+    }
+},
+{
+    "content": {
+        "content": "Yes"
+    },
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Notation_V1_1",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "nonDdiIdentifier": [],
+        "uri": {
+            "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_Notation_V1_1"
+        }
+    },
+    "representsCategory": [
+        {
+            "ddiReference": {
+                "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Category_V1_1",
+                "registrationAuthorityIdentifier": "int.dataartifex",
+                "versionIdentifier": "1"
+            },
+            "validType": [],
+            "isAssociationReference": true
+        }
+    ]
+},
+{
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Category_V1_1",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "nonDdiIdentifier": [],
+        "uri": {
+            "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_Category_V1_1"
+        }
+    },
+    "name": [
+        {
+            "name": "Yes"
+        }
+    ]
+},
+{
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Code_V1_2",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "nonDdiIdentifier": [
+            {
+                "type": "code-value",
+                "value": "2"
+            }
+        ],
+        "uri": {
+            "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_Code_V1_2"
+        }
+    },
+    "denotesCategory": {
+        "ddiReference": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Category_V1_2",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "validType": [],
+        "isAssociationReference": true
+    }
+},
+{
+    "content": {
+        "content": "No"
+    },
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Notation_V1_2",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "nonDdiIdentifier": [],
+        "uri": {
+            "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_Notation_V1_2"
+        }
+    },
+    "representsCategory": [
+        {
+            "ddiReference": {
+                "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Category_V1_2",
+                "registrationAuthorityIdentifier": "int.dataartifex",
+                "versionIdentifier": "1"
+            },
+            "validType": [],
+            "isAssociationReference": true
+        }
+    ]
+},
+{
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Category_V1_2",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "nonDdiIdentifier": [],
+        "uri": {
+            "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_Category_V1_2"
+        }
+    },
+    "name": [
+        {
+            "name": "No"
+        }
+    ]
+},
+{
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Code_V1_9",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "nonDdiIdentifier": [
+            {
+                "type": "code-value",
+                "value": "9"
+            }
+        ],
+        "uri": {
+            "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_Code_V1_9"
+        }
+    },
+    "denotesCategory": {
+        "ddiReference": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Category_V1_9",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "validType": [],
+        "isAssociationReference": true
+    }
+},
+{
+    "content": {
+        "content": "Don't know"
+    },
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Notation_V1_9",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "nonDdiIdentifier": [],
+        "uri": {
+            "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_Notation_V1_9"
+        }
+    },
+    "representsCategory": [
+        {
+            "ddiReference": {
+                "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Category_V1_9",
+                "registrationAuthorityIdentifier": "int.dataartifex",
+                "versionIdentifier": "1"
+            },
+            "validType": [],
+            "isAssociationReference": true
+        }
+    ]
+},
+{
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_Category_V1_9",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "nonDdiIdentifier": [],
+        "uri": {
+            "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_Category_V1_9"
+        }
+    },
+    "name": [
+        {
+            "name": "Don't know"
+        }
+    ]
+},
+{
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_DataSet_F1",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "nonDdiIdentifier": [
+            {
+                "type": "ddi-codebook",
+                "value": "F1"
+            }
+        ],
+        "uri": {
+            "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_DataSet_F1"
+        }
+    },
+    "isStructuredBy_DataStructure": [
+        {
+            "identifier": {
+                "ddiIdentifier": {
+                    "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_DataStructure_simple_yndk",
+                    "registrationAuthorityIdentifier": "int.dataartifex",
+                    "versionIdentifier": "1"
+                },
+                "nonDdiIdentifier": [
+                    {
+                        "type": "ddi-codebook",
+                        "value": "simple_yndk"
+                    }
+                ],
+                "uri": {
+                    "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_DataStructure_simple_yndk"
+                }
+            },
+            "semantic": [],
+            "DataStructure_has_ForeignKey": [],
+            "DataStructure_has_DataStructureComponent": [
+                {
+                    "identifier": {
+                        "ddiIdentifier": {
+                            "dataIdentifier": "93096fcc-180d-4a55-85bc-150227b588ef_DataStructureComponent",
+                            "registrationAuthorityIdentifier": "int.dataartifex",
+                            "versionIdentifier": "1"
+                        },
+                        "nonDdiIdentifier": [],
+                        "uri": {
+                            "value": "urn:dartfx:93096fcc-180d-4a55-85bc-150227b588ef_DataStructureComponent"
+                        }
+                    },
+                    "semantic": [],
+                    "isDefinedBy_RepresentedVariable": {
+                        "displayLabel": [
+                            {
+                                "languageSpecificString": [
+                                    {
+                                        "content": "Yes / No / Dont' know"
+                                    }
+                                ]
+                            }
+                        ],
+                        "identifier": {
+                            "ddiIdentifier": {
+                                "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_InstanceVariable_V1",
+                                "registrationAuthorityIdentifier": "int.dataartifex",
+                                "versionIdentifier": "1"
+                            },
+                            "nonDdiIdentifier": [
+                                {
+                                    "type": "ddi-codebook",
+                                    "value": "V1"
+                                }
+                            ],
+                            "uri": {
+                                "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_InstanceVariable_V1"
+                            }
+                        },
+                        "name": [
+                            {
+                                "name": "yesnodk"
+                            }
+                        ],
+                        "takesSubstantiveValues": [
+                            {
+                                "ddiReference": {
+                                    "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_SubstantiveValueDomain_V1",
+                                    "registrationAuthorityIdentifier": "int.dataartifex",
+                                    "versionIdentifier": "1"
+                                },
+                                "validType": [],
+                                "isAssociationReference": true
+                            }
+                        ]
+                    }
+                }
+            ],
+            "DataStructure_has_ComponentPosition": [
+                {
+                    "identifier": {
+                        "ddiIdentifier": {
+                            "dataIdentifier": "93096fcc-180d-4a55-85bc-150227b588ef_ComponentPosition",
+                            "registrationAuthorityIdentifier": "int.dataartifex",
+                            "versionIdentifier": "1"
+                        },
+                        "nonDdiIdentifier": [],
+                        "uri": {
+                            "value": "urn:dartfx:93096fcc-180d-4a55-85bc-150227b588ef_ComponentPosition"
+                        }
+                    },
+                    "value": 1
+                }
+            ]
+        }
+    ],
+    "has_DataPoint": [],
+    "has_Key": []
+},
+{
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_LogicalRecord_F1",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "nonDdiIdentifier": [
+            {
+                "type": "ddi-codebook",
+                "value": "F1"
+            }
+        ],
+        "uri": {
+            "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_LogicalRecord_F1"
+        }
+    },
+    "LogicalRecord_organizes_DataSet": [
+        {
+            "ddiReference": {
+                "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_DataSet_F1",
+                "registrationAuthorityIdentifier": "int.dataartifex",
+                "versionIdentifier": "1"
+            },
+            "validType": [],
+            "isAssociationReference": true
+        }
+    ],
+    "LogicalRecord_has_InstanceVariable": [
+        {
+            "ddiReference": {
+                "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_InstanceVariable_V1",
+                "registrationAuthorityIdentifier": "int.dataartifex",
+                "versionIdentifier": "1"
+            },
+            "validType": [],
+            "isAssociationReference": true
+        }
+    ]
+},
+{
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_DataStructure_simple_yndk",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "nonDdiIdentifier": [
+            {
+                "type": "ddi-codebook",
+                "value": "simple_yndk"
+            }
+        ],
+        "uri": {
+            "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_DataStructure_simple_yndk"
+        }
+    },
+    "semantic": [],
+    "DataStructure_has_ForeignKey": [],
+    "DataStructure_has_DataStructureComponent": [
+        {
+            "identifier": {
+                "ddiIdentifier": {
+                    "dataIdentifier": "93096fcc-180d-4a55-85bc-150227b588ef_DataStructureComponent",
+                    "registrationAuthorityIdentifier": "int.dataartifex",
+                    "versionIdentifier": "1"
+                },
+                "nonDdiIdentifier": [],
+                "uri": {
+                    "value": "urn:dartfx:93096fcc-180d-4a55-85bc-150227b588ef_DataStructureComponent"
+                }
+            },
+            "semantic": [],
+            "isDefinedBy_RepresentedVariable": {
+                "displayLabel": [
+                    {
+                        "languageSpecificString": [
+                            {
+                                "content": "Yes / No / Dont' know"
+                            }
+                        ]
+                    }
+                ],
+                "identifier": {
+                    "ddiIdentifier": {
+                        "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_InstanceVariable_V1",
+                        "registrationAuthorityIdentifier": "int.dataartifex",
+                        "versionIdentifier": "1"
+                    },
+                    "nonDdiIdentifier": [
+                        {
+                            "type": "ddi-codebook",
+                            "value": "V1"
+                        }
+                    ],
+                    "uri": {
+                        "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_InstanceVariable_V1"
+                    }
+                },
+                "name": [
+                    {
+                        "name": "yesnodk"
+                    }
+                ],
+                "takesSubstantiveValues": [
+                    {
+                        "ddiReference": {
+                            "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_SubstantiveValueDomain_V1",
+                            "registrationAuthorityIdentifier": "int.dataartifex",
+                            "versionIdentifier": "1"
+                        },
+                        "validType": [],
+                        "isAssociationReference": true
+                    }
+                ]
+            }
+        }
+    ],
+    "DataStructure_has_ComponentPosition": [
+        {
+            "identifier": {
+                "ddiIdentifier": {
+                    "dataIdentifier": "93096fcc-180d-4a55-85bc-150227b588ef_ComponentPosition",
+                    "registrationAuthorityIdentifier": "int.dataartifex",
+                    "versionIdentifier": "1"
+                },
+                "nonDdiIdentifier": [],
+                "uri": {
+                    "value": "urn:dartfx:93096fcc-180d-4a55-85bc-150227b588ef_ComponentPosition"
+                }
+            },
+            "value": 1
+        }
+    ]
+},
+{
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "93096fcc-180d-4a55-85bc-150227b588ef_DataStructureComponent",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "nonDdiIdentifier": [],
+        "uri": {
+            "value": "urn:dartfx:93096fcc-180d-4a55-85bc-150227b588ef_DataStructureComponent"
+        }
+    },
+    "semantic": [],
+    "isDefinedBy_RepresentedVariable": {
+        "displayLabel": [
+            {
+                "languageSpecificString": [
+                    {
+                        "content": "Yes / No / Dont' know"
+                    }
+                ]
+            }
+        ],
+        "identifier": {
+            "ddiIdentifier": {
+                "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_InstanceVariable_V1",
+                "registrationAuthorityIdentifier": "int.dataartifex",
+                "versionIdentifier": "1"
+            },
+            "nonDdiIdentifier": [
+                {
+                    "type": "ddi-codebook",
+                    "value": "V1"
+                }
+            ],
+            "uri": {
+                "value": "urn:dartfx:bafa06b8-2731-4db8-90ab-289df1de44f2_InstanceVariable_V1"
+            }
+        },
+        "name": [
+            {
+                "name": "yesnodk"
+            }
+        ],
+        "takesSubstantiveValues": [
+            {
+                "ddiReference": {
+                    "dataIdentifier": "bafa06b8-2731-4db8-90ab-289df1de44f2_SubstantiveValueDomain_V1",
+                    "registrationAuthorityIdentifier": "int.dataartifex",
+                    "versionIdentifier": "1"
+                },
+                "validType": [],
+                "isAssociationReference": true
+            }
+        ]
+    }
+},
+{
+    "identifier": {
+        "ddiIdentifier": {
+            "dataIdentifier": "93096fcc-180d-4a55-85bc-150227b588ef_ComponentPosition",
+            "registrationAuthorityIdentifier": "int.dataartifex",
+            "versionIdentifier": "1"
+        },
+        "nonDdiIdentifier": [],
+        "uri": {
+            "value": "urn:dartfx:93096fcc-180d-4a55-85bc-150227b588ef_ComponentPosition"
+        }
+    },
+    "value": 1
+}
+]

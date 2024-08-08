@@ -9,18 +9,18 @@ to support the conversion of DDI-Codebook to CDI
 Only a subset of the specification is covered, 
 
 Author:
-     Pascal Heus (pascal.heus@postman.com)
+     Pascal Heus (https://github.com/kulnor)
 
 Contributors:
       <be_the_first!>
 
-Version: 0.0.1
+Version: 0.1.0
 
 How to use:
     - N/A
 
 Implementation notes:
-    - The dataclasses were generated using ChatGOT and Meta fron the XSD specifications
+    - The dataclasses were generated using meta.ai LLMs from the XSD specifications
     - Only a subset of the specification is covered
 
 Roadmap:
@@ -36,18 +36,17 @@ from abc import ABC
 from dataclasses import asdict, dataclass, field, fields
 from datetime import date
 from enum import Enum
+from functools import cache
 import json
 import logging
 import re
-from rdflib import Graph, Namespace
-from typing import Any, Optional, Union, get_args, get_type_hints, get_origin
+import uuid
+from rdflib import Graph, Literal, Namespace, RDF, URIRef, XSD
+from rdflib.collection import Collection
+from typing import Any, Optional, Tuple, Union, get_args, get_type_hints, get_origin
 from urllib.parse import urlparse
 
-import rdflib
-
-
 CDI = Namespace("http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/")
-
 
 @dataclass
 class AttributeInfo:
@@ -57,43 +56,50 @@ class AttributeInfo:
     name: str
     is_list: bool = None
     is_optional: bool = None
-    cls: Any = None
-    metadata: Any = None
+    cls: Any = None # the attribute or list class
+    metadata: Any = None # metadata from the field(...,metadata="")
+    
+    @property
+    def associated_class(self):
+        if self.metadata:
+            return self.metadata.get("association")    
 
 #
 # Resources
 #
 class DdiCdiResource:
-
-    def add_to_graph(self, g: rdflib.Graph):
-        """ 
-        Add this resource to an RDF graph.
-        """
-        for f in fields(self.__class__):
-            print(f.name, getattr(self.__class__, f.name))
-        pass
+    """The base class for all DDI-CDI resources.
+    
+    Equipped with numerous helper methods to facilitate processing.
+    
+    """
 
     @classmethod
-    def get_attribute_info(cls, attribute_name:str) -> AttributeInfo:
-        """Helper that infers information on an attribute type for instantiaion and processing.
+    @cache
+    def _get_attribute_info(cls, attribute_name:str) -> AttributeInfo:
+        """Internal helper that infers information on an attribute type for instantiaion and processing.
 
-        Relies on dataclasses annotations and Python typing package introspection.
+        Relies on dataclasses attribute annotations and Python typing package introspection.
+        
+        Note that we use the attribute field(...) 'metadata' to capture information specific to the DDI-CDI model
 
-        Returns a dictionary with the following keys:
-        - is_list: bool -- True if this attribute is repeatble
-        - is_optional: bool -- True if the attribute can be None
-        - cls: class -- The class of the attribute (should only have one)
-        - metadata: dict -- The metadata if specified in the field(metadata=) annotation 
         """
         #
         # A typical attribute is defined as 
-        #   name: Optional[list["ObjectName"]] = None
+        #   name: Optional[list["ObjectName"]] = field(... )
         # which translates into
         #   name_type_hints is typing.Optional[list['ObjectName']]
         #   --> origin is typing.Union
         #   --> args is the tuple (typinglist['ObjectName'], <class 'NoneType'>)
         #
         attribute_info= AttributeInfo(name=attribute_name)
+        # Field information
+        try:
+            field_info = next(f for f in fields(cls) if f.name == attribute_name)
+        except StopIteration:
+            raise Exception(f"{attribute_name} attribute not found on {cls.__name__}")
+        attribute_info.metadata = field_info.metadata
+        # Type hints
         attribute_type_hints = get_type_hints(cls).get(attribute_name)
         if attribute_type_hints:
             origin = get_origin(attribute_type_hints)
@@ -112,10 +118,10 @@ class DdiCdiResource:
                     args = list(get_args(attribute_type_hints))
                 else:
                     # More than one type is possible
-                    # We do not currently support this.....
-                    raise Exception(f"More than one possible type found for {attribute_type_hints}")
+                    # ... but we do not currently support this
+                    raise Exception(f"More than one type found for {attribute_type_hints}")
         else:
-            # This attribuites does not exists on the class
+            # This attributes does not exists on the class
             # Just ignore and return None
             logging.warning(f"No '{attribute_name}' attribute found on {cls.__name__}")
             return None
@@ -125,29 +131,99 @@ class DdiCdiResource:
             attribute_info.cls = args[0]
         else:
             attribute_info.cls = attribute_type_hints
-        # if the type was defined as ForwardRef
+        # if the type was defined using a ForwardRef, 
         # convert the string value to a class
         if isinstance(attribute_info.cls, str):
             attribute_info.cls = globals()[attribute_info.cls]
-        # Add metadata
-        # @TODO: add support for metadata
         # Done
         return attribute_info
 
-
-    def set_simple_identifier(self, ddi:str = None, nonddi:str = None, uri:str = None):
+    def add_association_reference(self, attribute_name:str, resource: "DdiCdiClass"):
+        """Helper to add an association reference to a list[AssociationReference] property.
+        
+        This ensures that the list[] has been initialized and that the resource is of the correct type.
+        The resource type is determined by property field metadata 'association' entry.
+        
+        Examples:
+            logical_record.add_association_reference('LogicalRecord_has_InstanceVariable', instance_variable)
+            represente_variable.add_association_reference('takesSentinelValues',sentinel_value_domain)
+        
+        Args:
+            property_name (str): _description_
+            resource (DdiCdiClass): _description_
         """
-        Helper to set basic values on an 'identifier' attribute.
+        attribute_info = self._get_attribute_info(attribute_name)
+        if attribute_info:
+            # make sure this is an AssociationReference
+            if attribute_info.cls is AssociationReference:
+                # check the target class from the field metadata association
+                if attribute_info.associated_class:
+                    # metadata can be a single entry or a comma seperated list of classes
+                    cls_names = attribute_info.associated_class.split(",")
+                    if type(resource).__name__ not in cls_names:
+                        raise Exception(f"{type(resource).__name__} is not a valid AssociatedReferenece target for {attribute_name}. Must be {attribute_info.associated_class}.")
+                else:
+                    raise Exception(f"Missing 'association' metadata on {self.__class__.__name__}.{attribute_name}")
+                # create the reference
+                association_reference = resource.get_association_reference()
+                # associate the reference
+                if attribute_info.is_list: # this is a list["AssociatedReference"]
+                    # initialize the list if needed
+                    if not getattr(self, attribute_name):
+                        setattr(self, attribute_name, [])
+                    # add
+                    getattr(self, attribute_name).append(association_reference)
+                else: # this is a "AssociatedReference"
+                    # set
+                    setattr(self, attribute_name, association_reference)
+            else:
+                raise Exception(f"{attribute_name} must be of type 'AssociationReference'")
+        else:
+            raise Exception(f"Attribute '{attribute_name}' not found on {self.__class__.__name__}")        
+
+    def get_association_reference(self) -> "AssociationReference":
+        """
+        Helper to instantiate an AssociationReference for this resource.
+        """
+        if self.identifier is not None:
+            if self.identifier.ddiIdentifier is not None: 
+                reference = AssociationReference(ddiReference=self.identifier.ddiIdentifier)
+                return reference
+
+    def get_ddi_identifer_value(self) -> str:
+        """
+        Helper to get the value of identifier.ddiIdentifier.dataIdentifier
+        """
+        if getattr(self,'identifier',None) is not None:
+            if getattr(self.identifier,'ddiIdentifier',None) is not None: 
+                return self.identifier.ddiIdentifier.dataIdentifier
+        return None
+
+    def get_uri(self) -> str:
+        """
+        Helper to get the value of identifier.uri.
+        """
+        if getattr(self,'identifier',None) is not None:
+            if getattr(self.identifier,'uri',None) is not None: 
+                return self.identifier.uri.value
+        return None
+    
+    def set_identifiers(self, ddi:str = None, nonddi:str = None, uri:str = None):
+        """
+        Helper to quickly set basic values on an 'identifier' attribute.
 
         In general, 'identifier' is alwway an optional non-repeatable Identifier, with the following expections:
         - InternationalIdentifier for CatalogDetail (inherits from Identifier)
-
+        
         Note that some default values for required attributes are set by the code below.
-        These are not part of the DDI_CDI specification, but necessary to instantiate the classes.
+        These are not part of the DDI-CDI specification, but necessary to instantiate the classes.
+        
+        As nonDdiIdentifier is repeatable, this will appends the the list.
+        You can use set_simple_identifier_nonddi with clear=True option if you need to reset.
 
         """
         attribute_name = 'identifier'
-        attribute_info = self.get_attribute_info(attribute_name)
+        attribute_info = self._get_attribute_info(attribute_name)
         if attribute_info:
             if attribute_info.is_list:
                 raise Exception(f"Repeatable attribute '{attribute_name}' not supported on {self.__class__.__name__}")
@@ -155,23 +231,20 @@ class DdiCdiResource:
                 # check if instantiated
                 if self.identifier is None:
                     self.identifier = attribute_info.cls()
-                    logging.debug(f"Created 'identifier' as {self.identifier.__class__.__name__}")
                 # set the value on various attributes
                 if ddi: # ddiIdentifer: a InternationalRegistrationDataIdentifier
                     if self.identifier.ddiIdentifier is None:
-                        self.identifier.ddiIdentifier = InternationalRegistrationDataIdentifier(dataIdentifier=ddi, registrationAuthorityIdentifier="int.dataartifex", versionIdentifier="0.0.0")
-                        logging.debug(f"Created 'ddiIdentifier' as {self.identifier.ddiIdentifier.__class__.__name__}")
+                        self.identifier.ddiIdentifier = InternationalRegistrationDataIdentifier(dataIdentifier=ddi, registrationAuthorityIdentifier="int.dataartifex", versionIdentifier="1")
                     else:
                         self.identifier.ddiIdentifier.dataIdentifier = ddi
                 if nonddi: # nonDdiIdentifier: NonDdiIdentifier
                     if self.identifier.nonDdiIdentifier is None:
                         self.identifier.nonDdiIdentifier = list()
-                        logging.debug(f"Created 'nonDdiIdentifier' as {self.identifier.nonDdiIdentifier.__class__.__name__}")
+                    # add to the list
                     self.identifier.nonDdiIdentifier.append(NonDdiIdentifier(value=nonddi, type="generic"))
                 if uri: # uri: XsdAnyUri
                     if self.identifier.uri is None:
                         self.identifier.uri = XsdAnyUri(value=uri)
-                        logging.debug(f"Created 'uri' as {self.identifier.uri.__class__.__name__}")
                     else:
                         self.identifier.uri.value = uri
         else:
@@ -179,24 +252,27 @@ class DdiCdiResource:
             logging.warning(f"Attribute '{attribute_name}' not found on {self.__class__.__name__}")
         return self.identifier
 
-    def set_simple_identifier_ddi(self, value:str, authority:str = None, version:str = None):
-        if self.set_simple_identifier(ddi=value):
+    def set_ddi_identifier(self, value:str, authority:str = None, version:str = None):
+        """Helper to set the identifier.ddiIdentifier"""
+        if self.set_identifiers(ddi=value):
             if authority:
                 self.identifier.ddiIdentifier.registrationAuthorityIdentifier = authority
             if version:
                 self.identifier.ddiIdentifier.versionIdentifier = version
             return self.identifier.ddiIdentifier
 
-    def set_simple_identifier_nonddi(self, value:str, type=None, clear=False):
+    def add_nonddi_identifier(self, value:str, type=None, clear=False):
+        """Helper to add a identifier.nonDdiIdentifier"""
         if clear:
             self.identifier.nonDdiIdentifier = None
-        if self.set_simple_identifier(nonddi=value):
+        if self.set_identifiers(nonddi=value):
             if type:
                 self.identifier.nonDdiIdentifier[-1].type = type
             return self.identifier.nonDdiIdentifier[-1] # last entry in list
 
-    def set_simple_identifier_uri(self, value:str):
-        if self.set_simple_identifier(uri=value):
+    def set_uri(self, value:str):
+        """Helper to set the identifier.uri"""
+        if self.set_identifiers(uri=value):
             return self.identifier.uri
 
     def set_simple_display_label(self, value:str):
@@ -208,7 +284,7 @@ class DdiCdiResource:
         Returns the instantiated resource
         """
         attribute_name = 'displayLabel'
-        attribute_info = self.get_attribute_info(attribute_name)
+        attribute_info = self._get_attribute_info(attribute_name)
         if attribute_info:
             # instantiate the class
             if attribute_info.cls is LabelForDisplay:
@@ -238,7 +314,7 @@ class DdiCdiResource:
         Returns the instantiated resource
         """
         attribute_name = 'name'
-        attribute_info = self.get_attribute_info(attribute_name)
+        attribute_info = self._get_attribute_info(attribute_name)
         if attribute_info:
             # instantiate the class
             if attribute_info.cls is ObjectName:
@@ -260,24 +336,146 @@ class DdiCdiResource:
             logging.warning(f"Attribute '{attribute_name}' not found on {self.__class__.__name__}")
             return None
 
-    #
-    # JSON SERIALIZER
-    #
     def as_dict(self):
+        """Returns the object as a dictionary"""
         return asdict(self, dict_factory=lambda x: {k: v for (k, v) in x if v is not None})
 
+    #
+    # JSON SERIALIZER
+    # This is unofficial JSON serialization mainly for development purposes
+    #
     def as_json(self, indent=None):
         return json.dumps(self.as_dict(),indent=indent)
 
     def save_json(self, filepath, indent=4):
         with open(filepath, 'w') as f:
             json.dump(self.as_dict(), f, indent=indent)
+            
+    #
+    # RDF SERIALIZER
+    # 
+    def add_to_rdf_graph(self, g:Graph) -> URIRef:
+        """ 
+        Add this resource to an RDF graph.
+        """
+        # create the resource subject
+        g.bind("cdi", CDI)
+        subject = self.get_uriref()
+        triple = (subject, RDF.type, CDI[self.__class__.__name__])
+        # if resource already in the graph, just return the reference
+        if triple in g:
+            return subject
+        #logging.debug(f"Adding {triple[0]} {triple[2]} to RDF graph") 
+        g.add(triple)
+        
+        for attribute in fields(self): # iterate over all fields (attributes)
+            attribute_value = getattr(self, attribute.name) 
+            if attribute_value: # if the attribute is not None or empty list
+                predicate = CDI[attribute.name] # the predicate is based on the attribute name
+                attribute_info = self._get_attribute_info(attribute.name)
+                # if not a list, convert to a single entry list so we can iterate
+                if not attribute_info.is_list:
+                    attribute_value_items = [attribute_value]
+                else:
+                    attribute_value_items = attribute_value
+                # this array will collect all the objects that need to be added
+                objects = [] 
+                # iterate over all values and add
+                for value in attribute_value_items:
+                    if issubclass(attribute_info.cls, DdiCdiClass): # the attribute contains DdiCdiClass
+                        uriref = value.add_to_rdf_graph(g)
+                        objects.append(uriref)
+                    elif issubclass(attribute_info.cls, DdiCdiDataType): # the attribute is a DdiCdiDataType
+                        uriref = value.add_to_rdf_graph(g)
+                        objects.append(uriref)
+                    elif issubclass(attribute_info.cls, DdiCdiResource):
+                        logging.warning(f"Unexpected DdiCdiResource {attribute_info.cls}")
+                        uriref = value.add_to_rdf_graph(g)
+                        objects.append(uriref)
+                    elif issubclass(attribute_info.cls, str):
+                        objects.append(Literal(attribute_value, datatype=XSD.string))
+                    elif issubclass(attribute_info.cls, int):
+                        objects.append(Literal(attribute_value, datatype=XSD.integer))
+                    elif issubclass(attribute_info.cls, float):
+                        objects.append(Literal(attribute_value, datatype=XSD.float))
+                    elif issubclass(attribute_info.cls, bool):
+                        objects.append(Literal(attribute_value, datatype=XSD.boolean))
+                    else:
+                        objects.append(Literal(f"Other {attribute_info.cls}"))
+                # add to this resource
+                if attribute_info.is_list:
+                    # Create a list node with a URIRef based on the subject and attribute
+                    # Do not use blank node.
+                    list_node = URIRef(f"{str(subject)}_{attribute.name}List")
+                    rdf_list = Collection(g, list_node, objects)  # noqa: F841
+                    g.add((subject, predicate, list_node)) # add the list_node, not rdf_list
+                else:
+                    # add single entry (there can only be one entry in this case)
+                    g.add((subject, predicate, objects[0]))
+        # return the URIRef                
+        return subject
+    
+    def get_uriref(self, uri_prefix:str="urn:dartfx:") -> URIRef:
+        """Create a URIRef for this resource.
+        
+        If the resource has an 'identifier' attribute, the identifier.uri is used if set.
+        Alternatively, the identifier.ddiIdentifier value is used as a basis for the uri value.
+        Otherwise a random UUID is used to generate one.
+
+        """
+        if self.get_uri(): # use uri
+            return URIRef(self.get_uri())
+        elif self.get_ddi_identifer_value(): # use ddiIdentifier value
+            return URIRef(f"{uri_prefix}{self.get_ddi_identifer_value()}")
+        else: # generate a random uuid based URI
+            if not getattr(self,'_generated_uriref',None): # only do this once!
+                self._generated_uriref = URIRef(f"{uri_prefix}{str(uuid.uuid4())}_{self.__class__.__name__}")
+            return self._generated_uriref
 
     
 class DdiCdiClass(DdiCdiResource):
-    pass
+    """
+    Base class for all CDI classes.
+    """
+
+    @classmethod
+    def factory(cls, id_prefix=str(uuid.uuid4()), id_suffix=None, base_uri:str="urn:dartfx:", non_ddi_id=None, non_ddi_id_type=None, *args, **kwargs) -> "DdiCdiClass":
+        """Helper method to instantiate a DDI-CDI class and its set of identifiers. 
+
+        Args:
+            cls: The DDI-CDI class to instantiate.
+            id_prefix (optional): A prefix for the unique indetifier. Defaults to str(uuid.uuid4()).
+            id_suffix (optional): A suffix for the unique identifier. Defaults to None.
+            base_uri (optional): The base URI prefix which will be combined with the unique identifier. Defaults to "urn:dartfx:".
+            non_ddi_id (optional): A non-DDI identifier. Defaults to None.
+            non_ddi_id_type (optional): If applicable, the non-DDI indentifier type. Defaults to None.
+            *args: Positional arguments to pass to the class constructor.
+            **kwargs: Keyword arguments to pass to the class constructor.
+
+        Raises:
+            ValueError: if the class is not an instance of DdiCdiClass
+
+        Returns:
+            cdi_resource: the instantiated and initialized resource
+        """
+        cdi_resource = cls(*args, **kwargs)
+        if not isinstance(cdi_resource, DdiCdiClass):
+            raise ValueError("The resource must be a DdiCdiClass") 
+        cdi_resource_uid = f"{id_prefix}_{cdi_resource.__class__.__name__}"
+        if id_suffix:
+            cdi_resource_uid += f"_{id_suffix}"        
+        cdi_resource.set_ddi_identifier(cdi_resource_uid)
+        cdi_resource_uri = f"{base_uri}{cdi_resource_uid}"
+        cdi_resource.set_uri(cdi_resource_uri)
+        if non_ddi_id:
+            cdi_resource.add_nonddi_identifier(non_ddi_id, type=non_ddi_id_type)
+        return cdi_resource
+
 
 class DdiCdiDataType(DdiCdiResource):
+    """
+    Base class for all CDI data types.
+    """
     pass
 
 #
@@ -309,6 +507,7 @@ class CatalogDetails(DdiCdiClass):
     title: Optional["InternationalString"] = None  # Full authoritative title. List any additional titles for this item as alternativeTitle.
     typeOfResource: Optional[list["ControlledVocabularyEntry"]] = None  # Provide the type of the resource. This supports the use of a controlled vocabulary. It should be appropriate to the level of the annotation.
 
+ 
 @dataclass
 class ComponentPosition(DdiCdiClass):
     """
@@ -316,7 +515,12 @@ class ComponentPosition(DdiCdiClass):
     ."""
     identifier: "Identifier" = None # Identifier for objects requiring short- or long-lasting referencing and management.
     value: int = None # Index value of the member in an ordered array.
-    indexes_DataStructureComponent: "DataStructureComponent" = field(metadata={"association": "DataStructureComponent"}, default=None) #
+    indexesDataStructureComponent: "DataStructureComponent" = field(metadata={"association": "DataStructureComponent"}, default=None) #
+    
+    def set_data_structure_component(self, data_structure_component: "DataStructureComponent"):
+        if not isinstance(data_structure_component, DataStructureComponent):
+            raise ValueError("The data structure component must be a DataStructureComponent")
+        self.add_association_reference("indexesDataStructureComponent", data_structure_component)
 
 @dataclass
 class Concept(DdiCdiClass):
@@ -336,7 +540,7 @@ class Concept(DdiCdiClass):
     displayLabel: Optional[list["LabelForDisplay"]] = None  # A human-readable display label for the object. Supports the use of multiple languages. Repeat for labels with different content, for example, labels with differing length limitations.
     externalDefinition: Optional["Reference"] = None  # A reference to an external definition of a concept (that is, a concept which is described outside the content of the DDI-CDI metadata description). An example is a SKOS concept. The definition property is assumed to duplicate the external one referenced if externalDefinition is used. Other corresponding properties are assumed to be included unchanged if used.
     identifier: Optional["Identifier"] = None  # Identifier for objects requiring short- or long-lasting referencing and management.
-    name: Optional[list["ObjectName"]] = None  # Human understandable name (linguistic signifier, word
+    name: Optional[list["ObjectName"]] = None  # Human understandable name (linguistic signifier, word)
 
 @dataclass
 class ConceptSystem(DdiCdiClass):
@@ -351,7 +555,7 @@ class ConceptSystem(DdiCdiClass):
     ===================
     Note that this class can be used with concepts, classifications, universes, populations, unit types and any other class that extends from concept.
     """
-    allowsDuplicates: bool  # If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical “bag” permits duplicates and is unordered - a “set” does not have duplicates and may be ordered.)
+    allowsDuplicates: bool = field(default=False)  # If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical “bag” permits duplicates and is unordered - a “set” does not have duplicates and may be ordered.)
     catalogDetails: Optional["CatalogDetails"] = None  # Bundles the information useful for a data catalog entry. Examples would be creator, contributor, title, copyright, embargo, and license information. A set of information useful for attribution, data discovery, and access. This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.
     externalDefinition: Optional["Reference"] = None  # A reference to an external definition of a concept (that is, a concept which is described outside the content of the DDI-CDI metadata description). An example is a SKOS concept. The definition property is assumed to duplicate the external one referenced if externalDefinition is used. Other corresponding properties are assumed to be included unchanged if used.
     identifier: Optional["Identifier"] = None  # Identifier for objects requiring short- or long-lasting referencing and management.
@@ -359,7 +563,36 @@ class ConceptSystem(DdiCdiClass):
     purpose: Optional["InternationalString"] = None  # Intent or reason for the object/the description of the object.
     isDefinedBy_Concept: Optional[list["Concept"]] = None  # Concept system is defined by zero to many concepts. The conceptual basis for the collection of members.
     has_Concept: Optional[list["Concept"]] = None  # Concept system has zero to many concepts.
+    
 
+@dataclass
+class CategorySet(ConceptSystem):
+    """Definition
+    ============
+    Concept system where the underlying concepts are categories."""
+    hasCategory: list["AssociationReference"] = field(default_factory=list, metadata={"association": "Category"})  
+    hasCategoryPosition: list["AssociationReference"] = field(default_factory=list, metadata={"association": "CategoryPosition"})
+    
+    def add_category(self, category):
+        """Helper to add a Category association reference to hasCategory."""
+        self.add_association_reference("hasCategory", category)
+
+class Category(Concept):
+    """Definition 
+    ============ 
+    Concept whose role is to define and measure a characteristic."""
+    descriptiveText: "InternationalString" = field(default=None)  # A short natural language account of the characteristics of the object.
+   
+    
+@dataclass
+class CategoryPosition(DdiCdiClass):
+    """Definition
+    ============
+    Assigns a sequence number to a category within a list."""
+    identifier: "Identifier" = field(default=None)  # Identifier for objects requiring short- or long-lasting referencing and management.
+    value: int = field(default=None)  # Index value of the member in an ordered array.
+    indexesCategory: "AssociationReference" = field(default=None, metadata={"association":"Category"})  # 
+    
 @dataclass
 class ConceptualDomain(DdiCdiClass):
     """
@@ -425,13 +658,19 @@ class DataSet(DdiCdiClass):
     """
     Organized collection of data based on keys.
     """
-    catalogDetails: "CatalogDetails"
-    identifier: "Identifier"
-    isStructuredBy_DataStructure: list["DataStructure"]
-    has_DataPoint: list["DataPoint"]
-    has_Key: list["Key"]
-
-
+    catalogDetails: "CatalogDetails" = field(default=None, metadata={"association": "CatalogDetails"})
+    identifier: "Identifier" = field(default=None, metadata={"association": "Identifier"})
+    isStructuredBy_DataStructure: list["DataStructure"] = field(default_factory=list)
+    has_DataPoint: list["DataPoint"] = field(default_factory=list, metadata={"association": "DataPoint"})
+    has_Key: list["Key"] = field(default_factory=list, metadata={"association": "Key"})
+    
+    def add_data_structure(self, data_structure: "DataStructure"):
+        if not isinstance(data_structure, DataStructure):
+            raise TypeError("data_structure must be of type DataStructure")
+        if self.isStructuredBy_DataStructure is None:
+            self.isStructuredBy_DataStructure = []
+        self.isStructuredBy_DataStructure.append(data_structure)
+        
 @dataclass
 class DataStore(DdiCdiClass):
     """
@@ -466,10 +705,13 @@ class DataStructureComponent(DdiCdiClass):
     =================== 
     A represented variable can have different roles in different data structures. For instance, the variable sex can be a measure in a wide data structure and a dimension in a dimensional data structure.
     """
-    identifier: "Identifier"  # Identifier for objects requiring short- or long-lasting referencing and management.
-    semantic: list["PairedControlledVocabularyEntry"]  # Qualifies the purpose or use expressed as a paired external controlled vocabulary.
-    specialization: "SpecializationRole"  # The role played by the component for the data set for purposes of harmonization and integration, typically regarding geography, time, etc.
-    isDefinedBy_RepresentedVariable: "RepresentedVariable" = field(metadata={"association": "RepresentedVariable"})  # Data structure component is defined by zero to one represented variable.
+    identifier: "Identifier" = field(default=None) # Identifier for objects requiring short- or long-lasting referencing and management.
+    semantic: list["PairedControlledVocabularyEntry"] = field(default_factory=list) # Qualifies the purpose or use expressed as a paired external controlled vocabulary.
+    specialization: "SpecializationRole" = field(default=None) # The role played by the component for the data set for purposes of harmonization and integration, typically regarding geography, time, etc.
+    isDefinedBy_RepresentedVariable: "RepresentedVariable" = field(default=None)  # Data structure component is defined by zero to one represented variable.
+    
+    def set_represented_variable(self, represented_variable: "RepresentedVariable"):
+        self.isDefinedBy_RepresentedVariable = represented_variable
 
 @dataclass
 class DataStructure(DataStructureComponent):
@@ -479,8 +721,69 @@ class DataStructure(DataStructureComponent):
     DataStructure_has_ForeignKey: list["ForeignKey"] = field(default_factory=list) #
     DataStructure_has_DataStructureComponent: list["DataStructureComponent"] = field(default_factory=list) #
     DataStructure_has_ComponentPosition: list["ComponentPosition"] = field(default_factory=list) #
-    DataStructure_has_PrimaryKey: "PrimaryKey" = None #
+    DataStructure_has_PrimaryKey: "PrimaryKey" = field(default=None) #
+    
+    def add_data_structure_component(self, data_structure_component: "DataStructureComponent"):
+        if not isinstance(data_structure_component, DataStructureComponent):
+            raise ValueError("The resource must be an an DataStructureComponent")
+        if self.DataStructure_has_DataStructureComponent is None:
+            self.DataStructure_has_DataStructureComponent = []
+        self.DataStructure_has_DataStructureComponent.append(data_structure_component)
 
+    def add_component_position(self, component_position: "ComponentPosition"):
+        if not isinstance(component_position, ComponentPosition):
+            raise ValueError("The resource must be an an ComponentPosition")
+        if self.DataStructure_has_ComponentPosition is None:
+            self.DataStructure_has_ComponentPosition = []
+        self.DataStructure_has_ComponentPosition.append(component_position)
+    
+    def add_represented_variable(self, represented_variable: "RepresentedVariable", position_value: None) -> Tuple[DataStructureComponent, ComponentPosition]:
+        """
+        Helper to add a represented variable to a data structure.
+        
+        This addes both the data structure component and the component position.
+        
+        Returns:
+            Tuple[DataStructureComponent, ComponentPosition]
+        """
+        data_structure_component = DataStructureComponent.factory()
+        data_structure_component.set_represented_variable(represented_variable)
+        self.add_data_structure_component(data_structure_component)
+        if position_value:
+            component_position = ComponentPosition.factory()
+            component_position.value = position_value
+            self.add_component_position(component_position) 
+        return (data_structure_component, component_position)        
+
+@dataclass
+class DimensionalDataSet(DataSet):
+    """Definition ============
+    Organized collection of multidimensional data. It is structured by a dimensional data structure.
+
+    Examples ==========
+    A dimensional dataset with Income values in each data point, where the dimensions organizing the data points are Sex and Marital Status.
+
+    Explanatory notes
+    ===================
+    Similar to Structural N-Cube.
+    """
+    name: list["ObjectName"] = field(default_factory=list)  # Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.
+    represents: list["AssociationReference"] = field(default_factory=list, metadata={"association": "ScopedMeasure"})  # 
+
+
+@dataclass
+class DimensionalDataStructure(DataStructure):
+    """Definition
+    ============
+    Structure of a dimensional data set (organized collection of multidimensional data). It is described by dimension, measure and attribute components.
+    
+    Examples
+    ==========
+    The structure described by [City, Average Income, Total Population] where City is a dimension and Average Income and Total Population are measures.
+    """
+    DimensionalDataStructure_uses_DimensionGroup: list["AssociationReference"] = field(default_factory=list, metadata={"association": "DimensionGroup"})
+    
+        
 @dataclass
 class ForeignKey(DdiCdiClass):
     """
@@ -493,6 +796,54 @@ class ForeignKey(DdiCdiClass):
     identifier: "Identifier" = None  # Identifier for objects requiring short- or long-lasting referencing and management.
     isComposedOf_ForeignKeyComponent: list["ForeignKeyComponent"] = field(default_factory=list)  #
 
+@dataclass
+class EnumerationDomain(DdiCdiClass):
+    """Definition 
+    ============ 
+    A base class acting as an extension point to allow all codifications (codelist, statistical classification, etc.) to be understood as enumerated value domains.
+    """
+    identifier: "Identifier" = field(default=None)  # Identifier for objects requiring short- or long-lasting referencing and management.
+    name: list["ObjectName"] = field(default_factory=list)  # Human understandable name (liguistic signifier, word, phrase, or mnemonic).
+    purpose: "InternationalString" = field(default=None)  # Intent or reason for the object/the description of the object.
+    usesLevelStructure: "AssociationReference" = field(default=None, metadata={"association": "LevelStructure"})  # Has meaningful level to which members belong.
+    referencesCategorySet: "AssociationReference" = field(default=None, metadata={"association": "CategorySet"})  # Category set associated with the enumeration.
+    isDefinedByConcept: list["AssociationReference"] = field(default_factory=list, metadata={"association": "Concept"})  # The conceptual basis for the collection of members.
+    
+    def set_category_set(self, category_set: "CategorySet") -> None:
+        """Helper to set a CategorySet association reference on referencesCategorySet."""
+        self.add_association_reference("referencesCategorySet", category_set)
+
+@dataclass
+class CodeList(EnumerationDomain):
+    """Definition 
+    ============ 
+    List of codes and associated categories."""
+    allowsDuplicates: bool = field(default=False)  # If value is False, the members are unique within the collection - if True, there may be duplicates.
+    hasCodePosition: list["AssociationReference"] = field(default_factory=list, metadata={"association": "CodePosition"})  # 
+    hasCode: list["AssociationReference"] = field(default_factory=list, metadata={"association": "Code"})  # 
+    
+    def add_code(self, code: "Code") -> None:
+        """Helper to add a Code association reference to hasCode."""
+        self.add_association_reference("hasCode", code)
+    
+
+@dataclass
+class Code(DdiCdiClass):
+    """Definition 
+    ============ 
+    The characters used as a symbol to designate a category within a codelist or classification."""
+    identifier: "Identifier" = field(default=None)  # Identifier for objects requiring short- or long-lasting referencing and management.
+    denotesCategory: "AssociationReference" = field(default=None, metadata={"association": "Category"})  # A definition for the code. Specialization of denotes for categories.
+    usesNotation: "AssociationReference" = field(default=None, metadata={"association": "Notation"})  #
+    
+    def set_category(self, category: "Category") -> None:
+        """Helper to set a Category association reference on denotesCategory."""
+        self.add_association_reference("denotesCategory", category)
+        
+    def set_notation(self, notation: "Notation") -> None:
+        """Helper to set a Notation association reference on usesNotation."""
+        self.add_association_reference("usesNotation", notation)
+    
 @dataclass
 class ForeignKeyComponent(DdiCdiClass):
     """
@@ -520,7 +871,7 @@ class InstanceValue(DdiCdiClass):
     content: Optional["TypedString"] = None  # The content of this value expressed as a string.
     identifier: Optional["Identifier"] = None  # Identifier for objects requiring short- or long-lasting referencing and management.
     whiteSpace: Optional["WhiteSpaceRule"] = None  # The usual setting "collapse" states that leading and trailing white space will be removed and multiple adjacent white spaces will be treated as a single white space. When setting to "replace" all occurrences of #x9 (tab), #xA (line feed) and #xD (carriage return) are replaced with #x20 (space) but leading and trailing spaces will be retained. If the existence of any of these white spaces is critical to the understanding of the content, change the value of this attribute to "preserve".
-    hasValueFrom_ValueDomain: Optional["AssociationReference"] = field(default=None, metadata={"association":"ValueDomain"})
+    hasValueFrom_ValueDomain: Optional["AssociationReference"] = field(default=None, metadata={"association":"ValueDomain, DescriptorValueDomain, ReferenceValueDomain, SentinelValueDomain, SubstantiveValueDomain"})
     isStoredIn_DataPoint: Optional["AssociationReference"] = field(default=None, metadata={"association":"DataPoint"})
     represents_ConceptualValue: Optional["AssociationReference"] = field(default=None, metadata={"association":"ConceptualValue"})
 
@@ -539,6 +890,7 @@ class RepresentedVariable(ConceptualVariable):
     simpleUnitOfMeasure: str = field(default=None)  # The unit in which the data values are measured (kg, pound, euro), expressed as a simple string.
     takesSentinelValues: list["AssociationReference"] =  field(default=None, metadata={"association":"SentinelValueDomain"})  # A represented variable may have more than one sets of sentinel value domains, one for each type of software platform on which related instance variables might be instantiated.
     takesSubstantiveValues: list["AssociationReference"] =  field(default=None, metadata={"association":"SubstantiveValueDomain"})  # The substantive representation (substantive value domain) of the variable.
+        
 
 @dataclass
 class InstanceVariable(RepresentedVariable):
@@ -596,6 +948,36 @@ class KeyMember(InstanceValue):
     """
     isBasedOn_DataStructureComponent: list["AssociationReference"] = field(default=None, metadata={"association": "DataStructureComponent"})
 
+
+@dataclass
+class KeyValueDataStore(DataSet):
+    """    Definition 
+    ==========
+    Organized collection of key-value data. It is structured by a key value structure.
+
+    Examples
+    ========
+    A unit key-value datastore where each instance key corresponds to a data point capturing a different characteristic of a unit.
+
+    Explanatory notes
+    ==================
+    A key-value datastore is just a collection of key-value pairs, i.e. instance keys and reference values. 
+    Each instance key encodes all relevant information about the context, the unit of interest and the variable associated with the reference value of a given data point.
+    """
+    pass
+
+@dataclass
+class KeyValueStructure(DataStructure):
+    """Definition
+    ============
+    Structure of a key-value datastore (organized collection of key-value data). It is described by identifier, contextual, synthetic id, dimension, variable descriptor and variable value components.
+    
+    Examples
+    ==========
+    The structure described by [Income distribution, Unit id, Period, Income] where Income distribution is the contextual component, Unit id identifies a statistical unit, period is a effective period and Income is the variable of interest.
+    """
+    pass
+
 @dataclass
 class LogicalRecord(DdiCdiClass):
     """
@@ -605,6 +987,75 @@ class LogicalRecord(DdiCdiClass):
     LogicalRecord_organizes_DataSet: list["AssociationReference"] = field(default=None, metadata={"association":"DataSet"})
     LogicalRecord_isDefinedBy_Concept: list["AssociationReference"] = field(default=None, metadata={"association":"Concept"}) # The conceptual basis for the collection of members.
     LogicalRecord_has_InstanceVariable: list["AssociationReference"] = field(default=None, metadata={"association":"InstanceVariable"})
+    
+    
+    def add_dataset(self, dataset: DataSet):
+        if not isinstance(dataset, DataSet):
+            raise ValueError("The resource must be an an DataSet")
+        if dataset.identifier.ddiIdentifier is None:
+            raise ValueError("The DataSet identifier.ddiIdentifier must be set to be used as a reference")
+        if self.LogicalRecord_organizes_DataSet is None:
+            self.LogicalRecord_organizes_DataSet = []
+        self.LogicalRecord_organizes_DataSet.append(AssociationReference(ddiReference=dataset.identifier.ddiIdentifier))
+    
+    def add_variable(self, instance_variable: InstanceVariable):
+        """Adds an InstanceVariable to the LogicalRecord_has_InstanceVariable.
+        
+        Note: this does not check for duplicates
+
+        Args:
+            instance_variable (InstanceVariable): The instance variable to add
+
+        Raises:
+            ValueError: if the resource is not an InstanceVariable
+            ValueError: if the InstanceVariable identifier.ddiIdentifier is not set
+        """
+        if not isinstance(instance_variable, InstanceVariable):
+            raise ValueError("The resource must be an an InstanceVariable")
+        if instance_variable.identifier.ddiIdentifier is None:
+            raise ValueError("The InstanceVariable identifier.ddiIdentifier must be set to be used as a reference")
+        if self.LogicalRecord_has_InstanceVariable is None:
+            self.LogicalRecord_has_InstanceVariable = []
+        #self.LogicalRecord_has_InstanceVariable.append(AssociationReference(ddiReference=instance_variable.identifier.ddiIdentifier))
+        self.LogicalRecord_has_InstanceVariable.append(instance_variable.get_association_reference())
+
+@dataclass
+class LongDataSet(DataSet):
+    """Definition
+    ============
+    Organized collection of long data. It is structured by a long data structure.
+
+    Examples
+    ========
+    A unit dataset where each row corresponds to a set of data points capturing different characteristics of a unit, some of which can be transposed into variable descriptor and variable value components."""
+    pass
+
+
+@dataclass
+class LongDataStructure(DataStructure):
+    """Definition
+    ============
+    Structure of a long dataset (organized collection of long data). It is described by identifier, measure, attribute, variable descriptor and variable value components.
+    
+    Examples
+    ==========
+    The structure described by [Unit id, Income, Province, Variable name, Variable value] where Unit id identifies a statistical unit, Income and Province are two instance variables capturing characteristics, and other instance variables are represented by Variable name (a variable descriptor component) and Variable Value (a variable value component).
+    """
+    pass
+    
+@dataclass
+class Notation(DdiCdiClass):
+    """Definition 
+    ============ 
+    Representation of a category in the context of a code or a classification item, as opposed of the corresponding instance value which would appear when used in a dataset.
+    """
+    content: "TypedString" = field(default=None)  # The actual content of this value as a string.
+    identifier: "Identifier" = field(default=None)  # Identifier for objects requiring short- or long-lasting referencing and management.
+    whiteSpace: "WhiteSpaceRule" = field(default=None)  # The usual setting "collapse" states that leading and trailing white space will be removed and multiple adjacent white spaces will be treated as a single white space. When setting to "replace" all occurrences of #x9 (tab), #xA (line feed) and #xD (carriage return) are replaced with #x20 (space) but leading and trailing spaces will be retained. If the existence of any of these white spaces is critical to the understanding of the content, change the value of this attribute to "preserve".
+    representsCategory: list["AssociationReference"] = field(default_factory=list, metadata={"association": "Category"})  # Notation represents zero to many categories.
+    
+    def set_category(self, category: "Category"):
+        self.add_association_reference("representsCategory", category)
 
 @dataclass
 class PhysicalDataSet(DdiCdiClass):
@@ -819,6 +1270,61 @@ class Unit(DdiCdiClass):
     name: list["ObjectName"] = field(default_factory=list)  # Human understandable name (linguistic signifier, word, phrase, or mnemonic).
     has_UnitType: list["UnitType"] = field(default_factory=list, metadata={"association": "UnitType"})  # The unit type of the unit.
 
+
+@dataclass
+class ValueDomain(DdiCdiClass):
+    """Definition 
+    ============ 
+    Set of permissible values for a variable (adapted from ISO/IEC 11179).  
+    
+    Examples 
+    ========== 
+    Age categories with a numeric code list; Age in years; Young, Middle-aged and Old.  
+    
+    Explanatory notes 
+    =================== 
+    The values can be described by enumeration or by an expression. Value domains can be either substantive/sentinel, or described/enumeration."""
+    catalogDetails: "CatalogDetails" = field(default=None)  # Bundles the information useful for a data catalog entry.
+    displayLabel: list["LabelForDisplay"] = field(default_factory=list)  # A human-readable display label for the object. Supports the use of multiple languages.
+    identifier: "Identifier" = field(default=None)  # Identifier for objects requiring short- or long-lasting referencing and management.
+    recommendedDataType: list["ControlledVocabularyEntry"] = field(default_factory=list)  # The data types that are recommended for use with this domain.
+   
+@dataclass
+class SentinelValueDomain(ValueDomain):
+    """Definition 
+    ============ 
+    Value domain for a sentinel conceptual domain.   
+    
+    Examples 
+    ========== 
+    Missing categories expressed as codes: -9, refused; -8, Don't Know; for a numeric variable with values greater than zero.    
+    
+    Explanatory notes 
+    =================== 
+    Sentinel values are defined in ISO 11404 as "element of a value space that is not completely consistent with a datatype's properties and characterizing operations...". A common example would be codes for missing values. Sentinel values are used for processing, not to describe subject matter. Typical examples include missing values or invalid entry codes. Sentinel value domains are typically of the enumerated type, but they can be the described type, too."""
+    platformType: "ControlledVocabularyEntry" = field(default=None)  # The type of platform under which sentinel codes will be used.
+    takesConceptsFrom: "AssociationReference" = field(default=None, metadata={"association": "SentinelConceptualDomain"})  # Corresponding conceptual definition given by a sentinel conceptual domain.
+    takesValuesFrom: "AssociationReference" = field(default=None, metadata={"association": "CodeList,EnumerationDomain,StatisticalClassification"})  # Any subtype of an enumeration domain enumerating the set of valid values.
+    isDescribedBy: "AssociationReference" = field(default=None, metadata={"association": "ValueAndConceptDescription"})  # A formal description of the set of valid values - for described value domains.
+    
+@dataclass
+class SubstantiveValueDomain(ValueDomain):
+    """Definition 
+    ==========
+    Value domain for a substantive conceptual domain. Typically a description and/or enumeration of allowed values of interest.  
+    
+    Examples 
+    ========
+    All real decimal numbers relating to the subject matter of interest between 0 and 1 specified in Arabic numerals. (From the Generic Statistical Information Model [GSIM] 1.1). The codes "M" male and "F" for female .   
+    
+    Explanatory notes 
+    =================
+    In DDI-CDI the value domain for a variable is separated into "substantive" and "sentinel" values. Substantive values are the values of primary interest. Sentinel values are additional values that may carry supplementary information, such as reasons for missing. This duality is described in ISO 11404. Substantive values for height might be real numbers expressed in meters. The full value domain might also include codes for different kinds of missing values - one code for "refused" and another for "don’t know". Sentinel values may also convey some substantive information and at the same time represent missing values."""
+    takesValuesFrom: "AssociationReference" = field(default=None, metadata={"association": "CodeList,EnumerationDomain,StatisticalClassification"})  # Any subtype of an enumeration domain enumerating the set of valid values.
+    takesConceptsFrom: "AssociationReference" = field(default=None, metadata={"association": "SubstantiveConceptualDomain"})  # Corresponding conceptual definition given by an substantive conceptual domain.
+    isDescribedBy: "AssociationReference" = field(default=None, metadata={"association": "ValueAndConceptDescription"})  # A formal description of the set of valid values - for described value domains.
+
+
 @dataclass
 class ValueAndConceptDescription(DdiCdiClass):
     """
@@ -855,8 +1361,34 @@ class VariableStructure(DdiCdiClass):
     specification: "StructureSpecification" = None # Provides information on reflexivity, transitivity, and symmetry of relationship using a descriptive term from an enumerated list. Use if all relations within this relation structure are of the same specification.
     topology: "ControlledVocabularyEntry" = None # Indicates the form of the associations among members of the collection. Specifies the way in which constituent parts are interrelated or arranged.
     totality: "StructureExtent" = None # Indicates whether the related collections are comprehensive in terms of their coverage.
-    VariableStructure_structures_VariableCollection: "AssociationReference" = None # @association("VariableCollection") Variable structure structures zero to one variable collection.
-    VariableStructure_has_VariableRelationship: list["AssociationReference"] = None # @association("VariableRelationship")
+    VariableStructure_structures_VariableCollection: "AssociationReference" = field(default=None, metadata={"association": "VariableCollection"}) # Variable structure structures zero to one variable collection.
+    VariableStructure_has_VariableRelationship: list["AssociationReference"] = field(default=None, metadata={"association": "VariableRelationship"}) # 
+
+@dataclass
+class WideDataSet(DataSet):
+    """Definition
+    ============
+    Organized collection of wide data. It is structured by a wide data structure.
+
+    Examples
+    ========
+    A unit dataset where each row corresponds to a set of data points capturing different characteristics of a unit.
+    """
+    pass
+
+
+@dataclass
+class WideDataStructure(DataStructure):
+    """Definition
+    ==========
+    Structure of a wide dataset (organized collection of wide data). It is described by identifier, measure and attribute components.
+    
+    Examples
+    ==========
+    The structure described by [Unit id, Income, Province] where Unit id identifies a statistical unit and Income and Province are two instance variables capturing characteristics.
+    """
+    pass
+
 
 #
 # DATA TYPES
@@ -874,20 +1406,20 @@ class Address(DdiCdiDataType):
     1. OFFICE, ABS HOUSE, 45 Benjamin Way, Belconnen, Canberra, ACT, 2617, AU
     2. OFFICE, Institute of Education, 20 Bedford Way, London, WC1H 0AL, UK
     """
-    city_place_local: Optional[str] = None  # City, place, or local area used as part of an address.
-    country_code: Optional["ControlledVocabularyEntry"] = None  # Country of the location.
-    effective_dates: Optional["DateRange"] = None  # Clarifies when the identification information is accurate.
-    geographic_point: Optional["SpatialPoint"] = None  # Geographic coordinates corresponding to the address.
-    is_preferred: Optional[bool] = None  # Set to True if this is the preferred location for contacting the organization or individual.
+    cityPlaceLocal: Optional[str] = None  # City, place, or local area used as part of an address.
+    countryCode: Optional["ControlledVocabularyEntry"] = None  # Country of the location.
+    effectiveDates: Optional["DateRange"] = None  # Clarifies when the identification information is accurate.
+    geographicPoint: Optional["SpatialPoint"] = None  # Geographic coordinates corresponding to the address.
+    isPreferred: Optional[bool] = None  # Set to True if this is the preferred location for contacting the organization or individual.
     line: Optional[list[str]] = None  # Number and street including office or suite number. May use multiple lines.
-    location_name: Optional["ObjectName"] = None  # Name of the location if applicable.
-    postal_code: Optional[str] = None  # Postal or ZIP Code.
+    locationName: Optional["ObjectName"] = None  # Name of the location if applicable.
+    postalCode: Optional[str] = None  # Postal or ZIP Code.
     privacy: Optional["ControlledVocabularyEntry"] = None  # Specify the level privacy for the address as public, restricted, or private. Supports the use of an external controlled vocabulary.
-    regional_coverage: Optional["ControlledVocabularyEntry"] = None  # The region covered by the agent at this address.
-    state_province: Optional[str] = None  # A major sub-national division such as a state or province used to identify a major region within an address.
-    time_zone: Optional["ControlledVocabularyEntry"] = None  # Time zone of the location expressed as code.
-    type_of_address: Optional["ControlledVocabularyEntry"] = None  # Indicates address type (i.e. home, office, mailing, etc.).
-    type_of_location: Optional["ControlledVocabularyEntry"] = None  # The type or purpose of the location (i.e. regional office, distribution center, home).
+    regionalCoverage: Optional["ControlledVocabularyEntry"] = None  # The region covered by the agent at this address.
+    stateProvince: Optional[str] = None  # A major sub-national division such as a state or province used to identify a major region within an address.
+    timeZone: Optional["ControlledVocabularyEntry"] = None  # Time zone of the location expressed as code.
+    typeOfAddress: Optional["ControlledVocabularyEntry"] = None  # Indicates address type (i.e. home, office, mailing, etc.).
+    typeOfLlocation: Optional["ControlledVocabularyEntry"] = None  # The type or purpose of the location (i.e. regional office, distribution center, home).
 
 
 @dataclass
@@ -920,8 +1452,8 @@ class AssociationReference(DdiCdiDataType):
     Provides a way of pointing to resources outside of the information described in the set of DDI-CDI metadata.
     """
     ddiReference: Optional["InternationalRegistrationDataIdentifier"] = None  # A DDI type reference to a DDI object.
-    validType: Optional[list[str]] = None  # The expected type of the reference (e.g., the class or element according to the schema of the referenced resource).
-    isAssociationReference: bool = True  # Fixed attribute indicating the reference is an association reference.
+    validType: Optional[list[str]] = field(default_factory=list)  # The expected type of the reference (e.g., the class or element according to the schema of the referenced resource).
+    isAssociationReference: bool = field(default=True, init=False)  # Fixed attribute indicating the reference is an association reference.
 
 @dataclass
 class InternationalString(DdiCdiDataType):
@@ -938,6 +1470,8 @@ class BibliographicName(InternationalString):
     """
     affiliation: Optional[str] = None  # The affiliation of this person to an organization. This is generally an organization or sub-organization name and should be related to the specific role within which the individual is being listed.
 
+
+@dataclass
 class CategoryRelationCode(Enum):
     """
     Indicates the type of relationship, nominal, ordinal, interval, ratio, or continuous. Use where appropriate for the representation type.
@@ -1272,8 +1806,8 @@ class SpatialPoint(DdiCdiDataType):
     """
     A geographic point consisting of an X and Y coordinate. Each coordinate value is expressed separately providing its value and format.
     """
-    x_coordinate: Optional["SpatialCoordinate"] = None  # An X coordinate (latitudinal equivalent) value and format expressed using the Spatial Coordinate structure.
-    y_coordinate: Optional["SpatialCoordinate"] = None  # A Y coordinate (longitudinal equivalent) value and format expressed using the Spatial Coordinate structure.
+    xCoordinate: Optional["SpatialCoordinate"] = None  # An X coordinate (latitudinal equivalent) value and format expressed using the Spatial Coordinate structure.
+    yCoordinate: Optional["SpatialCoordinate"] = None  # A Y coordinate (longitudinal equivalent) value and format expressed using the Spatial Coordinate structure.
 
 
 class StructureExtent(Enum):
@@ -1325,11 +1859,12 @@ class TimeRole(SpecializationRole):
     """
     time: Optional["ControlledVocabularyEntry"] = None # Holds a value from an external controlled vocabulary defining the time role.
 
+@dataclass
 class TypedString(DdiCdiDataType):
     """
     TypedString combines a type with content defined as a simple string. May be used wherever a simple string needs to support a type definition to clarify its content.
 
-        Examples
+    Examples
     ========
     Content is a regular expression and the typeOfContent attribute is used to define the syntax of the regular expression content.
 
@@ -1360,6 +1895,7 @@ class WhiteSpaceRule(Enum):
     Preserve = "Preserve"
     Replace = "Replace"
 
+
 @dataclass
 class XsdAnyUri(DdiCdiDataType):
     value: str  # The URI value
@@ -1370,6 +1906,7 @@ class XsdAnyUri(DdiCdiDataType):
 
     @staticmethod
     def validate_uri(uri: str) -> bool:
+        
         """Validate if the provided string is a well-formed URI."""
         parsed = urlparse(uri)
         # Check if the scheme is valid
@@ -1381,7 +1918,6 @@ class XsdAnyUri(DdiCdiDataType):
             # For HTTP, HTTPS, and FTP, check if the netloc (domain) is present
             if not parsed.netloc:
                 raise ValueError(f"Invalid URI: {uri} -- invalid network location {parsed.netloc}")
-            # Optionally, you can add more checks for the path, query, etc.
         elif parsed.scheme == 'urn':
             # For URNs, validate the format
             urn_pattern = re.compile(r'^urn:[a-zA-Z0-9][a-zA-Z0-9-]{0,31}:[a-zA-Z0-9()+,\-.:=@;$_!*\'%/?#]+$')

@@ -1,4 +1,7 @@
 # DDI Toolkit
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
+
+**This project is currently in its early stages of development. Please be aware that stability is not be guaranteed, and documentation is very limited at this time. Your feedback and contributions are welcome as we work towards refining and expanding this work!**
 
 This package provides various utilities for using, processing, or converting metadata based on the [Data Documentation Initiative (DDI)](https://ddialliance.org/), an international standard for describing the data produced by surveys and other observational methods in the social, behavioral, economic, and health sciences.
 
