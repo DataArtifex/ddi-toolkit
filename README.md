@@ -1,7 +1,7 @@
 # DDI Toolkit
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
 
-**This project is currently in its early stages of development. Please be aware that stability is not be guaranteed, and documentation is very limited at this time. Your feedback and contributions are welcome as we work towards refining and expanding this work!**
+**This project is currently in its early stages of development. Please be aware that stability is not guaranteed, and documentation is limited. Your feedback and contributions are welcome as we work towards refining and expanding this work!**
 
 This package provides various utilities for using, processing, or converting metadata based on the [Data Documentation Initiative (DDI)](https://ddialliance.org/), an international standard for describing the data produced by surveys and other observational methods in the social, behavioral, economic, and health sciences.
 
@@ -9,12 +9,16 @@ There are three major flavors of DDI: DDI-Codebbok, DDI-Lifecycle, and the upcom
 
 
 ## Installation
- 
-```
-pip install dartfx-ddi
-```
+
+Once stable and mature enough, this package will be released on pypi.org as `dartfx-ddi`.
+
+In the meantime, you can install locally by calling `pip install -e  .` from the checked out project home directory.
+
+To install other dependencies, run `pip install -t requirements.txt`.
  
 ## Usage
+
+### Load and process a DDI-Codebook XML document
 
 ```
 from dartfx.ddi import codebook
@@ -22,12 +26,13 @@ my_codebook = codebook.loadXml('mycodebook.xml')
 # do something useful...
 ```
 
+### Convert a DDI-Codebook to 
+
 This core package is used by other [Data Artifex](http://www.dataartifex.org) components leveraging DDI.
 
 ## Roadmap
 
 - Add additional helper methods (as needed arise)
-- Conversion to DDI-CDI
 - SQL schema generators
 - DCAT generator
 - Explore how this can potentially be used with LLMs

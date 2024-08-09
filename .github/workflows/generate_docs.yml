@@ -7,7 +7,7 @@ on:
   workflow_dispatch: # adds button to trigger workflow
 
 jobs:
-  build:
+  build-docs:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,4 +29,13 @@ jobs:
         cd docs
         python3 -m sphinx -b html source build/html
 
-  
+  deploy-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/build
