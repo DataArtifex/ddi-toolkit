@@ -1,0 +1,157 @@
+{
+    "n_triples": 65886,
+    "types": {
+        "cdi:AssociationReference": {
+            "count": 3841
+        },
+        "cdi:Category": {
+            "count": 896
+        },
+        "cdi:CategorySet": {
+            "count": 63
+        },
+        "cdi:Code": {
+            "count": 896
+        },
+        "cdi:CodeList": {
+            "count": 63
+        },
+        "cdi:ComponentPosition": {
+            "count": 1
+        },
+        "cdi:DataSet": {
+            "count": 1
+        },
+        "cdi:DataStructure": {
+            "count": 1
+        },
+        "cdi:DataStructureComponent": {
+            "count": 1
+        },
+        "cdi:Identifier": {
+            "count": 2949
+        },
+        "cdi:InstanceVariable": {
+            "count": 67
+        },
+        "cdi:InternationalRegistrationDataIdentifier": {
+            "count": 2949
+        },
+        "cdi:LabelForDisplay": {
+            "count": 67
+        },
+        "cdi:LanguageString": {
+            "count": 67
+        },
+        "cdi:LogicalRecord": {
+            "count": 1
+        },
+        "cdi:NonDdiIdentifier": {
+            "count": 966
+        },
+        "cdi:Notation": {
+            "count": 896
+        },
+        "cdi:ObjectName": {
+            "count": 963
+        },
+        "cdi:SubstantiveValueDomain": {
+            "count": 63
+        },
+        "cdi:TypedString": {
+            "count": 896
+        },
+        "cdi:XsdAnyUri": {
+            "count": 2949
+        }
+    },
+    "properties": {
+        "cdi:DataStructure_has_ComponentPosition": {
+            "count": 1
+        },
+        "cdi:DataStructure_has_DataStructureComponent": {
+            "count": 1
+        },
+        "cdi:LogicalRecord_has_InstanceVariable": {
+            "count": 1
+        },
+        "cdi:LogicalRecord_organizes_DataSet": {
+            "count": 1
+        },
+        "cdi:content": {
+            "count": 1859
+        },
+        "cdi:dataIdentifier": {
+            "count": 2949
+        },
+        "cdi:ddiIdentifier": {
+            "count": 2949
+        },
+        "cdi:ddiReference": {
+            "count": 3841
+        },
+        "cdi:denotesCategory": {
+            "count": 896
+        },
+        "cdi:displayLabel": {
+            "count": 67
+        },
+        "cdi:hasCategory": {
+            "count": 63
+        },
+        "cdi:hasCode": {
+            "count": 63
+        },
+        "cdi:identifier": {
+            "count": 2949
+        },
+        "cdi:isAssociationReference": {
+            "count": 3841
+        },
+        "cdi:isDefinedBy_RepresentedVariable": {
+            "count": 1
+        },
+        "cdi:isStructuredBy_DataStructure": {
+            "count": 1
+        },
+        "cdi:languageSpecificString": {
+            "count": 67
+        },
+        "cdi:name": {
+            "count": 1926
+        },
+        "cdi:nonDdiIdentifier": {
+            "count": 966
+        },
+        "cdi:referencesCategorySet": {
+            "count": 63
+        },
+        "cdi:registrationAuthorityIdentifier": {
+            "count": 2949
+        },
+        "cdi:representsCategory": {
+            "count": 896
+        },
+        "cdi:takesSubstantiveValues": {
+            "count": 63
+        },
+        "cdi:takesValuesFrom": {
+            "count": 63
+        },
+        "cdi:type": {
+            "count": 966
+        },
+        "cdi:uri": {
+            "count": 2949
+        },
+        "cdi:value": {
+            "count": 3916
+        },
+        "cdi:versionIdentifier": {
+            "count": 2949
+        },
+        "rdf:type": {
+            "count": 18596
+        }
+    }
+}

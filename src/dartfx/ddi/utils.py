@@ -58,9 +58,7 @@ def codebook_to_cdif(
                     cdi_substantive_value_domain
                 )
                 # associate substantive value domain with variable
-                cdi_var.add_association_reference(
-                    "takesSubstantiveValues", cdi_substantive_value_domain
-                )
+                cdi_var.add_resources(cdi_substantive_value_domain, "takesSubstantiveValues")
                 # substantive code list
                 cdi_substantive_code_list = CodeList.factory(
                     id_prefix=base_uuid, id_suffix=cb_var.id
@@ -69,9 +67,7 @@ def codebook_to_cdif(
                     cdi_substantive_code_list
                 )
                 # associate code list with substantive value domain
-                cdi_substantive_value_domain.add_association_reference(
-                    "takesValuesFrom", cdi_substantive_code_list
-                )
+                cdi_substantive_value_domain.add_resources(cdi_substantive_code_list,"takesValuesFrom", exact_match=False)
                 # substantive category set
                 cdi_substantive_category_set = CategorySet.factory(
                     id_prefix=base_uuid, id_suffix=cb_var.id
@@ -90,18 +86,14 @@ def codebook_to_cdif(
                     cdi_sentinel_value_domain
                 )
                 # associate sentinel value domain with variable
-                cdi_var.add_association_reference(
-                    "takesSentinelValues", cdi_sentinel_value_domain
-                )
+                cdi_var.add_resources(cdi_sentinel_value_domain, "takesSentinelValues")
                 # sentinel code list
                 cdi_sentinel_code_list = CodeList.factory(
                     id_prefix=base_uuid, id_suffix=cb_var.id + "_sentinel"
                 )  # uid must be different from substantive
                 cdi_resources[cdi_sentinel_code_list.get_uri()] = cdi_sentinel_code_list
                 # associate code list with sentinel value domain
-                cdi_sentinel_value_domain.add_association_reference(
-                    "takesValuesFrom", cdi_sentinel_code_list
-                )
+                cdi_sentinel_value_domain.add_resources(cdi_sentinel_code_list,"takesValuesFrom")
                 # sentinel category set
                 cdi_sentinel_category_set = CategorySet.factory(
                     id_prefix=base_uuid, id_suffix=cb_var.id + "_sentinel"
@@ -133,6 +125,7 @@ def codebook_to_cdif(
                     id_prefix=base_uuid, id_suffix=f"{cb_var.id}_{code_value_uid}"
                 )
                 cdi_code_notation.content = TypedString(code_label)
+                cdi_code.add_resources(cdi_code_notation, "usesNotation")
                 cdi_resources[cdi_code_notation.get_uri()] = cdi_code_notation
                 # category
                 cdi_category = Category.factory(
@@ -147,10 +140,10 @@ def codebook_to_cdif(
                 # add to code list and category set
                 if not catgry.is_missing:
                     cdi_substantive_code_list.add_code(cdi_code)
-                    cdi_substantive_category_set.add_category(cdi_category)
+                    cdi_substantive_category_set.add_categories(cdi_category)
                 else:
                     cdi_sentinel_code_list.add_code(cdi_code)
-                    cdi_sentinel_category_set.add_category(cdi_category)
+                    cdi_sentinel_category_set.add_categories(cdi_category)
     
     # datasets & structure
     for cb_file in codebook.fileDscr:

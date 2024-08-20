@@ -1,0 +1,32 @@
+@prefix cdi: <http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<urn:dartfx:ccb7fc29-1863-4610-bb8f-2f9fd9815ad0_InstanceVariable> a cdi:InstanceVariable ;
+    cdi:displayLabel <urn:dartfx:ccb7fc29-1863-4610-bb8f-2f9fd9815ad0_InstanceVariable_displayLabelList> ;
+    cdi:identifier <urn:dartfx:87d7f377-7d50-473b-a3ee-ab19f7504b15_Identifier> .
+
+<urn:dartfx:4907b533-a435-422f-8710-d43db82d5f0c_LanguageString> a cdi:LanguageString ;
+    cdi:content "Test Instance Variable"^^xsd:string .
+
+<urn:dartfx:87d7f377-7d50-473b-a3ee-ab19f7504b15_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:ad06f7f4-35f2-453f-a7b1-a3a878fc08e9_InternationalRegistrationDataIdentifier> ;
+    cdi:uri <urn:dartfx:f9fe0b8c-2597-4dee-906d-ab0f2fbb0437_XsdAnyUri> .
+
+<urn:dartfx:a797f886-b6b8-4b62-ba56-8adba3dc6099_LabelForDisplay> a cdi:LabelForDisplay ;
+    cdi:languageSpecificString <urn:dartfx:a797f886-b6b8-4b62-ba56-8adba3dc6099_LabelForDisplay_languageSpecificStringList> .
+
+<urn:dartfx:a797f886-b6b8-4b62-ba56-8adba3dc6099_LabelForDisplay_languageSpecificStringList> rdf:first <urn:dartfx:4907b533-a435-422f-8710-d43db82d5f0c_LanguageString> ;
+    rdf:rest () .
+
+<urn:dartfx:ad06f7f4-35f2-453f-a7b1-a3a878fc08e9_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "ccb7fc29-1863-4610-bb8f-2f9fd9815ad0_InstanceVariable"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:dartfx:ccb7fc29-1863-4610-bb8f-2f9fd9815ad0_InstanceVariable_displayLabelList> rdf:first <urn:dartfx:a797f886-b6b8-4b62-ba56-8adba3dc6099_LabelForDisplay> ;
+    rdf:rest () .
+
+<urn:dartfx:f9fe0b8c-2597-4dee-906d-ab0f2fbb0437_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:ccb7fc29-1863-4610-bb8f-2f9fd9815ad0_InstanceVariable"^^xsd:string .
+

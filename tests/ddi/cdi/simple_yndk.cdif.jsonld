@@ -1,0 +1,2038 @@
+[
+    {
+        "@id": "urn:dartfx:3af504d7-b235-4b39-8f06-f1f48d69063b_InternationalRegistrationDataIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InternationalRegistrationDataIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/dataIdentifier": [
+            {
+                "@value": "c28e869a-51a2-4b9a-a319-36edbfdd8efd_DataSet_F1"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/registrationAuthorityIdentifier": [
+            {
+                "@value": "int.dataartifex"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/versionIdentifier": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:00796d96-48f5-43a6-aa01-9375f40afcc9_ObjectName",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ObjectName"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/name": [
+            {
+                "@value": "Yes"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Category_V1_9_nameList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:d0a14d1f-05e1-46d3-9858-e80e11589e27_ObjectName"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_InstanceVariable_V1_nameList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:c3a32086-397a-4e18-9680-12a71cea9729_ObjectName"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:f29ac5bc-c0d1-4223-9eca-a9f5f93ff375_Identifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Identifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiIdentifier": [
+            {
+                "@id": "urn:dartfx:e808d110-3095-4b52-a546-e510539131c9_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/uri": [
+            {
+                "@id": "urn:dartfx:6654bf7c-1b64-4546-b9be-2756ced8d5b7_XsdAnyUri"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:9983cd70-7abe-42f3-9aa0-96a3db6f1765_InternationalRegistrationDataIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InternationalRegistrationDataIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/dataIdentifier": [
+            {
+                "@value": "c28e869a-51a2-4b9a-a319-36edbfdd8efd_Code_V1_9"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/registrationAuthorityIdentifier": [
+            {
+                "@value": "int.dataartifex"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/versionIdentifier": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:e965d153-8f63-4e78-9fee-b592a91882df_XsdAnyUri",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XsdAnyUri"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Code_V1_2"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:6dcac3c5-b992-4a86-b2e9-86f9a0e1cbc4_DataStructureComponent",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/DataStructureComponent"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/identifier": [
+            {
+                "@id": "urn:dartfx:725de227-4cd0-43f8-8b31-d68366c158d7_Identifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isDefinedBy_RepresentedVariable": [
+            {
+                "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_InstanceVariable_V1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:06cd3879-f7d5-4920-aa8f-1731580e7bfb_AssociationReference",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AssociationReference"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiReference": [
+            {
+                "@id": "urn:dartfx:fc68ba32-3b2a-43af-bf9d-00f4465247a1_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isAssociationReference": [
+            {
+                "@value": true
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:8a183d02-f513-456e-b8a4-e4150274ddc0_NonDdiIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/NonDdiIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/type": [
+            {
+                "@value": "code-value"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "9"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:9c02f3ca-dc55-4b5b-a6eb-e49569e483d9_InternationalRegistrationDataIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InternationalRegistrationDataIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/dataIdentifier": [
+            {
+                "@value": "c28e869a-51a2-4b9a-a319-36edbfdd8efd_LogicalRecord_F1"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/registrationAuthorityIdentifier": [
+            {
+                "@value": "int.dataartifex"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/versionIdentifier": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:d0a14d1f-05e1-46d3-9858-e80e11589e27_ObjectName",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ObjectName"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/name": [
+            {
+                "@value": "Don't know"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:f4941a1c-e287-4a01-9019-7e6250298f2a_InternationalRegistrationDataIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InternationalRegistrationDataIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/dataIdentifier": [
+            {
+                "@value": "6dcac3c5-b992-4a86-b2e9-86f9a0e1cbc4_DataStructureComponent"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/registrationAuthorityIdentifier": [
+            {
+                "@value": "int.dataartifex"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/versionIdentifier": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:1234e0c5-791b-4979-8197-3104a18fa8b2_ObjectName",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ObjectName"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/name": [
+            {
+                "@value": "No"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:ac79d967-337f-48c3-83be-c96f4894fc96_AssociationReference",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AssociationReference"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiReference": [
+            {
+                "@id": "urn:dartfx:a8111526-0f3f-4e93-9fe9-a7047716dd03_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isAssociationReference": [
+            {
+                "@value": true
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:a2749e83-d72e-498a-848f-abd7e0c3e15a_Identifier_nonDdiIdentifierList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:811c0af3-c289-4d34-bd53-e2aac066a8e5_NonDdiIdentifier"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:8e74a5b4-7747-4a54-8206-495e2eb0ed27_AssociationReference",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AssociationReference"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiReference": [
+            {
+                "@id": "urn:dartfx:de44ba0f-b5fc-4102-b075-057a2ed20516_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isAssociationReference": [
+            {
+                "@value": true
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:8b63c651-5cd6-4fea-9ebe-a494848fffdf_Identifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Identifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiIdentifier": [
+            {
+                "@id": "urn:dartfx:de44ba0f-b5fc-4102-b075-057a2ed20516_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/uri": [
+            {
+                "@id": "urn:dartfx:17858685-60d5-4a1c-8bf2-5e3bd5180a15_XsdAnyUri"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:de50075c-1b90-4f38-94b7-65cffdf485ff_XsdAnyUri",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XsdAnyUri"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_DataStructure_simple_yndk"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:6d8b08be-a3d7-409e-b7b6-8c59577fba42_LabelForDisplay_languageSpecificStringList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:92da160f-cb7f-42d3-8c5d-05e6b7e4c526_LanguageString"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:da17fbb0-b1c6-4f75-a100-1617082457e3_AssociationReference",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AssociationReference"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiReference": [
+            {
+                "@id": "urn:dartfx:660fe9c1-866e-4c95-82e4-c62dba70becc_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isAssociationReference": [
+            {
+                "@value": true
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_CategorySet_V1",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/CategorySet"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/hasCategory": [
+            {
+                "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_CategorySet_V1_hasCategoryList"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/identifier": [
+            {
+                "@id": "urn:dartfx:0ade5f82-83e4-4783-951c-8dc3b75163d3_Identifier"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Category_V1_1",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Category"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/identifier": [
+            {
+                "@id": "urn:dartfx:f29ac5bc-c0d1-4223-9eca-a9f5f93ff375_Identifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/name": [
+            {
+                "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Category_V1_1_nameList"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:f0f2cfa0-c5b6-4c2c-ae37-8117d91529f2_XsdAnyUri",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XsdAnyUri"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_InstanceVariable_V1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:43794947-c5b1-4191-8c1a-9c469f44e7e5_Identifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Identifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiIdentifier": [
+            {
+                "@id": "urn:dartfx:9983cd70-7abe-42f3-9aa0-96a3db6f1765_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/nonDdiIdentifier": [
+            {
+                "@id": "urn:dartfx:43794947-c5b1-4191-8c1a-9c469f44e7e5_Identifier_nonDdiIdentifierList"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/uri": [
+            {
+                "@id": "urn:dartfx:ebe2ab46-2fec-414a-ace9-68655b456c5f_XsdAnyUri"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:ee9b8c7c-746e-4831-a571-cec1993b01f8_AssociationReference",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AssociationReference"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiReference": [
+            {
+                "@id": "urn:dartfx:e808d110-3095-4b52-a546-e510539131c9_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isAssociationReference": [
+            {
+                "@value": true
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:4a35a1b9-e511-4b73-84b3-beb5950b1d12_NonDdiIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/NonDdiIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/type": [
+            {
+                "@value": "code-value"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:24249d20-3b02-4529-bdfb-38a38cdc3ab7_Identifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Identifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiIdentifier": [
+            {
+                "@id": "urn:dartfx:264258c8-8b0c-4204-b2bb-27391bcae1fd_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/uri": [
+            {
+                "@id": "urn:dartfx:9b6d7b97-fd00-4556-bb43-733456ded1e3_XsdAnyUri"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:6dcac3c5-b992-4a86-b2e9-86f9a0e1cbc4_ComponentPosition",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ComponentPosition"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/identifier": [
+            {
+                "@id": "urn:dartfx:8e5481ae-895f-4bab-af4a-b9f42552219b_Identifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": 1
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:8906d81b-c976-4c2c-8933-1d88558df834_XsdAnyUri",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XsdAnyUri"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_LogicalRecord_F1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_DataSet_F1",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/DataSet"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/identifier": [
+            {
+                "@id": "urn:dartfx:8f836a06-b1fe-4590-bffd-2a0f2eb68b35_Identifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isStructuredBy_DataStructure": [
+            {
+                "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_DataSet_F1_isStructuredBy_DataStructureList"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_InstanceVariable_V1_displayLabelList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:6d8b08be-a3d7-409e-b7b6-8c59577fba42_LabelForDisplay"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:d30e59d9-90f8-4339-a8cf-2388cb3a5527_Identifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Identifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiIdentifier": [
+            {
+                "@id": "urn:dartfx:38014462-65c6-4144-9a5a-df2a0d65bd56_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/nonDdiIdentifier": [
+            {
+                "@id": "urn:dartfx:d30e59d9-90f8-4339-a8cf-2388cb3a5527_Identifier_nonDdiIdentifierList"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/uri": [
+            {
+                "@id": "urn:dartfx:e965d153-8f63-4e78-9fee-b592a91882df_XsdAnyUri"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:92915241-eff4-4dc1-a3d6-77ef99e4c533_XsdAnyUri",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XsdAnyUri"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Code_V1_1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Code_V1_9",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Code"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/denotesCategory": [
+            {
+                "@id": "urn:dartfx:51c01902-4c26-4b6f-a84f-19ea16d9ce98_AssociationReference"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/identifier": [
+            {
+                "@id": "urn:dartfx:43794947-c5b1-4191-8c1a-9c469f44e7e5_Identifier"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:6654bf7c-1b64-4546-b9be-2756ced8d5b7_XsdAnyUri",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XsdAnyUri"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Category_V1_1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:5cc1fffc-23cd-4f80-887d-65b2e8a99bd2_XsdAnyUri",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XsdAnyUri"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_SubstantiveValueDomain_V1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:32975b47-037c-4125-b0ec-6efd6284b8ba_NonDdiIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/NonDdiIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/type": [
+            {
+                "@value": "ddi-codebook"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "V1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:1a6e9782-70f5-4883-93b0-4385a0e79cab_NonDdiIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/NonDdiIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/type": [
+            {
+                "@value": "code-value"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "2"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c3a32086-397a-4e18-9680-12a71cea9729_ObjectName",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ObjectName"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/name": [
+            {
+                "@value": "yesnodk"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:17858685-60d5-4a1c-8bf2-5e3bd5180a15_XsdAnyUri",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XsdAnyUri"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Category_V1_9"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_DataStructure_simple_yndk",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/DataStructure"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/DataStructure_has_ComponentPosition": [
+            {
+                "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_DataStructure_simple_yndk_DataStructure_has_ComponentPositionList"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/DataStructure_has_DataStructureComponent": [
+            {
+                "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_DataStructure_simple_yndk_DataStructure_has_DataStructureComponentList"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/identifier": [
+            {
+                "@id": "urn:dartfx:a2749e83-d72e-498a-848f-abd7e0c3e15a_Identifier"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Code_V1_2",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Code"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/denotesCategory": [
+            {
+                "@id": "urn:dartfx:da17fbb0-b1c6-4f75-a100-1617082457e3_AssociationReference"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/identifier": [
+            {
+                "@id": "urn:dartfx:d30e59d9-90f8-4339-a8cf-2388cb3a5527_Identifier"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:45ecf001-df27-4686-8782-b76ec9bd97ee_XsdAnyUri",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XsdAnyUri"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Notation_V1_1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Category_V1_2_nameList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:1234e0c5-791b-4979-8197-3104a18fa8b2_ObjectName"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:ebe016c7-0859-4bf6-85e1-f3154f045017_TypedString",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/TypedString"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/content": [
+            {
+                "@value": "Yes"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c2a503e8-840f-4dfc-a0c7-0aa6169f6b69_AssociationReference",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AssociationReference"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiReference": [
+            {
+                "@id": "urn:dartfx:3af504d7-b235-4b39-8f06-f1f48d69063b_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isAssociationReference": [
+            {
+                "@value": true
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:a2749e83-d72e-498a-848f-abd7e0c3e15a_Identifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Identifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiIdentifier": [
+            {
+                "@id": "urn:dartfx:f9eb5d3f-5709-4a06-ab1e-3683a43ea7cf_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/nonDdiIdentifier": [
+            {
+                "@id": "urn:dartfx:a2749e83-d72e-498a-848f-abd7e0c3e15a_Identifier_nonDdiIdentifierList"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/uri": [
+            {
+                "@id": "urn:dartfx:de50075c-1b90-4f38-94b7-65cffdf485ff_XsdAnyUri"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Category_V1_9",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Category"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/identifier": [
+            {
+                "@id": "urn:dartfx:8b63c651-5cd6-4fea-9ebe-a494848fffdf_Identifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/name": [
+            {
+                "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Category_V1_9_nameList"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:eb44cf11-6af1-4c5d-bacc-187fafd65a9d_AssociationReference",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AssociationReference"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiReference": [
+            {
+                "@id": "urn:dartfx:e808d110-3095-4b52-a546-e510539131c9_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isAssociationReference": [
+            {
+                "@value": true
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:fc63ec41-6a13-45eb-b632-19f18aecd44f_Identifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Identifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiIdentifier": [
+            {
+                "@id": "urn:dartfx:612b43fa-13a8-4d34-8f02-6f444d3b189d_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/uri": [
+            {
+                "@id": "urn:dartfx:0ab62304-2ec3-4651-a6db-cfadc239fac7_XsdAnyUri"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:818dcae5-b6ec-410a-8692-4c90a0b2aaa5_NonDdiIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/NonDdiIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/type": [
+            {
+                "@value": "ddi-codebook"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "F1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:35b84aee-6aa3-48d2-84c7-e191fe905b4a_Identifier_nonDdiIdentifierList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:32975b47-037c-4125-b0ec-6efd6284b8ba_NonDdiIdentifier"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:6d8b08be-a3d7-409e-b7b6-8c59577fba42_LabelForDisplay",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/LabelForDisplay"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/languageSpecificString": [
+            {
+                "@id": "urn:dartfx:6d8b08be-a3d7-409e-b7b6-8c59577fba42_LabelForDisplay_languageSpecificStringList"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:8e5481ae-895f-4bab-af4a-b9f42552219b_Identifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Identifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiIdentifier": [
+            {
+                "@id": "urn:dartfx:c31cf2c5-c317-4b56-9a5e-26199985c6b6_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/uri": [
+            {
+                "@id": "urn:dartfx:6608f2ee-4441-4828-8dc3-e9c1c656ed2a_XsdAnyUri"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:0ab62304-2ec3-4651-a6db-cfadc239fac7_XsdAnyUri",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XsdAnyUri"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_CodeList_V1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:5956e390-c9aa-4b80-a507-17977c159f7a_Identifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Identifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiIdentifier": [
+            {
+                "@id": "urn:dartfx:bf53bf85-191e-4a3b-bcd3-2e767070fda5_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/uri": [
+            {
+                "@id": "urn:dartfx:f41e8b07-420c-4e80-8f00-5ac5173e5d91_XsdAnyUri"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c31cf2c5-c317-4b56-9a5e-26199985c6b6_InternationalRegistrationDataIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InternationalRegistrationDataIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/dataIdentifier": [
+            {
+                "@value": "6dcac3c5-b992-4a86-b2e9-86f9a0e1cbc4_ComponentPosition"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/registrationAuthorityIdentifier": [
+            {
+                "@value": "int.dataartifex"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/versionIdentifier": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:69369081-06c6-41f2-a049-4ab65b949d5a_AssociationReference",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AssociationReference"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiReference": [
+            {
+                "@id": "urn:dartfx:38014462-65c6-4144-9a5a-df2a0d65bd56_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isAssociationReference": [
+            {
+                "@value": true
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:38014462-65c6-4144-9a5a-df2a0d65bd56_InternationalRegistrationDataIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InternationalRegistrationDataIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/dataIdentifier": [
+            {
+                "@value": "c28e869a-51a2-4b9a-a319-36edbfdd8efd_Code_V1_2"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/registrationAuthorityIdentifier": [
+            {
+                "@value": "int.dataartifex"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/versionIdentifier": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_DataSet_F1_isStructuredBy_DataStructureList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_DataStructure_simple_yndk"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Notation_V1_1_representsCategoryList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:ee9b8c7c-746e-4831-a571-cec1993b01f8_AssociationReference"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:92dcb6de-01c7-4f3e-a257-46b8a6645ad7_Identifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Identifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiIdentifier": [
+            {
+                "@id": "urn:dartfx:9c02f3ca-dc55-4b5b-a6eb-e49569e483d9_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/nonDdiIdentifier": [
+            {
+                "@id": "urn:dartfx:92dcb6de-01c7-4f3e-a257-46b8a6645ad7_Identifier_nonDdiIdentifierList"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/uri": [
+            {
+                "@id": "urn:dartfx:8906d81b-c976-4c2c-8933-1d88558df834_XsdAnyUri"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:612b43fa-13a8-4d34-8f02-6f444d3b189d_InternationalRegistrationDataIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InternationalRegistrationDataIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/dataIdentifier": [
+            {
+                "@value": "c28e869a-51a2-4b9a-a319-36edbfdd8efd_CodeList_V1"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/registrationAuthorityIdentifier": [
+            {
+                "@value": "int.dataartifex"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/versionIdentifier": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:a8111526-0f3f-4e93-9fe9-a7047716dd03_InternationalRegistrationDataIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InternationalRegistrationDataIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/dataIdentifier": [
+            {
+                "@value": "c28e869a-51a2-4b9a-a319-36edbfdd8efd_InstanceVariable_V1"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/registrationAuthorityIdentifier": [
+            {
+                "@value": "int.dataartifex"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/versionIdentifier": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:d7853287-7dd1-4263-aec9-612cdca85d7f_AssociationReference",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AssociationReference"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiReference": [
+            {
+                "@id": "urn:dartfx:9983cd70-7abe-42f3-9aa0-96a3db6f1765_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isAssociationReference": [
+            {
+                "@value": true
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Category_V1_1_nameList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:00796d96-48f5-43a6-aa01-9375f40afcc9_ObjectName"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:89f90bca-0459-4da1-898c-a4f7c6dfbdbe_AssociationReference",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AssociationReference"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiReference": [
+            {
+                "@id": "urn:dartfx:612b43fa-13a8-4d34-8f02-6f444d3b189d_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isAssociationReference": [
+            {
+                "@value": true
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:f98e7889-23e8-4048-9135-77e20047ad66_InternationalRegistrationDataIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InternationalRegistrationDataIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/dataIdentifier": [
+            {
+                "@value": "c28e869a-51a2-4b9a-a319-36edbfdd8efd_SubstantiveValueDomain_V1"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/registrationAuthorityIdentifier": [
+            {
+                "@value": "int.dataartifex"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/versionIdentifier": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Notation_V1_2",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Notation"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/content": [
+            {
+                "@id": "urn:dartfx:100b5acb-b7da-4293-b05d-573402e3d644_TypedString"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/identifier": [
+            {
+                "@id": "urn:dartfx:5956e390-c9aa-4b80-a507-17977c159f7a_Identifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/representsCategory": [
+            {
+                "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Notation_V1_2_representsCategoryList"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:e808d110-3095-4b52-a546-e510539131c9_InternationalRegistrationDataIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InternationalRegistrationDataIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/dataIdentifier": [
+            {
+                "@value": "c28e869a-51a2-4b9a-a319-36edbfdd8efd_Category_V1_1"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/registrationAuthorityIdentifier": [
+            {
+                "@value": "int.dataartifex"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/versionIdentifier": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:660fe9c1-866e-4c95-82e4-c62dba70becc_InternationalRegistrationDataIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InternationalRegistrationDataIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/dataIdentifier": [
+            {
+                "@value": "c28e869a-51a2-4b9a-a319-36edbfdd8efd_Category_V1_2"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/registrationAuthorityIdentifier": [
+            {
+                "@value": "int.dataartifex"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/versionIdentifier": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:002bf955-9a25-4dde-a28c-c4e238d64ccd_Identifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Identifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiIdentifier": [
+            {
+                "@id": "urn:dartfx:6c1671a5-ec04-43b2-9655-65502a167bd3_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/nonDdiIdentifier": [
+            {
+                "@id": "urn:dartfx:002bf955-9a25-4dde-a28c-c4e238d64ccd_Identifier_nonDdiIdentifierList"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/uri": [
+            {
+                "@id": "urn:dartfx:92915241-eff4-4dc1-a3d6-77ef99e4c533_XsdAnyUri"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:43794947-c5b1-4191-8c1a-9c469f44e7e5_Identifier_nonDdiIdentifierList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:8a183d02-f513-456e-b8a4-e4150274ddc0_NonDdiIdentifier"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:ebe2ab46-2fec-414a-ace9-68655b456c5f_XsdAnyUri",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XsdAnyUri"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Code_V1_9"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_CategorySet_V1_hasCategoryList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:eb44cf11-6af1-4c5d-bacc-187fafd65a9d_AssociationReference"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": [
+                    {
+                        "@id": "urn:dartfx:4ccf2c19-f5f3-4323-afa9-a3f544a12cf2_AssociationReference"
+                    },
+                    {
+                        "@id": "urn:dartfx:8e74a5b4-7747-4a54-8206-495e2eb0ed27_AssociationReference"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:a601760f-8096-4538-b923-e7ac9a48b7b7_AssociationReference",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AssociationReference"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiReference": [
+            {
+                "@id": "urn:dartfx:660fe9c1-866e-4c95-82e4-c62dba70becc_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isAssociationReference": [
+            {
+                "@value": true
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:4ccf2c19-f5f3-4323-afa9-a3f544a12cf2_AssociationReference",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AssociationReference"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiReference": [
+            {
+                "@id": "urn:dartfx:660fe9c1-866e-4c95-82e4-c62dba70becc_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isAssociationReference": [
+            {
+                "@value": true
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:0ade5f82-83e4-4783-951c-8dc3b75163d3_Identifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Identifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiIdentifier": [
+            {
+                "@id": "urn:dartfx:fc68ba32-3b2a-43af-bf9d-00f4465247a1_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/uri": [
+            {
+                "@id": "urn:dartfx:4d836ea5-1605-4f35-9f2f-7d115d1b4bd1_XsdAnyUri"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_SubstantiveValueDomain_V1",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/SubstantiveValueDomain"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/identifier": [
+            {
+                "@id": "urn:dartfx:7a89fcc0-cd33-463d-ad36-fbf646898ff3_Identifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/takesValuesFrom": [
+            {
+                "@id": "urn:dartfx:89f90bca-0459-4da1-898c-a4f7c6dfbdbe_AssociationReference"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:8f836a06-b1fe-4590-bffd-2a0f2eb68b35_Identifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Identifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiIdentifier": [
+            {
+                "@id": "urn:dartfx:3af504d7-b235-4b39-8f06-f1f48d69063b_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/nonDdiIdentifier": [
+            {
+                "@id": "urn:dartfx:8f836a06-b1fe-4590-bffd-2a0f2eb68b35_Identifier_nonDdiIdentifierList"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/uri": [
+            {
+                "@id": "urn:dartfx:86e996fe-6530-47c6-8d5f-e7fe8a036ca5_XsdAnyUri"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Notation_V1_1",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Notation"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/content": [
+            {
+                "@id": "urn:dartfx:ebe016c7-0859-4bf6-85e1-f3154f045017_TypedString"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/identifier": [
+            {
+                "@id": "urn:dartfx:ca4424cb-0720-46d7-9771-d7f68a900114_Identifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/representsCategory": [
+            {
+                "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Notation_V1_1_representsCategoryList"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:4d836ea5-1605-4f35-9f2f-7d115d1b4bd1_XsdAnyUri",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XsdAnyUri"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_CategorySet_V1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:86e996fe-6530-47c6-8d5f-e7fe8a036ca5_XsdAnyUri",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XsdAnyUri"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_DataSet_F1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:fc68ba32-3b2a-43af-bf9d-00f4465247a1_InternationalRegistrationDataIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InternationalRegistrationDataIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/dataIdentifier": [
+            {
+                "@value": "c28e869a-51a2-4b9a-a319-36edbfdd8efd_CategorySet_V1"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/registrationAuthorityIdentifier": [
+            {
+                "@value": "int.dataartifex"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/versionIdentifier": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:811c0af3-c289-4d34-bd53-e2aac066a8e5_NonDdiIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/NonDdiIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/type": [
+            {
+                "@value": "ddi-codebook"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "simple_yndk"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:97090450-e0af-4910-99a4-085c261d96bb_InternationalRegistrationDataIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InternationalRegistrationDataIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/dataIdentifier": [
+            {
+                "@value": "c28e869a-51a2-4b9a-a319-36edbfdd8efd_Notation_V1_1"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/registrationAuthorityIdentifier": [
+            {
+                "@value": "int.dataartifex"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/versionIdentifier": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_InstanceVariable_V1_takesSubstantiveValuesList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:4558909a-5286-4222-9e94-ac2d15cc066b_AssociationReference"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:28e5934b-9cb5-486f-938b-15485d1f106e_AssociationReference",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AssociationReference"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiReference": [
+            {
+                "@id": "urn:dartfx:de44ba0f-b5fc-4102-b075-057a2ed20516_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isAssociationReference": [
+            {
+                "@value": true
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_DataStructure_simple_yndk_DataStructure_has_ComponentPositionList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:6dcac3c5-b992-4a86-b2e9-86f9a0e1cbc4_ComponentPosition"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:725de227-4cd0-43f8-8b31-d68366c158d7_Identifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Identifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiIdentifier": [
+            {
+                "@id": "urn:dartfx:f4941a1c-e287-4a01-9019-7e6250298f2a_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/uri": [
+            {
+                "@id": "urn:dartfx:8402d5f8-3d31-4dad-b973-dec0ec717bcb_XsdAnyUri"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Category_V1_2",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Category"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/identifier": [
+            {
+                "@id": "urn:dartfx:ac077359-bb63-4497-acbb-c95667b5a400_Identifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/name": [
+            {
+                "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Category_V1_2_nameList"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:8402d5f8-3d31-4dad-b973-dec0ec717bcb_XsdAnyUri",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XsdAnyUri"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "urn:dartfx:6dcac3c5-b992-4a86-b2e9-86f9a0e1cbc4_DataStructureComponent"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:264258c8-8b0c-4204-b2bb-27391bcae1fd_InternationalRegistrationDataIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InternationalRegistrationDataIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/dataIdentifier": [
+            {
+                "@value": "c28e869a-51a2-4b9a-a319-36edbfdd8efd_Notation_V1_9"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/registrationAuthorityIdentifier": [
+            {
+                "@value": "int.dataartifex"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/versionIdentifier": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_LogicalRecord_F1",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/LogicalRecord"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/LogicalRecord_has_InstanceVariable": [
+            {
+                "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_LogicalRecord_F1_LogicalRecord_has_InstanceVariableList"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/LogicalRecord_organizes_DataSet": [
+            {
+                "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_LogicalRecord_F1_LogicalRecord_organizes_DataSetList"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/identifier": [
+            {
+                "@id": "urn:dartfx:92dcb6de-01c7-4f3e-a257-46b8a6645ad7_Identifier"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:f41e8b07-420c-4e80-8f00-5ac5173e5d91_XsdAnyUri",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XsdAnyUri"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Notation_V1_2"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:02be0698-3623-4ae5-9451-d2318599cf85_AssociationReference",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AssociationReference"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiReference": [
+            {
+                "@id": "urn:dartfx:e808d110-3095-4b52-a546-e510539131c9_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isAssociationReference": [
+            {
+                "@value": true
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Notation_V1_2_representsCategoryList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:a601760f-8096-4538-b923-e7ac9a48b7b7_AssociationReference"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Code_V1_1",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Code"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/denotesCategory": [
+            {
+                "@id": "urn:dartfx:02be0698-3623-4ae5-9451-d2318599cf85_AssociationReference"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/identifier": [
+            {
+                "@id": "urn:dartfx:002bf955-9a25-4dde-a28c-c4e238d64ccd_Identifier"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_DataStructure_simple_yndk_DataStructure_has_DataStructureComponentList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:6dcac3c5-b992-4a86-b2e9-86f9a0e1cbc4_DataStructureComponent"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:8f836a06-b1fe-4590-bffd-2a0f2eb68b35_Identifier_nonDdiIdentifierList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:c31e331b-eb65-460f-9ad4-d4f431e8bad9_NonDdiIdentifier"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:92da160f-cb7f-42d3-8c5d-05e6b7e4c526_LanguageString",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/LanguageString"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/content": [
+            {
+                "@value": "Yes / No / Dont' know"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Notation_V1_9_representsCategoryList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:28e5934b-9cb5-486f-938b-15485d1f106e_AssociationReference"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_LogicalRecord_F1_LogicalRecord_organizes_DataSetList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:c2a503e8-840f-4dfc-a0c7-0aa6169f6b69_AssociationReference"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_CodeList_V1",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/CodeList"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/hasCode": [
+            {
+                "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_CodeList_V1_hasCodeList"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/identifier": [
+            {
+                "@id": "urn:dartfx:fc63ec41-6a13-45eb-b632-19f18aecd44f_Identifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/referencesCategorySet": [
+            {
+                "@id": "urn:dartfx:06cd3879-f7d5-4920-aa8f-1731580e7bfb_AssociationReference"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Notation_V1_9",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Notation"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/content": [
+            {
+                "@id": "urn:dartfx:543903ee-7683-41da-9788-f4488a24a517_TypedString"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/identifier": [
+            {
+                "@id": "urn:dartfx:24249d20-3b02-4529-bdfb-38a38cdc3ab7_Identifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/representsCategory": [
+            {
+                "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Notation_V1_9_representsCategoryList"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:4f741a12-029b-4878-b56c-2735ea9a7e53_XsdAnyUri",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XsdAnyUri"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Category_V1_2"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:ac077359-bb63-4497-acbb-c95667b5a400_Identifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Identifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiIdentifier": [
+            {
+                "@id": "urn:dartfx:660fe9c1-866e-4c95-82e4-c62dba70becc_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/uri": [
+            {
+                "@id": "urn:dartfx:4f741a12-029b-4878-b56c-2735ea9a7e53_XsdAnyUri"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:cc701b20-78fa-4220-acff-f38889226498_AssociationReference",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AssociationReference"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiReference": [
+            {
+                "@id": "urn:dartfx:6c1671a5-ec04-43b2-9655-65502a167bd3_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isAssociationReference": [
+            {
+                "@value": true
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:f9eb5d3f-5709-4a06-ab1e-3683a43ea7cf_InternationalRegistrationDataIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InternationalRegistrationDataIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/dataIdentifier": [
+            {
+                "@value": "c28e869a-51a2-4b9a-a319-36edbfdd8efd_DataStructure_simple_yndk"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/registrationAuthorityIdentifier": [
+            {
+                "@value": "int.dataartifex"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/versionIdentifier": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:d30e59d9-90f8-4339-a8cf-2388cb3a5527_Identifier_nonDdiIdentifierList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:1a6e9782-70f5-4883-93b0-4385a0e79cab_NonDdiIdentifier"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_InstanceVariable_V1",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InstanceVariable"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/displayLabel": [
+            {
+                "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_InstanceVariable_V1_displayLabelList"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/identifier": [
+            {
+                "@id": "urn:dartfx:35b84aee-6aa3-48d2-84c7-e191fe905b4a_Identifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/name": [
+            {
+                "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_InstanceVariable_V1_nameList"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/takesSubstantiveValues": [
+            {
+                "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_InstanceVariable_V1_takesSubstantiveValuesList"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:002bf955-9a25-4dde-a28c-c4e238d64ccd_Identifier_nonDdiIdentifierList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:4a35a1b9-e511-4b73-84b3-beb5950b1d12_NonDdiIdentifier"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:35b84aee-6aa3-48d2-84c7-e191fe905b4a_Identifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Identifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiIdentifier": [
+            {
+                "@id": "urn:dartfx:a8111526-0f3f-4e93-9fe9-a7047716dd03_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/nonDdiIdentifier": [
+            {
+                "@id": "urn:dartfx:35b84aee-6aa3-48d2-84c7-e191fe905b4a_Identifier_nonDdiIdentifierList"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/uri": [
+            {
+                "@id": "urn:dartfx:f0f2cfa0-c5b6-4c2c-ae37-8117d91529f2_XsdAnyUri"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:bf53bf85-191e-4a3b-bcd3-2e767070fda5_InternationalRegistrationDataIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InternationalRegistrationDataIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/dataIdentifier": [
+            {
+                "@value": "c28e869a-51a2-4b9a-a319-36edbfdd8efd_Notation_V1_2"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/registrationAuthorityIdentifier": [
+            {
+                "@value": "int.dataartifex"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/versionIdentifier": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:100b5acb-b7da-4293-b05d-573402e3d644_TypedString",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/TypedString"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/content": [
+            {
+                "@value": "No"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:543903ee-7683-41da-9788-f4488a24a517_TypedString",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/TypedString"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/content": [
+            {
+                "@value": "Don't know"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:ca4424cb-0720-46d7-9771-d7f68a900114_Identifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Identifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiIdentifier": [
+            {
+                "@id": "urn:dartfx:97090450-e0af-4910-99a4-085c261d96bb_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/uri": [
+            {
+                "@id": "urn:dartfx:45ecf001-df27-4686-8782-b76ec9bd97ee_XsdAnyUri"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c31e331b-eb65-460f-9ad4-d4f431e8bad9_NonDdiIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/NonDdiIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/type": [
+            {
+                "@value": "ddi-codebook"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "F1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:9b6d7b97-fd00-4556-bb43-733456ded1e3_XsdAnyUri",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XsdAnyUri"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_Notation_V1_9"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:de44ba0f-b5fc-4102-b075-057a2ed20516_InternationalRegistrationDataIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InternationalRegistrationDataIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/dataIdentifier": [
+            {
+                "@value": "c28e869a-51a2-4b9a-a319-36edbfdd8efd_Category_V1_9"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/registrationAuthorityIdentifier": [
+            {
+                "@value": "int.dataartifex"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/versionIdentifier": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:6c1671a5-ec04-43b2-9655-65502a167bd3_InternationalRegistrationDataIdentifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InternationalRegistrationDataIdentifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/dataIdentifier": [
+            {
+                "@value": "c28e869a-51a2-4b9a-a319-36edbfdd8efd_Code_V1_1"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/registrationAuthorityIdentifier": [
+            {
+                "@value": "int.dataartifex"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/versionIdentifier": [
+            {
+                "@value": "1"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:51c01902-4c26-4b6f-a84f-19ea16d9ce98_AssociationReference",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AssociationReference"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiReference": [
+            {
+                "@id": "urn:dartfx:de44ba0f-b5fc-4102-b075-057a2ed20516_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isAssociationReference": [
+            {
+                "@value": true
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:92dcb6de-01c7-4f3e-a257-46b8a6645ad7_Identifier_nonDdiIdentifierList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:818dcae5-b6ec-410a-8692-4c90a0b2aaa5_NonDdiIdentifier"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_LogicalRecord_F1_LogicalRecord_has_InstanceVariableList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:ac79d967-337f-48c3-83be-c96f4894fc96_AssociationReference"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": []
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:c28e869a-51a2-4b9a-a319-36edbfdd8efd_CodeList_V1_hasCodeList",
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#first": [
+            {
+                "@id": "urn:dartfx:cc701b20-78fa-4220-acff-f38889226498_AssociationReference"
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest": [
+            {
+                "@list": [
+                    {
+                        "@id": "urn:dartfx:69369081-06c6-41f2-a049-4ab65b949d5a_AssociationReference"
+                    },
+                    {
+                        "@id": "urn:dartfx:d7853287-7dd1-4263-aec9-612cdca85d7f_AssociationReference"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:4558909a-5286-4222-9e94-ac2d15cc066b_AssociationReference",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AssociationReference"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiReference": [
+            {
+                "@id": "urn:dartfx:f98e7889-23e8-4048-9135-77e20047ad66_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/isAssociationReference": [
+            {
+                "@value": true
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:6608f2ee-4441-4828-8dc3-e9c1c656ed2a_XsdAnyUri",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XsdAnyUri"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/value": [
+            {
+                "@value": "urn:dartfx:6dcac3c5-b992-4a86-b2e9-86f9a0e1cbc4_ComponentPosition"
+            }
+        ]
+    },
+    {
+        "@id": "urn:dartfx:7a89fcc0-cd33-463d-ad36-fbf646898ff3_Identifier",
+        "@type": [
+            "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Identifier"
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ddiIdentifier": [
+            {
+                "@id": "urn:dartfx:f98e7889-23e8-4048-9135-77e20047ad66_InternationalRegistrationDataIdentifier"
+            }
+        ],
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/uri": [
+            {
+                "@id": "urn:dartfx:5cc1fffc-23cd-4f80-887d-65b2e8a99bd2_XsdAnyUri"
+            }
+        ]
+    }
+]

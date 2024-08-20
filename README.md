@@ -3,7 +3,7 @@
 
 **This project is currently in its early stages of development. Please be aware that stability is not guaranteed, and documentation is limited. Your feedback and contributions are welcome as we work towards refining and expanding this work!**
 
-This package provides various utilities for using, processing, or converting metadata based on the [Data Documentation Initiative (DDI)](https://ddialliance.org/), an international standard for describing the data produced by surveys and other observational methods in the social, behavioral, economic, and health sciences.
+This package provides utilities for using, processing, or converting metadata based on the [Data Documentation Initiative (DDI)](https://ddialliance.org/), an international standard for describing the data produced by surveys and other observational methods in the social, behavioral, economic, and health sciences.
 
 There are three major flavors of DDI: DDI-Codebbok, DDI-Lifecycle, and the upcoming DDI Cross Domain Integration (CDI). This initial version of th epackage focuses on [DDI-Codebook](https://ddialliance.org/Specification/DDI-Codebook/2.5/), the light-weight version of the standard, intended primarily to document simple survey data. This specification has been widely adopted around the globe by statistical agencies, data producers, archives, research centers, and international organizations. Thousands of datasets have been documented with DDI-C.
 

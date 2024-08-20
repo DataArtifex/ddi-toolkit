@@ -19,9 +19,12 @@ Version: 0.1.0
 How to use:
     - N/A
 
-Implementation notes:
+
+mplementation notes:
     - The dataclasses were generated using meta.ai LLMs from the XSD specifications
     - Only a subset of the specification is covered
+    - Need to check that optional attributes are properly documented as Optionan[]
+    - Need to check that non-optional attributes come first in the class definition
 
 Roadmap:
     - Implement RDF serialier(s) 
@@ -138,57 +141,82 @@ class DdiCdiResource:
         # Done
         return attribute_info
 
-    def add_association_reference(self, attribute_name:str, resource: "DdiCdiClass"):
-        """Helper to add an association reference to a list[AssociationReference] property.
-        
-        This ensures that the list[] has been initialized and that the resource is of the correct type.
-        The resource type is determined by property field metadata 'association' entry.
-        
-        Examples:
-            logical_record.add_association_reference('LogicalRecord_has_InstanceVariable', instance_variable)
-            represente_variable.add_association_reference('takesSentinelValues',sentinel_value_domain)
-        
-        Args:
-            property_name (str): _description_
-            resource (DdiCdiClass): _description_
-        """
-        attribute_info = self._get_attribute_info(attribute_name)
-        if attribute_info:
-            # make sure this is an AssociationReference
-            if attribute_info.cls is AssociationReference:
-                # check the target class from the field metadata association
-                if attribute_info.associated_class:
-                    # metadata can be a single entry or a comma seperated list of classes
-                    cls_names = attribute_info.associated_class.split(",")
-                    if type(resource).__name__ not in cls_names:
-                        raise Exception(f"{type(resource).__name__} is not a valid AssociatedReferenece target for {attribute_name}. Must be {attribute_info.associated_class}.")
-                else:
-                    raise Exception(f"Missing 'association' metadata on {self.__class__.__name__}.{attribute_name}")
-                # create the reference
-                association_reference = resource.get_association_reference()
-                # associate the reference
-                if attribute_info.is_list: # this is a list["AssociatedReference"]
-                    # initialize the list if needed
-                    if not getattr(self, attribute_name):
-                        setattr(self, attribute_name, [])
-                    # add
-                    getattr(self, attribute_name).append(association_reference)
-                else: # this is a "AssociatedReference"
-                    # set
-                    setattr(self, attribute_name, association_reference)
-            else:
-                raise Exception(f"{attribute_name} must be of type 'AssociationReference'")
-        else:
-            raise Exception(f"Attribute '{attribute_name}' not found on {self.__class__.__name__}")        
 
-    def get_association_reference(self) -> "AssociationReference":
+    def add_resource(self, resource, attribute_name:str = None, exact_match:bool = True):
+        """A singular version of add_resources(...)
         """
-        Helper to instantiate an AssociationReference for this resource.
+        self.add_resources([resource], attribute_name, exact_match)
+        
+    def add_resources(self, resources, attribute_name:str = None, exact_match:bool = True):
+        """Generic helper to add resources to attributes of this resource.
+        
+        This is a magic helper to add any resources to an attribute of this resource.
+        
+        It is recommended to provide the attribute name for faster processing.
+        When the attribute name is not specified, each attribute of the class will be examined for a match based on the resource type.
+        - By default, wee look for an exact resource type match.
+        - This can be adjusted using the exact_match argument, in which case subtypes will also be considered (e.g. a Category for a Concept).
+        - If more than one match is found, an exception will be raised.
+        
+        If the target attribute is a list, it will be instantiated and the resources will be appended.
+        We do not at this time prevent duplicate list entries (@TODO implement after we have a resource comparison/equality implemented)
+        
+        If the target attribute is not a list, it will simply be set (replacing any existing value).
+        
         """
-        if self.identifier is not None:
-            if self.identifier.ddiIdentifier is not None: 
-                reference = AssociationReference(ddiReference=self.identifier.ddiIdentifier)
-                return reference
+        # make sure resources is a list (vs a single resource)
+        if not isinstance(resources, list):
+            resources = [resources]
+        # Detect if the list has mixed resource types. 
+        # This usually won't be the case so we only need to find the target once.
+        resource_types = set()
+        for resource in resources:
+            resource_types.add(type(resource))
+        is_mixed_resources = len(resource_types) > 1
+        # iterate resources to add
+        for resource in resources:
+            target_attribute_info = None
+            # find the target attribute
+            if not target_attribute_info or is_mixed_resources: # only need to do this once if not mixed types
+                if attribute_name:
+                    # target explicitely provided
+                    target_attribute_info = self._get_attribute_info(attribute_name)
+                    # check type
+                    if exact_match:
+                        if type(resource) is not target_attribute_info.cls:
+                            raise Exception(f"{resource.__class__} is not of type {target_attribute_info.cls}")
+                        elif not issubclass(resource.__class__, target_attribute_info.cls):
+                            raise Exception(f"{resource.__class__} is not a subclass of {target_attribute_info.cls}")                            
+                else:
+                    # find a match based on the resource type
+                    target_matches = [] # to collect matching attributes
+                    for f in fields(self.__class__): # loop over all the attributes of this class
+                        attribute_info = self._get_attribute_info(f.name)
+                        # test match
+                        if exact_match: 
+                            if type(resource) is attribute_info.cls:
+                                target_matches.append(attribute_info)
+                        elif issubclass(resource.__class__, attribute_info.cls):
+                            target_matches.append(attribute_info)
+                    # process matches
+                    if len(target_matches) == 1:
+                        target_attribute_info = target_matches[0]
+                    elif len(target_matches) > 1:
+                        mactches_names = [f.name for f in target_matches]
+                        raise Exception(f"Multiple target matches for {resource.__class__} on {self.__class__}: {mactches_names}")
+                    else:
+                        raise Exception(f"No target matches for {resource.__class__} on {self.__class__}")
+            # set or add the resource to the target attribute
+            if target_attribute_info.is_list:
+                # initialize the list if needed
+                if not getattr(self, target_attribute_info.name):
+                    setattr(self, target_attribute_info.name, [])
+                # append this resource to list
+                getattr(self, target_attribute_info.name).append(resource)
+            else:
+                # set the target attribute value
+                setattr(self, target_attribute_info.name, resource)                    
+        return
 
     def get_ddi_identifer_value(self) -> str:
         """
@@ -483,6 +511,43 @@ class DdiCdiDataType(DdiCdiResource):
 #
 
 @dataclass
+class Agent:
+    """
+    Actor that performs a role in relation to a process or product.
+    Examples
+    ========
+    Analyst performing edits on data, interviewer conducting an interview, a relational database management system managing data, organization publishing data on a regular basis, creator or contributor of a publication.
+
+    Explanatory notes
+    =================
+    foaf:Agent is: An agent (eg. person, group, software or physical artifact). prov:Agent is: An agent is something that bears some form of responsibility for an activity taking place, for the existence of an entity, or for another agent's activity.
+    """
+    catalogDetails: "CatalogDetails" = field(default=None)  # Bundles the information useful for a data catalog entry.
+    identifier: "Identifier" = field(default=None)  # Identifier for objects requiring short- or long-lasting referencing and management.
+    image: list["PrivateImage"] = field(default_factory=list)  # Information regarding image associated with the agent.
+    purpose: "InternationalString" = field(default=None)  # Intent or reason for the object/the description of the object.
+
+@dataclass
+class AuthorizationSource(DdiCdiClass):
+    """
+    Identifies the authorizing agency and allows for the full text of the authorization (law, regulation, or other form of authorization).
+    Examples
+    ========
+    May be used to list authorizations from oversight committees and other regulatory agencies.
+
+    Explanatory notes
+    ===================
+    Supports requirements for some statistical offices to identify the agency or law authorizing the collection or management of data or metadata.
+    """
+    authorizationDate: "CombinedDate" = field(default=None)  # Identifies the date of authorization.
+    catalogDetails: "CatalogDetails" = field(default=None)  # Bundles the information useful for a data catalog entry.
+    identifier: "Identifier" = field(default=None)  # Identifier for objects requiring short- or long-lasting referencing and management.
+    legalMandate: "InternationalString" = field(default=None)  # Provide a legal citation to a law authorizing the study/data collection.
+    purpose: "InternationalString" = field(default=None)  # Intent or reason for the object/the description of the object.
+    statementOfAuthorization: "InternationalString" = field(default=None)  # Text of the authorization (law, mandate, approved business case).
+    AuthorizationSource_has_Agent: list["Agent"] = field(default_factory=list, metadata={"association": "Agent"})  # Agent responsible for the authorization source.
+
+@dataclass
 class CatalogDetails(DdiCdiClass):
     """
     A set of information useful for attribution, data discovery, and access.
@@ -509,6 +574,16 @@ class CatalogDetails(DdiCdiClass):
 
  
 @dataclass
+class CodePosition:
+    """
+    An index within an order intended for presentation (even though the content within levels of the hierarchy may be conceptually unordered). Expressed as an integer counting upward from 01 or 1.
+    """
+    value: int = field(default=None) # Index value of the member in an ordered array.
+
+    identifier: Optional["Identifier"] = field(default=None) # Identifier for objects requiring short- or long-lasting referencing and management.
+    indexes_Code: Optional["Code"] = field(default=None, metadata={"association": "Code"}) # Association to a Code. 
+ 
+@dataclass
 class ComponentPosition(DdiCdiClass):
     """
     Indexes the components in a data structure using integers with a position indicated by incrementing upward from 0 or 1
@@ -518,9 +593,7 @@ class ComponentPosition(DdiCdiClass):
     indexesDataStructureComponent: "DataStructureComponent" = field(metadata={"association": "DataStructureComponent"}, default=None) #
     
     def set_data_structure_component(self, data_structure_component: "DataStructureComponent"):
-        if not isinstance(data_structure_component, DataStructureComponent):
-            raise ValueError("The data structure component must be a DataStructureComponent")
-        self.add_association_reference("indexesDataStructureComponent", data_structure_component)
+        self.add_resources(data_structure_component, "indexesDataStructureComponent")
 
 @dataclass
 class Concept(DdiCdiClass):
@@ -570,12 +643,15 @@ class CategorySet(ConceptSystem):
     """Definition
     ============
     Concept system where the underlying concepts are categories."""
-    hasCategory: list["AssociationReference"] = field(default_factory=list, metadata={"association": "Category"})  
-    hasCategoryPosition: list["AssociationReference"] = field(default_factory=list, metadata={"association": "CategoryPosition"})
+    hasCategory: list["Category"] = field(default_factory=list, metadata={"association": "Category"})  
+    hasCategoryPosition: list["CategoryPosition"] = field(default_factory=list, metadata={"association": "CategoryPosition"})
+    
     
     def add_category(self, category):
-        """Helper to add a Category association reference to hasCategory."""
-        self.add_association_reference("hasCategory", category)
+        return self.add_categorys([category])
+        
+    def add_categories(self, categories):
+        return self.add_resources(categories, "hasCategory")
 
 class Category(Concept):
     """Definition 
@@ -591,8 +667,34 @@ class CategoryPosition(DdiCdiClass):
     Assigns a sequence number to a category within a list."""
     identifier: "Identifier" = field(default=None)  # Identifier for objects requiring short- or long-lasting referencing and management.
     value: int = field(default=None)  # Index value of the member in an ordered array.
-    indexesCategory: "AssociationReference" = field(default=None, metadata={"association":"Category"})  # 
+    indexesCategory: "Category" = field(default=None, metadata={"association":"Category"})  # 
     
+@dataclass
+class ClassificationItem(DdiCdiClass):
+    """
+    A space for a category within a statistical classification.
+    Examples
+    ========
+    In the 2012 North American Industry Classification System (NAICS) one classification item has the category "construction", and has the Code 23, which designates construction in NAICS.
+
+    Explanatory notes
+    ===================
+    A classification item defines the content and the borders of the category. A unit can be classified to one and only one item at each level of a statistical classification. As such a classification item is a placeholder for a position in a statistical classification. It contains a designation, for which code is a common kind; a category; and possibly other things. This differentiates it from code which is a only kind of designation, in particular if it is an alphanumeric string assigned to stand in place of a category. Statistical classifications often have multiple levels. A level is defined as a set of classification items each the same number of relationships from the top or root classification item.
+    """
+    ClassificationItem_denotes_Category: "Category" = field(metadata={"association": "Category"})
+    ClassificationItem_uses_Notation: "Notation" = field(metadata={"association": "Notation"})
+    changeFromPreviousVersion: Optional["InternationalString"] = field(default=None)  # Describes the changes, which the item has been subject to from the previous version to the actual statistical classification.
+    changeLog: Optional["InternationalString"] = field(default=None)  # Describes the changes, which the item has been subject to during the life time of the actual statistical classification.
+    explanatoryNotes: list["InternationalString"] = field(default_factory=list)  # A classification item may be associated with explanatory notes, which further describe and clarify the contents of the category.
+    futureNotes: list["InternationalString"] = field(default_factory=list)  # The future events describe an intended or implemented change (or a number of changes) related to an invalid item.
+    identifier: Optional["Identifier"] = field(default=None)  # Identifier for objects requiring short- or long-lasting referencing and management.
+    isGenerated: Optional[bool] = field(default=None)  # Indicates whether or not the item has been generated to make the level to which it belongs complete.
+    isValid: Optional[bool] = field(default=None)  # Indicates whether or not the item is currently valid.
+    name: list["ObjectName"] = field(default_factory=list)  # Human understandable name (liguistic signifier, word, phrase, or mnemonic).
+    validDates: Optional["DateRange"] = field(default=None)  # The dates describing the validity period of the object.
+    ClassificationItem_excludes_ClassificationItem: list["ClassificationItem"] = field(default_factory=list, metadata={"association": "ClassificationItem"})
+    ClassificationItem_hasRulingBy_AuthorizationSource: list["AuthorizationSource"] = field(default_factory=list, metadata={"association": "AuthorizationSource"})
+
 @dataclass
 class ConceptualDomain(DdiCdiClass):
     """
@@ -632,9 +734,9 @@ class ConceptualVariable(Concept):
     """
     descriptiveText: "InternationalString" = None  # A short natural language account of the characteristics of the object.
     unitOfMeasureKind: "ControlledVocabularyEntry" = None  # Kind of unit of measure, so that it may be prone to translation to equivalent UOMs. Example values include "acceleration," "temperature," "salinity", etc. This description exists at the conceptual level, indicating a limitation on the type of representations which may be used for the variable as it is made more concrete.
-    measures: list["AssociationReference"] = field(default=None, metadata={"association": "UnitType"}) # The measures association is intended to describe specific relationships between the ConceptualVariable and UnitType classes, and similar relationships between their sub-classes.    
-    takesSentinelConceptsFrom: list["AssociationReference"] = field(default=None, metadata={"association": "SentinelConceptualDomain"}) # Identifies the conceptual domain containing the set of sentinel concepts used to describe the conceptual variable.
-    takesSubstantiveConceptsFrom: list["AssociationReference"] = field(default=None, metadata={"association": "SubstantiveConceptualDomain"}) # Identifies the substantive conceptual domain containing the set of substantive concepts used to describe the conceptual variable.
+    measures: list["UnitType"] = field(default=None, metadata={"association": "UnitType"}) # The measures association is intended to describe specific relationships between the ConceptualVariable and UnitType classes, and similar relationships between their sub-classes.    
+    takesSentinelConceptsFrom: list["SentinelConceptualDomain"] = field(default=None, metadata={"association": "SentinelConceptualDomain"}) # Identifies the conceptual domain containing the set of sentinel concepts used to describe the conceptual variable.
+    takesSubstantiveConceptsFrom: list["SubstantiveConceptualDomain"] = field(default=None, metadata={"association": "SubstantiveConceptualDomain"}) # Identifies the substantive conceptual domain containing the set of substantive concepts used to describe the conceptual variable.
 
 @dataclass
 class DataPoint(DdiCdiClass):
@@ -692,10 +794,10 @@ class DataStore(DdiCdiClass):
     name: list["ObjectName"] = None  # Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.
     purpose: "InternationalString" = None  # Intent or reason for the object/the description of the object.
     recordCount: int = None  # The number of records in the Data Store.
-    isDefinedBy_Concept: list["AssociationReference"] = field(default=None, metadata={"association": "Concept"}) # The conceptual basis for the collection of members.
-    has_LogicalRecordPosition: list["AssociationReference"] = field(default=None, metadata={"association": "LogicalRecordPosition"}) 
-    has_LogicalRecord: list["AssociationReference"] = field(default=None, metadata={"association": "LogicalRecord"})
-    has_RecordRelation: "AssociationReference" = field(default=None, metadata={"association": "RecordRelation"}) # The record relation that defines the relationship and linking requirements between logical records in the data store.
+    isDefinedBy_Concept: list["Concept"] = field(default=None, metadata={"association": "Concept"}) # The conceptual basis for the collection of members.
+    has_LogicalRecordPosition: list["LogicalRecordPosition"] = field(default=None, metadata={"association": "LogicalRecordPosition"}) 
+    has_LogicalRecord: list["LogicalRecord"] = field(default=None, metadata={"association": "LogicalRecord"})
+    has_RecordRelation: "RecordRelation" = field(default=None, metadata={"association": "RecordRelation"}) # The record relation that defines the relationship and linking requirements between logical records in the data store.
 
 @dataclass
 class DataStructureComponent(DdiCdiClass):
@@ -768,7 +870,7 @@ class DimensionalDataSet(DataSet):
     Similar to Structural N-Cube.
     """
     name: list["ObjectName"] = field(default_factory=list)  # Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.
-    represents: list["AssociationReference"] = field(default_factory=list, metadata={"association": "ScopedMeasure"})  # 
+    represents: list["ScopedMeasure"] = field(default_factory=list, metadata={"association": "ScopedMeasure"})  # 
 
 
 @dataclass
@@ -781,7 +883,7 @@ class DimensionalDataStructure(DataStructure):
     ==========
     The structure described by [City, Average Income, Total Population] where City is a dimension and Average Income and Total Population are measures.
     """
-    DimensionalDataStructure_uses_DimensionGroup: list["AssociationReference"] = field(default_factory=list, metadata={"association": "DimensionGroup"})
+    DimensionalDataStructure_uses_DimensionGroup: list["DimensionGroup"] = field(default_factory=list, metadata={"association": "DimensionGroup"})
     
         
 @dataclass
@@ -805,13 +907,13 @@ class EnumerationDomain(DdiCdiClass):
     identifier: "Identifier" = field(default=None)  # Identifier for objects requiring short- or long-lasting referencing and management.
     name: list["ObjectName"] = field(default_factory=list)  # Human understandable name (liguistic signifier, word, phrase, or mnemonic).
     purpose: "InternationalString" = field(default=None)  # Intent or reason for the object/the description of the object.
-    usesLevelStructure: "AssociationReference" = field(default=None, metadata={"association": "LevelStructure"})  # Has meaningful level to which members belong.
-    referencesCategorySet: "AssociationReference" = field(default=None, metadata={"association": "CategorySet"})  # Category set associated with the enumeration.
-    isDefinedByConcept: list["AssociationReference"] = field(default_factory=list, metadata={"association": "Concept"})  # The conceptual basis for the collection of members.
+    usesLevelStructure: "LevelStructure" = field(default=None, metadata={"association": "LevelStructure"})  # Has meaningful level to which members belong.
+    referencesCategorySet: "CategorySet" = field(default=None, metadata={"association": "CategorySet"})  # Category set associated with the enumeration.
+    isDefinedByConcept: list["Concept"] = field(default_factory=list, metadata={"association": "Concept"})  # The conceptual basis for the collection of members.
     
     def set_category_set(self, category_set: "CategorySet") -> None:
         """Helper to set a CategorySet association reference on referencesCategorySet."""
-        self.add_association_reference("referencesCategorySet", category_set)
+        self.add_resources(category_set, "referencesCategorySet")
 
 @dataclass
 class CodeList(EnumerationDomain):
@@ -819,12 +921,12 @@ class CodeList(EnumerationDomain):
     ============ 
     List of codes and associated categories."""
     allowsDuplicates: bool = field(default=False)  # If value is False, the members are unique within the collection - if True, there may be duplicates.
-    hasCodePosition: list["AssociationReference"] = field(default_factory=list, metadata={"association": "CodePosition"})  # 
-    hasCode: list["AssociationReference"] = field(default_factory=list, metadata={"association": "Code"})  # 
+    hasCodePosition: list["CodePosition"] = field(default_factory=list, metadata={"association": "CodePosition"})  # 
+    hasCode: list["Code"] = field(default_factory=list, metadata={"association": "Code"})  # 
     
     def add_code(self, code: "Code") -> None:
         """Helper to add a Code association reference to hasCode."""
-        self.add_association_reference("hasCode", code)
+        self.add_resources(code, "hasCode")
     
 
 @dataclass
@@ -833,16 +935,16 @@ class Code(DdiCdiClass):
     ============ 
     The characters used as a symbol to designate a category within a codelist or classification."""
     identifier: "Identifier" = field(default=None)  # Identifier for objects requiring short- or long-lasting referencing and management.
-    denotesCategory: "AssociationReference" = field(default=None, metadata={"association": "Category"})  # A definition for the code. Specialization of denotes for categories.
-    usesNotation: "AssociationReference" = field(default=None, metadata={"association": "Notation"})  #
+    denotesCategory: "Category" = field(default=None, metadata={"association": "Category"})  # A definition for the code. Specialization of denotes for categories.
+    usesNotation: "Notation" = field(default=None, metadata={"association": "Notation"})  #
     
     def set_category(self, category: "Category") -> None:
         """Helper to set a Category association reference on denotesCategory."""
-        self.add_association_reference("denotesCategory", category)
+        self.add_resources(category, "denotesCategory")
         
     def set_notation(self, notation: "Notation") -> None:
         """Helper to set a Notation association reference on usesNotation."""
-        self.add_association_reference("usesNotation", notation)
+        self.category_set(notation, "usesNotation")
     
 @dataclass
 class ForeignKeyComponent(DdiCdiClass):
@@ -871,9 +973,9 @@ class InstanceValue(DdiCdiClass):
     content: Optional["TypedString"] = None  # The content of this value expressed as a string.
     identifier: Optional["Identifier"] = None  # Identifier for objects requiring short- or long-lasting referencing and management.
     whiteSpace: Optional["WhiteSpaceRule"] = None  # The usual setting "collapse" states that leading and trailing white space will be removed and multiple adjacent white spaces will be treated as a single white space. When setting to "replace" all occurrences of #x9 (tab), #xA (line feed) and #xD (carriage return) are replaced with #x20 (space) but leading and trailing spaces will be retained. If the existence of any of these white spaces is critical to the understanding of the content, change the value of this attribute to "preserve".
-    hasValueFrom_ValueDomain: Optional["AssociationReference"] = field(default=None, metadata={"association":"ValueDomain, DescriptorValueDomain, ReferenceValueDomain, SentinelValueDomain, SubstantiveValueDomain"})
-    isStoredIn_DataPoint: Optional["AssociationReference"] = field(default=None, metadata={"association":"DataPoint"})
-    represents_ConceptualValue: Optional["AssociationReference"] = field(default=None, metadata={"association":"ConceptualValue"})
+    hasValueFrom_ValueDomain: Optional["ValueDomain"] = field(default=None, metadata={"association":"ValueDomain, DescriptorValueDomain, ReferenceValueDomain, SentinelValueDomain, SubstantiveValueDomain"})
+    isStoredIn_DataPoint: Optional["DataPoint"] = field(default=None, metadata={"association":"DataPoint"})
+    represents_ConceptualValue: Optional["ConceptualValue"] = field(default=None, metadata={"association":"ConceptualValue"})
 
 @dataclass
 class RepresentedVariable(ConceptualVariable):
@@ -888,8 +990,8 @@ class RepresentedVariable(ConceptualVariable):
     describedUnitOfMeasure: "ControlledVocabularyEntry" = field(default=None)  # The unit in which the data values are measured (kg, pound, euro), expressed as a value from a controlled system of entries (i.e., QDT).
     hasIntendedDataType: "ControlledVocabularyEntry" = field(default=None)  # The data type intended to be used by this variable.
     simpleUnitOfMeasure: str = field(default=None)  # The unit in which the data values are measured (kg, pound, euro), expressed as a simple string.
-    takesSentinelValues: list["AssociationReference"] =  field(default=None, metadata={"association":"SentinelValueDomain"})  # A represented variable may have more than one sets of sentinel value domains, one for each type of software platform on which related instance variables might be instantiated.
-    takesSubstantiveValues: list["AssociationReference"] =  field(default=None, metadata={"association":"SubstantiveValueDomain"})  # The substantive representation (substantive value domain) of the variable.
+    takesSentinelValues: list["SentinelValueDomain"] =  field(default=None, metadata={"association":"SentinelValueDomain"})  # A represented variable may have more than one sets of sentinel value domains, one for each type of software platform on which related instance variables might be instantiated.
+    takesSubstantiveValues: list["SubstantiveValueDomain"] =  field(default=None, metadata={"association":"SubstantiveValueDomain"})  # The substantive representation (substantive value domain) of the variable.
         
 
 @dataclass
@@ -909,8 +1011,8 @@ class InstanceVariable(RepresentedVariable):
     platformType: "ControlledVocabularyEntry" = field(default=None)  # Describes the application or technical system context in which the variable has been realized.
     source: "Reference" = field(default=None)  # Reference capturing provenance information.
     variableFunction: list["ControlledVocabularyEntry"] = field(default=None)  # Immutable characteristic of the variable.
-    hasPhysicalSegmentLayout: list["AssociationReference"] =  field(default=None, metadata={"association":"PhysicalSegmentLayout"})  # 
-    hasValueMapping: list["AssociationReference"] = field(default=None, metadata={"association":"ValueMapping"})  #
+    hasPhysicalSegmentLayout: list["PhysicalSegmentLayout"] =  field(default=None, metadata={"association":"PhysicalSegmentLayout"})  # 
+    hasValueMapping: list["ValueMapping"] = field(default=None, metadata={"association":"ValueMapping"})  #
 
 @dataclass
 class Key(DdiCdiClass):
@@ -946,7 +1048,7 @@ class KeyMember(InstanceValue):
     """
     Single data instance that is part of a key.
     """
-    isBasedOn_DataStructureComponent: list["AssociationReference"] = field(default=None, metadata={"association": "DataStructureComponent"})
+    isBasedOn_DataStructureComponent: list["DataStructureComponent"] = field(default=None, metadata={"association": "DataStructureComponent"})
 
 
 @dataclass
@@ -978,25 +1080,61 @@ class KeyValueStructure(DataStructure):
     """
     pass
 
+
+@dataclass
+class Level:
+    """
+    Set of all classification items the same number of relationships from the root (or top) classification item.
+    Examples
+    ========
+    ISCO-08: index='1' label of associated category 'Major', index='2' label of associated category 'Sub-Major',  index='3' label of associated category 'Minor', 
+
+    Explanatory notes
+    ===================
+    Provides level information for the members of the level structure. levelNumber provides the level number which may or may not be associated with a category which defines level.
+    """
+    levelNumber: int = field(default=None)  # Provides an association between a level number and optional concept which defines it within an ordered array. Use is required.
+    displayLabel: list["LabelForDisplay"] = field(default_factory=list)  # A human-readable display label for the object. Supports the use of multiple languages. Repeat for labels with different content, for example, labels with differing length limitations.
+    identifier: Optional["Identifier"] = field(default=None)  # Identifier for objects requiring short- or long-lasting referencing and management.
+    Level_isDefinedBy_Concept: Optional["Concept"] = field(default=None, metadata={"association": "Concept"})  # A concept or concept sub-type which describes the level.
+    Level_groups_ClassificationItem: list["ClassificationItem"] = field(default_factory=list, metadata={"association": "ClassificationItem"})  # Classification items belonging to this level.
+
+@dataclass
+class LevelStructure(DdiCdiClass):
+    """
+    Nesting structure of a hierarchical collection.
+
+    Examples
+    ========
+    The International Standard Classification of Occupations (ISCO-08: (link unavailable)) Major, Sub-Major, and Minor or the North American Industry Classification System (NAICS: (link unavailable)) 2 digit sector codes, 3 digit subsector code list, 4 digit industry group code list, and 5 digit industry code list.
+
+    Explanatory notes
+    ===================
+    The levels within the structure begin at the root level '1' and continue as an ordered array through each level of nesting. Levels are used to organize a hierarchy. Usually, a hierarchy contains one root member at the top, though it could contain several. These are the first level. All members directly related to those in the first level compose the second level. The third and subsequent levels are defined similarly. A level often is associated with a concept, which defines it. These correspond to kinds of aggregates. For example, in the US Standard Occupational Classification (2010), the level below the top is called Major Occupation Groups, and the next level is called Minor Occupational Groups. These ideas convey the structure. In particular, Health Care Practitioners (a major group) can be broken into Chiropractors, Dentists, Physicians, Vets, Therapists, etc. (minor groups) The categories in the nodes at the lower level aggregate to the category in node above them. "Classification schemes are frequently organized in nested levels of increasing detail. ISCO-08, for example, has four levels: at the top level are ten major groups, each of which contain sub-major groups, which in turn are subdivided in minor groups, which contain unit groups. Even when a classification is not structured in levels ("flat classification"), the usual convention, which is adopted here, is to consider that it contains one unique level." (From the W3C Simple Knowledge Organization System: (link unavailable)#) Individual classification items organized in a hierarchy may be associated with a specific level.
+    """
+    catalogDetails: "CatalogDetails" = field(default=None)
+    identifier: "Identifier" = field(default=None)
+    name: list["ObjectName"] = field(default_factory=list)
+    usage: "InternationalString" = field(default=None)
+    validDateRange: "DateRange" = field(default=None)
+    LevelStructure_has_Level: list["Level"] = field(default_factory=list, metadata={"association": "Level"})
+
 @dataclass
 class LogicalRecord(DdiCdiClass):
     """
     Collection of instance variables.
     """
     identifier: "Identifier" = None # Identifier for objects requiring short- or long-lasting referencing and management.
-    LogicalRecord_organizes_DataSet: list["AssociationReference"] = field(default=None, metadata={"association":"DataSet"})
-    LogicalRecord_isDefinedBy_Concept: list["AssociationReference"] = field(default=None, metadata={"association":"Concept"}) # The conceptual basis for the collection of members.
-    LogicalRecord_has_InstanceVariable: list["AssociationReference"] = field(default=None, metadata={"association":"InstanceVariable"})
+    LogicalRecord_organizes_DataSet: list["DataSet"] = field(default=None, metadata={"association":"DataSet"})
+    LogicalRecord_isDefinedBy_Concept: list["Concept"] = field(default=None, metadata={"association":"Concept"}) # The conceptual basis for the collection of members.
+    LogicalRecord_has_InstanceVariable: list["InstanceVariable"] = field(default=None, metadata={"association":"InstanceVariable"})
     
     
     def add_dataset(self, dataset: DataSet):
-        if not isinstance(dataset, DataSet):
-            raise ValueError("The resource must be an an DataSet")
-        if dataset.identifier.ddiIdentifier is None:
-            raise ValueError("The DataSet identifier.ddiIdentifier must be set to be used as a reference")
-        if self.LogicalRecord_organizes_DataSet is None:
-            self.LogicalRecord_organizes_DataSet = []
-        self.LogicalRecord_organizes_DataSet.append(AssociationReference(ddiReference=dataset.identifier.ddiIdentifier))
+        self.add_datasets(dataset)
+        
+    def add_datasets(self, datasets: DataSet|list[DataSet]):
+        self.add_resources(datasets, "LogicalRecord_organizes_DataSet")
     
     def add_variable(self, instance_variable: InstanceVariable):
         """Adds an InstanceVariable to the LogicalRecord_has_InstanceVariable.
@@ -1017,7 +1155,7 @@ class LogicalRecord(DdiCdiClass):
         if self.LogicalRecord_has_InstanceVariable is None:
             self.LogicalRecord_has_InstanceVariable = []
         #self.LogicalRecord_has_InstanceVariable.append(AssociationReference(ddiReference=instance_variable.identifier.ddiIdentifier))
-        self.LogicalRecord_has_InstanceVariable.append(instance_variable.get_association_reference())
+        self.LogicalRecord_has_InstanceVariable.append(instance_variable)
 
 @dataclass
 class LongDataSet(DataSet):
@@ -1052,10 +1190,10 @@ class Notation(DdiCdiClass):
     content: "TypedString" = field(default=None)  # The actual content of this value as a string.
     identifier: "Identifier" = field(default=None)  # Identifier for objects requiring short- or long-lasting referencing and management.
     whiteSpace: "WhiteSpaceRule" = field(default=None)  # The usual setting "collapse" states that leading and trailing white space will be removed and multiple adjacent white spaces will be treated as a single white space. When setting to "replace" all occurrences of #x9 (tab), #xA (line feed) and #xD (carriage return) are replaced with #x20 (space) but leading and trailing spaces will be retained. If the existence of any of these white spaces is critical to the understanding of the content, change the value of this attribute to "preserve".
-    representsCategory: list["AssociationReference"] = field(default_factory=list, metadata={"association": "Category"})  # Notation represents zero to many categories.
+    representsCategory: list["Category"] = field(default_factory=list, metadata={"association": "Category"})  # Notation represents zero to many categories.
     
     def set_category(self, category: "Category"):
-        self.add_association_reference("representsCategory", category)
+        self.add_resources(category,"representsCategory")
 
 @dataclass
 class PhysicalDataSet(DdiCdiClass):
@@ -1125,7 +1263,7 @@ class PhysicalRecordSegmentPosition(DdiCdiClass):
     """
     value: int # Index value of the member in an ordered array.
     identifier: "Identifier" = None # Identifier for objects requiring short- or long-lasting referencing and management.
-    indexes_PhysicalRecordSegment: "AssociationReference" =  field(default=None, metadata={"association":"PhysicalRecordSegment"}) # Assigns a position to a physical record segment within a physical record.
+    indexes_PhysicalRecordSegment: "PhysicalRecordSegment" =  field(default=None, metadata={"association":"PhysicalRecordSegment"}) # Assigns a position to a physical record segment within a physical record.
 
 @dataclass
 class PhysicalSegmentLayout(DdiCdiClass):
@@ -1211,7 +1349,7 @@ class Population(Universe):
     3. Universities in Denmark 1 January 2011.
     """
     timePeriodOfPopulation: list["DateRange"] = field(default=None)  # The time period associated with the population.
-    isComposedOfUnit: list["AssociationReference"] = field(default=None, metadata={"association":"Unit"})  # A unit in the population.
+    isComposedOfUnit: list["Unit"] = field(default=None, metadata={"association":"Unit"})  # A unit in the population.
 
 @dataclass
 class PrimaryKey(DdiCdiClass):
@@ -1288,6 +1426,27 @@ class ValueDomain(DdiCdiClass):
     displayLabel: list["LabelForDisplay"] = field(default_factory=list)  # A human-readable display label for the object. Supports the use of multiple languages.
     identifier: "Identifier" = field(default=None)  # Identifier for objects requiring short- or long-lasting referencing and management.
     recommendedDataType: list["ControlledVocabularyEntry"] = field(default_factory=list)  # The data types that are recommended for use with this domain.
+
+
+
+@dataclass
+class SentinelConceptualDomain(ConceptualDomain):
+    """
+    Conceptual domain of sentinel concepts.
+    Examples
+    ========
+
+    - Refused 
+    - Don't know
+    - Lost in processing
+
+    Explanatory notes
+    =================
+    Sentinel values are intended for processing purposes whereas substantive values are used for subject matter concerns.
+    """
+    pass
+
+
    
 @dataclass
 class SentinelValueDomain(ValueDomain):
@@ -1303,9 +1462,24 @@ class SentinelValueDomain(ValueDomain):
     =================== 
     Sentinel values are defined in ISO 11404 as "element of a value space that is not completely consistent with a datatype's properties and characterizing operations...". A common example would be codes for missing values. Sentinel values are used for processing, not to describe subject matter. Typical examples include missing values or invalid entry codes. Sentinel value domains are typically of the enumerated type, but they can be the described type, too."""
     platformType: "ControlledVocabularyEntry" = field(default=None)  # The type of platform under which sentinel codes will be used.
-    takesConceptsFrom: "AssociationReference" = field(default=None, metadata={"association": "SentinelConceptualDomain"})  # Corresponding conceptual definition given by a sentinel conceptual domain.
-    takesValuesFrom: "AssociationReference" = field(default=None, metadata={"association": "CodeList,EnumerationDomain,StatisticalClassification"})  # Any subtype of an enumeration domain enumerating the set of valid values.
-    isDescribedBy: "AssociationReference" = field(default=None, metadata={"association": "ValueAndConceptDescription"})  # A formal description of the set of valid values - for described value domains.
+    takesConceptsFrom: "SentinelConceptualDomain" = field(default=None, metadata={"association": "SentinelConceptualDomain"})  # Corresponding conceptual definition given by a sentinel conceptual domain.
+    takesValuesFrom: "EnumerationDomain" = field(default=None, metadata={"association": "CodeList,EnumerationDomain,StatisticalClassification"})  # Any subtype of an enumeration domain enumerating the set of valid values.
+    isDescribedBy: "ValueAndConceptDescription" = field(default=None, metadata={"association": "ValueAndConceptDescription"})  # A formal description of the set of valid values - for described value domains.
+
+
+
+@dataclass
+class SubstantiveConceptualDomain(ConceptualDomain):
+    """ Conceptual domain of substantive concepts.
+    
+    Examples
+    ========
+    An enumeration of concepts for a categorical variable like "male" and "female" for gender, or "ozone" and "particulate matter less than 2.5 microns in diameter" for pollutant in an air quality measure.
+
+    Explanatory notes
+    =================
+    A conceptual variable links a unit type to a substantive conceptual domain. The latter can be an enumeration or description of the values that the variable may take on. In the enumerated case these are the categories in a category set that can be values, not the codes that represent the values. An example might be the conceptual domain for a variable representing self-identified gender. An enumeration might include the concept of "male" and the concept of "female". These, in turn, would be represented in a substantive value domain by codes in a code list like "m" and "f", or "0" and "1". A conceptual domain might be described through a value and concept description's description property of "a real number greater than 0" or through a more formal logical expression of "all reals x such that x > 0". Even in the described case, what is being described are conceptual, not the symbols used to represent the values. This may be a subtle distinction, but allows specifying that the same numeric value might be represented by 32 bits or by 64 bits or by an Arabic numeral or a Roman numeral.
+    """
     
 @dataclass
 class SubstantiveValueDomain(ValueDomain):
@@ -1320,11 +1494,38 @@ class SubstantiveValueDomain(ValueDomain):
     Explanatory notes 
     =================
     In DDI-CDI the value domain for a variable is separated into "substantive" and "sentinel" values. Substantive values are the values of primary interest. Sentinel values are additional values that may carry supplementary information, such as reasons for missing. This duality is described in ISO 11404. Substantive values for height might be real numbers expressed in meters. The full value domain might also include codes for different kinds of missing values - one code for "refused" and another for "don’t know". Sentinel values may also convey some substantive information and at the same time represent missing values."""
-    takesValuesFrom: "AssociationReference" = field(default=None, metadata={"association": "CodeList,EnumerationDomain,StatisticalClassification"})  # Any subtype of an enumeration domain enumerating the set of valid values.
-    takesConceptsFrom: "AssociationReference" = field(default=None, metadata={"association": "SubstantiveConceptualDomain"})  # Corresponding conceptual definition given by an substantive conceptual domain.
-    isDescribedBy: "AssociationReference" = field(default=None, metadata={"association": "ValueAndConceptDescription"})  # A formal description of the set of valid values - for described value domains.
+    takesValuesFrom: "EnumerationDomain" = field(default=None, metadata={"association": "CodeList,EnumerationDomain,StatisticalClassification"})  # Any subtype of an enumeration domain enumerating the set of valid values.
+    takesConceptsFrom: "SubstantiveConceptualDomain" = field(default=None, metadata={"association": "SubstantiveConceptualDomain"})  # Corresponding conceptual definition given by an substantive conceptual domain.
+    isDescribedBy: "ValueAndConceptDescription" = field(default=None, metadata={"association": "ValueAndConceptDescription"})  # A formal description of the set of valid values - for described value domains.
 
 
+
+@dataclass
+class ValueMapping:
+    """
+    Physical characteristics for the value of an instance variable stored in a data point as part of a physical segment layout.
+    Examples 
+    ========
+    A variable "age" might be represented in a file as a string with a maximum length of 5 characters and a number pattern of ##0.0  
+
+    Explanatory notes 
+    =================
+    An instance variable has details of value domain and data type, but will not have the final details of how a value is physically represented in a data file. A variable for height, for example, may be represented as a real number, but may be represented as a string in multiple ways. The decimal separator might be, for example a period or a comma. The string representing the value of a payment might be preceded by a currency symbol. The same numeric value might be written as "1,234,567" or "1.234567". A missing value might be written as ".", "NA", ".R" or as "R". The value mapping describes how the value of an instance variable is physically expressed. The properties of the value mapping as intended to be compatible with the W3C Metadata Vocabulary for Tabular Data ((link unavailable)) as well as common programming languages and statistical packages. The 'format' property, for example, can draw from an external controlled vocabulary such as the set of formats for Stata, SPSS, or SAS.
+    """
+    defaultValue: str = field(default=None)  # A default string indicating the value to substitute for an empty string.
+    
+    decimalPositions: Optional[int] = field(default=None)  # The number of decimal positions expressed as an integer. Used when the decimal position is implied (no decimal separator is present)
+    defaultDecimalSeparator: Optional[str] = field(default=None)  # Default value is "." (period). The character separating the integer part from the fractional part of a decimal or real number.
+    defaultDigitGroupSeparator: Optional[str] = field(default=None)  # Default value is null. A character separating groups of digits (for readability).
+    format: Optional["ControlledVocabularyEntry"] = field(default=None)  # This defines the format of the physical representation of the value.
+    identifier: Optional["Identifier"] = field(default=None)  # Identifier for objects requiring short- or long-lasting referencing and management.
+    isRequired: Optional[bool] = field(default=None)  # If the value of this property is True indicates that a value is required for the referenced instance variable.
+    length: Optional[int] = field(default=None)  # The length in characters of the physical representation of the value.
+    maximumLength: Optional[int] = field(default=None)  # The largest possible value of the length of the physical representation of the value.
+    minimumLength: Optional[int] = field(default=None)  # The smallest possible value for the length of the physical representation of the value.
+    nullSequence: Optional[str] = field(default=None)  # A string indicating a null value.
+    numberPattern: Optional[str] = field(default=None)  # A pattern description of the format of a numeric value.
+    
 @dataclass
 class ValueAndConceptDescription(DdiCdiClass):
     """
@@ -1361,8 +1562,8 @@ class VariableStructure(DdiCdiClass):
     specification: "StructureSpecification" = None # Provides information on reflexivity, transitivity, and symmetry of relationship using a descriptive term from an enumerated list. Use if all relations within this relation structure are of the same specification.
     topology: "ControlledVocabularyEntry" = None # Indicates the form of the associations among members of the collection. Specifies the way in which constituent parts are interrelated or arranged.
     totality: "StructureExtent" = None # Indicates whether the related collections are comprehensive in terms of their coverage.
-    VariableStructure_structures_VariableCollection: "AssociationReference" = field(default=None, metadata={"association": "VariableCollection"}) # Variable structure structures zero to one variable collection.
-    VariableStructure_has_VariableRelationship: list["AssociationReference"] = field(default=None, metadata={"association": "VariableRelationship"}) # 
+    VariableStructure_structures_VariableCollection: "VariableCollection" = field(default=None, metadata={"association": "VariableCollection"}) # Variable structure structures zero to one variable collection.
+    VariableStructure_has_VariableRelationship: list["VariableRelationship"] = field(default=None, metadata={"association": "VariableRelationship"}) # 
 
 @dataclass
 class WideDataSet(DataSet):
@@ -1446,14 +1647,14 @@ class AgentInRole(DdiCdiDataType):
     role: Optional[list["PairedControlledVocabularyEntry"]] = None  # Role of the of the agent within the context of the parent property name.
 
 
-@dataclass
-class AssociationReference(DdiCdiDataType):
-    """
-    Provides a way of pointing to resources outside of the information described in the set of DDI-CDI metadata.
-    """
-    ddiReference: Optional["InternationalRegistrationDataIdentifier"] = None  # A DDI type reference to a DDI object.
-    validType: Optional[list[str]] = field(default_factory=list)  # The expected type of the reference (e.g., the class or element according to the schema of the referenced resource).
-    isAssociationReference: bool = field(default=True, init=False)  # Fixed attribute indicating the reference is an association reference.
+#@dataclass
+#class AssociationReference(DdiCdiDataType):
+#    """
+#    Provides a way of pointing to resources outside of the information described in the set of DDI-CDI metadata.
+#    """
+#   ddiReference: Optional["InternationalRegistrationDataIdentifier"] = None  # A DDI type reference to a DDI object.
+#    validType: Optional[list[str]] = field(default_factory=list)  # The expected type of the reference (e.g., the class or element according to the schema of the referenced resource).
+#    isAssociationReference: bool = field(default=True, init=False)  # Fixed attribute indicating the reference is an association reference.
 
 @dataclass
 class InternationalString(DdiCdiDataType):

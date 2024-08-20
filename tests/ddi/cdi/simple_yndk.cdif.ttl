@@ -1,0 +1,502 @@
+@prefix cdi: <http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_CategorySet_V1> a cdi:CategorySet ;
+    cdi:hasCategory <urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_CategorySet_V1_hasCategoryList> ;
+    cdi:identifier <urn:dartfx:09633480-24af-4279-8df7-f11e060d5eb3_Identifier> .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Category_V1_1> a cdi:Category ;
+    cdi:identifier <urn:dartfx:36e61c98-468f-44bb-8b27-c65a7f69c09e_Identifier> ;
+    cdi:name <urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Category_V1_1_nameList> .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Category_V1_2> a cdi:Category ;
+    cdi:identifier <urn:dartfx:abaecdd0-0c50-4bb3-929a-d173a982d2b3_Identifier> ;
+    cdi:name <urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Category_V1_2_nameList> .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Category_V1_9> a cdi:Category ;
+    cdi:identifier <urn:dartfx:77a1af0f-ee01-4b16-b9bd-5be4b60532a4_Identifier> ;
+    cdi:name <urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Category_V1_9_nameList> .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_CodeList_V1> a cdi:CodeList ;
+    cdi:hasCode <urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_CodeList_V1_hasCodeList> ;
+    cdi:identifier <urn:dartfx:8512abba-118b-42d4-95b8-1b09efc24d3c_Identifier> ;
+    cdi:referencesCategorySet <urn:dartfx:0640e058-0bcc-46e0-a788-c85cd56497af_AssociationReference> .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Code_V1_1> a cdi:Code ;
+    cdi:denotesCategory <urn:dartfx:6ed52114-b0b4-45cc-99c2-fed7c2aec4cf_AssociationReference> ;
+    cdi:identifier <urn:dartfx:3af968a2-9faf-4fe4-a749-af549d937839_Identifier> .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Code_V1_2> a cdi:Code ;
+    cdi:denotesCategory <urn:dartfx:9a8cc171-56b4-4832-8886-d23fa6334dbb_AssociationReference> ;
+    cdi:identifier <urn:dartfx:f481eb31-5ca0-4bb2-b117-ff6062c41b86_Identifier> .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Code_V1_9> a cdi:Code ;
+    cdi:denotesCategory <urn:dartfx:821e31f0-770c-4ac5-915c-5d5f79d056a0_AssociationReference> ;
+    cdi:identifier <urn:dartfx:0f5b2949-2f34-42f7-9801-35ad82b47427_Identifier> .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_DataSet_F1> a cdi:DataSet ;
+    cdi:identifier <urn:dartfx:0c036ea9-f1ce-47c1-a019-b95970fd84cd_Identifier> ;
+    cdi:isStructuredBy_DataStructure <urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_DataSet_F1_isStructuredBy_DataStructureList> .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_LogicalRecord_F1> a cdi:LogicalRecord ;
+    cdi:LogicalRecord_has_InstanceVariable <urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_LogicalRecord_F1_LogicalRecord_has_InstanceVariableList> ;
+    cdi:LogicalRecord_organizes_DataSet <urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_LogicalRecord_F1_LogicalRecord_organizes_DataSetList> ;
+    cdi:identifier <urn:dartfx:5af57d92-4f9f-4239-8616-2f4805e90a07_Identifier> .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Notation_V1_1> a cdi:Notation ;
+    cdi:content <urn:dartfx:b9cb50d5-ba41-49ac-a412-6352ec7452ad_TypedString> ;
+    cdi:identifier <urn:dartfx:722f1c73-c45f-487a-9e24-b19db0bc8d31_Identifier> ;
+    cdi:representsCategory <urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Notation_V1_1_representsCategoryList> .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Notation_V1_2> a cdi:Notation ;
+    cdi:content <urn:dartfx:3659d4c0-2805-4520-af26-282190aabf4f_TypedString> ;
+    cdi:identifier <urn:dartfx:6cc8b37c-c524-4359-a271-b793d334da5c_Identifier> ;
+    cdi:representsCategory <urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Notation_V1_2_representsCategoryList> .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Notation_V1_9> a cdi:Notation ;
+    cdi:content <urn:dartfx:87a07038-32ca-4863-9d61-4702b431ff2e_TypedString> ;
+    cdi:identifier <urn:dartfx:0f80b01a-f711-476f-bd49-792e4e38c4f9_Identifier> ;
+    cdi:representsCategory <urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Notation_V1_9_representsCategoryList> .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_SubstantiveValueDomain_V1> a cdi:SubstantiveValueDomain ;
+    cdi:identifier <urn:dartfx:85855b8d-51e4-4ae3-bbd5-ed3ead0aa546_Identifier> ;
+    cdi:takesValuesFrom <urn:dartfx:2ca27657-87ce-48ef-8b25-e836ee821acc_AssociationReference> .
+
+<urn:dartfx:063e9240-2410-45c8-a130-c5ef5c56bc50_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:b21f11f9-d717-4171-a0cc-3fe50b1d60b0_InternationalRegistrationDataIdentifier> ;
+    cdi:uri <urn:dartfx:f05d823d-2c0f-4b63-8f5c-fbcfe8080e0c_XsdAnyUri> .
+
+<urn:dartfx:0640e058-0bcc-46e0-a788-c85cd56497af_AssociationReference> a cdi:AssociationReference ;
+    cdi:ddiReference <urn:dartfx:27c00f28-8fdf-4b16-8430-b78cccc4993a_InternationalRegistrationDataIdentifier> ;
+    cdi:isAssociationReference true .
+
+<urn:dartfx:09633480-24af-4279-8df7-f11e060d5eb3_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:27c00f28-8fdf-4b16-8430-b78cccc4993a_InternationalRegistrationDataIdentifier> ;
+    cdi:uri <urn:dartfx:588abc13-b798-4095-9612-0aff8c18819d_XsdAnyUri> .
+
+<urn:dartfx:0c036ea9-f1ce-47c1-a019-b95970fd84cd_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:adc8e65f-3f0f-4c8e-9f57-53cb0284b215_InternationalRegistrationDataIdentifier> ;
+    cdi:nonDdiIdentifier <urn:dartfx:0c036ea9-f1ce-47c1-a019-b95970fd84cd_Identifier_nonDdiIdentifierList> ;
+    cdi:uri <urn:dartfx:5275f9d7-e9a7-4e06-a9ce-5f74856ea237_XsdAnyUri> .
+
+<urn:dartfx:0c036ea9-f1ce-47c1-a019-b95970fd84cd_Identifier_nonDdiIdentifierList> rdf:first <urn:dartfx:b311bcfa-424d-418c-bba1-73cda47bcc2a_NonDdiIdentifier> ;
+    rdf:rest () .
+
+<urn:dartfx:0d9311c8-ea83-47a0-93bd-428349204848_LabelForDisplay> a cdi:LabelForDisplay ;
+    cdi:languageSpecificString <urn:dartfx:0d9311c8-ea83-47a0-93bd-428349204848_LabelForDisplay_languageSpecificStringList> .
+
+<urn:dartfx:0d9311c8-ea83-47a0-93bd-428349204848_LabelForDisplay_languageSpecificStringList> rdf:first <urn:dartfx:6258d95e-c64c-4dfb-ae88-096f82ca2c18_LanguageString> ;
+    rdf:rest () .
+
+<urn:dartfx:0df24a95-ea0b-4e86-88d8-25f9b9317b77_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "75bf9be5-01bc-49db-99d0-d570a49d6a8e_LogicalRecord_F1"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:dartfx:0f5b2949-2f34-42f7-9801-35ad82b47427_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:a1509f49-e104-4b47-98cc-28724f7bd7d4_InternationalRegistrationDataIdentifier> ;
+    cdi:nonDdiIdentifier <urn:dartfx:0f5b2949-2f34-42f7-9801-35ad82b47427_Identifier_nonDdiIdentifierList> ;
+    cdi:uri <urn:dartfx:fb1f167f-c454-4f9a-87f4-3324d0da48ed_XsdAnyUri> .
+
+<urn:dartfx:0f5b2949-2f34-42f7-9801-35ad82b47427_Identifier_nonDdiIdentifierList> rdf:first <urn:dartfx:8fd7772f-2c86-4826-9b58-1a6861c432b5_NonDdiIdentifier> ;
+    rdf:rest () .
+
+<urn:dartfx:0f80b01a-f711-476f-bd49-792e4e38c4f9_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:f6d88c03-134e-43b6-a531-a3a44d8d3622_InternationalRegistrationDataIdentifier> ;
+    cdi:uri <urn:dartfx:16dc4c87-bf67-4b44-b844-7b5735554cab_XsdAnyUri> .
+
+<urn:dartfx:16dc4c87-bf67-4b44-b844-7b5735554cab_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Notation_V1_9"^^xsd:string .
+
+<urn:dartfx:1da96b4f-a4dc-404e-891a-02d338d94c39_NonDdiIdentifier> a cdi:NonDdiIdentifier ;
+    cdi:type "code-value"^^xsd:string ;
+    cdi:value "1"^^xsd:string .
+
+<urn:dartfx:26ed7cba-7d16-4445-9582-aa787f990399_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "75bf9be5-01bc-49db-99d0-d570a49d6a8e_DataStructure_simple_yndk"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:dartfx:2ca27657-87ce-48ef-8b25-e836ee821acc_AssociationReference> a cdi:AssociationReference ;
+    cdi:ddiReference <urn:dartfx:031ee945-bb8d-4241-b0b3-c853b8b760a9_InternationalRegistrationDataIdentifier> ;
+    cdi:isAssociationReference true .
+
+<urn:dartfx:2d20ab13-6b05-4468-8fe8-ca317746d4b3_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Code_V1_1"^^xsd:string .
+
+<urn:dartfx:317452d0-3bbc-4f13-8104-93896a689594_AssociationReference> a cdi:AssociationReference ;
+    cdi:ddiReference <urn:dartfx:6cf18865-a7fe-4cf0-ab61-9ca2b81050d8_InternationalRegistrationDataIdentifier> ;
+    cdi:isAssociationReference true .
+
+<urn:dartfx:343910c3-7044-42a7-8869-a76deb5b1454_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:80df3187-7ccd-458d-ba6a-d4166b913f45_InternationalRegistrationDataIdentifier> ;
+    cdi:nonDdiIdentifier <urn:dartfx:343910c3-7044-42a7-8869-a76deb5b1454_Identifier_nonDdiIdentifierList> ;
+    cdi:uri <urn:dartfx:c463b2ce-f719-4157-a6f7-63139218e623_XsdAnyUri> .
+
+<urn:dartfx:343910c3-7044-42a7-8869-a76deb5b1454_Identifier_nonDdiIdentifierList> rdf:first <urn:dartfx:4b78a127-524b-473b-b220-8b3cdcb4e7ad_NonDdiIdentifier> ;
+    rdf:rest () .
+
+<urn:dartfx:3659d4c0-2805-4520-af26-282190aabf4f_TypedString> a cdi:TypedString ;
+    cdi:content "No"^^xsd:string .
+
+<urn:dartfx:36e61c98-468f-44bb-8b27-c65a7f69c09e_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:e58cf8bc-dc0e-43d1-95a3-6909d91e21e6_InternationalRegistrationDataIdentifier> ;
+    cdi:uri <urn:dartfx:b31b94d6-4b02-4691-ba4d-754c29657cd6_XsdAnyUri> .
+
+<urn:dartfx:3725f1ef-08ba-4121-89e5-70051472b537_AssociationReference> a cdi:AssociationReference ;
+    cdi:ddiReference <urn:dartfx:0fed9cef-3ba5-415e-a4b5-746089456157_InternationalRegistrationDataIdentifier> ;
+    cdi:isAssociationReference true .
+
+<urn:dartfx:3ae5905c-235f-423c-b5c7-6de5612daf50_AssociationReference> a cdi:AssociationReference ;
+    cdi:ddiReference <urn:dartfx:62a1efc5-8c46-451b-a781-7b349be3adf7_InternationalRegistrationDataIdentifier> ;
+    cdi:isAssociationReference true .
+
+<urn:dartfx:3af968a2-9faf-4fe4-a749-af549d937839_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:3e48c507-b97b-4d4f-b609-34568045ed4a_InternationalRegistrationDataIdentifier> ;
+    cdi:nonDdiIdentifier <urn:dartfx:3af968a2-9faf-4fe4-a749-af549d937839_Identifier_nonDdiIdentifierList> ;
+    cdi:uri <urn:dartfx:2d20ab13-6b05-4468-8fe8-ca317746d4b3_XsdAnyUri> .
+
+<urn:dartfx:3af968a2-9faf-4fe4-a749-af549d937839_Identifier_nonDdiIdentifierList> rdf:first <urn:dartfx:1da96b4f-a4dc-404e-891a-02d338d94c39_NonDdiIdentifier> ;
+    rdf:rest () .
+
+<urn:dartfx:3b217feb-70ae-440c-a152-67bf0e11c7d2_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Code_V1_2"^^xsd:string .
+
+<urn:dartfx:3c824805-687e-4313-b7ae-1ebbb2cba0fe_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:fb82afa9-f08d-46c7-87d1-7e94889d7097_DataStructureComponent"^^xsd:string .
+
+<urn:dartfx:45b0f5af-8f6a-4875-afd1-7c565973057e_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Notation_V1_1"^^xsd:string .
+
+<urn:dartfx:4b78a127-524b-473b-b220-8b3cdcb4e7ad_NonDdiIdentifier> a cdi:NonDdiIdentifier ;
+    cdi:type "ddi-codebook"^^xsd:string ;
+    cdi:value "V1"^^xsd:string .
+
+<urn:dartfx:5275f9d7-e9a7-4e06-a9ce-5f74856ea237_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_DataSet_F1"^^xsd:string .
+
+<urn:dartfx:57565811-b1f2-4379-b49e-b87b39118c82_NonDdiIdentifier> a cdi:NonDdiIdentifier ;
+    cdi:type "ddi-codebook"^^xsd:string ;
+    cdi:value "F1"^^xsd:string .
+
+<urn:dartfx:588abc13-b798-4095-9612-0aff8c18819d_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_CategorySet_V1"^^xsd:string .
+
+<urn:dartfx:5af57d92-4f9f-4239-8616-2f4805e90a07_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:0df24a95-ea0b-4e86-88d8-25f9b9317b77_InternationalRegistrationDataIdentifier> ;
+    cdi:nonDdiIdentifier <urn:dartfx:5af57d92-4f9f-4239-8616-2f4805e90a07_Identifier_nonDdiIdentifierList> ;
+    cdi:uri <urn:dartfx:952e56c4-19dd-4972-b042-374a41a4c303_XsdAnyUri> .
+
+<urn:dartfx:5af57d92-4f9f-4239-8616-2f4805e90a07_Identifier_nonDdiIdentifierList> rdf:first <urn:dartfx:57565811-b1f2-4379-b49e-b87b39118c82_NonDdiIdentifier> ;
+    rdf:rest () .
+
+<urn:dartfx:5c4e8770-091e-4c53-bee2-679f98bd2306_AssociationReference> a cdi:AssociationReference ;
+    cdi:ddiReference <urn:dartfx:bac1ae95-3c2e-485c-a80a-a2b7fc4e5b6b_InternationalRegistrationDataIdentifier> ;
+    cdi:isAssociationReference true .
+
+<urn:dartfx:6258d95e-c64c-4dfb-ae88-096f82ca2c18_LanguageString> a cdi:LanguageString ;
+    cdi:content "Yes / No / Dont' know"^^xsd:string .
+
+<urn:dartfx:632117b1-04f7-483e-8029-9724c840a630_NonDdiIdentifier> a cdi:NonDdiIdentifier ;
+    cdi:type "ddi-codebook"^^xsd:string ;
+    cdi:value "simple_yndk"^^xsd:string .
+
+<urn:dartfx:6b0da140-4ca8-40a9-94ea-851a3bd0e492_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Category_V1_9"^^xsd:string .
+
+<urn:dartfx:6cc8b37c-c524-4359-a271-b793d334da5c_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:fb0042f8-4bc8-4e81-bfb7-73b3bc41305c_InternationalRegistrationDataIdentifier> ;
+    cdi:uri <urn:dartfx:d7bf4b7e-3101-4d3c-90a7-29ca97548c04_XsdAnyUri> .
+
+<urn:dartfx:6ed52114-b0b4-45cc-99c2-fed7c2aec4cf_AssociationReference> a cdi:AssociationReference ;
+    cdi:ddiReference <urn:dartfx:e58cf8bc-dc0e-43d1-95a3-6909d91e21e6_InternationalRegistrationDataIdentifier> ;
+    cdi:isAssociationReference true .
+
+<urn:dartfx:6eeac92d-c7c3-442a-9fee-0c253be18c1a_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_DataStructure_simple_yndk"^^xsd:string .
+
+<urn:dartfx:722f1c73-c45f-487a-9e24-b19db0bc8d31_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:b7c67e60-2670-4c46-b6c6-48a22ed7059e_InternationalRegistrationDataIdentifier> ;
+    cdi:uri <urn:dartfx:45b0f5af-8f6a-4875-afd1-7c565973057e_XsdAnyUri> .
+
+<urn:dartfx:7436465e-8738-4795-acaf-f5daa74223f7_ObjectName> a cdi:ObjectName ;
+    cdi:name "Don't know"^^xsd:string .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_CategorySet_V1_hasCategoryList> rdf:first <urn:dartfx:d843993e-7bac-4bfa-83d7-0f081a17f647_AssociationReference> ;
+    rdf:rest ( <urn:dartfx:d7e90093-799e-4401-be35-e45e6e2ccf35_AssociationReference> <urn:dartfx:317452d0-3bbc-4f13-8104-93896a689594_AssociationReference> ) .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Category_V1_1_nameList> rdf:first <urn:dartfx:d4f69d82-8dec-43ef-a86f-99dba29d2c18_ObjectName> ;
+    rdf:rest () .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Category_V1_2_nameList> rdf:first <urn:dartfx:7b26feb0-d5f1-433f-b407-7e983c6547d6_ObjectName> ;
+    rdf:rest () .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Category_V1_9_nameList> rdf:first <urn:dartfx:7436465e-8738-4795-acaf-f5daa74223f7_ObjectName> ;
+    rdf:rest () .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_CodeList_V1_hasCodeList> rdf:first <urn:dartfx:91645080-669d-480b-a303-18a4e8c981ea_AssociationReference> ;
+    rdf:rest ( <urn:dartfx:5c4e8770-091e-4c53-bee2-679f98bd2306_AssociationReference> <urn:dartfx:f4e0dc94-7a68-4f56-b2ed-1925775e177f_AssociationReference> ) .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_DataSet_F1_isStructuredBy_DataStructureList> rdf:first <urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_DataStructure_simple_yndk> ;
+    rdf:rest () .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_DataStructure_simple_yndk> a cdi:DataStructure ;
+    cdi:DataStructure_has_ComponentPosition <urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_DataStructure_simple_yndk_DataStructure_has_ComponentPositionList> ;
+    cdi:DataStructure_has_DataStructureComponent <urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_DataStructure_simple_yndk_DataStructure_has_DataStructureComponentList> ;
+    cdi:identifier <urn:dartfx:bcb94bda-fad5-42c2-ba60-f43c26e2a4f9_Identifier> .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_DataStructure_simple_yndk_DataStructure_has_ComponentPositionList> rdf:first <urn:dartfx:fb82afa9-f08d-46c7-87d1-7e94889d7097_ComponentPosition> ;
+    rdf:rest () .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_DataStructure_simple_yndk_DataStructure_has_DataStructureComponentList> rdf:first <urn:dartfx:fb82afa9-f08d-46c7-87d1-7e94889d7097_DataStructureComponent> ;
+    rdf:rest () .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_InstanceVariable_V1> a cdi:InstanceVariable ;
+    cdi:displayLabel <urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_InstanceVariable_V1_displayLabelList> ;
+    cdi:identifier <urn:dartfx:343910c3-7044-42a7-8869-a76deb5b1454_Identifier> ;
+    cdi:name <urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_InstanceVariable_V1_nameList> ;
+    cdi:takesSubstantiveValues <urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_InstanceVariable_V1_takesSubstantiveValuesList> .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_InstanceVariable_V1_displayLabelList> rdf:first <urn:dartfx:0d9311c8-ea83-47a0-93bd-428349204848_LabelForDisplay> ;
+    rdf:rest () .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_InstanceVariable_V1_nameList> rdf:first <urn:dartfx:cd9c5d43-8637-410f-9e19-8279d1c2a5a6_ObjectName> ;
+    rdf:rest () .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_InstanceVariable_V1_takesSubstantiveValuesList> rdf:first <urn:dartfx:3725f1ef-08ba-4121-89e5-70051472b537_AssociationReference> ;
+    rdf:rest () .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_LogicalRecord_F1_LogicalRecord_has_InstanceVariableList> rdf:first <urn:dartfx:f30e5336-3a9f-442d-8dd3-1b1aec2e0a51_AssociationReference> ;
+    rdf:rest () .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_LogicalRecord_F1_LogicalRecord_organizes_DataSetList> rdf:first <urn:dartfx:e7f1390d-feaa-412a-b974-0cfae4cd9691_AssociationReference> ;
+    rdf:rest () .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Notation_V1_1_representsCategoryList> rdf:first <urn:dartfx:fffbad3b-4d7d-4490-a854-73b2ec487dac_AssociationReference> ;
+    rdf:rest () .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Notation_V1_2_representsCategoryList> rdf:first <urn:dartfx:3ae5905c-235f-423c-b5c7-6de5612daf50_AssociationReference> ;
+    rdf:rest () .
+
+<urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Notation_V1_9_representsCategoryList> rdf:first <urn:dartfx:99b15d8d-5dc0-4970-9bca-f51455f2eab5_AssociationReference> ;
+    rdf:rest () .
+
+<urn:dartfx:77a1af0f-ee01-4b16-b9bd-5be4b60532a4_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:6cf18865-a7fe-4cf0-ab61-9ca2b81050d8_InternationalRegistrationDataIdentifier> ;
+    cdi:uri <urn:dartfx:6b0da140-4ca8-40a9-94ea-851a3bd0e492_XsdAnyUri> .
+
+<urn:dartfx:7b26feb0-d5f1-433f-b407-7e983c6547d6_ObjectName> a cdi:ObjectName ;
+    cdi:name "No"^^xsd:string .
+
+<urn:dartfx:81636716-e445-4ccf-ae4e-690768b2150b_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:b627e903-ec8d-441d-8bf2-2c3a3f44e14e_InternationalRegistrationDataIdentifier> ;
+    cdi:uri <urn:dartfx:3c824805-687e-4313-b7ae-1ebbb2cba0fe_XsdAnyUri> .
+
+<urn:dartfx:821e31f0-770c-4ac5-915c-5d5f79d056a0_AssociationReference> a cdi:AssociationReference ;
+    cdi:ddiReference <urn:dartfx:6cf18865-a7fe-4cf0-ab61-9ca2b81050d8_InternationalRegistrationDataIdentifier> ;
+    cdi:isAssociationReference true .
+
+<urn:dartfx:8512abba-118b-42d4-95b8-1b09efc24d3c_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:031ee945-bb8d-4241-b0b3-c853b8b760a9_InternationalRegistrationDataIdentifier> ;
+    cdi:uri <urn:dartfx:fea31e45-74ff-474c-a79f-fc1847737364_XsdAnyUri> .
+
+<urn:dartfx:85855b8d-51e4-4ae3-bbd5-ed3ead0aa546_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:0fed9cef-3ba5-415e-a4b5-746089456157_InternationalRegistrationDataIdentifier> ;
+    cdi:uri <urn:dartfx:f1e04045-9ac7-4546-b5f1-1ad9a9dd1cfc_XsdAnyUri> .
+
+<urn:dartfx:87a07038-32ca-4863-9d61-4702b431ff2e_TypedString> a cdi:TypedString ;
+    cdi:content "Don't know"^^xsd:string .
+
+<urn:dartfx:8fd7772f-2c86-4826-9b58-1a6861c432b5_NonDdiIdentifier> a cdi:NonDdiIdentifier ;
+    cdi:type "code-value"^^xsd:string ;
+    cdi:value "9"^^xsd:string .
+
+<urn:dartfx:91645080-669d-480b-a303-18a4e8c981ea_AssociationReference> a cdi:AssociationReference ;
+    cdi:ddiReference <urn:dartfx:3e48c507-b97b-4d4f-b609-34568045ed4a_InternationalRegistrationDataIdentifier> ;
+    cdi:isAssociationReference true .
+
+<urn:dartfx:952e56c4-19dd-4972-b042-374a41a4c303_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_LogicalRecord_F1"^^xsd:string .
+
+<urn:dartfx:99b15d8d-5dc0-4970-9bca-f51455f2eab5_AssociationReference> a cdi:AssociationReference ;
+    cdi:ddiReference <urn:dartfx:6cf18865-a7fe-4cf0-ab61-9ca2b81050d8_InternationalRegistrationDataIdentifier> ;
+    cdi:isAssociationReference true .
+
+<urn:dartfx:9a8cc171-56b4-4832-8886-d23fa6334dbb_AssociationReference> a cdi:AssociationReference ;
+    cdi:ddiReference <urn:dartfx:62a1efc5-8c46-451b-a781-7b349be3adf7_InternationalRegistrationDataIdentifier> ;
+    cdi:isAssociationReference true .
+
+<urn:dartfx:aa6d746d-3173-4081-a01b-b0ba1792126d_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Category_V1_2"^^xsd:string .
+
+<urn:dartfx:abaecdd0-0c50-4bb3-929a-d173a982d2b3_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:62a1efc5-8c46-451b-a781-7b349be3adf7_InternationalRegistrationDataIdentifier> ;
+    cdi:uri <urn:dartfx:aa6d746d-3173-4081-a01b-b0ba1792126d_XsdAnyUri> .
+
+<urn:dartfx:b21f11f9-d717-4171-a0cc-3fe50b1d60b0_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "fb82afa9-f08d-46c7-87d1-7e94889d7097_ComponentPosition"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:dartfx:b311bcfa-424d-418c-bba1-73cda47bcc2a_NonDdiIdentifier> a cdi:NonDdiIdentifier ;
+    cdi:type "ddi-codebook"^^xsd:string ;
+    cdi:value "F1"^^xsd:string .
+
+<urn:dartfx:b31b94d6-4b02-4691-ba4d-754c29657cd6_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Category_V1_1"^^xsd:string .
+
+<urn:dartfx:b627e903-ec8d-441d-8bf2-2c3a3f44e14e_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "fb82afa9-f08d-46c7-87d1-7e94889d7097_DataStructureComponent"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:dartfx:b7c67e60-2670-4c46-b6c6-48a22ed7059e_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "75bf9be5-01bc-49db-99d0-d570a49d6a8e_Notation_V1_1"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:dartfx:b9cb50d5-ba41-49ac-a412-6352ec7452ad_TypedString> a cdi:TypedString ;
+    cdi:content "Yes"^^xsd:string .
+
+<urn:dartfx:bcb94bda-fad5-42c2-ba60-f43c26e2a4f9_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:26ed7cba-7d16-4445-9582-aa787f990399_InternationalRegistrationDataIdentifier> ;
+    cdi:nonDdiIdentifier <urn:dartfx:bcb94bda-fad5-42c2-ba60-f43c26e2a4f9_Identifier_nonDdiIdentifierList> ;
+    cdi:uri <urn:dartfx:6eeac92d-c7c3-442a-9fee-0c253be18c1a_XsdAnyUri> .
+
+<urn:dartfx:bcb94bda-fad5-42c2-ba60-f43c26e2a4f9_Identifier_nonDdiIdentifierList> rdf:first <urn:dartfx:632117b1-04f7-483e-8029-9724c840a630_NonDdiIdentifier> ;
+    rdf:rest () .
+
+<urn:dartfx:c463b2ce-f719-4157-a6f7-63139218e623_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_InstanceVariable_V1"^^xsd:string .
+
+<urn:dartfx:cd9c5d43-8637-410f-9e19-8279d1c2a5a6_ObjectName> a cdi:ObjectName ;
+    cdi:name "yesnodk"^^xsd:string .
+
+<urn:dartfx:d4f69d82-8dec-43ef-a86f-99dba29d2c18_ObjectName> a cdi:ObjectName ;
+    cdi:name "Yes"^^xsd:string .
+
+<urn:dartfx:d7bf4b7e-3101-4d3c-90a7-29ca97548c04_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Notation_V1_2"^^xsd:string .
+
+<urn:dartfx:d7e90093-799e-4401-be35-e45e6e2ccf35_AssociationReference> a cdi:AssociationReference ;
+    cdi:ddiReference <urn:dartfx:62a1efc5-8c46-451b-a781-7b349be3adf7_InternationalRegistrationDataIdentifier> ;
+    cdi:isAssociationReference true .
+
+<urn:dartfx:d843993e-7bac-4bfa-83d7-0f081a17f647_AssociationReference> a cdi:AssociationReference ;
+    cdi:ddiReference <urn:dartfx:e58cf8bc-dc0e-43d1-95a3-6909d91e21e6_InternationalRegistrationDataIdentifier> ;
+    cdi:isAssociationReference true .
+
+<urn:dartfx:e7f1390d-feaa-412a-b974-0cfae4cd9691_AssociationReference> a cdi:AssociationReference ;
+    cdi:ddiReference <urn:dartfx:adc8e65f-3f0f-4c8e-9f57-53cb0284b215_InternationalRegistrationDataIdentifier> ;
+    cdi:isAssociationReference true .
+
+<urn:dartfx:ea94e583-7a46-47f7-a8f2-4ab1a3fdc136_NonDdiIdentifier> a cdi:NonDdiIdentifier ;
+    cdi:type "code-value"^^xsd:string ;
+    cdi:value "2"^^xsd:string .
+
+<urn:dartfx:f05d823d-2c0f-4b63-8f5c-fbcfe8080e0c_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:fb82afa9-f08d-46c7-87d1-7e94889d7097_ComponentPosition"^^xsd:string .
+
+<urn:dartfx:f1e04045-9ac7-4546-b5f1-1ad9a9dd1cfc_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_SubstantiveValueDomain_V1"^^xsd:string .
+
+<urn:dartfx:f30e5336-3a9f-442d-8dd3-1b1aec2e0a51_AssociationReference> a cdi:AssociationReference ;
+    cdi:ddiReference <urn:dartfx:80df3187-7ccd-458d-ba6a-d4166b913f45_InternationalRegistrationDataIdentifier> ;
+    cdi:isAssociationReference true .
+
+<urn:dartfx:f481eb31-5ca0-4bb2-b117-ff6062c41b86_Identifier> a cdi:Identifier ;
+    cdi:ddiIdentifier <urn:dartfx:bac1ae95-3c2e-485c-a80a-a2b7fc4e5b6b_InternationalRegistrationDataIdentifier> ;
+    cdi:nonDdiIdentifier <urn:dartfx:f481eb31-5ca0-4bb2-b117-ff6062c41b86_Identifier_nonDdiIdentifierList> ;
+    cdi:uri <urn:dartfx:3b217feb-70ae-440c-a152-67bf0e11c7d2_XsdAnyUri> .
+
+<urn:dartfx:f481eb31-5ca0-4bb2-b117-ff6062c41b86_Identifier_nonDdiIdentifierList> rdf:first <urn:dartfx:ea94e583-7a46-47f7-a8f2-4ab1a3fdc136_NonDdiIdentifier> ;
+    rdf:rest () .
+
+<urn:dartfx:f4e0dc94-7a68-4f56-b2ed-1925775e177f_AssociationReference> a cdi:AssociationReference ;
+    cdi:ddiReference <urn:dartfx:a1509f49-e104-4b47-98cc-28724f7bd7d4_InternationalRegistrationDataIdentifier> ;
+    cdi:isAssociationReference true .
+
+<urn:dartfx:f6d88c03-134e-43b6-a531-a3a44d8d3622_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "75bf9be5-01bc-49db-99d0-d570a49d6a8e_Notation_V1_9"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:dartfx:fb0042f8-4bc8-4e81-bfb7-73b3bc41305c_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "75bf9be5-01bc-49db-99d0-d570a49d6a8e_Notation_V1_2"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:dartfx:fb1f167f-c454-4f9a-87f4-3324d0da48ed_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_Code_V1_9"^^xsd:string .
+
+<urn:dartfx:fb82afa9-f08d-46c7-87d1-7e94889d7097_ComponentPosition> a cdi:ComponentPosition ;
+    cdi:identifier <urn:dartfx:063e9240-2410-45c8-a130-c5ef5c56bc50_Identifier> ;
+    cdi:value 1 .
+
+<urn:dartfx:fb82afa9-f08d-46c7-87d1-7e94889d7097_DataStructureComponent> a cdi:DataStructureComponent ;
+    cdi:identifier <urn:dartfx:81636716-e445-4ccf-ae4e-690768b2150b_Identifier> ;
+    cdi:isDefinedBy_RepresentedVariable <urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_InstanceVariable_V1> .
+
+<urn:dartfx:fea31e45-74ff-474c-a79f-fc1847737364_XsdAnyUri> a cdi:XsdAnyUri ;
+    cdi:value "urn:dartfx:75bf9be5-01bc-49db-99d0-d570a49d6a8e_CodeList_V1"^^xsd:string .
+
+<urn:dartfx:fffbad3b-4d7d-4490-a854-73b2ec487dac_AssociationReference> a cdi:AssociationReference ;
+    cdi:ddiReference <urn:dartfx:e58cf8bc-dc0e-43d1-95a3-6909d91e21e6_InternationalRegistrationDataIdentifier> ;
+    cdi:isAssociationReference true .
+
+<urn:dartfx:031ee945-bb8d-4241-b0b3-c853b8b760a9_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "75bf9be5-01bc-49db-99d0-d570a49d6a8e_CodeList_V1"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:dartfx:0fed9cef-3ba5-415e-a4b5-746089456157_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "75bf9be5-01bc-49db-99d0-d570a49d6a8e_SubstantiveValueDomain_V1"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:dartfx:27c00f28-8fdf-4b16-8430-b78cccc4993a_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "75bf9be5-01bc-49db-99d0-d570a49d6a8e_CategorySet_V1"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:dartfx:3e48c507-b97b-4d4f-b609-34568045ed4a_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "75bf9be5-01bc-49db-99d0-d570a49d6a8e_Code_V1_1"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:dartfx:80df3187-7ccd-458d-ba6a-d4166b913f45_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "75bf9be5-01bc-49db-99d0-d570a49d6a8e_InstanceVariable_V1"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:dartfx:a1509f49-e104-4b47-98cc-28724f7bd7d4_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "75bf9be5-01bc-49db-99d0-d570a49d6a8e_Code_V1_9"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:dartfx:adc8e65f-3f0f-4c8e-9f57-53cb0284b215_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "75bf9be5-01bc-49db-99d0-d570a49d6a8e_DataSet_F1"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:dartfx:bac1ae95-3c2e-485c-a80a-a2b7fc4e5b6b_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "75bf9be5-01bc-49db-99d0-d570a49d6a8e_Code_V1_2"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:dartfx:62a1efc5-8c46-451b-a781-7b349be3adf7_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "75bf9be5-01bc-49db-99d0-d570a49d6a8e_Category_V1_2"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:dartfx:6cf18865-a7fe-4cf0-ab61-9ca2b81050d8_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "75bf9be5-01bc-49db-99d0-d570a49d6a8e_Category_V1_9"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:dartfx:e58cf8bc-dc0e-43d1-95a3-6909d91e21e6_InternationalRegistrationDataIdentifier> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:dataIdentifier "75bf9be5-01bc-49db-99d0-d570a49d6a8e_Category_V1_1"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
