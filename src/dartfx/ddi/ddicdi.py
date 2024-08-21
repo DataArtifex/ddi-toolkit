@@ -368,10 +368,6 @@ class DdiCdiResource:
         """Returns the object as a dictionary"""
         return asdict(self, dict_factory=lambda x: {k: v for (k, v) in x if v is not None})
 
-    #
-    # JSON SERIALIZER
-    # This is unofficial JSON serialization mainly for development purposes
-    #
     def as_json(self, indent=None):
         return json.dumps(self.as_dict(),indent=indent)
 
@@ -379,10 +375,7 @@ class DdiCdiResource:
         with open(filepath, 'w') as f:
             json.dump(self.as_dict(), f, indent=indent)
             
-    #
-    # RDF SERIALIZER
-    # 
-    def add_to_rdf_graph(self, g:Graph) -> URIRef:
+    def add_to_rdf_graph(self, g:Graph, use_list=False) -> URIRef:
         """ 
         Add this resource to an RDF graph.
         """
@@ -432,11 +425,16 @@ class DdiCdiResource:
                         objects.append(Literal(f"Other {attribute_info.cls}"))
                 # add to this resource
                 if attribute_info.is_list:
-                    # Create a list node with a URIRef based on the subject and attribute
-                    # Do not use blank node.
-                    list_node = URIRef(f"{str(subject)}_{attribute.name}List")
-                    rdf_list = Collection(g, list_node, objects)  # noqa: F841
-                    g.add((subject, predicate, list_node)) # add the list_node, not rdf_list
+                    if use_list:
+                        # Create a list node with a URIRef based on the subject and attribute
+                        # Do not use blank node.
+                        list_node = URIRef(f"{str(subject)}_{attribute.name}List")
+                        rdf_list = Collection(g, list_node, objects)  # noqa: F841
+                        g.add((subject, predicate, list_node)) # add the list_node, not rdf_list
+                    else:
+                        # add each entrey as a triple
+                        for object in objects:
+                            g.add((subject, predicate, object))
                 else:
                     # add single entry (there can only be one entry in this case)
                     g.add((subject, predicate, objects[0]))

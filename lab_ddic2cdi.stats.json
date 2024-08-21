@@ -1,5 +1,5 @@
 {
-    "n_triples": 293,
+    "n_triples": 241,
     "types": {
         "cdi:Category": {
             "count": 3
@@ -88,10 +88,10 @@
             "count": 1
         },
         "cdi:hasCategory": {
-            "count": 1
+            "count": 3
         },
         "cdi:hasCode": {
-            "count": 1
+            "count": 3
         },
         "cdi:identifier": {
             "count": 18

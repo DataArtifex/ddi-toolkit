@@ -1,20 +1,16 @@
 # DDI Toolkit
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
 
-**This project is currently in its early stages of development. Please be aware that stability is not guaranteed, and documentation is limited. Your feedback and contributions are welcome as we work towards refining and expanding this work!**
+**This project is in its early development stages, so stability is not guaranteed, and documentation is limited. We welcome your feedback and contributions as we refine and expand this project together!**
+
+## Overview
 
 This package provides utilities for using, processing, or converting metadata based on the [Data Documentation Initiative (DDI)](https://ddialliance.org/), an international standard for describing the data produced by surveys and other observational methods in the social, behavioral, economic, and health sciences.
 
 There are three major flavors of DDI: DDI-Codebbok, DDI-Lifecycle, and the upcoming DDI Cross Domain Integration (CDI). This initial version of th epackage focuses on [DDI-Codebook](https://ddialliance.org/Specification/DDI-Codebook/2.5/), the light-weight version of the standard, intended primarily to document simple survey data. This specification has been widely adopted around the globe by statistical agencies, data producers, archives, research centers, and international organizations. Thousands of datasets have been documented with DDI-C.
 
 
-## Installation
-
-Once stable and mature enough, this package will be released on pypi.org as `dartfx-ddi`.
-
-In the meantime, you can install locally by calling `pip install -e  .` from the checked out project home directory.
-
-To install other dependencies, run `pip install -t requirements.txt`.
+## Installation### PyPI ReleaseOnce stable, this package will be officially released and distributed through [PyPI](https://pypi.org/). Stay tuned for updates!### Local InstallationIn the meantime, you can install the package locally by following these steps:1. **Clone the Repository:**   First, clone the repository to your local machine:   ```bash   git clone <repository-url>   cd <repository-directory>   ```2. **Install the Package:**   From the project's home directory, run the following command to install the package:   ```bash   pip install -e .   ```### Installing DependenciesTo install the required dependencies, execute the following command:```bashpip install -r requirements.txt```Make sure you are in the project's root directory when running these commands.Feel free to replace `<repository-url>` and `<repository-directory>` with the actual URL and directory name of your project. This enhanced version provides clear instructions and formatting to guide users through the installation process effectively.
  
 ## Usage
 
@@ -26,7 +22,7 @@ my_codebook = codebook.loadXml('mycodebook.xml')
 # do something useful...
 ```
 
-### Convert a DDI-Codebook to 
+### Convert a DDI-Codebook to DDI-CDIF
 
 This core package is used by other [Data Artifex](http://www.dataartifex.org) components leveraging DDI.
 
@@ -45,7 +41,7 @@ This core package is used by other [Data Artifex](http://www.dataartifex.org) co
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
  
- ## License
+## License
  
 The MIT License (MIT)
 

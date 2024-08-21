@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main  # Adjust branch as needed
-  workflow_dispatch: # adds button to trigger workflow
+  workflow_dispatch: # adds a button to trigger workflow
 
 jobs:
   build-docs:
