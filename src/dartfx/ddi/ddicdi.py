@@ -2135,6 +2135,10 @@ class XsdAnyUri(DdiCdiDataType):
     def from_string(cls, uri_string: str) -> 'XsdAnyUri':
         """Create an XsdAnyUri instance from a string."""
         return cls(value=uri_string)
+    
+    def add_to_rdf_graph(self, g: Graph) -> URIRef:
+        """Override the add_to_rdf_graph method to simply return the URI as a URIRef.""" 
+        return URIRef(self.value)
 
 
 class XsdDate(DdiCdiDataType):
@@ -2148,3 +2152,7 @@ class XsdDate(DdiCdiDataType):
     def to_iso_string(self) -> str:
         """Convert the XsdDate instance to an ISO 8601 formatted string."""
         return self.value.isoformat()
+    
+    def add_to_rdf_graph(self, g: Graph) -> Literal:
+        """Override the add_to_rdf_graph method to return a date literal.""" 
+        return Literal(self.value, datatype=XSD.date)
