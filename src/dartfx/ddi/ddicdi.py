@@ -70,6 +70,7 @@ class AttributeInfo:
 #
 # Resources
 #
+@dataclass(kw_only=True)
 class DdiCdiResource:
     """The base class for all DDI-CDI resources.
     
@@ -414,13 +415,13 @@ class DdiCdiResource:
                         uriref = value.add_to_rdf_graph(g)
                         objects.append(uriref)
                     elif issubclass(attribute_info.cls, str):
-                        objects.append(Literal(attribute_value, datatype=XSD.string))
+                        objects.append(Literal(value, datatype=XSD.string))
                     elif issubclass(attribute_info.cls, int):
-                        objects.append(Literal(attribute_value, datatype=XSD.integer))
+                        objects.append(Literal(value, datatype=XSD.integer))
                     elif issubclass(attribute_info.cls, float):
-                        objects.append(Literal(attribute_value, datatype=XSD.float))
+                        objects.append(Literal(value, datatype=XSD.float))
                     elif issubclass(attribute_info.cls, bool):
-                        objects.append(Literal(attribute_value, datatype=XSD.boolean))
+                        objects.append(Literal(value, datatype=XSD.boolean))
                     else:
                         objects.append(Literal(f"Other {attribute_info.cls}"))
                 # add to this resource
@@ -459,6 +460,7 @@ class DdiCdiResource:
             return self._generated_uriref
 
     
+@dataclass(kw_only=True)
 class DdiCdiClass(DdiCdiResource):
     """
     Base class for all CDI classes.
@@ -498,6 +500,7 @@ class DdiCdiClass(DdiCdiResource):
         return cdi_resource
 
 
+@dataclass(kw_only=True)
 class DdiCdiDataType(DdiCdiResource):
     """
     Base class for all CDI data types.
@@ -508,7 +511,7 @@ class DdiCdiDataType(DdiCdiResource):
 # CDI CLASSES
 #
 
-@dataclass
+@dataclass(kw_only=True)
 class Agent:
     """
     Actor that performs a role in relation to a process or product.
@@ -525,7 +528,7 @@ class Agent:
     image: list["PrivateImage"] = field(default_factory=list)  # Information regarding image associated with the agent.
     purpose: "InternationalString" = field(default=None)  # Intent or reason for the object/the description of the object.
 
-@dataclass
+@dataclass(kw_only=True)
 class AuthorizationSource(DdiCdiClass):
     """
     Identifies the authorizing agency and allows for the full text of the authorization (law, regulation, or other form of authorization).
@@ -545,7 +548,7 @@ class AuthorizationSource(DdiCdiClass):
     statementOfAuthorization: "InternationalString" = field(default=None)  # Text of the authorization (law, mandate, approved business case).
     AuthorizationSource_has_Agent: list["Agent"] = field(default_factory=list, metadata={"association": "Agent"})  # Agent responsible for the authorization source.
 
-@dataclass
+@dataclass(kw_only=True)
 class CatalogDetails(DdiCdiClass):
     """
     A set of information useful for attribution, data discovery, and access.
@@ -571,7 +574,7 @@ class CatalogDetails(DdiCdiClass):
     typeOfResource: Optional[list["ControlledVocabularyEntry"]] = None  # Provide the type of the resource. This supports the use of a controlled vocabulary. It should be appropriate to the level of the annotation.
 
  
-@dataclass
+@dataclass(kw_only=True)
 class CodePosition:
     """
     An index within an order intended for presentation (even though the content within levels of the hierarchy may be conceptually unordered). Expressed as an integer counting upward from 01 or 1.
@@ -581,7 +584,7 @@ class CodePosition:
     identifier: Optional["Identifier"] = field(default=None) # Identifier for objects requiring short- or long-lasting referencing and management.
     indexes_Code: Optional["Code"] = field(default=None, metadata={"association": "Code"}) # Association to a Code. 
  
-@dataclass
+@dataclass(kw_only=True)
 class ComponentPosition(DdiCdiClass):
     """
     Indexes the components in a data structure using integers with a position indicated by incrementing upward from 0 or 1
@@ -593,7 +596,7 @@ class ComponentPosition(DdiCdiClass):
     def set_data_structure_component(self, data_structure_component: "DataStructureComponent"):
         self.add_resources(data_structure_component, "indexesDataStructureComponent")
 
-@dataclass
+@dataclass(kw_only=True)
 class Concept(DdiCdiClass):
     """
     Unit of thought differentiated by characteristics (from the Generic Statistical Information Model version 1.2: https://statswiki.unece.org/display/clickablegsim/Concept).  
@@ -613,7 +616,7 @@ class Concept(DdiCdiClass):
     identifier: Optional["Identifier"] = None  # Identifier for objects requiring short- or long-lasting referencing and management.
     name: Optional[list["ObjectName"]] = None  # Human understandable name (linguistic signifier, word)
 
-@dataclass
+@dataclass(kw_only=True)
 class ConceptSystem(DdiCdiClass):
     """
     Set of concepts structured by the relations among them [GSIM 1.1].
@@ -636,7 +639,7 @@ class ConceptSystem(DdiCdiClass):
     has_Concept: Optional[list["Concept"]] = None  # Concept system has zero to many concepts.
     
 
-@dataclass
+@dataclass(kw_only=True)
 class CategorySet(ConceptSystem):
     """Definition
     ============
@@ -658,7 +661,7 @@ class Category(Concept):
     descriptiveText: "InternationalString" = field(default=None)  # A short natural language account of the characteristics of the object.
    
     
-@dataclass
+@dataclass(kw_only=True)
 class CategoryPosition(DdiCdiClass):
     """Definition
     ============
@@ -667,7 +670,7 @@ class CategoryPosition(DdiCdiClass):
     value: int = field(default=None)  # Index value of the member in an ordered array.
     indexesCategory: "Category" = field(default=None, metadata={"association":"Category"})  # 
     
-@dataclass
+@dataclass(kw_only=True)
 class ClassificationItem(DdiCdiClass):
     """
     A space for a category within a statistical classification.
@@ -693,7 +696,7 @@ class ClassificationItem(DdiCdiClass):
     ClassificationItem_excludes_ClassificationItem: list["ClassificationItem"] = field(default_factory=list, metadata={"association": "ClassificationItem"})
     ClassificationItem_hasRulingBy_AuthorizationSource: list["AuthorizationSource"] = field(default_factory=list, metadata={"association": "AuthorizationSource"})
 
-@dataclass
+@dataclass(kw_only=True)
 class ConceptualDomain(DdiCdiClass):
     """
     Set of concepts, where each concept is intended to be used as the meaning (signified) for a datum.
@@ -711,14 +714,14 @@ class ConceptualDomain(DdiCdiClass):
     isDescribedBy_ValueAndConceptDescription: "ValueAndConceptDescription" = field(default=None, metadata={"association": "ValueAndConceptDescription"})  # A description of the concepts in the domain. A numeric domain might use a logical expression to be machine actionable; a text domain might use a regular expression to describe strings that describe the concepts.
     takesConceptsFrom_ConceptSystem: "ConceptSystem" = field(default=None, metadata={"association": "ConceptSystem"})  # Conceptual domain takes concept from zero to one concept system.
 
-@dataclass
+@dataclass(kw_only=True)
 class ConceptualValue(Concept):
     """
     Concept (with a notion of equality defined) being observed, captured, or derived which is associated to a single data instance.
     """
     hasConceptFrom_ConceptualDomain: "ConceptualDomain" = None # Conceptual value has concept from one conceptual domain.
 
-@dataclass
+@dataclass(kw_only=True)
 class ConceptualVariable(Concept):
     """A variable at the highest level of abstraction.
     
@@ -736,7 +739,7 @@ class ConceptualVariable(Concept):
     takesSentinelConceptsFrom: list["SentinelConceptualDomain"] = field(default=None, metadata={"association": "SentinelConceptualDomain"}) # Identifies the conceptual domain containing the set of sentinel concepts used to describe the conceptual variable.
     takesSubstantiveConceptsFrom: list["SubstantiveConceptualDomain"] = field(default=None, metadata={"association": "SubstantiveConceptualDomain"}) # Identifies the substantive conceptual domain containing the set of substantive concepts used to describe the conceptual variable.
 
-@dataclass
+@dataclass(kw_only=True)
 class DataPoint(DdiCdiClass):
     """"
     Container for an instance value.
@@ -753,7 +756,7 @@ class DataPoint(DdiCdiClass):
     correspondsTo_DataStructureComponent: list["DataStructureComponent"] = field(default_factory=list, metadata={"association": "DataStructureComponent"})  #
     isDescribedBy_InstanceVariable: "InstanceVariable" = None  # The instance variable delimits the values which can populate a data point. Data point is described by one instance variable.
 
-@dataclass
+@dataclass(kw_only=True)
 class DataSet(DdiCdiClass):
     """
     Organized collection of data based on keys.
@@ -771,7 +774,7 @@ class DataSet(DdiCdiClass):
             self.isStructuredBy_DataStructure = []
         self.isStructuredBy_DataStructure.append(data_structure)
         
-@dataclass
+@dataclass(kw_only=True)
 class DataStore(DdiCdiClass):
     """
     Collection of logical records.
@@ -797,7 +800,7 @@ class DataStore(DdiCdiClass):
     has_LogicalRecord: list["LogicalRecord"] = field(default=None, metadata={"association": "LogicalRecord"})
     has_RecordRelation: "RecordRelation" = field(default=None, metadata={"association": "RecordRelation"}) # The record relation that defines the relationship and linking requirements between logical records in the data store.
 
-@dataclass
+@dataclass(kw_only=True)
 class DataStructureComponent(DdiCdiClass):
     """
     Role given to a represented variable in the context of a data structure.
@@ -813,7 +816,7 @@ class DataStructureComponent(DdiCdiClass):
     def set_represented_variable(self, represented_variable: "RepresentedVariable"):
         self.isDefinedBy_RepresentedVariable = represented_variable
 
-@dataclass
+@dataclass(kw_only=True)
 class DataStructure(DataStructureComponent):
     """
     Data organization based on reusable data structure components.
@@ -855,7 +858,7 @@ class DataStructure(DataStructureComponent):
             self.add_component_position(component_position) 
         return (data_structure_component, component_position)        
 
-@dataclass
+@dataclass(kw_only=True)
 class DimensionalDataSet(DataSet):
     """Definition ============
     Organized collection of multidimensional data. It is structured by a dimensional data structure.
@@ -871,7 +874,7 @@ class DimensionalDataSet(DataSet):
     represents: list["ScopedMeasure"] = field(default_factory=list, metadata={"association": "ScopedMeasure"})  # 
 
 
-@dataclass
+@dataclass(kw_only=True)
 class DimensionalDataStructure(DataStructure):
     """Definition
     ============
@@ -884,7 +887,7 @@ class DimensionalDataStructure(DataStructure):
     DimensionalDataStructure_uses_DimensionGroup: list["DimensionGroup"] = field(default_factory=list, metadata={"association": "DimensionGroup"})
     
         
-@dataclass
+@dataclass(kw_only=True)
 class ForeignKey(DdiCdiClass):
     """
     Role of a set of data structure components for content referencing purposes
@@ -896,7 +899,7 @@ class ForeignKey(DdiCdiClass):
     identifier: "Identifier" = None  # Identifier for objects requiring short- or long-lasting referencing and management.
     isComposedOf_ForeignKeyComponent: list["ForeignKeyComponent"] = field(default_factory=list)  #
 
-@dataclass
+@dataclass(kw_only=True)
 class EnumerationDomain(DdiCdiClass):
     """Definition 
     ============ 
@@ -913,7 +916,7 @@ class EnumerationDomain(DdiCdiClass):
         """Helper to set a CategorySet association reference on referencesCategorySet."""
         self.add_resources(category_set, "referencesCategorySet")
 
-@dataclass
+@dataclass(kw_only=True)
 class CodeList(EnumerationDomain):
     """Definition 
     ============ 
@@ -927,7 +930,7 @@ class CodeList(EnumerationDomain):
         self.add_resources(code, "hasCode")
     
 
-@dataclass
+@dataclass(kw_only=True)
 class Code(DdiCdiClass):
     """Definition 
     ============ 
@@ -944,7 +947,7 @@ class Code(DdiCdiClass):
         """Helper to set a Notation association reference on usesNotation."""
         self.category_set(notation, "usesNotation")
     
-@dataclass
+@dataclass(kw_only=True)
 class ForeignKeyComponent(DdiCdiClass):
     """
     Role of a data structure component for content referencing purposes
@@ -975,7 +978,7 @@ class InstanceValue(DdiCdiClass):
     isStoredIn_DataPoint: Optional["DataPoint"] = field(default=None, metadata={"association":"DataPoint"})
     represents_ConceptualValue: Optional["ConceptualValue"] = field(default=None, metadata={"association":"ConceptualValue"})
 
-@dataclass
+@dataclass(kw_only=True)
 class RepresentedVariable(ConceptualVariable):
     """
     Conceptual variable with a substantive value domain specified.
@@ -992,7 +995,7 @@ class RepresentedVariable(ConceptualVariable):
     takesSubstantiveValues: list["SubstantiveValueDomain"] =  field(default=None, metadata={"association":"SubstantiveValueDomain"})  # The substantive representation (substantive value domain) of the variable.
         
 
-@dataclass
+@dataclass(kw_only=True)
 class InstanceVariable(RepresentedVariable):
     """
     Use of a represented variable within a data set.
@@ -1012,7 +1015,7 @@ class InstanceVariable(RepresentedVariable):
     hasPhysicalSegmentLayout: list["PhysicalSegmentLayout"] =  field(default=None, metadata={"association":"PhysicalSegmentLayout"})  # 
     hasValueMapping: list["ValueMapping"] = field(default=None, metadata={"association":"ValueMapping"})  #
 
-@dataclass
+@dataclass(kw_only=True)
 class Key(DdiCdiClass):
     """
     Collection of data instances that uniquely identify a collection of data points in a dataset.
@@ -1024,7 +1027,7 @@ class Key(DdiCdiClass):
     correspondsTo_Universe: "Universe" = None #
     has_KeyMember: list["KeyMember"] = field(default_factory=list, metadata={"association": "KeyMember"}) #
 
-@dataclass
+@dataclass(kw_only=True)
 class KeyDefinition(DdiCdiClass):
     """
     Collection of concepts that uniquely defines a collection of data points in a dataset.
@@ -1034,7 +1037,7 @@ class KeyDefinition(DdiCdiClass):
     correspondsTo_Unit: "Unit" = None #
     has_KeyDefinitionMember: list["KeyDefinitionMember"] = field(default_factory=list, metadata={"association": "KeyDefinitionMember"}) #
 
-@dataclass
+@dataclass(kw_only=True)
 class KeyDefinitionMember(ConceptualValue):
     """Definition
     ============
@@ -1049,7 +1052,7 @@ class KeyMember(InstanceValue):
     isBasedOn_DataStructureComponent: list["DataStructureComponent"] = field(default=None, metadata={"association": "DataStructureComponent"})
 
 
-@dataclass
+@dataclass(kw_only=True)
 class KeyValueDataStore(DataSet):
     """    Definition 
     ==========
@@ -1066,7 +1069,7 @@ class KeyValueDataStore(DataSet):
     """
     pass
 
-@dataclass
+@dataclass(kw_only=True)
 class KeyValueStructure(DataStructure):
     """Definition
     ============
@@ -1079,7 +1082,7 @@ class KeyValueStructure(DataStructure):
     pass
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Level:
     """
     Set of all classification items the same number of relationships from the root (or top) classification item.
@@ -1097,7 +1100,7 @@ class Level:
     Level_isDefinedBy_Concept: Optional["Concept"] = field(default=None, metadata={"association": "Concept"})  # A concept or concept sub-type which describes the level.
     Level_groups_ClassificationItem: list["ClassificationItem"] = field(default_factory=list, metadata={"association": "ClassificationItem"})  # Classification items belonging to this level.
 
-@dataclass
+@dataclass(kw_only=True)
 class LevelStructure(DdiCdiClass):
     """
     Nesting structure of a hierarchical collection.
@@ -1117,7 +1120,7 @@ class LevelStructure(DdiCdiClass):
     validDateRange: "DateRange" = field(default=None)
     LevelStructure_has_Level: list["Level"] = field(default_factory=list, metadata={"association": "Level"})
 
-@dataclass
+@dataclass(kw_only=True)
 class LogicalRecord(DdiCdiClass):
     """
     Collection of instance variables.
@@ -1155,7 +1158,7 @@ class LogicalRecord(DdiCdiClass):
         #self.LogicalRecord_has_InstanceVariable.append(AssociationReference(ddiReference=instance_variable.identifier.ddiIdentifier))
         self.LogicalRecord_has_InstanceVariable.append(instance_variable)
 
-@dataclass
+@dataclass(kw_only=True)
 class LongDataSet(DataSet):
     """Definition
     ============
@@ -1167,7 +1170,7 @@ class LongDataSet(DataSet):
     pass
 
 
-@dataclass
+@dataclass(kw_only=True)
 class LongDataStructure(DataStructure):
     """Definition
     ============
@@ -1179,7 +1182,7 @@ class LongDataStructure(DataStructure):
     """
     pass
     
-@dataclass
+@dataclass(kw_only=True)
 class Notation(DdiCdiClass):
     """Definition 
     ============ 
@@ -1193,7 +1196,7 @@ class Notation(DdiCdiClass):
     def set_category(self, category: "Category"):
         self.add_resources(category,"representsCategory")
 
-@dataclass
+@dataclass(kw_only=True)
 class PhysicalDataSet(DdiCdiClass):
     """
     Definition
@@ -1223,7 +1226,7 @@ class PhysicalDataSet(DdiCdiClass):
     hasPhysicalRecordSegment: list["PhysicalRecordSegment"] = field(default_factory=list)
     hasPhysicalRecordSegmentPosition: list["PhysicalRecordSegmentPosition"] = field(default_factory=list)
 
-@dataclass
+@dataclass(kw_only=True)
 class PhysicalRecordSegment(DdiCdiClass):
     """
     Description of each physical storage segment required to completely cover a physical record representing the logical record.
@@ -1254,7 +1257,7 @@ class PhysicalRecordSegment(DdiCdiClass):
     hasDataPointPositions: list["DataPointPosition"] = field(default_factory=list)
     hasDataPoints: list["DataPoint"] = field(default_factory=list)
 
-@dataclass
+@dataclass(kw_only=True)
 class PhysicalRecordSegmentPosition(DdiCdiClass):
     """
     Assigns a position of the physical record segment within the whole physical record. For example in what order does this 80 character segment fall within an 800 character record.
@@ -1263,7 +1266,7 @@ class PhysicalRecordSegmentPosition(DdiCdiClass):
     identifier: "Identifier" = None # Identifier for objects requiring short- or long-lasting referencing and management.
     indexes_PhysicalRecordSegment: "PhysicalRecordSegment" =  field(default=None, metadata={"association":"PhysicalRecordSegment"}) # Assigns a position to a physical record segment within a physical record.
 
-@dataclass
+@dataclass(kw_only=True)
 class PhysicalSegmentLayout(DdiCdiClass):
     """
     Used as an extension point in the description of the different layout styles of data structure descriptions.  
@@ -1308,7 +1311,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
     hasValueMapping: list["ValueMapping"] = field(default_factory=list)
     hasValueMappingPosition: list["ValueMappingPosition"] = field(default_factory=list)
 
-@dataclass
+@dataclass(kw_only=True)
 class UnitType(Concept):
     """
     Unit type is a type or class of objects of interest (units).
@@ -1321,7 +1324,7 @@ class UnitType(Concept):
     descriptiveText: "InternationalString" = field(default=None)  # A short natural language account of the characteristics of the object.
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Universe(UnitType):
     """
     Specialized unit type, with the specialization based upon characteristics other than time and geography.
@@ -1335,7 +1338,7 @@ class Universe(UnitType):
     """
     isInclusive: bool = field(default=True)  # Default value is True. The description statement of a universe is generally stated in inclusive terms.
 
-@dataclass
+@dataclass(kw_only=True)
 class Population(Universe):
     """
     Universe with time and geography specified.
@@ -1349,7 +1352,7 @@ class Population(Universe):
     timePeriodOfPopulation: list["DateRange"] = field(default=None)  # The time period associated with the population.
     isComposedOfUnit: list["Unit"] = field(default=None, metadata={"association":"Unit"})  # A unit in the population.
 
-@dataclass
+@dataclass(kw_only=True)
 class PrimaryKey(DdiCdiClass):
     """
     Role of a set of data structure components for content linkage purposes
@@ -1363,7 +1366,7 @@ class PrimaryKey(DdiCdiClass):
     isComposedOf_PrimaryKeyComponent: list["PrimaryKeyComponent"] = field(default_factory=list, metadata={"association": "PrimaryKeyComponent"})  #
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PrimaryKeyComponent(DdiCdiClass):
     """
     Role of a data structure component for content identification purposes
@@ -1377,7 +1380,7 @@ class PrimaryKeyComponent(DdiCdiClass):
     identifier: "Identifier" = None  # Identifier for objects requiring short- or long-lasting referencing and management.
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Unit(DdiCdiClass):
     """
     Individual object of interest for some statistical activity, such as data collection.
@@ -1407,7 +1410,7 @@ class Unit(DdiCdiClass):
     has_UnitType: list["UnitType"] = field(default_factory=list, metadata={"association": "UnitType"})  # The unit type of the unit.
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ValueDomain(DdiCdiClass):
     """Definition 
     ============ 
@@ -1427,7 +1430,7 @@ class ValueDomain(DdiCdiClass):
 
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SentinelConceptualDomain(ConceptualDomain):
     """
     Conceptual domain of sentinel concepts.
@@ -1446,7 +1449,7 @@ class SentinelConceptualDomain(ConceptualDomain):
 
 
    
-@dataclass
+@dataclass(kw_only=True)
 class SentinelValueDomain(ValueDomain):
     """Definition 
     ============ 
@@ -1466,7 +1469,7 @@ class SentinelValueDomain(ValueDomain):
 
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SubstantiveConceptualDomain(ConceptualDomain):
     """ Conceptual domain of substantive concepts.
     
@@ -1479,7 +1482,7 @@ class SubstantiveConceptualDomain(ConceptualDomain):
     A conceptual variable links a unit type to a substantive conceptual domain. The latter can be an enumeration or description of the values that the variable may take on. In the enumerated case these are the categories in a category set that can be values, not the codes that represent the values. An example might be the conceptual domain for a variable representing self-identified gender. An enumeration might include the concept of "male" and the concept of "female". These, in turn, would be represented in a substantive value domain by codes in a code list like "m" and "f", or "0" and "1". A conceptual domain might be described through a value and concept description's description property of "a real number greater than 0" or through a more formal logical expression of "all reals x such that x > 0". Even in the described case, what is being described are conceptual, not the symbols used to represent the values. This may be a subtle distinction, but allows specifying that the same numeric value might be represented by 32 bits or by 64 bits or by an Arabic numeral or a Roman numeral.
     """
     
-@dataclass
+@dataclass(kw_only=True)
 class SubstantiveValueDomain(ValueDomain):
     """Definition 
     ==========
@@ -1498,7 +1501,7 @@ class SubstantiveValueDomain(ValueDomain):
 
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ValueMapping:
     """
     Physical characteristics for the value of an instance variable stored in a data point as part of a physical segment layout.
@@ -1524,7 +1527,7 @@ class ValueMapping:
     nullSequence: Optional[str] = field(default=None)  # A string indicating a null value.
     numberPattern: Optional[str] = field(default=None)  # A pattern description of the format of a numeric value.
     
-@dataclass
+@dataclass(kw_only=True)
 class ValueAndConceptDescription(DdiCdiClass):
     """
     Formal description of a set of values.
@@ -1548,7 +1551,7 @@ class ValueAndConceptDescription(DdiCdiClass):
     maximumValueInclusive: str = None  # A string denoting the maximum possible value. From the W3C Recommendation "Metadata Vocabulary for Tabular Data" (https://www.w3.org/TR/tabular-metadata/) 5.11.2: "maximum: An atomic property that contains a single number or string that is the maximum valid value (inclusive); equivalent to maxInclusive. The value of this property becomes the maximum annotation for the described datatype. See Value Constraints in [tabular-data-model] for details."
     minimumValueExclusive: str = None  # A string denoting the minimum possible value (excluding this value). From the
 
-@dataclass
+@dataclass(kw_only=True)
 class VariableStructure(DdiCdiClass):
     """
     Relation structure for use with any set of variables in the variable cascade (conceptual, represented, instance).
@@ -1563,7 +1566,7 @@ class VariableStructure(DdiCdiClass):
     VariableStructure_structures_VariableCollection: "VariableCollection" = field(default=None, metadata={"association": "VariableCollection"}) # Variable structure structures zero to one variable collection.
     VariableStructure_has_VariableRelationship: list["VariableRelationship"] = field(default=None, metadata={"association": "VariableRelationship"}) # 
 
-@dataclass
+@dataclass(kw_only=True)
 class WideDataSet(DataSet):
     """Definition
     ============
@@ -1576,7 +1579,7 @@ class WideDataSet(DataSet):
     pass
 
 
-@dataclass
+@dataclass(kw_only=True)
 class WideDataStructure(DataStructure):
     """Definition
     ==========
@@ -1593,7 +1596,7 @@ class WideDataStructure(DataStructure):
 # DATA TYPES
 #
 
-@dataclass
+@dataclass(kw_only=True)
 class Address(DdiCdiDataType):
     """
     Location address identifying each part of the address as separate elements, identifying the type of address, the level of privacy associated with the release of the address, and a flag to identify the preferred address for contact.
@@ -1621,7 +1624,7 @@ class Address(DdiCdiDataType):
     typeOfLlocation: Optional["ControlledVocabularyEntry"] = None  # The type or purpose of the location (i.e. regional office, distribution center, home).
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AccessInformation(DdiCdiDataType):
     """
     A set of information important for understanding access conditions. Examples include license, embargo details.
@@ -1631,7 +1634,7 @@ class AccessInformation(DdiCdiDataType):
     license: Optional[list["LicenseInformation"]] = None  # Information about any relevant license.
     rights: Optional[list["InternationalString"]] = None  # Information about rights held in and over the resource. Typically, rights information includes a statement about various property rights associated with the resource, including intellectual property rights.
 
-@dataclass
+@dataclass(kw_only=True)
 class AgentInRole(DdiCdiDataType):
     """
     A reference to an agent (organization, individual, or machine) including a role for that agent in the context of this specific reference.
@@ -1645,7 +1648,7 @@ class AgentInRole(DdiCdiDataType):
     role: Optional[list["PairedControlledVocabularyEntry"]] = None  # Role of the of the agent within the context of the parent property name.
 
 
-#@dataclass
+#@dataclass(kw_only=True)
 #class AssociationReference(DdiCdiDataType):
 #    """
 #    Provides a way of pointing to resources outside of the information described in the set of DDI-CDI metadata.
@@ -1654,7 +1657,7 @@ class AgentInRole(DdiCdiDataType):
 #    validType: Optional[list[str]] = field(default_factory=list)  # The expected type of the reference (e.g., the class or element according to the schema of the referenced resource).
 #    isAssociationReference: bool = field(default=True, init=False)  # Fixed attribute indicating the reference is an association reference.
 
-@dataclass
+@dataclass(kw_only=True)
 class InternationalString(DdiCdiDataType):
     """
     Packaging structure for multilingual versions of the same string content, represented by a set of LanguageString. Only one LanguageString per language/scope type is allowed. Where an element of this type (InternationalString) is repeatable, the expectation is that each repetition contains a different content, each of which can be expressed in multiple languages.
@@ -1662,7 +1665,7 @@ class InternationalString(DdiCdiDataType):
     languageSpecificString: Optional[list["LanguageString"]] = None  # A non-formatted string of text with an attribute that designates the language of the text. Repeat this object to express the same content in another language.
 
 
-@dataclass
+@dataclass(kw_only=True)
 class BibliographicName(InternationalString):
     """
     Personal names should be listed surname or family name first, followed by forename or given name. When in doubt, give the name as it appears, and do not invert. In the case of organizations where there is clearly a hierarchy present, list the parts of the hierarchy from largest to smallest, separated by full stops and a space. If it is not clear whether there is a hierarchy present, or unclear which is the larger or smaller portion of the body, give the name as it appears in the item. The name may be provided in one or more languages.
@@ -1670,7 +1673,7 @@ class BibliographicName(InternationalString):
     affiliation: Optional[str] = None  # The affiliation of this person to an organization. This is generally an organization or sub-organization name and should be related to the specific role within which the individual is being listed.
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CategoryRelationCode(Enum):
     """
     Indicates the type of relationship, nominal, ordinal, interval, ratio, or continuous. Use where appropriate for the representation type.
@@ -1681,7 +1684,7 @@ class CategoryRelationCode(Enum):
     Ordinal = "Ordinal" # The categories in the domain have a rank order.
     Ratio = "Ratio" # The categories have all the features of interval measurement and also have meaningful ratios between arbitrary pairs of numbers.
 
-@dataclass
+@dataclass(kw_only=True)
 class CombinedDate(DdiCdiDataType):
     """
     Provides the structure of a single Date expressed in an ISO date structure along with equivalent expression in any number of non-ISO formats. While it supports the use of the ISO time interval structure this should only be used when the exact date is unclear (i.e. occurring at some point in time between the two specified dates) or in specified applications. Ranges with specified start and end dates should use the DateRange as a datatype. Commonly uses property names include: eventDate, issueDate, and releaseDate.
@@ -1694,7 +1697,7 @@ class CombinedDate(DdiCdiDataType):
     nonIsoDate: Optional[list["NonIsoDate"]] = None  # A simple date expressed in a non-ISO date format, including a specification of the date format and calendar used.
     semantics: Optional["ControlledVocabularyEntry"] = None  # Use to specify the type of date. This may reflect the refinements of dc:date such as dateAccepted, dateCopyrighted, dateSubmitted, etc.
 
-@dataclass
+@dataclass(kw_only=True)
 class ContactInformation(DdiCdiDataType):
     """
     Contact information for the individual or organization including location specification, address, web site, phone numbers, and other means of communication access. Address, location, telephone, and other means of communication can be repeated to express multiple means of a single type or change over time. Each major piece of contact information contains the element effectiveDates in order to date stamp the period for which the information is valid.
@@ -1705,7 +1708,7 @@ class ContactInformation(DdiCdiDataType):
     telephone: Optional[list["Telephone"]] = None  # Telephone for contact.
     website: Optional[list["WebLink"]] = None  # The URL of the Agent's website.
 
-@dataclass
+@dataclass(kw_only=True)
 class ControlledVocabularyEntry(DdiCdiDataType):
     """
     Allows for unstructured content which may be an entry from an externally maintained controlled vocabulary.
@@ -1724,7 +1727,7 @@ class ControlledVocabularyEntry(DdiCdiDataType):
     valueForOther: Optional[str] = None  # If the value of the string is "Other" or the equivalent from the codelist, this attribute can provide a more specific value not found in the codelist.
     vocabulary: Optional["Reference"] = None  # A reference to the external controlled vocabulary, using a URI or other resolvable identifier.
 
-@dataclass
+@dataclass(kw_only=True)
 class DateRange(DdiCdiDataType):
     """
     Expresses a date/time range using a start date and end date (both with the structure of Date and supporting the use of ISO and non-ISO date structures). Use in all locations where a range of dates is required, i.e. validFor, embargoPeriod, collectionPeriod, etc.
@@ -1732,7 +1735,7 @@ class DateRange(DdiCdiDataType):
     endDate: Optional["CombinedDate"] = None  # The date (time) designating the end of the period or range.
     startDate: Optional["CombinedDate"] = None  # The date (time) designating the beginning of the period or range.
 
-@dataclass
+@dataclass(kw_only=True)
 class ElectronicMessageSystem(DdiCdiDataType):
     """
     Any non-email means of relaying a message electronically. This would include text messaging, Skype, Twitter, ICQ, or other emerging means of electronic message conveyance.
@@ -1747,7 +1750,7 @@ class ElectronicMessageSystem(DdiCdiDataType):
     privacy: "ControlledVocabularyEntry" = None  # Specify the level privacy for the address as public, restricted, or private. Supports the use of an external controlled vocabulary.
     typeOfService: "ControlledVocabularyEntry" = None  # Indicates the type of service used. Supports the use of a controlled vocabulary.
 
-@dataclass
+@dataclass(kw_only=True)
 class Email(DdiCdiDataType):
     """
     An e-mail address which conforms to the internet format (RFC 822) including its type and time period for which it is valid.
@@ -1762,7 +1765,7 @@ class Email(DdiCdiDataType):
     privacy: "ControlledVocabularyEntry" = None  # Indicates the level of privacy.
     typeOfEmail: "ControlledVocabularyEntry" = None  # Code indicating the type of e-mail address. Supports the use of an external controlled vocabulary. (e.g. home, office).
 
-@dataclass
+@dataclass(kw_only=True)
 class EmbargoInformation(DdiCdiDataType):
     """
     Specific information about any relevant embargo.
@@ -1770,7 +1773,7 @@ class EmbargoInformation(DdiCdiDataType):
     description: Optional["InternationalString"] = None  # A text description of the terms of an embargo on the object.
     period: Optional[list["DateRange"]] = None  # The time range(s) for embargo of the object.
 
-@dataclass
+@dataclass(kw_only=True)
 class FundingInformation(DdiCdiDataType):
     """
     Information regarding the source of funds used to develop or support the resource being described.
@@ -1778,21 +1781,21 @@ class FundingInformation(DdiCdiDataType):
     fundingAgent: list["AgentInRole"] = None # A reference to the agent (e.g. organization) that provided funding for a grant.
     grantNumber: str = None # The identification number for the grant at least partly provided by the funding agent.
 
-@dataclass
+@dataclass(kw_only=True)
 class SpecializationRole(DdiCdiDataType,ABC):
     """Definition
     ============
     Specific roles played by represented variables in terms of time, geography, and other concepts which are important for the harmonization and integration of data.
     """
 
-@dataclass
+@dataclass(kw_only=True)
 class GeoRole(SpecializationRole):
     """
     Geography-specific role given to a represented variable in the context of a data structure. The specific characterization of the role (e.g. reference, coordinates, etc.) may be given by a controlled vocabulary.
     """
     geography: Optional["ControlledVocabularyEntry"] = None  # Function in relation to the specification of a place or physical area or feature, ideally drawn from a controlled vocabulary.
 
-@dataclass
+@dataclass(kw_only=True)
 class Identifier(DdiCdiDataType):
     """
     Identifier for objects requiring short- or long-lasting referencing and management.
@@ -1806,7 +1809,7 @@ class Identifier(DdiCdiDataType):
     versionRationale: Optional["RationaleDefinition"] = None  # Reason for making a new version of the object.
     versionResponsibility: Optional["AgentInRole"] = None  # Contributor who has the ownership and responsibility for the current version.
 
-@dataclass
+@dataclass(kw_only=True)
 class InternationalIdentifier(DdiCdiDataType):
     """
     An identifier whose scope of uniqueness is broader than the local archive. Common forms of an international identifier are ISBN, ISSN, DOI or similar designator. Provides both the value of the identifier and the agency who manages it.
@@ -1819,7 +1822,7 @@ class InternationalIdentifier(DdiCdiDataType):
     isURI: bool = None  # Set to True if Identifier is a URI.
     managingAgency: "ControlledVocabularyEntry" = None  # The identification of the Agency which assigns and manages the identifier, i.e., ISBN, ISSN, DOI, etc.
 
-@dataclass
+@dataclass(kw_only=True)
 class InternationalRegistrationDataIdentifier(DdiCdiDataType):
     """
     Persistent, globally unique object identifier aligned with ISO/IEC 11179-6:2015, Information technology - Metadata registries (MDR) - Part 6: Registration, Annex A, Identifiers based on ISO/IEC 6523, http://standards.iso.org/ittf/PubliclyAvailableStandards/c060342_ISO_IEC_11179-6_2015.zip.
@@ -1830,7 +1833,7 @@ class InternationalRegistrationDataIdentifier(DdiCdiDataType):
     versionIdentifier: str  # Identifier assigned to a version under which an Administered Item registration is submitted or updated hereafter called Version Identifier (VI). The VI is called "version" in DDI-Codebook and DDI-Lifecycle.
 
 
-@dataclass
+@dataclass(kw_only=True)
 class LabelForDisplay(InternationalString):
     """
     A structured display label. Label provides display content of a fully human readable display for the identification of the object.
@@ -1839,7 +1842,7 @@ class LabelForDisplay(InternationalString):
     maxLength: int = None  # A positive integer indicating the maximum number of characters in the label.
     validDates: "DateRange" = None  # Allows for the specification of a starting date and ending date for the period that this label is valid.
 
-@dataclass
+@dataclass(kw_only=True)
 class LanguageString(DdiCdiDataType):
     """
     A data type which describes a string specific to a language/scope combination. It contains the following attributes: language to designate the language, isTranslated with a default value of false to designate if an object is a translation of another language, isTranslatable with a default value of true to designate if the content can be translated, translationSourceLanguage to indicate the source languages used in creating this translation, translationDate, and scope which can be used to define intended audience or use such as internal, external, etc.
@@ -1853,7 +1856,7 @@ class LanguageString(DdiCdiDataType):
     translationDate: Optional["XsdDate"] = None  # The date the content was translated. Provision of translation date allows user to verify if translation was available during data collection or other time linked activity.
     translationSourceLanguage: Optional[list[str]] = None  # Lists the natural language(s) of the source. Repeat if source is in multiple languages.
 
-@dataclass
+@dataclass(kw_only=True)
 class LicenseInformation(DdiCdiDataType):
     """
     Information about any relevant license.
@@ -1876,7 +1879,7 @@ class MemberRelationshipScope(Enum):
     None_ = "None" # This indicates that no member of the collection is indicated, e.g. None of the relationships are symmetric.
     Some = "Some" # Some, but not necessarily all of the members of the collection are indicated.
 
-@dataclass
+@dataclass(kw_only=True)
 class NonDdiIdentifier(DdiCdiDataType):
     """
     A unique set of attributes, not conforming to the DDI identifier structure nor structured as a URI, used to identify some entity.
@@ -1886,7 +1889,7 @@ class NonDdiIdentifier(DdiCdiDataType):
     version: Optional[str] = None  # The version of the object being identified, according to the versioning system provided by the identified scheme.
     managingAgency: Optional[str] = None  # The authority which maintains the identification scheme.
 
-@dataclass
+@dataclass(kw_only=True)
 class NonIsoDate(DdiCdiDataType):
     """
     Used to preserve an historical date, formatted in a non-ISO fashion.
@@ -1895,14 +1898,14 @@ class NonIsoDate(DdiCdiDataType):
     calendar: Optional["ControlledVocabularyEntry"] = None  # Specifies the type of calendar used (e.g., Gregorian, Julian, Jewish).
     nonIsoDateFormat: Optional["ControlledVocabularyEntry"] = None  # Indicate the structure of the date provided in NonISODate. For example if the NonISODate contained 4/1/2000 the Historical Date Format would be mm/dd/yyyy. The use of a controlled vocabulary is strongly recommended to support interoperability.
 
-@dataclass
+@dataclass(kw_only=True)
 class Selector(DdiCdiDataType,ABC):
     """
     A resource which describes the segment of interest in a representation of a resource. This class is not used directly, only its subclasses. It is defined accordingly the related selector of the Web Annotation Vocabulary, see https://www.w3.org/TR/annotation-vocab/#selector.
     """
     pass
 
-@dataclass
+@dataclass(kw_only=True)
 class ObjectAttributeSelector(Selector):
     """
     A resource which describes a specific attribute of an object. It is defined in the style of selectors of the Web Annotation Vocabulary, see https://www.w3.org/TR/annotation-vocab/. The selector can be nested dependent on the structure of the referenced object.
@@ -1912,7 +1915,7 @@ class ObjectAttributeSelector(Selector):
     value: Optional[str] = None  # Name of the attribute.
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ObjectName(DdiCdiDataType):
     """
     A standard means of expressing a name for a class object. A linguistic signifier. Human understandable name (word, phrase, or mnemonic) that reflects the ISO/IEC 11179-5 naming principles.
@@ -1924,7 +1927,7 @@ class ObjectName(DdiCdiDataType):
     context: "ControlledVocabularyEntry" = None  # A name may be specific to a particular context, i.e., a type of software, or a section of a registry. Identify the context related to the specified name.
     name: str = None  # The expressed name of the object.
 
-@dataclass
+@dataclass(kw_only=True)
 class OrganizationName(ObjectName):
     """
     Names by which the organization is known. Use the attribute isFormal with a value of True to designate the legal or formal name of the organization. Names may be typed with typeOfOrganizationName to indicate their appropriate usage.
@@ -1934,7 +1937,7 @@ class OrganizationName(ObjectName):
     isFormal: bool = None # The legal or formal name of the organization should have the isFormal attribute set to True. To avoid confusion only one organization name should have the isFormal attribute set to True. Use the typeOfOrganizationName to further differentiate the type and applied usage when multiple names are provided.
     typeOfOrganizationName: "ControlledVocabularyEntry" = None # The type of organization name provided. the use of a controlled vocabulary is strongly recommended. At minimum this should include, e.g. PreviousFormalName, Nickname (or CommonName), Other.
 
-@dataclass
+@dataclass(kw_only=True)
 class PairedControlledVocabularyEntry(DdiCdiDataType):
     """
     A tightly bound pair of items from an external controlled vocabulary. The extent property describes the extent to which the parent term applies for the specific case.
@@ -1958,7 +1961,7 @@ class PointFormat(Enum):
     Feet = "Feet"  # Value is expressed in feet.
     Meters = "Meters"  # Value is expressed in meters.
 
-@dataclass
+@dataclass(kw_only=True)
 class ProvenanceInformation(DdiCdiDataType):
     """Definition
     ============
@@ -1969,7 +1972,7 @@ class ProvenanceInformation(DdiCdiDataType):
     recordCreationDate: date = None  # Date the record was created.
     recordLastRevisionDate: date = None  # Date the record was last revised.
 
-@dataclass
+@dataclass(kw_only=True)
 class RationaleDefinition(DdiCdiDataType):
     """
     Textual description of the rationale/purpose for the version change and a coded value to provide an internal processing flag within and organization or system.
@@ -1978,7 +1981,7 @@ class RationaleDefinition(DdiCdiDataType):
     rationaleDescription: Optional["InternationalString"] = None  # Textual description of the rationale/purpose for the version change to inform users as to the extent and implication of the version change. May be expressed in multiple languages.
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Reference(DdiCdiDataType):
     """
     Provides a way of pointing to resources outside of the information described in the set of DDI-CDI metadata.
@@ -1992,7 +1995,7 @@ class Reference(DdiCdiDataType):
     uri: Optional[str] = None  # A URI to any object.
     validType: Optional[list[str]] = None  # The expected type of the reference (e.g., the class or element according to the schema of the referenced resource).
 
-@dataclass
+@dataclass(kw_only=True)
 class SpatialCoordinate(DdiCdiDataType):
     """
     Lists the value and format type for the coordinate value. Note that this is a single value (X coordinate or Y coordinate) rather than a coordinate pair.
@@ -2000,7 +2003,7 @@ class SpatialCoordinate(DdiCdiDataType):
     content: Optional[str] = None  # The value of the coordinate expressed as a string.
     coordinate_type: Optional["PointFormat"] = None  # Identifies the type of point coordinate system using a controlled vocabulary. Point formats include decimal degree, degrees minutes seconds, decimal minutes, meters, and feet.
 
-@dataclass
+@dataclass(kw_only=True)
 class SpatialPoint(DdiCdiDataType):
     """
     A geographic point consisting of an X and Y coordinate. Each coordinate value is expressed separately providing its value and format.
@@ -2019,7 +2022,7 @@ class StructureExtent(Enum):
     Partial = "Partial"  # Some members of a collection C are not related to each other.
     Total = "Total"  # All members of a collection C are related to each other.
     
-@dataclass
+@dataclass(kw_only=True)
 class StructureSpecification(DdiCdiDataType):
     """
     The mathematical properties of the structure.
@@ -2028,7 +2031,7 @@ class StructureSpecification(DdiCdiDataType):
     symmetric: "MemberRelationshipScope" = None # For pairs of members, a, b in the indicated scope of the associated collection, whenever a is related to b then also b is related to a.
     transitive: "MemberRelationshipScope" = None # For members a, b, c in the indicated scope of the associated collection, whenever a is related to b and b is related to c then a is also related to c.
 
-@dataclass
+@dataclass(kw_only=True)
 class Telephone(DdiCdiDataType):
     """
     Details of a telephone number including the number, type of telephone number, a privacy setting and an indication of whether this is the preferred contact number.
@@ -2043,7 +2046,7 @@ class Telephone(DdiCdiDataType):
     telephoneNumber: str = None  # The telephone number including country code if appropriate.
     typeOfTelephone: "ControlledVocabularyEntry" = None  # Indicates type of telephone number provided (home, fax, office, cell, etc.). Supports the use of a controlled vocabulary.
 
-@dataclass
+@dataclass(kw_only=True)
 class TextPositionSelector(Selector):
     """
     Describes a range of text by recording the start and end positions of the selection in the object. Position 0 would be immediately before the first character, position 1 would be immediately before the second character, and so on. It is defined accordingly the related selector of the Web Annotation Vocabulary, see https://www.w3.org/TR/annotation-vocab/#textpositionselector.
@@ -2051,14 +2054,14 @@ class TextPositionSelector(Selector):
     end: int  # Position of the last character of the selection. Position 8 would be the end of the word "Position" of the previous sentence.
     start: int  # Position of the first character of the selection. Position 0 would be the start of the word "Position" of the previous sentence.
 
-@dataclass
+@dataclass(kw_only=True)
 class TimeRole(SpecializationRole):
     """
     Time-specific role given to a represented variable in the context of a data structure. The specific characterization of the role (e.g. event, valid, transaction, reference, etc.) may be given by a controlled vocabulary.
     """
     time: Optional["ControlledVocabularyEntry"] = None # Holds a value from an external controlled vocabulary defining the time role.
 
-@dataclass
+@dataclass(kw_only=True)
 class TypedString(DdiCdiDataType):
     """
     TypedString combines a type with content defined as a simple string. May be used wherever a simple string needs to support a type definition to clarify its content.
@@ -2074,7 +2077,7 @@ class TypedString(DdiCdiDataType):
     content: str  # Content of the property expressed as a simple string.
     typeOfContent: Optional["ControlledVocabularyEntry"] = None  # Optional use of a controlled vocabulary to specifically type the associated content.
 
-@dataclass
+@dataclass(kw_only=True)
 class WebLink(DdiCdiDataType):
     """Definition
     ============
@@ -2095,7 +2098,7 @@ class WhiteSpaceRule(Enum):
     Replace = "Replace"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class XsdAnyUri(DdiCdiDataType):
     value: str  # The URI value
 
@@ -2139,6 +2142,7 @@ class XsdAnyUri(DdiCdiDataType):
         return URIRef(self.value)
 
 
+@dataclass(kw_only=True)
 class XsdDate(DdiCdiDataType):
     value: date  # The date value expressed in standard ISO format (YYYY-MM-DD)
 
