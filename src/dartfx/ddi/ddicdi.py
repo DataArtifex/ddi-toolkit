@@ -35,113 +35,37 @@ References:
      - https://ddi-alliance.atlassian.net/wiki/spaces/DDI4/pages/3126951969/DDI-CDI+Process+Review
 
 """
+
+from dartfx.rdf import rdf
+
 from abc import ABC
-from dataclasses import asdict, dataclass, field, fields
+from dataclasses import dataclass, field, fields
 from datetime import date
 from enum import Enum
-from functools import cache
-import json
 import logging
 import re
 import uuid
-from rdflib import Graph, Literal, Namespace, RDF, URIRef, XSD
-from rdflib.collection import Collection
-from typing import Any, Optional, Tuple, Union, get_args, get_type_hints, get_origin
+from rdflib import Graph, Literal, Namespace, URIRef, XSD
+from typing import Optional, Tuple
 from urllib.parse import urlparse
 
 CDI = Namespace("http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/")
-
-@dataclass
-class AttributeInfo:
-    """
-    Helper class to capture the information on an attribute.
-    """
-    name: str
-    is_list: bool = None
-    is_optional: bool = None
-    cls: Any = None # the attribute or list class
-    metadata: Any = None # metadata from the field(...,metadata="")
-    
-    @property
-    def associated_class(self):
-        if self.metadata:
-            return self.metadata.get("association")    
 
 #
 # Resources
 #
 @dataclass(kw_only=True)
-class DdiCdiResource:
+class DdiCdiResource(rdf.RdfResource):
     """The base class for all DDI-CDI resources.
     
     Equipped with numerous helper methods to facilitate processing.
     
     """
 
-    @classmethod
-    @cache
-    def _get_attribute_info(cls, attribute_name:str) -> AttributeInfo:
-        """Internal helper that infers information on an attribute type for instantiaion and processing.
-
-        Relies on dataclasses attribute annotations and Python typing package introspection.
-        
-        Note that we use the attribute field(...) 'metadata' to capture information specific to the DDI-CDI model
-
-        """
-        #
-        # A typical attribute is defined as 
-        #   name: Optional[list["ObjectName"]] = field(... )
-        # which translates into
-        #   name_type_hints is typing.Optional[list['ObjectName']]
-        #   --> origin is typing.Union
-        #   --> args is the tuple (typinglist['ObjectName'], <class 'NoneType'>)
-        #
-        attribute_info= AttributeInfo(name=attribute_name)
-        # Field information
-        try:
-            field_info = next(f for f in fields(cls) if f.name == attribute_name)
-        except StopIteration:
-            raise Exception(f"{attribute_name} attribute not found on {cls.__name__}")
-        attribute_info.metadata = field_info.metadata
-        # Type hints
-        attribute_type_hints = get_type_hints(cls).get(attribute_name)
-        if attribute_type_hints:
-            origin = get_origin(attribute_type_hints)
-            args = list(get_args(attribute_type_hints)) # we make the args tuple a list so we can remove the None class
-            if origin is Union: 
-                if None.__class__ in args:
-                    attribute_info.is_optional = True
-                    args.remove(None.__class__) # remove the None class
-                else:
-                    attribute_info.is_optional = False
-                # At this point, only one type should be left
-                # It could be a list
-                if len(args) == 1:
-                    attribute_type_hints = args[0]
-                    origin = get_origin(attribute_type_hints)
-                    args = list(get_args(attribute_type_hints))
-                else:
-                    # More than one type is possible
-                    # ... but we do not currently support this
-                    raise Exception(f"More than one type found for {attribute_type_hints}")
-        else:
-            # This attributes does not exists on the class
-            # Just ignore and return None
-            logging.warning(f"No '{attribute_name}' attribute found on {cls.__name__}")
-            return None
-        # detect if this is a list or a single value
-        attribute_info.is_list = True if origin is list else False
-        if attribute_info.is_list:
-            attribute_info.cls = args[0]
-        else:
-            attribute_info.cls = attribute_type_hints
-        # if the type was defined using a ForwardRef, 
-        # convert the string value to a class
-        if isinstance(attribute_info.cls, str):
-            attribute_info.cls = globals()[attribute_info.cls]
-        # Done
-        return attribute_info
-
+    def __post_init__(self):
+        if hasattr(super(), '__post_init__'):
+            super().__post_init__()
+        self._namespace = CDI
 
     def add_resource(self, resource, attribute_name:str = None, exact_match:bool = True):
         """A singular version of add_resources(...)
@@ -231,11 +155,13 @@ class DdiCdiResource:
     def get_uri(self) -> str:
         """
         Helper to get the value of identifier.uri.
+        @override
         """
         if getattr(self,'identifier',None) is not None:
             if getattr(self.identifier,'uri',None) is not None: 
+                self._uri = self.identifier.uri.value # set the internal _uri attribute
                 return self.identifier.uri.value
-        return None
+        return super().get_uri()
     
     def set_identifiers(self, ddi:str = None, nonddi:str = None, uri:str = None):
         """
@@ -300,8 +226,12 @@ class DdiCdiResource:
             return self.identifier.nonDdiIdentifier[-1] # last entry in list
 
     def set_uri(self, value:str):
-        """Helper to set the identifier.uri"""
+        """
+        Helper to set the identifier.uri.
+        @override
+        """
         if self.set_identifiers(uri=value):
+            super().set_uri(value) # also set internal _uri
             return self.identifier.uri
 
     def set_simple_display_label(self, value:str):
@@ -364,102 +294,7 @@ class DdiCdiResource:
             # no 'name' on this resources. Warn and do nothing
             logging.warning(f"Attribute '{attribute_name}' not found on {self.__class__.__name__}")
             return None
-
-    def as_dict(self):
-        """Returns the object as a dictionary"""
-        return asdict(self, dict_factory=lambda x: {k: v for (k, v) in x if v is not None})
-
-    def as_json(self, indent=None):
-        return json.dumps(self.as_dict(),indent=indent)
-
-    def save_json(self, filepath, indent=4):
-        with open(filepath, 'w') as f:
-            json.dump(self.as_dict(), f, indent=indent)
-            
-    def add_to_rdf_graph(self, g:Graph, use_list=False) -> URIRef:
-        """ 
-        Add this resource to an RDF graph.
-        """
-        # create the resource subject
-        g.bind("cdi", CDI)
-        subject = self.get_uriref()
-        triple = (subject, RDF.type, CDI[self.__class__.__name__])
-        # if resource already in the graph, just return the reference
-        if triple in g:
-            return subject
-        #logging.debug(f"Adding {triple[0]} {triple[2]} to RDF graph") 
-        g.add(triple)
-        
-        for attribute in fields(self): # iterate over all fields (attributes)
-            attribute_value = getattr(self, attribute.name) 
-            if attribute_value: # if the attribute is not None or empty list
-                predicate = CDI[attribute.name] # the predicate is based on the attribute name
-                attribute_info = self._get_attribute_info(attribute.name)
-                # if not a list, convert to a single entry list so we can iterate
-                if not attribute_info.is_list:
-                    attribute_value_items = [attribute_value]
-                else:
-                    attribute_value_items = attribute_value
-                # this array will collect all the objects that need to be added
-                objects = [] 
-                # iterate over all values and add
-                for value in attribute_value_items:
-                    if issubclass(attribute_info.cls, DdiCdiClass): # the attribute contains DdiCdiClass
-                        uriref = value.add_to_rdf_graph(g)
-                        objects.append(uriref)
-                    elif issubclass(attribute_info.cls, DdiCdiDataType): # the attribute is a DdiCdiDataType
-                        uriref = value.add_to_rdf_graph(g)
-                        objects.append(uriref)
-                    elif issubclass(attribute_info.cls, DdiCdiResource):
-                        logging.warning(f"Unexpected DdiCdiResource {attribute_info.cls}")
-                        uriref = value.add_to_rdf_graph(g)
-                        objects.append(uriref)
-                    elif issubclass(attribute_info.cls, str):
-                        objects.append(Literal(value, datatype=XSD.string))
-                    elif issubclass(attribute_info.cls, int):
-                        objects.append(Literal(value, datatype=XSD.integer))
-                    elif issubclass(attribute_info.cls, float):
-                        objects.append(Literal(value, datatype=XSD.float))
-                    elif issubclass(attribute_info.cls, bool):
-                        objects.append(Literal(value, datatype=XSD.boolean))
-                    else:
-                        objects.append(Literal(f"Other {attribute_info.cls}"))
-                # add to this resource
-                if attribute_info.is_list:
-                    if use_list:
-                        # Create a list node with a URIRef based on the subject and attribute
-                        # Do not use blank node.
-                        list_node = URIRef(f"{str(subject)}_{attribute.name}List")
-                        rdf_list = Collection(g, list_node, objects)  # noqa: F841
-                        g.add((subject, predicate, list_node)) # add the list_node, not rdf_list
-                    else:
-                        # add each entrey as a triple
-                        for object in objects:
-                            g.add((subject, predicate, object))
-                else:
-                    # add single entry (there can only be one entry in this case)
-                    g.add((subject, predicate, objects[0]))
-        # return the URIRef                
-        return subject
-    
-    def get_uriref(self, uri_prefix:str="urn:dartfx:") -> URIRef:
-        """Create a URIRef for this resource.
-        
-        If the resource has an 'identifier' attribute, the identifier.uri is used if set.
-        Alternatively, the identifier.ddiIdentifier value is used as a basis for the uri value.
-        Otherwise a random UUID is used to generate one.
-
-        """
-        if self.get_uri(): # use uri
-            return URIRef(self.get_uri())
-        elif self.get_ddi_identifer_value(): # use ddiIdentifier value
-            return URIRef(f"{uri_prefix}{self.get_ddi_identifer_value()}")
-        else: # generate a random uuid based URI
-            if not getattr(self,'_generated_uriref',None): # only do this once!
-                self._generated_uriref = URIRef(f"{uri_prefix}{str(uuid.uuid4())}_{self.__class__.__name__}")
-            return self._generated_uriref
-
-    
+  
 @dataclass(kw_only=True)
 class DdiCdiClass(DdiCdiResource):
     """
@@ -467,14 +302,14 @@ class DdiCdiClass(DdiCdiResource):
     """
 
     @classmethod
-    def factory(cls, id_prefix=str(uuid.uuid4()), id_suffix=None, base_uri:str="urn:dartfx:", non_ddi_id=None, non_ddi_id_type=None, *args, **kwargs) -> "DdiCdiClass":
+    def factory(cls, id_prefix=str(uuid.uuid4()), id_suffix=None, base_uri:str="urn:ddi-cdi:", non_ddi_id=None, non_ddi_id_type=None, *args, **kwargs) -> "DdiCdiClass":
         """Helper method to instantiate a DDI-CDI class and its set of identifiers. 
 
         Args:
             cls: The DDI-CDI class to instantiate.
             id_prefix (optional): A prefix for the unique indetifier. Defaults to str(uuid.uuid4()).
             id_suffix (optional): A suffix for the unique identifier. Defaults to None.
-            base_uri (optional): The base URI prefix which will be combined with the unique identifier. Defaults to "urn:dartfx:".
+            base_uri (optional): The base URI prefix which will be combined with the unique identifier. Defaults to "urn:ddi:".
             non_ddi_id (optional): A non-DDI identifier. Defaults to None.
             non_ddi_id_type (optional): If applicable, the non-DDI indentifier type. Defaults to None.
             *args: Positional arguments to pass to the class constructor.
@@ -587,8 +422,8 @@ class CodePosition:
 @dataclass(kw_only=True)
 class ComponentPosition(DdiCdiClass):
     """
-    Indexes the components in a data structure using integers with a position indicated by incrementing upward from 0 or 1
-    ."""
+    Indexes the components in a data structure using integers with a position indicated by incrementing upward from 0 or 1.
+    """
     identifier: "Identifier" = None # Identifier for objects requiring short- or long-lasting referencing and management.
     value: int = None # Index value of the member in an ordered array.
     indexesDataStructureComponent: "DataStructureComponent" = field(metadata={"association": "DataStructureComponent"}, default=None) #

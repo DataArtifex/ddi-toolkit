@@ -124,7 +124,7 @@ def codebook_to_cdif(
                 cdi_code_notation = Notation.factory(
                     id_prefix=base_uuid, id_suffix=f"{cb_var.id}_{code_value_uid}"
                 )
-                cdi_code_notation.content = TypedString(code_label)
+                cdi_code_notation.content = TypedString(content=code_label)
                 cdi_code.add_resources(cdi_code_notation, "usesNotation")
                 cdi_resources[cdi_code_notation.get_uri()] = cdi_code_notation
                 # category
