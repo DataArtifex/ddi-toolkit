@@ -39,7 +39,7 @@ References:
 from dartfx.rdf import rdf
 
 from abc import ABC
-from dataclasses import dataclass, field, fields
+from dataclasses import dataclass, field
 from datetime import date
 from enum import Enum
 import logging
