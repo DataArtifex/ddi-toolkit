@@ -613,18 +613,6 @@ class codeBookType(baseElementType):
                          value[var.id] = var_info
           return value
 
-     def search_variables(self, file_id:str=None, name:str=None, label:str=None, has_catgry:bool=None, has_qstn:bool=None):
-          """
-          Search variables in the codebook
-          """
-          vars = []
-          for dataDscr in self.dataDscr:
-               for var in dataDscr.var:
-                    if file_id and file_id not in var.attributes.get("files").value:
-                         continue
-                    vars.append(var)
-          return vars
-
      def get_files(self) -> dict[str,dict]:
           """Returns the files and their documented infornation."""
           value = {}
@@ -674,6 +662,19 @@ class codeBookType(baseElementType):
                               subtitl = titlStmt.subtitle[0]
                               value = str(subtitl._content)
           return value
+
+     def search_variables(self, file_id:str=None, name:str=None, label:str=None, has_catgry:bool=None, has_qstn:bool=None):
+          """
+          Search variables in the codebook
+          """
+          vars = []
+          for dataDscr in self.dataDscr:
+               for var in dataDscr.var:
+                    if file_id and file_id not in var.attributes.get("files").value:
+                         continue
+                    vars.append(var)
+          return vars
+
 
 class codingInstructionsType(baseElementType):
      txt: List[txtType]

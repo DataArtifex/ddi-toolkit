@@ -19,8 +19,7 @@ Version: 0.1.0
 How to use:
     - N/A
 
-
-mplementation notes:
+Implementation notes:
     - The dataclasses were generated using meta.ai LLMs from the XSD specifications
     - Only a subset of the specification is covered
     - Need to check that optional attributes are properly documented as Optionan[]
