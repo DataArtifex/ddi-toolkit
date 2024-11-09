@@ -441,11 +441,10 @@ class catgryType(baseElementType):
           self._valid_attributes.append("excls")
           self._valid_attributes.append("catgry")
           self._valid_attributes.append("level")
-
           
      @property
      def is_missing(self):
-          return self._attributes.get("missing","N") == "Y"
+          return str(self._attributes.get("missing","N")) == "Y"
 
 class catLevelType(baseElementType):
      def __init__(self, options=None):
