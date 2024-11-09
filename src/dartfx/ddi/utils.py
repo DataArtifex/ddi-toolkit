@@ -18,6 +18,7 @@ from .ddicdi import (
 )
 from dartfx.rdf import skos
 from rdflib import Graph
+import urllib.parse
 
 def codebook_to_cdif(
     codebook: codeBookType, baseuri: str = None, files: list[str] = None, use_skos=True
@@ -139,7 +140,7 @@ def codebook_to_cdif(
                 else:  # use the code value as the label if not available
                     code_label = code_value
                 # set code_value_uri
-                code_value_uid = code_value.replace(" ", "_")  # sanitize
+                code_value_uid = urllib.parse.quote_plus(code_value.replace(" ", "_"))  # sanitize
                 if use_skos:
                     cdi_skos_concept = skos.Concept()
                     cdi_skos_concept.set_uri(f'{base_uuid}_Concept_{cb_var.id}_{code_value_uid}') 
