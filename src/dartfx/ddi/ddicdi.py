@@ -3,7 +3,7 @@ Classes to manage DDI Cross-Domain Integration (CDI) resources
 
 This is a an early prototype based on the Public Review version of DDI-CDI (june 2024)
 
-Mainly intended as an initial experiment around represeting DDI-CDI in Python
+Mainly intended as an initial experiment around representing DDI-CDI in Python
 to support the conversion of DDI-Codebook to CDI
 
 Only a subset of the specification is covered, 
@@ -22,13 +22,13 @@ How to use:
 Implementation notes:
     - The dataclasses were generated using meta.ai LLMs from the XSD specifications
     - Only a subset of the specification is covered
-    - Need to check that optional attributes are properly documented as Optionan[]
+    - Need to check that optional attributes are properly documented as Optional[]
     - Need to check that non-optional attributes come first in the class definition
 
 Roadmap:
-    - Implement RDF serialier(s) 
-    - Add resource level specific helper methods to facilite processing
-    - Implement RDF deserialier(s)
+    - Implement RDF serializer(s) 
+    - Add resource level specific helper methods to facilitate processing
+    - Implement RDF deserializer(s)
 
 References:
      - https://ddi-alliance.atlassian.net/wiki/spaces/DDI4/pages/3126951969/DDI-CDI+Process+Review
@@ -66,7 +66,7 @@ class DdiCdiResource(rdf.RdfResource):
             super().__post_init__()
         self._namespace = CDI
 
-    def get_ddi_identifer_value(self) -> str:
+    def get_ddi_identifier_value(self) -> str:
         """
         Helper to get the value of identifier.ddiIdentifier.dataIdentifier
         """
@@ -90,7 +90,7 @@ class DdiCdiResource(rdf.RdfResource):
         """
         Helper to quickly set basic values on an 'identifier' attribute.
 
-        In general, 'identifier' is alwway an optional non-repeatable Identifier, with the following expections:
+        In general, 'identifier' is always an optional non-repeatable Identifier, with the following exceptions:
         - InternationalIdentifier for CatalogDetail (inherits from Identifier)
         
         Note that some default values for required attributes are set by the code below.
@@ -110,7 +110,7 @@ class DdiCdiResource(rdf.RdfResource):
                 if self.identifier is None:
                     self.identifier = attribute_info.cls()
                 # set the value on various attributes
-                if ddi: # ddiIdentifer: a InternationalRegistrationDataIdentifier
+                if ddi: # ddiIdentifier: a InternationalRegistrationDataIdentifier
                     if self.identifier.ddiIdentifier is None:
                         self.identifier.ddiIdentifier = InternationalRegistrationDataIdentifier(dataIdentifier=ddi, registrationAuthorityIdentifier="int.dataartifex", versionIdentifier="1")
                     else:
@@ -190,7 +190,7 @@ class DdiCdiResource(rdf.RdfResource):
         """
         Helper to set the 'name' attribute of a resource as a simple string (the common use case).
 
-        'name' is usually an ObjectName, with the following expections:
+        'name' is usually an ObjectName, with the following exceptions:
         - OrganizationName for VariableStructure
 
         Returns the instantiated resource
@@ -230,11 +230,11 @@ class DdiCdiClass(DdiCdiResource):
 
         Args:
             cls: The DDI-CDI class to instantiate.
-            id_prefix (optional): A prefix for the unique indetifier. Defaults to str(uuid.uuid4()).
+            id_prefix (optional): A prefix for the unique identifier. Defaults to str(uuid.uuid4()).
             id_suffix (optional): A suffix for the unique identifier. Defaults to None.
             base_uri (optional): The base URI prefix which will be combined with the unique identifier. Defaults to "urn:ddi:".
             non_ddi_id (optional): A non-DDI identifier. Defaults to None.
-            non_ddi_id_type (optional): If applicable, the non-DDI indentifier type. Defaults to None.
+            non_ddi_id_type (optional): If applicable, the non-DDI identifier type. Defaults to None.
             *args: Positional arguments to pass to the class constructor.
             **kwargs: Keyword arguments to pass to the class constructor.
 
@@ -391,7 +391,7 @@ class ConceptSystem(DdiCdiClass):
     catalogDetails: Optional["CatalogDetails"] = None  # Bundles the information useful for a data catalog entry. Examples would be creator, contributor, title, copyright, embargo, and license information. A set of information useful for attribution, data discovery, and access. This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.
     externalDefinition: Optional["Reference"] = None  # A reference to an external definition of a concept (that is, a concept which is described outside the content of the DDI-CDI metadata description). An example is a SKOS concept. The definition property is assumed to duplicate the external one referenced if externalDefinition is used. Other corresponding properties are assumed to be included unchanged if used.
     identifier: Optional["Identifier"] = None  # Identifier for objects requiring short- or long-lasting referencing and management.
-    name: Optional[list["ObjectName"]] = None  # Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.
+    name: Optional[list["ObjectName"]] = None  # Human understandable name (linguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.
     purpose: Optional["InternationalString"] = None  # Intent or reason for the object/the description of the object.
     isDefinedBy_Concept: Optional[list["Concept"]] = None  # Concept system is defined by zero to many concepts. The conceptual basis for the collection of members.
     has_Concept: Optional[list["Concept"]] = None  # Concept system has zero to many concepts.
@@ -407,7 +407,7 @@ class CategorySet(ConceptSystem):
     
     
     def add_category(self, category):
-        return self.add_categorys([category])
+        return self.add_categories([category])
         
     def add_categories(self, categories):
         return self.add_resources(categories, "hasCategory")
@@ -449,7 +449,7 @@ class ClassificationItem(DdiCdiClass):
     identifier: Optional["Identifier"] = field(default=None)  # Identifier for objects requiring short- or long-lasting referencing and management.
     isGenerated: Optional[bool] = field(default=None)  # Indicates whether or not the item has been generated to make the level to which it belongs complete.
     isValid: Optional[bool] = field(default=None)  # Indicates whether or not the item is currently valid.
-    name: list["ObjectName"] = field(default_factory=list)  # Human understandable name (liguistic signifier, word, phrase, or mnemonic).
+    name: list["ObjectName"] = field(default_factory=list)  # Human understandable name (linguistic signifier, word, phrase, or mnemonic).
     validDates: Optional["DateRange"] = field(default=None)  # The dates describing the validity period of the object.
     ClassificationItem_excludes_ClassificationItem: list["ClassificationItem"] = field(default_factory=list, metadata={"association": "ClassificationItem"})
     ClassificationItem_hasRulingBy_AuthorizationSource: list["AuthorizationSource"] = field(default_factory=list, metadata={"association": "AuthorizationSource"})
@@ -550,7 +550,7 @@ class DataStore(DdiCdiClass):
     characterSet: str = None  # Default character set used in the Data Store.
     dataStoreType: "ControlledVocabularyEntry" = None  # The type of datastore. Could be delimited file, fixed record length file, relational database, etc. Points to an external definition which can be part of a controlled vocabulary maintained by the DDI Alliance.
     identifier: "Identifier" = None  # Identifier for objects requiring short- or long-lasting referencing and management.
-    name: list["ObjectName"] = None  # Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.
+    name: list["ObjectName"] = None  # Human understandable name (linguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.
     purpose: "InternationalString" = None  # Intent or reason for the object/the description of the object.
     recordCount: int = None  # The number of records in the Data Store.
     isDefinedBy_Concept: list["Concept"] = field(default=None, metadata={"association": "Concept"}) # The conceptual basis for the collection of members.
@@ -602,7 +602,7 @@ class DataStructure(DataStructureComponent):
         """
         Helper to add a represented variable to a data structure.
         
-        This addes both the data structure component and the component position.
+        This adds both the data structure component and the component position.
         
         Returns:
             Tuple[DataStructureComponent, ComponentPosition]
@@ -628,7 +628,7 @@ class DimensionalDataSet(DataSet):
     ===================
     Similar to Structural N-Cube.
     """
-    name: list["ObjectName"] = field(default_factory=list)  # Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.
+    name: list["ObjectName"] = field(default_factory=list)  # Human understandable name (linguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.
     represents: list["ScopedMeasure"] = field(default_factory=list, metadata={"association": "ScopedMeasure"})  # 
 
 
@@ -664,7 +664,7 @@ class EnumerationDomain(DdiCdiClass):
     A base class acting as an extension point to allow all codifications (codelist, statistical classification, etc.) to be understood as enumerated value domains.
     """
     identifier: "Identifier" = field(default=None)  # Identifier for objects requiring short- or long-lasting referencing and management.
-    name: list["ObjectName"] = field(default_factory=list)  # Human understandable name (liguistic signifier, word, phrase, or mnemonic).
+    name: list["ObjectName"] = field(default_factory=list)  # Human understandable name (linguistic signifier, word, phrase, or mnemonic).
     purpose: "InternationalString" = field(default=None)  # Intent or reason for the object/the description of the object.
     usesLevelStructure: "LevelStructure" = field(default=None, metadata={"association": "LevelStructure"})  # Has meaningful level to which members belong.
     referencesCategorySet: "CategorySet" = field(default=None, metadata={"association": "CategorySet"})  # Category set associated with the enumeration.
@@ -972,7 +972,7 @@ class PhysicalDataSet(DdiCdiClass):
     allowsDuplicates: bool  # If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical "bag" permits duplicates and is unordered - a "set" does not have duplicates and may be ordered.)
     catalogDetails: Optional["CatalogDetails"] = None  # Bundles the information useful for a data catalog entry. Examples would be creator, contributor, title, copyright, embargo, and license information. A set of information useful for attribution, data discovery, and access. This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.
     identifier: Optional["Identifier"] = None  # Identifier for objects requiring short- or long-lasting referencing and management.
-    name: Optional["ObjectName"] = None  # Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.
+    name: Optional["ObjectName"] = None  # Human understandable name (linguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.
     numberOfSegments: Optional[int] = None  # The number of distinct segments (e.g., segments patterns with different structures, identified separately) in a physical dataset.
     overview: Optional["InternationalString"] = None  # Short natural language account of the information obtained from the combination of properties and relationships associated with an object.
     physicalFileName: Optional[str] = None  # Use when multiple physical segments are stored in a single file.
@@ -1315,7 +1315,7 @@ class VariableStructure(DdiCdiClass):
     Relation structure for use with any set of variables in the variable cascade (conceptual, represented, instance).
     """
     identifier: "Identifier" = None # Identifier for objects requiring short- or long-lasting referencing and management.
-    name: list["OrganizationName"] = None # Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.
+    name: list["OrganizationName"] = None # Human understandable name (linguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.
     purpose: "InternationalString" = None # Intent or reason for the object/the description of the object.
     semantics: "ControlledVocabularyEntry" = None # Specifies the semantics of the object in reference to a vocabulary, ontology, etc.
     specification: "StructureSpecification" = None # Provides information on reflexivity, transitivity, and symmetry of relationship using a descriptive term from an enumerated list. Use if all relations within this relation structure are of the same specification.
@@ -1379,7 +1379,7 @@ class Address(DdiCdiDataType):
     stateProvince: Optional[str] = None  # A major sub-national division such as a state or province used to identify a major region within an address.
     timeZone: Optional["ControlledVocabularyEntry"] = None  # Time zone of the location expressed as code.
     typeOfAddress: Optional["ControlledVocabularyEntry"] = None  # Indicates address type (i.e. home, office, mailing, etc.).
-    typeOfLlocation: Optional["ControlledVocabularyEntry"] = None  # The type or purpose of the location (i.e. regional office, distribution center, home).
+    typeOfLocation: Optional["ControlledVocabularyEntry"] = None  # The type or purpose of the location (i.e. regional office, distribution center, home).
 
 
 @dataclass(kw_only=True)

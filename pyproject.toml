@@ -22,7 +22,9 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = []
+dependencies = [
+  rdflib>=7.0.0
+]
 
 [project.urls]
 Documentation = "https://github.com/DataArtifex/dartfx-ddi#readme"

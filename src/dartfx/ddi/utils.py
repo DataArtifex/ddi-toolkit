@@ -52,7 +52,7 @@ def codebook_to_cdif(
         # categories and codes
         if cb_var.n_catgry:
             #
-            # SUBTANTIVE VALUE DOMAIN
+            # SUBSTANTIVE VALUE DOMAIN
             #
             if cb_var.n_non_missing_catgry > 0:
                 # substantive value domain
