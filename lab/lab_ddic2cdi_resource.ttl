@@ -1,0 +1,27 @@
+@prefix cdi: <http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<urn:dartfx:bbabd31a-a5ef-4be4-baa5-59e9f8682f67_InstanceVariable> a cdi:InstanceVariable ;
+    cdi:_uri "urn:dartfx:bbabd31a-a5ef-4be4-baa5-59e9f8682f67_InstanceVariable"^^xsd:string ;
+    cdi:displayLabel <urn:uuid:08cca145-ef6c-4cbd-9ea8-416c536dc772> ;
+    cdi:identifier <urn:uuid:ff52579c-e528-42cb-b7c1-70ed4231fccd> .
+
+<urn:uuid:08764a1d-6c44-41f9-ad56-15e8805ae859> a cdi:LanguageString ;
+    cdi:_uri "urn:uuid:08764a1d-6c44-41f9-ad56-15e8805ae859"^^xsd:string ;
+    cdi:content "Test Instance Variable"^^xsd:string .
+
+<urn:uuid:08cca145-ef6c-4cbd-9ea8-416c536dc772> a cdi:LabelForDisplay ;
+    cdi:_uri "urn:uuid:08cca145-ef6c-4cbd-9ea8-416c536dc772"^^xsd:string ;
+    cdi:languageSpecificString <urn:uuid:08764a1d-6c44-41f9-ad56-15e8805ae859> .
+
+<urn:uuid:ea86e8fa-4aa7-4d1e-a216-ad8cfc5b6a3d> a cdi:InternationalRegistrationDataIdentifier ;
+    cdi:_uri "urn:uuid:ea86e8fa-4aa7-4d1e-a216-ad8cfc5b6a3d"^^xsd:string ;
+    cdi:dataIdentifier "bbabd31a-a5ef-4be4-baa5-59e9f8682f67_InstanceVariable"^^xsd:string ;
+    cdi:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    cdi:versionIdentifier "1"^^xsd:string .
+
+<urn:uuid:ff52579c-e528-42cb-b7c1-70ed4231fccd> a cdi:Identifier ;
+    cdi:_uri "urn:uuid:ff52579c-e528-42cb-b7c1-70ed4231fccd"^^xsd:string ;
+    cdi:ddiIdentifier <urn:uuid:ea86e8fa-4aa7-4d1e-a216-ad8cfc5b6a3d> ;
+    cdi:uri <urn:dartfx:bbabd31a-a5ef-4be4-baa5-59e9f8682f67_InstanceVariable> .
+
