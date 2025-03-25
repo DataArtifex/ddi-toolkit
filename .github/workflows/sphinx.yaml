@@ -1,0 +1,44 @@
+name: Sphinx Documentation
+
+on:
+  push:
+    branches:
+      - main  # Triggers on pushes to the main branch
+
+jobs:
+  build-and-deploy:
+    name: Build and Publish Sphinx Docs
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      # Install dependencies
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install sphinx sphinx_rtd_theme sphinx-copybutton myst_parser
+
+      - name: Install package
+        run: pip install . .[langchain]
+
+      # Build Sphinx Documentation
+      - name: Build Documentation
+        run: |
+          sphinx-build docs/source _build/html
+
+      # Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_build/html
+          publish_branch: gh-pages
