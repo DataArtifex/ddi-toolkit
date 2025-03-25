@@ -37,18 +37,6 @@ In the meantime, you can install the package locally by following these steps:
    pip install -e .
    ```
 
-### Installing Dependencies
-
-To install the required dependencies, execute the following command:
-
-```bash
-pip install -r requirements.txt
-```
-
-Make sure you are in the project's root directory when running these commands.
-
-Feel free to replace `<repository-url>` and `<repository-directory>` with the actual URL and directory name of your project. This enhanced version provides clear instructions and formatting to guide users through the installation process effectively.
- 
 ## Usage
 
 ### Load and process a DDI-Codebook XML document
