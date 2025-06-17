@@ -1,0 +1,148 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DDI Cross Domain Integration &mdash; Data Artifex DDI Toolkit 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="DDI Codebook" href="ddicodebook.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Data Artifex DDI Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="ddicodebook.html">DDI Codebook</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">DDI Cross Domain Integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#class-generator-prompt">Class generator prompt</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Data Artifex DDI Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">DDI Cross Domain Integration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ddicdi.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ddi-cross-domain-integration">
+<h1>DDI Cross Domain Integration<a class="headerlink" href="#ddi-cross-domain-integration" title="Link to this heading"></a></h1>
+<p>DDI Cross Domain Integration (CDI) is in early stage and current development work is exploratory.</p>
+<p>Very little is documented at this time….</p>
+<p>The current objective is to create base classes and methods to create and manipulate DDI-CDI resources.
+The focus is on supporting the profile being advocated by the CODATA [Cross Domain Interoperability Framework](<a class="reference external" href="https://cdif.codata.org/">https://cdif.codata.org/</a>).</p>
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">dartfx.ddicdi.DdiCdiResource</span></code> class is at the heart of the implementation. It holds nuemrous helper methods, as well as the RDF serilizer.</p>
+<p>All other classes derive from it and are implemente as <cite>&#64;dataclass</cite>.</p>
+<p>The classes and their attributes’ match the names of the DDI-CDI resources and properties. This therefore does not follow common Python naming conventions (snake case).
+The attribute’s field() is used to provide extra information as needed. The <cite>metatata</cite> value for example is used to document valid classes for references.</p>
+<section id="class-generator-prompt">
+<h2>Class generator prompt<a class="headerlink" href="#class-generator-prompt" title="Link to this heading"></a></h2>
+<p>The dataclasses were generated with meta.ai using the promt below. The XML Schema representation of a class or datatype were used as a reference.
+This can be found in the</p>
+<p>Note that this is not perfect and</p>
+<p>Prompt:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Convert the XSD resources described below the ===== line, strictly adhering to the following rules and instructions:
+- make sure to take cardinality into account
+- use the resource documentation as class documentation
+- use the field-level documentation as an inline comment for the class attributes
+- only generate the dataclass definition. No imports or examples.
+- Double quote parent class names in Python as they may defined later in the code
+- Double quote the attribute classes&#39; names in Python as they may defined later in the code
+- use lower case typing (eg. list instead of List), as specified in PEP 585
+- If applicable, drop the XsdType suffix for the Python class name
+- Make sure to render and format as Python code
+- Make sure to include the @dataclass annotation on the class
+- Preserver original property name for class attributes (use camelCase)
+- use field(...) to initialize attributes
+- Drop the XsdType from the class names
+- For AssociationReference, do not use subclasses. Do not include a target class prefix on such property.
+
+&lt;copy/paste XML Schema representation here&gt;
+</pre></div>
+</div>
+<ul class="simple">
+<li></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ddicodebook.html" class="btn btn-neutral float-left" title="DDI Codebook" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Pascal L.G.A. Heus.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
