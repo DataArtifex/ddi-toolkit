@@ -1,0 +1,144 @@
+{
+    "cdi:InstanceVariable-physicalDataType": {
+        "uri": "cdi:InstanceVariable-physicalDataType",
+        "cardinality": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "display": "0..1"
+        }
+    },
+    "cdi:InstanceVariable-platformType": {
+        "uri": "cdi:InstanceVariable-platformType",
+        "cardinality": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "display": "0..1"
+        }
+    },
+    "cdi:InstanceVariable-source": {
+        "uri": "cdi:InstanceVariable-source",
+        "cardinality": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "display": "0..1"
+        }
+    },
+    "cdi:InstanceVariable-variableFunction": {
+        "uri": "cdi:InstanceVariable-variableFunction",
+        "cardinality": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "display": "0..*"
+        }
+    },
+    "cdi:RepresentedVariable-describedUnitOfMeasure": {
+        "uri": "cdi:RepresentedVariable-describedUnitOfMeasure",
+        "cardinality": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "display": "0..1"
+        },
+        "inherited": true,
+        "inherited_from": "cdi:RepresentedVariable"
+    },
+    "cdi:RepresentedVariable-hasIntendedDataType": {
+        "uri": "cdi:RepresentedVariable-hasIntendedDataType",
+        "cardinality": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "display": "0..1"
+        },
+        "inherited": true,
+        "inherited_from": "cdi:RepresentedVariable"
+    },
+    "cdi:RepresentedVariable-simpleUnitOfMeasure": {
+        "uri": "cdi:RepresentedVariable-simpleUnitOfMeasure",
+        "cardinality": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "display": "0..1"
+        },
+        "inherited": true,
+        "inherited_from": "cdi:RepresentedVariable"
+    },
+    "cdi:ConceptualVariable-descriptiveText": {
+        "uri": "cdi:ConceptualVariable-descriptiveText",
+        "cardinality": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "display": "0..1"
+        },
+        "inherited": true,
+        "inherited_from": "cdi:ConceptualVariable"
+    },
+    "cdi:ConceptualVariable-unitOfMeasureKind": {
+        "uri": "cdi:ConceptualVariable-unitOfMeasureKind",
+        "cardinality": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "display": "0..1"
+        },
+        "inherited": true,
+        "inherited_from": "cdi:ConceptualVariable"
+    },
+    "cdi:Concept-catalogDetails": {
+        "uri": "cdi:Concept-catalogDetails",
+        "cardinality": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "display": "0..1"
+        },
+        "inherited": true,
+        "inherited_from": "cdi:Concept"
+    },
+    "cdi:Concept-definition": {
+        "uri": "cdi:Concept-definition",
+        "cardinality": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "display": "0..1"
+        },
+        "inherited": true,
+        "inherited_from": "cdi:Concept"
+    },
+    "cdi:Concept-displayLabel": {
+        "uri": "cdi:Concept-displayLabel",
+        "cardinality": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "display": "0..*"
+        },
+        "inherited": true,
+        "inherited_from": "cdi:Concept"
+    },
+    "cdi:Concept-externalDefinition": {
+        "uri": "cdi:Concept-externalDefinition",
+        "cardinality": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "display": "0..1"
+        },
+        "inherited": true,
+        "inherited_from": "cdi:Concept"
+    },
+    "cdi:Concept-identifier": {
+        "uri": "cdi:Concept-identifier",
+        "cardinality": {
+            "minOccurs": "0",
+            "maxOccurs": "1",
+            "display": "0..1"
+        },
+        "inherited": true,
+        "inherited_from": "cdi:Concept"
+    },
+    "cdi:Concept-name": {
+        "uri": "cdi:Concept-name",
+        "cardinality": {
+            "minOccurs": "0",
+            "maxOccurs": "unbounded",
+            "display": "0..*"
+        },
+        "inherited": true,
+        "inherited_from": "cdi:Concept"
+    }
+}

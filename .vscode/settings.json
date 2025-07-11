@@ -3,6 +3,7 @@
         "./src/dartfx/ddi"
     ],
     "cSpell.words": [
-        "nonddi"
+        "nonddi",
+        "ucmis"
     ]
 }
