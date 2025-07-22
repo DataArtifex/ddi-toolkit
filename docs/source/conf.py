@@ -35,6 +35,19 @@ autodoc_default_options = {
     'special-members': '__init__',
 }
 
+# Mock imports for problematic modules
+autodoc_mock_imports = [
+    'dartfx.ddi.sempyro.ddicdi_datatypes',
+    'dartfx.ddi.ddicdi_sempyro',
+]
+
+# Skip autodoc errors for modules that can't be imported
+autodoc_typehints = 'description'
+autodoc_typehints_description_target = 'documented'
+
+# Suppress warnings for missing modules
+suppress_warnings = ['autodoc.import_error']
+
 # Napoleon configuration
 napoleon_google_docstring = True
 napoleon_numpy_docstring = True
