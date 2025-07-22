@@ -19,10 +19,37 @@ import sys
 sys.path.insert(0, os.path.abspath("../../src"))
 
 extensions = [
-    'sphinx.ext.autodoc', 
-    'sphinx.ext.napoleon', 
+    'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.todo',
     'myst_parser'
-    ]
+]
+
+# Autodoc configuration
+autodoc_default_options = {
+    'members': True,
+    'undoc-members': True,
+    'show-inheritance': True,
+    'special-members': '__init__',
+}
+
+# Napoleon configuration
+napoleon_google_docstring = True
+napoleon_numpy_docstring = True
+napoleon_include_init_with_doc = False
+napoleon_include_private_with_doc = False
+
+# Intersphinx mapping
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3', None),
+    'pydantic': ('https://docs.pydantic.dev/latest/', None),
+    'rdflib': ('https://rdflib.readthedocs.io/en/stable/', None),
+}
+
+# Todo extension
+todo_include_todos = True
 
 templates_path = ['_templates']
 exclude_patterns = []
@@ -32,5 +59,17 @@ exclude_patterns = []
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
+html_theme_options = {
+    'navigation_depth': 4,
+    'collapse_navigation': False,
+    'sticky_navigation': True,
+    'includehidden': True,
+    'titles_only': False
+}
+
+# Add custom CSS
+html_css_files = [
+    'custom.css',
+]
 
 
