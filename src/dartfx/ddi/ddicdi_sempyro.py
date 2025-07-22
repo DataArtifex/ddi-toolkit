@@ -315,11 +315,6 @@ class AccessInformation(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:CatalogDetails-access (0..*)
-
 
 
 class AccessLocation(RDFModel, metaclass=ABCMeta): 
@@ -371,11 +366,6 @@ class AccessLocation(RDFModel, metaclass=ABCMeta):
         },
     )
 
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:Machine-accessLocation (0..1)
 
 
 
@@ -535,11 +525,6 @@ class Address(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:ContactInformation-address (0..*)
-
 
 
 class AgentInRole(RDFModel, metaclass=ABCMeta): 
@@ -596,16 +581,6 @@ class AgentInRole(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:CatalogDetails-contributor (0..*)
-    # cdi:CatalogDetails-creator (0..*)
-    # cdi:CatalogDetails-publisher (0..*)
-    # cdi:FundingInformation-fundingAgent (0..*)
-    # cdi:Identifier-versionResponsibility (0..1)
-    # cdi:LicenseInformation-licenseAgent (0..*)
-
 
 
 class BibliographicName(InternationalString): # type: ignore # noqa: F821
@@ -639,11 +614,6 @@ class BibliographicName(InternationalString): # type: ignore # noqa: F821
         },
     )
 
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:AgentInRole-agentName (0..1)
 
 
 
@@ -809,34 +779,6 @@ class CatalogDetails(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:DataPoint-catalogDetails (0..1)
-    # cdi:DataSet-catalogDetails (0..1)
-    # cdi:Datum-catalogDetails (0..1)
-    # cdi:AuthorizationSource-catalogDetails (0..1)
-    # cdi:ClassificationFamily-catalogDetails (0..1)
-    # cdi:ClassificationIndex-catalogDetails (0..1)
-    # cdi:ClassificationIndexEntry-catalogDetails (0..1)
-    # cdi:ClassificationSeries-catalogDetails (0..1)
-    # cdi:CorrespondenceTable-catalogDetails (0..1)
-    # cdi:LevelStructure-catalogDetails (0..1)
-    # cdi:StatisticalClassification-catalogDetails (0..1)
-    # cdi:ValueDomain-catalogDetails (0..1)
-    # cdi:DataStore-catalogDetails (0..1)
-    # cdi:PhysicalDataSet-catalogDetails (0..1)
-    # cdi:PhysicalRecordSegment-catalogDetails (0..1)
-    # cdi:PhysicalSegmentLayout-catalogDetails (0..1)
-    # cdi:PhysicalSegmentLocation-catalogDetails (0..1)
-    # cdi:RecordRelation-catalogDetails (0..1)
-    # cdi:Agent-catalogDetails (0..1)
-    # cdi:Concept-catalogDetails (0..1)
-    # cdi:ConceptSystem-catalogDetails (0..1)
-    # cdi:ConceptSystemCorrespondence-catalogDetails (0..1)
-    # cdi:ConceptualDomain-catalogDetails (0..1)
-    # cdi:Unit-catalogDetails (0..1)
-
 
 
 class CombinedDate(RDFModel, metaclass=ABCMeta): 
@@ -893,16 +835,6 @@ class CombinedDate(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:AuthorizationSource-authorizationDate (0..1)
-    # cdi:ClassificationIndex-releaseDate (0..1)
-    # cdi:StatisticalClassification-releaseDate (0..1)
-    # cdi:CatalogDetails-date (0..*)
-    # cdi:DateRange-endDate (0..1)
-    # cdi:DateRange-startDate (0..1)
-
 
 
 class Command(RDFModel, metaclass=ABCMeta): 
@@ -945,11 +877,6 @@ class Command(RDFModel, metaclass=ABCMeta):
         },
     )
 
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:CommandCode-command (0..*)
 
 
 
@@ -1003,14 +930,6 @@ class CommandCode(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:ClassificationIndex-codingInstruction (0..*)
-    # cdi:ClassificationIndexEntry-codingInstruction (0..1)
-    # cdi:ConditionalControlLogic-condition (1..1)
-    # cdi:Step-script (0..1)
-
 
 
 class CommandFile(RDFModel, metaclass=ABCMeta): 
@@ -1053,11 +972,6 @@ class CommandFile(RDFModel, metaclass=ABCMeta):
         },
     )
 
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:CommandCode-commandFile (0..*)
 
 
 
@@ -1129,14 +1043,6 @@ class ContactInformation(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:Individual-contactInformation (0..1)
-    # cdi:Machine-ownerOperatorContact (0..1)
-    # cdi:Organization-contactInformation (0..1)
-    # cdi:LicenseInformation-contact (0..*)
-
 
 
 class ControlledVocabularyEntry(RDFModel, metaclass=ABCMeta): 
@@ -1207,105 +1113,6 @@ class ControlledVocabularyEntry(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:CategoryStatistic-typeOfCategoryStatistic (0..1)
-    # cdi:ClassificationItemRelationship-semantics (0..1)
-    # cdi:ClassificationItemStructure-semantics (0..1)
-    # cdi:ClassificationItemStructure-topology (0..1)
-    # cdi:ClassificationSeries-context (0..1)
-    # cdi:ClassificationSeries-keyword (0..*)
-    # cdi:ClassificationSeries-objectsOrUnitsClassified (0..1)
-    # cdi:ClassificationSeries-subject (0..*)
-    # cdi:ClassificationSeriesStructure-semantics (0..1)
-    # cdi:ClassificationSeriesStructure-topology (0..1)
-    # cdi:CodeListStructure-semantics (0..1)
-    # cdi:CodeListStructure-topology (1..1)
-    # cdi:CodeRelationship-semantics (0..1)
-    # cdi:SentinelValueDomain-platformType (0..1)
-    # cdi:StatisticalClassificationRelationship-semantics (0..1)
-    # cdi:ValueAndConceptDescription-formatPattern (0..1)
-    # cdi:ValueAndConceptDescription-logicalExpression (0..1)
-    # cdi:ValueDomain-recommendedDataType (0..*)
-    # cdi:DataPointRelationship-semantics (0..1)
-    # cdi:DataStore-dataStoreType (0..1)
-    # cdi:LogicalRecordRelationship-semantics (0..1)
-    # cdi:LogicalRecordRelationStructure-semantics (0..1)
-    # cdi:LogicalRecordRelationStructure-topology (0..1)
-    # cdi:PhysicalDataSetStructure-semantics (0..1)
-    # cdi:PhysicalDataSetStructure-topology (0..1)
-    # cdi:PhysicalLayoutRelationStructure-semantics (0..1)
-    # cdi:PhysicalLayoutRelationStructure-topology (1..1)
-    # cdi:PhysicalRecordSegmentRelationship-semantics (0..1)
-    # cdi:PhysicalRecordSegmentStructure-semantics (0..1)
-    # cdi:PhysicalRecordSegmentStructure-topology (0..1)
-    # cdi:PhysicalSegmentLayout-encoding (0..1)
-    # cdi:ValueMapping-format (0..1)
-    # cdi:ValueMapping-physicalDataType (0..1)
-    # cdi:ValueMappingRelationship-semantics (0..1)
-    # cdi:AgentRelationship-semantics (0..1)
-    # cdi:AgentStructure-privacy (0..1)
-    # cdi:AgentStructure-semantics (0..1)
-    # cdi:AgentStructure-topology (0..1)
-    # cdi:Machine-function (0..*)
-    # cdi:Machine-machineInterface (0..*)
-    # cdi:Machine-typeOfMachine (0..1)
-    # cdi:CategoryRelationship-semantics (0..1)
-    # cdi:CategoryRelationStructure-semantics (0..1)
-    # cdi:CategoryRelationStructure-topology (0..1)
-    # cdi:ConceptRelationship-semantics (0..1)
-    # cdi:ConceptStructure-semantics (0..1)
-    # cdi:ConceptStructure-topology (0..1)
-    # cdi:ConceptualVariable-unitOfMeasureKind (0..1)
-    # cdi:InstanceVariable-physicalDataType (0..1)
-    # cdi:InstanceVariable-platformType (0..1)
-    # cdi:InstanceVariable-variableFunction (0..*)
-    # cdi:RepresentedVariable-describedUnitOfMeasure (0..1)
-    # cdi:RepresentedVariable-hasIntendedDataType (0..1)
-    # cdi:VariableCollection-groupingSemantic (0..1)
-    # cdi:VariableRelationship-semantics (0..1)
-    # cdi:VariableStructure-semantics (0..1)
-    # cdi:VariableStructure-topology (0..1)
-    # cdi:AccessLocation-mimeType (0..1)
-    # cdi:Address-countryCode (0..1)
-    # cdi:Address-privacy (0..1)
-    # cdi:Address-regionalCoverage (0..1)
-    # cdi:Address-timeZone (0..1)
-    # cdi:Address-typeOfAddress (0..1)
-    # cdi:Address-typeOfLocation (0..1)
-    # cdi:CatalogDetails-typeOfResource (0..*)
-    # cdi:CombinedDate-semantics (0..1)
-    # cdi:Command-programLanguage (0..1)
-    # cdi:CorrespondenceDefinition-commonalityCode (0..*)
-    # cdi:ElectronicMessageSystem-privacy (0..1)
-    # cdi:ElectronicMessageSystem-typeOfService (0..1)
-    # cdi:Email-privacy (0..1)
-    # cdi:Email-typeOfEmail (0..1)
-    # cdi:GeoRole-geography (0..1)
-    # cdi:IndividualName-context (0..1)
-    # cdi:IndividualName-typeOfIndividualName (0..1)
-    # cdi:InternationalIdentifier-managingAgency (0..1)
-    # cdi:LabelForDisplay-locationVariant (0..1)
-    # cdi:LanguageString-structureUsed (0..1)
-    # cdi:NonIsoDate-calendar (0..1)
-    # cdi:NonIsoDate-nonIsoDateFormat (0..1)
-    # cdi:ObjectName-context (0..1)
-    # cdi:OrganizationName-typeOfOrganizationName (0..1)
-    # cdi:PairedControlledVocabularyEntry-extent (0..1)
-    # cdi:PairedControlledVocabularyEntry-term (1..1)
-    # cdi:PrivateImage-privacy (0..1)
-    # cdi:RationaleDefinition-rationaleCode (0..1)
-    # cdi:Reference-semantic (0..1)
-    # cdi:Telephone-privacy (0..1)
-    # cdi:Telephone-typeOfTelephone (0..1)
-    # cdi:TimeRole-time (0..1)
-    # cdi:TypedString-typeOfContent (0..1)
-    # cdi:WebLink-privacy (0..1)
-    # cdi:WebLink-typeOfWebsite (0..1)
-    # cdi:ControlLogic-workflow (0..1)
-    # cdi:Step-scriptingLanguage (0..1)
-
 
 
 class CorrespondenceDefinition(RDFModel, metaclass=ABCMeta): 
@@ -1367,12 +1174,6 @@ class CorrespondenceDefinition(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:InstanceVariableMap-correspondence (1..1)
-    # cdi:ConceptMap-correspondence (0..1)
-
 
 
 class DateRange(RDFModel, metaclass=ABCMeta): 
@@ -1415,29 +1216,6 @@ class DateRange(RDFModel, metaclass=ABCMeta):
         },
     )
 
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:ClassificationIndexEntry-validDates (0..1)
-    # cdi:ClassificationItem-validDates (0..1)
-    # cdi:CorrespondenceTable-effectiveDates (0..1)
-    # cdi:LevelStructure-validDateRange (0..1)
-    # cdi:StatisticalClassification-validDates (0..1)
-    # cdi:AgentRelationship-effectiveDates (0..1)
-    # cdi:AgentStructure-effectiveDates (0..1)
-    # cdi:ConceptMap-validDates (0..1)
-    # cdi:Population-timePeriodOfPopulation (0..*)
-    # cdi:Address-effectiveDates (0..1)
-    # cdi:ElectronicMessageSystem-effectiveDates (0..1)
-    # cdi:Email-effectiveDates (0..1)
-    # cdi:EmbargoInformation-period (0..*)
-    # cdi:IndividualName-effectiveDates (0..1)
-    # cdi:LabelForDisplay-validDates (0..1)
-    # cdi:OrganizationName-effectiveDates (0..1)
-    # cdi:PrivateImage-effectiveDates (0..1)
-    # cdi:Telephone-effectiveDates (0..1)
-    # cdi:WebLink-effectiveDates (0..1)
 
 
 
@@ -1513,11 +1291,6 @@ class ElectronicMessageSystem(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:ContactInformation-emessaging (0..*)
-
 
 
 class Email(RDFModel, metaclass=ABCMeta): 
@@ -1592,11 +1365,6 @@ class Email(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:ContactInformation-email (0..*)
-
 
 
 class EmbargoInformation(RDFModel, metaclass=ABCMeta): 
@@ -1640,11 +1408,6 @@ class EmbargoInformation(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:AccessInformation-embargo (0..*)
-
 
 
 class FundingInformation(RDFModel, metaclass=ABCMeta): 
@@ -1687,11 +1450,6 @@ class FundingInformation(RDFModel, metaclass=ABCMeta):
         },
     )
 
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:ProvenanceInformation-funding (0..*)
 
 
 
@@ -1823,99 +1581,6 @@ class Identifier(RDFModel, metaclass=ABCMeta):
         },
     )
 
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:DataPoint-identifier (0..1)
-    # cdi:DataSet-identifier (0..1)
-    # cdi:Datum-identifier (0..1)
-    # cdi:InstanceValue-identifier (0..1)
-    # cdi:Key-identifier (0..1)
-    # cdi:KeyDefinition-identifier (0..1)
-    # cdi:Notation-identifier (0..1)
-    # cdi:AuthorizationSource-identifier (0..1)
-    # cdi:CategoryStatistic-identifier (0..1)
-    # cdi:ClassificationFamily-identifier (0..1)
-    # cdi:ClassificationIndex-identifier (0..1)
-    # cdi:ClassificationIndexEntry-identifier (0..1)
-    # cdi:ClassificationIndexEntryPosition-identifier (0..1)
-    # cdi:ClassificationItem-identifier (0..1)
-    # cdi:ClassificationItemPosition-identifier (0..1)
-    # cdi:ClassificationItemRelationship-identifier (0..1)
-    # cdi:ClassificationItemStructure-identifier (0..1)
-    # cdi:ClassificationPosition-identifier (0..1)
-    # cdi:ClassificationSeries-identifier (0..1)
-    # cdi:ClassificationSeriesStructure-identifier (0..1)
-    # cdi:Code-identifier (0..1)
-    # cdi:CodeListStructure-identifier (0..1)
-    # cdi:CodePosition-identifier (0..1)
-    # cdi:CodeRelationship-identifier (0..1)
-    # cdi:CorrespondenceTable-identifier (0..1)
-    # cdi:EnumerationDomain-identifier (0..1)
-    # cdi:Level-identifier (0..1)
-    # cdi:LevelStructure-identifier (0..1)
-    # cdi:StatisticalClassificationRelationship-identifier (0..1)
-    # cdi:ValueAndConceptDescription-identifier (0..1)
-    # cdi:ValueDomain-identifier (0..1)
-    # cdi:DataPointPosition-identifier (0..1)
-    # cdi:DataPointRelationship-identifier (0..1)
-    # cdi:DataStore-identifier (0..1)
-    # cdi:InstanceVariableMap-identifier (0..1)
-    # cdi:LogicalRecord-identifier (0..1)
-    # cdi:LogicalRecordPosition-identifier (0..1)
-    # cdi:LogicalRecordRelationship-identifier (0..1)
-    # cdi:LogicalRecordRelationStructure-identifier (0..1)
-    # cdi:PhysicalDataSet-identifier (0..1)
-    # cdi:PhysicalDataSetStructure-identifier (0..1)
-    # cdi:PhysicalLayoutRelationStructure-identifier (0..1)
-    # cdi:PhysicalRecordSegment-identifier (0..1)
-    # cdi:PhysicalRecordSegmentPosition-identifier (0..1)
-    # cdi:PhysicalRecordSegmentRelationship-identifier (0..1)
-    # cdi:PhysicalRecordSegmentStructure-identifier (0..1)
-    # cdi:PhysicalSegmentLayout-identifier (0..1)
-    # cdi:PhysicalSegmentLocation-identifier (0..1)
-    # cdi:RecordRelation-identifier (0..1)
-    # cdi:ValueMapping-identifier (0..1)
-    # cdi:ValueMappingPosition-identifier (0..1)
-    # cdi:ValueMappingRelationship-identifier (0..1)
-    # cdi:ComponentPosition-identifier (0..1)
-    # cdi:DataStructureComponent-identifier (0..1)
-    # cdi:ForeignKey-identifier (0..1)
-    # cdi:ForeignKeyComponent-identifier (0..1)
-    # cdi:PrimaryKey-identifier (0..1)
-    # cdi:PrimaryKeyComponent-identifier (0..1)
-    # cdi:Agent-identifier (0..1)
-    # cdi:AgentListing-identifier (0..1)
-    # cdi:AgentPosition-identifier (0..1)
-    # cdi:AgentRelationship-identifier (0..1)
-    # cdi:AgentStructure-identifier (0..1)
-    # cdi:CategoryPosition-identifier (0..1)
-    # cdi:CategoryRelationship-identifier (0..1)
-    # cdi:CategoryRelationStructure-identifier (0..1)
-    # cdi:Concept-identifier (0..1)
-    # cdi:ConceptMap-identifier (0..1)
-    # cdi:ConceptRelationship-identifier (0..1)
-    # cdi:ConceptStructure-identifier (0..1)
-    # cdi:ConceptSystem-identifier (0..1)
-    # cdi:ConceptSystemCorrespondence-identifier (0..1)
-    # cdi:ConceptualDomain-identifier (0..1)
-    # cdi:Unit-identifier (0..1)
-    # cdi:VariableCollection-identifier (0..1)
-    # cdi:VariablePosition-identifier (0..1)
-    # cdi:VariableRelationship-identifier (0..1)
-    # cdi:VariableStructure-identifier (0..1)
-    # cdi:DimensionGroup-identifier (0..1)
-    # cdi:Revision-identifier (0..1)
-    # cdi:ScopedMeasure-identifier (0..1)
-    # cdi:Activity-identifier (0..1)
-    # cdi:ControlLogic-identifier (0..1)
-    # cdi:InformationFlowDefinition-identifier (0..1)
-    # cdi:Parameter-identifier (0..1)
-    # cdi:ProductionEnvironment-identifier (0..1)
-    # cdi:Rule-identifier (0..1)
-    # cdi:RuleSet-identifier (0..1)
-    # cdi:SequencePosition-identifier (0..1)
 
 
 
@@ -2059,11 +1724,6 @@ class IndividualName(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:Individual-individualName (0..*)
-
 
 
 class InternationalIdentifier(RDFModel, metaclass=ABCMeta): 
@@ -2120,11 +1780,6 @@ class InternationalIdentifier(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:CatalogDetails-identifier (0..1)
-
 
 
 class InternationalRegistrationDataIdentifier(RDFModel, metaclass=ABCMeta): 
@@ -2178,12 +1833,6 @@ class InternationalRegistrationDataIdentifier(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:Identifier-ddiIdentifier (0..1)
-    # cdi:Reference-ddiReference (0..1)
-
 
 
 class InternationalString(RDFModel, metaclass=ABCMeta): 
@@ -2217,88 +1866,6 @@ class InternationalString(RDFModel, metaclass=ABCMeta):
         },
     )
 
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:AuthorizationSource-legalMandate (0..1)
-    # cdi:AuthorizationSource-purpose (0..1)
-    # cdi:AuthorizationSource-statementOfAuthorization (0..1)
-    # cdi:ClassificationFamily-purpose (0..1)
-    # cdi:ClassificationIndex-corrections (0..*)
-    # cdi:ClassificationIndex-purpose (0..1)
-    # cdi:ClassificationIndexEntry-entry (0..1)
-    # cdi:ClassificationItem-changeFromPreviousVersion (0..1)
-    # cdi:ClassificationItem-changeLog (0..1)
-    # cdi:ClassificationItem-explanatoryNotes (0..*)
-    # cdi:ClassificationItem-futureNotes (0..*)
-    # cdi:ClassificationItemStructure-purpose (0..1)
-    # cdi:ClassificationSeries-purpose (0..1)
-    # cdi:ClassificationSeriesStructure-purpose (0..1)
-    # cdi:CodeListStructure-purpose (0..1)
-    # cdi:EnumerationDomain-purpose (0..1)
-    # cdi:LevelStructure-usage (0..1)
-    # cdi:StatisticalClassification-changeFromBase (0..1)
-    # cdi:StatisticalClassification-copyright (0..*)
-    # cdi:StatisticalClassification-purposeOfVariant (0..1)
-    # cdi:StatisticalClassification-rationale (0..1)
-    # cdi:StatisticalClassification-updateChanges (0..*)
-    # cdi:StatisticalClassification-usage (0..1)
-    # cdi:ValueAndConceptDescription-description (0..1)
-    # cdi:DataStore-aboutMissing (0..1)
-    # cdi:DataStore-purpose (0..1)
-    # cdi:LogicalRecordRelationStructure-purpose (0..1)
-    # cdi:PhysicalDataSet-overview (0..1)
-    # cdi:PhysicalDataSet-purpose (0..1)
-    # cdi:PhysicalDataSetStructure-purpose (0..1)
-    # cdi:PhysicalLayoutRelationStructure-criteria (0..1)
-    # cdi:PhysicalLayoutRelationStructure-purpose (0..1)
-    # cdi:PhysicalRecordSegment-purpose (0..1)
-    # cdi:PhysicalRecordSegmentStructure-purpose (0..1)
-    # cdi:PhysicalSegmentLayout-overview (0..1)
-    # cdi:PhysicalSegmentLayout-purpose (0..1)
-    # cdi:RecordRelation-purpose (0..1)
-    # cdi:RecordRelation-usage (0..1)
-    # cdi:Agent-purpose (0..1)
-    # cdi:AgentListing-purpose (0..1)
-    # cdi:AgentStructure-purpose (0..1)
-    # cdi:Category-descriptiveText (0..1)
-    # cdi:CategoryRelationStructure-purpose (0..1)
-    # cdi:Concept-definition (0..1)
-    # cdi:ConceptMap-usage (0..1)
-    # cdi:ConceptStructure-purpose (0..1)
-    # cdi:ConceptSystem-purpose (0..1)
-    # cdi:ConceptSystemCorrespondence-purpose (0..1)
-    # cdi:ConceptSystemCorrespondence-usage (0..1)
-    # cdi:ConceptualVariable-descriptiveText (0..1)
-    # cdi:Unit-definition (0..1)
-    # cdi:UnitType-descriptiveText (0..1)
-    # cdi:VariableCollection-purpose (0..1)
-    # cdi:VariableCollection-usage (0..1)
-    # cdi:VariableStructure-purpose (0..1)
-    # cdi:AccessInformation-copyright (0..*)
-    # cdi:AccessInformation-rights (0..*)
-    # cdi:AccessLocation-physicalLocation (0..*)
-    # cdi:CatalogDetails-alternativeTitle (0..*)
-    # cdi:CatalogDetails-informationSource (0..*)
-    # cdi:CatalogDetails-subTitle (0..*)
-    # cdi:CatalogDetails-summary (0..1)
-    # cdi:CatalogDetails-title (0..1)
-    # cdi:CommandCode-description (0..1)
-    # cdi:CommandFile-location (0..1)
-    # cdi:CorrespondenceDefinition-commonality (0..1)
-    # cdi:CorrespondenceDefinition-difference (0..1)
-    # cdi:EmbargoInformation-description (0..1)
-    # cdi:IndividualName-abbreviation (0..1)
-    # cdi:IndividualName-fullName (0..1)
-    # cdi:LicenseInformation-description (0..*)
-    # cdi:OrganizationName-abbreviation (0..1)
-    # cdi:ProvenanceInformation-provenanceStatement (0..*)
-    # cdi:RationaleDefinition-rationaleDescription (0..1)
-    # cdi:Reference-location (0..1)
-    # cdi:Revision-overview (0..1)
-    # cdi:ScopedMeasure-frequency (0..1)
-    # cdi:Activity-definition (0..1)
 
 
 
@@ -2351,24 +1918,6 @@ class LabelForDisplay(InternationalString): # type: ignore # noqa: F821
         },
     )
 
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:ClassificationItemStructure-displayLabel (0..*)
-    # cdi:Level-displayLabel (0..*)
-    # cdi:StatisticalClassification-displayLabel (0..*)
-    # cdi:ValueDomain-displayLabel (0..*)
-    # cdi:RecordRelation-displayLabel (0..*)
-    # cdi:Concept-displayLabel (0..*)
-    # cdi:ConceptMap-displayLabel (0..1)
-    # cdi:ConceptSystemCorrespondence-displayLabel (0..*)
-    # cdi:ConceptualDomain-displayLabel (0..*)
-    # cdi:Unit-displayLabel (0..*)
-    # cdi:VariableCollection-displayLabel (0..*)
-    # cdi:Activity-displayLabel (0..*)
-    # cdi:ControlLogic-displayLabel (0..*)
-    # cdi:ProductionEnvironment-displayLabel (0..*)
 
 
 
@@ -2467,11 +2016,6 @@ class LanguageString(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:InternationalString-languageSpecificString (0..*)
-
 
 
 class LicenseInformation(RDFModel, metaclass=ABCMeta): 
@@ -2536,11 +2080,6 @@ class LicenseInformation(RDFModel, metaclass=ABCMeta):
         },
     )
 
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:AccessInformation-license (0..*)
 
 
 
@@ -2691,12 +2230,6 @@ class NonDdiIdentifier(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:Identifier-nonDdiIdentifier (0..*)
-    # cdi:Reference-nonDdiReference (0..*)
-
 
 
 class NonIsoDate(RDFModel, metaclass=ABCMeta): 
@@ -2748,11 +2281,6 @@ class NonIsoDate(RDFModel, metaclass=ABCMeta):
         },
     )
 
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:CombinedDate-nonIsoDate (0..*)
 
 
 
@@ -2806,11 +2334,6 @@ class ObjectAttributeSelector(Selector): # type: ignore # noqa: F821
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:ObjectAttributeSelector-refinedBy (0..1)
-
 
 
 class ObjectName(RDFModel, metaclass=ABCMeta): 
@@ -2857,44 +2380,6 @@ class ObjectName(RDFModel, metaclass=ABCMeta):
         },
     )
 
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:ClassificationFamily-name (0..*)
-    # cdi:ClassificationIndex-name (0..*)
-    # cdi:ClassificationItem-name (0..*)
-    # cdi:ClassificationItemStructure-name (0..*)
-    # cdi:ClassificationSeries-name (0..*)
-    # cdi:ClassificationSeriesStructure-name (0..*)
-    # cdi:CodeListStructure-name (0..*)
-    # cdi:EnumerationDomain-name (0..*)
-    # cdi:LevelStructure-name (0..*)
-    # cdi:DataStore-name (0..*)
-    # cdi:LogicalRecordRelationStructure-name (0..*)
-    # cdi:PhysicalDataSet-name (0..1)
-    # cdi:PhysicalDataSetStructure-name (0..1)
-    # cdi:PhysicalLayoutRelationStructure-name (0..*)
-    # cdi:PhysicalRecordSegment-name (0..*)
-    # cdi:PhysicalRecordSegmentStructure-name (0..1)
-    # cdi:PhysicalSegmentLayout-name (0..*)
-    # cdi:MeasureComponent-name (0..*)
-    # cdi:AgentListing-name (0..*)
-    # cdi:AgentStructure-name (0..*)
-    # cdi:Machine-name (0..*)
-    # cdi:CategoryRelationStructure-name (0..*)
-    # cdi:Concept-name (0..*)
-    # cdi:ConceptStructure-name (0..*)
-    # cdi:ConceptSystem-name (0..*)
-    # cdi:Unit-name (0..*)
-    # cdi:VariableCollection-name (0..*)
-    # cdi:Address-locationName (0..1)
-    # cdi:DimensionalDataSet-name (0..*)
-    # cdi:DimensionGroup-name (0..*)
-    # cdi:Activity-name (0..*)
-    # cdi:ControlLogic-name (0..*)
-    # cdi:Parameter-name (0..*)
-    # cdi:ProductionEnvironment-name (0..*)
 
 
 
@@ -2957,12 +2442,6 @@ class OrganizationName(ObjectName): # type: ignore # noqa: F821
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:Organization-organizationName (1..*)
-    # cdi:VariableStructure-name (0..*)
-
 
 
 class PairedControlledVocabularyEntry(RDFModel, metaclass=ABCMeta): 
@@ -3012,12 +2491,6 @@ class PairedControlledVocabularyEntry(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:DataStructureComponent-semantic (0..*)
-    # cdi:AgentInRole-role (0..*)
-
 
 
 class PrivateImage(RDFModel, metaclass=ABCMeta): 
@@ -3060,11 +2533,6 @@ class PrivateImage(RDFModel, metaclass=ABCMeta):
         },
     )
 
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:Agent-image (0..*)
 
 
 
@@ -3127,11 +2595,6 @@ class ProvenanceInformation(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:CatalogDetails-provenance (0..1)
-
 
 
 class RationaleDefinition(RDFModel, metaclass=ABCMeta): 
@@ -3174,11 +2637,6 @@ class RationaleDefinition(RDFModel, metaclass=ABCMeta):
         },
     )
 
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:Identifier-versionRationale (0..1)
 
 
 
@@ -3277,22 +2735,6 @@ class Reference(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:Concept-externalDefinition (0..1)
-    # cdi:ConceptSystem-externalDefinition (0..1)
-    # cdi:InstanceVariable-source (0..1)
-    # cdi:AgentInRole-reference (0..1)
-    # cdi:CatalogDetails-relatedResource (0..*)
-    # cdi:ControlledVocabularyEntry-entryReference (0..*)
-    # cdi:ControlledVocabularyEntry-vocabulary (0..1)
-    # cdi:LicenseInformation-licenseReference (0..*)
-    # cdi:Activity-entityProduced (0..*)
-    # cdi:Activity-entityUsed (0..*)
-    # cdi:Activity-standardModelMapping (0..*)
-    # cdi:Parameter-entityBound (0..*)
-
 
 
 class Selector(RDFModel, metaclass=ABCMeta): 
@@ -3313,11 +2755,6 @@ class Selector(RDFModel, metaclass=ABCMeta):
             "$prefix": "cdi",
         },
     )
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:Reference-deepLink (0..1)
 
 
 
@@ -3362,12 +2799,6 @@ class SpatialCoordinate(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:SpatialPoint-xCoordinate (0..1)
-    # cdi:SpatialPoint-yCoordinate (0..1)
-
 
 
 class SpatialPoint(RDFModel, metaclass=ABCMeta): 
@@ -3411,11 +2842,6 @@ class SpatialPoint(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:Address-geographicPoint (0..1)
-
 
 
 class SpecializationRole(RDFModel, metaclass=ABCMeta): 
@@ -3436,11 +2862,6 @@ class SpecializationRole(RDFModel, metaclass=ABCMeta):
             "$prefix": "cdi",
         },
     )
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:DataStructureComponent-specialization (0..1)
 
 
 
@@ -3503,11 +2924,6 @@ class Statistic(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:CategoryStatistic-statistic (0..*)
-
 
 
 class StructureSpecification(RDFModel, metaclass=ABCMeta): 
@@ -3559,21 +2975,6 @@ class StructureSpecification(RDFModel, metaclass=ABCMeta):
         },
     )
 
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:ClassificationItemStructure-specification (0..1)
-    # cdi:ClassificationSeriesStructure-specification (0..1)
-    # cdi:CodeListStructure-specification (0..1)
-    # cdi:LogicalRecordRelationStructure-specification (0..1)
-    # cdi:PhysicalDataSetStructure-specification (0..1)
-    # cdi:PhysicalLayoutRelationStructure-specification (0..1)
-    # cdi:PhysicalRecordSegmentStructure-specification (0..1)
-    # cdi:AgentStructure-specification (0..1)
-    # cdi:CategoryRelationStructure-specification (0..1)
-    # cdi:ConceptStructure-specification (0..1)
-    # cdi:VariableStructure-specification (0..1)
 
 
 
@@ -3648,11 +3049,6 @@ class Telephone(RDFModel, metaclass=ABCMeta):
         },
     )
 
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:ContactInformation-telephone (0..*)
 
 
 
@@ -3782,14 +3178,6 @@ class TypedString(RDFModel, metaclass=ABCMeta):
     )
 
 
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:InstanceValue-content (0..1)
-    # cdi:Notation-content (0..1)
-    # cdi:ValueAndConceptDescription-regularExpression (0..1)
-    # cdi:Command-commandContent (0..1)
-
 
 
 class WebLink(RDFModel, metaclass=ABCMeta): 
@@ -3859,11 +3247,6 @@ class WebLink(RDFModel, metaclass=ABCMeta):
         },
     )
 
-
-    #
-    # RANGE ATTRIBUTES
-    #
-    # cdi:ContactInformation-website (0..*)
 
 
 

@@ -147,13 +147,13 @@ def generate_resource(model, resource_uri):
         code += '\n'
 
     # range attributes
-    range_attributes = model.get_resource_range_attributes(resource_uri, description=True)
-    if range_attributes:
-        code += indent_code('#\n# RANGE ATTRIBUTES\n#\n\n', 1)
-        for attribute_uri, attribute in range_attributes.items():
-            cardinality = model.get_resource_attribute_cardinality(resource_uri, attribute_uri)
-            code += indent_code(f"# {attribute_uri} ({cardinality.get('display')})\n\n", 1)
-        code += '\n'
+    #range_attributes = model.get_resource_range_attributes(resource_uri, description=True)
+    #if range_attributes:
+    #    code += indent_code('#\n# RANGE ATTRIBUTES\n#\n\n', 1)
+    #    for attribute_uri, attribute in range_attributes.items():
+    #       cardinality = model.get_resource_attribute_cardinality(resource_uri, attribute_uri)
+    #       code += indent_code(f"# {attribute_uri} ({cardinality.get('display')})\n\n", 1)
+    #   code += '\n'
 
     # the end
     code += '\n\n'
