@@ -1,7 +1,7 @@
 import os
 import pytest
 from rdflib import Graph
-from dartfx.ddi.ddicdi_model import DdiCdiModel
+from ddicdi_specification import DdiCdiModel
 
 @pytest.fixture
 def root_dir():

@@ -3,7 +3,9 @@
         "./src/dartfx/ddi"
     ],
     "cSpell.words": [
+        "ddicdi",
         "nonddi",
+        "sempyro",
         "ucmis"
     ]
 }

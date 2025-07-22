@@ -44,6 +44,7 @@ import os
 from rdflib import Graph
 from rdflib import Namespace
 import xml.etree.ElementTree as ET
+from typing import Any, Union
 
 
 NAMESPACES = {
@@ -73,8 +74,8 @@ class DdiCdiModel(BaseModel):
 
     root_dir: str
 
-    _graph: Graph
-    _xml: ET.Element
+    _graph: Graph | None = None
+    _xml: ET.Element | None = None
 
     @classmethod
     def validate(cls, value):
@@ -179,7 +180,7 @@ class DdiCdiModel(BaseModel):
         tree = ET.parse(file_path)
         return tree.getroot()
 
-    def get_association_cardinalities(self, association_uri: str) -> dict[str, dict]:
+    def get_association_cardinalities(self, association_uri: str) -> dict[str, dict[str, Any]]:
         """
         Retrieves the from and to cardinalities of an association for a given association URI.
         Uses the XML schema to determine the minOccurs and maxOccurs values and other attributes.
@@ -229,9 +230,7 @@ class DdiCdiModel(BaseModel):
             cardinalities['from'] = cardinality_from
             # TO .//xs:element[@id='InstanceVariable_has_PhysicalSegmentLayout-validType']
             xpath = f".//{{{XMLNS['xs']}}}element[@{{{XMLNS['xml']}}}id='{association_name}-validType']"
-            #print(xpath)
             to_element = from_element.find(xpath)
-            #print(to_element)
             if to_element:
                 cardinality_to = {}
                 cardinality_to['minOccurs'] = to_element.get("minOccurs")
@@ -274,7 +273,42 @@ class DdiCdiModel(BaseModel):
         results = self.graph.query(query)
         return [self.prefixed_uri(str(row[0])) for row in results]
 
-    def get_resource_attribute_cardinality(self, resource_uri: str, attribute_uri) -> dict[str, str]:
+    def get_enumeration(self, enumeration_uri: str) -> dict[str, Any]:
+        """
+        Retrieves information about an enumeration.
+        """
+        enumeration = {}
+        properties = self.get_resource_properties(enumeration_uri)
+        enumeration['uri'] = enumeration_uri
+        enumeration['label'] = properties.get("rdfs:label")
+        enumeration['description'] = properties.get("rdfs:comment")
+        # get members
+        members = {}
+        query = f"""
+            SELECT ?s
+            WHERE {{
+                ?s a {enumeration_uri} ;
+            }}
+        """
+        results = self.graph.query(query)
+        for row in results:
+            member_uri = self.prefixed_uri(row[0])
+            member_properties = self.get_resource_properties(member_uri)
+            label = member_properties.get("rdfs:label")
+            description = member_properties.get("rdfs:comment")
+            if isinstance(description, list): # NOTE: this is to accommodate for extra lines in enumeration's comments
+                description = "\n".join(description)
+            if description:
+                description = description.replace("\n", " ").strip()
+            members[label] = {
+                "uri": member_uri,
+                "label": label,
+                "description": description
+            }
+        enumeration['members'] = members
+        return enumeration
+
+    def get_resource_attribute_cardinality(self, resource_uri: str, attribute_uri) -> dict[str, Any]:
         """
         Retrieves the cardinality of attribute for a given resource URI.
         Uses the XML schema to determine the minOccurs and maxOccurs values.
@@ -299,7 +333,6 @@ class DdiCdiModel(BaseModel):
         attribute_name = attribute_uri.split(":")[-1]  # Get the local name of the attribute
         resource_name = attribute_name.split("-")[0]  # Get the local name of the resource
         xpath = f"./{{{XMLNS['xs']}}}complexType[@{{{XMLNS['xml']}}}id='{resource_name}XsdType']//{{{XMLNS['xs']}}}element[@{{{XMLNS['xml']}}}id='{attribute_name}']"
-        # print(xpath)
         elements = self.xml.findall(xpath)
         if elements:
             # Assuming the first element is the one we want
@@ -310,13 +343,13 @@ class DdiCdiModel(BaseModel):
             cardinality['display'] = f"{cardinality['minOccurs']}..{cardinality['maxOccurs']}" if cardinality['maxOccurs'] != 'unbounded' else f"{cardinality['minOccurs']}..*"                
         return cardinality
 
-    def get_resource_attributes(self, resource_uri: str, description: bool = False, inherited: bool = False) -> dict[str, dict]:
+    def get_resource_domain_attributes(self, resource_uri: str, description: bool = False, inherited: bool = False) -> dict[str, dict[str, Any]]:
         """
-        Retrieves all attributes for a given resource URI.
+        Retrieves all domain attributes for a given resource URI.
         Returns a dictionary with attribute URIs as keys and their cardinality as values.
         """
         attributes = {} 
-        for attribute_uri in self.get_resource_ucmis_attributes(resource_uri):
+        for attribute_uri in self.get_resource_ucmis_domain_attributes(resource_uri):
             properties = self.get_resource_properties(attribute_uri)
             range = properties.get("rdfs:range")
             if isinstance(range, list):
@@ -339,31 +372,80 @@ class DdiCdiModel(BaseModel):
             # get attributes from superclasses
             superclasses = self.get_resource_superclasses(resource_uri)
             for superclass_uri in superclasses:
-                superclass_attributes = self.get_resource_attributes(superclass_uri, inherited=False)
+                superclass_attributes = self.get_resource_domain_attributes(superclass_uri, inherited=False)
                 for superclass_attribute in superclass_attributes.values():
                     superclass_attribute['inherited'] = True  # Mark as inherited
                     superclass_attribute['inherited_from'] = superclass_uri  # Mark the superclass
                     attributes[superclass_attribute['uri']] = superclass_attribute
         return attributes
 
-    def get_resource_associations(self, resource_uri: str, inherited: bool = False, cardinalities: bool = False) ->  dict[str, dict]:
-        associations = {} 
+    def get_resource_range_attributes(self, resource_uri: str, description: bool = False, inherited: bool = False) -> dict[str, dict[str, Any]]:
+        """
+        Retrieves all range attributes for a given resource URI.
+        Returns a dictionary with attribute URIs as keys and their cardinality as values.
+        """
+        attributes = {} 
+        for attribute_uri in self.get_resource_ucmis_range_attributes(resource_uri):
+            properties = self.get_resource_properties(attribute_uri)
+            range = properties.get("rdfs:range")
+            if isinstance(range, list):
+                range = [self.prefixed_uri(r) for r in range]
+            else:
+                range = self.prefixed_uri(range) if range else None
+            cardinality = self.get_resource_attribute_cardinality(resource_uri, attribute_uri)
+            attribute = {
+                "uri": attribute_uri, 
+                "label": properties.get("rdfs:label"), 
+                "range": range, 
+                "cardinality": cardinality, 
+            }
+            if inherited:
+                attribute['inherited'] = False
+            if description:
+                attribute['description'] = properties.get("rdfs:comment")
+            attributes[attribute_uri] = attribute
+        if inherited:
+            # get attributes from superclasses
+            superclasses = self.get_resource_superclasses(resource_uri)
+            for superclass_uri in superclasses:
+                superclass_attributes = self.get_resource_range_attributes(superclass_uri, inherited=False)
+                for superclass_attribute in superclass_attributes.values():
+                    superclass_attribute['inherited'] = True  # Mark as inherited
+                    superclass_attribute['inherited_from'] = superclass_uri  # Mark the superclass
+                    attributes[superclass_attribute['uri']] = superclass_attribute
+        return attributes
+
+    def get_resource_associations(self, resource_uri: str, include_from: bool = True, include_to: bool = True, inherited: bool = False, cardinalities: bool = False) -> dict[str, dict[str, Any]]:
+        associations = {}
         # from
-        for association_uri in self.get_resource_ucmis_associations_from(resource_uri):
-            association = {"uri": association_uri, "direction": "from"}
-            if inherited:
-                association['inherited'] = False
-            if cardinalities:
-                association.update(self.get_association_cardinalities(association_uri))
-            associations[association_uri] = association
+        if include_from:
+            for association_uri in self.get_resource_ucmis_associations_from(resource_uri):
+                association: dict[str, Any] = {"uri": association_uri, "direction": "from"}
+                properties = self.get_resource_properties(association_uri)
+                range = properties.get("rdfs:range")
+                if isinstance(range, list):
+                    range = [self.prefixed_uri(r) for r in range]
+                else:
+                    range = self.prefixed_uri(range) if range else None
+                association['label'] = properties.get("rdfs:label")
+                association['altLabel'] = properties.get("skos:altLabel")
+                association['description'] = properties.get("rdfs:comment")
+                association['domain'] = properties.get("rdfs:domain")
+                association['range'] = range
+                if inherited:
+                    association['inherited'] = False
+                if cardinalities:
+                    association.update(self.get_association_cardinalities(association_uri))
+                associations[association_uri] = association
         # to
-        for association_uri in self.get_resource_ucmis_associations_to(resource_uri):
-            association = {"uri": association_uri, "direction": "to"}
-            if inherited:
-                association['inherited'] = False
-            if cardinalities:
-                association.update(self.get_association_cardinalities(association_uri))
-            associations[association_uri] = association
+        if include_to:
+            for association_uri in self.get_resource_ucmis_associations_to(resource_uri):
+                association: dict[str, Any] = {"uri": association_uri, "direction": "to"}
+                if inherited:
+                    association['inherited'] = False
+                if cardinalities:
+                    association.update(self.get_association_cardinalities(association_uri))
+                associations[association_uri] = association
         if inherited:
             # get attributes from superclasses
             superclasses = self.get_resource_superclasses(resource_uri)
@@ -374,6 +456,46 @@ class DdiCdiModel(BaseModel):
                     superclass_attribute['inherited_from'] = superclass_uri  # Mark the superclass
                     associations[superclass_attribute['uri']] = superclass_attribute
         return associations
+
+    def get_resource_associations_from(self, resource_uri: str, inherited: bool = False, cardinalities: bool = False) -> dict[str, dict[str, Any]]:
+        """
+        Retrieves all FROM associations that have the given resource_uri as their rdfs:domain.
+        Returns a dictionary with association URIs as keys and their properties as values.
+        """
+        return self.get_resource_associations(resource_uri, include_from=True, include_to=False, inherited=inherited, cardinalities=cardinalities)
+
+    def get_resource_associations_to(self, resource_uri: str, inherited: bool = False, cardinalities: bool = False) -> dict[str, dict[str, Any]]:
+        """
+        Retrieves all TO associations that have the given resource_uri as their rdfs:range.
+        Returns a dictionary with association URIs as keys and their properties as values.
+        """
+        return self.get_resource_associations(resource_uri, include_from=False, include_to=True, inherited=inherited, cardinalities=cardinalities)
+
+    def get_resource_properties(self, resource_uri: str) -> dict[str, Any]:
+        """
+        Retrieves all RDF properties of a given resource URI in the graph.
+        Returns a dictionary with property URIs as keys and their values as lists or single values.
+        """
+        query = f"""
+        SELECT ?property ?value
+        WHERE {{
+            {resource_uri} ?property ?value .
+        }}
+        """
+        results = self.graph.query(query)
+        properties = {}
+        # Process results into a dictionary
+        for row in results:
+            prop = self.prefixed_uri(str(row[0]))
+            value = str(row[1])
+            if prop not in properties:
+                properties[prop] = []
+            properties[prop].append(value)
+        # Convert lists with a single item to just the item
+        for prop in properties:
+            if len(properties[prop]) == 1:
+                properties[prop] = properties[prop][0]
+        return properties
 
     def get_resource_ucmis_associations_from(self, resource_uri: str) -> list[str]:
             """
@@ -405,7 +527,7 @@ class DdiCdiModel(BaseModel):
             results = self.graph.query(query)
             return [self.prefixed_uri(str(row[0])) for row in results]
 
-    def get_resource_ucmis_attributes(self, resource_uri: str) -> list[str]:
+    def get_resource_ucmis_domain_attributes(self, resource_uri: str) -> list[str]:
         """
         Retrieves all ucmis:Attribute resources that have the given resource_uri as their rdfs:domain.
         Returns a list of attribute URIs (as prefixed URIs if possible).
@@ -420,31 +542,20 @@ class DdiCdiModel(BaseModel):
         results = self.graph.query(query)
         return [self.prefixed_uri(str(row[0])) for row in results]
 
-    def get_resource_properties(self, resource_uri: str) -> dict[str, str|list[str]]:
+    def get_resource_ucmis_range_attributes(self, resource_uri: str) -> list[str]:
         """
-        Retrieves all RDF properties of a given resource URI in the graph.
-        Returns a dictionary with property URIs as keys and their values as lists or single values.
+        Retrieves all ucmis:Attribute resources that have the given resource_uri as their rdfs:range.
+        Returns a list of attribute URIs (as prefixed URIs if possible).
         """
         query = f"""
-        SELECT ?property ?value
+        SELECT ?attribute
         WHERE {{
-            {resource_uri} ?property ?value .
+            ?attribute a ucmis:Attribute ;
+            rdfs:range {resource_uri} .
         }}
         """
         results = self.graph.query(query)
-        properties = {}
-        # Process results into a dictionary
-        for row in results:
-            prop = self.prefixed_uri(str(row[0]))
-            value = str(row[1])
-            if prop not in properties:
-                properties[prop] = []
-            properties[prop].append(value)
-        # Convert lists with a single item to just the item
-        for prop in properties:
-            if len(properties[prop]) == 1:
-                properties[prop] = properties[prop][0]
-        return properties
+        return [self.prefixed_uri(str(row[0])) for row in results]
 
     def get_resource_superclasses(self, resource_uri: str) -> list[str]:
         """
@@ -497,7 +608,7 @@ class DdiCdiModel(BaseModel):
         results = self.graph.query(query)
         return [self.prefixed_uri(str(row[0])) for row in results]
 
-    def get_ucmis_associations_from(self) -> list[str]:
+    def get_ucmis_associations(self) -> list[str]:
         """
         Retrieves all ucmis:Association
         Returns a list of associations URIs (as prefixed URIs if possible).
