@@ -13,50 +13,116 @@ specification and provide type-safe, validated access to DDI-CDI resources.
 Generated Classes
 -----------------
 
+.. note::
+   The sempyro classes are generated automatically from the DDI-CDI specification.
+   Due to complex forward references in the generated code, some classes may not be
+   fully importable during documentation generation. The classes are functional
+   at runtime when used with the DDI-CDI specification loader.
+
 Data Types
 ~~~~~~~~~~
 
-.. automodule:: dartfx.ddi.sempyro.ddicdi_datatypes
-   :members:
-   :undoc-members:
-   :show-inheritance:
+The `ddicdi_datatypes` module contains primitive data types and enumerations 
+used throughout the DDI-CDI specification. These include:
+
+- String types with internationalization support
+- Date and time types
+- Controlled vocabularies and enumerations
+- Complex data structures
+
+**Key Classes:**
+
+- ``InternationalString``: Multi-language string support
+- ``ControlledVocabularyEntry``: Standardized vocabulary terms
+- ``DateTimeType``: Temporal data representation
+- Various enumeration classes for controlled vocabularies
 
 Main Classes
 ~~~~~~~~~~~~
 
-.. automodule:: dartfx.ddi.ddicdi_sempyro
-   :members:
-   :undoc-members:
-   :show-inheritance:
+The main sempyro module (`ddicdi_sempyro`) contains the core DDI-CDI resource classes:
+
+**Primary Resource Types:**
+
+- ``Agent``: Persons, organizations, or systems
+- ``InstanceVariable``: Data collection variables
+- ``DataStructure``: Logical and physical data structures  
+- ``DataSet``: Collections of data
+- ``Population``: Target populations for studies
+- ``Activity``: Data collection and processing activities
+
+**Relationship Classes:**
+
+- ``Correspondence``: Links between variables or concepts
+- ``AssociationReference``: References between resources
+- ``MemberRelationship``: Group membership relationships
 
 Usage Examples
 --------------
 
-Creating Basic Resources
-~~~~~~~~~~~~~~~~~~~~~~~~
+Loading DDI-CDI with Sempyro
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
-   from dartfx.ddi.ddicdi_sempyro import InstanceVariable, Identifier
-   from dartfx.ddi.sempyro.ddicdi_datatypes import ObjectName
+   from dartfx.ddi.ddicdi_specification import DdiCdiModel
    
-   # Create an identifier
-   identifier = Identifier(
-       content="VAR001",
-       typeOfIdentifier="local"
-   )
+   # Load the DDI-CDI specification
+   model = DdiCdiModel()
    
-   # Create a variable name
-   var_name = ObjectName(
-       content="age"
-   )
+   # Access the RDF graph
+   graph = model.graph
    
-   # Create an instance variable
-   variable = InstanceVariable(
-       identifier=[identifier],
-       name=[var_name],
-       description="Respondent age in years"
-   )
+   # Query for classes
+   classes = model.get_ucmis_classes()
+   print(f"Found {len(classes)} DDI-CDI classes")
+
+Working with RDF Resources
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   # Query for specific resource types
+   variables = model.search_classes("Variable")
+   agents = model.search_classes("Agent")
+   
+   # Get class relationships
+   subclasses = model.get_resource_subclasses("DataStructure")
+   properties = model.get_resource_properties("InstanceVariable")
+
+Advanced Queries
+~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   # SPARQL queries for complex relationships
+   query = """
+   PREFIX ucmis: <https://ddialliance.org/Specification/DDI-CDI/1.0/UCMISModel/>
+   
+   SELECT ?class ?property ?range WHERE {
+       ?class ucmis:hasDomainProperty ?property .
+       ?property ucmis:hasRange ?range .
+   }
+   """
+   
+   results = model.graph.query(query)
+   for row in results:
+       print(f"Class: {row.class}, Property: {row.property}, Range: {row.range}")
+
+Class Generation
+~~~~~~~~~~~~~~~~
+
+The sempyro classes are generated from the DDI-CDI XMI specification using 
+automated tooling. This ensures that the Python classes stay synchronized 
+with the official DDI-CDI model.
+
+**Generation Process:**
+
+1. Parse the XMI model file
+2. Extract class definitions and relationships  
+3. Generate Pydantic model classes with proper inheritance
+4. Handle forward references and circular dependencies
+5. Add validation rules and constraints
 
 Working with Enumerations
 ~~~~~~~~~~~~~~~~~~~~~~~~~

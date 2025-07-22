@@ -1118,7 +1118,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="sempyro.html#usage-examples">Usage Examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#creating-basic-resources">Creating Basic Resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sempyro.html#loading-ddi-cdi-with-sempyro">Loading DDI-CDI with Sempyro</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sempyro.html#working-with-rdf-resources">Working with RDF Resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sempyro.html#advanced-queries">Advanced Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sempyro.html#class-generation">Class Generation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sempyro.html#working-with-enumerations">Working with Enumerations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sempyro.html#complex-resource-creation">Complex Resource Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sempyro.html#rdf-serialization">RDF Serialization</a></li>
@@ -1320,8 +1323,10 @@ my_codebook = codebook.loadxml(filename)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dartfx.ddi.ddicodebook.abstractTextType.from_xml_element">
-<span class="sig-name descname"><span class="pre">from_xml_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/xml.etree.elementtree.html#xml.etree.ElementTree.Element" title="(in Python v3.13)"><span class="pre">Element</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#abstractTextType.from_xml_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.abstractTextType.from_xml_element" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">from_xml_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#abstractTextType.from_xml_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.abstractTextType.from_xml_element" title="Link to this definition"></a></dt>
 <dd><p>Override method to stop driling down and capture underlying mixed content as text</p>
+<dl class="field-list simple">
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -1445,8 +1450,10 @@ See <a class="reference external" href="https://www.lihaoyi.com/post/Buildyourow
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dartfx.ddi.ddicodebook.baseElementType.from_xml_element">
-<span class="sig-name descname"><span class="pre">from_xml_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/xml.etree.elementtree.html#xml.etree.ElementTree.Element" title="(in Python v3.13)"><span class="pre">Element</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#baseElementType.from_xml_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.baseElementType.from_xml_element" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">from_xml_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#baseElementType.from_xml_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.baseElementType.from_xml_element" title="Link to this definition"></a></dt>
 <dd><p>Initializes the object from an XML element.</p>
+<dl class="field-list simple">
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1671,29 +1678,33 @@ See <a class="reference external" href="https://www.lihaoyi.com/post/Buildyourow
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dartfx.ddi.ddicodebook.codeBookType.get_abstract">
-<span class="sig-name descname"><span class="pre">get_abstract</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#codeBookType.get_abstract"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.codeBookType.get_abstract" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_abstract</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#codeBookType.get_abstract"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.codeBookType.get_abstract" title="Link to this definition"></a></dt>
 <dd><p>Returns the abstract from the study description if it exists.</p>
+<dl class="field-list simple">
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dartfx.ddi.ddicodebook.codeBookType.get_alternate_title">
-<span class="sig-name descname"><span class="pre">get_alternate_title</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#codeBookType.get_alternate_title"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.codeBookType.get_alternate_title" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_alternate_title</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#codeBookType.get_alternate_title"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.codeBookType.get_alternate_title" title="Link to this definition"></a></dt>
 <dd><p>Returns the alternate title from the study description if it exists.</p>
+<dl class="field-list simple">
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dartfx.ddi.ddicodebook.codeBookType.get_data_dictionary">
-<span class="sig-name descname"><span class="pre">get_data_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_regex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_regex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">questions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#codeBookType.get_data_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.codeBookType.get_data_dictionary" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_data_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_regex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_regex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">questions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#codeBookType.get_data_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.codeBookType.get_data_dictionary" title="Link to this definition"></a></dt>
 <dd><p>Generates a all-in-one data dictionary from the variable descriptions.</p>
 <p>Supports various filtering and rendering options.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>file_id</strong> – filter to a specific file identifier (<cite>var/&#64;files</cite> attribute matching <cite>fileDscr/&#64;ID</cite>)</p></li>
-<li><p><strong>name_regex</strong> – a regular expression to match variable names</p></li>
-<li><p><strong>label_regex</strong> – a regular expression to match variable names</p></li>
-<li><p><strong>categories</strong> – whether to include categories in the data dictionary</p></li>
-<li><p><strong>questions</strong> – whether to include questions in the data dictionary</p></li>
+<li><p><strong>file_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – filter to a specific file identifier (<cite>var/&#64;files</cite> attribute matching <cite>fileDscr/&#64;ID</cite>)</p></li>
+<li><p><strong>name_regex</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – a regular expression to match variable names</p></li>
+<li><p><strong>label_regex</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – a regular expression to match variable names</p></li>
+<li><p><strong>categories</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – whether to include categories in the data dictionary</p></li>
+<li><p><strong>questions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – whether to include questions in the data dictionary</p></li>
 </ul>
 </dd>
 </dl>
@@ -1701,20 +1712,26 @@ See <a class="reference external" href="https://www.lihaoyi.com/post/Buildyourow
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dartfx.ddi.ddicodebook.codeBookType.get_files">
-<span class="sig-name descname"><span class="pre">get_files</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#codeBookType.get_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.codeBookType.get_files" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_files</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#codeBookType.get_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.codeBookType.get_files" title="Link to this definition"></a></dt>
 <dd><p>Returns the files and their documented infornation.</p>
+<dl class="field-list simple">
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dartfx.ddi.ddicodebook.codeBookType.get_subtitle">
-<span class="sig-name descname"><span class="pre">get_subtitle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#codeBookType.get_subtitle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.codeBookType.get_subtitle" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_subtitle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#codeBookType.get_subtitle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.codeBookType.get_subtitle" title="Link to this definition"></a></dt>
 <dd><p>Returns the subtitle of the study.</p>
+<dl class="field-list simple">
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dartfx.ddi.ddicodebook.codeBookType.get_title">
-<span class="sig-name descname"><span class="pre">get_title</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#codeBookType.get_title"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.codeBookType.get_title" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_title</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#codeBookType.get_title"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.codeBookType.get_title" title="Link to this definition"></a></dt>
 <dd><p>Returns the title of the study.</p>
+<dl class="field-list simple">
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -1724,8 +1741,10 @@ See <a class="reference external" href="https://www.lihaoyi.com/post/Buildyourow
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dartfx.ddi.ddicodebook.codeBookType.search_variables">
-<span class="sig-name descname"><span class="pre">search_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_catgry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_qstn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#codeBookType.search_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.codeBookType.search_variables" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">search_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_catgry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_qstn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#codeBookType.search_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.codeBookType.search_variables" title="Link to this definition"></a></dt>
 <dd><p>Search variables in the codebook</p>
+<dl class="field-list simple">
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -2742,10 +2761,12 @@ See <a class="reference external" href="https://www.lihaoyi.com/post/Buildyourow
 
 <dl class="py function">
 <dt class="sig sig-object py" id="dartfx.ddi.ddicodebook.get_mixed_content">
-<span class="sig-prename descclassname"><span class="pre">dartfx.ddi.ddicodebook.</span></span><span class="sig-name descname"><span class="pre">get_mixed_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#get_mixed_content"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.get_mixed_content" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">dartfx.ddi.ddicodebook.</span></span><span class="sig-name descname"><span class="pre">get_mixed_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#get_mixed_content"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.get_mixed_content" title="Link to this definition"></a></dt>
 <dd><p>Returns the mixed content of an XML element as a concatenated and potentially multiline string.</p>
 <p>This is to avoid having to implement/parse various text
 formatting options supported by DDI-C such as XHTML or forms.</p>
+<dl class="field-list simple">
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -2853,14 +2874,18 @@ formatting options supported by DDI-C such as XHTML or forms.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="dartfx.ddi.ddicodebook.loadxml">
-<span class="sig-prename descclassname"><span class="pre">dartfx.ddi.ddicodebook.</span></span><span class="sig-name descname"><span class="pre">loadxml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dartfx.ddi.ddicodebook.codeBookType" title="dartfx.ddi.ddicodebook.codeBookType"><span class="pre">codeBookType</span></a></span></span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#loadxml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.loadxml" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">dartfx.ddi.ddicodebook.</span></span><span class="sig-name descname"><span class="pre">loadxml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#loadxml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.loadxml" title="Link to this definition"></a></dt>
 <dd><p>Loads a DDI codebook from an XML file.</p>
+<dl class="field-list simple">
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="dartfx.ddi.ddicodebook.loadxmlstring">
-<span class="sig-prename descclassname"><span class="pre">dartfx.ddi.ddicodebook.</span></span><span class="sig-name descname"><span class="pre">loadxmlstring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmlstring</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#dartfx.ddi.ddicodebook.codeBookType" title="dartfx.ddi.ddicodebook.codeBookType"><span class="pre">codeBookType</span></a></span></span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#loadxmlstring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.loadxmlstring" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">dartfx.ddi.ddicodebook.</span></span><span class="sig-name descname"><span class="pre">loadxmlstring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmlstring</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#loadxmlstring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.loadxmlstring" title="Link to this definition"></a></dt>
 <dd><p>Loads a DDI codebook from an XML string.</p>
+<dl class="field-list simple">
+</dl>
 </dd></dl>
 
 <dl class="py class">
@@ -4454,8 +4479,10 @@ formatting options supported by DDI-C such as XHTML or forms.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dartfx.ddi.ddicodebook.varType.get_catgry_checksum">
-<span class="sig-name descname"><span class="pre">get_catgry_checksum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">include_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#varType.get_catgry_checksum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.varType.get_catgry_checksum" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">get_catgry_checksum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">include_code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicodebook.html#varType.get_catgry_checksum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicodebook.varType.get_catgry_checksum" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dartfx.ddi.ddicodebook.varType.get_label">

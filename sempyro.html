@@ -1118,7 +1118,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#usage-examples">Usage Examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#creating-basic-resources">Creating Basic Resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#loading-ddi-cdi-with-sempyro">Loading DDI-CDI with Sempyro</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#working-with-rdf-resources">Working with RDF Resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#advanced-queries">Advanced Queries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-generation">Class Generation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#working-with-enumerations">Working with Enumerations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#complex-resource-creation">Complex Resource Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#rdf-serialization">RDF Serialization</a></li>
@@ -1201,39 +1204,112 @@ specification and provide type-safe, validated access to DDI-CDI resources.</p>
 </section>
 <section id="generated-classes">
 <h2>Generated Classes<a class="headerlink" href="#generated-classes" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The sempyro classes are generated automatically from the DDI-CDI specification.
+Due to complex forward references in the generated code, some classes may not be
+fully importable during documentation generation. The classes are functional
+at runtime when used with the DDI-CDI specification loader.</p>
+</div>
 <section id="data-types">
 <h3>Data Types<a class="headerlink" href="#data-types" title="Link to this heading"></a></h3>
+<p>The <cite>ddicdi_datatypes</cite> module contains primitive data types and enumerations
+used throughout the DDI-CDI specification. These include:</p>
+<ul class="simple">
+<li><p>String types with internationalization support</p></li>
+<li><p>Date and time types</p></li>
+<li><p>Controlled vocabularies and enumerations</p></li>
+<li><p>Complex data structures</p></li>
+</ul>
+<p><strong>Key Classes:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">InternationalString</span></code>: Multi-language string support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ControlledVocabularyEntry</span></code>: Standardized vocabulary terms</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DateTimeType</span></code>: Temporal data representation</p></li>
+<li><p>Various enumeration classes for controlled vocabularies</p></li>
+</ul>
 </section>
 <section id="main-classes">
 <h3>Main Classes<a class="headerlink" href="#main-classes" title="Link to this heading"></a></h3>
+<p>The main sempyro module (<cite>ddicdi_sempyro</cite>) contains the core DDI-CDI resource classes:</p>
+<p><strong>Primary Resource Types:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Agent</span></code>: Persons, organizations, or systems</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InstanceVariable</span></code>: Data collection variables</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DataStructure</span></code>: Logical and physical data structures</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DataSet</span></code>: Collections of data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Population</span></code>: Target populations for studies</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Activity</span></code>: Data collection and processing activities</p></li>
+</ul>
+<p><strong>Relationship Classes:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Correspondence</span></code>: Links between variables or concepts</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AssociationReference</span></code>: References between resources</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MemberRelationship</span></code>: Group membership relationships</p></li>
+</ul>
 </section>
 </section>
 <section id="usage-examples">
 <h2>Usage Examples<a class="headerlink" href="#usage-examples" title="Link to this heading"></a></h2>
-<section id="creating-basic-resources">
-<h3>Creating Basic Resources<a class="headerlink" href="#creating-basic-resources" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi_sempyro</span><span class="w"> </span><span class="kn">import</span> <span class="n">InstanceVariable</span><span class="p">,</span> <span class="n">Identifier</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.sempyro.ddicdi_datatypes</span><span class="w"> </span><span class="kn">import</span> <span class="n">ObjectName</span>
+<section id="loading-ddi-cdi-with-sempyro">
+<h3>Loading DDI-CDI with Sempyro<a class="headerlink" href="#loading-ddi-cdi-with-sempyro" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi_specification</span><span class="w"> </span><span class="kn">import</span> <span class="n">DdiCdiModel</span>
 
-<span class="c1"># Create an identifier</span>
-<span class="n">identifier</span> <span class="o">=</span> <span class="n">Identifier</span><span class="p">(</span>
-    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;VAR001&quot;</span><span class="p">,</span>
-    <span class="n">typeOfIdentifier</span><span class="o">=</span><span class="s2">&quot;local&quot;</span>
-<span class="p">)</span>
+<span class="c1"># Load the DDI-CDI specification</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">DdiCdiModel</span><span class="p">()</span>
 
-<span class="c1"># Create a variable name</span>
-<span class="n">var_name</span> <span class="o">=</span> <span class="n">ObjectName</span><span class="p">(</span>
-    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;age&quot;</span>
-<span class="p">)</span>
+<span class="c1"># Access the RDF graph</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">graph</span>
 
-<span class="c1"># Create an instance variable</span>
-<span class="n">variable</span> <span class="o">=</span> <span class="n">InstanceVariable</span><span class="p">(</span>
-    <span class="n">identifier</span><span class="o">=</span><span class="p">[</span><span class="n">identifier</span><span class="p">],</span>
-    <span class="n">name</span><span class="o">=</span><span class="p">[</span><span class="n">var_name</span><span class="p">],</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Respondent age in years&quot;</span>
-<span class="p">)</span>
+<span class="c1"># Query for classes</span>
+<span class="n">classes</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_ucmis_classes</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span><span class="si">}</span><span class="s2"> DDI-CDI classes&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="working-with-rdf-resources">
+<h3>Working with RDF Resources<a class="headerlink" href="#working-with-rdf-resources" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Query for specific resource types</span>
+<span class="n">variables</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">search_classes</span><span class="p">(</span><span class="s2">&quot;Variable&quot;</span><span class="p">)</span>
+<span class="n">agents</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">search_classes</span><span class="p">(</span><span class="s2">&quot;Agent&quot;</span><span class="p">)</span>
+
+<span class="c1"># Get class relationships</span>
+<span class="n">subclasses</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_resource_subclasses</span><span class="p">(</span><span class="s2">&quot;DataStructure&quot;</span><span class="p">)</span>
+<span class="n">properties</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_resource_properties</span><span class="p">(</span><span class="s2">&quot;InstanceVariable&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="advanced-queries">
+<h3>Advanced Queries<a class="headerlink" href="#advanced-queries" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># SPARQL queries for complex relationships</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">PREFIX ucmis: &lt;https://ddialliance.org/Specification/DDI-CDI/1.0/UCMISModel/&gt;</span>
+
+<span class="s2">SELECT ?class ?property ?range WHERE {</span>
+<span class="s2">    ?class ucmis:hasDomainProperty ?property .</span>
+<span class="s2">    ?property ucmis:hasRange ?range .</span>
+<span class="s2">}</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Class: </span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">class</span><span class="si">}</span><span class="s2">, Property: </span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">property</span><span class="si">}</span><span class="s2">, Range: </span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">range</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="class-generation">
+<h3>Class Generation<a class="headerlink" href="#class-generation" title="Link to this heading"></a></h3>
+<p>The sempyro classes are generated from the DDI-CDI XMI specification using
+automated tooling. This ensures that the Python classes stay synchronized
+with the official DDI-CDI model.</p>
+<p><strong>Generation Process:</strong></p>
+<ol class="arabic simple">
+<li><p>Parse the XMI model file</p></li>
+<li><p>Extract class definitions and relationships</p></li>
+<li><p>Generate Pydantic model classes with proper inheritance</p></li>
+<li><p>Handle forward references and circular dependencies</p></li>
+<li><p>Add validation rules and constraints</p></li>
+</ol>
 </section>
 <section id="working-with-enumerations">
 <h3>Working with Enumerations<a class="headerlink" href="#working-with-enumerations" title="Link to this heading"></a></h3>
