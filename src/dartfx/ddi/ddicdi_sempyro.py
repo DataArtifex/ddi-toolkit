@@ -21,7 +21,12 @@ class CategoryRelationCode(str, Enum):
     Indicates the type of relationship, nominal, ordinal, interval, ratio, or continuous. Use where appropriate for the representation type.
 
     """
-    CONTINUOUS = "cdi:Continuous"  # May be used to identify both interval and ratio classification levels, when more precise information is not available.    INTERVAL = "cdi:Interval"  # The categories in the domain are in rank order and have a consistent interval between each category so that differences between arbitrary pairs of measurements can be meaningfully compared.    NOMINAL = "cdi:Nominal"  # A relationship of less than, or greater than, cannot be established among the included categories. This type of relationship is also called categorical or discrete.    ORDINAL = "cdi:Ordinal"  # The categories in the domain have a rank order.    RATIO = "cdi:Ratio"  # The categories have all the features of interval measurement and also have meaningful ratios between arbitrary pairs of numbers.
+    CONTINUOUS = "cdi:Continuous"  # May be used to identify both interval and ratio classification levels, when more precise information is not available.
+    INTERVAL = "cdi:Interval"  # The categories in the domain are in rank order and have a consistent interval between each category so that differences between arbitrary pairs of measurements can be meaningfully compared.
+    NOMINAL = "cdi:Nominal"  # A relationship of less than, or greater than, cannot be established among the included categories. This type of relationship is also called categorical or discrete.
+    ORDINAL = "cdi:Ordinal"  # The categories in the domain have a rank order.
+    RATIO = "cdi:Ratio"  # The categories have all the features of interval measurement and also have meaningful ratios between arbitrary pairs of numbers.
+
 
 class ComparisonOperator(str, Enum):
     """ ComparisonOperator.
@@ -31,7 +36,13 @@ class ComparisonOperator(str, Enum):
     Defines the relationship between values in key/value pair.
 
     """
-    EQUAL = "cdi:Equal"  # The value the key's in the source and target must be equal.    GREATERTHAN = "cdi:GreaterThan"  # The value the key in the source must be greater than the key in the target.    GREATERTHANOREQUALTO = "cdi:GreaterThanOrEqualTo"  # The value the key in the source must be greater than or equal to the key in the target.    LESSTHAN = "cdi:LessThan"  # The value the key in the source must be less than the key in the target.    LESSTHANOREQUALTO = "cdi:LessThanOrEqualTo"  # The value the key in the source must be less than or equal to the key in the target.    NOTEQUAL = "cdi:NotEqual"  # The value the key's in the source and target must be unequal.
+    EQUAL = "cdi:Equal"  # The value the key's in the source and target must be equal.
+    GREATERTHAN = "cdi:GreaterThan"  # The value the key in the source must be greater than the key in the target.
+    GREATERTHANOREQUALTO = "cdi:GreaterThanOrEqualTo"  # The value the key in the source must be greater than or equal to the key in the target.
+    LESSTHAN = "cdi:LessThan"  # The value the key in the source must be less than the key in the target.
+    LESSTHANOREQUALTO = "cdi:LessThanOrEqualTo"  # The value the key in the source must be less than or equal to the key in the target.
+    NOTEQUAL = "cdi:NotEqual"  # The value the key's in the source and target must be unequal.
+
 
 class ComputationBaseList(str, Enum):
     """ ComputationBaseList.
@@ -41,7 +52,10 @@ class ComputationBaseList(str, Enum):
     Defines the cases included in determining the statistic.
 
     """
-    MISSINGONLY = "cdi:MissingOnly"  # Only missing (invalid) cases included in the calculation.    TOTAL = "cdi:Total"  # All cases, both valid and missing (invalid). All members of a collection C are related to each other.    VALIDONLY = "cdi:ValidOnly"  # Only valid values, missing (invalid) are not included in the calculation.
+    MISSINGONLY = "cdi:MissingOnly"  # Only missing (invalid) cases included in the calculation.
+    TOTAL = "cdi:Total"  # All cases, both valid and missing (invalid). All members of a collection C are related to each other.
+    VALIDONLY = "cdi:ValidOnly"  # Only valid values, missing (invalid) are not included in the calculation.
+
 
 class ControlConstruct(str, Enum):
     """ ControlConstruct.
@@ -51,7 +65,12 @@ class ControlConstruct(str, Enum):
     Type of control construct used by the conditional control logic related to an activity.
 
     """
-    ELSE = "cdi:Else"  # Describes an Else type of control construct.    IFTHEN = "cdi:IfThen"  # Describes an IfThen type of control construct.  If the stated condition is met, the Then clause is triggered.    LOOP = "cdi:Loop"  # Describes a Loop type of control construct (loops until a limiting condition is met).    REPEATUNTIL = "cdi:RepeatUntil"  # Describes an RepeatUntil type of control construct (to be repeated until a specified condition is met).    REPEATWHILE = "cdi:RepeatWhile"  # Describes a RepeatWhile type of control construct (to be repeated while a specified condition is met).
+    ELSE = "cdi:Else"  # Describes an Else type of control construct.
+    IFTHEN = "cdi:IfThen"  # Describes an IfThen type of control construct.  If the stated condition is met, the Then clause is triggered.
+    LOOP = "cdi:Loop"  # Describes a Loop type of control construct (loops until a limiting condition is met).
+    REPEATUNTIL = "cdi:RepeatUntil"  # Describes an RepeatUntil type of control construct (to be repeated until a specified condition is met).
+    REPEATWHILE = "cdi:RepeatWhile"  # Describes a RepeatWhile type of control construct (to be repeated while a specified condition is met).
+
 
 class MatchingCriterion(str, Enum):
     """ MatchingCriterion.
@@ -61,7 +80,10 @@ class MatchingCriterion(str, Enum):
     Supports mapping comparative relationships by type of match. Not used for causative, sequential, temporal or special relations.
 
     """
-    CLOSEMATCH = "cdi:CloseMatch"  # The identified objects (source and target) are not exact but are similar. Equivalent to SKOS closeMatch - see the W3C Recommendation "SKOS Simple Knowledge Organization System Reference" - 10. Mapping Properties (https://www.w3.org/TR/skos-reference/#L4186).    DISJOINT = "cdi:Disjoint"  # The identified objects are do not have a close or exact match. Equivalent to disjoint objects in SKOS  - see the W3C Recommendation "SKOS Simple Knowledge Organization System Reference" (https://www.w3.org/TR/skos-reference/#L4186).    EXACTMATCH = "cdi:ExactMatch"  # The identified objects (source and target) are identical. Equivalent to SKOS exactMatch - see the W3C Recommendation "SKOS Simple Knowledge Organization System Reference" - 10. Mapping Properties (https://www.w3.org/TR/skos-reference/#L4186).
+    CLOSEMATCH = "cdi:CloseMatch"  # The identified objects (source and target) are not exact but are similar. Equivalent to SKOS closeMatch - see the W3C Recommendation "SKOS Simple Knowledge Organization System Reference" - 10. Mapping Properties (https://www.w3.org/TR/skos-reference/#L4186).
+    DISJOINT = "cdi:Disjoint"  # The identified objects are do not have a close or exact match. Equivalent to disjoint objects in SKOS  - see the W3C Recommendation "SKOS Simple Knowledge Organization System Reference" (https://www.w3.org/TR/skos-reference/#L4186).
+    EXACTMATCH = "cdi:ExactMatch"  # The identified objects (source and target) are identical. Equivalent to SKOS exactMatch - see the W3C Recommendation "SKOS Simple Knowledge Organization System Reference" - 10. Mapping Properties (https://www.w3.org/TR/skos-reference/#L4186).
+
 
 class MemberRelationshipScope(str, Enum):
     """ MemberRelationshipScope.
@@ -71,7 +93,10 @@ class MemberRelationshipScope(str, Enum):
     A vocabulary for the specification of how much of a collection is referenced. All, some or none of the collection may be indicated.
 
     """
-    ALL = "cdi:All"  # Every member of the collection is indicated.    NONE = "cdi:None"  # This indicates that no member of the collection is indicated, e.g. None of the relationships are symmetric.    SOME = "cdi:Some"  # Some, but not necessarily all of the members of the collection are indicated.
+    ALL = "cdi:All"  # Every member of the collection is indicated.
+    NONE = "cdi:None"  # This indicates that no member of the collection is indicated, e.g. None of the relationships are symmetric.
+    SOME = "cdi:Some"  # Some, but not necessarily all of the members of the collection are indicated.
+
 
 class PointFormat(str, Enum):
     """ PointFormat.
@@ -81,7 +106,12 @@ class PointFormat(str, Enum):
     Provides an enumerated list of valid point format types for capturing a coordinate point.
 
     """
-    DECIMALDEGREE = "cdi:DecimalDegree"  # Value is expressed as a decimal degree.    DECIMALMINUTES = "cdi:DecimalMinutes"  # Value is expressed as decimal minutes.    DEGREESMINUTESSECONDS = "cdi:DegreesMinutesSeconds"  # Value is expressed as degrees-minutes-seconds.    FEET = "cdi:Feet"  # Value is expressed in feet.    METERS = "cdi:Meters"  # Value is expressed in meters.
+    DECIMALDEGREE = "cdi:DecimalDegree"  # Value is expressed as a decimal degree.
+    DECIMALMINUTES = "cdi:DecimalMinutes"  # Value is expressed as decimal minutes.
+    DEGREESMINUTESSECONDS = "cdi:DegreesMinutesSeconds"  # Value is expressed as degrees-minutes-seconds.
+    FEET = "cdi:Feet"  # Value is expressed in feet.
+    METERS = "cdi:Meters"  # Value is expressed in meters.
+
 
 class SchedulingStrategy(str, Enum):
     """ SchedulingStrategy.
@@ -91,7 +121,9 @@ class SchedulingStrategy(str, Enum):
     Enumeration that consists of forward chaining and backward chaining. Rule based scheduling is guided by its scheduling strategy.
 
     """
-    BACKWARDCHAINING = "cdi:BackwardChaining"  # Backward chaining is a strategy of first identifying the goal/completion date and working backward in time from there to achieve it.    FORWARDCHAINING = "cdi:ForwardChaining"  # Forward chaining is a strategy of planning to complete each step as soon as possible to reach the goal at the earliest date.
+    BACKWARDCHAINING = "cdi:BackwardChaining"  # Backward chaining is a strategy of first identifying the goal/completion date and working backward in time from there to achieve it.
+    FORWARDCHAINING = "cdi:ForwardChaining"  # Forward chaining is a strategy of planning to complete each step as soon as possible to reach the goal at the earliest date.
+
 
 class SexSpecification(str, Enum):
     """ SexSpecification.
@@ -101,7 +133,10 @@ class SexSpecification(str, Enum):
     Sex specification is limited to the purpose of determining the proper pronoun to use in addressing the individual. This may be based on conventional usage or personal preference.
 
     """
-    FEMININE = "cdi:Feminine"  # Use the feminine pronoun (equivalent of English she, her, her's).    GENDERNEUTRAL = "cdi:GenderNeutral"  # Use a gender neutral or non-specified pronoun. (equivalent of English they, them, theirs).    MASCULINE = "cdi:Masculine"  # Use the masculine pronoun (equivalent of English he, him, his).
+    FEMININE = "cdi:Feminine"  # Use the feminine pronoun (equivalent of English she, her, her's).
+    GENDERNEUTRAL = "cdi:GenderNeutral"  # Use a gender neutral or non-specified pronoun. (equivalent of English they, them, theirs).
+    MASCULINE = "cdi:Masculine"  # Use the masculine pronoun (equivalent of English he, him, his).
+
 
 class StructureExtent(str, Enum):
     """ StructureExtent.
@@ -115,7 +150,9 @@ class StructureExtent(str, Enum):
     A binary relation R on a collection C is total if all members of C are related to each other in R. The relation is partial otherwise.
 
     """
-    PARTIAL = "cdi:Partial"  # Some members of a collection C are not related to each other.    TOTAL = "cdi:Total"  # All cases, both valid and missing (invalid). All members of a collection C are related to each other.
+    PARTIAL = "cdi:Partial"  # Some members of a collection C are not related to each other.
+    TOTAL = "cdi:Total"  # All cases, both valid and missing (invalid). All members of a collection C are related to each other.
+
 
 class TableDirectionValues(str, Enum):
     """ TableDirectionValues.
@@ -125,7 +162,10 @@ class TableDirectionValues(str, Enum):
     Indicates whether the tables in the group should be displayed with the first column on the right, on the left, or based on the first character in the table that has a specific direction.
 
     """
-    AUTO = "cdi:Auto"  # Display table based on the first character in the table that has a specific direction. Text in the cells should be according to the content of the cell (auto).    LTR = "cdi:Ltr"  # Display table with first column on the left. Text in cells should be displayed left-to-right (ltr).    RTL = "cdi:Rtl"  # Display table with first column on the right. Text in cells should be displayed right-to-left (rtl).
+    AUTO = "cdi:Auto"  # Display table based on the first character in the table that has a specific direction. Text in the cells should be according to the content of the cell (auto).
+    LTR = "cdi:Ltr"  # Display table with first column on the left. Text in cells should be displayed left-to-right (ltr).
+    RTL = "cdi:Rtl"  # Display table with first column on the right. Text in cells should be displayed right-to-left (rtl).
+
 
 class TemporalOperator(str, Enum):
     """ TemporalOperator.
@@ -135,7 +175,11 @@ class TemporalOperator(str, Enum):
     Set of control flow operators where the continuation of the execution flow depends on the finalization of one or more preceding activities.
 
     """
-    ANDJOIN = "cdi:AndJoin"  # Given three activities A, B and C, if ANDJoin(A, B) -> C, then C is executed after both A and B finish executing. ANDJoin is sometimes referred to as synchronization.    ANDSPLIT = "cdi:AndSplit"  # Given three activities A, B and C, if ANDSplit(A) -> (B, C), then both B and C are executed after A finishes executing.    XORJOIN = "cdi:XorJoin"  # Given three activities A, B and C, if XORJoin(A, B) -> C, then C is executed after either A or B finishes executing. XORJoin is sometimes referred to as simple merge.    XORSPLIT = "cdi:XorSplit"  # Given three activities A, B and C, if XORSplit(A) -> (B, C), then either B or C is executed, not both, after A finishes executing. XORSplit is sometimes referred to as exclusive choice.
+    ANDJOIN = "cdi:AndJoin"  # Given three activities A, B and C, if ANDJoin(A, B) -> C, then C is executed after both A and B finish executing. ANDJoin is sometimes referred to as synchronization.
+    ANDSPLIT = "cdi:AndSplit"  # Given three activities A, B and C, if ANDSplit(A) -> (B, C), then both B and C are executed after A finishes executing.
+    XORJOIN = "cdi:XorJoin"  # Given three activities A, B and C, if XORJoin(A, B) -> C, then C is executed after either A or B finishes executing. XORJoin is sometimes referred to as simple merge.
+    XORSPLIT = "cdi:XorSplit"  # Given three activities A, B and C, if XORSplit(A) -> (B, C), then either B or C is executed, not both, after A finishes executing. XORSplit is sometimes referred to as exclusive choice.
+
 
 class TemporalRelation(str, Enum):
     """ TemporalRelation.
@@ -157,7 +201,14 @@ class TemporalRelation(str, Enum):
     - a and b equal (e) each other
 
     """
-    CONTAINS = "cdi:Contains"  # A contains interval relation. Representation of the contains relation in Allen's interval algebra. We say that an interval A contains another interval B if and only if A begins before B but finishes after it. More precisely, A.start < B.start < B.end < A.end. Instead of saying that A contains B we can also say that B is during A (converse). An asymmetric relationship: anti-reflexive, anti-symmetric, transitive.    EQUALS = "cdi:Equals"  # An equals interval relation. Representation of the equals relation in Allen's interval algebra. We say that an interval A equals another interval B if and only if they both begin and finish at the same time. More precisely, A.start = B.start < A.end = B.end. Instead of saying that A equals B we can also say the B equals A (reflexive). An equivalence symmetric relationship: reflexive, symmetric, transitive.    FINISHES = "cdi:Finishes"  # A finishes interval relation. Representation of the finishes relation in Allen's interval algebra. We say that an interval A finishes another interval B if and only if A begins after B but both finish at the same time. More precisely, B.start < A.start < B.end = A.end. Instead of saying that A finishes B we can also say that B is finished by A (converse). An asymmetric relationship: anti-reflexive, anti-symmetric, transitive.    MEETS = "cdi:Meets"  # A meets interval relation. Representation of the meets relation in Allen's interval algebra. We say that an interval A meets another interval B if and only if A finishes when B begins. More precisely, A.ends = B.start. Instead of saying that A meets B we can also say that B is met by A (converse). An immediate-precedence relationship: anti-reflexive, anti-symmetric, anti-transitive.    OVERLAPS = "cdi:Overlaps"  # A overlaps interval relation. Representation of the overlaps relation in Allen's interval algebra. We say that an interval A overlaps another interval B if and only if A begins before B but finishes during B. More precisely, A.start < B.start < A.end < B.end. Instead of saying that A overlaps B we can also say that B is overlapped by A (converse). An acyclic precedence relationship: anti-reflexive, anti-symmetric, neither.    PRECEDES = "cdi:Precedes"  # A precedes interval relation. Representation of the precedes relation in Allen's interval algebra. We say that an interval A precedes another interval B if and only if A finishes before B begins. More precisely, A.end < B.start. Instead of saying that A precedes B we can also say that B is preceded by A (converse). An asymmetric relationship: anti-reflexive, anti-symmetric, transitive.    STARTS = "cdi:Starts"  # A starts interval relation. Representation of the starts relation in Allen's interval algebra. We say that an interval A starts another interval B if and only if they both start at the same time but A finishes first. More precisely, A.start = B.start < A.end. An asymmetric relationship: anti-reflexive, anti-symmetric, transitive.
+    CONTAINS = "cdi:Contains"  # A contains interval relation. Representation of the contains relation in Allen's interval algebra. We say that an interval A contains another interval B if and only if A begins before B but finishes after it. More precisely, A.start < B.start < B.end < A.end. Instead of saying that A contains B we can also say that B is during A (converse). An asymmetric relationship: anti-reflexive, anti-symmetric, transitive.
+    EQUALS = "cdi:Equals"  # An equals interval relation. Representation of the equals relation in Allen's interval algebra. We say that an interval A equals another interval B if and only if they both begin and finish at the same time. More precisely, A.start = B.start < A.end = B.end. Instead of saying that A equals B we can also say the B equals A (reflexive). An equivalence symmetric relationship: reflexive, symmetric, transitive.
+    FINISHES = "cdi:Finishes"  # A finishes interval relation. Representation of the finishes relation in Allen's interval algebra. We say that an interval A finishes another interval B if and only if A begins after B but both finish at the same time. More precisely, B.start < A.start < B.end = A.end. Instead of saying that A finishes B we can also say that B is finished by A (converse). An asymmetric relationship: anti-reflexive, anti-symmetric, transitive.
+    MEETS = "cdi:Meets"  # A meets interval relation. Representation of the meets relation in Allen's interval algebra. We say that an interval A meets another interval B if and only if A finishes when B begins. More precisely, A.ends = B.start. Instead of saying that A meets B we can also say that B is met by A (converse). An immediate-precedence relationship: anti-reflexive, anti-symmetric, anti-transitive.
+    OVERLAPS = "cdi:Overlaps"  # A overlaps interval relation. Representation of the overlaps relation in Allen's interval algebra. We say that an interval A overlaps another interval B if and only if A begins before B but finishes during B. More precisely, A.start < B.start < A.end < B.end. Instead of saying that A overlaps B we can also say that B is overlapped by A (converse). An acyclic precedence relationship: anti-reflexive, anti-symmetric, neither.
+    PRECEDES = "cdi:Precedes"  # A precedes interval relation. Representation of the precedes relation in Allen's interval algebra. We say that an interval A precedes another interval B if and only if A finishes before B begins. More precisely, A.end < B.start. Instead of saying that A precedes B we can also say that B is preceded by A (converse). An asymmetric relationship: anti-reflexive, anti-symmetric, transitive.
+    STARTS = "cdi:Starts"  # A starts interval relation. Representation of the starts relation in Allen's interval algebra. We say that an interval A starts another interval B if and only if they both start at the same time but A finishes first. More precisely, A.start = B.start < A.end. An asymmetric relationship: anti-reflexive, anti-symmetric, transitive.
+
 
 class TextDirectionValues(str, Enum):
     """ TextDirectionValues.
@@ -167,7 +218,11 @@ class TextDirectionValues(str, Enum):
     Indicates whether the text within cells should be displayed as left-to-right text (ltr), as right-to-left text (rtl), according to the content of the cell (auto) or in the direction inherited from the table direction annotation of the table.
 
     """
-    AUTO = "cdi:Auto"  # Display table based on the first character in the table that has a specific direction. Text in the cells should be according to the content of the cell (auto).    INHERIT = "cdi:Inherit"  # Text in the cells should inherit its direction from the table direction annotation of the table.    LTR = "cdi:Ltr"  # Display table with first column on the left. Text in cells should be displayed left-to-right (ltr).    RTL = "cdi:Rtl"  # Display table with first column on the right. Text in cells should be displayed right-to-left (rtl).
+    AUTO = "cdi:Auto"  # Display table based on the first character in the table that has a specific direction. Text in the cells should be according to the content of the cell (auto).
+    INHERIT = "cdi:Inherit"  # Text in the cells should inherit its direction from the table direction annotation of the table.
+    LTR = "cdi:Ltr"  # Display table with first column on the left. Text in cells should be displayed left-to-right (ltr).
+    RTL = "cdi:Rtl"  # Display table with first column on the right. Text in cells should be displayed right-to-left (rtl).
+
 
 class TrimValues(str, Enum):
     """ TrimValues.
@@ -177,7 +232,11 @@ class TrimValues(str, Enum):
     Specifies which spaces to remove from a data value (start, end, both, neither).
 
     """
-    BOTH = "cdi:Both"  # Trim whitespace characters from both the start and the end of the value.    END = "cdi:End"  # Trim whitespace characters from the end of the value.    NEITHER = "cdi:Neither"  # Trim whitespace characters from neither the start nor the end of the value.    START = "cdi:Start"  # Trim whitespce characters from the start of the value.
+    BOTH = "cdi:Both"  # Trim whitespace characters from both the start and the end of the value.
+    END = "cdi:End"  # Trim whitespace characters from the end of the value.
+    NEITHER = "cdi:Neither"  # Trim whitespace characters from neither the start nor the end of the value.
+    START = "cdi:Start"  # Trim whitespce characters from the start of the value.
+
 
 class WhiteSpaceRule(str, Enum):
     """ WhiteSpaceRule.
@@ -187,7 +246,10 @@ class WhiteSpaceRule(str, Enum):
     WhiteSpace constrains the value space of types derived from string.
 
     """
-    COLLAPSE = "cdi:Collapse"  # After the processing implied by the replace, contiguous sequences of Unicode hexadecimal #x20's are collapsed to a single #x20, and any #x20 at the start or end of the string is then removed.    PRESERVE = "cdi:Preserve"  # No normalization is done, the value is not changed (this is the behavior required by XML for element content).    REPLACE = "cdi:Replace"  # All occurrences of Unicode hexadecimal #x9 (tab), #xA (line feed) and #xD (carriage return) are replaced with #x20 (space).
+    COLLAPSE = "cdi:Collapse"  # After the processing implied by the replace, contiguous sequences of Unicode hexadecimal #x20's are collapsed to a single #x20, and any #x20 at the start or end of the string is then removed.
+    PRESERVE = "cdi:Preserve"  # No normalization is done, the value is not changed (this is the behavior required by XML for element content).
+    REPLACE = "cdi:Replace"  # All occurrences of Unicode hexadecimal #x9 (tab), #xA (line feed) and #xD (carriage return) are replaced with #x20 (space).
+
 
 
 #

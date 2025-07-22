@@ -197,7 +197,7 @@ def generate_enumerations(model) -> str:
             member_code = f'{member_label.upper()} = "{member_uri}"'
             if member_description:
                 member_code += f'  # {member_description}'
-            member_code += '\n'
+            member_code += '\n\n'
             code += indent_code(member_code, 1)
         code += '\n\n'
     return code
