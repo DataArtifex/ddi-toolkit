@@ -1,0 +1,57 @@
+Changelog
+=========
+
+All notable changes to this project will be documented in this file.
+
+Version 0.1.0 (Current)
+------------------------
+
+Initial release of the DDI Toolkit.
+
+Features
+~~~~~~~~
+
+**DDI-Codebook Support:**
+
+- Load DDI-Codebook XML files
+- Extract basic metadata (title, abstract, etc.)
+- Access data dictionary with variable information
+- File information extraction
+- Support for filtering variables by type
+
+**DDI-CDI Support (Experimental):**
+
+- Load DDI-CDI specifications from directory
+- RDF graph operations with rdflib
+- SPARQL query support
+- Resource property and relationship exploration
+- Class hierarchy navigation
+- Sempyro integration for type-safe RDF objects
+
+**Documentation:**
+
+- Comprehensive Sphinx documentation
+- API reference for all modules
+- Usage examples and tutorials
+- Installation and quick start guides
+
+Known Issues
+~~~~~~~~~~~~
+
+- DDI-CDI support is experimental and subject to change
+- Limited validation for DDI-Codebook files
+- Performance not optimized for very large datasets
+
+Upcoming Features
+~~~~~~~~~~~~~~~~~
+
+- Enhanced DDI-Codebook validation
+- Better error handling and logging
+- Performance improvements
+- Additional DDI-CDI resource types
+- Export functionality for various formats
+
+Previous Versions
+-----------------
+
+This is the initial release.
