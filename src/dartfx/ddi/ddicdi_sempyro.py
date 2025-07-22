@@ -195,7 +195,7 @@ class WhiteSpaceRule(str, Enum):
 #
 
 class AccessInformation(RDFModel, metaclass=ABCMeta): 
-    """ AccessInformation
+    """ AccessInformation.
 
     Definition
     ============
@@ -259,8 +259,9 @@ class AccessInformation(RDFModel, metaclass=ABCMeta):
     # cdi:CatalogDetails-access (0..*)
 
 
+
 class AccessLocation(RDFModel, metaclass=ABCMeta): 
-    """ AccessLocation
+    """ AccessLocation.
 
     Definition
     ============
@@ -315,8 +316,9 @@ class AccessLocation(RDFModel, metaclass=ABCMeta):
     # cdi:Machine-accessLocation (0..1)
 
 
+
 class Address(RDFModel, metaclass=ABCMeta): 
-    """ Address
+    """ Address.
 
     Definition
     ==========
@@ -477,8 +479,9 @@ class Address(RDFModel, metaclass=ABCMeta):
     # cdi:ContactInformation-address (0..*)
 
 
+
 class AgentInRole(RDFModel, metaclass=ABCMeta): 
-    """ AgentInRole
+    """ AgentInRole.
 
     Definition
     ==========
@@ -534,11 +537,17 @@ class AgentInRole(RDFModel, metaclass=ABCMeta):
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:CatalogDetails-contributor (0..*)    # cdi:CatalogDetails-creator (0..*)    # cdi:CatalogDetails-publisher (0..*)    # cdi:FundingInformation-fundingAgent (0..*)    # cdi:Identifier-versionResponsibility (0..1)    # cdi:LicenseInformation-licenseAgent (0..*)
+    # cdi:CatalogDetails-contributor (0..*)
+    # cdi:CatalogDetails-creator (0..*)
+    # cdi:CatalogDetails-publisher (0..*)
+    # cdi:FundingInformation-fundingAgent (0..*)
+    # cdi:Identifier-versionResponsibility (0..1)
+    # cdi:LicenseInformation-licenseAgent (0..*)
+
 
 
 class BibliographicName(InternationalString): # type: ignore # noqa: F821
-    """ BibliographicName
+    """ BibliographicName.
 
     Definition
     ============
@@ -575,8 +584,9 @@ class BibliographicName(InternationalString): # type: ignore # noqa: F821
     # cdi:AgentInRole-agentName (0..1)
 
 
+
 class CatalogDetails(RDFModel, metaclass=ABCMeta): 
-    """ CatalogDetails
+    """ CatalogDetails.
 
     Definition
     ============
@@ -740,11 +750,35 @@ class CatalogDetails(RDFModel, metaclass=ABCMeta):
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:DataPoint-catalogDetails (0..1)    # cdi:DataSet-catalogDetails (0..1)    # cdi:Datum-catalogDetails (0..1)    # cdi:AuthorizationSource-catalogDetails (0..1)    # cdi:ClassificationFamily-catalogDetails (0..1)    # cdi:ClassificationIndex-catalogDetails (0..1)    # cdi:ClassificationIndexEntry-catalogDetails (0..1)    # cdi:ClassificationSeries-catalogDetails (0..1)    # cdi:CorrespondenceTable-catalogDetails (0..1)    # cdi:LevelStructure-catalogDetails (0..1)    # cdi:StatisticalClassification-catalogDetails (0..1)    # cdi:ValueDomain-catalogDetails (0..1)    # cdi:DataStore-catalogDetails (0..1)    # cdi:PhysicalDataSet-catalogDetails (0..1)    # cdi:PhysicalRecordSegment-catalogDetails (0..1)    # cdi:PhysicalSegmentLayout-catalogDetails (0..1)    # cdi:PhysicalSegmentLocation-catalogDetails (0..1)    # cdi:RecordRelation-catalogDetails (0..1)    # cdi:Agent-catalogDetails (0..1)    # cdi:Concept-catalogDetails (0..1)    # cdi:ConceptSystem-catalogDetails (0..1)    # cdi:ConceptSystemCorrespondence-catalogDetails (0..1)    # cdi:ConceptualDomain-catalogDetails (0..1)    # cdi:Unit-catalogDetails (0..1)
+    # cdi:DataPoint-catalogDetails (0..1)
+    # cdi:DataSet-catalogDetails (0..1)
+    # cdi:Datum-catalogDetails (0..1)
+    # cdi:AuthorizationSource-catalogDetails (0..1)
+    # cdi:ClassificationFamily-catalogDetails (0..1)
+    # cdi:ClassificationIndex-catalogDetails (0..1)
+    # cdi:ClassificationIndexEntry-catalogDetails (0..1)
+    # cdi:ClassificationSeries-catalogDetails (0..1)
+    # cdi:CorrespondenceTable-catalogDetails (0..1)
+    # cdi:LevelStructure-catalogDetails (0..1)
+    # cdi:StatisticalClassification-catalogDetails (0..1)
+    # cdi:ValueDomain-catalogDetails (0..1)
+    # cdi:DataStore-catalogDetails (0..1)
+    # cdi:PhysicalDataSet-catalogDetails (0..1)
+    # cdi:PhysicalRecordSegment-catalogDetails (0..1)
+    # cdi:PhysicalSegmentLayout-catalogDetails (0..1)
+    # cdi:PhysicalSegmentLocation-catalogDetails (0..1)
+    # cdi:RecordRelation-catalogDetails (0..1)
+    # cdi:Agent-catalogDetails (0..1)
+    # cdi:Concept-catalogDetails (0..1)
+    # cdi:ConceptSystem-catalogDetails (0..1)
+    # cdi:ConceptSystemCorrespondence-catalogDetails (0..1)
+    # cdi:ConceptualDomain-catalogDetails (0..1)
+    # cdi:Unit-catalogDetails (0..1)
+
 
 
 class CombinedDate(RDFModel, metaclass=ABCMeta): 
-    """ CombinedDate
+    """ CombinedDate.
 
     Definition
     ============
@@ -800,11 +834,17 @@ class CombinedDate(RDFModel, metaclass=ABCMeta):
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:AuthorizationSource-authorizationDate (0..1)    # cdi:ClassificationIndex-releaseDate (0..1)    # cdi:StatisticalClassification-releaseDate (0..1)    # cdi:CatalogDetails-date (0..*)    # cdi:DateRange-endDate (0..1)    # cdi:DateRange-startDate (0..1)
+    # cdi:AuthorizationSource-authorizationDate (0..1)
+    # cdi:ClassificationIndex-releaseDate (0..1)
+    # cdi:StatisticalClassification-releaseDate (0..1)
+    # cdi:CatalogDetails-date (0..*)
+    # cdi:DateRange-endDate (0..1)
+    # cdi:DateRange-startDate (0..1)
+
 
 
 class Command(RDFModel, metaclass=ABCMeta): 
-    """ Command
+    """ Command.
 
     Definition
     ============
@@ -850,8 +890,9 @@ class Command(RDFModel, metaclass=ABCMeta):
     # cdi:CommandCode-command (0..*)
 
 
+
 class CommandCode(RDFModel, metaclass=ABCMeta): 
-    """ CommandCode
+    """ CommandCode.
 
     Definition
     ============
@@ -903,11 +944,15 @@ class CommandCode(RDFModel, metaclass=ABCMeta):
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:ClassificationIndex-codingInstruction (0..*)    # cdi:ClassificationIndexEntry-codingInstruction (0..1)    # cdi:ConditionalControlLogic-condition (1..1)    # cdi:Step-script (0..1)
+    # cdi:ClassificationIndex-codingInstruction (0..*)
+    # cdi:ClassificationIndexEntry-codingInstruction (0..1)
+    # cdi:ConditionalControlLogic-condition (1..1)
+    # cdi:Step-script (0..1)
+
 
 
 class CommandFile(RDFModel, metaclass=ABCMeta): 
-    """ CommandFile
+    """ CommandFile.
 
     Definition
     ============
@@ -953,8 +998,9 @@ class CommandFile(RDFModel, metaclass=ABCMeta):
     # cdi:CommandCode-commandFile (0..*)
 
 
+
 class ContactInformation(RDFModel, metaclass=ABCMeta): 
-    """ ContactInformation
+    """ ContactInformation.
 
     Definition
     ============
@@ -1024,11 +1070,15 @@ class ContactInformation(RDFModel, metaclass=ABCMeta):
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:Individual-contactInformation (0..1)    # cdi:Machine-ownerOperatorContact (0..1)    # cdi:Organization-contactInformation (0..1)    # cdi:LicenseInformation-contact (0..*)
+    # cdi:Individual-contactInformation (0..1)
+    # cdi:Machine-ownerOperatorContact (0..1)
+    # cdi:Organization-contactInformation (0..1)
+    # cdi:LicenseInformation-contact (0..*)
+
 
 
 class ControlledVocabularyEntry(RDFModel, metaclass=ABCMeta): 
-    """ ControlledVocabularyEntry
+    """ ControlledVocabularyEntry.
 
     Definition
     ============
@@ -1098,11 +1148,106 @@ class ControlledVocabularyEntry(RDFModel, metaclass=ABCMeta):
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:CategoryStatistic-typeOfCategoryStatistic (0..1)    # cdi:ClassificationItemRelationship-semantics (0..1)    # cdi:ClassificationItemStructure-semantics (0..1)    # cdi:ClassificationItemStructure-topology (0..1)    # cdi:ClassificationSeries-context (0..1)    # cdi:ClassificationSeries-keyword (0..*)    # cdi:ClassificationSeries-objectsOrUnitsClassified (0..1)    # cdi:ClassificationSeries-subject (0..*)    # cdi:ClassificationSeriesStructure-semantics (0..1)    # cdi:ClassificationSeriesStructure-topology (0..1)    # cdi:CodeListStructure-semantics (0..1)    # cdi:CodeListStructure-topology (1..1)    # cdi:CodeRelationship-semantics (0..1)    # cdi:SentinelValueDomain-platformType (0..1)    # cdi:StatisticalClassificationRelationship-semantics (0..1)    # cdi:ValueAndConceptDescription-formatPattern (0..1)    # cdi:ValueAndConceptDescription-logicalExpression (0..1)    # cdi:ValueDomain-recommendedDataType (0..*)    # cdi:DataPointRelationship-semantics (0..1)    # cdi:DataStore-dataStoreType (0..1)    # cdi:LogicalRecordRelationship-semantics (0..1)    # cdi:LogicalRecordRelationStructure-semantics (0..1)    # cdi:LogicalRecordRelationStructure-topology (0..1)    # cdi:PhysicalDataSetStructure-semantics (0..1)    # cdi:PhysicalDataSetStructure-topology (0..1)    # cdi:PhysicalLayoutRelationStructure-semantics (0..1)    # cdi:PhysicalLayoutRelationStructure-topology (1..1)    # cdi:PhysicalRecordSegmentRelationship-semantics (0..1)    # cdi:PhysicalRecordSegmentStructure-semantics (0..1)    # cdi:PhysicalRecordSegmentStructure-topology (0..1)    # cdi:PhysicalSegmentLayout-encoding (0..1)    # cdi:ValueMapping-format (0..1)    # cdi:ValueMapping-physicalDataType (0..1)    # cdi:ValueMappingRelationship-semantics (0..1)    # cdi:AgentRelationship-semantics (0..1)    # cdi:AgentStructure-privacy (0..1)    # cdi:AgentStructure-semantics (0..1)    # cdi:AgentStructure-topology (0..1)    # cdi:Machine-function (0..*)    # cdi:Machine-machineInterface (0..*)    # cdi:Machine-typeOfMachine (0..1)    # cdi:CategoryRelationship-semantics (0..1)    # cdi:CategoryRelationStructure-semantics (0..1)    # cdi:CategoryRelationStructure-topology (0..1)    # cdi:ConceptRelationship-semantics (0..1)    # cdi:ConceptStructure-semantics (0..1)    # cdi:ConceptStructure-topology (0..1)    # cdi:ConceptualVariable-unitOfMeasureKind (0..1)    # cdi:InstanceVariable-physicalDataType (0..1)    # cdi:InstanceVariable-platformType (0..1)    # cdi:InstanceVariable-variableFunction (0..*)    # cdi:RepresentedVariable-describedUnitOfMeasure (0..1)    # cdi:RepresentedVariable-hasIntendedDataType (0..1)    # cdi:VariableCollection-groupingSemantic (0..1)    # cdi:VariableRelationship-semantics (0..1)    # cdi:VariableStructure-semantics (0..1)    # cdi:VariableStructure-topology (0..1)    # cdi:AccessLocation-mimeType (0..1)    # cdi:Address-countryCode (0..1)    # cdi:Address-privacy (0..1)    # cdi:Address-regionalCoverage (0..1)    # cdi:Address-timeZone (0..1)    # cdi:Address-typeOfAddress (0..1)    # cdi:Address-typeOfLocation (0..1)    # cdi:CatalogDetails-typeOfResource (0..*)    # cdi:CombinedDate-semantics (0..1)    # cdi:Command-programLanguage (0..1)    # cdi:CorrespondenceDefinition-commonalityCode (0..*)    # cdi:ElectronicMessageSystem-privacy (0..1)    # cdi:ElectronicMessageSystem-typeOfService (0..1)    # cdi:Email-privacy (0..1)    # cdi:Email-typeOfEmail (0..1)    # cdi:GeoRole-geography (0..1)    # cdi:IndividualName-context (0..1)    # cdi:IndividualName-typeOfIndividualName (0..1)    # cdi:InternationalIdentifier-managingAgency (0..1)    # cdi:LabelForDisplay-locationVariant (0..1)    # cdi:LanguageString-structureUsed (0..1)    # cdi:NonIsoDate-calendar (0..1)    # cdi:NonIsoDate-nonIsoDateFormat (0..1)    # cdi:ObjectName-context (0..1)    # cdi:OrganizationName-typeOfOrganizationName (0..1)    # cdi:PairedControlledVocabularyEntry-extent (0..1)    # cdi:PairedControlledVocabularyEntry-term (1..1)    # cdi:PrivateImage-privacy (0..1)    # cdi:RationaleDefinition-rationaleCode (0..1)    # cdi:Reference-semantic (0..1)    # cdi:Telephone-privacy (0..1)    # cdi:Telephone-typeOfTelephone (0..1)    # cdi:TimeRole-time (0..1)    # cdi:TypedString-typeOfContent (0..1)    # cdi:WebLink-privacy (0..1)    # cdi:WebLink-typeOfWebsite (0..1)    # cdi:ControlLogic-workflow (0..1)    # cdi:Step-scriptingLanguage (0..1)
+    # cdi:CategoryStatistic-typeOfCategoryStatistic (0..1)
+    # cdi:ClassificationItemRelationship-semantics (0..1)
+    # cdi:ClassificationItemStructure-semantics (0..1)
+    # cdi:ClassificationItemStructure-topology (0..1)
+    # cdi:ClassificationSeries-context (0..1)
+    # cdi:ClassificationSeries-keyword (0..*)
+    # cdi:ClassificationSeries-objectsOrUnitsClassified (0..1)
+    # cdi:ClassificationSeries-subject (0..*)
+    # cdi:ClassificationSeriesStructure-semantics (0..1)
+    # cdi:ClassificationSeriesStructure-topology (0..1)
+    # cdi:CodeListStructure-semantics (0..1)
+    # cdi:CodeListStructure-topology (1..1)
+    # cdi:CodeRelationship-semantics (0..1)
+    # cdi:SentinelValueDomain-platformType (0..1)
+    # cdi:StatisticalClassificationRelationship-semantics (0..1)
+    # cdi:ValueAndConceptDescription-formatPattern (0..1)
+    # cdi:ValueAndConceptDescription-logicalExpression (0..1)
+    # cdi:ValueDomain-recommendedDataType (0..*)
+    # cdi:DataPointRelationship-semantics (0..1)
+    # cdi:DataStore-dataStoreType (0..1)
+    # cdi:LogicalRecordRelationship-semantics (0..1)
+    # cdi:LogicalRecordRelationStructure-semantics (0..1)
+    # cdi:LogicalRecordRelationStructure-topology (0..1)
+    # cdi:PhysicalDataSetStructure-semantics (0..1)
+    # cdi:PhysicalDataSetStructure-topology (0..1)
+    # cdi:PhysicalLayoutRelationStructure-semantics (0..1)
+    # cdi:PhysicalLayoutRelationStructure-topology (1..1)
+    # cdi:PhysicalRecordSegmentRelationship-semantics (0..1)
+    # cdi:PhysicalRecordSegmentStructure-semantics (0..1)
+    # cdi:PhysicalRecordSegmentStructure-topology (0..1)
+    # cdi:PhysicalSegmentLayout-encoding (0..1)
+    # cdi:ValueMapping-format (0..1)
+    # cdi:ValueMapping-physicalDataType (0..1)
+    # cdi:ValueMappingRelationship-semantics (0..1)
+    # cdi:AgentRelationship-semantics (0..1)
+    # cdi:AgentStructure-privacy (0..1)
+    # cdi:AgentStructure-semantics (0..1)
+    # cdi:AgentStructure-topology (0..1)
+    # cdi:Machine-function (0..*)
+    # cdi:Machine-machineInterface (0..*)
+    # cdi:Machine-typeOfMachine (0..1)
+    # cdi:CategoryRelationship-semantics (0..1)
+    # cdi:CategoryRelationStructure-semantics (0..1)
+    # cdi:CategoryRelationStructure-topology (0..1)
+    # cdi:ConceptRelationship-semantics (0..1)
+    # cdi:ConceptStructure-semantics (0..1)
+    # cdi:ConceptStructure-topology (0..1)
+    # cdi:ConceptualVariable-unitOfMeasureKind (0..1)
+    # cdi:InstanceVariable-physicalDataType (0..1)
+    # cdi:InstanceVariable-platformType (0..1)
+    # cdi:InstanceVariable-variableFunction (0..*)
+    # cdi:RepresentedVariable-describedUnitOfMeasure (0..1)
+    # cdi:RepresentedVariable-hasIntendedDataType (0..1)
+    # cdi:VariableCollection-groupingSemantic (0..1)
+    # cdi:VariableRelationship-semantics (0..1)
+    # cdi:VariableStructure-semantics (0..1)
+    # cdi:VariableStructure-topology (0..1)
+    # cdi:AccessLocation-mimeType (0..1)
+    # cdi:Address-countryCode (0..1)
+    # cdi:Address-privacy (0..1)
+    # cdi:Address-regionalCoverage (0..1)
+    # cdi:Address-timeZone (0..1)
+    # cdi:Address-typeOfAddress (0..1)
+    # cdi:Address-typeOfLocation (0..1)
+    # cdi:CatalogDetails-typeOfResource (0..*)
+    # cdi:CombinedDate-semantics (0..1)
+    # cdi:Command-programLanguage (0..1)
+    # cdi:CorrespondenceDefinition-commonalityCode (0..*)
+    # cdi:ElectronicMessageSystem-privacy (0..1)
+    # cdi:ElectronicMessageSystem-typeOfService (0..1)
+    # cdi:Email-privacy (0..1)
+    # cdi:Email-typeOfEmail (0..1)
+    # cdi:GeoRole-geography (0..1)
+    # cdi:IndividualName-context (0..1)
+    # cdi:IndividualName-typeOfIndividualName (0..1)
+    # cdi:InternationalIdentifier-managingAgency (0..1)
+    # cdi:LabelForDisplay-locationVariant (0..1)
+    # cdi:LanguageString-structureUsed (0..1)
+    # cdi:NonIsoDate-calendar (0..1)
+    # cdi:NonIsoDate-nonIsoDateFormat (0..1)
+    # cdi:ObjectName-context (0..1)
+    # cdi:OrganizationName-typeOfOrganizationName (0..1)
+    # cdi:PairedControlledVocabularyEntry-extent (0..1)
+    # cdi:PairedControlledVocabularyEntry-term (1..1)
+    # cdi:PrivateImage-privacy (0..1)
+    # cdi:RationaleDefinition-rationaleCode (0..1)
+    # cdi:Reference-semantic (0..1)
+    # cdi:Telephone-privacy (0..1)
+    # cdi:Telephone-typeOfTelephone (0..1)
+    # cdi:TimeRole-time (0..1)
+    # cdi:TypedString-typeOfContent (0..1)
+    # cdi:WebLink-privacy (0..1)
+    # cdi:WebLink-typeOfWebsite (0..1)
+    # cdi:ControlLogic-workflow (0..1)
+    # cdi:Step-scriptingLanguage (0..1)
+
 
 
 class CorrespondenceDefinition(RDFModel, metaclass=ABCMeta): 
-    """ CorrespondenceDefinition
+    """ CorrespondenceDefinition.
 
     Definition
     ============
@@ -1163,11 +1308,13 @@ class CorrespondenceDefinition(RDFModel, metaclass=ABCMeta):
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:InstanceVariableMap-correspondence (1..1)    # cdi:ConceptMap-correspondence (0..1)
+    # cdi:InstanceVariableMap-correspondence (1..1)
+    # cdi:ConceptMap-correspondence (0..1)
+
 
 
 class DateRange(RDFModel, metaclass=ABCMeta): 
-    """ DateRange
+    """ DateRange.
 
     Definition
     ============
@@ -1210,11 +1357,30 @@ class DateRange(RDFModel, metaclass=ABCMeta):
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:ClassificationIndexEntry-validDates (0..1)    # cdi:ClassificationItem-validDates (0..1)    # cdi:CorrespondenceTable-effectiveDates (0..1)    # cdi:LevelStructure-validDateRange (0..1)    # cdi:StatisticalClassification-validDates (0..1)    # cdi:AgentRelationship-effectiveDates (0..1)    # cdi:AgentStructure-effectiveDates (0..1)    # cdi:ConceptMap-validDates (0..1)    # cdi:Population-timePeriodOfPopulation (0..*)    # cdi:Address-effectiveDates (0..1)    # cdi:ElectronicMessageSystem-effectiveDates (0..1)    # cdi:Email-effectiveDates (0..1)    # cdi:EmbargoInformation-period (0..*)    # cdi:IndividualName-effectiveDates (0..1)    # cdi:LabelForDisplay-validDates (0..1)    # cdi:OrganizationName-effectiveDates (0..1)    # cdi:PrivateImage-effectiveDates (0..1)    # cdi:Telephone-effectiveDates (0..1)    # cdi:WebLink-effectiveDates (0..1)
+    # cdi:ClassificationIndexEntry-validDates (0..1)
+    # cdi:ClassificationItem-validDates (0..1)
+    # cdi:CorrespondenceTable-effectiveDates (0..1)
+    # cdi:LevelStructure-validDateRange (0..1)
+    # cdi:StatisticalClassification-validDates (0..1)
+    # cdi:AgentRelationship-effectiveDates (0..1)
+    # cdi:AgentStructure-effectiveDates (0..1)
+    # cdi:ConceptMap-validDates (0..1)
+    # cdi:Population-timePeriodOfPopulation (0..*)
+    # cdi:Address-effectiveDates (0..1)
+    # cdi:ElectronicMessageSystem-effectiveDates (0..1)
+    # cdi:Email-effectiveDates (0..1)
+    # cdi:EmbargoInformation-period (0..*)
+    # cdi:IndividualName-effectiveDates (0..1)
+    # cdi:LabelForDisplay-validDates (0..1)
+    # cdi:OrganizationName-effectiveDates (0..1)
+    # cdi:PrivateImage-effectiveDates (0..1)
+    # cdi:Telephone-effectiveDates (0..1)
+    # cdi:WebLink-effectiveDates (0..1)
+
 
 
 class ElectronicMessageSystem(RDFModel, metaclass=ABCMeta): 
-    """ ElectronicMessageSystem
+    """ ElectronicMessageSystem.
 
     Definition
     ============
@@ -1291,8 +1457,9 @@ class ElectronicMessageSystem(RDFModel, metaclass=ABCMeta):
     # cdi:ContactInformation-emessaging (0..*)
 
 
+
 class Email(RDFModel, metaclass=ABCMeta): 
-    """ Email
+    """ Email.
 
     Definition
     ============
@@ -1369,8 +1536,9 @@ class Email(RDFModel, metaclass=ABCMeta):
     # cdi:ContactInformation-email (0..*)
 
 
+
 class EmbargoInformation(RDFModel, metaclass=ABCMeta): 
-    """ EmbargoInformation
+    """ EmbargoInformation.
 
     Definition
     ============
@@ -1416,8 +1584,9 @@ class EmbargoInformation(RDFModel, metaclass=ABCMeta):
     # cdi:AccessInformation-embargo (0..*)
 
 
+
 class FundingInformation(RDFModel, metaclass=ABCMeta): 
-    """ FundingInformation
+    """ FundingInformation.
 
     Definition
     ============
@@ -1463,8 +1632,9 @@ class FundingInformation(RDFModel, metaclass=ABCMeta):
     # cdi:ProvenanceInformation-funding (0..*)
 
 
+
 class GeoRole(SpecializationRole): # type: ignore # noqa: F821
-    """ GeoRole
+    """ GeoRole.
 
     Definition
     ============
@@ -1498,7 +1668,7 @@ class GeoRole(SpecializationRole): # type: ignore # noqa: F821
 
 
 class Identifier(RDFModel, metaclass=ABCMeta): 
-    """ Identifier
+    """ Identifier.
 
     Definition
     ============
@@ -1595,11 +1765,100 @@ class Identifier(RDFModel, metaclass=ABCMeta):
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:DataPoint-identifier (0..1)    # cdi:DataSet-identifier (0..1)    # cdi:Datum-identifier (0..1)    # cdi:InstanceValue-identifier (0..1)    # cdi:Key-identifier (0..1)    # cdi:KeyDefinition-identifier (0..1)    # cdi:Notation-identifier (0..1)    # cdi:AuthorizationSource-identifier (0..1)    # cdi:CategoryStatistic-identifier (0..1)    # cdi:ClassificationFamily-identifier (0..1)    # cdi:ClassificationIndex-identifier (0..1)    # cdi:ClassificationIndexEntry-identifier (0..1)    # cdi:ClassificationIndexEntryPosition-identifier (0..1)    # cdi:ClassificationItem-identifier (0..1)    # cdi:ClassificationItemPosition-identifier (0..1)    # cdi:ClassificationItemRelationship-identifier (0..1)    # cdi:ClassificationItemStructure-identifier (0..1)    # cdi:ClassificationPosition-identifier (0..1)    # cdi:ClassificationSeries-identifier (0..1)    # cdi:ClassificationSeriesStructure-identifier (0..1)    # cdi:Code-identifier (0..1)    # cdi:CodeListStructure-identifier (0..1)    # cdi:CodePosition-identifier (0..1)    # cdi:CodeRelationship-identifier (0..1)    # cdi:CorrespondenceTable-identifier (0..1)    # cdi:EnumerationDomain-identifier (0..1)    # cdi:Level-identifier (0..1)    # cdi:LevelStructure-identifier (0..1)    # cdi:StatisticalClassificationRelationship-identifier (0..1)    # cdi:ValueAndConceptDescription-identifier (0..1)    # cdi:ValueDomain-identifier (0..1)    # cdi:DataPointPosition-identifier (0..1)    # cdi:DataPointRelationship-identifier (0..1)    # cdi:DataStore-identifier (0..1)    # cdi:InstanceVariableMap-identifier (0..1)    # cdi:LogicalRecord-identifier (0..1)    # cdi:LogicalRecordPosition-identifier (0..1)    # cdi:LogicalRecordRelationship-identifier (0..1)    # cdi:LogicalRecordRelationStructure-identifier (0..1)    # cdi:PhysicalDataSet-identifier (0..1)    # cdi:PhysicalDataSetStructure-identifier (0..1)    # cdi:PhysicalLayoutRelationStructure-identifier (0..1)    # cdi:PhysicalRecordSegment-identifier (0..1)    # cdi:PhysicalRecordSegmentPosition-identifier (0..1)    # cdi:PhysicalRecordSegmentRelationship-identifier (0..1)    # cdi:PhysicalRecordSegmentStructure-identifier (0..1)    # cdi:PhysicalSegmentLayout-identifier (0..1)    # cdi:PhysicalSegmentLocation-identifier (0..1)    # cdi:RecordRelation-identifier (0..1)    # cdi:ValueMapping-identifier (0..1)    # cdi:ValueMappingPosition-identifier (0..1)    # cdi:ValueMappingRelationship-identifier (0..1)    # cdi:ComponentPosition-identifier (0..1)    # cdi:DataStructureComponent-identifier (0..1)    # cdi:ForeignKey-identifier (0..1)    # cdi:ForeignKeyComponent-identifier (0..1)    # cdi:PrimaryKey-identifier (0..1)    # cdi:PrimaryKeyComponent-identifier (0..1)    # cdi:Agent-identifier (0..1)    # cdi:AgentListing-identifier (0..1)    # cdi:AgentPosition-identifier (0..1)    # cdi:AgentRelationship-identifier (0..1)    # cdi:AgentStructure-identifier (0..1)    # cdi:CategoryPosition-identifier (0..1)    # cdi:CategoryRelationship-identifier (0..1)    # cdi:CategoryRelationStructure-identifier (0..1)    # cdi:Concept-identifier (0..1)    # cdi:ConceptMap-identifier (0..1)    # cdi:ConceptRelationship-identifier (0..1)    # cdi:ConceptStructure-identifier (0..1)    # cdi:ConceptSystem-identifier (0..1)    # cdi:ConceptSystemCorrespondence-identifier (0..1)    # cdi:ConceptualDomain-identifier (0..1)    # cdi:Unit-identifier (0..1)    # cdi:VariableCollection-identifier (0..1)    # cdi:VariablePosition-identifier (0..1)    # cdi:VariableRelationship-identifier (0..1)    # cdi:VariableStructure-identifier (0..1)    # cdi:DimensionGroup-identifier (0..1)    # cdi:Revision-identifier (0..1)    # cdi:ScopedMeasure-identifier (0..1)    # cdi:Activity-identifier (0..1)    # cdi:ControlLogic-identifier (0..1)    # cdi:InformationFlowDefinition-identifier (0..1)    # cdi:Parameter-identifier (0..1)    # cdi:ProductionEnvironment-identifier (0..1)    # cdi:Rule-identifier (0..1)    # cdi:RuleSet-identifier (0..1)    # cdi:SequencePosition-identifier (0..1)
+    # cdi:DataPoint-identifier (0..1)
+    # cdi:DataSet-identifier (0..1)
+    # cdi:Datum-identifier (0..1)
+    # cdi:InstanceValue-identifier (0..1)
+    # cdi:Key-identifier (0..1)
+    # cdi:KeyDefinition-identifier (0..1)
+    # cdi:Notation-identifier (0..1)
+    # cdi:AuthorizationSource-identifier (0..1)
+    # cdi:CategoryStatistic-identifier (0..1)
+    # cdi:ClassificationFamily-identifier (0..1)
+    # cdi:ClassificationIndex-identifier (0..1)
+    # cdi:ClassificationIndexEntry-identifier (0..1)
+    # cdi:ClassificationIndexEntryPosition-identifier (0..1)
+    # cdi:ClassificationItem-identifier (0..1)
+    # cdi:ClassificationItemPosition-identifier (0..1)
+    # cdi:ClassificationItemRelationship-identifier (0..1)
+    # cdi:ClassificationItemStructure-identifier (0..1)
+    # cdi:ClassificationPosition-identifier (0..1)
+    # cdi:ClassificationSeries-identifier (0..1)
+    # cdi:ClassificationSeriesStructure-identifier (0..1)
+    # cdi:Code-identifier (0..1)
+    # cdi:CodeListStructure-identifier (0..1)
+    # cdi:CodePosition-identifier (0..1)
+    # cdi:CodeRelationship-identifier (0..1)
+    # cdi:CorrespondenceTable-identifier (0..1)
+    # cdi:EnumerationDomain-identifier (0..1)
+    # cdi:Level-identifier (0..1)
+    # cdi:LevelStructure-identifier (0..1)
+    # cdi:StatisticalClassificationRelationship-identifier (0..1)
+    # cdi:ValueAndConceptDescription-identifier (0..1)
+    # cdi:ValueDomain-identifier (0..1)
+    # cdi:DataPointPosition-identifier (0..1)
+    # cdi:DataPointRelationship-identifier (0..1)
+    # cdi:DataStore-identifier (0..1)
+    # cdi:InstanceVariableMap-identifier (0..1)
+    # cdi:LogicalRecord-identifier (0..1)
+    # cdi:LogicalRecordPosition-identifier (0..1)
+    # cdi:LogicalRecordRelationship-identifier (0..1)
+    # cdi:LogicalRecordRelationStructure-identifier (0..1)
+    # cdi:PhysicalDataSet-identifier (0..1)
+    # cdi:PhysicalDataSetStructure-identifier (0..1)
+    # cdi:PhysicalLayoutRelationStructure-identifier (0..1)
+    # cdi:PhysicalRecordSegment-identifier (0..1)
+    # cdi:PhysicalRecordSegmentPosition-identifier (0..1)
+    # cdi:PhysicalRecordSegmentRelationship-identifier (0..1)
+    # cdi:PhysicalRecordSegmentStructure-identifier (0..1)
+    # cdi:PhysicalSegmentLayout-identifier (0..1)
+    # cdi:PhysicalSegmentLocation-identifier (0..1)
+    # cdi:RecordRelation-identifier (0..1)
+    # cdi:ValueMapping-identifier (0..1)
+    # cdi:ValueMappingPosition-identifier (0..1)
+    # cdi:ValueMappingRelationship-identifier (0..1)
+    # cdi:ComponentPosition-identifier (0..1)
+    # cdi:DataStructureComponent-identifier (0..1)
+    # cdi:ForeignKey-identifier (0..1)
+    # cdi:ForeignKeyComponent-identifier (0..1)
+    # cdi:PrimaryKey-identifier (0..1)
+    # cdi:PrimaryKeyComponent-identifier (0..1)
+    # cdi:Agent-identifier (0..1)
+    # cdi:AgentListing-identifier (0..1)
+    # cdi:AgentPosition-identifier (0..1)
+    # cdi:AgentRelationship-identifier (0..1)
+    # cdi:AgentStructure-identifier (0..1)
+    # cdi:CategoryPosition-identifier (0..1)
+    # cdi:CategoryRelationship-identifier (0..1)
+    # cdi:CategoryRelationStructure-identifier (0..1)
+    # cdi:Concept-identifier (0..1)
+    # cdi:ConceptMap-identifier (0..1)
+    # cdi:ConceptRelationship-identifier (0..1)
+    # cdi:ConceptStructure-identifier (0..1)
+    # cdi:ConceptSystem-identifier (0..1)
+    # cdi:ConceptSystemCorrespondence-identifier (0..1)
+    # cdi:ConceptualDomain-identifier (0..1)
+    # cdi:Unit-identifier (0..1)
+    # cdi:VariableCollection-identifier (0..1)
+    # cdi:VariablePosition-identifier (0..1)
+    # cdi:VariableRelationship-identifier (0..1)
+    # cdi:VariableStructure-identifier (0..1)
+    # cdi:DimensionGroup-identifier (0..1)
+    # cdi:Revision-identifier (0..1)
+    # cdi:ScopedMeasure-identifier (0..1)
+    # cdi:Activity-identifier (0..1)
+    # cdi:ControlLogic-identifier (0..1)
+    # cdi:InformationFlowDefinition-identifier (0..1)
+    # cdi:Parameter-identifier (0..1)
+    # cdi:ProductionEnvironment-identifier (0..1)
+    # cdi:Rule-identifier (0..1)
+    # cdi:RuleSet-identifier (0..1)
+    # cdi:SequencePosition-identifier (0..1)
+
 
 
 class IndividualName(RDFModel, metaclass=ABCMeta): 
-    """ IndividualName
+    """ IndividualName.
 
     Definition
     ============
@@ -1744,8 +2003,9 @@ class IndividualName(RDFModel, metaclass=ABCMeta):
     # cdi:Individual-individualName (0..*)
 
 
+
 class InternationalIdentifier(RDFModel, metaclass=ABCMeta): 
-    """ InternationalIdentifier
+    """ InternationalIdentifier.
 
     Definition
     ============
@@ -1804,8 +2064,9 @@ class InternationalIdentifier(RDFModel, metaclass=ABCMeta):
     # cdi:CatalogDetails-identifier (0..1)
 
 
+
 class InternationalRegistrationDataIdentifier(RDFModel, metaclass=ABCMeta): 
-    """ InternationalRegistrationDataIdentifier
+    """ InternationalRegistrationDataIdentifier.
 
     Definition
     ==========
@@ -1858,11 +2119,13 @@ class InternationalRegistrationDataIdentifier(RDFModel, metaclass=ABCMeta):
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:Identifier-ddiIdentifier (0..1)    # cdi:Reference-ddiReference (0..1)
+    # cdi:Identifier-ddiIdentifier (0..1)
+    # cdi:Reference-ddiReference (0..1)
+
 
 
 class InternationalString(RDFModel, metaclass=ABCMeta): 
-    """ InternationalString
+    """ InternationalString.
 
     Definition
     ============
@@ -1896,11 +2159,89 @@ class InternationalString(RDFModel, metaclass=ABCMeta):
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:AuthorizationSource-legalMandate (0..1)    # cdi:AuthorizationSource-purpose (0..1)    # cdi:AuthorizationSource-statementOfAuthorization (0..1)    # cdi:ClassificationFamily-purpose (0..1)    # cdi:ClassificationIndex-corrections (0..*)    # cdi:ClassificationIndex-purpose (0..1)    # cdi:ClassificationIndexEntry-entry (0..1)    # cdi:ClassificationItem-changeFromPreviousVersion (0..1)    # cdi:ClassificationItem-changeLog (0..1)    # cdi:ClassificationItem-explanatoryNotes (0..*)    # cdi:ClassificationItem-futureNotes (0..*)    # cdi:ClassificationItemStructure-purpose (0..1)    # cdi:ClassificationSeries-purpose (0..1)    # cdi:ClassificationSeriesStructure-purpose (0..1)    # cdi:CodeListStructure-purpose (0..1)    # cdi:EnumerationDomain-purpose (0..1)    # cdi:LevelStructure-usage (0..1)    # cdi:StatisticalClassification-changeFromBase (0..1)    # cdi:StatisticalClassification-copyright (0..*)    # cdi:StatisticalClassification-purposeOfVariant (0..1)    # cdi:StatisticalClassification-rationale (0..1)    # cdi:StatisticalClassification-updateChanges (0..*)    # cdi:StatisticalClassification-usage (0..1)    # cdi:ValueAndConceptDescription-description (0..1)    # cdi:DataStore-aboutMissing (0..1)    # cdi:DataStore-purpose (0..1)    # cdi:LogicalRecordRelationStructure-purpose (0..1)    # cdi:PhysicalDataSet-overview (0..1)    # cdi:PhysicalDataSet-purpose (0..1)    # cdi:PhysicalDataSetStructure-purpose (0..1)    # cdi:PhysicalLayoutRelationStructure-criteria (0..1)    # cdi:PhysicalLayoutRelationStructure-purpose (0..1)    # cdi:PhysicalRecordSegment-purpose (0..1)    # cdi:PhysicalRecordSegmentStructure-purpose (0..1)    # cdi:PhysicalSegmentLayout-overview (0..1)    # cdi:PhysicalSegmentLayout-purpose (0..1)    # cdi:RecordRelation-purpose (0..1)    # cdi:RecordRelation-usage (0..1)    # cdi:Agent-purpose (0..1)    # cdi:AgentListing-purpose (0..1)    # cdi:AgentStructure-purpose (0..1)    # cdi:Category-descriptiveText (0..1)    # cdi:CategoryRelationStructure-purpose (0..1)    # cdi:Concept-definition (0..1)    # cdi:ConceptMap-usage (0..1)    # cdi:ConceptStructure-purpose (0..1)    # cdi:ConceptSystem-purpose (0..1)    # cdi:ConceptSystemCorrespondence-purpose (0..1)    # cdi:ConceptSystemCorrespondence-usage (0..1)    # cdi:ConceptualVariable-descriptiveText (0..1)    # cdi:Unit-definition (0..1)    # cdi:UnitType-descriptiveText (0..1)    # cdi:VariableCollection-purpose (0..1)    # cdi:VariableCollection-usage (0..1)    # cdi:VariableStructure-purpose (0..1)    # cdi:AccessInformation-copyright (0..*)    # cdi:AccessInformation-rights (0..*)    # cdi:AccessLocation-physicalLocation (0..*)    # cdi:CatalogDetails-alternativeTitle (0..*)    # cdi:CatalogDetails-informationSource (0..*)    # cdi:CatalogDetails-subTitle (0..*)    # cdi:CatalogDetails-summary (0..1)    # cdi:CatalogDetails-title (0..1)    # cdi:CommandCode-description (0..1)    # cdi:CommandFile-location (0..1)    # cdi:CorrespondenceDefinition-commonality (0..1)    # cdi:CorrespondenceDefinition-difference (0..1)    # cdi:EmbargoInformation-description (0..1)    # cdi:IndividualName-abbreviation (0..1)    # cdi:IndividualName-fullName (0..1)    # cdi:LicenseInformation-description (0..*)    # cdi:OrganizationName-abbreviation (0..1)    # cdi:ProvenanceInformation-provenanceStatement (0..*)    # cdi:RationaleDefinition-rationaleDescription (0..1)    # cdi:Reference-location (0..1)    # cdi:Revision-overview (0..1)    # cdi:ScopedMeasure-frequency (0..1)    # cdi:Activity-definition (0..1)
+    # cdi:AuthorizationSource-legalMandate (0..1)
+    # cdi:AuthorizationSource-purpose (0..1)
+    # cdi:AuthorizationSource-statementOfAuthorization (0..1)
+    # cdi:ClassificationFamily-purpose (0..1)
+    # cdi:ClassificationIndex-corrections (0..*)
+    # cdi:ClassificationIndex-purpose (0..1)
+    # cdi:ClassificationIndexEntry-entry (0..1)
+    # cdi:ClassificationItem-changeFromPreviousVersion (0..1)
+    # cdi:ClassificationItem-changeLog (0..1)
+    # cdi:ClassificationItem-explanatoryNotes (0..*)
+    # cdi:ClassificationItem-futureNotes (0..*)
+    # cdi:ClassificationItemStructure-purpose (0..1)
+    # cdi:ClassificationSeries-purpose (0..1)
+    # cdi:ClassificationSeriesStructure-purpose (0..1)
+    # cdi:CodeListStructure-purpose (0..1)
+    # cdi:EnumerationDomain-purpose (0..1)
+    # cdi:LevelStructure-usage (0..1)
+    # cdi:StatisticalClassification-changeFromBase (0..1)
+    # cdi:StatisticalClassification-copyright (0..*)
+    # cdi:StatisticalClassification-purposeOfVariant (0..1)
+    # cdi:StatisticalClassification-rationale (0..1)
+    # cdi:StatisticalClassification-updateChanges (0..*)
+    # cdi:StatisticalClassification-usage (0..1)
+    # cdi:ValueAndConceptDescription-description (0..1)
+    # cdi:DataStore-aboutMissing (0..1)
+    # cdi:DataStore-purpose (0..1)
+    # cdi:LogicalRecordRelationStructure-purpose (0..1)
+    # cdi:PhysicalDataSet-overview (0..1)
+    # cdi:PhysicalDataSet-purpose (0..1)
+    # cdi:PhysicalDataSetStructure-purpose (0..1)
+    # cdi:PhysicalLayoutRelationStructure-criteria (0..1)
+    # cdi:PhysicalLayoutRelationStructure-purpose (0..1)
+    # cdi:PhysicalRecordSegment-purpose (0..1)
+    # cdi:PhysicalRecordSegmentStructure-purpose (0..1)
+    # cdi:PhysicalSegmentLayout-overview (0..1)
+    # cdi:PhysicalSegmentLayout-purpose (0..1)
+    # cdi:RecordRelation-purpose (0..1)
+    # cdi:RecordRelation-usage (0..1)
+    # cdi:Agent-purpose (0..1)
+    # cdi:AgentListing-purpose (0..1)
+    # cdi:AgentStructure-purpose (0..1)
+    # cdi:Category-descriptiveText (0..1)
+    # cdi:CategoryRelationStructure-purpose (0..1)
+    # cdi:Concept-definition (0..1)
+    # cdi:ConceptMap-usage (0..1)
+    # cdi:ConceptStructure-purpose (0..1)
+    # cdi:ConceptSystem-purpose (0..1)
+    # cdi:ConceptSystemCorrespondence-purpose (0..1)
+    # cdi:ConceptSystemCorrespondence-usage (0..1)
+    # cdi:ConceptualVariable-descriptiveText (0..1)
+    # cdi:Unit-definition (0..1)
+    # cdi:UnitType-descriptiveText (0..1)
+    # cdi:VariableCollection-purpose (0..1)
+    # cdi:VariableCollection-usage (0..1)
+    # cdi:VariableStructure-purpose (0..1)
+    # cdi:AccessInformation-copyright (0..*)
+    # cdi:AccessInformation-rights (0..*)
+    # cdi:AccessLocation-physicalLocation (0..*)
+    # cdi:CatalogDetails-alternativeTitle (0..*)
+    # cdi:CatalogDetails-informationSource (0..*)
+    # cdi:CatalogDetails-subTitle (0..*)
+    # cdi:CatalogDetails-summary (0..1)
+    # cdi:CatalogDetails-title (0..1)
+    # cdi:CommandCode-description (0..1)
+    # cdi:CommandFile-location (0..1)
+    # cdi:CorrespondenceDefinition-commonality (0..1)
+    # cdi:CorrespondenceDefinition-difference (0..1)
+    # cdi:EmbargoInformation-description (0..1)
+    # cdi:IndividualName-abbreviation (0..1)
+    # cdi:IndividualName-fullName (0..1)
+    # cdi:LicenseInformation-description (0..*)
+    # cdi:OrganizationName-abbreviation (0..1)
+    # cdi:ProvenanceInformation-provenanceStatement (0..*)
+    # cdi:RationaleDefinition-rationaleDescription (0..1)
+    # cdi:Reference-location (0..1)
+    # cdi:Revision-overview (0..1)
+    # cdi:ScopedMeasure-frequency (0..1)
+    # cdi:Activity-definition (0..1)
+
 
 
 class LabelForDisplay(InternationalString): # type: ignore # noqa: F821
-    """ LabelForDisplay
+    """ LabelForDisplay.
 
     Definition
     ============
@@ -1952,11 +2293,25 @@ class LabelForDisplay(InternationalString): # type: ignore # noqa: F821
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:ClassificationItemStructure-displayLabel (0..*)    # cdi:Level-displayLabel (0..*)    # cdi:StatisticalClassification-displayLabel (0..*)    # cdi:ValueDomain-displayLabel (0..*)    # cdi:RecordRelation-displayLabel (0..*)    # cdi:Concept-displayLabel (0..*)    # cdi:ConceptMap-displayLabel (0..1)    # cdi:ConceptSystemCorrespondence-displayLabel (0..*)    # cdi:ConceptualDomain-displayLabel (0..*)    # cdi:Unit-displayLabel (0..*)    # cdi:VariableCollection-displayLabel (0..*)    # cdi:Activity-displayLabel (0..*)    # cdi:ControlLogic-displayLabel (0..*)    # cdi:ProductionEnvironment-displayLabel (0..*)
+    # cdi:ClassificationItemStructure-displayLabel (0..*)
+    # cdi:Level-displayLabel (0..*)
+    # cdi:StatisticalClassification-displayLabel (0..*)
+    # cdi:ValueDomain-displayLabel (0..*)
+    # cdi:RecordRelation-displayLabel (0..*)
+    # cdi:Concept-displayLabel (0..*)
+    # cdi:ConceptMap-displayLabel (0..1)
+    # cdi:ConceptSystemCorrespondence-displayLabel (0..*)
+    # cdi:ConceptualDomain-displayLabel (0..*)
+    # cdi:Unit-displayLabel (0..*)
+    # cdi:VariableCollection-displayLabel (0..*)
+    # cdi:Activity-displayLabel (0..*)
+    # cdi:ControlLogic-displayLabel (0..*)
+    # cdi:ProductionEnvironment-displayLabel (0..*)
+
 
 
 class LanguageString(RDFModel, metaclass=ABCMeta): 
-    """ LanguageString
+    """ LanguageString.
 
     Definition
     ============
@@ -2056,8 +2411,9 @@ class LanguageString(RDFModel, metaclass=ABCMeta):
     # cdi:InternationalString-languageSpecificString (0..*)
 
 
+
 class LicenseInformation(RDFModel, metaclass=ABCMeta): 
-    """ LicenseInformation
+    """ LicenseInformation.
 
     Definition
     ============
@@ -2125,8 +2481,9 @@ class LicenseInformation(RDFModel, metaclass=ABCMeta):
     # cdi:AccessInformation-license (0..*)
 
 
+
 class ModelIdentification(RDFModel, metaclass=ABCMeta): 
-    """ ModelIdentification
+    """ ModelIdentification.
 
     Definition
     ==========
@@ -2214,7 +2571,7 @@ class ModelIdentification(RDFModel, metaclass=ABCMeta):
 
 
 class NonDdiIdentifier(RDFModel, metaclass=ABCMeta): 
-    """ NonDdiIdentifier
+    """ NonDdiIdentifier.
 
     Definition
     ============
@@ -2275,11 +2632,13 @@ class NonDdiIdentifier(RDFModel, metaclass=ABCMeta):
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:Identifier-nonDdiIdentifier (0..*)    # cdi:Reference-nonDdiReference (0..*)
+    # cdi:Identifier-nonDdiIdentifier (0..*)
+    # cdi:Reference-nonDdiReference (0..*)
+
 
 
 class NonIsoDate(RDFModel, metaclass=ABCMeta): 
-    """ NonIsoDate
+    """ NonIsoDate.
 
     Definition
     ============
@@ -2334,8 +2693,9 @@ class NonIsoDate(RDFModel, metaclass=ABCMeta):
     # cdi:CombinedDate-nonIsoDate (0..*)
 
 
+
 class ObjectAttributeSelector(Selector): # type: ignore # noqa: F821
-    """ ObjectAttributeSelector
+    """ ObjectAttributeSelector.
 
     Definition
     ==========
@@ -2390,8 +2750,9 @@ class ObjectAttributeSelector(Selector): # type: ignore # noqa: F821
     # cdi:ObjectAttributeSelector-refinedBy (0..1)
 
 
+
 class ObjectName(RDFModel, metaclass=ABCMeta): 
-    """ ObjectName
+    """ ObjectName.
 
     Definition
     ==========
@@ -2438,11 +2799,45 @@ class ObjectName(RDFModel, metaclass=ABCMeta):
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:ClassificationFamily-name (0..*)    # cdi:ClassificationIndex-name (0..*)    # cdi:ClassificationItem-name (0..*)    # cdi:ClassificationItemStructure-name (0..*)    # cdi:ClassificationSeries-name (0..*)    # cdi:ClassificationSeriesStructure-name (0..*)    # cdi:CodeListStructure-name (0..*)    # cdi:EnumerationDomain-name (0..*)    # cdi:LevelStructure-name (0..*)    # cdi:DataStore-name (0..*)    # cdi:LogicalRecordRelationStructure-name (0..*)    # cdi:PhysicalDataSet-name (0..1)    # cdi:PhysicalDataSetStructure-name (0..1)    # cdi:PhysicalLayoutRelationStructure-name (0..*)    # cdi:PhysicalRecordSegment-name (0..*)    # cdi:PhysicalRecordSegmentStructure-name (0..1)    # cdi:PhysicalSegmentLayout-name (0..*)    # cdi:MeasureComponent-name (0..*)    # cdi:AgentListing-name (0..*)    # cdi:AgentStructure-name (0..*)    # cdi:Machine-name (0..*)    # cdi:CategoryRelationStructure-name (0..*)    # cdi:Concept-name (0..*)    # cdi:ConceptStructure-name (0..*)    # cdi:ConceptSystem-name (0..*)    # cdi:Unit-name (0..*)    # cdi:VariableCollection-name (0..*)    # cdi:Address-locationName (0..1)    # cdi:DimensionalDataSet-name (0..*)    # cdi:DimensionGroup-name (0..*)    # cdi:Activity-name (0..*)    # cdi:ControlLogic-name (0..*)    # cdi:Parameter-name (0..*)    # cdi:ProductionEnvironment-name (0..*)
+    # cdi:ClassificationFamily-name (0..*)
+    # cdi:ClassificationIndex-name (0..*)
+    # cdi:ClassificationItem-name (0..*)
+    # cdi:ClassificationItemStructure-name (0..*)
+    # cdi:ClassificationSeries-name (0..*)
+    # cdi:ClassificationSeriesStructure-name (0..*)
+    # cdi:CodeListStructure-name (0..*)
+    # cdi:EnumerationDomain-name (0..*)
+    # cdi:LevelStructure-name (0..*)
+    # cdi:DataStore-name (0..*)
+    # cdi:LogicalRecordRelationStructure-name (0..*)
+    # cdi:PhysicalDataSet-name (0..1)
+    # cdi:PhysicalDataSetStructure-name (0..1)
+    # cdi:PhysicalLayoutRelationStructure-name (0..*)
+    # cdi:PhysicalRecordSegment-name (0..*)
+    # cdi:PhysicalRecordSegmentStructure-name (0..1)
+    # cdi:PhysicalSegmentLayout-name (0..*)
+    # cdi:MeasureComponent-name (0..*)
+    # cdi:AgentListing-name (0..*)
+    # cdi:AgentStructure-name (0..*)
+    # cdi:Machine-name (0..*)
+    # cdi:CategoryRelationStructure-name (0..*)
+    # cdi:Concept-name (0..*)
+    # cdi:ConceptStructure-name (0..*)
+    # cdi:ConceptSystem-name (0..*)
+    # cdi:Unit-name (0..*)
+    # cdi:VariableCollection-name (0..*)
+    # cdi:Address-locationName (0..1)
+    # cdi:DimensionalDataSet-name (0..*)
+    # cdi:DimensionGroup-name (0..*)
+    # cdi:Activity-name (0..*)
+    # cdi:ControlLogic-name (0..*)
+    # cdi:Parameter-name (0..*)
+    # cdi:ProductionEnvironment-name (0..*)
+
 
 
 class OrganizationName(ObjectName): # type: ignore # noqa: F821
-    """ OrganizationName
+    """ OrganizationName.
 
     Definition
     ==========
@@ -2503,11 +2898,13 @@ class OrganizationName(ObjectName): # type: ignore # noqa: F821
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:Organization-organizationName (1..*)    # cdi:VariableStructure-name (0..*)
+    # cdi:Organization-organizationName (1..*)
+    # cdi:VariableStructure-name (0..*)
+
 
 
 class PairedControlledVocabularyEntry(RDFModel, metaclass=ABCMeta): 
-    """ PairedControlledVocabularyEntry
+    """ PairedControlledVocabularyEntry.
 
     Definition
     ==========
@@ -2556,11 +2953,13 @@ class PairedControlledVocabularyEntry(RDFModel, metaclass=ABCMeta):
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:DataStructureComponent-semantic (0..*)    # cdi:AgentInRole-role (0..*)
+    # cdi:DataStructureComponent-semantic (0..*)
+    # cdi:AgentInRole-role (0..*)
+
 
 
 class PrivateImage(RDFModel, metaclass=ABCMeta): 
-    """ PrivateImage
+    """ PrivateImage.
 
     Definition
     ============
@@ -2606,8 +3005,9 @@ class PrivateImage(RDFModel, metaclass=ABCMeta):
     # cdi:Agent-image (0..*)
 
 
+
 class ProvenanceInformation(RDFModel, metaclass=ABCMeta): 
-    """ ProvenanceInformation
+    """ ProvenanceInformation.
 
     Definition
     ============
@@ -2671,8 +3071,9 @@ class ProvenanceInformation(RDFModel, metaclass=ABCMeta):
     # cdi:CatalogDetails-provenance (0..1)
 
 
+
 class RationaleDefinition(RDFModel, metaclass=ABCMeta): 
-    """ RationaleDefinition
+    """ RationaleDefinition.
 
     Definition
     ============
@@ -2718,8 +3119,9 @@ class RationaleDefinition(RDFModel, metaclass=ABCMeta):
     # cdi:Identifier-versionRationale (0..1)
 
 
+
 class Reference(RDFModel, metaclass=ABCMeta): 
-    """ Reference
+    """ Reference.
 
     Definition
     ============
@@ -2816,11 +3218,23 @@ class Reference(RDFModel, metaclass=ABCMeta):
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:Concept-externalDefinition (0..1)    # cdi:ConceptSystem-externalDefinition (0..1)    # cdi:InstanceVariable-source (0..1)    # cdi:AgentInRole-reference (0..1)    # cdi:CatalogDetails-relatedResource (0..*)    # cdi:ControlledVocabularyEntry-entryReference (0..*)    # cdi:ControlledVocabularyEntry-vocabulary (0..1)    # cdi:LicenseInformation-licenseReference (0..*)    # cdi:Activity-entityProduced (0..*)    # cdi:Activity-entityUsed (0..*)    # cdi:Activity-standardModelMapping (0..*)    # cdi:Parameter-entityBound (0..*)
+    # cdi:Concept-externalDefinition (0..1)
+    # cdi:ConceptSystem-externalDefinition (0..1)
+    # cdi:InstanceVariable-source (0..1)
+    # cdi:AgentInRole-reference (0..1)
+    # cdi:CatalogDetails-relatedResource (0..*)
+    # cdi:ControlledVocabularyEntry-entryReference (0..*)
+    # cdi:ControlledVocabularyEntry-vocabulary (0..1)
+    # cdi:LicenseInformation-licenseReference (0..*)
+    # cdi:Activity-entityProduced (0..*)
+    # cdi:Activity-entityUsed (0..*)
+    # cdi:Activity-standardModelMapping (0..*)
+    # cdi:Parameter-entityBound (0..*)
+
 
 
 class Selector(RDFModel, metaclass=ABCMeta): 
-    """ Selector
+    """ Selector.
 
     Definition
     ==========
@@ -2844,8 +3258,9 @@ class Selector(RDFModel, metaclass=ABCMeta):
     # cdi:Reference-deepLink (0..1)
 
 
+
 class SpatialCoordinate(RDFModel, metaclass=ABCMeta): 
-    """ SpatialCoordinate
+    """ SpatialCoordinate.
 
     Definition
     ============
@@ -2888,11 +3303,13 @@ class SpatialCoordinate(RDFModel, metaclass=ABCMeta):
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:SpatialPoint-xCoordinate (0..1)    # cdi:SpatialPoint-yCoordinate (0..1)
+    # cdi:SpatialPoint-xCoordinate (0..1)
+    # cdi:SpatialPoint-yCoordinate (0..1)
+
 
 
 class SpatialPoint(RDFModel, metaclass=ABCMeta): 
-    """ SpatialPoint
+    """ SpatialPoint.
 
     Definition
     ============
@@ -2938,8 +3355,9 @@ class SpatialPoint(RDFModel, metaclass=ABCMeta):
     # cdi:Address-geographicPoint (0..1)
 
 
+
 class SpecializationRole(RDFModel, metaclass=ABCMeta): 
-    """ SpecializationRole
+    """ SpecializationRole.
 
     Definition
     ============
@@ -2963,8 +3381,9 @@ class SpecializationRole(RDFModel, metaclass=ABCMeta):
     # cdi:DataStructureComponent-specialization (0..1)
 
 
+
 class Statistic(RDFModel, metaclass=ABCMeta): 
-    """ Statistic
+    """ Statistic.
 
     Definition
     ============
@@ -3028,8 +3447,9 @@ class Statistic(RDFModel, metaclass=ABCMeta):
     # cdi:CategoryStatistic-statistic (0..*)
 
 
+
 class StructureSpecification(RDFModel, metaclass=ABCMeta): 
-    """ StructureSpecification
+    """ StructureSpecification.
 
     Definition
     ============
@@ -3081,11 +3501,22 @@ class StructureSpecification(RDFModel, metaclass=ABCMeta):
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:ClassificationItemStructure-specification (0..1)    # cdi:ClassificationSeriesStructure-specification (0..1)    # cdi:CodeListStructure-specification (0..1)    # cdi:LogicalRecordRelationStructure-specification (0..1)    # cdi:PhysicalDataSetStructure-specification (0..1)    # cdi:PhysicalLayoutRelationStructure-specification (0..1)    # cdi:PhysicalRecordSegmentStructure-specification (0..1)    # cdi:AgentStructure-specification (0..1)    # cdi:CategoryRelationStructure-specification (0..1)    # cdi:ConceptStructure-specification (0..1)    # cdi:VariableStructure-specification (0..1)
+    # cdi:ClassificationItemStructure-specification (0..1)
+    # cdi:ClassificationSeriesStructure-specification (0..1)
+    # cdi:CodeListStructure-specification (0..1)
+    # cdi:LogicalRecordRelationStructure-specification (0..1)
+    # cdi:PhysicalDataSetStructure-specification (0..1)
+    # cdi:PhysicalLayoutRelationStructure-specification (0..1)
+    # cdi:PhysicalRecordSegmentStructure-specification (0..1)
+    # cdi:AgentStructure-specification (0..1)
+    # cdi:CategoryRelationStructure-specification (0..1)
+    # cdi:ConceptStructure-specification (0..1)
+    # cdi:VariableStructure-specification (0..1)
+
 
 
 class Telephone(RDFModel, metaclass=ABCMeta): 
-    """ Telephone
+    """ Telephone.
 
     Definition
     ============
@@ -3162,8 +3593,9 @@ class Telephone(RDFModel, metaclass=ABCMeta):
     # cdi:ContactInformation-telephone (0..*)
 
 
+
 class TextPositionSelector(Selector): # type: ignore # noqa: F821
-    """ TextPositionSelector
+    """ TextPositionSelector.
 
     Definition
     ==========
@@ -3206,7 +3638,7 @@ class TextPositionSelector(Selector): # type: ignore # noqa: F821
 
 
 class TimeRole(SpecializationRole): # type: ignore # noqa: F821
-    """ TimeRole
+    """ TimeRole.
 
     Definition
     ============
@@ -3240,7 +3672,7 @@ class TimeRole(SpecializationRole): # type: ignore # noqa: F821
 
 
 class TypedString(RDFModel, metaclass=ABCMeta): 
-    """ TypedString
+    """ TypedString.
 
     Definition
     ============
@@ -3291,11 +3723,15 @@ class TypedString(RDFModel, metaclass=ABCMeta):
     #
     # RANGE ATTRIBUTES
     #
-    # cdi:InstanceValue-content (0..1)    # cdi:Notation-content (0..1)    # cdi:ValueAndConceptDescription-regularExpression (0..1)    # cdi:Command-commandContent (0..1)
+    # cdi:InstanceValue-content (0..1)
+    # cdi:Notation-content (0..1)
+    # cdi:ValueAndConceptDescription-regularExpression (0..1)
+    # cdi:Command-commandContent (0..1)
+
 
 
 class WebLink(RDFModel, metaclass=ABCMeta): 
-    """ WebLink
+    """ WebLink.
 
     Definition
     ============
@@ -3369,12 +3805,13 @@ class WebLink(RDFModel, metaclass=ABCMeta):
 
 
 
+
 #
 # CLASSES
 #
 
 class Activity(RDFModel, metaclass=ABCMeta): 
-    """ Activity
+    """ Activity.
 
     Definition 
     ============ 
@@ -3510,7 +3947,7 @@ class Activity(RDFModel, metaclass=ABCMeta):
 
 
 class Agent(RDFModel, metaclass=ABCMeta): 
-    """ Agent
+    """ Agent.
 
     Definition
     ==========
@@ -3579,7 +4016,7 @@ class Agent(RDFModel, metaclass=ABCMeta):
 
 
 class AgentListing(RDFModel, metaclass=ABCMeta): 
-    """ AgentListing
+    """ AgentListing.
 
     Definition 
     ============ 
@@ -3686,7 +4123,7 @@ class AgentListing(RDFModel, metaclass=ABCMeta):
 
 
 class AgentPosition(RDFModel, metaclass=ABCMeta): 
-    """ AgentPosition
+    """ AgentPosition.
 
     Definition 
     ============ 
@@ -3741,7 +4178,7 @@ class AgentPosition(RDFModel, metaclass=ABCMeta):
 
 
 class AgentRelationship(RDFModel, metaclass=ABCMeta): 
-    """ AgentRelationship
+    """ AgentRelationship.
 
     Definition 
     ============ 
@@ -3823,7 +4260,7 @@ class AgentRelationship(RDFModel, metaclass=ABCMeta):
 
 
 class AgentStructure(RDFModel, metaclass=ABCMeta): 
-    """ AgentStructure
+    """ AgentStructure.
 
     Definition 
     ============ 
@@ -3957,7 +4394,7 @@ class AgentStructure(RDFModel, metaclass=ABCMeta):
 
 
 class AllenIntervalAlgebra(TemporalConstraints): # type: ignore # noqa: F821
-    """ AllenIntervalAlgebra
+    """ AllenIntervalAlgebra.
 
     Definition 
     ==========
@@ -3999,7 +4436,7 @@ class AllenIntervalAlgebra(TemporalConstraints): # type: ignore # noqa: F821
 
 
 class AttributeComponent(DataStructureComponent): # type: ignore # noqa: F821
-    """ AttributeComponent
+    """ AttributeComponent.
 
     Definition 
     ============ 
@@ -4036,7 +4473,7 @@ class AttributeComponent(DataStructureComponent): # type: ignore # noqa: F821
 
 
 class AuthorizationSource(RDFModel, metaclass=ABCMeta): 
-    """ AuthorizationSource
+    """ AuthorizationSource.
 
     Definition 
     ============ 
@@ -4140,7 +4577,7 @@ class AuthorizationSource(RDFModel, metaclass=ABCMeta):
 
 
 class Category(Concept): # type: ignore # noqa: F821
-    """ Category
+    """ Category.
 
     Definition 
     ============ 
@@ -4183,7 +4620,7 @@ class Category(Concept): # type: ignore # noqa: F821
 
 
 class CategoryPosition(RDFModel, metaclass=ABCMeta): 
-    """ CategoryPosition
+    """ CategoryPosition.
 
     Definition
     ============
@@ -4238,7 +4675,7 @@ class CategoryPosition(RDFModel, metaclass=ABCMeta):
 
 
 class CategoryRelationStructure(RDFModel, metaclass=ABCMeta): 
-    """ CategoryRelationStructure
+    """ CategoryRelationStructure.
 
     Definition 
     ============ 
@@ -4355,7 +4792,7 @@ class CategoryRelationStructure(RDFModel, metaclass=ABCMeta):
 
 
 class CategoryRelationship(RDFModel, metaclass=ABCMeta): 
-    """ CategoryRelationship
+    """ CategoryRelationship.
 
     Definition 
     ============ 
@@ -4427,7 +4864,7 @@ class CategoryRelationship(RDFModel, metaclass=ABCMeta):
 
 
 class CategorySet(ConceptSystem): # type: ignore # noqa: F821
-    """ CategorySet
+    """ CategorySet.
 
     Definition
     ============
@@ -4476,7 +4913,7 @@ class CategorySet(ConceptSystem): # type: ignore # noqa: F821
 
 
 class CategoryStatistic(RDFModel, metaclass=ABCMeta): 
-    """ CategoryStatistic
+    """ CategoryStatistic.
 
     Definition 
     ============ 
@@ -4556,7 +4993,7 @@ class CategoryStatistic(RDFModel, metaclass=ABCMeta):
 
 
 class ClassificationFamily(RDFModel, metaclass=ABCMeta): 
-    """ ClassificationFamily
+    """ ClassificationFamily.
 
     Definition
     ============
@@ -4660,7 +5097,7 @@ class ClassificationFamily(RDFModel, metaclass=ABCMeta):
 
 
 class ClassificationIndex(RDFModel, metaclass=ABCMeta): 
-    """ ClassificationIndex
+    """ ClassificationIndex.
 
     Definition 
     ============ 
@@ -4826,7 +5263,7 @@ class ClassificationIndex(RDFModel, metaclass=ABCMeta):
 
 
 class ClassificationIndexEntry(RDFModel, metaclass=ABCMeta): 
-    """ ClassificationIndexEntry
+    """ ClassificationIndexEntry.
 
     Definition
     ============
@@ -4911,7 +5348,7 @@ class ClassificationIndexEntry(RDFModel, metaclass=ABCMeta):
 
 
 class ClassificationIndexEntryPosition(RDFModel, metaclass=ABCMeta): 
-    """ ClassificationIndexEntryPosition
+    """ ClassificationIndexEntryPosition.
 
     Definition 
     ============ 
@@ -4967,7 +5404,7 @@ class ClassificationIndexEntryPosition(RDFModel, metaclass=ABCMeta):
 
 
 class ClassificationItem(RDFModel, metaclass=ABCMeta): 
-    """ ClassificationItem
+    """ ClassificationItem.
 
     Definition 
     ============ 
@@ -5121,7 +5558,7 @@ class ClassificationItem(RDFModel, metaclass=ABCMeta):
 
 
 class ClassificationItemPosition(RDFModel, metaclass=ABCMeta): 
-    """ ClassificationItemPosition
+    """ ClassificationItemPosition.
 
     Definition
     ============
@@ -5177,7 +5614,7 @@ class ClassificationItemPosition(RDFModel, metaclass=ABCMeta):
 
 
 class ClassificationItemRelationship(RDFModel, metaclass=ABCMeta): 
-    """ ClassificationItemRelationship
+    """ ClassificationItemRelationship.
 
     Definition 
     ============ 
@@ -5241,7 +5678,7 @@ class ClassificationItemRelationship(RDFModel, metaclass=ABCMeta):
 
 
 class ClassificationItemStructure(RDFModel, metaclass=ABCMeta): 
-    """ ClassificationItemStructure
+    """ ClassificationItemStructure.
 
     Definition 
     ============ 
@@ -5366,7 +5803,7 @@ class ClassificationItemStructure(RDFModel, metaclass=ABCMeta):
 
 
 class ClassificationPosition(RDFModel, metaclass=ABCMeta): 
-    """ ClassificationPosition
+    """ ClassificationPosition.
 
     Definition 
     ============
@@ -5421,7 +5858,7 @@ class ClassificationPosition(RDFModel, metaclass=ABCMeta):
 
 
 class ClassificationSeries(RDFModel, metaclass=ABCMeta): 
-    """ ClassificationSeries
+    """ ClassificationSeries.
 
     Definition
     ============
@@ -5579,7 +6016,7 @@ class ClassificationSeries(RDFModel, metaclass=ABCMeta):
 
 
 class ClassificationSeriesStructure(RDFModel, metaclass=ABCMeta): 
-    """ ClassificationSeriesStructure
+    """ ClassificationSeriesStructure.
 
     Definition
     ============
@@ -5695,7 +6132,7 @@ class ClassificationSeriesStructure(RDFModel, metaclass=ABCMeta):
 
 
 class Code(RDFModel, metaclass=ABCMeta): 
-    """ Code
+    """ Code.
 
     Definition 
     ============ 
@@ -5758,7 +6195,7 @@ class Code(RDFModel, metaclass=ABCMeta):
 
 
 class CodeList(EnumerationDomain): # type: ignore # noqa: F821
-    """ CodeList
+    """ CodeList.
 
     Definition 
     ============ 
@@ -5820,7 +6257,7 @@ class CodeList(EnumerationDomain): # type: ignore # noqa: F821
 
 
 class CodeListStructure(RDFModel, metaclass=ABCMeta): 
-    """ CodeListStructure
+    """ CodeListStructure.
 
     Definition
     ============
@@ -5932,7 +6369,7 @@ class CodeListStructure(RDFModel, metaclass=ABCMeta):
 
 
 class CodePosition(RDFModel, metaclass=ABCMeta): 
-    """ CodePosition
+    """ CodePosition.
 
     Definition 
     ============ 
@@ -5987,7 +6424,7 @@ class CodePosition(RDFModel, metaclass=ABCMeta):
 
 
 class CodeRelationship(RDFModel, metaclass=ABCMeta): 
-    """ CodeRelationship
+    """ CodeRelationship.
 
     Definition
     ============
@@ -6051,7 +6488,7 @@ class CodeRelationship(RDFModel, metaclass=ABCMeta):
 
 
 class ComponentPosition(RDFModel, metaclass=ABCMeta): 
-    """ ComponentPosition
+    """ ComponentPosition.
 
     Definition 
     ============ 
@@ -6106,7 +6543,7 @@ class ComponentPosition(RDFModel, metaclass=ABCMeta):
 
 
 class Concept(RDFModel, metaclass=ABCMeta): 
-    """ Concept
+    """ Concept.
 
     Definition 
     ============ 
@@ -6207,7 +6644,7 @@ class Concept(RDFModel, metaclass=ABCMeta):
 
 
 class ConceptMap(RDFModel, metaclass=ABCMeta): 
-    """ ConceptMap
+    """ ConceptMap.
 
     Definition 
     ============ 
@@ -6307,7 +6744,7 @@ class ConceptMap(RDFModel, metaclass=ABCMeta):
 
 
 class ConceptRelationship(RDFModel, metaclass=ABCMeta): 
-    """ ConceptRelationship
+    """ ConceptRelationship.
 
     Definition 
     ============ 
@@ -6380,7 +6817,7 @@ class ConceptRelationship(RDFModel, metaclass=ABCMeta):
 
 
 class ConceptStructure(RDFModel, metaclass=ABCMeta): 
-    """ ConceptStructure
+    """ ConceptStructure.
 
     Definition 
     ============ 
@@ -6498,7 +6935,7 @@ class ConceptStructure(RDFModel, metaclass=ABCMeta):
 
 
 class ConceptSystem(RDFModel, metaclass=ABCMeta): 
-    """ ConceptSystem
+    """ ConceptSystem.
 
     Definition
     ============
@@ -6608,7 +7045,7 @@ class ConceptSystem(RDFModel, metaclass=ABCMeta):
 
 
 class ConceptSystemCorrespondence(RDFModel, metaclass=ABCMeta): 
-    """ ConceptSystemCorrespondence
+    """ ConceptSystemCorrespondence.
 
     Definition 
     ============ 
@@ -6708,7 +7145,7 @@ class ConceptSystemCorrespondence(RDFModel, metaclass=ABCMeta):
 
 
 class ConceptualDomain(RDFModel, metaclass=ABCMeta): 
-    """ ConceptualDomain
+    """ ConceptualDomain.
 
     Definition 
     ============ 
@@ -6790,7 +7227,7 @@ class ConceptualDomain(RDFModel, metaclass=ABCMeta):
 
 
 class ConceptualValue(Concept): # type: ignore # noqa: F821
-    """ ConceptualValue
+    """ ConceptualValue.
 
     Definition 
     ============ 
@@ -6832,7 +7269,7 @@ class ConceptualValue(Concept): # type: ignore # noqa: F821
 
 
 class ConceptualVariable(Concept): # type: ignore # noqa: F821
-    """ ConceptualVariable
+    """ ConceptualVariable.
 
     Definition 
     ============ 
@@ -6914,7 +7351,7 @@ class ConceptualVariable(Concept): # type: ignore # noqa: F821
 
 
 class ConditionalControlLogic(DeterministicImperative): # type: ignore # noqa: F821
-    """ ConditionalControlLogic
+    """ ConditionalControlLogic.
 
     Definition 
     ============ 
@@ -6961,7 +7398,7 @@ class ConditionalControlLogic(DeterministicImperative): # type: ignore # noqa: F
 
 
 class ContextualComponent(DataStructureComponent): # type: ignore # noqa: F821
-    """ ContextualComponent
+    """ ContextualComponent.
 
     Definition
     ============
@@ -6994,7 +7431,7 @@ class ContextualComponent(DataStructureComponent): # type: ignore # noqa: F821
 
 
 class ControlLogic(RDFModel, metaclass=ABCMeta): 
-    """ ControlLogic
+    """ ControlLogic.
 
     Definition 
     ============ 
@@ -7112,7 +7549,7 @@ class ControlLogic(RDFModel, metaclass=ABCMeta):
 
 
 class CorrespondenceTable(RDFModel, metaclass=ABCMeta): 
-    """ CorrespondenceTable
+    """ CorrespondenceTable.
 
     Definition 
     ============ 
@@ -7244,7 +7681,7 @@ class CorrespondenceTable(RDFModel, metaclass=ABCMeta):
 
 
 class Curator(ProcessingAgent): # type: ignore # noqa: F821
-    """ Curator
+    """ Curator.
 
     Definition 
     ============ 
@@ -7273,7 +7710,7 @@ class Curator(ProcessingAgent): # type: ignore # noqa: F821
 
 
 class DataPoint(RDFModel, metaclass=ABCMeta): 
-    """ DataPoint
+    """ DataPoint.
 
     Definition
     ============
@@ -7345,7 +7782,7 @@ class DataPoint(RDFModel, metaclass=ABCMeta):
 
 
 class DataPointPosition(RDFModel, metaclass=ABCMeta): 
-    """ DataPointPosition
+    """ DataPointPosition.
 
     Definition
     ============
@@ -7401,7 +7838,7 @@ class DataPointPosition(RDFModel, metaclass=ABCMeta):
 
 
 class DataPointRelationship(RDFModel, metaclass=ABCMeta): 
-    """ DataPointRelationship
+    """ DataPointRelationship.
 
     Definition
     ============
@@ -7465,7 +7902,7 @@ class DataPointRelationship(RDFModel, metaclass=ABCMeta):
 
 
 class DataSet(RDFModel, metaclass=ABCMeta): 
-    """ DataSet
+    """ DataSet.
 
     Definition 
     ============ 
@@ -7536,7 +7973,7 @@ class DataSet(RDFModel, metaclass=ABCMeta):
 
 
 class DataStore(RDFModel, metaclass=ABCMeta): 
-    """ DataStore
+    """ DataStore.
 
     Definition 
     ============ 
@@ -7688,7 +8125,7 @@ class DataStore(RDFModel, metaclass=ABCMeta):
 
 
 class DataStructure(DataStructureComponent): # type: ignore # noqa: F821
-    """ DataStructure
+    """ DataStructure.
 
     Definition 
     ============
@@ -7745,7 +8182,7 @@ class DataStructure(DataStructureComponent): # type: ignore # noqa: F821
 
 
 class DataStructureComponent(RDFModel, metaclass=ABCMeta): 
-    """ DataStructureComponent
+    """ DataStructureComponent.
 
     Definition 
     ============ 
@@ -7814,7 +8251,7 @@ class DataStructureComponent(RDFModel, metaclass=ABCMeta):
 
 
 class Datum(RDFModel, metaclass=ABCMeta): 
-    """ Datum
+    """ Datum.
 
     Definition 
     ============ 
@@ -7904,7 +8341,7 @@ class Datum(RDFModel, metaclass=ABCMeta):
 
 
 class Descriptor(KeyMember): # type: ignore # noqa: F821
-    """ Descriptor
+    """ Descriptor.
 
     Definition
     ==========
@@ -7957,7 +8394,7 @@ class Descriptor(KeyMember): # type: ignore # noqa: F821
 
 
 class DescriptorValueDomain(SubstantiveValueDomain): # type: ignore # noqa: F821
-    """ DescriptorValueDomain
+    """ DescriptorValueDomain.
 
     Definition
     ============
@@ -7983,7 +8420,7 @@ class DescriptorValueDomain(SubstantiveValueDomain): # type: ignore # noqa: F821
 
 
 class DescriptorVariable(InstanceVariable): # type: ignore # noqa: F821
-    """ DescriptorVariable
+    """ DescriptorVariable.
 
     Definition
     ============
@@ -8022,7 +8459,7 @@ class DescriptorVariable(InstanceVariable): # type: ignore # noqa: F821
 
 
 class DeterministicImperative(ControlLogic): # type: ignore # noqa: F821
-    """ DeterministicImperative
+    """ DeterministicImperative.
 
     Definition 
     ============ 
@@ -8051,7 +8488,7 @@ class DeterministicImperative(ControlLogic): # type: ignore # noqa: F821
 
 
 class DimensionComponent(DataStructureComponent): # type: ignore # noqa: F821
-    """ DimensionComponent
+    """ DimensionComponent.
 
     Definition 
     ============ 
@@ -8103,7 +8540,7 @@ class DimensionComponent(DataStructureComponent): # type: ignore # noqa: F821
 
 
 class DimensionGroup(RDFModel, metaclass=ABCMeta): 
-    """ DimensionGroup
+    """ DimensionGroup.
 
     Definition
     ============
@@ -8162,7 +8599,7 @@ class DimensionGroup(RDFModel, metaclass=ABCMeta):
 
 
 class DimensionalDataSet(DataSet): # type: ignore # noqa: F821
-    """ DimensionalDataSet
+    """ DimensionalDataSet.
 
     Definition
     ============
@@ -8216,7 +8653,7 @@ class DimensionalDataSet(DataSet): # type: ignore # noqa: F821
 
 
 class DimensionalDataStructure(DataStructure): # type: ignore # noqa: F821
-    """ DimensionalDataStructure
+    """ DimensionalDataStructure.
 
     Definition
     ============
@@ -8253,7 +8690,7 @@ class DimensionalDataStructure(DataStructure): # type: ignore # noqa: F821
 
 
 class DimensionalKey(Key): # type: ignore # noqa: F821
-    """ DimensionalKey
+    """ DimensionalKey.
 
     Definition
     ============
@@ -8278,7 +8715,7 @@ class DimensionalKey(Key): # type: ignore # noqa: F821
 
 
 class DimensionalKeyDefinition(KeyDefinition): # type: ignore # noqa: F821
-    """ DimensionalKeyDefinition
+    """ DimensionalKeyDefinition.
 
     Definition
     ============
@@ -8303,7 +8740,7 @@ class DimensionalKeyDefinition(KeyDefinition): # type: ignore # noqa: F821
 
 
 class DimensionalKeyDefinitionMember(ConceptualValue): # type: ignore # noqa: F821
-    """ DimensionalKeyDefinitionMember
+    """ DimensionalKeyDefinitionMember.
 
     Definition
     ============
@@ -8340,7 +8777,7 @@ class DimensionalKeyDefinitionMember(ConceptualValue): # type: ignore # noqa: F8
 
 
 class DimensionalKeyMember(KeyMember): # type: ignore # noqa: F821
-    """ DimensionalKeyMember
+    """ DimensionalKeyMember.
 
     Definition
     ============
@@ -8377,7 +8814,7 @@ class DimensionalKeyMember(KeyMember): # type: ignore # noqa: F821
 
 
 class EnumerationDomain(RDFModel, metaclass=ABCMeta): 
-    """ EnumerationDomain
+    """ EnumerationDomain.
 
     Definition 
     ============ 
@@ -8460,7 +8897,7 @@ class EnumerationDomain(RDFModel, metaclass=ABCMeta):
 
 
 class ForeignKey(RDFModel, metaclass=ABCMeta): 
-    """ ForeignKey
+    """ ForeignKey.
 
     Definition
     ============
@@ -8511,7 +8948,7 @@ class ForeignKey(RDFModel, metaclass=ABCMeta):
 
 
 class ForeignKeyComponent(RDFModel, metaclass=ABCMeta): 
-    """ ForeignKeyComponent
+    """ ForeignKeyComponent.
 
     Definition
     ============
@@ -8570,7 +9007,7 @@ class ForeignKeyComponent(RDFModel, metaclass=ABCMeta):
 
 
 class IdentifierComponent(DataStructureComponent): # type: ignore # noqa: F821
-    """ IdentifierComponent
+    """ IdentifierComponent.
 
     Definition 
     ============ 
@@ -8595,7 +9032,7 @@ class IdentifierComponent(DataStructureComponent): # type: ignore # noqa: F821
 
 
 class Individual(Agent): # type: ignore # noqa: F821
-    """ Individual
+    """ Individual.
 
     Definition 
     ============ 
@@ -8646,7 +9083,7 @@ class Individual(Agent): # type: ignore # noqa: F821
 
 
 class InformationFlowDefinition(RDFModel, metaclass=ABCMeta): 
-    """ InformationFlowDefinition
+    """ InformationFlowDefinition.
 
     Definition 
     ============ 
@@ -8710,7 +9147,7 @@ class InformationFlowDefinition(RDFModel, metaclass=ABCMeta):
 
 
 class InstanceKey(Key): # type: ignore # noqa: F821
-    """ InstanceKey
+    """ InstanceKey.
 
     Definition
     ============
@@ -8761,7 +9198,7 @@ class InstanceKey(Key): # type: ignore # noqa: F821
 
 
 class InstanceValue(RDFModel, metaclass=ABCMeta): 
-    """ InstanceValue
+    """ InstanceValue.
 
     Definition 
     ============ 
@@ -8849,7 +9286,7 @@ class InstanceValue(RDFModel, metaclass=ABCMeta):
 
 
 class InstanceVariable(RepresentedVariable): # type: ignore # noqa: F821
-    """ InstanceVariable
+    """ InstanceVariable.
 
     Definition
     ==========
@@ -8941,7 +9378,7 @@ class InstanceVariable(RepresentedVariable): # type: ignore # noqa: F821
 
 
 class InstanceVariableMap(RDFModel, metaclass=ABCMeta): 
-    """ InstanceVariableMap
+    """ InstanceVariableMap.
 
     Definition 
     ============ 
@@ -9028,7 +9465,7 @@ class InstanceVariableMap(RDFModel, metaclass=ABCMeta):
 
 
 class Key(RDFModel, metaclass=ABCMeta): 
-    """ Key
+    """ Key.
 
     Definition 
     ============ 
@@ -9106,7 +9543,7 @@ class Key(RDFModel, metaclass=ABCMeta):
 
 
 class KeyDefinition(RDFModel, metaclass=ABCMeta): 
-    """ KeyDefinition
+    """ KeyDefinition.
 
     Definition 
     ============ 
@@ -9168,7 +9605,7 @@ class KeyDefinition(RDFModel, metaclass=ABCMeta):
 
 
 class KeyDefinitionMember(ConceptualValue): # type: ignore # noqa: F821
-    """ KeyDefinitionMember
+    """ KeyDefinitionMember.
 
     Definition 
     ============ 
@@ -9189,7 +9626,7 @@ class KeyDefinitionMember(ConceptualValue): # type: ignore # noqa: F821
 
 
 class KeyMember(InstanceValue): # type: ignore # noqa: F821
-    """ KeyMember
+    """ KeyMember.
 
     Definition 
     ============ 
@@ -9222,7 +9659,7 @@ class KeyMember(InstanceValue): # type: ignore # noqa: F821
 
 
 class KeyValueDataStore(DataSet): # type: ignore # noqa: F821
-    """ KeyValueDataStore
+    """ KeyValueDataStore.
 
     Definition
     ============
@@ -9252,7 +9689,7 @@ class KeyValueDataStore(DataSet): # type: ignore # noqa: F821
 
 
 class KeyValueStructure(DataStructure): # type: ignore # noqa: F821
-    """ KeyValueStructure
+    """ KeyValueStructure.
 
     Definition
     ============
@@ -9277,7 +9714,7 @@ class KeyValueStructure(DataStructure): # type: ignore # noqa: F821
 
 
 class Level(RDFModel, metaclass=ABCMeta): 
-    """ Level
+    """ Level.
 
     Definition
     ============
@@ -9358,7 +9795,7 @@ class Level(RDFModel, metaclass=ABCMeta):
 
 
 class LevelStructure(RDFModel, metaclass=ABCMeta): 
-    """ LevelStructure
+    """ LevelStructure.
 
     Definition 
     ============ 
@@ -9453,7 +9890,7 @@ class LevelStructure(RDFModel, metaclass=ABCMeta):
 
 
 class LogicalRecord(RDFModel, metaclass=ABCMeta): 
-    """ LogicalRecord
+    """ LogicalRecord.
 
     Definition 
     ============ 
@@ -9516,7 +9953,7 @@ class LogicalRecord(RDFModel, metaclass=ABCMeta):
 
 
 class LogicalRecordPosition(RDFModel, metaclass=ABCMeta): 
-    """ LogicalRecordPosition
+    """ LogicalRecordPosition.
 
     Definition 
     ============ 
@@ -9572,7 +10009,7 @@ class LogicalRecordPosition(RDFModel, metaclass=ABCMeta):
 
 
 class LogicalRecordRelationStructure(RDFModel, metaclass=ABCMeta): 
-    """ LogicalRecordRelationStructure
+    """ LogicalRecordRelationStructure.
 
     Definition
     ============
@@ -9685,7 +10122,7 @@ class LogicalRecordRelationStructure(RDFModel, metaclass=ABCMeta):
 
 
 class LogicalRecordRelationship(RDFModel, metaclass=ABCMeta): 
-    """ LogicalRecordRelationship
+    """ LogicalRecordRelationship.
 
     Definition 
     ============ 
@@ -9749,7 +10186,7 @@ class LogicalRecordRelationship(RDFModel, metaclass=ABCMeta):
 
 
 class LongDataSet(DataSet): # type: ignore # noqa: F821
-    """ LongDataSet
+    """ LongDataSet.
 
     Definition
     ============
@@ -9774,7 +10211,7 @@ class LongDataSet(DataSet): # type: ignore # noqa: F821
 
 
 class LongDataStructure(DataStructure): # type: ignore # noqa: F821
-    """ LongDataStructure
+    """ LongDataStructure.
 
     Definition
     ============
@@ -9799,7 +10236,7 @@ class LongDataStructure(DataStructure): # type: ignore # noqa: F821
 
 
 class LongKey(Key): # type: ignore # noqa: F821
-    """ LongKey
+    """ LongKey.
 
     Definition
     ============
@@ -9824,7 +10261,7 @@ class LongKey(Key): # type: ignore # noqa: F821
 
 
 class LongMainKeyMember(KeyMember): # type: ignore # noqa: F821
-    """ LongMainKeyMember
+    """ LongMainKeyMember.
 
     Definition
     ============
@@ -9849,7 +10286,7 @@ class LongMainKeyMember(KeyMember): # type: ignore # noqa: F821
 
 
 class Machine(Agent): # type: ignore # noqa: F821
-    """ Machine
+    """ Machine.
 
     Definition
     ============
@@ -9936,7 +10373,7 @@ class Machine(Agent): # type: ignore # noqa: F821
 
 
 class MainKeyMember(KeyMember): # type: ignore # noqa: F821
-    """ MainKeyMember
+    """ MainKeyMember.
 
     Definition
     ============
@@ -9974,7 +10411,7 @@ class MainKeyMember(KeyMember): # type: ignore # noqa: F821
 
 
 class MeasureComponent(DataStructureComponent): # type: ignore # noqa: F821
-    """ MeasureComponent
+    """ MeasureComponent.
 
     Definition 
     ============ 
@@ -10012,7 +10449,7 @@ class MeasureComponent(DataStructureComponent): # type: ignore # noqa: F821
 
 
 class NonDeterministicDeclarative(ControlLogic): # type: ignore # noqa: F821
-    """ NonDeterministicDeclarative
+    """ NonDeterministicDeclarative.
 
     Definition 
     ============ 
@@ -10041,7 +10478,7 @@ class NonDeterministicDeclarative(ControlLogic): # type: ignore # noqa: F821
 
 
 class Notation(RDFModel, metaclass=ABCMeta): 
-    """ Notation
+    """ Notation.
 
     Definition 
     ============ 
@@ -10110,7 +10547,7 @@ class Notation(RDFModel, metaclass=ABCMeta):
 
 
 class Organization(Agent): # type: ignore # noqa: F821
-    """ Organization
+    """ Organization.
 
     Definition 
     ========== 
@@ -10161,7 +10598,7 @@ class Organization(Agent): # type: ignore # noqa: F821
 
 
 class Parameter(RDFModel, metaclass=ABCMeta): 
-    """ Parameter
+    """ Parameter.
 
     Definition 
     ============ 
@@ -10217,7 +10654,7 @@ class Parameter(RDFModel, metaclass=ABCMeta):
 
 
 class PhysicalDataSet(RDFModel, metaclass=ABCMeta): 
-    """ PhysicalDataSet
+    """ PhysicalDataSet.
 
     Definition
     ============
@@ -10381,7 +10818,7 @@ class PhysicalDataSet(RDFModel, metaclass=ABCMeta):
 
 
 class PhysicalDataSetStructure(RDFModel, metaclass=ABCMeta): 
-    """ PhysicalDataSetStructure
+    """ PhysicalDataSetStructure.
 
     Definition 
     ============ 
@@ -10501,7 +10938,7 @@ class PhysicalDataSetStructure(RDFModel, metaclass=ABCMeta):
 
 
 class PhysicalLayoutRelationStructure(RDFModel, metaclass=ABCMeta): 
-    """ PhysicalLayoutRelationStructure
+    """ PhysicalLayoutRelationStructure.
 
     Definition
     ==========
@@ -10632,7 +11069,7 @@ class PhysicalLayoutRelationStructure(RDFModel, metaclass=ABCMeta):
 
 
 class PhysicalRecordSegment(RDFModel, metaclass=ABCMeta): 
-    """ PhysicalRecordSegment
+    """ PhysicalRecordSegment.
 
     Definition
     ==========
@@ -10775,7 +11212,7 @@ class PhysicalRecordSegment(RDFModel, metaclass=ABCMeta):
 
 
 class PhysicalRecordSegmentPosition(RDFModel, metaclass=ABCMeta): 
-    """ PhysicalRecordSegmentPosition
+    """ PhysicalRecordSegmentPosition.
 
     Definition 
     ============ 
@@ -10831,7 +11268,7 @@ class PhysicalRecordSegmentPosition(RDFModel, metaclass=ABCMeta):
 
 
 class PhysicalRecordSegmentRelationship(RDFModel, metaclass=ABCMeta): 
-    """ PhysicalRecordSegmentRelationship
+    """ PhysicalRecordSegmentRelationship.
 
     Definition
     ============
@@ -10894,7 +11331,7 @@ class PhysicalRecordSegmentRelationship(RDFModel, metaclass=ABCMeta):
 
 
 class PhysicalRecordSegmentStructure(RDFModel, metaclass=ABCMeta): 
-    """ PhysicalRecordSegmentStructure
+    """ PhysicalRecordSegmentStructure.
 
     Definition
     ============
@@ -11004,7 +11441,7 @@ class PhysicalRecordSegmentStructure(RDFModel, metaclass=ABCMeta):
 
 
 class PhysicalSegmentLayout(RDFModel, metaclass=ABCMeta): 
-    """ PhysicalSegmentLayout
+    """ PhysicalSegmentLayout.
 
     Definition 
     ============ 
@@ -11323,7 +11760,7 @@ class PhysicalSegmentLayout(RDFModel, metaclass=ABCMeta):
 
 
 class PhysicalSegmentLocation(RDFModel, metaclass=ABCMeta): 
-    """ PhysicalSegmentLocation
+    """ PhysicalSegmentLocation.
 
     Definition 
     ============ 
@@ -11379,7 +11816,7 @@ class PhysicalSegmentLocation(RDFModel, metaclass=ABCMeta):
 
 
 class Population(Universe): # type: ignore # noqa: F821
-    """ Population
+    """ Population.
 
     Definition
     ============
@@ -11436,7 +11873,7 @@ class Population(Universe): # type: ignore # noqa: F821
 
 
 class PrimaryKey(RDFModel, metaclass=ABCMeta): 
-    """ PrimaryKey
+    """ PrimaryKey.
 
     Definition
     ============
@@ -11488,7 +11925,7 @@ class PrimaryKey(RDFModel, metaclass=ABCMeta):
 
 
 class PrimaryKeyComponent(RDFModel, metaclass=ABCMeta): 
-    """ PrimaryKeyComponent
+    """ PrimaryKeyComponent.
 
     Definition
     ============
@@ -11539,7 +11976,7 @@ class PrimaryKeyComponent(RDFModel, metaclass=ABCMeta):
 
 
 class ProcessingAgent(Agent): # type: ignore # noqa: F821
-    """ ProcessingAgent
+    """ ProcessingAgent.
 
     Definition 
     ============ 
@@ -11585,7 +12022,7 @@ class ProcessingAgent(Agent): # type: ignore # noqa: F821
 
 
 class ProductionEnvironment(RDFModel, metaclass=ABCMeta): 
-    """ ProductionEnvironment
+    """ ProductionEnvironment.
 
     Definition 
     ============ 
@@ -11650,7 +12087,7 @@ class ProductionEnvironment(RDFModel, metaclass=ABCMeta):
 
 
 class QualifiedMeasure(MeasureComponent): # type: ignore # noqa: F821
-    """ QualifiedMeasure
+    """ QualifiedMeasure.
 
     Definition
     ============
@@ -11687,7 +12124,7 @@ class QualifiedMeasure(MeasureComponent): # type: ignore # noqa: F821
 
 
 class RecordRelation(RDFModel, metaclass=ABCMeta): 
-    """ RecordRelation
+    """ RecordRelation.
 
     Definition
     ============
@@ -11792,7 +12229,7 @@ class RecordRelation(RDFModel, metaclass=ABCMeta):
 
 
 class ReferenceValue(InstanceValue): # type: ignore # noqa: F821
-    """ ReferenceValue
+    """ ReferenceValue.
 
     Definition
     ============
@@ -11839,7 +12276,7 @@ class ReferenceValue(InstanceValue): # type: ignore # noqa: F821
 
 
 class ReferenceValueDomain(ValueDomain): # type: ignore # noqa: F821
-    """ ReferenceValueDomain
+    """ ReferenceValueDomain.
 
     Definition
     ============
@@ -11864,7 +12301,7 @@ class ReferenceValueDomain(ValueDomain): # type: ignore # noqa: F821
 
 
 class ReferenceVariable(InstanceVariable): # type: ignore # noqa: F821
-    """ ReferenceVariable
+    """ ReferenceVariable.
 
     Definition
     ============
@@ -11904,7 +12341,7 @@ class ReferenceVariable(InstanceVariable): # type: ignore # noqa: F821
 
 
 class RepresentedVariable(ConceptualVariable): # type: ignore # noqa: F821
-    """ RepresentedVariable
+    """ RepresentedVariable.
 
     Definition 
     ========== 
@@ -11986,7 +12423,7 @@ class RepresentedVariable(ConceptualVariable): # type: ignore # noqa: F821
 
 
 class RevisableDatum(Datum): # type: ignore # noqa: F821
-    """ RevisableDatum
+    """ RevisableDatum.
 
     Definition
     ============
@@ -12036,7 +12473,7 @@ class RevisableDatum(Datum): # type: ignore # noqa: F821
 
 
 class Revision(RDFModel, metaclass=ABCMeta): 
-    """ Revision
+    """ Revision.
 
     Definition
     ============
@@ -12092,7 +12529,7 @@ class Revision(RDFModel, metaclass=ABCMeta):
 
 
 class Rule(RDFModel, metaclass=ABCMeta): 
-    """ Rule
+    """ Rule.
 
     Definition 
     ============ 
@@ -12143,7 +12580,7 @@ class Rule(RDFModel, metaclass=ABCMeta):
 
 
 class RuleBasedScheduling(NonDeterministicDeclarative): # type: ignore # noqa: F821
-    """ RuleBasedScheduling
+    """ RuleBasedScheduling.
 
     Definition 
     ============ 
@@ -12207,7 +12644,7 @@ class RuleBasedScheduling(NonDeterministicDeclarative): # type: ignore # noqa: F
 
 
 class RuleSet(RDFModel, metaclass=ABCMeta): 
-    """ RuleSet
+    """ RuleSet.
 
     Definition 
     ============ 
@@ -12262,7 +12699,7 @@ class RuleSet(RDFModel, metaclass=ABCMeta):
 
 
 class ScopedMeasure(RDFModel, metaclass=ABCMeta): 
-    """ ScopedMeasure
+    """ ScopedMeasure.
 
     Definition
     ==========
@@ -12340,7 +12777,7 @@ class ScopedMeasure(RDFModel, metaclass=ABCMeta):
 
 
 class SegmentByText(PhysicalSegmentLocation): # type: ignore # noqa: F821
-    """ SegmentByText
+    """ SegmentByText.
 
     Definition 
     ============ 
@@ -12418,7 +12855,7 @@ class SegmentByText(PhysicalSegmentLocation): # type: ignore # noqa: F821
 
 
 class SentinelConceptualDomain(ConceptualDomain): # type: ignore # noqa: F821
-    """ SentinelConceptualDomain
+    """ SentinelConceptualDomain.
 
     Definition
     ==========
@@ -12450,7 +12887,7 @@ class SentinelConceptualDomain(ConceptualDomain): # type: ignore # noqa: F821
 
 
 class SentinelValueDomain(ValueDomain): # type: ignore # noqa: F821
-    """ SentinelValueDomain
+    """ SentinelValueDomain.
 
     Definition 
     ============ 
@@ -12530,7 +12967,7 @@ class SentinelValueDomain(ValueDomain): # type: ignore # noqa: F821
 
 
 class Sequence(DeterministicImperative): # type: ignore # noqa: F821
-    """ Sequence
+    """ Sequence.
 
     Definition 
     ============ 
@@ -12571,7 +13008,7 @@ class Sequence(DeterministicImperative): # type: ignore # noqa: F821
 
 
 class SequencePosition(RDFModel, metaclass=ABCMeta): 
-    """ SequencePosition
+    """ SequencePosition.
 
     Definition
     ============
@@ -12626,7 +13063,7 @@ class SequencePosition(RDFModel, metaclass=ABCMeta):
 
 
 class Service(ProcessingAgent): # type: ignore # noqa: F821
-    """ Service
+    """ Service.
 
     Definition 
     ============ 
@@ -12655,7 +13092,7 @@ class Service(ProcessingAgent): # type: ignore # noqa: F821
 
 
 class StatisticalClassification(EnumerationDomain): # type: ignore # noqa: F821
-    """ StatisticalClassification
+    """ StatisticalClassification.
 
     Definition
     ============
@@ -12892,7 +13329,7 @@ class StatisticalClassification(EnumerationDomain): # type: ignore # noqa: F821
 
 
 class StatisticalClassificationRelationship(RDFModel, metaclass=ABCMeta): 
-    """ StatisticalClassificationRelationship
+    """ StatisticalClassificationRelationship.
 
     Definition 
     ============ 
@@ -12955,7 +13392,7 @@ class StatisticalClassificationRelationship(RDFModel, metaclass=ABCMeta):
 
 
 class Step(Activity): # type: ignore # noqa: F821
-    """ Step
+    """ Step.
 
     Definition
     ============
@@ -13037,7 +13474,7 @@ class Step(Activity): # type: ignore # noqa: F821
 
 
 class SubstantiveConceptualDomain(ConceptualDomain): # type: ignore # noqa: F821
-    """ SubstantiveConceptualDomain
+    """ SubstantiveConceptualDomain.
 
     Definition 
     ==========
@@ -13066,7 +13503,7 @@ class SubstantiveConceptualDomain(ConceptualDomain): # type: ignore # noqa: F821
 
 
 class SubstantiveValueDomain(ValueDomain): # type: ignore # noqa: F821
-    """ SubstantiveValueDomain
+    """ SubstantiveValueDomain.
 
     Definition 
     ==========
@@ -13130,7 +13567,7 @@ class SubstantiveValueDomain(ValueDomain): # type: ignore # noqa: F821
 
 
 class SyntheticIdComponent(DataStructureComponent): # type: ignore # noqa: F821
-    """ SyntheticIdComponent
+    """ SyntheticIdComponent.
 
     Definition
     ============
@@ -13160,7 +13597,7 @@ class SyntheticIdComponent(DataStructureComponent): # type: ignore # noqa: F821
 
 
 class TemporalConstraints(NonDeterministicDeclarative): # type: ignore # noqa: F821
-    """ TemporalConstraints
+    """ TemporalConstraints.
 
     Definition
     ============
@@ -13189,7 +13626,7 @@ class TemporalConstraints(NonDeterministicDeclarative): # type: ignore # noqa: F
 
 
 class TemporalControlConstruct(TemporalConstraints): # type: ignore # noqa: F821
-    """ TemporalControlConstruct
+    """ TemporalControlConstruct.
 
     Definition 
     ==========
@@ -13228,7 +13665,7 @@ class TemporalControlConstruct(TemporalConstraints): # type: ignore # noqa: F821
 
 
 class Unit(RDFModel, metaclass=ABCMeta): 
-    """ Unit
+    """ Unit.
 
     Definition
     ==========
@@ -13329,7 +13766,7 @@ class Unit(RDFModel, metaclass=ABCMeta):
 
 
 class UnitSegmentLayout(PhysicalSegmentLayout): # type: ignore # noqa: F821
-    """ UnitSegmentLayout
+    """ UnitSegmentLayout.
 
     Definition
     ==========
@@ -13364,7 +13801,7 @@ class UnitSegmentLayout(PhysicalSegmentLayout): # type: ignore # noqa: F821
 
 
 class UnitType(Concept): # type: ignore # noqa: F821
-    """ UnitType
+    """ UnitType.
 
     Definition
     ==========
@@ -13410,7 +13847,7 @@ class UnitType(Concept): # type: ignore # noqa: F821
 
 
 class Universe(UnitType): # type: ignore # noqa: F821
-    """ Universe
+    """ Universe.
 
     Definition
     ============
@@ -13458,7 +13895,7 @@ class Universe(UnitType): # type: ignore # noqa: F821
 
 
 class ValueAndConceptDescription(RDFModel, metaclass=ABCMeta): 
-    """ ValueAndConceptDescription
+    """ ValueAndConceptDescription.
 
     Definition
     ==========
@@ -13584,7 +14021,7 @@ class ValueAndConceptDescription(RDFModel, metaclass=ABCMeta):
 
 
 class ValueDomain(RDFModel, metaclass=ABCMeta): 
-    """ ValueDomain
+    """ ValueDomain.
 
     Definition 
     ============ 
@@ -13658,7 +14095,7 @@ class ValueDomain(RDFModel, metaclass=ABCMeta):
 
 
 class ValueMapping(RDFModel, metaclass=ABCMeta): 
-    """ ValueMapping
+    """ ValueMapping.
 
     Definition 
     ==========
@@ -13838,7 +14275,7 @@ class ValueMapping(RDFModel, metaclass=ABCMeta):
 
 
 class ValueMappingPosition(RDFModel, metaclass=ABCMeta): 
-    """ ValueMappingPosition
+    """ ValueMappingPosition.
 
     Definition 
     ============ 
@@ -13894,7 +14331,7 @@ class ValueMappingPosition(RDFModel, metaclass=ABCMeta):
 
 
 class ValueMappingRelationship(RDFModel, metaclass=ABCMeta): 
-    """ ValueMappingRelationship
+    """ ValueMappingRelationship.
 
     Definition 
     ============ 
@@ -13959,7 +14396,7 @@ class ValueMappingRelationship(RDFModel, metaclass=ABCMeta):
 
 
 class VariableCollection(RDFModel, metaclass=ABCMeta): 
-    """ VariableCollection
+    """ VariableCollection.
 
     Definition
     ==========
@@ -14088,7 +14525,7 @@ class VariableCollection(RDFModel, metaclass=ABCMeta):
 
 
 class VariableDescriptorComponent(DataStructureComponent): # type: ignore # noqa: F821
-    """ VariableDescriptorComponent
+    """ VariableDescriptorComponent.
 
     Definition 
     ============ 
@@ -14137,7 +14574,7 @@ class VariableDescriptorComponent(DataStructureComponent): # type: ignore # noqa
 
 
 class VariablePosition(RDFModel, metaclass=ABCMeta): 
-    """ VariablePosition
+    """ VariablePosition.
 
     Definition
     ============
@@ -14197,7 +14634,7 @@ class VariablePosition(RDFModel, metaclass=ABCMeta):
 
 
 class VariableRelationship(RDFModel, metaclass=ABCMeta): 
-    """ VariableRelationship
+    """ VariableRelationship.
 
     Definition 
     ============ 
@@ -14261,7 +14698,7 @@ class VariableRelationship(RDFModel, metaclass=ABCMeta):
 
 
 class VariableStructure(RDFModel, metaclass=ABCMeta): 
-    """ VariableStructure
+    """ VariableStructure.
 
     Definition 
     ============ 
@@ -14370,7 +14807,7 @@ class VariableStructure(RDFModel, metaclass=ABCMeta):
 
 
 class VariableValueComponent(DataStructureComponent): # type: ignore # noqa: F821
-    """ VariableValueComponent
+    """ VariableValueComponent.
 
     Definition 
     ============ 
@@ -14399,7 +14836,7 @@ class VariableValueComponent(DataStructureComponent): # type: ignore # noqa: F82
 
 
 class WideDataSet(DataSet): # type: ignore # noqa: F821
-    """ WideDataSet
+    """ WideDataSet.
 
     Definition
     ============
@@ -14424,7 +14861,7 @@ class WideDataSet(DataSet): # type: ignore # noqa: F821
 
 
 class WideDataStructure(DataStructure): # type: ignore # noqa: F821
-    """ WideDataStructure
+    """ WideDataStructure.
 
     Definition
     ==========
@@ -14449,7 +14886,7 @@ class WideDataStructure(DataStructure): # type: ignore # noqa: F821
 
 
 class WideKey(Key): # type: ignore # noqa: F821
-    """ WideKey
+    """ WideKey.
 
     Definition
     ==========
@@ -14474,7 +14911,7 @@ class WideKey(Key): # type: ignore # noqa: F821
 
 
 class WideKeyMember(KeyMember): # type: ignore # noqa: F821
-    """ WideKeyMember
+    """ WideKeyMember.
 
     Definition 
     ============ 

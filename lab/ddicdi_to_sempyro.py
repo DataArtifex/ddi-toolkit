@@ -107,7 +107,7 @@ def generate_resource(model, resource_uri):
     code += f"class {class_name}({class_inheritance}): {class_inline_comment}\n"
 
     # header docs
-    header = f'""" {class_name}\n'
+    header = f'""" {class_name}.\n'
     header += f"\n{class_description}\n"
     header += '\n"""\n\n'
     code += indent_code(header, 1)
@@ -152,7 +152,7 @@ def generate_resource(model, resource_uri):
         code += indent_code('#\n# RANGE ATTRIBUTES\n#\n\n', 1)
         for attribute_uri, attribute in range_attributes.items():
             cardinality = model.get_resource_attribute_cardinality(resource_uri, attribute_uri)
-            code += indent_code(f'# {attribute_uri} ({cardinality.get('display')})\n', 1)
+            code += indent_code(f"# {attribute_uri} ({cardinality.get('display')})\n\n", 1)
         code += '\n'
 
     # the end
