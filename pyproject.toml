@@ -23,8 +23,8 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-  "rdflib>=7"
-  "sempyro>=2.0.0",
+  "rdflib>=7",
+  "sempyro>=2.0.0"
 ]
 
 [project.urls]
