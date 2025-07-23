@@ -23,7 +23,6 @@ def escape_description(description):
             return f'"{description}"'
     return '""'  # Return empty string in quotes instead of empty
 
-
 def generate(model, output_dir):
     # create file
     output_file = os.path.join(output_dir, "ddicdi_sempyro.py")
