@@ -668,6 +668,27 @@ class DdiCdiModel(BaseModel):
         results = self.graph.query(query)
         return [self.prefixed_uri(str(row[0])) for row in results]
 
+    def get_subclassof(self) -> dict[str,str]:
+        """
+        Retrieves all rdfs:subClassOf relationships in the RDF graph.
+        Returns a dictionary where keys are child class URIs and values are parent class URIs.
+        The URIs are returned as prefixed URIs if possible.
+        """
+        query = """
+        SELECT ?child ?parent
+        WHERE {
+                ?child rdfs:subClassOf ?parent.
+            }
+        order by ?child
+        """
+        results = self.graph.query(query)
+        subclass_of = {}
+        for row in results:
+            child_uri = self.prefixed_uri(str(row[0]))
+            parent_uri = self.prefixed_uri(str(row[1]))
+            subclass_of[child_uri] = parent_uri
+        return subclass_of
+
     def prefixed_uri(self, uri: str) -> str:
         """
           Converts a full URI to a prefixed URI if it matches any of the known namespaces.
