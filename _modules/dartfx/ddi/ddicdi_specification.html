@@ -1051,6 +1051,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../specification.html#dartfx.ddi.ddicdi_specification.DdiCdiModel.get_resource_ucmis_associations_to"><code class="docutils literal notranslate"><span class="pre">DdiCdiModel.get_resource_ucmis_associations_to()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../specification.html#dartfx.ddi.ddicdi_specification.DdiCdiModel.get_resource_ucmis_domain_attributes"><code class="docutils literal notranslate"><span class="pre">DdiCdiModel.get_resource_ucmis_domain_attributes()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../specification.html#dartfx.ddi.ddicdi_specification.DdiCdiModel.get_resource_ucmis_range_attributes"><code class="docutils literal notranslate"><span class="pre">DdiCdiModel.get_resource_ucmis_range_attributes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../specification.html#dartfx.ddi.ddicdi_specification.DdiCdiModel.get_subclassof"><code class="docutils literal notranslate"><span class="pre">DdiCdiModel.get_subclassof()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../specification.html#dartfx.ddi.ddicdi_specification.DdiCdiModel.get_ucmis_associations"><code class="docutils literal notranslate"><span class="pre">DdiCdiModel.get_ucmis_associations()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../specification.html#dartfx.ddi.ddicdi_specification.DdiCdiModel.get_ucmis_attributes"><code class="docutils literal notranslate"><span class="pre">DdiCdiModel.get_ucmis_attributes()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../specification.html#dartfx.ddi.ddicdi_specification.DdiCdiModel.get_ucmis_classes"><code class="docutils literal notranslate"><span class="pre">DdiCdiModel.get_ucmis_classes()</span></code></a></li>
@@ -1936,6 +1937,30 @@
 <span class="s2">        &quot;&quot;&quot;</span>
         <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">prefixed_uri</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="DdiCdiModel.get_subclassof">
+<a class="viewcode-back" href="../../../specification.html#dartfx.ddi.ddicdi_specification.DdiCdiModel.get_subclassof">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_subclassof</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves all rdfs:subClassOf relationships in the RDF graph.</span>
+<span class="sd">        Returns a dictionary where keys are child class URIs and values are parent class URIs.</span>
+<span class="sd">        The URIs are returned as prefixed URIs if possible.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        SELECT ?child ?parent</span>
+<span class="s2">        WHERE {</span>
+<span class="s2">                ?child rdfs:subClassOf ?parent.</span>
+<span class="s2">            }</span>
+<span class="s2">        order by ?child</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="n">subclass_of</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+            <span class="n">child_uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefixed_uri</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">parent_uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefixed_uri</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">subclass_of</span><span class="p">[</span><span class="n">child_uri</span><span class="p">]</span> <span class="o">=</span> <span class="n">parent_uri</span>
+        <span class="k">return</span> <span class="n">subclass_of</span></div>
 
 
 <div class="viewcode-block" id="DdiCdiModel.prefixed_uri">

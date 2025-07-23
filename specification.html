@@ -1054,6 +1054,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#dartfx.ddi.ddicdi_specification.DdiCdiModel.get_resource_ucmis_associations_to"><code class="docutils literal notranslate"><span class="pre">DdiCdiModel.get_resource_ucmis_associations_to()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dartfx.ddi.ddicdi_specification.DdiCdiModel.get_resource_ucmis_domain_attributes"><code class="docutils literal notranslate"><span class="pre">DdiCdiModel.get_resource_ucmis_domain_attributes()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dartfx.ddi.ddicdi_specification.DdiCdiModel.get_resource_ucmis_range_attributes"><code class="docutils literal notranslate"><span class="pre">DdiCdiModel.get_resource_ucmis_range_attributes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dartfx.ddi.ddicdi_specification.DdiCdiModel.get_subclassof"><code class="docutils literal notranslate"><span class="pre">DdiCdiModel.get_subclassof()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dartfx.ddi.ddicdi_specification.DdiCdiModel.get_ucmis_associations"><code class="docutils literal notranslate"><span class="pre">DdiCdiModel.get_ucmis_associations()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dartfx.ddi.ddicdi_specification.DdiCdiModel.get_ucmis_attributes"><code class="docutils literal notranslate"><span class="pre">DdiCdiModel.get_ucmis_attributes()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dartfx.ddi.ddicdi_specification.DdiCdiModel.get_ucmis_classes"><code class="docutils literal notranslate"><span class="pre">DdiCdiModel.get_ucmis_classes()</span></code></a></li>
@@ -1444,6 +1445,16 @@ Returns a list of attribute URIs (as prefixed URIs if possible).</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="dartfx.ddi.ddicdi_specification.DdiCdiModel.get_subclassof">
+<span class="sig-name descname"><span class="pre">get_subclassof</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.get_subclassof"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicdi_specification.DdiCdiModel.get_subclassof" title="Link to this definition"></a></dt>
+<dd><p>Retrieves all rdfs:subClassOf relationships in the RDF graph.
+Returns a dictionary where keys are child class URIs and values are parent class URIs.
+The URIs are returned as prefixed URIs if possible.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="dartfx.ddi.ddicdi_specification.DdiCdiModel.get_ucmis_associations">
 <span class="sig-name descname"><span class="pre">get_ucmis_associations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.get_ucmis_associations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicdi_specification.DdiCdiModel.get_ucmis_associations" title="Link to this definition"></a></dt>
 <dd><p>Retrieves all ucmis:Association
@@ -1809,7 +1820,17 @@ Returns a list of attribute URIs (as prefixed URIs if possible).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id21">
-<span class="sig-name descname"><span class="pre">get_ucmis_associations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.get_ucmis_associations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id21" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_subclassof</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.get_subclassof"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id21" title="Link to this definition"></a></dt>
+<dd><p>Retrieves all rdfs:subClassOf relationships in the RDF graph.
+Returns a dictionary where keys are child class URIs and values are parent class URIs.
+The URIs are returned as prefixed URIs if possible.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id22">
+<span class="sig-name descname"><span class="pre">get_ucmis_associations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.get_ucmis_associations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id22" title="Link to this definition"></a></dt>
 <dd><p>Retrieves all ucmis:Association
 Returns a list of associations URIs (as prefixed URIs if possible).</p>
 <dl class="field-list simple">
@@ -1817,8 +1838,8 @@ Returns a list of associations URIs (as prefixed URIs if possible).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id22">
-<span class="sig-name descname"><span class="pre">get_ucmis_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.get_ucmis_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id22" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id23">
+<span class="sig-name descname"><span class="pre">get_ucmis_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.get_ucmis_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id23" title="Link to this definition"></a></dt>
 <dd><p>Retrieves all ucmis:Attribute
 Returns a list of attribute URIs (as prefixed URIs if possible).</p>
 <dl class="field-list simple">
@@ -1826,8 +1847,8 @@ Returns a list of attribute URIs (as prefixed URIs if possible).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id23">
-<span class="sig-name descname"><span class="pre">get_ucmis_classes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.get_ucmis_classes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id23" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id24">
+<span class="sig-name descname"><span class="pre">get_ucmis_classes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.get_ucmis_classes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id24" title="Link to this definition"></a></dt>
 <dd><p>Retrieves all ucmis:Classes
 Returns a list of attribute URIs (as prefixed URIs if possible).</p>
 <dl class="field-list simple">
@@ -1835,8 +1856,8 @@ Returns a list of attribute URIs (as prefixed URIs if possible).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id24">
-<span class="sig-name descname"><span class="pre">get_ucmis_enumerations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.get_ucmis_enumerations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id24" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id25">
+<span class="sig-name descname"><span class="pre">get_ucmis_enumerations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.get_ucmis_enumerations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id25" title="Link to this definition"></a></dt>
 <dd><p>Retrieves all ucmis:Enumeration
 Returns a list of enumeration URIs (as prefixed URIs if possible).</p>
 <dl class="field-list simple">
@@ -1844,8 +1865,8 @@ Returns a list of enumeration URIs (as prefixed URIs if possible).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id25">
-<span class="sig-name descname"><span class="pre">get_ucmis_structureddatatypes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.get_ucmis_structureddatatypes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id25" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id26">
+<span class="sig-name descname"><span class="pre">get_ucmis_structureddatatypes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.get_ucmis_structureddatatypes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id26" title="Link to this definition"></a></dt>
 <dd><p>Retrieves all ucmis:StructuredDataType
 Returns a list of datatype URIs (as prefixed URIs if possible).</p>
 <dl class="field-list simple">
@@ -1853,21 +1874,21 @@ Returns a list of datatype URIs (as prefixed URIs if possible).</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id26">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">graph</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html#rdflib.graph.Graph" title="(in rdflib v)"><span class="pre">Graph</span></a></em><a class="headerlink" href="#id26" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id27">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">graph</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html#rdflib.graph.Graph" title="(in rdflib v)"><span class="pre">Graph</span></a></em><a class="headerlink" href="#id27" title="Link to this definition"></a></dt>
 <dd><p>Returns the in-memory RDF graph containing the loaded Turtle files.
 This graph can be queried using SPARQL.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id27">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jsonld_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#id27" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id28">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jsonld_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#id28" title="Link to this definition"></a></dt>
 <dd><p>Returns the directory path where the JSON-LD files are located.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id28">
-<span class="sig-name descname"><span class="pre">load_ontology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.load_ontology"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id28" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id29">
+<span class="sig-name descname"><span class="pre">load_ontology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.load_ontology"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id29" title="Link to this definition"></a></dt>
 <dd><p>Loads all Turtle (.ttl) files from the specified directory into an in-memory RDF graph.
 Returns the rdflib.Graph object, which can be queried with SPARQL.</p>
 <dl class="field-list simple">
@@ -1875,22 +1896,22 @@ Returns the rdflib.Graph object, which can be queried with SPARQL.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id29">
-<span class="sig-name descname"><span class="pre">load_xml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.load_xml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id29" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id30">
+<span class="sig-name descname"><span class="pre">load_xml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.load_xml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id30" title="Link to this definition"></a></dt>
 <dd><p>Loads an XML file and returns its root element.</p>
 <dl class="field-list simple">
 </dl>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id30">
-<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#id30" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id31">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#id31" title="Link to this definition"></a></dt>
 <dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id31">
-<span class="sig-name descname"><span class="pre">model_post_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id31" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id32">
+<span class="sig-name descname"><span class="pre">model_post_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id32" title="Link to this definition"></a></dt>
 <dd><p>We need to both initialize private attributes and call the user-defined model_post_init
 method.</p>
 <dl class="field-list simple">
@@ -1898,27 +1919,27 @@ method.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id32">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ontology_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#id32" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id33">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ontology_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#id33" title="Link to this definition"></a></dt>
 <dd><p>Returns the directory path where the ontology files are located.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id33">
-<span class="sig-name descname"><span class="pre">prefixed_uri</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.prefixed_uri"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id33" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id34">
+<span class="sig-name descname"><span class="pre">prefixed_uri</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uri</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.prefixed_uri"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id34" title="Link to this definition"></a></dt>
 <dd><p>Converts a full URI to a prefixed URI if it matches any of the known namespaces.</p>
 <dl class="field-list simple">
 </dl>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id34">
-<span class="sig-name descname"><span class="pre">root_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#id34" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id35">
+<span class="sig-name descname"><span class="pre">root_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#id35" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id35">
-<span class="sig-name descname"><span class="pre">search_classes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.search_classes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id35" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id36">
+<span class="sig-name descname"><span class="pre">search_classes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.search_classes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id36" title="Link to this definition"></a></dt>
 <dd><p>Searches for classes in the RDF graph by their name.
 Returns a list of matching class URIs.</p>
 <dl class="field-list simple">
@@ -1926,25 +1947,25 @@ Returns a list of matching class URIs.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id36">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">source_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#id36" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id37">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">source_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#id37" title="Link to this definition"></a></dt>
 <dd><p>Returns the directory path where the source files are located.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id37">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id37" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id38">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi_specification.html#DdiCdiModel.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id38" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id38">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">xml</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/xml.etree.elementtree.html#xml.etree.ElementTree.Element" title="(in Python v3.13)"><span class="pre">Element</span></a></em><a class="headerlink" href="#id38" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id39">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">xml</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/xml.etree.elementtree.html#xml.etree.ElementTree.Element" title="(in Python v3.13)"><span class="pre">Element</span></a></em><a class="headerlink" href="#id39" title="Link to this definition"></a></dt>
 <dd><p>Returns the root element of the loaded XML schema.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id39">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">xmlschema_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#id39" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id40">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">xmlschema_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#id40" title="Link to this definition"></a></dt>
 <dd><p>Returns the directory path where the XML Schema files are located.</p>
 </dd></dl>
 
