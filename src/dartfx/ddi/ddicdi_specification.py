@@ -36,6 +36,8 @@ attributes = model.get_resource_attributes("cdi:InstanceVariable", inherited=Tru
 associations = model.get_resource_associations("cdi:InstanceVariable")
 ```
 
+SPDX-Identifier: MIT
+
 """
 
 from functools import cache

@@ -20,22 +20,18 @@ def model(root_dir):
     return m
 
 def test_load_all_ttl_files(model):
+    print()
     assert isinstance(model._graph, Graph)
     assert len(model._graph) > 0
 
-def test_count_owl_classes(model):
-    classname = 'owl:Class'
-    count = model.count_by_class(classname)
-    print(f"Number of {classname}: {count}")
-    assert count == 223
-
 def test_count_ucmis_classes(model):
-    classname = 'ucmis:Class'
-    count = model.count_by_class(classname)
-    print(f"Number of {classname}: {count}")
+    print()
+    count = len(model.get_ucmis_classes())
+    print(f"Number of ucmis:Classes: {count}")
     assert count == 158
 
 def test_count_ucmis_top_classes(model):
+    print()
     query = """
     SELECT ?class
     WHERE {
@@ -45,24 +41,27 @@ def test_count_ucmis_top_classes(model):
     order by ?class
     """
     result = model.graph.query(query)
-    print(f"Number of top ucmis:Classes: {len(result)}")
     for row in result:
-        print(row)
+        print(model.prefixed_uri(str(row[0])))
+    print(f"Number of TOP ucmis:Classes: {len(result)}")
+    count = len(result)
+    assert count == 89
 
 
 def test_count_ucmis_datatypes(model):
-    classname = 'ucmis:StructuredDataType'
-    count = model.count_by_class(classname)
-    print(f"Number of {classname}: {count}")
-    assert count == 49
+    print()
+    count = len(model.get_ucmis_classes())
+    print(f"Number of ucmis:StructuredDataType: {count}")
+    assert count == 158
 
 def test_count_ucmis_enumerations(model):
-    classname = 'ucmis:Enumeration'
-    count = model.count_by_class(classname)
-    print(f"Number of {classname}: {count}")
+    print()
+    count = len(model.get_ucmis_enumerations())
+    print(f"Number of ucmis:Enumerations: {count}")
     assert count == 16
 
 def test_search_class(model):
+    print()
     result = model.search_classes('concept')
     assert isinstance(result, list)
     assert len(result) == 12
@@ -71,6 +70,7 @@ def test_search_class(model):
             print(f"Found class: {class_uri}")
 
 def test_represented_variable_properties(model):
+    print()
     props = model.get_resource_properties("cdi:RepresentedVariable")
     for prop, values in props.items():
         values = values[0:100] if isinstance(values, str) else [values]
@@ -78,11 +78,13 @@ def test_represented_variable_properties(model):
     assert len(props) > 0
 
 def test_instance_variable_superclasses(model):
+    print()
     data = model.get_resource_superclasses("cdi:InstanceVariable")
     print(data)
     assert len(data) > 0
 
-def test_instance_variable_attributes(model):
-    data = model.get_resource_attributes("cdi:InstanceVariable")
+def test_instance_variable_domain_attributes(model):
+    print()
+    data = model.get_resource_domain_attributes("cdi:InstanceVariable")
     print(data)
     assert len(data) > 0

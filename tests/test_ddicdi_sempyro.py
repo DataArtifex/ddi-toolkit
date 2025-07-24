@@ -2,7 +2,7 @@ from rdflib import URIRef
 from dartfx.ddi.ddicdi_sempyro import Identifier, InstanceVariable, InternationalRegistrationDataIdentifier, ObjectName
 import uuid
 
-def test_instance_variable_foo1():
+def test_instance_variable_foo():
     var = InstanceVariable(name = [ObjectName(name="Foo")])
     uri = f"http://example.org/{uuid.uuid4()}"
     irdi = InternationalRegistrationDataIdentifier(
