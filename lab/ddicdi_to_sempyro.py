@@ -1,3 +1,14 @@
+"""
+This script converts the DDI-CDI specification into Pydantic classes with annotation for the
+SemPyRO package, enabling serialization to RDF.
+
+How to use:
+python lab/ddicdi_to_sempyro.py specifications/ddi-cdi-1.0 src/dartfx/ddi
+
+How to test:
+pytest -s tests/test_ddicdi_sempyro.py
+
+"""
 import argparse
 from datetime import datetime
 import os
@@ -208,7 +219,7 @@ def generate_resource(model, resource_uri):
         class_inheritance = subclass_of
         #class_inline_comment = '# type: ignore # noqa: F821'
     else:
-        class_inheritance = "RDFModel, metaclass=ABCMeta"
+        class_inheritance = "RDFModel"
         #class_inline_comment = ''
     code  = ""
     code += f"class {class_name}({class_inheritance}):\n"
