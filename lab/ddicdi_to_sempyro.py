@@ -100,8 +100,8 @@ def generate_field(resource, cardinality, type:str):
     if not use_class and not use_uriref:
         raise ValueError("At least one of use_class or use_uriref must be True")
     code  = ""
-    # class comment
-    code += f'# {resource.get("uri")} ({cardinality.get("display")}) | {resource.get("label")} | {resource.get("range")}\n'
+    # type comment
+    code += f'# {type} {resource.get("uri")} ({cardinality.get("display")}) | {resource.get("label")} | {resource.get("range")}\n'
     # get field name
     field_name = resource.get("label")
     # handle reserved Python/Pydantic keywords

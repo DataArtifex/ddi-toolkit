@@ -319,7 +319,7 @@ class AccessInformation(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:AccessInformation-copyright (0..*) | copyright | cdi:InternationalString
+    # attribute cdi:AccessInformation-copyright (0..*) | copyright | cdi:InternationalString
     copyright: list[InternationalString] | None = Field(
         alias="copyright",
         default=None,
@@ -330,7 +330,7 @@ class AccessInformation(DdiCdiType):
         },
     )
 
-    # cdi:AccessInformation-embargo (0..*) | embargo | cdi:EmbargoInformation
+    # attribute cdi:AccessInformation-embargo (0..*) | embargo | cdi:EmbargoInformation
     embargo: list[EmbargoInformation] | None = Field(
         alias="embargo",
         default=None,
@@ -341,7 +341,7 @@ class AccessInformation(DdiCdiType):
         },
     )
 
-    # cdi:AccessInformation-license (0..*) | license | cdi:LicenseInformation
+    # attribute cdi:AccessInformation-license (0..*) | license | cdi:LicenseInformation
     license: list[LicenseInformation] | None = Field(
         alias="license",
         default=None,
@@ -352,7 +352,7 @@ class AccessInformation(DdiCdiType):
         },
     )
 
-    # cdi:AccessInformation-rights (0..*) | rights | cdi:InternationalString
+    # attribute cdi:AccessInformation-rights (0..*) | rights | cdi:InternationalString
     rights: list[InternationalString] | None = Field(
         alias="rights",
         default=None,
@@ -388,7 +388,7 @@ class AccessLocation(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:AccessLocation-mimeType (0..1) | mimeType | cdi:ControlledVocabularyEntry
+    # attribute cdi:AccessLocation-mimeType (0..1) | mimeType | cdi:ControlledVocabularyEntry
     mimeType: ControlledVocabularyEntry | None = Field(
         alias="mimeType",
         default=None,
@@ -399,7 +399,7 @@ class AccessLocation(DdiCdiType):
         },
     )
 
-    # cdi:AccessLocation-physicalLocation (0..*) | physicalLocation | cdi:InternationalString
+    # attribute cdi:AccessLocation-physicalLocation (0..*) | physicalLocation | cdi:InternationalString
     physicalLocation: list[InternationalString] | None = Field(
         alias="physicalLocation",
         default=None,
@@ -410,7 +410,7 @@ class AccessLocation(DdiCdiType):
         },
     )
 
-    # cdi:AccessLocation-uri (0..*) | uri | xsd:anyURI
+    # attribute cdi:AccessLocation-uri (0..*) | uri | xsd:anyURI
     uri: list[Union[str, LiteralField]] | None = Field(
         alias="uri",
         default=None,
@@ -453,7 +453,7 @@ class Address(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Address-cityPlaceLocal (0..1) | cityPlaceLocal | xsd:string
+    # attribute cdi:Address-cityPlaceLocal (0..1) | cityPlaceLocal | xsd:string
     cityPlaceLocal: Union[str, LiteralField] | None = Field(
         alias="cityPlaceLocal",
         default=None,
@@ -464,7 +464,7 @@ class Address(DdiCdiType):
         },
     )
 
-    # cdi:Address-countryCode (0..1) | countryCode | cdi:ControlledVocabularyEntry
+    # attribute cdi:Address-countryCode (0..1) | countryCode | cdi:ControlledVocabularyEntry
     countryCode: ControlledVocabularyEntry | None = Field(
         alias="countryCode",
         default=None,
@@ -475,7 +475,7 @@ class Address(DdiCdiType):
         },
     )
 
-    # cdi:Address-effectiveDates (0..1) | effectiveDates | cdi:DateRange
+    # attribute cdi:Address-effectiveDates (0..1) | effectiveDates | cdi:DateRange
     effectiveDates: DateRange | None = Field(
         alias="effectiveDates",
         default=None,
@@ -486,7 +486,7 @@ class Address(DdiCdiType):
         },
     )
 
-    # cdi:Address-geographicPoint (0..1) | geographicPoint | cdi:SpatialPoint
+    # attribute cdi:Address-geographicPoint (0..1) | geographicPoint | cdi:SpatialPoint
     geographicPoint: SpatialPoint | None = Field(
         alias="geographicPoint",
         default=None,
@@ -497,7 +497,7 @@ class Address(DdiCdiType):
         },
     )
 
-    # cdi:Address-isPreferred (0..1) | isPreferred | xsd:boolean
+    # attribute cdi:Address-isPreferred (0..1) | isPreferred | xsd:boolean
     isPreferred: bool | None = Field(
         alias="isPreferred",
         default=None,
@@ -508,7 +508,7 @@ class Address(DdiCdiType):
         },
     )
 
-    # cdi:Address-line (0..*) | line | xsd:string
+    # attribute cdi:Address-line (0..*) | line | xsd:string
     line: list[Union[str, LiteralField]] | None = Field(
         alias="line",
         default=None,
@@ -519,7 +519,7 @@ class Address(DdiCdiType):
         },
     )
 
-    # cdi:Address-locationName (0..1) | locationName | cdi:ObjectName
+    # attribute cdi:Address-locationName (0..1) | locationName | cdi:ObjectName
     locationName: ObjectName | None = Field(
         alias="locationName",
         default=None,
@@ -530,7 +530,7 @@ class Address(DdiCdiType):
         },
     )
 
-    # cdi:Address-postalCode (0..1) | postalCode | xsd:string
+    # attribute cdi:Address-postalCode (0..1) | postalCode | xsd:string
     postalCode: Union[str, LiteralField] | None = Field(
         alias="postalCode",
         default=None,
@@ -541,7 +541,7 @@ class Address(DdiCdiType):
         },
     )
 
-    # cdi:Address-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
+    # attribute cdi:Address-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
     privacy: ControlledVocabularyEntry | None = Field(
         alias="privacy",
         default=None,
@@ -552,7 +552,7 @@ class Address(DdiCdiType):
         },
     )
 
-    # cdi:Address-regionalCoverage (0..1) | regionalCoverage | cdi:ControlledVocabularyEntry
+    # attribute cdi:Address-regionalCoverage (0..1) | regionalCoverage | cdi:ControlledVocabularyEntry
     regionalCoverage: ControlledVocabularyEntry | None = Field(
         alias="regionalCoverage",
         default=None,
@@ -563,7 +563,7 @@ class Address(DdiCdiType):
         },
     )
 
-    # cdi:Address-stateProvince (0..1) | stateProvince | xsd:string
+    # attribute cdi:Address-stateProvince (0..1) | stateProvince | xsd:string
     stateProvince: Union[str, LiteralField] | None = Field(
         alias="stateProvince",
         default=None,
@@ -574,7 +574,7 @@ class Address(DdiCdiType):
         },
     )
 
-    # cdi:Address-timeZone (0..1) | timeZone | cdi:ControlledVocabularyEntry
+    # attribute cdi:Address-timeZone (0..1) | timeZone | cdi:ControlledVocabularyEntry
     timeZone: ControlledVocabularyEntry | None = Field(
         alias="timeZone",
         default=None,
@@ -585,7 +585,7 @@ class Address(DdiCdiType):
         },
     )
 
-    # cdi:Address-typeOfAddress (0..1) | typeOfAddress | cdi:ControlledVocabularyEntry
+    # attribute cdi:Address-typeOfAddress (0..1) | typeOfAddress | cdi:ControlledVocabularyEntry
     typeOfAddress: ControlledVocabularyEntry | None = Field(
         alias="typeOfAddress",
         default=None,
@@ -596,7 +596,7 @@ class Address(DdiCdiType):
         },
     )
 
-    # cdi:Address-typeOfLocation (0..1) | typeOfLocation | cdi:ControlledVocabularyEntry
+    # attribute cdi:Address-typeOfLocation (0..1) | typeOfLocation | cdi:ControlledVocabularyEntry
     typeOfLocation: ControlledVocabularyEntry | None = Field(
         alias="typeOfLocation",
         default=None,
@@ -636,7 +636,7 @@ class AgentInRole(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:AgentInRole-agentName (0..1) | agentName | cdi:BibliographicName
+    # attribute cdi:AgentInRole-agentName (0..1) | agentName | cdi:BibliographicName
     agentName: BibliographicName | None = Field(
         alias="agentName",
         default=None,
@@ -647,7 +647,7 @@ class AgentInRole(DdiCdiType):
         },
     )
 
-    # cdi:AgentInRole-reference (0..1) | reference | cdi:Reference
+    # attribute cdi:AgentInRole-reference (0..1) | reference | cdi:Reference
     reference: Reference | None = Field(
         alias="reference",
         default=None,
@@ -658,7 +658,7 @@ class AgentInRole(DdiCdiType):
         },
     )
 
-    # cdi:AgentInRole-role (0..*) | role | cdi:PairedControlledVocabularyEntry
+    # attribute cdi:AgentInRole-role (0..*) | role | cdi:PairedControlledVocabularyEntry
     role: list[PairedControlledVocabularyEntry] | None = Field(
         alias="role",
         default=None,
@@ -698,7 +698,7 @@ class CatalogDetails(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:CatalogDetails-access (0..*) | access | cdi:AccessInformation
+    # attribute cdi:CatalogDetails-access (0..*) | access | cdi:AccessInformation
     access: list[AccessInformation] | None = Field(
         alias="access",
         default=None,
@@ -709,7 +709,7 @@ class CatalogDetails(DdiCdiType):
         },
     )
 
-    # cdi:CatalogDetails-alternativeTitle (0..*) | alternativeTitle | cdi:InternationalString
+    # attribute cdi:CatalogDetails-alternativeTitle (0..*) | alternativeTitle | cdi:InternationalString
     alternativeTitle: list[InternationalString] | None = Field(
         alias="alternativeTitle",
         default=None,
@@ -720,7 +720,7 @@ class CatalogDetails(DdiCdiType):
         },
     )
 
-    # cdi:CatalogDetails-contributor (0..*) | contributor | cdi:AgentInRole
+    # attribute cdi:CatalogDetails-contributor (0..*) | contributor | cdi:AgentInRole
     contributor: list[AgentInRole] | None = Field(
         alias="contributor",
         default=None,
@@ -731,7 +731,7 @@ class CatalogDetails(DdiCdiType):
         },
     )
 
-    # cdi:CatalogDetails-creator (0..*) | creator | cdi:AgentInRole
+    # attribute cdi:CatalogDetails-creator (0..*) | creator | cdi:AgentInRole
     creator: list[AgentInRole] | None = Field(
         alias="creator",
         default=None,
@@ -742,7 +742,7 @@ class CatalogDetails(DdiCdiType):
         },
     )
 
-    # cdi:CatalogDetails-date (0..*) | date | cdi:CombinedDate
+    # attribute cdi:CatalogDetails-date (0..*) | date | cdi:CombinedDate
     date: list[CombinedDate] | None = Field(
         alias="date",
         default=None,
@@ -753,7 +753,7 @@ class CatalogDetails(DdiCdiType):
         },
     )
 
-    # cdi:CatalogDetails-identifier (0..1) | identifier | cdi:InternationalIdentifier
+    # attribute cdi:CatalogDetails-identifier (0..1) | identifier | cdi:InternationalIdentifier
     identifier: InternationalIdentifier | None = Field(
         alias="identifier",
         default=None,
@@ -764,7 +764,7 @@ class CatalogDetails(DdiCdiType):
         },
     )
 
-    # cdi:CatalogDetails-informationSource (0..*) | informationSource | cdi:InternationalString
+    # attribute cdi:CatalogDetails-informationSource (0..*) | informationSource | cdi:InternationalString
     informationSource: list[InternationalString] | None = Field(
         alias="informationSource",
         default=None,
@@ -775,7 +775,7 @@ class CatalogDetails(DdiCdiType):
         },
     )
 
-    # cdi:CatalogDetails-languageOfObject (0..*) | languageOfObject | xsd:language
+    # attribute cdi:CatalogDetails-languageOfObject (0..*) | languageOfObject | xsd:language
     languageOfObject: list[Union[str, LiteralField]] | None = Field(
         alias="languageOfObject",
         default=None,
@@ -786,7 +786,7 @@ class CatalogDetails(DdiCdiType):
         },
     )
 
-    # cdi:CatalogDetails-provenance (0..1) | provenance | cdi:ProvenanceInformation
+    # attribute cdi:CatalogDetails-provenance (0..1) | provenance | cdi:ProvenanceInformation
     provenance: ProvenanceInformation | None = Field(
         alias="provenance",
         default=None,
@@ -797,7 +797,7 @@ class CatalogDetails(DdiCdiType):
         },
     )
 
-    # cdi:CatalogDetails-publisher (0..*) | publisher | cdi:AgentInRole
+    # attribute cdi:CatalogDetails-publisher (0..*) | publisher | cdi:AgentInRole
     publisher: list[AgentInRole] | None = Field(
         alias="publisher",
         default=None,
@@ -808,7 +808,7 @@ class CatalogDetails(DdiCdiType):
         },
     )
 
-    # cdi:CatalogDetails-relatedResource (0..*) | relatedResource | cdi:Reference
+    # attribute cdi:CatalogDetails-relatedResource (0..*) | relatedResource | cdi:Reference
     relatedResource: list[Reference] | None = Field(
         alias="relatedResource",
         default=None,
@@ -819,7 +819,7 @@ class CatalogDetails(DdiCdiType):
         },
     )
 
-    # cdi:CatalogDetails-subTitle (0..*) | subTitle | cdi:InternationalString
+    # attribute cdi:CatalogDetails-subTitle (0..*) | subTitle | cdi:InternationalString
     subTitle: list[InternationalString] | None = Field(
         alias="subTitle",
         default=None,
@@ -830,7 +830,7 @@ class CatalogDetails(DdiCdiType):
         },
     )
 
-    # cdi:CatalogDetails-summary (0..1) | summary | cdi:InternationalString
+    # attribute cdi:CatalogDetails-summary (0..1) | summary | cdi:InternationalString
     summary: InternationalString | None = Field(
         alias="summary",
         default=None,
@@ -841,7 +841,7 @@ class CatalogDetails(DdiCdiType):
         },
     )
 
-    # cdi:CatalogDetails-title (0..1) | title | cdi:InternationalString
+    # attribute cdi:CatalogDetails-title (0..1) | title | cdi:InternationalString
     title: InternationalString | None = Field(
         alias="title",
         default=None,
@@ -852,7 +852,7 @@ class CatalogDetails(DdiCdiType):
         },
     )
 
-    # cdi:CatalogDetails-typeOfResource (0..*) | typeOfResource | cdi:ControlledVocabularyEntry
+    # attribute cdi:CatalogDetails-typeOfResource (0..*) | typeOfResource | cdi:ControlledVocabularyEntry
     typeOfResource: list[ControlledVocabularyEntry] | None = Field(
         alias="typeOfResource",
         default=None,
@@ -892,7 +892,7 @@ class CombinedDate(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:CombinedDate-isoDate (0..1) | isoDate | xsd:date
+    # attribute cdi:CombinedDate-isoDate (0..1) | isoDate | xsd:date
     isoDate: Union[date, datetime] | None = Field(
         alias="isoDate",
         default=None,
@@ -903,7 +903,7 @@ class CombinedDate(DdiCdiType):
         },
     )
 
-    # cdi:CombinedDate-nonIsoDate (0..*) | nonIsoDate | cdi:NonIsoDate
+    # attribute cdi:CombinedDate-nonIsoDate (0..*) | nonIsoDate | cdi:NonIsoDate
     nonIsoDate: list[NonIsoDate] | None = Field(
         alias="nonIsoDate",
         default=None,
@@ -914,7 +914,7 @@ class CombinedDate(DdiCdiType):
         },
     )
 
-    # cdi:CombinedDate-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:CombinedDate-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -950,7 +950,7 @@ class Command(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Command-commandContent (0..1) | commandContent | cdi:TypedString
+    # attribute cdi:Command-commandContent (0..1) | commandContent | cdi:TypedString
     commandContent: TypedString | None = Field(
         alias="commandContent",
         default=None,
@@ -961,7 +961,7 @@ class Command(DdiCdiType):
         },
     )
 
-    # cdi:Command-programLanguage (0..1) | programLanguage | cdi:ControlledVocabularyEntry
+    # attribute cdi:Command-programLanguage (0..1) | programLanguage | cdi:ControlledVocabularyEntry
     programLanguage: ControlledVocabularyEntry | None = Field(
         alias="programLanguage",
         default=None,
@@ -997,7 +997,7 @@ class CommandCode(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:CommandCode-command (0..*) | command | cdi:Command
+    # attribute cdi:CommandCode-command (0..*) | command | cdi:Command
     command: list[Command] | None = Field(
         alias="command",
         default=None,
@@ -1008,7 +1008,7 @@ class CommandCode(DdiCdiType):
         },
     )
 
-    # cdi:CommandCode-commandFile (0..*) | commandFile | cdi:CommandFile
+    # attribute cdi:CommandCode-commandFile (0..*) | commandFile | cdi:CommandFile
     commandFile: list[CommandFile] | None = Field(
         alias="commandFile",
         default=None,
@@ -1019,7 +1019,7 @@ class CommandCode(DdiCdiType):
         },
     )
 
-    # cdi:CommandCode-description (0..1) | description | cdi:InternationalString
+    # attribute cdi:CommandCode-description (0..1) | description | cdi:InternationalString
     description: InternationalString | None = Field(
         alias="description",
         default=None,
@@ -1055,7 +1055,7 @@ class CommandFile(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:CommandFile-location (0..1) | location | cdi:InternationalString
+    # attribute cdi:CommandFile-location (0..1) | location | cdi:InternationalString
     location: InternationalString | None = Field(
         alias="location",
         default=None,
@@ -1066,7 +1066,7 @@ class CommandFile(DdiCdiType):
         },
     )
 
-    # cdi:CommandFile-uri (0..1) | uri | xsd:anyURI
+    # attribute cdi:CommandFile-uri (0..1) | uri | xsd:anyURI
     uri: Union[str, LiteralField] | None = Field(
         alias="uri",
         default=None,
@@ -1102,7 +1102,7 @@ class ContactInformation(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ContactInformation-address (0..*) | address | cdi:Address
+    # attribute cdi:ContactInformation-address (0..*) | address | cdi:Address
     address: list[Address] | None = Field(
         alias="address",
         default=None,
@@ -1113,7 +1113,7 @@ class ContactInformation(DdiCdiType):
         },
     )
 
-    # cdi:ContactInformation-email (0..*) | email | cdi:Email
+    # attribute cdi:ContactInformation-email (0..*) | email | cdi:Email
     email: list[Email] | None = Field(
         alias="email",
         default=None,
@@ -1124,7 +1124,7 @@ class ContactInformation(DdiCdiType):
         },
     )
 
-    # cdi:ContactInformation-emessaging (0..*) | emessaging | cdi:ElectronicMessageSystem
+    # attribute cdi:ContactInformation-emessaging (0..*) | emessaging | cdi:ElectronicMessageSystem
     emessaging: list[ElectronicMessageSystem] | None = Field(
         alias="emessaging",
         default=None,
@@ -1135,7 +1135,7 @@ class ContactInformation(DdiCdiType):
         },
     )
 
-    # cdi:ContactInformation-telephone (0..*) | telephone | cdi:Telephone
+    # attribute cdi:ContactInformation-telephone (0..*) | telephone | cdi:Telephone
     telephone: list[Telephone] | None = Field(
         alias="telephone",
         default=None,
@@ -1146,7 +1146,7 @@ class ContactInformation(DdiCdiType):
         },
     )
 
-    # cdi:ContactInformation-website (0..*) | website | cdi:WebLink
+    # attribute cdi:ContactInformation-website (0..*) | website | cdi:WebLink
     website: list[WebLink] | None = Field(
         alias="website",
         default=None,
@@ -1182,7 +1182,7 @@ class ControlledVocabularyEntry(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ControlledVocabularyEntry-entryReference (0..*) | entryReference | cdi:Reference
+    # attribute cdi:ControlledVocabularyEntry-entryReference (0..*) | entryReference | cdi:Reference
     entryReference: list[Reference] | None = Field(
         alias="entryReference",
         default=None,
@@ -1193,7 +1193,7 @@ class ControlledVocabularyEntry(DdiCdiType):
         },
     )
 
-    # cdi:ControlledVocabularyEntry-entryValue (0..*) | entryValue | xsd:string
+    # attribute cdi:ControlledVocabularyEntry-entryValue (0..*) | entryValue | xsd:string
     entryValue: list[Union[str, LiteralField]] | None = Field(
         alias="entryValue",
         default=None,
@@ -1204,7 +1204,7 @@ class ControlledVocabularyEntry(DdiCdiType):
         },
     )
 
-    # cdi:ControlledVocabularyEntry-name (0..1) | name | xsd:string
+    # attribute cdi:ControlledVocabularyEntry-name (0..1) | name | xsd:string
     name: Union[str, LiteralField] | None = Field(
         alias="name",
         default=None,
@@ -1215,7 +1215,7 @@ class ControlledVocabularyEntry(DdiCdiType):
         },
     )
 
-    # cdi:ControlledVocabularyEntry-valueForOther (0..1) | valueForOther | xsd:string
+    # attribute cdi:ControlledVocabularyEntry-valueForOther (0..1) | valueForOther | xsd:string
     valueForOther: Union[str, LiteralField] | None = Field(
         alias="valueForOther",
         default=None,
@@ -1226,7 +1226,7 @@ class ControlledVocabularyEntry(DdiCdiType):
         },
     )
 
-    # cdi:ControlledVocabularyEntry-vocabulary (0..1) | vocabulary | cdi:Reference
+    # attribute cdi:ControlledVocabularyEntry-vocabulary (0..1) | vocabulary | cdi:Reference
     vocabulary: Reference | None = Field(
         alias="vocabulary",
         default=None,
@@ -1262,7 +1262,7 @@ class CorrespondenceDefinition(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:CorrespondenceDefinition-commonality (0..1) | commonality | cdi:InternationalString
+    # attribute cdi:CorrespondenceDefinition-commonality (0..1) | commonality | cdi:InternationalString
     commonality: InternationalString | None = Field(
         alias="commonality",
         default=None,
@@ -1273,7 +1273,7 @@ class CorrespondenceDefinition(DdiCdiType):
         },
     )
 
-    # cdi:CorrespondenceDefinition-commonalityCode (0..*) | commonalityCode | cdi:ControlledVocabularyEntry
+    # attribute cdi:CorrespondenceDefinition-commonalityCode (0..*) | commonalityCode | cdi:ControlledVocabularyEntry
     commonalityCode: list[ControlledVocabularyEntry] | None = Field(
         alias="commonalityCode",
         default=None,
@@ -1284,7 +1284,7 @@ class CorrespondenceDefinition(DdiCdiType):
         },
     )
 
-    # cdi:CorrespondenceDefinition-difference (0..1) | difference | cdi:InternationalString
+    # attribute cdi:CorrespondenceDefinition-difference (0..1) | difference | cdi:InternationalString
     difference: InternationalString | None = Field(
         alias="difference",
         default=None,
@@ -1295,7 +1295,7 @@ class CorrespondenceDefinition(DdiCdiType):
         },
     )
 
-    # cdi:CorrespondenceDefinition-matching (0..1) | matching | cdi:MatchingCriterion
+    # attribute cdi:CorrespondenceDefinition-matching (0..1) | matching | cdi:MatchingCriterion
     matching: MatchingCriterion | None = Field(
         alias="matching",
         default=None,
@@ -1331,7 +1331,7 @@ class DateRange(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:DateRange-endDate (0..1) | endDate | cdi:CombinedDate
+    # attribute cdi:DateRange-endDate (0..1) | endDate | cdi:CombinedDate
     endDate: CombinedDate | None = Field(
         alias="endDate",
         default=None,
@@ -1342,7 +1342,7 @@ class DateRange(DdiCdiType):
         },
     )
 
-    # cdi:DateRange-startDate (0..1) | startDate | cdi:CombinedDate
+    # attribute cdi:DateRange-startDate (0..1) | startDate | cdi:CombinedDate
     startDate: CombinedDate | None = Field(
         alias="startDate",
         default=None,
@@ -1382,7 +1382,7 @@ class ElectronicMessageSystem(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ElectronicMessageSystem-contactAddress (0..1) | contactAddress | xsd:string
+    # attribute cdi:ElectronicMessageSystem-contactAddress (0..1) | contactAddress | xsd:string
     contactAddress: Union[str, LiteralField] | None = Field(
         alias="contactAddress",
         default=None,
@@ -1393,7 +1393,7 @@ class ElectronicMessageSystem(DdiCdiType):
         },
     )
 
-    # cdi:ElectronicMessageSystem-effectiveDates (0..1) | effectiveDates | cdi:DateRange
+    # attribute cdi:ElectronicMessageSystem-effectiveDates (0..1) | effectiveDates | cdi:DateRange
     effectiveDates: DateRange | None = Field(
         alias="effectiveDates",
         default=None,
@@ -1404,7 +1404,7 @@ class ElectronicMessageSystem(DdiCdiType):
         },
     )
 
-    # cdi:ElectronicMessageSystem-isPreferred (0..1) | isPreferred | xsd:boolean
+    # attribute cdi:ElectronicMessageSystem-isPreferred (0..1) | isPreferred | xsd:boolean
     isPreferred: bool | None = Field(
         alias="isPreferred",
         default=None,
@@ -1415,7 +1415,7 @@ class ElectronicMessageSystem(DdiCdiType):
         },
     )
 
-    # cdi:ElectronicMessageSystem-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
+    # attribute cdi:ElectronicMessageSystem-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
     privacy: ControlledVocabularyEntry | None = Field(
         alias="privacy",
         default=None,
@@ -1426,7 +1426,7 @@ class ElectronicMessageSystem(DdiCdiType):
         },
     )
 
-    # cdi:ElectronicMessageSystem-typeOfService (0..1) | typeOfService | cdi:ControlledVocabularyEntry
+    # attribute cdi:ElectronicMessageSystem-typeOfService (0..1) | typeOfService | cdi:ControlledVocabularyEntry
     typeOfService: ControlledVocabularyEntry | None = Field(
         alias="typeOfService",
         default=None,
@@ -1466,7 +1466,7 @@ class Email(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Email-effectiveDates (0..1) | effectiveDates | cdi:DateRange
+    # attribute cdi:Email-effectiveDates (0..1) | effectiveDates | cdi:DateRange
     effectiveDates: DateRange | None = Field(
         alias="effectiveDates",
         default=None,
@@ -1477,7 +1477,7 @@ class Email(DdiCdiType):
         },
     )
 
-    # cdi:Email-internetEmail (0..1) | internetEmail | xsd:string
+    # attribute cdi:Email-internetEmail (0..1) | internetEmail | xsd:string
     internetEmail: Union[str, LiteralField] | None = Field(
         alias="internetEmail",
         default=None,
@@ -1488,7 +1488,7 @@ class Email(DdiCdiType):
         },
     )
 
-    # cdi:Email-isPreferred (0..1) | isPreferred | xsd:boolean
+    # attribute cdi:Email-isPreferred (0..1) | isPreferred | xsd:boolean
     isPreferred: bool | None = Field(
         alias="isPreferred",
         default=None,
@@ -1499,7 +1499,7 @@ class Email(DdiCdiType):
         },
     )
 
-    # cdi:Email-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
+    # attribute cdi:Email-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
     privacy: ControlledVocabularyEntry | None = Field(
         alias="privacy",
         default=None,
@@ -1510,7 +1510,7 @@ class Email(DdiCdiType):
         },
     )
 
-    # cdi:Email-typeOfEmail (0..1) | typeOfEmail | cdi:ControlledVocabularyEntry
+    # attribute cdi:Email-typeOfEmail (0..1) | typeOfEmail | cdi:ControlledVocabularyEntry
     typeOfEmail: ControlledVocabularyEntry | None = Field(
         alias="typeOfEmail",
         default=None,
@@ -1546,7 +1546,7 @@ class EmbargoInformation(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:EmbargoInformation-description (0..1) | description | cdi:InternationalString
+    # attribute cdi:EmbargoInformation-description (0..1) | description | cdi:InternationalString
     description: InternationalString | None = Field(
         alias="description",
         default=None,
@@ -1557,7 +1557,7 @@ class EmbargoInformation(DdiCdiType):
         },
     )
 
-    # cdi:EmbargoInformation-period (0..*) | period | cdi:DateRange
+    # attribute cdi:EmbargoInformation-period (0..*) | period | cdi:DateRange
     period: list[DateRange] | None = Field(
         alias="period",
         default=None,
@@ -1593,7 +1593,7 @@ class FundingInformation(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:FundingInformation-fundingAgent (0..*) | fundingAgent | cdi:AgentInRole
+    # attribute cdi:FundingInformation-fundingAgent (0..*) | fundingAgent | cdi:AgentInRole
     fundingAgent: list[AgentInRole] | None = Field(
         alias="fundingAgent",
         default=None,
@@ -1604,7 +1604,7 @@ class FundingInformation(DdiCdiType):
         },
     )
 
-    # cdi:FundingInformation-grantNumber (0..1) | grantNumber | xsd:string
+    # attribute cdi:FundingInformation-grantNumber (0..1) | grantNumber | xsd:string
     grantNumber: Union[str, LiteralField] | None = Field(
         alias="grantNumber",
         default=None,
@@ -1640,7 +1640,7 @@ class Identifier(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Identifier-ddiIdentifier (0..1) | ddiIdentifier | cdi:InternationalRegistrationDataIdentifier
+    # attribute cdi:Identifier-ddiIdentifier (0..1) | ddiIdentifier | cdi:InternationalRegistrationDataIdentifier
     ddiIdentifier: InternationalRegistrationDataIdentifier | None = Field(
         alias="ddiIdentifier",
         default=None,
@@ -1651,7 +1651,7 @@ class Identifier(DdiCdiType):
         },
     )
 
-    # cdi:Identifier-isDdiIdentifierPersistent (0..1) | isDdiIdentifierPersistent | xsd:boolean
+    # attribute cdi:Identifier-isDdiIdentifierPersistent (0..1) | isDdiIdentifierPersistent | xsd:boolean
     isDdiIdentifierPersistent: bool | None = Field(
         alias="isDdiIdentifierPersistent",
         default=None,
@@ -1662,7 +1662,7 @@ class Identifier(DdiCdiType):
         },
     )
 
-    # cdi:Identifier-isDdiIdentifierUniversallyUnique (0..1) | isDdiIdentifierUniversallyUnique | xsd:boolean
+    # attribute cdi:Identifier-isDdiIdentifierUniversallyUnique (0..1) | isDdiIdentifierUniversallyUnique | xsd:boolean
     isDdiIdentifierUniversallyUnique: bool | None = Field(
         alias="isDdiIdentifierUniversallyUnique",
         default=None,
@@ -1673,7 +1673,7 @@ class Identifier(DdiCdiType):
         },
     )
 
-    # cdi:Identifier-nonDdiIdentifier (0..*) | nonDdiIdentifier | cdi:NonDdiIdentifier
+    # attribute cdi:Identifier-nonDdiIdentifier (0..*) | nonDdiIdentifier | cdi:NonDdiIdentifier
     nonDdiIdentifier: list[NonDdiIdentifier] | None = Field(
         alias="nonDdiIdentifier",
         default=None,
@@ -1684,7 +1684,7 @@ class Identifier(DdiCdiType):
         },
     )
 
-    # cdi:Identifier-uri (0..1) | uri | xsd:anyURI
+    # attribute cdi:Identifier-uri (0..1) | uri | xsd:anyURI
     uri: Union[str, LiteralField] | None = Field(
         alias="uri",
         default=None,
@@ -1695,7 +1695,7 @@ class Identifier(DdiCdiType):
         },
     )
 
-    # cdi:Identifier-versionDate (0..1) | versionDate | xsd:date
+    # attribute cdi:Identifier-versionDate (0..1) | versionDate | xsd:date
     versionDate: Union[date, datetime] | None = Field(
         alias="versionDate",
         default=None,
@@ -1706,7 +1706,7 @@ class Identifier(DdiCdiType):
         },
     )
 
-    # cdi:Identifier-versionRationale (0..1) | versionRationale | cdi:RationaleDefinition
+    # attribute cdi:Identifier-versionRationale (0..1) | versionRationale | cdi:RationaleDefinition
     versionRationale: RationaleDefinition | None = Field(
         alias="versionRationale",
         default=None,
@@ -1717,7 +1717,7 @@ class Identifier(DdiCdiType):
         },
     )
 
-    # cdi:Identifier-versionResponsibility (0..1) | versionResponsibility | cdi:AgentInRole
+    # attribute cdi:Identifier-versionResponsibility (0..1) | versionResponsibility | cdi:AgentInRole
     versionResponsibility: AgentInRole | None = Field(
         alias="versionResponsibility",
         default=None,
@@ -1753,7 +1753,7 @@ class IndividualName(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:IndividualName-abbreviation (0..1) | abbreviation | cdi:InternationalString
+    # attribute cdi:IndividualName-abbreviation (0..1) | abbreviation | cdi:InternationalString
     abbreviation: InternationalString | None = Field(
         alias="abbreviation",
         default=None,
@@ -1764,7 +1764,7 @@ class IndividualName(DdiCdiType):
         },
     )
 
-    # cdi:IndividualName-context (0..1) | context | cdi:ControlledVocabularyEntry
+    # attribute cdi:IndividualName-context (0..1) | context | cdi:ControlledVocabularyEntry
     context: ControlledVocabularyEntry | None = Field(
         alias="context",
         default=None,
@@ -1775,7 +1775,7 @@ class IndividualName(DdiCdiType):
         },
     )
 
-    # cdi:IndividualName-effectiveDates (0..1) | effectiveDates | cdi:DateRange
+    # attribute cdi:IndividualName-effectiveDates (0..1) | effectiveDates | cdi:DateRange
     effectiveDates: DateRange | None = Field(
         alias="effectiveDates",
         default=None,
@@ -1786,7 +1786,7 @@ class IndividualName(DdiCdiType):
         },
     )
 
-    # cdi:IndividualName-firstGiven (0..1) | firstGiven | xsd:string
+    # attribute cdi:IndividualName-firstGiven (0..1) | firstGiven | xsd:string
     firstGiven: Union[str, LiteralField] | None = Field(
         alias="firstGiven",
         default=None,
@@ -1797,7 +1797,7 @@ class IndividualName(DdiCdiType):
         },
     )
 
-    # cdi:IndividualName-fullName (0..1) | fullName | cdi:InternationalString
+    # attribute cdi:IndividualName-fullName (0..1) | fullName | cdi:InternationalString
     fullName: InternationalString | None = Field(
         alias="fullName",
         default=None,
@@ -1808,7 +1808,7 @@ class IndividualName(DdiCdiType):
         },
     )
 
-    # cdi:IndividualName-isFormal (0..1) | isFormal | xsd:boolean
+    # attribute cdi:IndividualName-isFormal (0..1) | isFormal | xsd:boolean
     isFormal: bool | None = Field(
         alias="isFormal",
         default=None,
@@ -1819,7 +1819,7 @@ class IndividualName(DdiCdiType):
         },
     )
 
-    # cdi:IndividualName-isPreferred (0..1) | isPreferred | xsd:boolean
+    # attribute cdi:IndividualName-isPreferred (0..1) | isPreferred | xsd:boolean
     isPreferred: bool | None = Field(
         alias="isPreferred",
         default=None,
@@ -1830,7 +1830,7 @@ class IndividualName(DdiCdiType):
         },
     )
 
-    # cdi:IndividualName-lastFamily (0..1) | lastFamily | xsd:string
+    # attribute cdi:IndividualName-lastFamily (0..1) | lastFamily | xsd:string
     lastFamily: Union[str, LiteralField] | None = Field(
         alias="lastFamily",
         default=None,
@@ -1841,7 +1841,7 @@ class IndividualName(DdiCdiType):
         },
     )
 
-    # cdi:IndividualName-middle (0..*) | middle | xsd:string
+    # attribute cdi:IndividualName-middle (0..*) | middle | xsd:string
     middle: list[Union[str, LiteralField]] | None = Field(
         alias="middle",
         default=None,
@@ -1852,7 +1852,7 @@ class IndividualName(DdiCdiType):
         },
     )
 
-    # cdi:IndividualName-prefix (0..1) | prefix | xsd:string
+    # attribute cdi:IndividualName-prefix (0..1) | prefix | xsd:string
     prefix: Union[str, LiteralField] | None = Field(
         alias="prefix",
         default=None,
@@ -1863,7 +1863,7 @@ class IndividualName(DdiCdiType):
         },
     )
 
-    # cdi:IndividualName-sex (0..1) | sex | cdi:SexSpecification
+    # attribute cdi:IndividualName-sex (0..1) | sex | cdi:SexSpecification
     sex: SexSpecification | None = Field(
         alias="sex",
         default=None,
@@ -1874,7 +1874,7 @@ class IndividualName(DdiCdiType):
         },
     )
 
-    # cdi:IndividualName-suffix (0..1) | suffix | xsd:string
+    # attribute cdi:IndividualName-suffix (0..1) | suffix | xsd:string
     suffix: Union[str, LiteralField] | None = Field(
         alias="suffix",
         default=None,
@@ -1885,7 +1885,7 @@ class IndividualName(DdiCdiType):
         },
     )
 
-    # cdi:IndividualName-typeOfIndividualName (0..1) | typeOfIndividualName | cdi:ControlledVocabularyEntry
+    # attribute cdi:IndividualName-typeOfIndividualName (0..1) | typeOfIndividualName | cdi:ControlledVocabularyEntry
     typeOfIndividualName: ControlledVocabularyEntry | None = Field(
         alias="typeOfIndividualName",
         default=None,
@@ -1925,7 +1925,7 @@ class InternationalIdentifier(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:InternationalIdentifier-identifierContent (0..1) | identifierContent | xsd:string
+    # attribute cdi:InternationalIdentifier-identifierContent (0..1) | identifierContent | xsd:string
     identifierContent: Union[str, LiteralField] | None = Field(
         alias="identifierContent",
         default=None,
@@ -1936,7 +1936,7 @@ class InternationalIdentifier(DdiCdiType):
         },
     )
 
-    # cdi:InternationalIdentifier-isURI (0..1) | isURI | xsd:boolean
+    # attribute cdi:InternationalIdentifier-isURI (0..1) | isURI | xsd:boolean
     isURI: bool | None = Field(
         alias="isURI",
         default=None,
@@ -1947,7 +1947,7 @@ class InternationalIdentifier(DdiCdiType):
         },
     )
 
-    # cdi:InternationalIdentifier-managingAgency (0..1) | managingAgency | cdi:ControlledVocabularyEntry
+    # attribute cdi:InternationalIdentifier-managingAgency (0..1) | managingAgency | cdi:ControlledVocabularyEntry
     managingAgency: ControlledVocabularyEntry | None = Field(
         alias="managingAgency",
         default=None,
@@ -1984,7 +1984,7 @@ class InternationalRegistrationDataIdentifier(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:InternationalRegistrationDataIdentifier-dataIdentifier (1..1) | dataIdentifier | xsd:string
+    # attribute cdi:InternationalRegistrationDataIdentifier-dataIdentifier (1..1) | dataIdentifier | xsd:string
     dataIdentifier: Union[str, LiteralField] = Field(
         alias="dataIdentifier",
         description="Identifier assigned to an Administered Item within a Registration Authority, hereafter called Data Identifier (DI). The DI is called 'id' in DDI-Codebook and DDI-Lifecycle.",
@@ -1994,7 +1994,7 @@ class InternationalRegistrationDataIdentifier(DdiCdiType):
         },
     )
 
-    # cdi:InternationalRegistrationDataIdentifier-registrationAuthorityIdentifier (1..1) | registrationAuthorityIdentifier | xsd:string
+    # attribute cdi:InternationalRegistrationDataIdentifier-registrationAuthorityIdentifier (1..1) | registrationAuthorityIdentifier | xsd:string
     registrationAuthorityIdentifier: Union[str, LiteralField] = Field(
         alias="registrationAuthorityIdentifier",
         description="Identifier assigned to a Registration Authority, hereafter called Registration Authority Identifier (RAI). The RAI is called 'agency' in DDI-Codebook and DDI-Lifecycle.",
@@ -2004,7 +2004,7 @@ class InternationalRegistrationDataIdentifier(DdiCdiType):
         },
     )
 
-    # cdi:InternationalRegistrationDataIdentifier-versionIdentifier (1..1) | versionIdentifier | xsd:string
+    # attribute cdi:InternationalRegistrationDataIdentifier-versionIdentifier (1..1) | versionIdentifier | xsd:string
     versionIdentifier: Union[str, LiteralField] = Field(
         alias="versionIdentifier",
         description="Identifier assigned to a version under which an Administered Item registration is submitted or updated hereafter called Version Identifier (VI). The VI is called \"version\" in DDI-Codebook and DDI-Lifecycle.",
@@ -2039,7 +2039,7 @@ class InternationalString(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:InternationalString-languageSpecificString (0..*) | languageSpecificString | cdi:LanguageString
+    # attribute cdi:InternationalString-languageSpecificString (0..*) | languageSpecificString | cdi:LanguageString
     languageSpecificString: list[LanguageString] | None = Field(
         alias="languageSpecificString",
         default=None,
@@ -2075,7 +2075,7 @@ class LanguageString(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:LanguageString-content (1..1) | content | xsd:string
+    # attribute cdi:LanguageString-content (1..1) | content | xsd:string
     content: Union[str, LiteralField] = Field(
         alias="content",
         description="The content of the string.",
@@ -2085,7 +2085,7 @@ class LanguageString(DdiCdiType):
         },
     )
 
-    # cdi:LanguageString-isTranslatable (0..1) | isTranslatable | xsd:boolean
+    # attribute cdi:LanguageString-isTranslatable (0..1) | isTranslatable | xsd:boolean
     isTranslatable: bool | None = Field(
         alias="isTranslatable",
         default=None,
@@ -2096,7 +2096,7 @@ class LanguageString(DdiCdiType):
         },
     )
 
-    # cdi:LanguageString-isTranslated (0..1) | isTranslated | xsd:boolean
+    # attribute cdi:LanguageString-isTranslated (0..1) | isTranslated | xsd:boolean
     isTranslated: bool | None = Field(
         alias="isTranslated",
         default=None,
@@ -2107,7 +2107,7 @@ class LanguageString(DdiCdiType):
         },
     )
 
-    # cdi:LanguageString-language (0..1) | language | xsd:language
+    # attribute cdi:LanguageString-language (0..1) | language | xsd:language
     language: Union[str, LiteralField] | None = Field(
         alias="language",
         default=None,
@@ -2118,7 +2118,7 @@ class LanguageString(DdiCdiType):
         },
     )
 
-    # cdi:LanguageString-scope (0..1) | scope | xsd:string
+    # attribute cdi:LanguageString-scope (0..1) | scope | xsd:string
     scope: Union[str, LiteralField] | None = Field(
         alias="scope",
         default=None,
@@ -2129,7 +2129,7 @@ class LanguageString(DdiCdiType):
         },
     )
 
-    # cdi:LanguageString-structureUsed (0..1) | structureUsed | cdi:ControlledVocabularyEntry
+    # attribute cdi:LanguageString-structureUsed (0..1) | structureUsed | cdi:ControlledVocabularyEntry
     structureUsed: ControlledVocabularyEntry | None = Field(
         alias="structureUsed",
         default=None,
@@ -2140,7 +2140,7 @@ class LanguageString(DdiCdiType):
         },
     )
 
-    # cdi:LanguageString-translationDate (0..1) | translationDate | xsd:date
+    # attribute cdi:LanguageString-translationDate (0..1) | translationDate | xsd:date
     translationDate: Union[date, datetime] | None = Field(
         alias="translationDate",
         default=None,
@@ -2151,7 +2151,7 @@ class LanguageString(DdiCdiType):
         },
     )
 
-    # cdi:LanguageString-translationSourceLanguage (0..*) | translationSourceLanguage | xsd:language
+    # attribute cdi:LanguageString-translationSourceLanguage (0..*) | translationSourceLanguage | xsd:language
     translationSourceLanguage: list[Union[str, LiteralField]] | None = Field(
         alias="translationSourceLanguage",
         default=None,
@@ -2191,7 +2191,7 @@ class LicenseInformation(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:LicenseInformation-contact (0..*) | contact | cdi:ContactInformation
+    # attribute cdi:LicenseInformation-contact (0..*) | contact | cdi:ContactInformation
     contact: list[ContactInformation] | None = Field(
         alias="contact",
         default=None,
@@ -2202,7 +2202,7 @@ class LicenseInformation(DdiCdiType):
         },
     )
 
-    # cdi:LicenseInformation-description (0..*) | description | cdi:InternationalString
+    # attribute cdi:LicenseInformation-description (0..*) | description | cdi:InternationalString
     description: list[InternationalString] | None = Field(
         alias="description",
         default=None,
@@ -2213,7 +2213,7 @@ class LicenseInformation(DdiCdiType):
         },
     )
 
-    # cdi:LicenseInformation-licenseAgent (0..*) | licenseAgent | cdi:AgentInRole
+    # attribute cdi:LicenseInformation-licenseAgent (0..*) | licenseAgent | cdi:AgentInRole
     licenseAgent: list[AgentInRole] | None = Field(
         alias="licenseAgent",
         default=None,
@@ -2224,7 +2224,7 @@ class LicenseInformation(DdiCdiType):
         },
     )
 
-    # cdi:LicenseInformation-licenseReference (0..*) | licenseReference | cdi:Reference
+    # attribute cdi:LicenseInformation-licenseReference (0..*) | licenseReference | cdi:Reference
     licenseReference: list[Reference] | None = Field(
         alias="licenseReference",
         default=None,
@@ -2260,7 +2260,7 @@ class ModelIdentification(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ModelIdentification-acronym (1..1) | acronym | xsd:string
+    # attribute cdi:ModelIdentification-acronym (1..1) | acronym | xsd:string
     acronym: Union[str, LiteralField] = Field(
         alias="acronym",
         description="Acronym of the model.",
@@ -2270,7 +2270,7 @@ class ModelIdentification(DdiCdiType):
         },
     )
 
-    # cdi:ModelIdentification-language (1..1) | language | xsd:string
+    # attribute cdi:ModelIdentification-language (1..1) | language | xsd:string
     language: Union[str, LiteralField] = Field(
         alias="language",
         description="Language of the model.",
@@ -2280,7 +2280,7 @@ class ModelIdentification(DdiCdiType):
         },
     )
 
-    # cdi:ModelIdentification-majorVersion (1..1) | majorVersion | xsd:integer
+    # attribute cdi:ModelIdentification-majorVersion (1..1) | majorVersion | xsd:integer
     majorVersion: int = Field(
         alias="majorVersion",
         description="Major version number of the model.",
@@ -2290,7 +2290,7 @@ class ModelIdentification(DdiCdiType):
         },
     )
 
-    # cdi:ModelIdentification-minorVersion (1..1) | minorVersion | xsd:integer
+    # attribute cdi:ModelIdentification-minorVersion (1..1) | minorVersion | xsd:integer
     minorVersion: int = Field(
         alias="minorVersion",
         description="Minor version number of the model.",
@@ -2300,7 +2300,7 @@ class ModelIdentification(DdiCdiType):
         },
     )
 
-    # cdi:ModelIdentification-subtitle (1..1) | subtitle | xsd:string
+    # attribute cdi:ModelIdentification-subtitle (1..1) | subtitle | xsd:string
     subtitle: Union[str, LiteralField] = Field(
         alias="subtitle",
         description="Subtitle of the model.",
@@ -2310,7 +2310,7 @@ class ModelIdentification(DdiCdiType):
         },
     )
 
-    # cdi:ModelIdentification-title (1..1) | title | xsd:string
+    # attribute cdi:ModelIdentification-title (1..1) | title | xsd:string
     title: Union[str, LiteralField] = Field(
         alias="title",
         description="Title of the model.",
@@ -2320,7 +2320,7 @@ class ModelIdentification(DdiCdiType):
         },
     )
 
-    # cdi:ModelIdentification-uri (1..1) | uri | xsd:string
+    # attribute cdi:ModelIdentification-uri (1..1) | uri | xsd:string
     uri: Union[str, LiteralField] = Field(
         alias="uri",
         description="URI of the specification.",
@@ -2355,7 +2355,7 @@ class NonDdiIdentifier(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:NonDdiIdentifier-managingAgency (0..1) | managingAgency | xsd:string
+    # attribute cdi:NonDdiIdentifier-managingAgency (0..1) | managingAgency | xsd:string
     managingAgency: Union[str, LiteralField] | None = Field(
         alias="managingAgency",
         default=None,
@@ -2366,7 +2366,7 @@ class NonDdiIdentifier(DdiCdiType):
         },
     )
 
-    # cdi:NonDdiIdentifier-type (1..1) | type | xsd:string
+    # attribute cdi:NonDdiIdentifier-type (1..1) | type | xsd:string
     type: Union[str, LiteralField] = Field(
         alias="type",
         description="The scheme of identifier, as distinct from a URI or a DDI-conforming identifier.",
@@ -2376,7 +2376,7 @@ class NonDdiIdentifier(DdiCdiType):
         },
     )
 
-    # cdi:NonDdiIdentifier-value (1..1) | value | xsd:string
+    # attribute cdi:NonDdiIdentifier-value (1..1) | value | xsd:string
     value: Union[str, LiteralField] = Field(
         alias="value",
         description="The identifier, structured according to the specified type.",
@@ -2386,7 +2386,7 @@ class NonDdiIdentifier(DdiCdiType):
         },
     )
 
-    # cdi:NonDdiIdentifier-version (0..1) | version | xsd:string
+    # attribute cdi:NonDdiIdentifier-version (0..1) | version | xsd:string
     version: Union[str, LiteralField] | None = Field(
         alias="version",
         default=None,
@@ -2422,7 +2422,7 @@ class NonIsoDate(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:NonIsoDate-calendar (0..1) | calendar | cdi:ControlledVocabularyEntry
+    # attribute cdi:NonIsoDate-calendar (0..1) | calendar | cdi:ControlledVocabularyEntry
     calendar: ControlledVocabularyEntry | None = Field(
         alias="calendar",
         default=None,
@@ -2433,7 +2433,7 @@ class NonIsoDate(DdiCdiType):
         },
     )
 
-    # cdi:NonIsoDate-dateContent (1..1) | dateContent | xsd:string
+    # attribute cdi:NonIsoDate-dateContent (1..1) | dateContent | xsd:string
     dateContent: Union[str, LiteralField] = Field(
         alias="dateContent",
         description="This is the date expressed in a non-ISO compliant structure. Primarily used to retain legacy content or to express non-Gregorian calendar dates.",
@@ -2443,7 +2443,7 @@ class NonIsoDate(DdiCdiType):
         },
     )
 
-    # cdi:NonIsoDate-nonIsoDateFormat (0..1) | nonIsoDateFormat | cdi:ControlledVocabularyEntry
+    # attribute cdi:NonIsoDate-nonIsoDateFormat (0..1) | nonIsoDateFormat | cdi:ControlledVocabularyEntry
     nonIsoDateFormat: ControlledVocabularyEntry | None = Field(
         alias="nonIsoDateFormat",
         default=None,
@@ -2483,7 +2483,7 @@ class ObjectName(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ObjectName-context (0..1) | context | cdi:ControlledVocabularyEntry
+    # attribute cdi:ObjectName-context (0..1) | context | cdi:ControlledVocabularyEntry
     context: ControlledVocabularyEntry | None = Field(
         alias="context",
         default=None,
@@ -2494,7 +2494,7 @@ class ObjectName(DdiCdiType):
         },
     )
 
-    # cdi:ObjectName-name (0..1) | name | xsd:string
+    # attribute cdi:ObjectName-name (0..1) | name | xsd:string
     name: Union[str, LiteralField] | None = Field(
         alias="name",
         default=None,
@@ -2536,7 +2536,7 @@ class PairedControlledVocabularyEntry(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:PairedControlledVocabularyEntry-extent (0..1) | extent | cdi:ControlledVocabularyEntry
+    # attribute cdi:PairedControlledVocabularyEntry-extent (0..1) | extent | cdi:ControlledVocabularyEntry
     extent: ControlledVocabularyEntry | None = Field(
         alias="extent",
         default=None,
@@ -2547,7 +2547,7 @@ class PairedControlledVocabularyEntry(DdiCdiType):
         },
     )
 
-    # cdi:PairedControlledVocabularyEntry-term (1..1) | term | cdi:ControlledVocabularyEntry
+    # attribute cdi:PairedControlledVocabularyEntry-term (1..1) | term | cdi:ControlledVocabularyEntry
     term: ControlledVocabularyEntry = Field(
         alias="term",
         description="The term attributed to the parent class, for example the role of a contributor.",
@@ -2582,7 +2582,7 @@ class PrivateImage(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:PrivateImage-effectiveDates (0..1) | effectiveDates | cdi:DateRange
+    # attribute cdi:PrivateImage-effectiveDates (0..1) | effectiveDates | cdi:DateRange
     effectiveDates: DateRange | None = Field(
         alias="effectiveDates",
         default=None,
@@ -2593,7 +2593,7 @@ class PrivateImage(DdiCdiType):
         },
     )
 
-    # cdi:PrivateImage-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
+    # attribute cdi:PrivateImage-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
     privacy: ControlledVocabularyEntry | None = Field(
         alias="privacy",
         default=None,
@@ -2629,7 +2629,7 @@ class ProvenanceInformation(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ProvenanceInformation-funding (0..*) | funding | cdi:FundingInformation
+    # attribute cdi:ProvenanceInformation-funding (0..*) | funding | cdi:FundingInformation
     funding: list[FundingInformation] | None = Field(
         alias="funding",
         default=None,
@@ -2640,7 +2640,7 @@ class ProvenanceInformation(DdiCdiType):
         },
     )
 
-    # cdi:ProvenanceInformation-provenanceStatement (0..*) | provenanceStatement | cdi:InternationalString
+    # attribute cdi:ProvenanceInformation-provenanceStatement (0..*) | provenanceStatement | cdi:InternationalString
     provenanceStatement: list[InternationalString] | None = Field(
         alias="provenanceStatement",
         default=None,
@@ -2651,7 +2651,7 @@ class ProvenanceInformation(DdiCdiType):
         },
     )
 
-    # cdi:ProvenanceInformation-recordCreationDate (0..1) | recordCreationDate | xsd:date
+    # attribute cdi:ProvenanceInformation-recordCreationDate (0..1) | recordCreationDate | xsd:date
     recordCreationDate: Union[date, datetime] | None = Field(
         alias="recordCreationDate",
         default=None,
@@ -2662,7 +2662,7 @@ class ProvenanceInformation(DdiCdiType):
         },
     )
 
-    # cdi:ProvenanceInformation-recordLastRevisionDate (0..1) | recordLastRevisionDate | xsd:date
+    # attribute cdi:ProvenanceInformation-recordLastRevisionDate (0..1) | recordLastRevisionDate | xsd:date
     recordLastRevisionDate: Union[date, datetime] | None = Field(
         alias="recordLastRevisionDate",
         default=None,
@@ -2698,7 +2698,7 @@ class RationaleDefinition(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:RationaleDefinition-rationaleCode (0..1) | rationaleCode | cdi:ControlledVocabularyEntry
+    # attribute cdi:RationaleDefinition-rationaleCode (0..1) | rationaleCode | cdi:ControlledVocabularyEntry
     rationaleCode: ControlledVocabularyEntry | None = Field(
         alias="rationaleCode",
         default=None,
@@ -2709,7 +2709,7 @@ class RationaleDefinition(DdiCdiType):
         },
     )
 
-    # cdi:RationaleDefinition-rationaleDescription (0..1) | rationaleDescription | cdi:InternationalString
+    # attribute cdi:RationaleDefinition-rationaleDescription (0..1) | rationaleDescription | cdi:InternationalString
     rationaleDescription: InternationalString | None = Field(
         alias="rationaleDescription",
         default=None,
@@ -2745,7 +2745,7 @@ class Reference(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Reference-ddiReference (0..1) | ddiReference | cdi:InternationalRegistrationDataIdentifier
+    # attribute cdi:Reference-ddiReference (0..1) | ddiReference | cdi:InternationalRegistrationDataIdentifier
     ddiReference: InternationalRegistrationDataIdentifier | None = Field(
         alias="ddiReference",
         default=None,
@@ -2756,7 +2756,7 @@ class Reference(DdiCdiType):
         },
     )
 
-    # cdi:Reference-deepLink (0..1) | deepLink | cdi:Selector
+    # attribute cdi:Reference-deepLink (0..1) | deepLink | cdi:Selector
     deepLink: Selector | None = Field(
         alias="deepLink",
         default=None,
@@ -2767,7 +2767,7 @@ class Reference(DdiCdiType):
         },
     )
 
-    # cdi:Reference-description (0..1) | description | xsd:string
+    # attribute cdi:Reference-description (0..1) | description | xsd:string
     description: Union[str, LiteralField] | None = Field(
         alias="description",
         default=None,
@@ -2778,7 +2778,7 @@ class Reference(DdiCdiType):
         },
     )
 
-    # cdi:Reference-location (0..1) | location | cdi:InternationalString
+    # attribute cdi:Reference-location (0..1) | location | cdi:InternationalString
     location: InternationalString | None = Field(
         alias="location",
         default=None,
@@ -2789,7 +2789,7 @@ class Reference(DdiCdiType):
         },
     )
 
-    # cdi:Reference-nonDdiReference (0..*) | nonDdiReference | cdi:NonDdiIdentifier
+    # attribute cdi:Reference-nonDdiReference (0..*) | nonDdiReference | cdi:NonDdiIdentifier
     nonDdiReference: list[NonDdiIdentifier] | None = Field(
         alias="nonDdiReference",
         default=None,
@@ -2800,7 +2800,7 @@ class Reference(DdiCdiType):
         },
     )
 
-    # cdi:Reference-semantic (0..1) | semantic | cdi:ControlledVocabularyEntry
+    # attribute cdi:Reference-semantic (0..1) | semantic | cdi:ControlledVocabularyEntry
     semantic: ControlledVocabularyEntry | None = Field(
         alias="semantic",
         default=None,
@@ -2811,7 +2811,7 @@ class Reference(DdiCdiType):
         },
     )
 
-    # cdi:Reference-uri (0..1) | uri | xsd:anyURI
+    # attribute cdi:Reference-uri (0..1) | uri | xsd:anyURI
     uri: Union[str, LiteralField] | None = Field(
         alias="uri",
         default=None,
@@ -2822,7 +2822,7 @@ class Reference(DdiCdiType):
         },
     )
 
-    # cdi:Reference-validType (0..*) | validType | xsd:string
+    # attribute cdi:Reference-validType (0..*) | validType | xsd:string
     validType: list[Union[str, LiteralField]] | None = Field(
         alias="validType",
         default=None,
@@ -2879,7 +2879,7 @@ class SpatialCoordinate(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:SpatialCoordinate-content (0..1) | content | xsd:string
+    # attribute cdi:SpatialCoordinate-content (0..1) | content | xsd:string
     content: Union[str, LiteralField] | None = Field(
         alias="content",
         default=None,
@@ -2890,7 +2890,7 @@ class SpatialCoordinate(DdiCdiType):
         },
     )
 
-    # cdi:SpatialCoordinate-coordinateType (0..1) | coordinateType | cdi:PointFormat
+    # attribute cdi:SpatialCoordinate-coordinateType (0..1) | coordinateType | cdi:PointFormat
     coordinateType: PointFormat | None = Field(
         alias="coordinateType",
         default=None,
@@ -2926,7 +2926,7 @@ class SpatialPoint(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:SpatialPoint-xCoordinate (0..1) | xCoordinate | cdi:SpatialCoordinate
+    # attribute cdi:SpatialPoint-xCoordinate (0..1) | xCoordinate | cdi:SpatialCoordinate
     xCoordinate: SpatialCoordinate | None = Field(
         alias="xCoordinate",
         default=None,
@@ -2937,7 +2937,7 @@ class SpatialPoint(DdiCdiType):
         },
     )
 
-    # cdi:SpatialPoint-yCoordinate (0..1) | yCoordinate | cdi:SpatialCoordinate
+    # attribute cdi:SpatialPoint-yCoordinate (0..1) | yCoordinate | cdi:SpatialCoordinate
     yCoordinate: SpatialCoordinate | None = Field(
         alias="yCoordinate",
         default=None,
@@ -2994,7 +2994,7 @@ class Statistic(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Statistic-computationBase (0..1) | computationBase | cdi:ComputationBaseList
+    # attribute cdi:Statistic-computationBase (0..1) | computationBase | cdi:ComputationBaseList
     computationBase: ComputationBaseList | None = Field(
         alias="computationBase",
         default=None,
@@ -3005,7 +3005,7 @@ class Statistic(DdiCdiType):
         },
     )
 
-    # cdi:Statistic-content (0..1) | content | xsd:double
+    # attribute cdi:Statistic-content (0..1) | content | xsd:double
     content: float | None = Field(
         alias="content",
         default=None,
@@ -3016,7 +3016,7 @@ class Statistic(DdiCdiType):
         },
     )
 
-    # cdi:Statistic-isWeighted (0..1) | isWeighted | xsd:boolean
+    # attribute cdi:Statistic-isWeighted (0..1) | isWeighted | xsd:boolean
     isWeighted: bool | None = Field(
         alias="isWeighted",
         default=None,
@@ -3027,7 +3027,7 @@ class Statistic(DdiCdiType):
         },
     )
 
-    # cdi:Statistic-typeOfNumericValue (0..1) | typeOfNumericValue | xsd:string
+    # attribute cdi:Statistic-typeOfNumericValue (0..1) | typeOfNumericValue | xsd:string
     typeOfNumericValue: Union[str, LiteralField] | None = Field(
         alias="typeOfNumericValue",
         default=None,
@@ -3063,7 +3063,7 @@ class StructureSpecification(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:StructureSpecification-reflexive (0..1) | reflexive | cdi:MemberRelationshipScope
+    # attribute cdi:StructureSpecification-reflexive (0..1) | reflexive | cdi:MemberRelationshipScope
     reflexive: MemberRelationshipScope | None = Field(
         alias="reflexive",
         default=None,
@@ -3074,7 +3074,7 @@ class StructureSpecification(DdiCdiType):
         },
     )
 
-    # cdi:StructureSpecification-symmetric (0..1) | symmetric | cdi:MemberRelationshipScope
+    # attribute cdi:StructureSpecification-symmetric (0..1) | symmetric | cdi:MemberRelationshipScope
     symmetric: MemberRelationshipScope | None = Field(
         alias="symmetric",
         default=None,
@@ -3085,7 +3085,7 @@ class StructureSpecification(DdiCdiType):
         },
     )
 
-    # cdi:StructureSpecification-transitive (0..1) | transitive | cdi:MemberRelationshipScope
+    # attribute cdi:StructureSpecification-transitive (0..1) | transitive | cdi:MemberRelationshipScope
     transitive: MemberRelationshipScope | None = Field(
         alias="transitive",
         default=None,
@@ -3125,7 +3125,7 @@ class Telephone(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Telephone-effectiveDates (0..1) | effectiveDates | cdi:DateRange
+    # attribute cdi:Telephone-effectiveDates (0..1) | effectiveDates | cdi:DateRange
     effectiveDates: DateRange | None = Field(
         alias="effectiveDates",
         default=None,
@@ -3136,7 +3136,7 @@ class Telephone(DdiCdiType):
         },
     )
 
-    # cdi:Telephone-isPreferred (0..1) | isPreferred | xsd:boolean
+    # attribute cdi:Telephone-isPreferred (0..1) | isPreferred | xsd:boolean
     isPreferred: bool | None = Field(
         alias="isPreferred",
         default=None,
@@ -3147,7 +3147,7 @@ class Telephone(DdiCdiType):
         },
     )
 
-    # cdi:Telephone-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
+    # attribute cdi:Telephone-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
     privacy: ControlledVocabularyEntry | None = Field(
         alias="privacy",
         default=None,
@@ -3158,7 +3158,7 @@ class Telephone(DdiCdiType):
         },
     )
 
-    # cdi:Telephone-telephoneNumber (0..1) | telephoneNumber | xsd:string
+    # attribute cdi:Telephone-telephoneNumber (0..1) | telephoneNumber | xsd:string
     telephoneNumber: Union[str, LiteralField] | None = Field(
         alias="telephoneNumber",
         default=None,
@@ -3169,7 +3169,7 @@ class Telephone(DdiCdiType):
         },
     )
 
-    # cdi:Telephone-typeOfTelephone (0..1) | typeOfTelephone | cdi:ControlledVocabularyEntry
+    # attribute cdi:Telephone-typeOfTelephone (0..1) | typeOfTelephone | cdi:ControlledVocabularyEntry
     typeOfTelephone: ControlledVocabularyEntry | None = Field(
         alias="typeOfTelephone",
         default=None,
@@ -3213,7 +3213,7 @@ class TypedString(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:TypedString-content (1..1) | content | xsd:string
+    # attribute cdi:TypedString-content (1..1) | content | xsd:string
     content: Union[str, LiteralField] = Field(
         alias="content",
         description="Content of the property expressed as a simple string.",
@@ -3223,7 +3223,7 @@ class TypedString(DdiCdiType):
         },
     )
 
-    # cdi:TypedString-typeOfContent (0..1) | typeOfContent | cdi:ControlledVocabularyEntry
+    # attribute cdi:TypedString-typeOfContent (0..1) | typeOfContent | cdi:ControlledVocabularyEntry
     typeOfContent: ControlledVocabularyEntry | None = Field(
         alias="typeOfContent",
         default=None,
@@ -3259,7 +3259,7 @@ class WebLink(DdiCdiType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:WebLink-effectiveDates (0..1) | effectiveDates | cdi:DateRange
+    # attribute cdi:WebLink-effectiveDates (0..1) | effectiveDates | cdi:DateRange
     effectiveDates: DateRange | None = Field(
         alias="effectiveDates",
         default=None,
@@ -3270,7 +3270,7 @@ class WebLink(DdiCdiType):
         },
     )
 
-    # cdi:WebLink-isPreferred (0..1) | isPreferred | xsd:boolean
+    # attribute cdi:WebLink-isPreferred (0..1) | isPreferred | xsd:boolean
     isPreferred: bool | None = Field(
         alias="isPreferred",
         default=None,
@@ -3281,7 +3281,7 @@ class WebLink(DdiCdiType):
         },
     )
 
-    # cdi:WebLink-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
+    # attribute cdi:WebLink-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
     privacy: ControlledVocabularyEntry | None = Field(
         alias="privacy",
         default=None,
@@ -3292,7 +3292,7 @@ class WebLink(DdiCdiType):
         },
     )
 
-    # cdi:WebLink-typeOfWebsite (0..1) | typeOfWebsite | cdi:ControlledVocabularyEntry
+    # attribute cdi:WebLink-typeOfWebsite (0..1) | typeOfWebsite | cdi:ControlledVocabularyEntry
     typeOfWebsite: ControlledVocabularyEntry | None = Field(
         alias="typeOfWebsite",
         default=None,
@@ -3303,7 +3303,7 @@ class WebLink(DdiCdiType):
         },
     )
 
-    # cdi:WebLink-uri (0..1) | uri | xsd:anyURI
+    # attribute cdi:WebLink-uri (0..1) | uri | xsd:anyURI
     uri: Union[str, LiteralField] | None = Field(
         alias="uri",
         default=None,
@@ -3339,7 +3339,7 @@ class BibliographicName(InternationalString):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:BibliographicName-affiliation (0..1) | affiliation | xsd:string
+    # attribute cdi:BibliographicName-affiliation (0..1) | affiliation | xsd:string
     affiliation: Union[str, LiteralField] | None = Field(
         alias="affiliation",
         default=None,
@@ -3375,7 +3375,7 @@ class LabelForDisplay(InternationalString):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:LabelForDisplay-locationVariant (0..1) | locationVariant | cdi:ControlledVocabularyEntry
+    # attribute cdi:LabelForDisplay-locationVariant (0..1) | locationVariant | cdi:ControlledVocabularyEntry
     locationVariant: ControlledVocabularyEntry | None = Field(
         alias="locationVariant",
         default=None,
@@ -3386,7 +3386,7 @@ class LabelForDisplay(InternationalString):
         },
     )
 
-    # cdi:LabelForDisplay-maxLength (0..1) | maxLength | xsd:integer
+    # attribute cdi:LabelForDisplay-maxLength (0..1) | maxLength | xsd:integer
     maxLength: int | None = Field(
         alias="maxLength",
         default=None,
@@ -3397,7 +3397,7 @@ class LabelForDisplay(InternationalString):
         },
     )
 
-    # cdi:LabelForDisplay-validDates (0..1) | validDates | cdi:DateRange
+    # attribute cdi:LabelForDisplay-validDates (0..1) | validDates | cdi:DateRange
     validDates: DateRange | None = Field(
         alias="validDates",
         default=None,
@@ -3433,7 +3433,7 @@ class OrganizationName(ObjectName):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:OrganizationName-abbreviation (0..1) | abbreviation | cdi:InternationalString
+    # attribute cdi:OrganizationName-abbreviation (0..1) | abbreviation | cdi:InternationalString
     abbreviation: InternationalString | None = Field(
         alias="abbreviation",
         default=None,
@@ -3444,7 +3444,7 @@ class OrganizationName(ObjectName):
         },
     )
 
-    # cdi:OrganizationName-effectiveDates (0..1) | effectiveDates | cdi:DateRange
+    # attribute cdi:OrganizationName-effectiveDates (0..1) | effectiveDates | cdi:DateRange
     effectiveDates: DateRange | None = Field(
         alias="effectiveDates",
         default=None,
@@ -3455,7 +3455,7 @@ class OrganizationName(ObjectName):
         },
     )
 
-    # cdi:OrganizationName-isFormal (0..1) | isFormal | xsd:boolean
+    # attribute cdi:OrganizationName-isFormal (0..1) | isFormal | xsd:boolean
     isFormal: bool | None = Field(
         alias="isFormal",
         default=None,
@@ -3466,7 +3466,7 @@ class OrganizationName(ObjectName):
         },
     )
 
-    # cdi:OrganizationName-typeOfOrganizationName (0..1) | typeOfOrganizationName | cdi:ControlledVocabularyEntry
+    # attribute cdi:OrganizationName-typeOfOrganizationName (0..1) | typeOfOrganizationName | cdi:ControlledVocabularyEntry
     typeOfOrganizationName: ControlledVocabularyEntry | None = Field(
         alias="typeOfOrganizationName",
         default=None,
@@ -3502,7 +3502,7 @@ class ObjectAttributeSelector(Selector):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ObjectAttributeSelector-refinedBy (0..1) | refinedBy | cdi:ObjectAttributeSelector
+    # attribute cdi:ObjectAttributeSelector-refinedBy (0..1) | refinedBy | cdi:ObjectAttributeSelector
     refinedBy: ObjectAttributeSelector | None = Field(
         alias="refinedBy",
         default=None,
@@ -3513,7 +3513,7 @@ class ObjectAttributeSelector(Selector):
         },
     )
 
-    # cdi:ObjectAttributeSelector-refinedByOrderNumber (0..1) | refinedByOrderNumber | xsd:integer
+    # attribute cdi:ObjectAttributeSelector-refinedByOrderNumber (0..1) | refinedByOrderNumber | xsd:integer
     refinedByOrderNumber: int | None = Field(
         alias="refinedByOrderNumber",
         default=None,
@@ -3524,7 +3524,7 @@ class ObjectAttributeSelector(Selector):
         },
     )
 
-    # cdi:ObjectAttributeSelector-value (0..1) | value | xsd:string
+    # attribute cdi:ObjectAttributeSelector-value (0..1) | value | xsd:string
     value: Union[str, LiteralField] | None = Field(
         alias="value",
         default=None,
@@ -3560,7 +3560,7 @@ class TextPositionSelector(Selector):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:TextPositionSelector-end (1..1) | end | xsd:integer
+    # attribute cdi:TextPositionSelector-end (1..1) | end | xsd:integer
     end: int = Field(
         alias="end",
         description="Position of the last character of the selection. Position 8 would be the end of the word \"Position\" of the previous sentence.",
@@ -3570,7 +3570,7 @@ class TextPositionSelector(Selector):
         },
     )
 
-    # cdi:TextPositionSelector-start (1..1) | start | xsd:integer
+    # attribute cdi:TextPositionSelector-start (1..1) | start | xsd:integer
     start: int = Field(
         alias="start",
         description="Position of the first character of the selection. Position 0 would be the start of the word \"Position\" of the previous sentence.",
@@ -3605,7 +3605,7 @@ class GeoRole(SpecializationRole):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:GeoRole-geography (0..1) | geography | cdi:ControlledVocabularyEntry
+    # attribute cdi:GeoRole-geography (0..1) | geography | cdi:ControlledVocabularyEntry
     geography: ControlledVocabularyEntry | None = Field(
         alias="geography",
         default=None,
@@ -3641,7 +3641,7 @@ class TimeRole(SpecializationRole):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:TimeRole-time (0..1) | time | cdi:ControlledVocabularyEntry
+    # attribute cdi:TimeRole-time (0..1) | time | cdi:ControlledVocabularyEntry
     time: ControlledVocabularyEntry | None = Field(
         alias="time",
         default=None,
@@ -3690,7 +3690,7 @@ class Activity(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Activity-definition (0..1) | definition | cdi:InternationalString
+    # attribute cdi:Activity-definition (0..1) | definition | cdi:InternationalString
     definition: InternationalString | None = Field(
         alias="definition",
         default=None,
@@ -3701,7 +3701,7 @@ class Activity(DdiCdiClass):
         },
     )
 
-    # cdi:Activity-description (0..1) | description | xsd:string
+    # attribute cdi:Activity-description (0..1) | description | xsd:string
     description: Union[str, LiteralField] | None = Field(
         alias="description",
         default=None,
@@ -3712,7 +3712,7 @@ class Activity(DdiCdiClass):
         },
     )
 
-    # cdi:Activity-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
+    # attribute cdi:Activity-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
     displayLabel: list[LabelForDisplay] | None = Field(
         alias="displayLabel",
         default=None,
@@ -3723,7 +3723,7 @@ class Activity(DdiCdiClass):
         },
     )
 
-    # cdi:Activity-entityProduced (0..*) | entityProduced | cdi:Reference
+    # attribute cdi:Activity-entityProduced (0..*) | entityProduced | cdi:Reference
     entityProduced: list[Reference] | None = Field(
         alias="entityProduced",
         default=None,
@@ -3734,7 +3734,7 @@ class Activity(DdiCdiClass):
         },
     )
 
-    # cdi:Activity-entityUsed (0..*) | entityUsed | cdi:Reference
+    # attribute cdi:Activity-entityUsed (0..*) | entityUsed | cdi:Reference
     entityUsed: list[Reference] | None = Field(
         alias="entityUsed",
         default=None,
@@ -3745,7 +3745,7 @@ class Activity(DdiCdiClass):
         },
     )
 
-    # cdi:Activity-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:Activity-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -3756,7 +3756,7 @@ class Activity(DdiCdiClass):
         },
     )
 
-    # cdi:Activity-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:Activity-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -3767,7 +3767,7 @@ class Activity(DdiCdiClass):
         },
     )
 
-    # cdi:Activity-standardModelMapping (0..*) | standardModelMapping | cdi:Reference
+    # attribute cdi:Activity-standardModelMapping (0..*) | standardModelMapping | cdi:Reference
     standardModelMapping: list[Reference] | None = Field(
         alias="standardModelMapping",
         default=None,
@@ -3782,7 +3782,7 @@ class Activity(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:Activity_has_Step (0..*) | has_Step | cdi:Step
+    # association cdi:Activity_has_Step (0..*) | has_Step | cdi:Step
     has_Step: list[URIRef] | None = Field(
         alias="has_Step",
         default=None,
@@ -3793,7 +3793,7 @@ class Activity(DdiCdiClass):
         },
     )
 
-    # cdi:Activity_hasInternal_ControlLogic (0..*) | hasInternal | cdi:ControlLogic
+    # association cdi:Activity_hasInternal_ControlLogic (0..*) | hasInternal | cdi:ControlLogic
     hasInternal: list[URIRef] | None = Field(
         alias="hasInternal",
         default=None,
@@ -3804,7 +3804,7 @@ class Activity(DdiCdiClass):
         },
     )
 
-    # cdi:Activity_hasSubActivity_Activity (0..*) | hasSubActivity | cdi:Activity
+    # association cdi:Activity_hasSubActivity_Activity (0..*) | hasSubActivity | cdi:Activity
     hasSubActivity: list[URIRef] | None = Field(
         alias="hasSubActivity",
         default=None,
@@ -3848,7 +3848,7 @@ class Agent(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Agent-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:Agent-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -3859,7 +3859,7 @@ class Agent(DdiCdiClass):
         },
     )
 
-    # cdi:Agent-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:Agent-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -3870,7 +3870,7 @@ class Agent(DdiCdiClass):
         },
     )
 
-    # cdi:Agent-image (0..*) | image | cdi:PrivateImage
+    # attribute cdi:Agent-image (0..*) | image | cdi:PrivateImage
     image: list[PrivateImage] | None = Field(
         alias="image",
         default=None,
@@ -3881,7 +3881,7 @@ class Agent(DdiCdiClass):
         },
     )
 
-    # cdi:Agent-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:Agent-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -3925,7 +3925,7 @@ class AgentListing(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:AgentListing-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
+    # attribute cdi:AgentListing-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
     allowsDuplicates: bool = Field(
         alias="allowsDuplicates",
         description="""If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical \"bag\" permits duplicates and is unordered - a \"set\" does not have duplicates and may be ordered.)""",
@@ -3935,7 +3935,7 @@ class AgentListing(DdiCdiClass):
         },
     )
 
-    # cdi:AgentListing-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:AgentListing-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -3946,7 +3946,7 @@ class AgentListing(DdiCdiClass):
         },
     )
 
-    # cdi:AgentListing-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:AgentListing-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -3957,7 +3957,7 @@ class AgentListing(DdiCdiClass):
         },
     )
 
-    # cdi:AgentListing-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:AgentListing-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -3972,7 +3972,7 @@ class AgentListing(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:AgentListing_has_Agent (0..*) | has_Agent | cdi:Agent
+    # association cdi:AgentListing_has_Agent (0..*) | has_Agent | cdi:Agent
     has_Agent: list[URIRef] | None = Field(
         alias="has_Agent",
         default=None,
@@ -3983,7 +3983,7 @@ class AgentListing(DdiCdiClass):
         },
     )
 
-    # cdi:AgentListing_has_AgentPosition (0..*) | has_AgentPosition | cdi:AgentPosition
+    # association cdi:AgentListing_has_AgentPosition (0..*) | has_AgentPosition | cdi:AgentPosition
     has_AgentPosition: list[URIRef] | None = Field(
         alias="has_AgentPosition",
         default=None,
@@ -3994,7 +3994,7 @@ class AgentListing(DdiCdiClass):
         },
     )
 
-    # cdi:AgentListing_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
+    # association cdi:AgentListing_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
     isDefinedBy_Concept: list[URIRef] | None = Field(
         alias="isDefinedBy_Concept",
         default=None,
@@ -4005,7 +4005,7 @@ class AgentListing(DdiCdiClass):
         },
     )
 
-    # cdi:AgentListing_isMaintainedBy_Agent (0..1) | isMaintainedBy | cdi:Agent
+    # association cdi:AgentListing_isMaintainedBy_Agent (0..1) | isMaintainedBy | cdi:Agent
     isMaintainedBy: URIRef | None = Field(
         alias="isMaintainedBy",
         default=None,
@@ -4041,7 +4041,7 @@ class AgentPosition(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:AgentPosition-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:AgentPosition-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -4052,7 +4052,7 @@ class AgentPosition(DdiCdiClass):
         },
     )
 
-    # cdi:AgentPosition-value (1..1) | value | xsd:integer
+    # attribute cdi:AgentPosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="The index of the agent within an agent listing.",
@@ -4066,7 +4066,7 @@ class AgentPosition(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:AgentPosition_indexes_Agent (0..1) | indexes | cdi:Agent
+    # association cdi:AgentPosition_indexes_Agent (0..1) | indexes | cdi:Agent
     indexes: URIRef | None = Field(
         alias="indexes",
         default=None,
@@ -4110,7 +4110,7 @@ class AgentRelationship(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:AgentRelationship-effectiveDates (0..1) | effectiveDates | cdi:DateRange
+    # attribute cdi:AgentRelationship-effectiveDates (0..1) | effectiveDates | cdi:DateRange
     effectiveDates: DateRange | None = Field(
         alias="effectiveDates",
         default=None,
@@ -4121,7 +4121,7 @@ class AgentRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:AgentRelationship-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:AgentRelationship-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -4132,7 +4132,7 @@ class AgentRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:AgentRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:AgentRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -4147,7 +4147,7 @@ class AgentRelationship(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:AgentRelationship_hasSource_Agent (1..1) | hasSource | cdi:Agent
+    # association cdi:AgentRelationship_hasSource_Agent (1..1) | hasSource | cdi:Agent
     hasSource: URIRef = Field(
         alias="hasSource",
         description="The subject in the description of a paired relationship – for example the Parent agent in the hierarchical Parent of Child relationship.",
@@ -4157,7 +4157,7 @@ class AgentRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:AgentRelationship_hasTarget_Agent (1..1) | hasTarget | cdi:Agent
+    # association cdi:AgentRelationship_hasTarget_Agent (1..1) | hasTarget | cdi:Agent
     hasTarget: URIRef = Field(
         alias="hasTarget",
         description="The object in the description of a paired relationship – for example the Object agent in the hierarchical Parent of Child relationship.",
@@ -4200,7 +4200,7 @@ class AgentStructure(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:AgentStructure-effectiveDates (0..1) | effectiveDates | cdi:DateRange
+    # attribute cdi:AgentStructure-effectiveDates (0..1) | effectiveDates | cdi:DateRange
     effectiveDates: DateRange | None = Field(
         alias="effectiveDates",
         default=None,
@@ -4211,7 +4211,7 @@ class AgentStructure(DdiCdiClass):
         },
     )
 
-    # cdi:AgentStructure-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:AgentStructure-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -4222,7 +4222,7 @@ class AgentStructure(DdiCdiClass):
         },
     )
 
-    # cdi:AgentStructure-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:AgentStructure-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -4233,7 +4233,7 @@ class AgentStructure(DdiCdiClass):
         },
     )
 
-    # cdi:AgentStructure-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
+    # attribute cdi:AgentStructure-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
     privacy: ControlledVocabularyEntry | None = Field(
         alias="privacy",
         default=None,
@@ -4244,7 +4244,7 @@ class AgentStructure(DdiCdiClass):
         },
     )
 
-    # cdi:AgentStructure-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:AgentStructure-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -4255,7 +4255,7 @@ class AgentStructure(DdiCdiClass):
         },
     )
 
-    # cdi:AgentStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:AgentStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -4266,7 +4266,7 @@ class AgentStructure(DdiCdiClass):
         },
     )
 
-    # cdi:AgentStructure-specification (0..1) | specification | cdi:StructureSpecification
+    # attribute cdi:AgentStructure-specification (0..1) | specification | cdi:StructureSpecification
     specification: StructureSpecification | None = Field(
         alias="specification",
         default=None,
@@ -4277,7 +4277,7 @@ class AgentStructure(DdiCdiClass):
         },
     )
 
-    # cdi:AgentStructure-topology (0..1) | topology | cdi:ControlledVocabularyEntry
+    # attribute cdi:AgentStructure-topology (0..1) | topology | cdi:ControlledVocabularyEntry
     topology: ControlledVocabularyEntry | None = Field(
         alias="topology",
         default=None,
@@ -4288,7 +4288,7 @@ class AgentStructure(DdiCdiClass):
         },
     )
 
-    # cdi:AgentStructure-totality (0..1) | totality | cdi:StructureExtent
+    # attribute cdi:AgentStructure-totality (0..1) | totality | cdi:StructureExtent
     totality: StructureExtent | None = Field(
         alias="totality",
         default=None,
@@ -4303,7 +4303,7 @@ class AgentStructure(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:AgentStructure_has_AgentRelationship (0..*) | has_AgentRelationship | cdi:AgentRelationship
+    # association cdi:AgentStructure_has_AgentRelationship (0..*) | has_AgentRelationship | cdi:AgentRelationship
     has_AgentRelationship: list[URIRef] | None = Field(
         alias="has_AgentRelationship",
         default=None,
@@ -4314,7 +4314,7 @@ class AgentStructure(DdiCdiClass):
         },
     )
 
-    # cdi:AgentStructure_structures_AgentListing (0..1) | structures | cdi:AgentListing
+    # association cdi:AgentStructure_structures_AgentListing (0..1) | structures | cdi:AgentListing
     structures: URIRef | None = Field(
         alias="structures",
         default=None,
@@ -4358,7 +4358,7 @@ class AuthorizationSource(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:AuthorizationSource-authorizationDate (0..1) | authorizationDate | cdi:CombinedDate
+    # attribute cdi:AuthorizationSource-authorizationDate (0..1) | authorizationDate | cdi:CombinedDate
     authorizationDate: CombinedDate | None = Field(
         alias="authorizationDate",
         default=None,
@@ -4369,7 +4369,7 @@ class AuthorizationSource(DdiCdiClass):
         },
     )
 
-    # cdi:AuthorizationSource-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:AuthorizationSource-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -4385,7 +4385,7 @@ class AuthorizationSource(DdiCdiClass):
         },
     )
 
-    # cdi:AuthorizationSource-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:AuthorizationSource-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -4396,7 +4396,7 @@ class AuthorizationSource(DdiCdiClass):
         },
     )
 
-    # cdi:AuthorizationSource-legalMandate (0..1) | legalMandate | cdi:InternationalString
+    # attribute cdi:AuthorizationSource-legalMandate (0..1) | legalMandate | cdi:InternationalString
     legalMandate: InternationalString | None = Field(
         alias="legalMandate",
         default=None,
@@ -4407,7 +4407,7 @@ class AuthorizationSource(DdiCdiClass):
         },
     )
 
-    # cdi:AuthorizationSource-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:AuthorizationSource-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -4418,7 +4418,7 @@ class AuthorizationSource(DdiCdiClass):
         },
     )
 
-    # cdi:AuthorizationSource-statementOfAuthorization (0..1) | statementOfAuthorization | cdi:InternationalString
+    # attribute cdi:AuthorizationSource-statementOfAuthorization (0..1) | statementOfAuthorization | cdi:InternationalString
     statementOfAuthorization: InternationalString | None = Field(
         alias="statementOfAuthorization",
         default=None,
@@ -4433,7 +4433,7 @@ class AuthorizationSource(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:AuthorizationSource_has_Agent (0..*) | has_Agent | cdi:Agent
+    # association cdi:AuthorizationSource_has_Agent (0..*) | has_Agent | cdi:Agent
     has_Agent: list[URIRef] | None = Field(
         alias="has_Agent",
         default=None,
@@ -4469,7 +4469,7 @@ class CategoryPosition(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:CategoryPosition-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:CategoryPosition-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -4480,7 +4480,7 @@ class CategoryPosition(DdiCdiClass):
         },
     )
 
-    # cdi:CategoryPosition-value (1..1) | value | xsd:integer
+    # attribute cdi:CategoryPosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
@@ -4494,7 +4494,7 @@ class CategoryPosition(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:CategoryPosition_indexes_Category (1..1) | indexes | cdi:Category
+    # association cdi:CategoryPosition_indexes_Category (1..1) | indexes | cdi:Category
     indexes: URIRef = Field(
         alias="indexes",
         description="",
@@ -4538,7 +4538,7 @@ class CategoryRelationStructure(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:CategoryRelationStructure-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:CategoryRelationStructure-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -4549,7 +4549,7 @@ class CategoryRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:CategoryRelationStructure-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:CategoryRelationStructure-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -4560,7 +4560,7 @@ class CategoryRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:CategoryRelationStructure-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:CategoryRelationStructure-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -4571,7 +4571,7 @@ class CategoryRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:CategoryRelationStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:CategoryRelationStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -4582,7 +4582,7 @@ class CategoryRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:CategoryRelationStructure-specification (0..1) | specification | cdi:StructureSpecification
+    # attribute cdi:CategoryRelationStructure-specification (0..1) | specification | cdi:StructureSpecification
     specification: StructureSpecification | None = Field(
         alias="specification",
         default=None,
@@ -4593,7 +4593,7 @@ class CategoryRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:CategoryRelationStructure-topology (0..1) | topology | cdi:ControlledVocabularyEntry
+    # attribute cdi:CategoryRelationStructure-topology (0..1) | topology | cdi:ControlledVocabularyEntry
     topology: ControlledVocabularyEntry | None = Field(
         alias="topology",
         default=None,
@@ -4604,7 +4604,7 @@ class CategoryRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:CategoryRelationStructure-totality (0..1) | totality | cdi:StructureExtent
+    # attribute cdi:CategoryRelationStructure-totality (0..1) | totality | cdi:StructureExtent
     totality: StructureExtent | None = Field(
         alias="totality",
         default=None,
@@ -4619,7 +4619,7 @@ class CategoryRelationStructure(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:CategoryRelationStructure_has_CategoryRelationship (0..*) | has_CategoryRelationship | cdi:CategoryRelationship
+    # association cdi:CategoryRelationStructure_has_CategoryRelationship (0..*) | has_CategoryRelationship | cdi:CategoryRelationship
     has_CategoryRelationship: list[URIRef] | None = Field(
         alias="has_CategoryRelationship",
         default=None,
@@ -4630,7 +4630,7 @@ class CategoryRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:CategoryRelationStructure_structures_CategorySet (0..1) | structures | cdi:CategorySet
+    # association cdi:CategoryRelationStructure_structures_CategorySet (0..1) | structures | cdi:CategorySet
     structures: URIRef | None = Field(
         alias="structures",
         default=None,
@@ -4674,7 +4674,7 @@ class CategoryRelationship(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:CategoryRelationship-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:CategoryRelationship-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -4685,7 +4685,7 @@ class CategoryRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:CategoryRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:CategoryRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -4700,7 +4700,7 @@ class CategoryRelationship(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:CategoryRelationship_hasSource_Category (0..*) | hasSource | cdi:Category
+    # association cdi:CategoryRelationship_hasSource_Category (0..*) | hasSource | cdi:Category
     hasSource: list[URIRef] | None = Field(
         alias="hasSource",
         default=None,
@@ -4711,7 +4711,7 @@ class CategoryRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:CategoryRelationship_hasTarget_Category (0..*) | hasTarget | cdi:Category
+    # association cdi:CategoryRelationship_hasTarget_Category (0..*) | hasTarget | cdi:Category
     hasTarget: list[URIRef] | None = Field(
         alias="hasTarget",
         default=None,
@@ -4755,7 +4755,7 @@ class CategoryStatistic(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:CategoryStatistic-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:CategoryStatistic-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -4766,7 +4766,7 @@ class CategoryStatistic(DdiCdiClass):
         },
     )
 
-    # cdi:CategoryStatistic-statistic (0..*) | statistic | cdi:Statistic
+    # attribute cdi:CategoryStatistic-statistic (0..*) | statistic | cdi:Statistic
     statistic: list[Statistic] | None = Field(
         alias="statistic",
         default=None,
@@ -4777,7 +4777,7 @@ class CategoryStatistic(DdiCdiClass):
         },
     )
 
-    # cdi:CategoryStatistic-typeOfCategoryStatistic (0..1) | typeOfCategoryStatistic | cdi:ControlledVocabularyEntry
+    # attribute cdi:CategoryStatistic-typeOfCategoryStatistic (0..1) | typeOfCategoryStatistic | cdi:ControlledVocabularyEntry
     typeOfCategoryStatistic: ControlledVocabularyEntry | None = Field(
         alias="typeOfCategoryStatistic",
         default=None,
@@ -4792,7 +4792,7 @@ class CategoryStatistic(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:CategoryStatistic_appliesTo_InstanceVariable (1..*) | appliesTo | cdi:InstanceVariable
+    # association cdi:CategoryStatistic_appliesTo_InstanceVariable (1..*) | appliesTo | cdi:InstanceVariable
     appliesTo: list[URIRef] = Field(
         alias="appliesTo",
         description="",
@@ -4802,7 +4802,7 @@ class CategoryStatistic(DdiCdiClass):
         },
     )
 
-    # cdi:CategoryStatistic_for_Category (0..1) | for | cdi:Category
+    # association cdi:CategoryStatistic_for_Category (0..1) | for | cdi:Category
     for_: URIRef | None = Field(
         alias="for",
         default=None,
@@ -4846,7 +4846,7 @@ class ClassificationFamily(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ClassificationFamily-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:ClassificationFamily-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -4862,7 +4862,7 @@ class ClassificationFamily(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationFamily-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ClassificationFamily-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -4873,7 +4873,7 @@ class ClassificationFamily(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationFamily-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:ClassificationFamily-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -4884,7 +4884,7 @@ class ClassificationFamily(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationFamily-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:ClassificationFamily-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -4899,7 +4899,7 @@ class ClassificationFamily(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ClassificationFamily_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
+    # association cdi:ClassificationFamily_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
     isDefinedBy_Concept: list[URIRef] | None = Field(
         alias="isDefinedBy_Concept",
         default=None,
@@ -4910,7 +4910,7 @@ class ClassificationFamily(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationFamily_groups_ClassificationSeries (0..*) | groups | cdi:ClassificationSeries
+    # association cdi:ClassificationFamily_groups_ClassificationSeries (0..*) | groups | cdi:ClassificationSeries
     groups: list[URIRef] | None = Field(
         alias="groups",
         default=None,
@@ -4921,7 +4921,7 @@ class ClassificationFamily(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationFamily_uses_ClassificationIndex (0..*) | uses_ClassificationIndex | cdi:ClassificationIndex
+    # association cdi:ClassificationFamily_uses_ClassificationIndex (0..*) | uses_ClassificationIndex | cdi:ClassificationIndex
     uses_ClassificationIndex: list[URIRef] | None = Field(
         alias="uses_ClassificationIndex",
         default=None,
@@ -4965,7 +4965,7 @@ class ClassificationIndex(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ClassificationIndex-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
+    # attribute cdi:ClassificationIndex-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
     allowsDuplicates: bool = Field(
         alias="allowsDuplicates",
         description="If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical “bag” permits duplicates and is unordered - a “set” does not have duplicates and may be ordered.)",
@@ -4975,7 +4975,7 @@ class ClassificationIndex(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationIndex-availableLanguage (0..*) | availableLanguage | xsd:language
+    # attribute cdi:ClassificationIndex-availableLanguage (0..*) | availableLanguage | xsd:language
     availableLanguage: list[Union[str, LiteralField]] | None = Field(
         alias="availableLanguage",
         default=None,
@@ -4986,7 +4986,7 @@ class ClassificationIndex(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationIndex-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:ClassificationIndex-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -5002,7 +5002,7 @@ class ClassificationIndex(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationIndex-codingInstruction (0..*) | codingInstruction | cdi:CommandCode
+    # attribute cdi:ClassificationIndex-codingInstruction (0..*) | codingInstruction | cdi:CommandCode
     codingInstruction: list[CommandCode] | None = Field(
         alias="codingInstruction",
         default=None,
@@ -5013,7 +5013,7 @@ class ClassificationIndex(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationIndex-corrections (0..*) | corrections | cdi:InternationalString
+    # attribute cdi:ClassificationIndex-corrections (0..*) | corrections | cdi:InternationalString
     corrections: list[InternationalString] | None = Field(
         alias="corrections",
         default=None,
@@ -5024,7 +5024,7 @@ class ClassificationIndex(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationIndex-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ClassificationIndex-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -5035,7 +5035,7 @@ class ClassificationIndex(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationIndex-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:ClassificationIndex-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -5046,7 +5046,7 @@ class ClassificationIndex(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationIndex-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:ClassificationIndex-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -5057,7 +5057,7 @@ class ClassificationIndex(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationIndex-releaseDate (0..1) | releaseDate | cdi:CombinedDate
+    # attribute cdi:ClassificationIndex-releaseDate (0..1) | releaseDate | cdi:CombinedDate
     releaseDate: CombinedDate | None = Field(
         alias="releaseDate",
         default=None,
@@ -5072,7 +5072,7 @@ class ClassificationIndex(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ClassificationIndex_hasContact_Agent (0..*) | hasContact | cdi:Agent
+    # association cdi:ClassificationIndex_hasContact_Agent (0..*) | hasContact | cdi:Agent
     hasContact: list[URIRef] | None = Field(
         alias="hasContact",
         default=None,
@@ -5083,7 +5083,7 @@ class ClassificationIndex(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationIndex_isMaintainedBy_Agent (0..1) | isMaintainedBy | cdi:Agent
+    # association cdi:ClassificationIndex_isMaintainedBy_Agent (0..1) | isMaintainedBy | cdi:Agent
     isMaintainedBy: URIRef | None = Field(
         alias="isMaintainedBy",
         default=None,
@@ -5094,7 +5094,7 @@ class ClassificationIndex(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationIndex_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
+    # association cdi:ClassificationIndex_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
     isDefinedBy_Concept: list[URIRef] | None = Field(
         alias="isDefinedBy_Concept",
         default=None,
@@ -5105,7 +5105,7 @@ class ClassificationIndex(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationIndex_has_ClassificationIndexEntry (0..*) | has_ClassificationIndexEntry | cdi:ClassificationIndexEntry
+    # association cdi:ClassificationIndex_has_ClassificationIndexEntry (0..*) | has_ClassificationIndexEntry | cdi:ClassificationIndexEntry
     has_ClassificationIndexEntry: list[URIRef] | None = Field(
         alias="has_ClassificationIndexEntry",
         default=None,
@@ -5116,7 +5116,7 @@ class ClassificationIndex(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationIndex_has_ClassificationIndexEntryPosition (0..*) | has_ClassificationIndexEntryPosition | cdi:ClassificationIndexEntryPosition
+    # association cdi:ClassificationIndex_has_ClassificationIndexEntryPosition (0..*) | has_ClassificationIndexEntryPosition | cdi:ClassificationIndexEntryPosition
     has_ClassificationIndexEntryPosition: list[URIRef] | None = Field(
         alias="has_ClassificationIndexEntryPosition",
         default=None,
@@ -5162,7 +5162,7 @@ class ClassificationIndexEntry(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ClassificationIndexEntry-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:ClassificationIndexEntry-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -5178,7 +5178,7 @@ class ClassificationIndexEntry(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationIndexEntry-codingInstruction (0..1) | codingInstruction | cdi:CommandCode
+    # attribute cdi:ClassificationIndexEntry-codingInstruction (0..1) | codingInstruction | cdi:CommandCode
     codingInstruction: CommandCode | None = Field(
         alias="codingInstruction",
         default=None,
@@ -5189,7 +5189,7 @@ class ClassificationIndexEntry(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationIndexEntry-entry (0..1) | entry | cdi:InternationalString
+    # attribute cdi:ClassificationIndexEntry-entry (0..1) | entry | cdi:InternationalString
     entry: InternationalString | None = Field(
         alias="entry",
         default=None,
@@ -5200,7 +5200,7 @@ class ClassificationIndexEntry(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationIndexEntry-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ClassificationIndexEntry-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -5211,7 +5211,7 @@ class ClassificationIndexEntry(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationIndexEntry-validDates (0..1) | validDates | cdi:DateRange
+    # attribute cdi:ClassificationIndexEntry-validDates (0..1) | validDates | cdi:DateRange
     validDates: DateRange | None = Field(
         alias="validDates",
         default=None,
@@ -5247,7 +5247,7 @@ class ClassificationIndexEntryPosition(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ClassificationIndexEntryPosition-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ClassificationIndexEntryPosition-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -5258,7 +5258,7 @@ class ClassificationIndexEntryPosition(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationIndexEntryPosition-value (1..1) | value | xsd:integer
+    # attribute cdi:ClassificationIndexEntryPosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
@@ -5272,7 +5272,7 @@ class ClassificationIndexEntryPosition(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ClassificationIndexEntryPosition_indexes_ClassificationIndexEntry (1..1) | indexes | cdi:ClassificationIndexEntry
+    # association cdi:ClassificationIndexEntryPosition_indexes_ClassificationIndexEntry (1..1) | indexes | cdi:ClassificationIndexEntry
     indexes: URIRef = Field(
         alias="indexes",
         description="Restricts member target class to classification index entry.",
@@ -5315,7 +5315,7 @@ class ClassificationItem(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ClassificationItem-changeFromPreviousVersion (0..1) | changeFromPreviousVersion | cdi:InternationalString
+    # attribute cdi:ClassificationItem-changeFromPreviousVersion (0..1) | changeFromPreviousVersion | cdi:InternationalString
     changeFromPreviousVersion: InternationalString | None = Field(
         alias="changeFromPreviousVersion",
         default=None,
@@ -5326,7 +5326,7 @@ class ClassificationItem(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItem-changeLog (0..1) | changeLog | cdi:InternationalString
+    # attribute cdi:ClassificationItem-changeLog (0..1) | changeLog | cdi:InternationalString
     changeLog: InternationalString | None = Field(
         alias="changeLog",
         default=None,
@@ -5337,7 +5337,7 @@ class ClassificationItem(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItem-explanatoryNotes (0..*) | explanatoryNotes | cdi:InternationalString
+    # attribute cdi:ClassificationItem-explanatoryNotes (0..*) | explanatoryNotes | cdi:InternationalString
     explanatoryNotes: list[InternationalString] | None = Field(
         alias="explanatoryNotes",
         default=None,
@@ -5348,7 +5348,7 @@ class ClassificationItem(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItem-futureNotes (0..*) | futureNotes | cdi:InternationalString
+    # attribute cdi:ClassificationItem-futureNotes (0..*) | futureNotes | cdi:InternationalString
     futureNotes: list[InternationalString] | None = Field(
         alias="futureNotes",
         default=None,
@@ -5359,7 +5359,7 @@ class ClassificationItem(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItem-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ClassificationItem-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -5370,7 +5370,7 @@ class ClassificationItem(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItem-isGenerated (0..1) | isGenerated | xsd:boolean
+    # attribute cdi:ClassificationItem-isGenerated (0..1) | isGenerated | xsd:boolean
     isGenerated: bool | None = Field(
         alias="isGenerated",
         default=None,
@@ -5381,7 +5381,7 @@ class ClassificationItem(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItem-isValid (0..1) | isValid | xsd:boolean
+    # attribute cdi:ClassificationItem-isValid (0..1) | isValid | xsd:boolean
     isValid: bool | None = Field(
         alias="isValid",
         default=None,
@@ -5392,7 +5392,7 @@ class ClassificationItem(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItem-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:ClassificationItem-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -5403,7 +5403,7 @@ class ClassificationItem(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItem-validDates (0..1) | validDates | cdi:DateRange
+    # attribute cdi:ClassificationItem-validDates (0..1) | validDates | cdi:DateRange
     validDates: DateRange | None = Field(
         alias="validDates",
         default=None,
@@ -5418,7 +5418,7 @@ class ClassificationItem(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ClassificationItem_denotes_Category (1..1) | denotes | cdi:Category
+    # association cdi:ClassificationItem_denotes_Category (1..1) | denotes | cdi:Category
     denotes: URIRef = Field(
         alias="denotes",
         description="A definition for the code. Specialization of denotes for categories.",
@@ -5428,7 +5428,7 @@ class ClassificationItem(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItem_uses_Notation (1..1) | uses_Notation | cdi:Notation
+    # association cdi:ClassificationItem_uses_Notation (1..1) | uses_Notation | cdi:Notation
     uses_Notation: URIRef = Field(
         alias="uses_Notation",
         description="Classification item uses a notation.",
@@ -5438,7 +5438,7 @@ class ClassificationItem(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItem_excludes_ClassificationItem (0..*) | excludes | cdi:ClassificationItem
+    # association cdi:ClassificationItem_excludes_ClassificationItem (0..*) | excludes | cdi:ClassificationItem
     excludes: list[URIRef] | None = Field(
         alias="excludes",
         default=None,
@@ -5449,7 +5449,7 @@ class ClassificationItem(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItem_hasRulingBy_AuthorizationSource (0..*) | hasRulingBy | cdi:AuthorizationSource
+    # association cdi:ClassificationItem_hasRulingBy_AuthorizationSource (0..*) | hasRulingBy | cdi:AuthorizationSource
     hasRulingBy: list[URIRef] | None = Field(
         alias="hasRulingBy",
         default=None,
@@ -5485,7 +5485,7 @@ class ClassificationItemPosition(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ClassificationItemPosition-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ClassificationItemPosition-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -5496,7 +5496,7 @@ class ClassificationItemPosition(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItemPosition-value (1..1) | value | xsd:integer
+    # attribute cdi:ClassificationItemPosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
@@ -5510,7 +5510,7 @@ class ClassificationItemPosition(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ClassificationItemPosition_indexes_ClassificationItem (0..1) | indexes | cdi:ClassificationItem
+    # association cdi:ClassificationItemPosition_indexes_ClassificationItem (0..1) | indexes | cdi:ClassificationItem
     indexes: URIRef | None = Field(
         alias="indexes",
         default=None,
@@ -5546,7 +5546,7 @@ class ClassificationItemRelationship(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ClassificationItemRelationship-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ClassificationItemRelationship-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -5557,7 +5557,7 @@ class ClassificationItemRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItemRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:ClassificationItemRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -5572,7 +5572,7 @@ class ClassificationItemRelationship(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ClassificationItemRelationship_hasSource_ClassificationItem (0..*) | hasSource | cdi:ClassificationItem
+    # association cdi:ClassificationItemRelationship_hasSource_ClassificationItem (0..*) | hasSource | cdi:ClassificationItem
     hasSource: list[URIRef] | None = Field(
         alias="hasSource",
         default=None,
@@ -5583,7 +5583,7 @@ class ClassificationItemRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItemRelationship_hasTarget_ClassificationItem (0..*) | hasTarget | cdi:ClassificationItem
+    # association cdi:ClassificationItemRelationship_hasTarget_ClassificationItem (0..*) | hasTarget | cdi:ClassificationItem
     hasTarget: list[URIRef] | None = Field(
         alias="hasTarget",
         default=None,
@@ -5627,7 +5627,7 @@ class ClassificationItemStructure(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ClassificationItemStructure-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
+    # attribute cdi:ClassificationItemStructure-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
     displayLabel: list[LabelForDisplay] | None = Field(
         alias="displayLabel",
         default=None,
@@ -5638,7 +5638,7 @@ class ClassificationItemStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItemStructure-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ClassificationItemStructure-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -5649,7 +5649,7 @@ class ClassificationItemStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItemStructure-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:ClassificationItemStructure-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -5660,7 +5660,7 @@ class ClassificationItemStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItemStructure-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:ClassificationItemStructure-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -5671,7 +5671,7 @@ class ClassificationItemStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItemStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:ClassificationItemStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -5682,7 +5682,7 @@ class ClassificationItemStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItemStructure-specification (0..1) | specification | cdi:StructureSpecification
+    # attribute cdi:ClassificationItemStructure-specification (0..1) | specification | cdi:StructureSpecification
     specification: StructureSpecification | None = Field(
         alias="specification",
         default=None,
@@ -5693,7 +5693,7 @@ class ClassificationItemStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItemStructure-topology (0..1) | topology | cdi:ControlledVocabularyEntry
+    # attribute cdi:ClassificationItemStructure-topology (0..1) | topology | cdi:ControlledVocabularyEntry
     topology: ControlledVocabularyEntry | None = Field(
         alias="topology",
         default=None,
@@ -5704,7 +5704,7 @@ class ClassificationItemStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItemStructure-totality (0..1) | totality | cdi:StructureExtent
+    # attribute cdi:ClassificationItemStructure-totality (0..1) | totality | cdi:StructureExtent
     totality: StructureExtent | None = Field(
         alias="totality",
         default=None,
@@ -5719,7 +5719,7 @@ class ClassificationItemStructure(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ClassificationItemStructure_has_ClassificationItemRelationship (0..*) | has_ClassificationItemRelationship | cdi:ClassificationItemRelationship
+    # association cdi:ClassificationItemStructure_has_ClassificationItemRelationship (0..*) | has_ClassificationItemRelationship | cdi:ClassificationItemRelationship
     has_ClassificationItemRelationship: list[URIRef] | None = Field(
         alias="has_ClassificationItemRelationship",
         default=None,
@@ -5730,7 +5730,7 @@ class ClassificationItemStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationItemStructure_structures_StatisticalClassification (0..1) | structures | cdi:StatisticalClassification
+    # association cdi:ClassificationItemStructure_structures_StatisticalClassification (0..1) | structures | cdi:StatisticalClassification
     structures: URIRef | None = Field(
         alias="structures",
         default=None,
@@ -5766,7 +5766,7 @@ class ClassificationPosition(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ClassificationPosition-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ClassificationPosition-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -5777,7 +5777,7 @@ class ClassificationPosition(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationPosition-value (1..1) | value | xsd:integer
+    # attribute cdi:ClassificationPosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
@@ -5791,7 +5791,7 @@ class ClassificationPosition(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ClassificationPosition_indexes_StatisticalClassification (0..1) | indexes | cdi:StatisticalClassification
+    # association cdi:ClassificationPosition_indexes_StatisticalClassification (0..1) | indexes | cdi:StatisticalClassification
     indexes: URIRef | None = Field(
         alias="indexes",
         default=None,
@@ -5836,7 +5836,7 @@ class ClassificationSeries(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ClassificationSeries-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
+    # attribute cdi:ClassificationSeries-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
     allowsDuplicates: bool = Field(
         alias="allowsDuplicates",
         description="If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical “bag” permits duplicates and is unordered - a “set” does not have duplicates and may be ordered.)",
@@ -5846,7 +5846,7 @@ class ClassificationSeries(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationSeries-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:ClassificationSeries-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -5862,7 +5862,7 @@ class ClassificationSeries(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationSeries-context (0..1) | context | cdi:ControlledVocabularyEntry
+    # attribute cdi:ClassificationSeries-context (0..1) | context | cdi:ControlledVocabularyEntry
     context: ControlledVocabularyEntry | None = Field(
         alias="context",
         default=None,
@@ -5873,7 +5873,7 @@ class ClassificationSeries(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationSeries-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ClassificationSeries-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -5884,7 +5884,7 @@ class ClassificationSeries(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationSeries-keyword (0..*) | keyword | cdi:ControlledVocabularyEntry
+    # attribute cdi:ClassificationSeries-keyword (0..*) | keyword | cdi:ControlledVocabularyEntry
     keyword: list[ControlledVocabularyEntry] | None = Field(
         alias="keyword",
         default=None,
@@ -5895,7 +5895,7 @@ class ClassificationSeries(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationSeries-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:ClassificationSeries-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -5906,7 +5906,7 @@ class ClassificationSeries(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationSeries-objectsOrUnitsClassified (0..1) | objectsOrUnitsClassified | cdi:ControlledVocabularyEntry
+    # attribute cdi:ClassificationSeries-objectsOrUnitsClassified (0..1) | objectsOrUnitsClassified | cdi:ControlledVocabularyEntry
     objectsOrUnitsClassified: ControlledVocabularyEntry | None = Field(
         alias="objectsOrUnitsClassified",
         default=None,
@@ -5917,7 +5917,7 @@ class ClassificationSeries(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationSeries-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:ClassificationSeries-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -5928,7 +5928,7 @@ class ClassificationSeries(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationSeries-subject (0..*) | subject | cdi:ControlledVocabularyEntry
+    # attribute cdi:ClassificationSeries-subject (0..*) | subject | cdi:ControlledVocabularyEntry
     subject: list[ControlledVocabularyEntry] | None = Field(
         alias="subject",
         default=None,
@@ -5943,7 +5943,7 @@ class ClassificationSeries(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ClassificationSeries_isOwnedBy_Agent (0..*) | isOwnedBy | cdi:Agent
+    # association cdi:ClassificationSeries_isOwnedBy_Agent (0..*) | isOwnedBy | cdi:Agent
     isOwnedBy: list[URIRef] | None = Field(
         alias="isOwnedBy",
         default=None,
@@ -5954,7 +5954,7 @@ class ClassificationSeries(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationSeries_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
+    # association cdi:ClassificationSeries_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
     isDefinedBy_Concept: list[URIRef] | None = Field(
         alias="isDefinedBy_Concept",
         default=None,
@@ -5965,7 +5965,7 @@ class ClassificationSeries(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationSeries_has_ClassificationPosition (0..*) | has_ClassificationPosition | cdi:ClassificationPosition
+    # association cdi:ClassificationSeries_has_ClassificationPosition (0..*) | has_ClassificationPosition | cdi:ClassificationPosition
     has_ClassificationPosition: list[URIRef] | None = Field(
         alias="has_ClassificationPosition",
         default=None,
@@ -5976,7 +5976,7 @@ class ClassificationSeries(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationSeries_has_StatisticalClassification (0..*) | has_StatisticalClassification | cdi:StatisticalClassification
+    # association cdi:ClassificationSeries_has_StatisticalClassification (0..*) | has_StatisticalClassification | cdi:StatisticalClassification
     has_StatisticalClassification: list[URIRef] | None = Field(
         alias="has_StatisticalClassification",
         default=None,
@@ -6020,7 +6020,7 @@ class ClassificationSeriesStructure(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ClassificationSeriesStructure-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ClassificationSeriesStructure-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -6031,7 +6031,7 @@ class ClassificationSeriesStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationSeriesStructure-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:ClassificationSeriesStructure-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -6042,7 +6042,7 @@ class ClassificationSeriesStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationSeriesStructure-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:ClassificationSeriesStructure-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -6053,7 +6053,7 @@ class ClassificationSeriesStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationSeriesStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:ClassificationSeriesStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -6064,7 +6064,7 @@ class ClassificationSeriesStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationSeriesStructure-specification (0..1) | specification | cdi:StructureSpecification
+    # attribute cdi:ClassificationSeriesStructure-specification (0..1) | specification | cdi:StructureSpecification
     specification: StructureSpecification | None = Field(
         alias="specification",
         default=None,
@@ -6075,7 +6075,7 @@ class ClassificationSeriesStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationSeriesStructure-topology (0..1) | topology | cdi:ControlledVocabularyEntry
+    # attribute cdi:ClassificationSeriesStructure-topology (0..1) | topology | cdi:ControlledVocabularyEntry
     topology: ControlledVocabularyEntry | None = Field(
         alias="topology",
         default=None,
@@ -6086,7 +6086,7 @@ class ClassificationSeriesStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationSeriesStructure-totality (0..1) | totality | cdi:StructureExtent
+    # attribute cdi:ClassificationSeriesStructure-totality (0..1) | totality | cdi:StructureExtent
     totality: StructureExtent | None = Field(
         alias="totality",
         default=None,
@@ -6101,7 +6101,7 @@ class ClassificationSeriesStructure(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ClassificationSeriesStructure_has_StatisticalClassificationRelationship (0..*) | has_StatisticalClassificationRelationship | cdi:StatisticalClassificationRelationship
+    # association cdi:ClassificationSeriesStructure_has_StatisticalClassificationRelationship (0..*) | has_StatisticalClassificationRelationship | cdi:StatisticalClassificationRelationship
     has_StatisticalClassificationRelationship: list[URIRef] | None = Field(
         alias="has_StatisticalClassificationRelationship",
         default=None,
@@ -6112,7 +6112,7 @@ class ClassificationSeriesStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ClassificationSeriesStructure_structures_ClassificationSeries (0..1) | structures | cdi:ClassificationSeries
+    # association cdi:ClassificationSeriesStructure_structures_ClassificationSeries (0..1) | structures | cdi:ClassificationSeries
     structures: URIRef | None = Field(
         alias="structures",
         default=None,
@@ -6156,7 +6156,7 @@ class Code(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Code-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:Code-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -6171,7 +6171,7 @@ class Code(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:Code_denotes_Category (1..1) | denotes | cdi:Category
+    # association cdi:Code_denotes_Category (1..1) | denotes | cdi:Category
     denotes: URIRef = Field(
         alias="denotes",
         description="A definition for the code. Specialization of denotes for categories.",
@@ -6181,7 +6181,7 @@ class Code(DdiCdiClass):
         },
     )
 
-    # cdi:Code_uses_Notation (1..1) | uses_Notation | cdi:Notation
+    # association cdi:Code_uses_Notation (1..1) | uses_Notation | cdi:Notation
     uses_Notation: URIRef = Field(
         alias="uses_Notation",
         description="",
@@ -6220,7 +6220,7 @@ class CodeListStructure(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:CodeListStructure-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:CodeListStructure-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -6231,7 +6231,7 @@ class CodeListStructure(DdiCdiClass):
         },
     )
 
-    # cdi:CodeListStructure-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:CodeListStructure-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -6242,7 +6242,7 @@ class CodeListStructure(DdiCdiClass):
         },
     )
 
-    # cdi:CodeListStructure-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:CodeListStructure-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -6253,7 +6253,7 @@ class CodeListStructure(DdiCdiClass):
         },
     )
 
-    # cdi:CodeListStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:CodeListStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -6264,7 +6264,7 @@ class CodeListStructure(DdiCdiClass):
         },
     )
 
-    # cdi:CodeListStructure-specification (0..1) | specification | cdi:StructureSpecification
+    # attribute cdi:CodeListStructure-specification (0..1) | specification | cdi:StructureSpecification
     specification: StructureSpecification | None = Field(
         alias="specification",
         default=None,
@@ -6275,7 +6275,7 @@ class CodeListStructure(DdiCdiClass):
         },
     )
 
-    # cdi:CodeListStructure-topology (1..1) | topology | cdi:ControlledVocabularyEntry
+    # attribute cdi:CodeListStructure-topology (1..1) | topology | cdi:ControlledVocabularyEntry
     topology: ControlledVocabularyEntry = Field(
         alias="topology",
         description="Indicates the form of the associations among members of the collection. Specifies the way in which constituent parts are interrelated or arranged.",
@@ -6285,7 +6285,7 @@ class CodeListStructure(DdiCdiClass):
         },
     )
 
-    # cdi:CodeListStructure-totality (0..1) | totality | cdi:StructureExtent
+    # attribute cdi:CodeListStructure-totality (0..1) | totality | cdi:StructureExtent
     totality: StructureExtent | None = Field(
         alias="totality",
         default=None,
@@ -6300,7 +6300,7 @@ class CodeListStructure(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:CodeListStructure_has_CodeRelationship (0..*) | has_CodeRelationship | cdi:CodeRelationship
+    # association cdi:CodeListStructure_has_CodeRelationship (0..*) | has_CodeRelationship | cdi:CodeRelationship
     has_CodeRelationship: list[URIRef] | None = Field(
         alias="has_CodeRelationship",
         default=None,
@@ -6311,7 +6311,7 @@ class CodeListStructure(DdiCdiClass):
         },
     )
 
-    # cdi:CodeListStructure_structures_CodeList (0..1) | structures | cdi:CodeList
+    # association cdi:CodeListStructure_structures_CodeList (0..1) | structures | cdi:CodeList
     structures: URIRef | None = Field(
         alias="structures",
         default=None,
@@ -6347,7 +6347,7 @@ class CodePosition(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:CodePosition-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:CodePosition-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -6358,7 +6358,7 @@ class CodePosition(DdiCdiClass):
         },
     )
 
-    # cdi:CodePosition-value (1..1) | value | xsd:integer
+    # attribute cdi:CodePosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
@@ -6372,7 +6372,7 @@ class CodePosition(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:CodePosition_indexes_Code (0..1) | indexes | cdi:Code
+    # association cdi:CodePosition_indexes_Code (0..1) | indexes | cdi:Code
     indexes: URIRef | None = Field(
         alias="indexes",
         default=None,
@@ -6408,7 +6408,7 @@ class CodeRelationship(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:CodeRelationship-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:CodeRelationship-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -6419,7 +6419,7 @@ class CodeRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:CodeRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:CodeRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -6434,7 +6434,7 @@ class CodeRelationship(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:CodeRelationship_hasSource_Code (0..*) | hasSource | cdi:Code
+    # association cdi:CodeRelationship_hasSource_Code (0..*) | hasSource | cdi:Code
     hasSource: list[URIRef] | None = Field(
         alias="hasSource",
         default=None,
@@ -6445,7 +6445,7 @@ class CodeRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:CodeRelationship_hasTarget_Code (0..*) | hasTarget | cdi:Code
+    # association cdi:CodeRelationship_hasTarget_Code (0..*) | hasTarget | cdi:Code
     hasTarget: list[URIRef] | None = Field(
         alias="hasTarget",
         default=None,
@@ -6481,7 +6481,7 @@ class ComponentPosition(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ComponentPosition-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ComponentPosition-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -6492,7 +6492,7 @@ class ComponentPosition(DdiCdiClass):
         },
     )
 
-    # cdi:ComponentPosition-value (1..1) | value | xsd:integer
+    # attribute cdi:ComponentPosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
@@ -6506,7 +6506,7 @@ class ComponentPosition(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ComponentPosition_indexes_DataStructureComponent (0..1) | indexes | cdi:DataStructureComponent
+    # association cdi:ComponentPosition_indexes_DataStructureComponent (0..1) | indexes | cdi:DataStructureComponent
     indexes: URIRef | None = Field(
         alias="indexes",
         default=None,
@@ -6551,7 +6551,7 @@ class Concept(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Concept-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:Concept-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -6562,7 +6562,7 @@ class Concept(DdiCdiClass):
         },
     )
 
-    # cdi:Concept-definition (0..1) | definition | cdi:InternationalString
+    # attribute cdi:Concept-definition (0..1) | definition | cdi:InternationalString
     definition: InternationalString | None = Field(
         alias="definition",
         default=None,
@@ -6573,7 +6573,7 @@ class Concept(DdiCdiClass):
         },
     )
 
-    # cdi:Concept-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
+    # attribute cdi:Concept-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
     displayLabel: list[LabelForDisplay] | None = Field(
         alias="displayLabel",
         default=None,
@@ -6584,7 +6584,7 @@ class Concept(DdiCdiClass):
         },
     )
 
-    # cdi:Concept-externalDefinition (0..1) | externalDefinition | cdi:Reference
+    # attribute cdi:Concept-externalDefinition (0..1) | externalDefinition | cdi:Reference
     externalDefinition: Reference | None = Field(
         alias="externalDefinition",
         default=None,
@@ -6595,7 +6595,7 @@ class Concept(DdiCdiClass):
         },
     )
 
-    # cdi:Concept-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:Concept-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -6606,7 +6606,7 @@ class Concept(DdiCdiClass):
         },
     )
 
-    # cdi:Concept-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:Concept-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -6621,7 +6621,7 @@ class Concept(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:Concept_uses_Concept (0..*) | uses_Concept | cdi:Concept
+    # association cdi:Concept_uses_Concept (0..*) | uses_Concept | cdi:Concept
     uses_Concept: list[URIRef] | None = Field(
         alias="uses_Concept",
         default=None,
@@ -6665,7 +6665,7 @@ class ConceptMap(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ConceptMap-correspondence (0..1) | correspondence | cdi:CorrespondenceDefinition
+    # attribute cdi:ConceptMap-correspondence (0..1) | correspondence | cdi:CorrespondenceDefinition
     correspondence: CorrespondenceDefinition | None = Field(
         alias="correspondence",
         default=None,
@@ -6676,7 +6676,7 @@ class ConceptMap(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptMap-displayLabel (0..1) | displayLabel | cdi:LabelForDisplay
+    # attribute cdi:ConceptMap-displayLabel (0..1) | displayLabel | cdi:LabelForDisplay
     displayLabel: LabelForDisplay | None = Field(
         alias="displayLabel",
         default=None,
@@ -6687,7 +6687,7 @@ class ConceptMap(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptMap-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ConceptMap-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -6698,7 +6698,7 @@ class ConceptMap(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptMap-usage (0..1) | usage | cdi:InternationalString
+    # attribute cdi:ConceptMap-usage (0..1) | usage | cdi:InternationalString
     usage: InternationalString | None = Field(
         alias="usage",
         default=None,
@@ -6709,7 +6709,7 @@ class ConceptMap(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptMap-validDates (0..1) | validDates | cdi:DateRange
+    # attribute cdi:ConceptMap-validDates (0..1) | validDates | cdi:DateRange
     validDates: DateRange | None = Field(
         alias="validDates",
         default=None,
@@ -6724,7 +6724,7 @@ class ConceptMap(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ConceptMap_hasSource_Concept (1..*) | hasSource | cdi:Concept
+    # association cdi:ConceptMap_hasSource_Concept (1..*) | hasSource | cdi:Concept
     hasSource: list[URIRef] = Field(
         alias="hasSource",
         description="Concept map has one to many source concepts.",
@@ -6734,7 +6734,7 @@ class ConceptMap(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptMap_hasTarget_Concept (1..*) | hasTarget | cdi:Concept
+    # association cdi:ConceptMap_hasTarget_Concept (1..*) | hasTarget | cdi:Concept
     hasTarget: list[URIRef] = Field(
         alias="hasTarget",
         description="Concept map has one to many target concepts.",
@@ -6777,7 +6777,7 @@ class ConceptRelationship(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ConceptRelationship-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ConceptRelationship-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -6788,7 +6788,7 @@ class ConceptRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:ConceptRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -6803,7 +6803,7 @@ class ConceptRelationship(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ConceptRelationship_hasSource_Concept (1..1) | hasSource | cdi:Concept
+    # association cdi:ConceptRelationship_hasSource_Concept (1..1) | hasSource | cdi:Concept
     hasSource: URIRef = Field(
         alias="hasSource",
         description="Restricts source object to concept for the relationship.",
@@ -6813,7 +6813,7 @@ class ConceptRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptRelationship_hasTarget_Concept (1..1) | hasTarget | cdi:Concept
+    # association cdi:ConceptRelationship_hasTarget_Concept (1..1) | hasTarget | cdi:Concept
     hasTarget: URIRef = Field(
         alias="hasTarget",
         description="Restricts target object to concept for the relationship.",
@@ -6856,7 +6856,7 @@ class ConceptStructure(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ConceptStructure-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ConceptStructure-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -6867,7 +6867,7 @@ class ConceptStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptStructure-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:ConceptStructure-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -6878,7 +6878,7 @@ class ConceptStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptStructure-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:ConceptStructure-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -6889,7 +6889,7 @@ class ConceptStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:ConceptStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -6900,7 +6900,7 @@ class ConceptStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptStructure-specification (0..1) | specification | cdi:StructureSpecification
+    # attribute cdi:ConceptStructure-specification (0..1) | specification | cdi:StructureSpecification
     specification: StructureSpecification | None = Field(
         alias="specification",
         default=None,
@@ -6911,7 +6911,7 @@ class ConceptStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptStructure-topology (0..1) | topology | cdi:ControlledVocabularyEntry
+    # attribute cdi:ConceptStructure-topology (0..1) | topology | cdi:ControlledVocabularyEntry
     topology: ControlledVocabularyEntry | None = Field(
         alias="topology",
         default=None,
@@ -6922,7 +6922,7 @@ class ConceptStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptStructure-totality (0..1) | totality | cdi:StructureExtent
+    # attribute cdi:ConceptStructure-totality (0..1) | totality | cdi:StructureExtent
     totality: StructureExtent | None = Field(
         alias="totality",
         default=None,
@@ -6937,7 +6937,7 @@ class ConceptStructure(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ConceptStructure_has_ConceptRelationship (0..*) | has_ConceptRelationship | cdi:ConceptRelationship
+    # association cdi:ConceptStructure_has_ConceptRelationship (0..*) | has_ConceptRelationship | cdi:ConceptRelationship
     has_ConceptRelationship: list[URIRef] | None = Field(
         alias="has_ConceptRelationship",
         default=None,
@@ -6948,7 +6948,7 @@ class ConceptStructure(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptStructure_structures_ConceptSystem (0..1) | structures | cdi:ConceptSystem
+    # association cdi:ConceptStructure_structures_ConceptSystem (0..1) | structures | cdi:ConceptSystem
     structures: URIRef | None = Field(
         alias="structures",
         default=None,
@@ -6993,7 +6993,7 @@ class ConceptSystem(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ConceptSystem-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
+    # attribute cdi:ConceptSystem-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
     allowsDuplicates: bool = Field(
         alias="allowsDuplicates",
         description="If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical “bag” permits duplicates and is unordered - a “set” does not have duplicates and may be ordered.)",
@@ -7003,7 +7003,7 @@ class ConceptSystem(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptSystem-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:ConceptSystem-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -7014,7 +7014,7 @@ class ConceptSystem(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptSystem-externalDefinition (0..1) | externalDefinition | cdi:Reference
+    # attribute cdi:ConceptSystem-externalDefinition (0..1) | externalDefinition | cdi:Reference
     externalDefinition: Reference | None = Field(
         alias="externalDefinition",
         default=None,
@@ -7025,7 +7025,7 @@ class ConceptSystem(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptSystem-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ConceptSystem-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -7036,7 +7036,7 @@ class ConceptSystem(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptSystem-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:ConceptSystem-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -7047,7 +7047,7 @@ class ConceptSystem(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptSystem-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:ConceptSystem-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -7062,7 +7062,7 @@ class ConceptSystem(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ConceptSystem_has_Concept (0..*) | has_Concept | cdi:Concept
+    # association cdi:ConceptSystem_has_Concept (0..*) | has_Concept | cdi:Concept
     has_Concept: list[URIRef] | None = Field(
         alias="has_Concept",
         default=None,
@@ -7073,7 +7073,7 @@ class ConceptSystem(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptSystem_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
+    # association cdi:ConceptSystem_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
     isDefinedBy_Concept: list[URIRef] | None = Field(
         alias="isDefinedBy_Concept",
         default=None,
@@ -7117,7 +7117,7 @@ class ConceptSystemCorrespondence(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ConceptSystemCorrespondence-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:ConceptSystemCorrespondence-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -7128,7 +7128,7 @@ class ConceptSystemCorrespondence(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptSystemCorrespondence-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
+    # attribute cdi:ConceptSystemCorrespondence-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
     displayLabel: list[LabelForDisplay] | None = Field(
         alias="displayLabel",
         default=None,
@@ -7139,7 +7139,7 @@ class ConceptSystemCorrespondence(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptSystemCorrespondence-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ConceptSystemCorrespondence-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -7150,7 +7150,7 @@ class ConceptSystemCorrespondence(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptSystemCorrespondence-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:ConceptSystemCorrespondence-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -7161,7 +7161,7 @@ class ConceptSystemCorrespondence(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptSystemCorrespondence-usage (0..1) | usage | cdi:InternationalString
+    # attribute cdi:ConceptSystemCorrespondence-usage (0..1) | usage | cdi:InternationalString
     usage: InternationalString | None = Field(
         alias="usage",
         default=None,
@@ -7176,7 +7176,7 @@ class ConceptSystemCorrespondence(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ConceptSystemCorrespondence_has_ConceptMap (0..*) | has_ConceptMap | cdi:ConceptMap
+    # association cdi:ConceptSystemCorrespondence_has_ConceptMap (0..*) | has_ConceptMap | cdi:ConceptMap
     has_ConceptMap: list[URIRef] | None = Field(
         alias="has_ConceptMap",
         default=None,
@@ -7187,7 +7187,7 @@ class ConceptSystemCorrespondence(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptSystemCorrespondence_maps_ConceptSystem (2..*) | maps | cdi:ConceptSystem
+    # association cdi:ConceptSystemCorrespondence_maps_ConceptSystem (2..*) | maps | cdi:ConceptSystem
     maps: list[URIRef] = Field(
         alias="maps",
         description="Concept system correspondence maps two to many concept systems. Realization of structures in symmetric relation. When concepts of a single concept system are mapped, the Concept has to appear twice as target.",
@@ -7230,7 +7230,7 @@ class ConceptualDomain(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ConceptualDomain-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:ConceptualDomain-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -7241,7 +7241,7 @@ class ConceptualDomain(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptualDomain-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
+    # attribute cdi:ConceptualDomain-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
     displayLabel: list[LabelForDisplay] | None = Field(
         alias="displayLabel",
         default=None,
@@ -7252,7 +7252,7 @@ class ConceptualDomain(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptualDomain-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ConceptualDomain-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -7267,7 +7267,7 @@ class ConceptualDomain(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ConceptualDomain_isDescribedBy_ValueAndConceptDescription (0..1) | isDescribedBy | cdi:ValueAndConceptDescription
+    # association cdi:ConceptualDomain_isDescribedBy_ValueAndConceptDescription (0..1) | isDescribedBy | cdi:ValueAndConceptDescription
     isDescribedBy: URIRef | None = Field(
         alias="isDescribedBy",
         default=None,
@@ -7278,7 +7278,7 @@ class ConceptualDomain(DdiCdiClass):
         },
     )
 
-    # cdi:ConceptualDomain_takesConceptsFrom_ConceptSystem (0..1) | takesConceptsFrom | cdi:ConceptSystem
+    # association cdi:ConceptualDomain_takesConceptsFrom_ConceptSystem (0..1) | takesConceptsFrom | cdi:ConceptSystem
     takesConceptsFrom: URIRef | None = Field(
         alias="takesConceptsFrom",
         default=None,
@@ -7322,7 +7322,7 @@ class ControlLogic(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ControlLogic-description (0..1) | description | xsd:string
+    # attribute cdi:ControlLogic-description (0..1) | description | xsd:string
     description: Union[str, LiteralField] | None = Field(
         alias="description",
         default=None,
@@ -7333,7 +7333,7 @@ class ControlLogic(DdiCdiClass):
         },
     )
 
-    # cdi:ControlLogic-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
+    # attribute cdi:ControlLogic-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
     displayLabel: list[LabelForDisplay] | None = Field(
         alias="displayLabel",
         default=None,
@@ -7344,7 +7344,7 @@ class ControlLogic(DdiCdiClass):
         },
     )
 
-    # cdi:ControlLogic-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ControlLogic-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -7355,7 +7355,7 @@ class ControlLogic(DdiCdiClass):
         },
     )
 
-    # cdi:ControlLogic-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:ControlLogic-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -7366,7 +7366,7 @@ class ControlLogic(DdiCdiClass):
         },
     )
 
-    # cdi:ControlLogic-workflow (0..1) | workflow | cdi:ControlledVocabularyEntry
+    # attribute cdi:ControlLogic-workflow (0..1) | workflow | cdi:ControlledVocabularyEntry
     workflow: ControlledVocabularyEntry | None = Field(
         alias="workflow",
         default=None,
@@ -7381,7 +7381,7 @@ class ControlLogic(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ControlLogic_has_InformationFlowDefinition (0..*) | has_InformationFlowDefinition | cdi:InformationFlowDefinition
+    # association cdi:ControlLogic_has_InformationFlowDefinition (0..*) | has_InformationFlowDefinition | cdi:InformationFlowDefinition
     has_InformationFlowDefinition: list[URIRef] | None = Field(
         alias="has_InformationFlowDefinition",
         default=None,
@@ -7392,7 +7392,7 @@ class ControlLogic(DdiCdiClass):
         },
     )
 
-    # cdi:ControlLogic_hasSubControlLogic_ControlLogic (0..*) | hasSubControlLogic | cdi:ControlLogic
+    # association cdi:ControlLogic_hasSubControlLogic_ControlLogic (0..*) | hasSubControlLogic | cdi:ControlLogic
     hasSubControlLogic: list[URIRef] | None = Field(
         alias="hasSubControlLogic",
         default=None,
@@ -7403,7 +7403,7 @@ class ControlLogic(DdiCdiClass):
         },
     )
 
-    # cdi:ControlLogic_informs_ProcessingAgent (0..*) | informs | cdi:ProcessingAgent
+    # association cdi:ControlLogic_informs_ProcessingAgent (0..*) | informs | cdi:ProcessingAgent
     informs: list[URIRef] | None = Field(
         alias="informs",
         default=None,
@@ -7414,7 +7414,7 @@ class ControlLogic(DdiCdiClass):
         },
     )
 
-    # cdi:ControlLogic_invokes_Activity (1..*) | invokes | cdi:Activity
+    # association cdi:ControlLogic_invokes_Activity (1..*) | invokes | cdi:Activity
     invokes: list[URIRef] = Field(
         alias="invokes",
         description="Control logic invokes an activity deterministically (either conditionally or unconditionally) or non-derministically (based on temporal constraints or rule-based scheduling).",
@@ -7457,7 +7457,7 @@ class CorrespondenceTable(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:CorrespondenceTable-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:CorrespondenceTable-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -7473,7 +7473,7 @@ class CorrespondenceTable(DdiCdiClass):
         },
     )
 
-    # cdi:CorrespondenceTable-effectiveDates (0..1) | effectiveDates | cdi:DateRange
+    # attribute cdi:CorrespondenceTable-effectiveDates (0..1) | effectiveDates | cdi:DateRange
     effectiveDates: DateRange | None = Field(
         alias="effectiveDates",
         default=None,
@@ -7484,7 +7484,7 @@ class CorrespondenceTable(DdiCdiClass):
         },
     )
 
-    # cdi:CorrespondenceTable-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:CorrespondenceTable-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -7499,7 +7499,7 @@ class CorrespondenceTable(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:CorrespondenceTable_hasContact_Agent (0..*) | hasContact | cdi:Agent
+    # association cdi:CorrespondenceTable_hasContact_Agent (0..*) | hasContact | cdi:Agent
     hasContact: list[URIRef] | None = Field(
         alias="hasContact",
         default=None,
@@ -7510,7 +7510,7 @@ class CorrespondenceTable(DdiCdiClass):
         },
     )
 
-    # cdi:CorrespondenceTable_isMaintainedBy_Agent (0..1) | isMaintainedBy | cdi:Agent
+    # association cdi:CorrespondenceTable_isMaintainedBy_Agent (0..1) | isMaintainedBy | cdi:Agent
     isMaintainedBy: URIRef | None = Field(
         alias="isMaintainedBy",
         default=None,
@@ -7521,7 +7521,7 @@ class CorrespondenceTable(DdiCdiClass):
         },
     )
 
-    # cdi:CorrespondenceTable_isOwnedBy_Agent (0..*) | isOwnedBy | cdi:Agent
+    # association cdi:CorrespondenceTable_isOwnedBy_Agent (0..*) | isOwnedBy | cdi:Agent
     isOwnedBy: list[URIRef] | None = Field(
         alias="isOwnedBy",
         default=None,
@@ -7532,7 +7532,7 @@ class CorrespondenceTable(DdiCdiClass):
         },
     )
 
-    # cdi:CorrespondenceTable_has_ConceptMap (0..*) | has_ConceptMap | cdi:ConceptMap
+    # association cdi:CorrespondenceTable_has_ConceptMap (0..*) | has_ConceptMap | cdi:ConceptMap
     has_ConceptMap: list[URIRef] | None = Field(
         alias="has_ConceptMap",
         default=None,
@@ -7543,7 +7543,7 @@ class CorrespondenceTable(DdiCdiClass):
         },
     )
 
-    # cdi:CorrespondenceTable_hasSource_Level (0..1) | hasSource | cdi:Level
+    # association cdi:CorrespondenceTable_hasSource_Level (0..1) | hasSource | cdi:Level
     hasSource: URIRef | None = Field(
         alias="hasSource",
         default=None,
@@ -7554,7 +7554,7 @@ class CorrespondenceTable(DdiCdiClass):
         },
     )
 
-    # cdi:CorrespondenceTable_hasTarget_Level (0..1) | hasTarget | cdi:Level
+    # association cdi:CorrespondenceTable_hasTarget_Level (0..1) | hasTarget | cdi:Level
     hasTarget: URIRef | None = Field(
         alias="hasTarget",
         default=None,
@@ -7565,7 +7565,7 @@ class CorrespondenceTable(DdiCdiClass):
         },
     )
 
-    # cdi:CorrespondenceTable_mapsTo_StatisticalClassification (2..*) | mapsTo | cdi:StatisticalClassification
+    # association cdi:CorrespondenceTable_mapsTo_StatisticalClassification (2..*) | mapsTo | cdi:StatisticalClassification
     mapsTo: list[URIRef] = Field(
         alias="mapsTo",
         description="The statistical classification(s) from which the correspondence is made.",
@@ -7608,7 +7608,7 @@ class DataPoint(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:DataPoint-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:DataPoint-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -7619,7 +7619,7 @@ class DataPoint(DdiCdiClass):
         },
     )
 
-    # cdi:DataPoint-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:DataPoint-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -7634,7 +7634,7 @@ class DataPoint(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:DataPoint_isDescribedBy_InstanceVariable (1..1) | isDescribedBy | cdi:InstanceVariable
+    # association cdi:DataPoint_isDescribedBy_InstanceVariable (1..1) | isDescribedBy | cdi:InstanceVariable
     isDescribedBy: URIRef = Field(
         alias="isDescribedBy",
         description="The instance variable delimits the values which can populate a data point. Data point is described by one instance variable.",
@@ -7644,7 +7644,7 @@ class DataPoint(DdiCdiClass):
         },
     )
 
-    # cdi:DataPoint_correspondsTo_DataStructureComponent (0..*) | correspondsTo_DataStructureComponent | cdi:DataStructureComponent
+    # association cdi:DataPoint_correspondsTo_DataStructureComponent (0..*) | correspondsTo_DataStructureComponent | cdi:DataStructureComponent
     correspondsTo_DataStructureComponent: list[URIRef] | None = Field(
         alias="correspondsTo_DataStructureComponent",
         default=None,
@@ -7680,7 +7680,7 @@ class DataPointPosition(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:DataPointPosition-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:DataPointPosition-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -7691,7 +7691,7 @@ class DataPointPosition(DdiCdiClass):
         },
     )
 
-    # cdi:DataPointPosition-value (1..1) | value | xsd:integer
+    # attribute cdi:DataPointPosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
@@ -7705,7 +7705,7 @@ class DataPointPosition(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:DataPointPosition_indexes_DataPoint (0..1) | indexes | cdi:DataPoint
+    # association cdi:DataPointPosition_indexes_DataPoint (0..1) | indexes | cdi:DataPoint
     indexes: URIRef | None = Field(
         alias="indexes",
         default=None,
@@ -7741,7 +7741,7 @@ class DataPointRelationship(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:DataPointRelationship-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:DataPointRelationship-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -7752,7 +7752,7 @@ class DataPointRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:DataPointRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:DataPointRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -7767,7 +7767,7 @@ class DataPointRelationship(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:DataPointRelationship_hasSource_DataPoint (0..*) | hasSource | cdi:DataPoint
+    # association cdi:DataPointRelationship_hasSource_DataPoint (0..*) | hasSource | cdi:DataPoint
     hasSource: list[URIRef] | None = Field(
         alias="hasSource",
         default=None,
@@ -7778,7 +7778,7 @@ class DataPointRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:DataPointRelationship_hasTarget_DataPoint (0..*) | hasTarget | cdi:DataPoint
+    # association cdi:DataPointRelationship_hasTarget_DataPoint (0..*) | hasTarget | cdi:DataPoint
     hasTarget: list[URIRef] | None = Field(
         alias="hasTarget",
         default=None,
@@ -7814,7 +7814,7 @@ class DataSet(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:DataSet-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:DataSet-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -7825,7 +7825,7 @@ class DataSet(DdiCdiClass):
         },
     )
 
-    # cdi:DataSet-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:DataSet-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -7840,7 +7840,7 @@ class DataSet(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:DataSet_has_DataPoint (0..*) | has_DataPoint | cdi:DataPoint
+    # association cdi:DataSet_has_DataPoint (0..*) | has_DataPoint | cdi:DataPoint
     has_DataPoint: list[URIRef] | None = Field(
         alias="has_DataPoint",
         default=None,
@@ -7851,7 +7851,7 @@ class DataSet(DdiCdiClass):
         },
     )
 
-    # cdi:DataSet_has_Key (0..*) | has_Key | cdi:Key
+    # association cdi:DataSet_has_Key (0..*) | has_Key | cdi:Key
     has_Key: list[URIRef] | None = Field(
         alias="has_Key",
         default=None,
@@ -7862,7 +7862,7 @@ class DataSet(DdiCdiClass):
         },
     )
 
-    # cdi:DataSet_isStructuredBy_DataStructure (0..*) | isStructuredBy | cdi:DataStructure
+    # association cdi:DataSet_isStructuredBy_DataStructure (0..*) | isStructuredBy | cdi:DataStructure
     isStructuredBy: list[URIRef] | None = Field(
         alias="isStructuredBy",
         default=None,
@@ -7906,7 +7906,7 @@ class DataStore(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:DataStore-aboutMissing (0..1) | aboutMissing | cdi:InternationalString
+    # attribute cdi:DataStore-aboutMissing (0..1) | aboutMissing | cdi:InternationalString
     aboutMissing: InternationalString | None = Field(
         alias="aboutMissing",
         default=None,
@@ -7917,7 +7917,7 @@ class DataStore(DdiCdiClass):
         },
     )
 
-    # cdi:DataStore-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
+    # attribute cdi:DataStore-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
     allowsDuplicates: bool = Field(
         alias="allowsDuplicates",
         description="If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical “bag” permits duplicates and is unordered - a “set” does not have duplicates and may be ordered.)",
@@ -7927,7 +7927,7 @@ class DataStore(DdiCdiClass):
         },
     )
 
-    # cdi:DataStore-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:DataStore-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -7938,7 +7938,7 @@ class DataStore(DdiCdiClass):
         },
     )
 
-    # cdi:DataStore-characterSet (0..1) | characterSet | xsd:string
+    # attribute cdi:DataStore-characterSet (0..1) | characterSet | xsd:string
     characterSet: Union[str, LiteralField] | None = Field(
         alias="characterSet",
         default=None,
@@ -7949,7 +7949,7 @@ class DataStore(DdiCdiClass):
         },
     )
 
-    # cdi:DataStore-dataStoreType (0..1) | dataStoreType | cdi:ControlledVocabularyEntry
+    # attribute cdi:DataStore-dataStoreType (0..1) | dataStoreType | cdi:ControlledVocabularyEntry
     dataStoreType: ControlledVocabularyEntry | None = Field(
         alias="dataStoreType",
         default=None,
@@ -7960,7 +7960,7 @@ class DataStore(DdiCdiClass):
         },
     )
 
-    # cdi:DataStore-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:DataStore-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -7971,7 +7971,7 @@ class DataStore(DdiCdiClass):
         },
     )
 
-    # cdi:DataStore-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:DataStore-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -7982,7 +7982,7 @@ class DataStore(DdiCdiClass):
         },
     )
 
-    # cdi:DataStore-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:DataStore-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -7993,7 +7993,7 @@ class DataStore(DdiCdiClass):
         },
     )
 
-    # cdi:DataStore-recordCount (0..1) | recordCount | xsd:integer
+    # attribute cdi:DataStore-recordCount (0..1) | recordCount | xsd:integer
     recordCount: int | None = Field(
         alias="recordCount",
         default=None,
@@ -8008,7 +8008,7 @@ class DataStore(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:DataStore_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
+    # association cdi:DataStore_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
     isDefinedBy_Concept: list[URIRef] | None = Field(
         alias="isDefinedBy_Concept",
         default=None,
@@ -8019,7 +8019,7 @@ class DataStore(DdiCdiClass):
         },
     )
 
-    # cdi:DataStore_has_LogicalRecord (0..*) | has_LogicalRecord | cdi:LogicalRecord
+    # association cdi:DataStore_has_LogicalRecord (0..*) | has_LogicalRecord | cdi:LogicalRecord
     has_LogicalRecord: list[URIRef] | None = Field(
         alias="has_LogicalRecord",
         default=None,
@@ -8030,7 +8030,7 @@ class DataStore(DdiCdiClass):
         },
     )
 
-    # cdi:DataStore_has_LogicalRecordPosition (0..*) | has_LogicalRecordPosition | cdi:LogicalRecordPosition
+    # association cdi:DataStore_has_LogicalRecordPosition (0..*) | has_LogicalRecordPosition | cdi:LogicalRecordPosition
     has_LogicalRecordPosition: list[URIRef] | None = Field(
         alias="has_LogicalRecordPosition",
         default=None,
@@ -8041,7 +8041,7 @@ class DataStore(DdiCdiClass):
         },
     )
 
-    # cdi:DataStore_has_RecordRelation (0..1) | has_RecordRelation | cdi:RecordRelation
+    # association cdi:DataStore_has_RecordRelation (0..1) | has_RecordRelation | cdi:RecordRelation
     has_RecordRelation: URIRef | None = Field(
         alias="has_RecordRelation",
         default=None,
@@ -8081,7 +8081,7 @@ class DataStructureComponent(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:DataStructureComponent-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:DataStructureComponent-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -8092,7 +8092,7 @@ class DataStructureComponent(DdiCdiClass):
         },
     )
 
-    # cdi:DataStructureComponent-semantic (0..*) | semantic | cdi:PairedControlledVocabularyEntry
+    # attribute cdi:DataStructureComponent-semantic (0..*) | semantic | cdi:PairedControlledVocabularyEntry
     semantic: list[PairedControlledVocabularyEntry] | None = Field(
         alias="semantic",
         default=None,
@@ -8103,7 +8103,7 @@ class DataStructureComponent(DdiCdiClass):
         },
     )
 
-    # cdi:DataStructureComponent-specialization (0..1) | specialization | cdi:SpecializationRole
+    # attribute cdi:DataStructureComponent-specialization (0..1) | specialization | cdi:SpecializationRole
     specialization: SpecializationRole | None = Field(
         alias="specialization",
         default=None,
@@ -8118,7 +8118,7 @@ class DataStructureComponent(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:DataStructureComponent_isDefinedBy_RepresentedVariable (0..1) | isDefinedBy_RepresentedVariable | cdi:RepresentedVariable
+    # association cdi:DataStructureComponent_isDefinedBy_RepresentedVariable (0..1) | isDefinedBy_RepresentedVariable | cdi:RepresentedVariable
     isDefinedBy_RepresentedVariable: URIRef | None = Field(
         alias="isDefinedBy_RepresentedVariable",
         default=None,
@@ -8164,7 +8164,7 @@ class Datum(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Datum-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:Datum-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -8175,7 +8175,7 @@ class Datum(DdiCdiClass):
         },
     )
 
-    # cdi:Datum-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:Datum-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -8190,7 +8190,7 @@ class Datum(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:Datum_isBoundedBy_InstanceVariable (1..*) | isBoundedBy | cdi:InstanceVariable
+    # association cdi:Datum_isBoundedBy_InstanceVariable (1..*) | isBoundedBy | cdi:InstanceVariable
     isBoundedBy: list[URIRef] = Field(
         alias="isBoundedBy",
         description="A datum is bounded by an instance variable. The datum is drawn from a set of values, either substantive or sentinel described by the value domain of the instance variable.",
@@ -8200,7 +8200,7 @@ class Datum(DdiCdiClass):
         },
     )
 
-    # cdi:Datum_denotes_ConceptualValue (1..1) | denotes | cdi:ConceptualValue
+    # association cdi:Datum_denotes_ConceptualValue (1..1) | denotes | cdi:ConceptualValue
     denotes: URIRef = Field(
         alias="denotes",
         description="",
@@ -8210,7 +8210,7 @@ class Datum(DdiCdiClass):
         },
     )
 
-    # cdi:Datum_uses_InstanceValue (1..*) | uses_InstanceValue | cdi:InstanceValue
+    # association cdi:Datum_uses_InstanceValue (1..*) | uses_InstanceValue | cdi:InstanceValue
     uses_InstanceValue: list[URIRef] = Field(
         alias="uses_InstanceValue",
         description="",
@@ -8220,7 +8220,7 @@ class Datum(DdiCdiClass):
         },
     )
 
-    # cdi:Datum_uses_Notation (0..1) | uses_Notation | cdi:Notation
+    # association cdi:Datum_uses_Notation (0..1) | uses_Notation | cdi:Notation
     uses_Notation: URIRef | None = Field(
         alias="uses_Notation",
         default=None,
@@ -8260,7 +8260,7 @@ class DimensionGroup(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:DimensionGroup-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:DimensionGroup-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -8271,7 +8271,7 @@ class DimensionGroup(DdiCdiClass):
         },
     )
 
-    # cdi:DimensionGroup-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:DimensionGroup-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -8286,7 +8286,7 @@ class DimensionGroup(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:DimensionGroup_has_DimensionComponent (1..*) | has_DimensionComponent | cdi:DimensionComponent
+    # association cdi:DimensionGroup_has_DimensionComponent (1..*) | has_DimensionComponent | cdi:DimensionComponent
     has_DimensionComponent: list[URIRef] = Field(
         alias="has_DimensionComponent",
         description="",
@@ -8321,7 +8321,7 @@ class EnumerationDomain(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:EnumerationDomain-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:EnumerationDomain-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -8332,7 +8332,7 @@ class EnumerationDomain(DdiCdiClass):
         },
     )
 
-    # cdi:EnumerationDomain-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:EnumerationDomain-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -8343,7 +8343,7 @@ class EnumerationDomain(DdiCdiClass):
         },
     )
 
-    # cdi:EnumerationDomain-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:EnumerationDomain-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -8358,7 +8358,7 @@ class EnumerationDomain(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:EnumerationDomain_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
+    # association cdi:EnumerationDomain_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
     isDefinedBy_Concept: list[URIRef] | None = Field(
         alias="isDefinedBy_Concept",
         default=None,
@@ -8369,7 +8369,7 @@ class EnumerationDomain(DdiCdiClass):
         },
     )
 
-    # cdi:EnumerationDomain_references_CategorySet (0..1) | references | cdi:CategorySet
+    # association cdi:EnumerationDomain_references_CategorySet (0..1) | references | cdi:CategorySet
     references: URIRef | None = Field(
         alias="references",
         default=None,
@@ -8380,7 +8380,7 @@ class EnumerationDomain(DdiCdiClass):
         },
     )
 
-    # cdi:EnumerationDomain_uses_LevelStructure (0..1) | uses_LevelStructure | cdi:LevelStructure
+    # association cdi:EnumerationDomain_uses_LevelStructure (0..1) | uses_LevelStructure | cdi:LevelStructure
     uses_LevelStructure: URIRef | None = Field(
         alias="uses_LevelStructure",
         default=None,
@@ -8421,7 +8421,7 @@ class ForeignKey(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ForeignKey-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ForeignKey-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -8436,7 +8436,7 @@ class ForeignKey(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ForeignKey_isComposedOf_ForeignKeyComponent (1..*) | isComposedOf | cdi:ForeignKeyComponent
+    # association cdi:ForeignKey_isComposedOf_ForeignKeyComponent (1..*) | isComposedOf | cdi:ForeignKeyComponent
     isComposedOf: list[URIRef] = Field(
         alias="isComposedOf",
         description="",
@@ -8476,7 +8476,7 @@ class ForeignKeyComponent(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ForeignKeyComponent-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ForeignKeyComponent-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -8491,7 +8491,7 @@ class ForeignKeyComponent(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ForeignKeyComponent_correspondsTo_DataStructureComponent (1..1) | correspondsTo_DataStructureComponent | cdi:DataStructureComponent
+    # association cdi:ForeignKeyComponent_correspondsTo_DataStructureComponent (1..1) | correspondsTo_DataStructureComponent | cdi:DataStructureComponent
     correspondsTo_DataStructureComponent: URIRef = Field(
         alias="correspondsTo_DataStructureComponent",
         description="",
@@ -8501,7 +8501,7 @@ class ForeignKeyComponent(DdiCdiClass):
         },
     )
 
-    # cdi:ForeignKeyComponent_references_PrimaryKeyComponent (1..1) | references | cdi:PrimaryKeyComponent
+    # association cdi:ForeignKeyComponent_references_PrimaryKeyComponent (1..1) | references | cdi:PrimaryKeyComponent
     references: URIRef = Field(
         alias="references",
         description="",
@@ -8544,7 +8544,7 @@ class InformationFlowDefinition(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:InformationFlowDefinition-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:InformationFlowDefinition-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -8559,7 +8559,7 @@ class InformationFlowDefinition(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:InformationFlowDefinition_from_Parameter (0..1) | from | cdi:Parameter
+    # association cdi:InformationFlowDefinition_from_Parameter (0..1) | from | cdi:Parameter
     from_: URIRef | None = Field(
         alias="from",
         default=None,
@@ -8570,7 +8570,7 @@ class InformationFlowDefinition(DdiCdiClass):
         },
     )
 
-    # cdi:InformationFlowDefinition_to_Parameter (0..*) | to | cdi:Parameter
+    # association cdi:InformationFlowDefinition_to_Parameter (0..*) | to | cdi:Parameter
     to: list[URIRef] | None = Field(
         alias="to",
         default=None,
@@ -8614,7 +8614,7 @@ class InstanceValue(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:InstanceValue-content (0..1) | content | cdi:TypedString
+    # attribute cdi:InstanceValue-content (0..1) | content | cdi:TypedString
     content: TypedString | None = Field(
         alias="content",
         default=None,
@@ -8625,7 +8625,7 @@ class InstanceValue(DdiCdiClass):
         },
     )
 
-    # cdi:InstanceValue-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:InstanceValue-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -8636,7 +8636,7 @@ class InstanceValue(DdiCdiClass):
         },
     )
 
-    # cdi:InstanceValue-whiteSpace (0..1) | whiteSpace | cdi:WhiteSpaceRule
+    # attribute cdi:InstanceValue-whiteSpace (0..1) | whiteSpace | cdi:WhiteSpaceRule
     whiteSpace: WhiteSpaceRule | None = Field(
         alias="whiteSpace",
         default=None,
@@ -8651,7 +8651,7 @@ class InstanceValue(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:InstanceValue_hasValueFrom_ValueDomain (1..1) | hasValueFrom_ValueDomain | cdi:ValueDomain
+    # association cdi:InstanceValue_hasValueFrom_ValueDomain (1..1) | hasValueFrom_ValueDomain | cdi:ValueDomain
     hasValueFrom_ValueDomain: URIRef = Field(
         alias="hasValueFrom_ValueDomain",
         description="",
@@ -8661,7 +8661,7 @@ class InstanceValue(DdiCdiClass):
         },
     )
 
-    # cdi:InstanceValue_isStoredIn_DataPoint (0..1) | isStoredIn | cdi:DataPoint
+    # association cdi:InstanceValue_isStoredIn_DataPoint (0..1) | isStoredIn | cdi:DataPoint
     isStoredIn: URIRef | None = Field(
         alias="isStoredIn",
         default=None,
@@ -8672,7 +8672,7 @@ class InstanceValue(DdiCdiClass):
         },
     )
 
-    # cdi:InstanceValue_represents_ConceptualValue (0..1) | represents | cdi:ConceptualValue
+    # association cdi:InstanceValue_represents_ConceptualValue (0..1) | represents | cdi:ConceptualValue
     represents: URIRef | None = Field(
         alias="represents",
         default=None,
@@ -8712,7 +8712,7 @@ class InstanceVariableMap(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:InstanceVariableMap-comparison (1..1) | comparison | cdi:ComparisonOperator
+    # attribute cdi:InstanceVariableMap-comparison (1..1) | comparison | cdi:ComparisonOperator
     comparison: ComparisonOperator = Field(
         alias="comparison",
         description="Relationship between the source and target instance variables or to the setValue if provided.",
@@ -8722,7 +8722,7 @@ class InstanceVariableMap(DdiCdiClass):
         },
     )
 
-    # cdi:InstanceVariableMap-correspondence (1..1) | correspondence | cdi:CorrespondenceDefinition
+    # attribute cdi:InstanceVariableMap-correspondence (1..1) | correspondence | cdi:CorrespondenceDefinition
     correspondence: CorrespondenceDefinition = Field(
         alias="correspondence",
         description="Describes the relationship between the source and target members using both controlled vocabularies and descriptive text. In this context the correspondence refers to the two instance variables, not their value. The relationship would normally be ExactMatch.",
@@ -8732,7 +8732,7 @@ class InstanceVariableMap(DdiCdiClass):
         },
     )
 
-    # cdi:InstanceVariableMap-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:InstanceVariableMap-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -8743,7 +8743,7 @@ class InstanceVariableMap(DdiCdiClass):
         },
     )
 
-    # cdi:InstanceVariableMap-setValue (1..1) | setValue | xsd:string
+    # attribute cdi:InstanceVariableMap-setValue (1..1) | setValue | xsd:string
     setValue: Union[str, LiteralField] = Field(
         alias="setValue",
         description="A fixed value for the key source Instance Variables.",
@@ -8757,7 +8757,7 @@ class InstanceVariableMap(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:InstanceVariableMap_hasSource_InstanceVariable (1..*) | hasSource | cdi:InstanceVariable
+    # association cdi:InstanceVariableMap_hasSource_InstanceVariable (1..*) | hasSource | cdi:InstanceVariable
     hasSource: list[URIRef] = Field(
         alias="hasSource",
         description="The source instance variable for the relationship.",
@@ -8767,7 +8767,7 @@ class InstanceVariableMap(DdiCdiClass):
         },
     )
 
-    # cdi:InstanceVariableMap_hasTarget_InstanceVariable (0..*) | hasTarget | cdi:InstanceVariable
+    # association cdi:InstanceVariableMap_hasTarget_InstanceVariable (0..*) | hasTarget | cdi:InstanceVariable
     hasTarget: list[URIRef] | None = Field(
         alias="hasTarget",
         default=None,
@@ -8803,7 +8803,7 @@ class Key(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Key-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:Key-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -8818,7 +8818,7 @@ class Key(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:Key_correspondsTo_Unit (0..1) | correspondsTo_Unit | cdi:Unit
+    # association cdi:Key_correspondsTo_Unit (0..1) | correspondsTo_Unit | cdi:Unit
     correspondsTo_Unit: URIRef | None = Field(
         alias="correspondsTo_Unit",
         default=None,
@@ -8829,7 +8829,7 @@ class Key(DdiCdiClass):
         },
     )
 
-    # cdi:Key_correspondsTo_Universe (0..1) | correspondsTo_Universe | cdi:Universe
+    # association cdi:Key_correspondsTo_Universe (0..1) | correspondsTo_Universe | cdi:Universe
     correspondsTo_Universe: URIRef | None = Field(
         alias="correspondsTo_Universe",
         default=None,
@@ -8840,7 +8840,7 @@ class Key(DdiCdiClass):
         },
     )
 
-    # cdi:Key_has_KeyMember (0..*) | has_KeyMember | cdi:KeyMember
+    # association cdi:Key_has_KeyMember (0..*) | has_KeyMember | cdi:KeyMember
     has_KeyMember: list[URIRef] | None = Field(
         alias="has_KeyMember",
         default=None,
@@ -8851,7 +8851,7 @@ class Key(DdiCdiClass):
         },
     )
 
-    # cdi:Key_identifies_DataPoint (1..*) | identifies | cdi:DataPoint
+    # association cdi:Key_identifies_DataPoint (1..*) | identifies | cdi:DataPoint
     identifies: list[URIRef] = Field(
         alias="identifies",
         description="",
@@ -8861,7 +8861,7 @@ class Key(DdiCdiClass):
         },
     )
 
-    # cdi:Key_represents_KeyDefinition (0..1) | represents | cdi:KeyDefinition
+    # association cdi:Key_represents_KeyDefinition (0..1) | represents | cdi:KeyDefinition
     represents: URIRef | None = Field(
         alias="represents",
         default=None,
@@ -8897,7 +8897,7 @@ class KeyDefinition(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:KeyDefinition-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:KeyDefinition-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -8912,7 +8912,7 @@ class KeyDefinition(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:KeyDefinition_correspondsTo_Unit (0..1) | correspondsTo_Unit | cdi:Unit
+    # association cdi:KeyDefinition_correspondsTo_Unit (0..1) | correspondsTo_Unit | cdi:Unit
     correspondsTo_Unit: URIRef | None = Field(
         alias="correspondsTo_Unit",
         default=None,
@@ -8923,7 +8923,7 @@ class KeyDefinition(DdiCdiClass):
         },
     )
 
-    # cdi:KeyDefinition_correspondsTo_Universe (0..1) | correspondsTo_Universe | cdi:Universe
+    # association cdi:KeyDefinition_correspondsTo_Universe (0..1) | correspondsTo_Universe | cdi:Universe
     correspondsTo_Universe: URIRef | None = Field(
         alias="correspondsTo_Universe",
         default=None,
@@ -8934,7 +8934,7 @@ class KeyDefinition(DdiCdiClass):
         },
     )
 
-    # cdi:KeyDefinition_has_KeyDefinitionMember (0..*) | has_KeyDefinitionMember | cdi:KeyDefinitionMember
+    # association cdi:KeyDefinition_has_KeyDefinitionMember (0..*) | has_KeyDefinitionMember | cdi:KeyDefinitionMember
     has_KeyDefinitionMember: list[URIRef] | None = Field(
         alias="has_KeyDefinitionMember",
         default=None,
@@ -8978,7 +8978,7 @@ class Level(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Level-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
+    # attribute cdi:Level-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
     displayLabel: list[LabelForDisplay] | None = Field(
         alias="displayLabel",
         default=None,
@@ -8989,7 +8989,7 @@ class Level(DdiCdiClass):
         },
     )
 
-    # cdi:Level-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:Level-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -9000,7 +9000,7 @@ class Level(DdiCdiClass):
         },
     )
 
-    # cdi:Level-levelNumber (1..1) | levelNumber | xsd:integer
+    # attribute cdi:Level-levelNumber (1..1) | levelNumber | xsd:integer
     levelNumber: int = Field(
         alias="levelNumber",
         description="Provides an association between a level number and optional concept which defines it within an ordered array. Use is required.",
@@ -9014,7 +9014,7 @@ class Level(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:Level_isDefinedBy_Concept (0..1) | isDefinedBy_Concept | cdi:Concept
+    # association cdi:Level_isDefinedBy_Concept (0..1) | isDefinedBy_Concept | cdi:Concept
     isDefinedBy_Concept: URIRef | None = Field(
         alias="isDefinedBy_Concept",
         default=None,
@@ -9025,7 +9025,7 @@ class Level(DdiCdiClass):
         },
     )
 
-    # cdi:Level_groups_ClassificationItem (0..*) | groups | cdi:ClassificationItem
+    # association cdi:Level_groups_ClassificationItem (0..*) | groups | cdi:ClassificationItem
     groups: list[URIRef] | None = Field(
         alias="groups",
         default=None,
@@ -9069,7 +9069,7 @@ class LevelStructure(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:LevelStructure-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:LevelStructure-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -9085,7 +9085,7 @@ class LevelStructure(DdiCdiClass):
         },
     )
 
-    # cdi:LevelStructure-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:LevelStructure-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -9096,7 +9096,7 @@ class LevelStructure(DdiCdiClass):
         },
     )
 
-    # cdi:LevelStructure-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:LevelStructure-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -9107,7 +9107,7 @@ class LevelStructure(DdiCdiClass):
         },
     )
 
-    # cdi:LevelStructure-usage (0..1) | usage | cdi:InternationalString
+    # attribute cdi:LevelStructure-usage (0..1) | usage | cdi:InternationalString
     usage: InternationalString | None = Field(
         alias="usage",
         default=None,
@@ -9118,7 +9118,7 @@ class LevelStructure(DdiCdiClass):
         },
     )
 
-    # cdi:LevelStructure-validDateRange (0..1) | validDateRange | cdi:DateRange
+    # attribute cdi:LevelStructure-validDateRange (0..1) | validDateRange | cdi:DateRange
     validDateRange: DateRange | None = Field(
         alias="validDateRange",
         default=None,
@@ -9133,7 +9133,7 @@ class LevelStructure(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:LevelStructure_has_Level (0..*) | has_Level | cdi:Level
+    # association cdi:LevelStructure_has_Level (0..*) | has_Level | cdi:Level
     has_Level: list[URIRef] | None = Field(
         alias="has_Level",
         default=None,
@@ -9169,7 +9169,7 @@ class LogicalRecord(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:LogicalRecord-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:LogicalRecord-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -9184,7 +9184,7 @@ class LogicalRecord(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:LogicalRecord_has_InstanceVariable (0..*) | has_InstanceVariable | cdi:InstanceVariable
+    # association cdi:LogicalRecord_has_InstanceVariable (0..*) | has_InstanceVariable | cdi:InstanceVariable
     has_InstanceVariable: list[URIRef] | None = Field(
         alias="has_InstanceVariable",
         default=None,
@@ -9195,7 +9195,7 @@ class LogicalRecord(DdiCdiClass):
         },
     )
 
-    # cdi:LogicalRecord_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
+    # association cdi:LogicalRecord_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
     isDefinedBy_Concept: list[URIRef] | None = Field(
         alias="isDefinedBy_Concept",
         default=None,
@@ -9206,7 +9206,7 @@ class LogicalRecord(DdiCdiClass):
         },
     )
 
-    # cdi:LogicalRecord_organizes_DataSet (0..*) | organizes | cdi:DataSet
+    # association cdi:LogicalRecord_organizes_DataSet (0..*) | organizes | cdi:DataSet
     organizes: list[URIRef] | None = Field(
         alias="organizes",
         default=None,
@@ -9242,7 +9242,7 @@ class LogicalRecordPosition(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:LogicalRecordPosition-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:LogicalRecordPosition-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -9253,7 +9253,7 @@ class LogicalRecordPosition(DdiCdiClass):
         },
     )
 
-    # cdi:LogicalRecordPosition-value (1..1) | value | xsd:integer
+    # attribute cdi:LogicalRecordPosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
@@ -9267,7 +9267,7 @@ class LogicalRecordPosition(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:LogicalRecordPosition_indexes_LogicalRecord (1..1) | indexes | cdi:LogicalRecord
+    # association cdi:LogicalRecordPosition_indexes_LogicalRecord (1..1) | indexes | cdi:LogicalRecord
     indexes: URIRef = Field(
         alias="indexes",
         description="Logical record position indexes a logical record.",
@@ -9306,7 +9306,7 @@ class LogicalRecordRelationStructure(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:LogicalRecordRelationStructure-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:LogicalRecordRelationStructure-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -9317,7 +9317,7 @@ class LogicalRecordRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:LogicalRecordRelationStructure-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:LogicalRecordRelationStructure-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -9328,7 +9328,7 @@ class LogicalRecordRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:LogicalRecordRelationStructure-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:LogicalRecordRelationStructure-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -9339,7 +9339,7 @@ class LogicalRecordRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:LogicalRecordRelationStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:LogicalRecordRelationStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -9350,7 +9350,7 @@ class LogicalRecordRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:LogicalRecordRelationStructure-specification (0..1) | specification | cdi:StructureSpecification
+    # attribute cdi:LogicalRecordRelationStructure-specification (0..1) | specification | cdi:StructureSpecification
     specification: StructureSpecification | None = Field(
         alias="specification",
         default=None,
@@ -9361,7 +9361,7 @@ class LogicalRecordRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:LogicalRecordRelationStructure-topology (0..1) | topology | cdi:ControlledVocabularyEntry
+    # attribute cdi:LogicalRecordRelationStructure-topology (0..1) | topology | cdi:ControlledVocabularyEntry
     topology: ControlledVocabularyEntry | None = Field(
         alias="topology",
         default=None,
@@ -9372,7 +9372,7 @@ class LogicalRecordRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:LogicalRecordRelationStructure-totality (0..1) | totality | cdi:StructureExtent
+    # attribute cdi:LogicalRecordRelationStructure-totality (0..1) | totality | cdi:StructureExtent
     totality: StructureExtent | None = Field(
         alias="totality",
         default=None,
@@ -9387,7 +9387,7 @@ class LogicalRecordRelationStructure(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:LogicalRecordRelationStructure_has_LogicalRecordRelationship (0..*) | has_LogicalRecordRelationship | cdi:LogicalRecordRelationship
+    # association cdi:LogicalRecordRelationStructure_has_LogicalRecordRelationship (0..*) | has_LogicalRecordRelationship | cdi:LogicalRecordRelationship
     has_LogicalRecordRelationship: list[URIRef] | None = Field(
         alias="has_LogicalRecordRelationship",
         default=None,
@@ -9398,7 +9398,7 @@ class LogicalRecordRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:LogicalRecordRelationStructure_structures_DataStore (0..*) | structures | cdi:DataStore
+    # association cdi:LogicalRecordRelationStructure_structures_DataStore (0..*) | structures | cdi:DataStore
     structures: list[URIRef] | None = Field(
         alias="structures",
         default=None,
@@ -9434,7 +9434,7 @@ class LogicalRecordRelationship(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:LogicalRecordRelationship-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:LogicalRecordRelationship-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -9445,7 +9445,7 @@ class LogicalRecordRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:LogicalRecordRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:LogicalRecordRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -9460,7 +9460,7 @@ class LogicalRecordRelationship(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:LogicalRecordRelationship_hasSource_LogicalRecord (0..*) | hasSource | cdi:LogicalRecord
+    # association cdi:LogicalRecordRelationship_hasSource_LogicalRecord (0..*) | hasSource | cdi:LogicalRecord
     hasSource: list[URIRef] | None = Field(
         alias="hasSource",
         default=None,
@@ -9471,7 +9471,7 @@ class LogicalRecordRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:LogicalRecordRelationship_hasTarget_LogicalRecord (0..*) | hasTarget | cdi:LogicalRecord
+    # association cdi:LogicalRecordRelationship_hasTarget_LogicalRecord (0..*) | hasTarget | cdi:LogicalRecord
     hasTarget: list[URIRef] | None = Field(
         alias="hasTarget",
         default=None,
@@ -9511,7 +9511,7 @@ class Notation(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Notation-content (0..1) | content | cdi:TypedString
+    # attribute cdi:Notation-content (0..1) | content | cdi:TypedString
     content: TypedString | None = Field(
         alias="content",
         default=None,
@@ -9522,7 +9522,7 @@ class Notation(DdiCdiClass):
         },
     )
 
-    # cdi:Notation-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:Notation-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -9533,7 +9533,7 @@ class Notation(DdiCdiClass):
         },
     )
 
-    # cdi:Notation-whiteSpace (0..1) | whiteSpace | cdi:WhiteSpaceRule
+    # attribute cdi:Notation-whiteSpace (0..1) | whiteSpace | cdi:WhiteSpaceRule
     whiteSpace: WhiteSpaceRule | None = Field(
         alias="whiteSpace",
         default=None,
@@ -9548,7 +9548,7 @@ class Notation(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:Notation_represents_Category (0..*) | represents | cdi:Category
+    # association cdi:Notation_represents_Category (0..*) | represents | cdi:Category
     represents: list[URIRef] | None = Field(
         alias="represents",
         default=None,
@@ -9588,7 +9588,7 @@ class Parameter(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Parameter-entityBound (0..*) | entityBound | cdi:Reference
+    # attribute cdi:Parameter-entityBound (0..*) | entityBound | cdi:Reference
     entityBound: list[Reference] | None = Field(
         alias="entityBound",
         default=None,
@@ -9599,7 +9599,7 @@ class Parameter(DdiCdiClass):
         },
     )
 
-    # cdi:Parameter-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:Parameter-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -9610,7 +9610,7 @@ class Parameter(DdiCdiClass):
         },
     )
 
-    # cdi:Parameter-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:Parameter-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -9654,7 +9654,7 @@ class PhysicalDataSet(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:PhysicalDataSet-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
+    # attribute cdi:PhysicalDataSet-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
     allowsDuplicates: bool = Field(
         alias="allowsDuplicates",
         description="""If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical \"bag\" permits duplicates and is unordered - a \"set\" does not have duplicates and may be ordered.)""",
@@ -9664,7 +9664,7 @@ class PhysicalDataSet(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSet-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:PhysicalDataSet-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -9680,7 +9680,7 @@ class PhysicalDataSet(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSet-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:PhysicalDataSet-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -9691,7 +9691,7 @@ class PhysicalDataSet(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSet-name (0..1) | name | cdi:ObjectName
+    # attribute cdi:PhysicalDataSet-name (0..1) | name | cdi:ObjectName
     name: ObjectName | None = Field(
         alias="name",
         default=None,
@@ -9702,7 +9702,7 @@ class PhysicalDataSet(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSet-numberOfSegments (0..1) | numberOfSegments | xsd:integer
+    # attribute cdi:PhysicalDataSet-numberOfSegments (0..1) | numberOfSegments | xsd:integer
     numberOfSegments: int | None = Field(
         alias="numberOfSegments",
         default=None,
@@ -9713,7 +9713,7 @@ class PhysicalDataSet(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSet-overview (0..1) | overview | cdi:InternationalString
+    # attribute cdi:PhysicalDataSet-overview (0..1) | overview | cdi:InternationalString
     overview: InternationalString | None = Field(
         alias="overview",
         default=None,
@@ -9724,7 +9724,7 @@ class PhysicalDataSet(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSet-physicalFileName (0..1) | physicalFileName | xsd:string
+    # attribute cdi:PhysicalDataSet-physicalFileName (0..1) | physicalFileName | xsd:string
     physicalFileName: Union[str, LiteralField] | None = Field(
         alias="physicalFileName",
         default=None,
@@ -9735,7 +9735,7 @@ class PhysicalDataSet(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSet-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:PhysicalDataSet-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -9750,7 +9750,7 @@ class PhysicalDataSet(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:PhysicalDataSet_has_InstanceVariable (0..*) | has_InstanceVariable | cdi:InstanceVariable
+    # association cdi:PhysicalDataSet_has_InstanceVariable (0..*) | has_InstanceVariable | cdi:InstanceVariable
     has_InstanceVariable: list[URIRef] | None = Field(
         alias="has_InstanceVariable",
         default=None,
@@ -9761,7 +9761,7 @@ class PhysicalDataSet(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSet_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
+    # association cdi:PhysicalDataSet_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
     isDefinedBy_Concept: list[URIRef] | None = Field(
         alias="isDefinedBy_Concept",
         default=None,
@@ -9772,7 +9772,7 @@ class PhysicalDataSet(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSet_correspondsTo_DataSet (0..1) | correspondsTo_DataSet | cdi:DataSet
+    # association cdi:PhysicalDataSet_correspondsTo_DataSet (0..1) | correspondsTo_DataSet | cdi:DataSet
     correspondsTo_DataSet: URIRef | None = Field(
         alias="correspondsTo_DataSet",
         default=None,
@@ -9783,7 +9783,7 @@ class PhysicalDataSet(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSet_formats_DataStore (0..*) | formats | cdi:DataStore
+    # association cdi:PhysicalDataSet_formats_DataStore (0..*) | formats | cdi:DataStore
     formats: list[URIRef] | None = Field(
         alias="formats",
         default=None,
@@ -9794,7 +9794,7 @@ class PhysicalDataSet(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSet_has_PhysicalRecordSegment (0..*) | has_PhysicalRecordSegment | cdi:PhysicalRecordSegment
+    # association cdi:PhysicalDataSet_has_PhysicalRecordSegment (0..*) | has_PhysicalRecordSegment | cdi:PhysicalRecordSegment
     has_PhysicalRecordSegment: list[URIRef] | None = Field(
         alias="has_PhysicalRecordSegment",
         default=None,
@@ -9805,7 +9805,7 @@ class PhysicalDataSet(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSet_has_PhysicalRecordSegmentPosition (0..*) | has_PhysicalRecordSegmentPosition | cdi:PhysicalRecordSegmentPosition
+    # association cdi:PhysicalDataSet_has_PhysicalRecordSegmentPosition (0..*) | has_PhysicalRecordSegmentPosition | cdi:PhysicalRecordSegmentPosition
     has_PhysicalRecordSegmentPosition: list[URIRef] | None = Field(
         alias="has_PhysicalRecordSegmentPosition",
         default=None,
@@ -9845,7 +9845,7 @@ class PhysicalDataSetStructure(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:PhysicalDataSetStructure-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:PhysicalDataSetStructure-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -9856,7 +9856,7 @@ class PhysicalDataSetStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSetStructure-name (0..1) | name | cdi:ObjectName
+    # attribute cdi:PhysicalDataSetStructure-name (0..1) | name | cdi:ObjectName
     name: ObjectName | None = Field(
         alias="name",
         default=None,
@@ -9867,7 +9867,7 @@ class PhysicalDataSetStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSetStructure-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:PhysicalDataSetStructure-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -9878,7 +9878,7 @@ class PhysicalDataSetStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSetStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:PhysicalDataSetStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -9889,7 +9889,7 @@ class PhysicalDataSetStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSetStructure-specification (0..1) | specification | cdi:StructureSpecification
+    # attribute cdi:PhysicalDataSetStructure-specification (0..1) | specification | cdi:StructureSpecification
     specification: StructureSpecification | None = Field(
         alias="specification",
         default=None,
@@ -9900,7 +9900,7 @@ class PhysicalDataSetStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSetStructure-topology (0..1) | topology | cdi:ControlledVocabularyEntry
+    # attribute cdi:PhysicalDataSetStructure-topology (0..1) | topology | cdi:ControlledVocabularyEntry
     topology: ControlledVocabularyEntry | None = Field(
         alias="topology",
         default=None,
@@ -9911,7 +9911,7 @@ class PhysicalDataSetStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSetStructure-totality (0..1) | totality | cdi:StructureExtent
+    # attribute cdi:PhysicalDataSetStructure-totality (0..1) | totality | cdi:StructureExtent
     totality: StructureExtent | None = Field(
         alias="totality",
         default=None,
@@ -9926,7 +9926,7 @@ class PhysicalDataSetStructure(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:PhysicalDataSetStructure_correspondsTo_DataStructure (0..1) | correspondsTo_DataStructure | cdi:DataStructure
+    # association cdi:PhysicalDataSetStructure_correspondsTo_DataStructure (0..1) | correspondsTo_DataStructure | cdi:DataStructure
     correspondsTo_DataStructure: URIRef | None = Field(
         alias="correspondsTo_DataStructure",
         default=None,
@@ -9937,7 +9937,7 @@ class PhysicalDataSetStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSetStructure_has_PhysicalRecordSegmentRelationship (0..*) | has_PhysicalRecordSegmentRelationship | cdi:PhysicalRecordSegmentRelationship
+    # association cdi:PhysicalDataSetStructure_has_PhysicalRecordSegmentRelationship (0..*) | has_PhysicalRecordSegmentRelationship | cdi:PhysicalRecordSegmentRelationship
     has_PhysicalRecordSegmentRelationship: list[URIRef] | None = Field(
         alias="has_PhysicalRecordSegmentRelationship",
         default=None,
@@ -9948,7 +9948,7 @@ class PhysicalDataSetStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalDataSetStructure_structures_PhysicalDataSet (0..1) | structures | cdi:PhysicalDataSet
+    # association cdi:PhysicalDataSetStructure_structures_PhysicalDataSet (0..1) | structures | cdi:PhysicalDataSet
     structures: URIRef | None = Field(
         alias="structures",
         default=None,
@@ -9998,7 +9998,7 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:PhysicalLayoutRelationStructure-criteria (0..1) | criteria | cdi:InternationalString
+    # attribute cdi:PhysicalLayoutRelationStructure-criteria (0..1) | criteria | cdi:InternationalString
     criteria: InternationalString | None = Field(
         alias="criteria",
         default=None,
@@ -10009,7 +10009,7 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalLayoutRelationStructure-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:PhysicalLayoutRelationStructure-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -10020,7 +10020,7 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalLayoutRelationStructure-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:PhysicalLayoutRelationStructure-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -10031,7 +10031,7 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalLayoutRelationStructure-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:PhysicalLayoutRelationStructure-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -10042,7 +10042,7 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalLayoutRelationStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:PhysicalLayoutRelationStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -10053,7 +10053,7 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalLayoutRelationStructure-specification (0..1) | specification | cdi:StructureSpecification
+    # attribute cdi:PhysicalLayoutRelationStructure-specification (0..1) | specification | cdi:StructureSpecification
     specification: StructureSpecification | None = Field(
         alias="specification",
         default=None,
@@ -10064,7 +10064,7 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalLayoutRelationStructure-topology (1..1) | topology | cdi:ControlledVocabularyEntry
+    # attribute cdi:PhysicalLayoutRelationStructure-topology (1..1) | topology | cdi:ControlledVocabularyEntry
     topology: ControlledVocabularyEntry = Field(
         alias="topology",
         description="Indicates the form of the associations among members of the collection. Specifies the way in which constituent parts are interrelated or arranged.",
@@ -10074,7 +10074,7 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalLayoutRelationStructure-totality (0..1) | totality | cdi:StructureExtent
+    # attribute cdi:PhysicalLayoutRelationStructure-totality (0..1) | totality | cdi:StructureExtent
     totality: StructureExtent | None = Field(
         alias="totality",
         default=None,
@@ -10089,7 +10089,7 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:PhysicalLayoutRelationStructure_has_ValueMappingRelationship (0..*) | has_ValueMappingRelationship | cdi:ValueMappingRelationship
+    # association cdi:PhysicalLayoutRelationStructure_has_ValueMappingRelationship (0..*) | has_ValueMappingRelationship | cdi:ValueMappingRelationship
     has_ValueMappingRelationship: list[URIRef] | None = Field(
         alias="has_ValueMappingRelationship",
         default=None,
@@ -10100,7 +10100,7 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalLayoutRelationStructure_structures_PhysicalSegmentLayout (0..1) | structures | cdi:PhysicalSegmentLayout
+    # association cdi:PhysicalLayoutRelationStructure_structures_PhysicalSegmentLayout (0..1) | structures | cdi:PhysicalSegmentLayout
     structures: URIRef | None = Field(
         alias="structures",
         default=None,
@@ -10149,7 +10149,7 @@ class PhysicalRecordSegment(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:PhysicalRecordSegment-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:PhysicalRecordSegment-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -10165,7 +10165,7 @@ class PhysicalRecordSegment(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegment-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:PhysicalRecordSegment-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -10176,7 +10176,7 @@ class PhysicalRecordSegment(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegment-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:PhysicalRecordSegment-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -10187,7 +10187,7 @@ class PhysicalRecordSegment(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegment-physicalFileName (0..1) | physicalFileName | xsd:string
+    # attribute cdi:PhysicalRecordSegment-physicalFileName (0..1) | physicalFileName | xsd:string
     physicalFileName: Union[str, LiteralField] | None = Field(
         alias="physicalFileName",
         default=None,
@@ -10198,7 +10198,7 @@ class PhysicalRecordSegment(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegment-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:PhysicalRecordSegment-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -10213,7 +10213,7 @@ class PhysicalRecordSegment(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:PhysicalRecordSegment_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
+    # association cdi:PhysicalRecordSegment_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
     isDefinedBy_Concept: list[URIRef] | None = Field(
         alias="isDefinedBy_Concept",
         default=None,
@@ -10224,7 +10224,7 @@ class PhysicalRecordSegment(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegment_represents_Population (0..1) | represents | cdi:Population
+    # association cdi:PhysicalRecordSegment_represents_Population (0..1) | represents | cdi:Population
     represents: URIRef | None = Field(
         alias="represents",
         default=None,
@@ -10235,7 +10235,7 @@ class PhysicalRecordSegment(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegment_has_DataPoint (0..*) | has_DataPoint | cdi:DataPoint
+    # association cdi:PhysicalRecordSegment_has_DataPoint (0..*) | has_DataPoint | cdi:DataPoint
     has_DataPoint: list[URIRef] | None = Field(
         alias="has_DataPoint",
         default=None,
@@ -10246,7 +10246,7 @@ class PhysicalRecordSegment(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegment_has_DataPointPosition (0..*) | has_DataPointPosition | cdi:DataPointPosition
+    # association cdi:PhysicalRecordSegment_has_DataPointPosition (0..*) | has_DataPointPosition | cdi:DataPointPosition
     has_DataPointPosition: list[URIRef] | None = Field(
         alias="has_DataPointPosition",
         default=None,
@@ -10257,7 +10257,7 @@ class PhysicalRecordSegment(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegment_has_PhysicalSegmentLayout (0..1) | has_PhysicalSegmentLayout | cdi:PhysicalSegmentLayout
+    # association cdi:PhysicalRecordSegment_has_PhysicalSegmentLayout (0..1) | has_PhysicalSegmentLayout | cdi:PhysicalSegmentLayout
     has_PhysicalSegmentLayout: URIRef | None = Field(
         alias="has_PhysicalSegmentLayout",
         default=None,
@@ -10268,7 +10268,7 @@ class PhysicalRecordSegment(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegment_mapsTo_LogicalRecord (0..1) | mapsTo | cdi:LogicalRecord
+    # association cdi:PhysicalRecordSegment_mapsTo_LogicalRecord (0..1) | mapsTo | cdi:LogicalRecord
     mapsTo: URIRef | None = Field(
         alias="mapsTo",
         default=None,
@@ -10304,7 +10304,7 @@ class PhysicalRecordSegmentPosition(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:PhysicalRecordSegmentPosition-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:PhysicalRecordSegmentPosition-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -10315,7 +10315,7 @@ class PhysicalRecordSegmentPosition(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegmentPosition-value (1..1) | value | xsd:integer
+    # attribute cdi:PhysicalRecordSegmentPosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
@@ -10329,7 +10329,7 @@ class PhysicalRecordSegmentPosition(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:PhysicalRecordSegmentPosition_indexes_PhysicalRecordSegment (1..1) | indexes | cdi:PhysicalRecordSegment
+    # association cdi:PhysicalRecordSegmentPosition_indexes_PhysicalRecordSegment (1..1) | indexes | cdi:PhysicalRecordSegment
     indexes: URIRef = Field(
         alias="indexes",
         description="Assigns a position to a physical record segment within a physical record.",
@@ -10364,7 +10364,7 @@ class PhysicalRecordSegmentRelationship(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:PhysicalRecordSegmentRelationship-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:PhysicalRecordSegmentRelationship-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -10375,7 +10375,7 @@ class PhysicalRecordSegmentRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegmentRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:PhysicalRecordSegmentRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -10390,7 +10390,7 @@ class PhysicalRecordSegmentRelationship(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:PhysicalRecordSegmentRelationship_hasSource_PhysicalRecordSegment (0..1) | hasSource | cdi:PhysicalRecordSegment
+    # association cdi:PhysicalRecordSegmentRelationship_hasSource_PhysicalRecordSegment (0..1) | hasSource | cdi:PhysicalRecordSegment
     hasSource: URIRef | None = Field(
         alias="hasSource",
         default=None,
@@ -10401,7 +10401,7 @@ class PhysicalRecordSegmentRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegmentRelationship_hasTarget_PhysicalRecordSegment (0..*) | hasTarget | cdi:PhysicalRecordSegment
+    # association cdi:PhysicalRecordSegmentRelationship_hasTarget_PhysicalRecordSegment (0..*) | hasTarget | cdi:PhysicalRecordSegment
     hasTarget: list[URIRef] | None = Field(
         alias="hasTarget",
         default=None,
@@ -10437,7 +10437,7 @@ class PhysicalRecordSegmentStructure(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:PhysicalRecordSegmentStructure-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:PhysicalRecordSegmentStructure-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -10448,7 +10448,7 @@ class PhysicalRecordSegmentStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegmentStructure-name (0..1) | name | cdi:ObjectName
+    # attribute cdi:PhysicalRecordSegmentStructure-name (0..1) | name | cdi:ObjectName
     name: ObjectName | None = Field(
         alias="name",
         default=None,
@@ -10459,7 +10459,7 @@ class PhysicalRecordSegmentStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegmentStructure-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:PhysicalRecordSegmentStructure-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -10470,7 +10470,7 @@ class PhysicalRecordSegmentStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegmentStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:PhysicalRecordSegmentStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -10481,7 +10481,7 @@ class PhysicalRecordSegmentStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegmentStructure-specification (0..1) | specification | cdi:StructureSpecification
+    # attribute cdi:PhysicalRecordSegmentStructure-specification (0..1) | specification | cdi:StructureSpecification
     specification: StructureSpecification | None = Field(
         alias="specification",
         default=None,
@@ -10492,7 +10492,7 @@ class PhysicalRecordSegmentStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegmentStructure-topology (0..1) | topology | cdi:ControlledVocabularyEntry
+    # attribute cdi:PhysicalRecordSegmentStructure-topology (0..1) | topology | cdi:ControlledVocabularyEntry
     topology: ControlledVocabularyEntry | None = Field(
         alias="topology",
         default=None,
@@ -10503,7 +10503,7 @@ class PhysicalRecordSegmentStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegmentStructure-totality (0..1) | totality | cdi:StructureExtent
+    # attribute cdi:PhysicalRecordSegmentStructure-totality (0..1) | totality | cdi:StructureExtent
     totality: StructureExtent | None = Field(
         alias="totality",
         default=None,
@@ -10518,7 +10518,7 @@ class PhysicalRecordSegmentStructure(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:PhysicalRecordSegmentStructure_has_DataPointRelationship (0..*) | has_DataPointRelationship | cdi:DataPointRelationship
+    # association cdi:PhysicalRecordSegmentStructure_has_DataPointRelationship (0..*) | has_DataPointRelationship | cdi:DataPointRelationship
     has_DataPointRelationship: list[URIRef] | None = Field(
         alias="has_DataPointRelationship",
         default=None,
@@ -10529,7 +10529,7 @@ class PhysicalRecordSegmentStructure(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalRecordSegmentStructure_structures_PhysicalRecordSegment (0..1) | structures | cdi:PhysicalRecordSegment
+    # association cdi:PhysicalRecordSegmentStructure_structures_PhysicalRecordSegment (0..1) | structures | cdi:PhysicalRecordSegment
     structures: URIRef | None = Field(
         alias="structures",
         default=None,
@@ -10573,7 +10573,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:PhysicalSegmentLayout-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
+    # attribute cdi:PhysicalSegmentLayout-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
     allowsDuplicates: bool = Field(
         alias="allowsDuplicates",
         description="If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical “bag” permits duplicates and is unordered - a “set” does not have duplicates and may be ordered.)",
@@ -10583,7 +10583,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-arrayBase (0..1) | arrayBase | xsd:integer
+    # attribute cdi:PhysicalSegmentLayout-arrayBase (0..1) | arrayBase | xsd:integer
     arrayBase: int | None = Field(
         alias="arrayBase",
         default=None,
@@ -10594,7 +10594,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:PhysicalSegmentLayout-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -10610,7 +10610,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-commentPrefix (0..1) | commentPrefix | xsd:string
+    # attribute cdi:PhysicalSegmentLayout-commentPrefix (0..1) | commentPrefix | xsd:string
     commentPrefix: Union[str, LiteralField] | None = Field(
         alias="commentPrefix",
         default=None,
@@ -10621,7 +10621,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-delimiter (0..1) | delimiter | xsd:string
+    # attribute cdi:PhysicalSegmentLayout-delimiter (0..1) | delimiter | xsd:string
     delimiter: Union[str, LiteralField] | None = Field(
         alias="delimiter",
         default=None,
@@ -10632,7 +10632,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-encoding (0..1) | encoding | cdi:ControlledVocabularyEntry
+    # attribute cdi:PhysicalSegmentLayout-encoding (0..1) | encoding | cdi:ControlledVocabularyEntry
     encoding: ControlledVocabularyEntry | None = Field(
         alias="encoding",
         default=None,
@@ -10643,7 +10643,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-escapeCharacter (0..1) | escapeCharacter | xsd:string
+    # attribute cdi:PhysicalSegmentLayout-escapeCharacter (0..1) | escapeCharacter | xsd:string
     escapeCharacter: Union[str, LiteralField] | None = Field(
         alias="escapeCharacter",
         default=None,
@@ -10654,7 +10654,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-hasHeader (0..1) | hasHeader | xsd:boolean
+    # attribute cdi:PhysicalSegmentLayout-hasHeader (0..1) | hasHeader | xsd:boolean
     hasHeader: bool | None = Field(
         alias="hasHeader",
         default=None,
@@ -10665,7 +10665,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-headerIsCaseSensitive (0..1) | headerIsCaseSensitive | xsd:boolean
+    # attribute cdi:PhysicalSegmentLayout-headerIsCaseSensitive (0..1) | headerIsCaseSensitive | xsd:boolean
     headerIsCaseSensitive: bool | None = Field(
         alias="headerIsCaseSensitive",
         default=None,
@@ -10676,7 +10676,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-headerRowCount (0..1) | headerRowCount | xsd:integer
+    # attribute cdi:PhysicalSegmentLayout-headerRowCount (0..1) | headerRowCount | xsd:integer
     headerRowCount: int | None = Field(
         alias="headerRowCount",
         default=None,
@@ -10687,7 +10687,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:PhysicalSegmentLayout-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -10698,7 +10698,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-isDelimited (1..1) | isDelimited | xsd:boolean
+    # attribute cdi:PhysicalSegmentLayout-isDelimited (1..1) | isDelimited | xsd:boolean
     isDelimited: bool = Field(
         alias="isDelimited",
         description="""Indicates whether the data are in a delimited format. If \"true,\" the format is delimited, and the isFixedWidth property must be set to \"false.\" If not set to \"true,\" the property isFixedWitdh must be set to \"true.\"""",
@@ -10708,7 +10708,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-isFixedWidth (1..1) | isFixedWidth | xsd:boolean
+    # attribute cdi:PhysicalSegmentLayout-isFixedWidth (1..1) | isFixedWidth | xsd:boolean
     isFixedWidth: bool = Field(
         alias="isFixedWidth",
         description="Set to true if the file is fixed-width. If true, isDelimited must be set to false.",
@@ -10718,7 +10718,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-lineTerminator (0..*) | lineTerminator | xsd:string
+    # attribute cdi:PhysicalSegmentLayout-lineTerminator (0..*) | lineTerminator | xsd:string
     lineTerminator: list[Union[str, LiteralField]] | None = Field(
         alias="lineTerminator",
         default=None,
@@ -10729,7 +10729,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:PhysicalSegmentLayout-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -10740,7 +10740,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-nullSequence (0..1) | nullSequence | xsd:string
+    # attribute cdi:PhysicalSegmentLayout-nullSequence (0..1) | nullSequence | xsd:string
     nullSequence: Union[str, LiteralField] | None = Field(
         alias="nullSequence",
         default=None,
@@ -10751,7 +10751,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-overview (0..1) | overview | cdi:InternationalString
+    # attribute cdi:PhysicalSegmentLayout-overview (0..1) | overview | cdi:InternationalString
     overview: InternationalString | None = Field(
         alias="overview",
         default=None,
@@ -10762,7 +10762,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:PhysicalSegmentLayout-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -10773,7 +10773,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-quoteCharacter (0..1) | quoteCharacter | xsd:string
+    # attribute cdi:PhysicalSegmentLayout-quoteCharacter (0..1) | quoteCharacter | xsd:string
     quoteCharacter: Union[str, LiteralField] | None = Field(
         alias="quoteCharacter",
         default=None,
@@ -10784,7 +10784,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-skipBlankRows (0..1) | skipBlankRows | xsd:boolean
+    # attribute cdi:PhysicalSegmentLayout-skipBlankRows (0..1) | skipBlankRows | xsd:boolean
     skipBlankRows: bool | None = Field(
         alias="skipBlankRows",
         default=None,
@@ -10795,7 +10795,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-skipDataColumns (0..1) | skipDataColumns | xsd:integer
+    # attribute cdi:PhysicalSegmentLayout-skipDataColumns (0..1) | skipDataColumns | xsd:integer
     skipDataColumns: int | None = Field(
         alias="skipDataColumns",
         default=None,
@@ -10806,7 +10806,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-skipInitialSpace (0..1) | skipInitialSpace | xsd:boolean
+    # attribute cdi:PhysicalSegmentLayout-skipInitialSpace (0..1) | skipInitialSpace | xsd:boolean
     skipInitialSpace: bool | None = Field(
         alias="skipInitialSpace",
         default=None,
@@ -10817,7 +10817,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-skipRows (0..1) | skipRows | xsd:integer
+    # attribute cdi:PhysicalSegmentLayout-skipRows (0..1) | skipRows | xsd:integer
     skipRows: int | None = Field(
         alias="skipRows",
         default=None,
@@ -10828,7 +10828,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-tableDirection (0..1) | tableDirection | cdi:TableDirectionValues
+    # attribute cdi:PhysicalSegmentLayout-tableDirection (0..1) | tableDirection | cdi:TableDirectionValues
     tableDirection: TableDirectionValues | None = Field(
         alias="tableDirection",
         default=None,
@@ -10839,7 +10839,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-textDirection (0..1) | textDirection | cdi:TextDirectionValues
+    # attribute cdi:PhysicalSegmentLayout-textDirection (0..1) | textDirection | cdi:TextDirectionValues
     textDirection: TextDirectionValues | None = Field(
         alias="textDirection",
         default=None,
@@ -10850,7 +10850,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-treatConsecutiveDelimitersAsOne (0..1) | treatConsecutiveDelimitersAsOne | xsd:boolean
+    # attribute cdi:PhysicalSegmentLayout-treatConsecutiveDelimitersAsOne (0..1) | treatConsecutiveDelimitersAsOne | xsd:boolean
     treatConsecutiveDelimitersAsOne: bool | None = Field(
         alias="treatConsecutiveDelimitersAsOne",
         default=None,
@@ -10861,7 +10861,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout-trim (0..1) | trim | cdi:TrimValues
+    # attribute cdi:PhysicalSegmentLayout-trim (0..1) | trim | cdi:TrimValues
     trim: TrimValues | None = Field(
         alias="trim",
         default=None,
@@ -10876,7 +10876,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:PhysicalSegmentLayout_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
+    # association cdi:PhysicalSegmentLayout_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
     isDefinedBy_Concept: list[URIRef] | None = Field(
         alias="isDefinedBy_Concept",
         default=None,
@@ -10887,7 +10887,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout_formats_LogicalRecord (0..1) | formats | cdi:LogicalRecord
+    # association cdi:PhysicalSegmentLayout_formats_LogicalRecord (0..1) | formats | cdi:LogicalRecord
     formats: URIRef | None = Field(
         alias="formats",
         default=None,
@@ -10898,7 +10898,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout_has_ValueMapping (0..*) | has_ValueMapping | cdi:ValueMapping
+    # association cdi:PhysicalSegmentLayout_has_ValueMapping (0..*) | has_ValueMapping | cdi:ValueMapping
     has_ValueMapping: list[URIRef] | None = Field(
         alias="has_ValueMapping",
         default=None,
@@ -10909,7 +10909,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLayout_has_ValueMappingPosition (0..*) | has_ValueMappingPosition | cdi:ValueMappingPosition
+    # association cdi:PhysicalSegmentLayout_has_ValueMappingPosition (0..*) | has_ValueMappingPosition | cdi:ValueMappingPosition
     has_ValueMappingPosition: list[URIRef] | None = Field(
         alias="has_ValueMappingPosition",
         default=None,
@@ -10953,7 +10953,7 @@ class PhysicalSegmentLocation(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:PhysicalSegmentLocation-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:PhysicalSegmentLocation-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -10969,7 +10969,7 @@ class PhysicalSegmentLocation(DdiCdiClass):
         },
     )
 
-    # cdi:PhysicalSegmentLocation-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:PhysicalSegmentLocation-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -11011,7 +11011,7 @@ class PrimaryKey(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:PrimaryKey-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:PrimaryKey-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -11026,7 +11026,7 @@ class PrimaryKey(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:PrimaryKey_isComposedOf_PrimaryKeyComponent (1..*) | isComposedOf | cdi:PrimaryKeyComponent
+    # association cdi:PrimaryKey_isComposedOf_PrimaryKeyComponent (1..*) | isComposedOf | cdi:PrimaryKeyComponent
     isComposedOf: list[URIRef] = Field(
         alias="isComposedOf",
         description="",
@@ -11066,7 +11066,7 @@ class PrimaryKeyComponent(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:PrimaryKeyComponent-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:PrimaryKeyComponent-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -11081,7 +11081,7 @@ class PrimaryKeyComponent(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:PrimaryKeyComponent_correspondsTo_DataStructureComponent (1..1) | correspondsTo_DataStructureComponent | cdi:DataStructureComponent
+    # association cdi:PrimaryKeyComponent_correspondsTo_DataStructureComponent (1..1) | correspondsTo_DataStructureComponent | cdi:DataStructureComponent
     correspondsTo_DataStructureComponent: URIRef = Field(
         alias="correspondsTo_DataStructureComponent",
         description="",
@@ -11120,7 +11120,7 @@ class ProductionEnvironment(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ProductionEnvironment-description (0..1) | description | xsd:string
+    # attribute cdi:ProductionEnvironment-description (0..1) | description | xsd:string
     description: Union[str, LiteralField] | None = Field(
         alias="description",
         default=None,
@@ -11131,7 +11131,7 @@ class ProductionEnvironment(DdiCdiClass):
         },
     )
 
-    # cdi:ProductionEnvironment-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
+    # attribute cdi:ProductionEnvironment-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
     displayLabel: list[LabelForDisplay] | None = Field(
         alias="displayLabel",
         default=None,
@@ -11142,7 +11142,7 @@ class ProductionEnvironment(DdiCdiClass):
         },
     )
 
-    # cdi:ProductionEnvironment-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ProductionEnvironment-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -11153,7 +11153,7 @@ class ProductionEnvironment(DdiCdiClass):
         },
     )
 
-    # cdi:ProductionEnvironment-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:ProductionEnvironment-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -11199,7 +11199,7 @@ class RecordRelation(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:RecordRelation-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:RecordRelation-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -11215,7 +11215,7 @@ class RecordRelation(DdiCdiClass):
         },
     )
 
-    # cdi:RecordRelation-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
+    # attribute cdi:RecordRelation-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
     displayLabel: list[LabelForDisplay] | None = Field(
         alias="displayLabel",
         default=None,
@@ -11226,7 +11226,7 @@ class RecordRelation(DdiCdiClass):
         },
     )
 
-    # cdi:RecordRelation-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:RecordRelation-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -11237,7 +11237,7 @@ class RecordRelation(DdiCdiClass):
         },
     )
 
-    # cdi:RecordRelation-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:RecordRelation-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -11248,7 +11248,7 @@ class RecordRelation(DdiCdiClass):
         },
     )
 
-    # cdi:RecordRelation-usage (0..1) | usage | cdi:InternationalString
+    # attribute cdi:RecordRelation-usage (0..1) | usage | cdi:InternationalString
     usage: InternationalString | None = Field(
         alias="usage",
         default=None,
@@ -11263,7 +11263,7 @@ class RecordRelation(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:RecordRelation_has_InstanceVariableMap (0..*) | has_InstanceVariableMap | cdi:InstanceVariableMap
+    # association cdi:RecordRelation_has_InstanceVariableMap (0..*) | has_InstanceVariableMap | cdi:InstanceVariableMap
     has_InstanceVariableMap: list[URIRef] | None = Field(
         alias="has_InstanceVariableMap",
         default=None,
@@ -11274,7 +11274,7 @@ class RecordRelation(DdiCdiClass):
         },
     )
 
-    # cdi:RecordRelation_maps_LogicalRecord (2..*) | maps | cdi:LogicalRecord
+    # association cdi:RecordRelation_maps_LogicalRecord (2..*) | maps | cdi:LogicalRecord
     maps: list[URIRef] = Field(
         alias="maps",
         description="",
@@ -11313,7 +11313,7 @@ class Revision(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Revision-algorithm (0..1) | algorithm | xsd:string
+    # attribute cdi:Revision-algorithm (0..1) | algorithm | xsd:string
     algorithm: Union[str, LiteralField] | None = Field(
         alias="algorithm",
         default=None,
@@ -11324,7 +11324,7 @@ class Revision(DdiCdiClass):
         },
     )
 
-    # cdi:Revision-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:Revision-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -11335,7 +11335,7 @@ class Revision(DdiCdiClass):
         },
     )
 
-    # cdi:Revision-overview (0..1) | overview | cdi:InternationalString
+    # attribute cdi:Revision-overview (0..1) | overview | cdi:InternationalString
     overview: InternationalString | None = Field(
         alias="overview",
         default=None,
@@ -11375,7 +11375,7 @@ class Rule(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Rule-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:Rule-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -11390,7 +11390,7 @@ class Rule(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:Rule_hasPrecondition_ConditionalControlLogic (0..*) | hasPrecondition | cdi:ConditionalControlLogic
+    # association cdi:Rule_hasPrecondition_ConditionalControlLogic (0..*) | hasPrecondition | cdi:ConditionalControlLogic
     hasPrecondition: list[URIRef] | None = Field(
         alias="hasPrecondition",
         default=None,
@@ -11434,7 +11434,7 @@ class RuleSet(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:RuleSet-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:RuleSet-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -11449,7 +11449,7 @@ class RuleSet(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:RuleSet_has_Rule (0..*) | has_Rule | cdi:Rule
+    # association cdi:RuleSet_has_Rule (0..*) | has_Rule | cdi:Rule
     has_Rule: list[URIRef] | None = Field(
         alias="has_Rule",
         default=None,
@@ -11489,7 +11489,7 @@ class ScopedMeasure(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ScopedMeasure-frequency (0..1) | frequency | cdi:InternationalString
+    # attribute cdi:ScopedMeasure-frequency (0..1) | frequency | cdi:InternationalString
     frequency: InternationalString | None = Field(
         alias="frequency",
         default=None,
@@ -11500,7 +11500,7 @@ class ScopedMeasure(DdiCdiClass):
         },
     )
 
-    # cdi:ScopedMeasure-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ScopedMeasure-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -11515,7 +11515,7 @@ class ScopedMeasure(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ScopedMeasure_circumscribes_DimensionalKeyDefinition (0..1) | circumscribes | cdi:DimensionalKeyDefinition
+    # association cdi:ScopedMeasure_circumscribes_DimensionalKeyDefinition (0..1) | circumscribes | cdi:DimensionalKeyDefinition
     circumscribes: URIRef | None = Field(
         alias="circumscribes",
         default=None,
@@ -11526,7 +11526,7 @@ class ScopedMeasure(DdiCdiClass):
         },
     )
 
-    # cdi:ScopedMeasure_generates_RevisableDatum (1..1) | generates | cdi:RevisableDatum
+    # association cdi:ScopedMeasure_generates_RevisableDatum (1..1) | generates | cdi:RevisableDatum
     generates: URIRef = Field(
         alias="generates",
         description="Scoped measure generates one revisable datum.",
@@ -11536,7 +11536,7 @@ class ScopedMeasure(DdiCdiClass):
         },
     )
 
-    # cdi:ScopedMeasure_restricts_QualifiedMeasure (0..1) | restricts | cdi:QualifiedMeasure
+    # association cdi:ScopedMeasure_restricts_QualifiedMeasure (0..1) | restricts | cdi:QualifiedMeasure
     restricts: URIRef | None = Field(
         alias="restricts",
         default=None,
@@ -11572,7 +11572,7 @@ class SequencePosition(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:SequencePosition-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:SequencePosition-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -11583,7 +11583,7 @@ class SequencePosition(DdiCdiClass):
         },
     )
 
-    # cdi:SequencePosition-value (1..1) | value | xsd:integer
+    # attribute cdi:SequencePosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Indexes the activities in a sequence using integers with a position indicated by incrementing upward from 0 or 1.",
@@ -11597,7 +11597,7 @@ class SequencePosition(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:SequencePosition_indexes_Activity (1..1) | indexes | cdi:Activity
+    # association cdi:SequencePosition_indexes_Activity (1..1) | indexes | cdi:Activity
     indexes: URIRef = Field(
         alias="indexes",
         description="",
@@ -11632,7 +11632,7 @@ class StatisticalClassificationRelationship(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:StatisticalClassificationRelationship-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:StatisticalClassificationRelationship-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -11643,7 +11643,7 @@ class StatisticalClassificationRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:StatisticalClassificationRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:StatisticalClassificationRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -11658,7 +11658,7 @@ class StatisticalClassificationRelationship(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:StatisticalClassificationRelationship_hasSource_StatisticalClassification (0..*) | hasSource | cdi:StatisticalClassification
+    # association cdi:StatisticalClassificationRelationship_hasSource_StatisticalClassification (0..*) | hasSource | cdi:StatisticalClassification
     hasSource: list[URIRef] | None = Field(
         alias="hasSource",
         default=None,
@@ -11669,7 +11669,7 @@ class StatisticalClassificationRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:StatisticalClassificationRelationship_hasTarget_StatisticalClassification (0..*) | hasTarget | cdi:StatisticalClassification
+    # association cdi:StatisticalClassificationRelationship_hasTarget_StatisticalClassification (0..*) | hasTarget | cdi:StatisticalClassification
     hasTarget: list[URIRef] | None = Field(
         alias="hasTarget",
         default=None,
@@ -11723,7 +11723,7 @@ class Unit(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Unit-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:Unit-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -11734,7 +11734,7 @@ class Unit(DdiCdiClass):
         },
     )
 
-    # cdi:Unit-definition (0..1) | definition | cdi:InternationalString
+    # attribute cdi:Unit-definition (0..1) | definition | cdi:InternationalString
     definition: InternationalString | None = Field(
         alias="definition",
         default=None,
@@ -11745,7 +11745,7 @@ class Unit(DdiCdiClass):
         },
     )
 
-    # cdi:Unit-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
+    # attribute cdi:Unit-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
     displayLabel: list[LabelForDisplay] | None = Field(
         alias="displayLabel",
         default=None,
@@ -11756,7 +11756,7 @@ class Unit(DdiCdiClass):
         },
     )
 
-    # cdi:Unit-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:Unit-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -11767,7 +11767,7 @@ class Unit(DdiCdiClass):
         },
     )
 
-    # cdi:Unit-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:Unit-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -11782,7 +11782,7 @@ class Unit(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:Unit_has_UnitType (0..*) | has_UnitType | cdi:UnitType
+    # association cdi:Unit_has_UnitType (0..*) | has_UnitType | cdi:UnitType
     has_UnitType: list[URIRef] | None = Field(
         alias="has_UnitType",
         default=None,
@@ -11829,7 +11829,7 @@ class ValueAndConceptDescription(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ValueAndConceptDescription-classificationLevel (0..1) | classificationLevel | cdi:CategoryRelationCode
+    # attribute cdi:ValueAndConceptDescription-classificationLevel (0..1) | classificationLevel | cdi:CategoryRelationCode
     classificationLevel: CategoryRelationCode | None = Field(
         alias="classificationLevel",
         default=None,
@@ -11840,7 +11840,7 @@ class ValueAndConceptDescription(DdiCdiClass):
         },
     )
 
-    # cdi:ValueAndConceptDescription-description (0..1) | description | cdi:InternationalString
+    # attribute cdi:ValueAndConceptDescription-description (0..1) | description | cdi:InternationalString
     description: InternationalString | None = Field(
         alias="description",
         default=None,
@@ -11851,7 +11851,7 @@ class ValueAndConceptDescription(DdiCdiClass):
         },
     )
 
-    # cdi:ValueAndConceptDescription-formatPattern (0..1) | formatPattern | cdi:ControlledVocabularyEntry
+    # attribute cdi:ValueAndConceptDescription-formatPattern (0..1) | formatPattern | cdi:ControlledVocabularyEntry
     formatPattern: ControlledVocabularyEntry | None = Field(
         alias="formatPattern",
         default=None,
@@ -11862,7 +11862,7 @@ class ValueAndConceptDescription(DdiCdiClass):
         },
     )
 
-    # cdi:ValueAndConceptDescription-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ValueAndConceptDescription-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -11873,7 +11873,7 @@ class ValueAndConceptDescription(DdiCdiClass):
         },
     )
 
-    # cdi:ValueAndConceptDescription-logicalExpression (0..1) | logicalExpression | cdi:ControlledVocabularyEntry
+    # attribute cdi:ValueAndConceptDescription-logicalExpression (0..1) | logicalExpression | cdi:ControlledVocabularyEntry
     logicalExpression: ControlledVocabularyEntry | None = Field(
         alias="logicalExpression",
         default=None,
@@ -11884,7 +11884,7 @@ class ValueAndConceptDescription(DdiCdiClass):
         },
     )
 
-    # cdi:ValueAndConceptDescription-maximumValueExclusive (0..1) | maximumValueExclusive | xsd:string
+    # attribute cdi:ValueAndConceptDescription-maximumValueExclusive (0..1) | maximumValueExclusive | xsd:string
     maximumValueExclusive: Union[str, LiteralField] | None = Field(
         alias="maximumValueExclusive",
         default=None,
@@ -11895,7 +11895,7 @@ class ValueAndConceptDescription(DdiCdiClass):
         },
     )
 
-    # cdi:ValueAndConceptDescription-maximumValueInclusive (0..1) | maximumValueInclusive | xsd:string
+    # attribute cdi:ValueAndConceptDescription-maximumValueInclusive (0..1) | maximumValueInclusive | xsd:string
     maximumValueInclusive: Union[str, LiteralField] | None = Field(
         alias="maximumValueInclusive",
         default=None,
@@ -11906,7 +11906,7 @@ class ValueAndConceptDescription(DdiCdiClass):
         },
     )
 
-    # cdi:ValueAndConceptDescription-minimumValueExclusive (0..1) | minimumValueExclusive | xsd:string
+    # attribute cdi:ValueAndConceptDescription-minimumValueExclusive (0..1) | minimumValueExclusive | xsd:string
     minimumValueExclusive: Union[str, LiteralField] | None = Field(
         alias="minimumValueExclusive",
         default=None,
@@ -11917,7 +11917,7 @@ class ValueAndConceptDescription(DdiCdiClass):
         },
     )
 
-    # cdi:ValueAndConceptDescription-minimumValueInclusive (0..1) | minimumValueInclusive | xsd:string
+    # attribute cdi:ValueAndConceptDescription-minimumValueInclusive (0..1) | minimumValueInclusive | xsd:string
     minimumValueInclusive: Union[str, LiteralField] | None = Field(
         alias="minimumValueInclusive",
         default=None,
@@ -11928,7 +11928,7 @@ class ValueAndConceptDescription(DdiCdiClass):
         },
     )
 
-    # cdi:ValueAndConceptDescription-regularExpression (0..1) | regularExpression | cdi:TypedString
+    # attribute cdi:ValueAndConceptDescription-regularExpression (0..1) | regularExpression | cdi:TypedString
     regularExpression: TypedString | None = Field(
         alias="regularExpression",
         default=None,
@@ -11972,7 +11972,7 @@ class ValueDomain(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ValueDomain-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:ValueDomain-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -11988,7 +11988,7 @@ class ValueDomain(DdiCdiClass):
         },
     )
 
-    # cdi:ValueDomain-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
+    # attribute cdi:ValueDomain-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
     displayLabel: list[LabelForDisplay] | None = Field(
         alias="displayLabel",
         default=None,
@@ -11999,7 +11999,7 @@ class ValueDomain(DdiCdiClass):
         },
     )
 
-    # cdi:ValueDomain-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ValueDomain-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -12010,7 +12010,7 @@ class ValueDomain(DdiCdiClass):
         },
     )
 
-    # cdi:ValueDomain-recommendedDataType (0..*) | recommendedDataType | cdi:ControlledVocabularyEntry
+    # attribute cdi:ValueDomain-recommendedDataType (0..*) | recommendedDataType | cdi:ControlledVocabularyEntry
     recommendedDataType: list[ControlledVocabularyEntry] | None = Field(
         alias="recommendedDataType",
         default=None,
@@ -12054,7 +12054,7 @@ class ValueMapping(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ValueMapping-decimalPositions (0..1) | decimalPositions | xsd:integer
+    # attribute cdi:ValueMapping-decimalPositions (0..1) | decimalPositions | xsd:integer
     decimalPositions: int | None = Field(
         alias="decimalPositions",
         default=None,
@@ -12065,7 +12065,7 @@ class ValueMapping(DdiCdiClass):
         },
     )
 
-    # cdi:ValueMapping-defaultDecimalSeparator (0..1) | defaultDecimalSeparator | xsd:string
+    # attribute cdi:ValueMapping-defaultDecimalSeparator (0..1) | defaultDecimalSeparator | xsd:string
     defaultDecimalSeparator: Union[str, LiteralField] | None = Field(
         alias="defaultDecimalSeparator",
         default=None,
@@ -12076,7 +12076,7 @@ class ValueMapping(DdiCdiClass):
         },
     )
 
-    # cdi:ValueMapping-defaultDigitGroupSeparator (0..1) | defaultDigitGroupSeparator | xsd:string
+    # attribute cdi:ValueMapping-defaultDigitGroupSeparator (0..1) | defaultDigitGroupSeparator | xsd:string
     defaultDigitGroupSeparator: Union[str, LiteralField] | None = Field(
         alias="defaultDigitGroupSeparator",
         default=None,
@@ -12087,7 +12087,7 @@ class ValueMapping(DdiCdiClass):
         },
     )
 
-    # cdi:ValueMapping-defaultValue (1..1) | defaultValue | xsd:string
+    # attribute cdi:ValueMapping-defaultValue (1..1) | defaultValue | xsd:string
     defaultValue: Union[str, LiteralField] = Field(
         alias="defaultValue",
         description="""A default string indicating the value to substitute for an empty string. From https://www.w3.org/TR/tabular-metadata/ Inherited 5.7  \"default - An atomic property holding a single string that is used to create a default value for the cell in cases where the original string value is an empty string. See Parsing Cells in [tabular-data-model] for more details. If not specified, the default for the default property is the empty string, \"\". The value of this property becomes the default annotation for the described column.\"""",
@@ -12097,7 +12097,7 @@ class ValueMapping(DdiCdiClass):
         },
     )
 
-    # cdi:ValueMapping-format (0..1) | format | cdi:ControlledVocabularyEntry
+    # attribute cdi:ValueMapping-format (0..1) | format | cdi:ControlledVocabularyEntry
     format: ControlledVocabularyEntry | None = Field(
         alias="format",
         default=None,
@@ -12108,7 +12108,7 @@ class ValueMapping(DdiCdiClass):
         },
     )
 
-    # cdi:ValueMapping-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ValueMapping-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -12119,7 +12119,7 @@ class ValueMapping(DdiCdiClass):
         },
     )
 
-    # cdi:ValueMapping-isRequired (0..1) | isRequired | xsd:boolean
+    # attribute cdi:ValueMapping-isRequired (0..1) | isRequired | xsd:boolean
     isRequired: bool | None = Field(
         alias="isRequired",
         default=None,
@@ -12130,7 +12130,7 @@ class ValueMapping(DdiCdiClass):
         },
     )
 
-    # cdi:ValueMapping-length (0..1) | length | xsd:integer
+    # attribute cdi:ValueMapping-length (0..1) | length | xsd:integer
     length: int | None = Field(
         alias="length",
         default=None,
@@ -12141,7 +12141,7 @@ class ValueMapping(DdiCdiClass):
         },
     )
 
-    # cdi:ValueMapping-maximumLength (0..1) | maximumLength | xsd:integer
+    # attribute cdi:ValueMapping-maximumLength (0..1) | maximumLength | xsd:integer
     maximumLength: int | None = Field(
         alias="maximumLength",
         default=None,
@@ -12152,7 +12152,7 @@ class ValueMapping(DdiCdiClass):
         },
     )
 
-    # cdi:ValueMapping-minimumLength (0..1) | minimumLength | xsd:integer
+    # attribute cdi:ValueMapping-minimumLength (0..1) | minimumLength | xsd:integer
     minimumLength: int | None = Field(
         alias="minimumLength",
         default=None,
@@ -12163,7 +12163,7 @@ class ValueMapping(DdiCdiClass):
         },
     )
 
-    # cdi:ValueMapping-nullSequence (0..1) | nullSequence | xsd:string
+    # attribute cdi:ValueMapping-nullSequence (0..1) | nullSequence | xsd:string
     nullSequence: Union[str, LiteralField] | None = Field(
         alias="nullSequence",
         default=None,
@@ -12174,7 +12174,7 @@ class ValueMapping(DdiCdiClass):
         },
     )
 
-    # cdi:ValueMapping-numberPattern (0..1) | numberPattern | xsd:string
+    # attribute cdi:ValueMapping-numberPattern (0..1) | numberPattern | xsd:string
     numberPattern: Union[str, LiteralField] | None = Field(
         alias="numberPattern",
         default=None,
@@ -12185,7 +12185,7 @@ class ValueMapping(DdiCdiClass):
         },
     )
 
-    # cdi:ValueMapping-physicalDataType (0..1) | physicalDataType | cdi:ControlledVocabularyEntry
+    # attribute cdi:ValueMapping-physicalDataType (0..1) | physicalDataType | cdi:ControlledVocabularyEntry
     physicalDataType: ControlledVocabularyEntry | None = Field(
         alias="physicalDataType",
         default=None,
@@ -12196,7 +12196,7 @@ class ValueMapping(DdiCdiClass):
         },
     )
 
-    # cdi:ValueMapping-scale (0..1) | scale | xsd:integer
+    # attribute cdi:ValueMapping-scale (0..1) | scale | xsd:integer
     scale: int | None = Field(
         alias="scale",
         default=None,
@@ -12211,7 +12211,7 @@ class ValueMapping(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ValueMapping_formats_DataPoint (0..*) | formats | cdi:DataPoint
+    # association cdi:ValueMapping_formats_DataPoint (0..*) | formats | cdi:DataPoint
     formats: list[URIRef] | None = Field(
         alias="formats",
         default=None,
@@ -12222,7 +12222,7 @@ class ValueMapping(DdiCdiClass):
         },
     )
 
-    # cdi:ValueMapping_uses_PhysicalSegmentLocation (0..1) | uses_PhysicalSegmentLocation | cdi:PhysicalSegmentLocation
+    # association cdi:ValueMapping_uses_PhysicalSegmentLocation (0..1) | uses_PhysicalSegmentLocation | cdi:PhysicalSegmentLocation
     uses_PhysicalSegmentLocation: URIRef | None = Field(
         alias="uses_PhysicalSegmentLocation",
         default=None,
@@ -12258,7 +12258,7 @@ class ValueMappingPosition(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ValueMappingPosition-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ValueMappingPosition-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -12269,7 +12269,7 @@ class ValueMappingPosition(DdiCdiClass):
         },
     )
 
-    # cdi:ValueMappingPosition-value (1..1) | value | xsd:integer
+    # attribute cdi:ValueMappingPosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
@@ -12283,7 +12283,7 @@ class ValueMappingPosition(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ValueMappingPosition_indexes_ValueMapping (1..1) | indexes | cdi:ValueMapping
+    # association cdi:ValueMappingPosition_indexes_ValueMapping (1..1) | indexes | cdi:ValueMapping
     indexes: URIRef = Field(
         alias="indexes",
         description="Assigns a position to a value mapping within a physical segment.",
@@ -12318,7 +12318,7 @@ class ValueMappingRelationship(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ValueMappingRelationship-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:ValueMappingRelationship-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -12329,7 +12329,7 @@ class ValueMappingRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:ValueMappingRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:ValueMappingRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -12344,7 +12344,7 @@ class ValueMappingRelationship(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ValueMappingRelationship_hasSource_ValueMapping (0..*) | hasSource | cdi:ValueMapping
+    # association cdi:ValueMappingRelationship_hasSource_ValueMapping (0..*) | hasSource | cdi:ValueMapping
     hasSource: list[URIRef] | None = Field(
         alias="hasSource",
         default=None,
@@ -12355,7 +12355,7 @@ class ValueMappingRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:ValueMappingRelationship_hasTarget_ValueMapping (0..*) | hasTarget | cdi:ValueMapping
+    # association cdi:ValueMappingRelationship_hasTarget_ValueMapping (0..*) | hasTarget | cdi:ValueMapping
     hasTarget: list[URIRef] | None = Field(
         alias="hasTarget",
         default=None,
@@ -12401,7 +12401,7 @@ class VariableCollection(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:VariableCollection-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
+    # attribute cdi:VariableCollection-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
     allowsDuplicates: bool = Field(
         alias="allowsDuplicates",
         description="If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical “bag” permits duplicates and is unordered - a “set” does not have duplicates and may be ordered.)",
@@ -12411,7 +12411,7 @@ class VariableCollection(DdiCdiClass):
         },
     )
 
-    # cdi:VariableCollection-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
+    # attribute cdi:VariableCollection-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
     displayLabel: list[LabelForDisplay] | None = Field(
         alias="displayLabel",
         default=None,
@@ -12422,7 +12422,7 @@ class VariableCollection(DdiCdiClass):
         },
     )
 
-    # cdi:VariableCollection-groupingSemantic (0..1) | groupingSemantic | cdi:ControlledVocabularyEntry
+    # attribute cdi:VariableCollection-groupingSemantic (0..1) | groupingSemantic | cdi:ControlledVocabularyEntry
     groupingSemantic: ControlledVocabularyEntry | None = Field(
         alias="groupingSemantic",
         default=None,
@@ -12433,7 +12433,7 @@ class VariableCollection(DdiCdiClass):
         },
     )
 
-    # cdi:VariableCollection-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:VariableCollection-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -12444,7 +12444,7 @@ class VariableCollection(DdiCdiClass):
         },
     )
 
-    # cdi:VariableCollection-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:VariableCollection-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -12455,7 +12455,7 @@ class VariableCollection(DdiCdiClass):
         },
     )
 
-    # cdi:VariableCollection-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:VariableCollection-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -12466,7 +12466,7 @@ class VariableCollection(DdiCdiClass):
         },
     )
 
-    # cdi:VariableCollection-usage (0..1) | usage | cdi:InternationalString
+    # attribute cdi:VariableCollection-usage (0..1) | usage | cdi:InternationalString
     usage: InternationalString | None = Field(
         alias="usage",
         default=None,
@@ -12481,7 +12481,7 @@ class VariableCollection(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:VariableCollection_has_ConceptualVariable (0..*) | has_ConceptualVariable | cdi:ConceptualVariable
+    # association cdi:VariableCollection_has_ConceptualVariable (0..*) | has_ConceptualVariable | cdi:ConceptualVariable
     has_ConceptualVariable: list[URIRef] | None = Field(
         alias="has_ConceptualVariable",
         default=None,
@@ -12492,7 +12492,7 @@ class VariableCollection(DdiCdiClass):
         },
     )
 
-    # cdi:VariableCollection_has_VariablePosition (0..*) | has_VariablePosition | cdi:VariablePosition
+    # association cdi:VariableCollection_has_VariablePosition (0..*) | has_VariablePosition | cdi:VariablePosition
     has_VariablePosition: list[URIRef] | None = Field(
         alias="has_VariablePosition",
         default=None,
@@ -12503,7 +12503,7 @@ class VariableCollection(DdiCdiClass):
         },
     )
 
-    # cdi:VariableCollection_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
+    # association cdi:VariableCollection_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
     isDefinedBy_Concept: list[URIRef] | None = Field(
         alias="isDefinedBy_Concept",
         default=None,
@@ -12543,7 +12543,7 @@ class VariablePosition(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:VariablePosition-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:VariablePosition-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -12554,7 +12554,7 @@ class VariablePosition(DdiCdiClass):
         },
     )
 
-    # cdi:VariablePosition-value (1..1) | value | xsd:integer
+    # attribute cdi:VariablePosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
@@ -12568,7 +12568,7 @@ class VariablePosition(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:VariablePosition_indexes_ConceptualVariable (1..1) | indexes | cdi:ConceptualVariable
+    # association cdi:VariablePosition_indexes_ConceptualVariable (1..1) | indexes | cdi:ConceptualVariable
     indexes: URIRef = Field(
         alias="indexes",
         description="Variable position indexes a conceptual variable.",
@@ -12603,7 +12603,7 @@ class VariableRelationship(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:VariableRelationship-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:VariableRelationship-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -12614,7 +12614,7 @@ class VariableRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:VariableRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:VariableRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -12629,7 +12629,7 @@ class VariableRelationship(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:VariableRelationship_hasSource_ConceptualVariable (0..*) | hasSource | cdi:ConceptualVariable
+    # association cdi:VariableRelationship_hasSource_ConceptualVariable (0..*) | hasSource | cdi:ConceptualVariable
     hasSource: list[URIRef] | None = Field(
         alias="hasSource",
         default=None,
@@ -12640,7 +12640,7 @@ class VariableRelationship(DdiCdiClass):
         },
     )
 
-    # cdi:VariableRelationship_hasTarget_ConceptualVariable (0..*) | hasTarget | cdi:ConceptualVariable
+    # association cdi:VariableRelationship_hasTarget_ConceptualVariable (0..*) | hasTarget | cdi:ConceptualVariable
     hasTarget: list[URIRef] | None = Field(
         alias="hasTarget",
         default=None,
@@ -12676,7 +12676,7 @@ class VariableStructure(DdiCdiClass):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:VariableStructure-identifier (0..1) | identifier | cdi:Identifier
+    # attribute cdi:VariableStructure-identifier (0..1) | identifier | cdi:Identifier
     identifier: Identifier | None = Field(
         alias="identifier",
         default=None,
@@ -12687,7 +12687,7 @@ class VariableStructure(DdiCdiClass):
         },
     )
 
-    # cdi:VariableStructure-name (0..*) | name | cdi:OrganizationName
+    # attribute cdi:VariableStructure-name (0..*) | name | cdi:OrganizationName
     name: list[OrganizationName] | None = Field(
         alias="name",
         default=None,
@@ -12698,7 +12698,7 @@ class VariableStructure(DdiCdiClass):
         },
     )
 
-    # cdi:VariableStructure-purpose (0..1) | purpose | cdi:InternationalString
+    # attribute cdi:VariableStructure-purpose (0..1) | purpose | cdi:InternationalString
     purpose: InternationalString | None = Field(
         alias="purpose",
         default=None,
@@ -12709,7 +12709,7 @@ class VariableStructure(DdiCdiClass):
         },
     )
 
-    # cdi:VariableStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
+    # attribute cdi:VariableStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
     semantics: ControlledVocabularyEntry | None = Field(
         alias="semantics",
         default=None,
@@ -12720,7 +12720,7 @@ class VariableStructure(DdiCdiClass):
         },
     )
 
-    # cdi:VariableStructure-specification (0..1) | specification | cdi:StructureSpecification
+    # attribute cdi:VariableStructure-specification (0..1) | specification | cdi:StructureSpecification
     specification: StructureSpecification | None = Field(
         alias="specification",
         default=None,
@@ -12731,7 +12731,7 @@ class VariableStructure(DdiCdiClass):
         },
     )
 
-    # cdi:VariableStructure-topology (0..1) | topology | cdi:ControlledVocabularyEntry
+    # attribute cdi:VariableStructure-topology (0..1) | topology | cdi:ControlledVocabularyEntry
     topology: ControlledVocabularyEntry | None = Field(
         alias="topology",
         default=None,
@@ -12742,7 +12742,7 @@ class VariableStructure(DdiCdiClass):
         },
     )
 
-    # cdi:VariableStructure-totality (0..1) | totality | cdi:StructureExtent
+    # attribute cdi:VariableStructure-totality (0..1) | totality | cdi:StructureExtent
     totality: StructureExtent | None = Field(
         alias="totality",
         default=None,
@@ -12757,7 +12757,7 @@ class VariableStructure(DdiCdiClass):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:VariableStructure_has_VariableRelationship (0..*) | has_VariableRelationship | cdi:VariableRelationship
+    # association cdi:VariableStructure_has_VariableRelationship (0..*) | has_VariableRelationship | cdi:VariableRelationship
     has_VariableRelationship: list[URIRef] | None = Field(
         alias="has_VariableRelationship",
         default=None,
@@ -12768,7 +12768,7 @@ class VariableStructure(DdiCdiClass):
         },
     )
 
-    # cdi:VariableStructure_structures_VariableCollection (0..1) | structures | cdi:VariableCollection
+    # association cdi:VariableStructure_structures_VariableCollection (0..1) | structures | cdi:VariableCollection
     structures: URIRef | None = Field(
         alias="structures",
         default=None,
@@ -12812,7 +12812,7 @@ class Step(Activity):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Step-script (0..1) | script | cdi:CommandCode
+    # attribute cdi:Step-script (0..1) | script | cdi:CommandCode
     script: CommandCode | None = Field(
         alias="script",
         default=None,
@@ -12823,7 +12823,7 @@ class Step(Activity):
         },
     )
 
-    # cdi:Step-scriptingLanguage (0..1) | scriptingLanguage | cdi:ControlledVocabularyEntry
+    # attribute cdi:Step-scriptingLanguage (0..1) | scriptingLanguage | cdi:ControlledVocabularyEntry
     scriptingLanguage: ControlledVocabularyEntry | None = Field(
         alias="scriptingLanguage",
         default=None,
@@ -12838,7 +12838,7 @@ class Step(Activity):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:Step_hasSubStep_Step (0..*) | hasSubStep | cdi:Step
+    # association cdi:Step_hasSubStep_Step (0..*) | hasSubStep | cdi:Step
     hasSubStep: list[URIRef] | None = Field(
         alias="hasSubStep",
         default=None,
@@ -12849,7 +12849,7 @@ class Step(Activity):
         },
     )
 
-    # cdi:Step_produces_Parameter (0..*) | produces | cdi:Parameter
+    # association cdi:Step_produces_Parameter (0..*) | produces | cdi:Parameter
     produces: list[URIRef] | None = Field(
         alias="produces",
         default=None,
@@ -12860,7 +12860,7 @@ class Step(Activity):
         },
     )
 
-    # cdi:Step_receives_Parameter (0..*) | receives | cdi:Parameter
+    # association cdi:Step_receives_Parameter (0..*) | receives | cdi:Parameter
     receives: list[URIRef] | None = Field(
         alias="receives",
         default=None,
@@ -12904,7 +12904,7 @@ class Individual(Agent):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Individual-contactInformation (0..1) | contactInformation | cdi:ContactInformation
+    # attribute cdi:Individual-contactInformation (0..1) | contactInformation | cdi:ContactInformation
     contactInformation: ContactInformation | None = Field(
         alias="contactInformation",
         default=None,
@@ -12915,7 +12915,7 @@ class Individual(Agent):
         },
     )
 
-    # cdi:Individual-individualName (0..*) | individualName | cdi:IndividualName
+    # attribute cdi:Individual-individualName (0..*) | individualName | cdi:IndividualName
     individualName: list[IndividualName] | None = Field(
         alias="individualName",
         default=None,
@@ -12959,7 +12959,7 @@ class Machine(Agent):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Machine-accessLocation (0..1) | accessLocation | cdi:AccessLocation
+    # attribute cdi:Machine-accessLocation (0..1) | accessLocation | cdi:AccessLocation
     accessLocation: AccessLocation | None = Field(
         alias="accessLocation",
         default=None,
@@ -12970,7 +12970,7 @@ class Machine(Agent):
         },
     )
 
-    # cdi:Machine-function (0..*) | function | cdi:ControlledVocabularyEntry
+    # attribute cdi:Machine-function (0..*) | function | cdi:ControlledVocabularyEntry
     function: list[ControlledVocabularyEntry] | None = Field(
         alias="function",
         default=None,
@@ -12981,7 +12981,7 @@ class Machine(Agent):
         },
     )
 
-    # cdi:Machine-machineInterface (0..*) | machineInterface | cdi:ControlledVocabularyEntry
+    # attribute cdi:Machine-machineInterface (0..*) | machineInterface | cdi:ControlledVocabularyEntry
     machineInterface: list[ControlledVocabularyEntry] | None = Field(
         alias="machineInterface",
         default=None,
@@ -12992,7 +12992,7 @@ class Machine(Agent):
         },
     )
 
-    # cdi:Machine-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:Machine-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -13003,7 +13003,7 @@ class Machine(Agent):
         },
     )
 
-    # cdi:Machine-ownerOperatorContact (0..1) | ownerOperatorContact | cdi:ContactInformation
+    # attribute cdi:Machine-ownerOperatorContact (0..1) | ownerOperatorContact | cdi:ContactInformation
     ownerOperatorContact: ContactInformation | None = Field(
         alias="ownerOperatorContact",
         default=None,
@@ -13014,7 +13014,7 @@ class Machine(Agent):
         },
     )
 
-    # cdi:Machine-typeOfMachine (0..1) | typeOfMachine | cdi:ControlledVocabularyEntry
+    # attribute cdi:Machine-typeOfMachine (0..1) | typeOfMachine | cdi:ControlledVocabularyEntry
     typeOfMachine: ControlledVocabularyEntry | None = Field(
         alias="typeOfMachine",
         default=None,
@@ -13058,7 +13058,7 @@ class Organization(Agent):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Organization-contactInformation (0..1) | contactInformation | cdi:ContactInformation
+    # attribute cdi:Organization-contactInformation (0..1) | contactInformation | cdi:ContactInformation
     contactInformation: ContactInformation | None = Field(
         alias="contactInformation",
         default=None,
@@ -13069,7 +13069,7 @@ class Organization(Agent):
         },
     )
 
-    # cdi:Organization-organizationName (1..*) | organizationName | cdi:OrganizationName
+    # attribute cdi:Organization-organizationName (1..*) | organizationName | cdi:OrganizationName
     organizationName: list[OrganizationName] = Field(
         alias="organizationName",
         description="Names by which the organization is known.",
@@ -13108,7 +13108,7 @@ class ProcessingAgent(Agent):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ProcessingAgent_operatesOn_ProductionEnvironment (0..*) | operatesOn | cdi:ProductionEnvironment
+    # association cdi:ProcessingAgent_operatesOn_ProductionEnvironment (0..*) | operatesOn | cdi:ProductionEnvironment
     operatesOn: list[URIRef] | None = Field(
         alias="operatesOn",
         default=None,
@@ -13119,7 +13119,7 @@ class ProcessingAgent(Agent):
         },
     )
 
-    # cdi:ProcessingAgent_performs_Activity (0..*) | performs | cdi:Activity
+    # association cdi:ProcessingAgent_performs_Activity (0..*) | performs | cdi:Activity
     performs: list[URIRef] | None = Field(
         alias="performs",
         default=None,
@@ -13164,7 +13164,7 @@ class Category(Concept):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Category-descriptiveText (0..1) | descriptiveText | cdi:InternationalString
+    # attribute cdi:Category-descriptiveText (0..1) | descriptiveText | cdi:InternationalString
     descriptiveText: InternationalString | None = Field(
         alias="descriptiveText",
         default=None,
@@ -13208,7 +13208,7 @@ class ConceptualValue(Concept):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ConceptualValue_hasConceptFrom_ConceptualDomain (1..1) | hasConceptFrom | cdi:ConceptualDomain
+    # association cdi:ConceptualValue_hasConceptFrom_ConceptualDomain (1..1) | hasConceptFrom | cdi:ConceptualDomain
     hasConceptFrom: URIRef = Field(
         alias="hasConceptFrom",
         description="Conceptual value has concept from one conceptual domain.",
@@ -13251,7 +13251,7 @@ class ConceptualVariable(Concept):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ConceptualVariable-descriptiveText (0..1) | descriptiveText | cdi:InternationalString
+    # attribute cdi:ConceptualVariable-descriptiveText (0..1) | descriptiveText | cdi:InternationalString
     descriptiveText: InternationalString | None = Field(
         alias="descriptiveText",
         default=None,
@@ -13262,7 +13262,7 @@ class ConceptualVariable(Concept):
         },
     )
 
-    # cdi:ConceptualVariable-unitOfMeasureKind (0..1) | unitOfMeasureKind | cdi:ControlledVocabularyEntry
+    # attribute cdi:ConceptualVariable-unitOfMeasureKind (0..1) | unitOfMeasureKind | cdi:ControlledVocabularyEntry
     unitOfMeasureKind: ControlledVocabularyEntry | None = Field(
         alias="unitOfMeasureKind",
         default=None,
@@ -13277,7 +13277,7 @@ class ConceptualVariable(Concept):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ConceptualVariable_measures_UnitType (0..1) | measures | cdi:UnitType
+    # association cdi:ConceptualVariable_measures_UnitType (0..1) | measures | cdi:UnitType
     measures: URIRef | None = Field(
         alias="measures",
         default=None,
@@ -13288,7 +13288,7 @@ class ConceptualVariable(Concept):
         },
     )
 
-    # cdi:ConceptualVariable_takesSentinelConceptsFrom_SentinelConceptualDomain (0..1) | takesSentinelConceptsFrom | cdi:SentinelConceptualDomain
+    # association cdi:ConceptualVariable_takesSentinelConceptsFrom_SentinelConceptualDomain (0..1) | takesSentinelConceptsFrom | cdi:SentinelConceptualDomain
     takesSentinelConceptsFrom: URIRef | None = Field(
         alias="takesSentinelConceptsFrom",
         default=None,
@@ -13299,7 +13299,7 @@ class ConceptualVariable(Concept):
         },
     )
 
-    # cdi:ConceptualVariable_takesSubstantiveConceptsFrom_SubstantiveConceptualDomain (0..1) | takesSubstantiveConceptsFrom | cdi:SubstantiveConceptualDomain
+    # association cdi:ConceptualVariable_takesSubstantiveConceptsFrom_SubstantiveConceptualDomain (0..1) | takesSubstantiveConceptsFrom | cdi:SubstantiveConceptualDomain
     takesSubstantiveConceptsFrom: URIRef | None = Field(
         alias="takesSubstantiveConceptsFrom",
         default=None,
@@ -13347,7 +13347,7 @@ class UnitType(Concept):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:UnitType-descriptiveText (0..1) | descriptiveText | cdi:InternationalString
+    # attribute cdi:UnitType-descriptiveText (0..1) | descriptiveText | cdi:InternationalString
     descriptiveText: InternationalString | None = Field(
         alias="descriptiveText",
         default=None,
@@ -13391,7 +13391,7 @@ class CategorySet(ConceptSystem):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:CategorySet_has_Category (0..*) | has_Category | cdi:Category
+    # association cdi:CategorySet_has_Category (0..*) | has_Category | cdi:Category
     has_Category: list[URIRef] | None = Field(
         alias="has_Category",
         default=None,
@@ -13402,7 +13402,7 @@ class CategorySet(ConceptSystem):
         },
     )
 
-    # cdi:CategorySet_has_CategoryPosition (0..*) | has_CategoryPosition | cdi:CategoryPosition
+    # association cdi:CategorySet_has_CategoryPosition (0..*) | has_CategoryPosition | cdi:CategoryPosition
     has_CategoryPosition: list[URIRef] | None = Field(
         alias="has_CategoryPosition",
         default=None,
@@ -13565,7 +13565,7 @@ class DimensionalDataSet(DataSet):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:DimensionalDataSet-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:DimensionalDataSet-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -13580,7 +13580,7 @@ class DimensionalDataSet(DataSet):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:DimensionalDataSet_represents_ScopedMeasure (0..*) | represents | cdi:ScopedMeasure
+    # association cdi:DimensionalDataSet_represents_ScopedMeasure (0..*) | represents | cdi:ScopedMeasure
     represents: list[URIRef] | None = Field(
         alias="represents",
         default=None,
@@ -13700,7 +13700,7 @@ class AttributeComponent(DataStructureComponent):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:AttributeComponent_qualifies_DataStructureComponent (0..*) | qualifies | cdi:DataStructureComponent
+    # association cdi:AttributeComponent_qualifies_DataStructureComponent (0..*) | qualifies | cdi:DataStructureComponent
     qualifies: list[URIRef] | None = Field(
         alias="qualifies",
         default=None,
@@ -13769,7 +13769,7 @@ class DataStructure(DataStructureComponent):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:DataStructure_has_ComponentPosition (0..*) | has_ComponentPosition | cdi:ComponentPosition
+    # association cdi:DataStructure_has_ComponentPosition (0..*) | has_ComponentPosition | cdi:ComponentPosition
     has_ComponentPosition: list[URIRef] | None = Field(
         alias="has_ComponentPosition",
         default=None,
@@ -13780,7 +13780,7 @@ class DataStructure(DataStructureComponent):
         },
     )
 
-    # cdi:DataStructure_has_DataStructureComponent (0..*) | has_DataStructureComponent | cdi:DataStructureComponent
+    # association cdi:DataStructure_has_DataStructureComponent (0..*) | has_DataStructureComponent | cdi:DataStructureComponent
     has_DataStructureComponent: list[URIRef] | None = Field(
         alias="has_DataStructureComponent",
         default=None,
@@ -13791,7 +13791,7 @@ class DataStructure(DataStructureComponent):
         },
     )
 
-    # cdi:DataStructure_has_ForeignKey (0..*) | has_ForeignKey | cdi:ForeignKey
+    # association cdi:DataStructure_has_ForeignKey (0..*) | has_ForeignKey | cdi:ForeignKey
     has_ForeignKey: list[URIRef] | None = Field(
         alias="has_ForeignKey",
         default=None,
@@ -13802,7 +13802,7 @@ class DataStructure(DataStructureComponent):
         },
     )
 
-    # cdi:DataStructure_has_PrimaryKey (0..1) | has_PrimaryKey | cdi:PrimaryKey
+    # association cdi:DataStructure_has_PrimaryKey (0..1) | has_PrimaryKey | cdi:PrimaryKey
     has_PrimaryKey: URIRef | None = Field(
         alias="has_PrimaryKey",
         default=None,
@@ -13842,7 +13842,7 @@ class DimensionComponent(DataStructureComponent):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:DimensionComponent-categoricalAdditivity (0..1) | categoricalAdditivity | xsd:boolean
+    # attribute cdi:DimensionComponent-categoricalAdditivity (0..1) | categoricalAdditivity | xsd:boolean
     categoricalAdditivity: bool | None = Field(
         alias="categoricalAdditivity",
         default=None,
@@ -13859,7 +13859,7 @@ class DimensionComponent(DataStructureComponent):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:DimensionComponent_isStructuredBy_ValueDomain (0..1) | isStructuredBy | cdi:ValueDomain
+    # association cdi:DimensionComponent_isStructuredBy_ValueDomain (0..1) | isStructuredBy | cdi:ValueDomain
     isStructuredBy: URIRef | None = Field(
         alias="isStructuredBy",
         default=None,
@@ -13924,7 +13924,7 @@ class MeasureComponent(DataStructureComponent):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:MeasureComponent-name (0..*) | name | cdi:ObjectName
+    # attribute cdi:MeasureComponent-name (0..*) | name | cdi:ObjectName
     name: list[ObjectName] | None = Field(
         alias="name",
         default=None,
@@ -13998,7 +13998,7 @@ class VariableDescriptorComponent(DataStructureComponent):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:VariableDescriptorComponent_isDefinedBy_DescriptorVariable (0..1) | isDefinedBy_DescriptorVariable | cdi:DescriptorVariable
+    # association cdi:VariableDescriptorComponent_isDefinedBy_DescriptorVariable (0..1) | isDefinedBy_DescriptorVariable | cdi:DescriptorVariable
     isDefinedBy_DescriptorVariable: URIRef | None = Field(
         alias="isDefinedBy_DescriptorVariable",
         default=None,
@@ -14009,7 +14009,7 @@ class VariableDescriptorComponent(DataStructureComponent):
         },
     )
 
-    # cdi:VariableDescriptorComponent_refersTo_VariableValueComponent (1..1) | refersTo | cdi:VariableValueComponent
+    # association cdi:VariableDescriptorComponent_refersTo_VariableValueComponent (1..1) | refersTo | cdi:VariableValueComponent
     refersTo: URIRef = Field(
         alias="refersTo",
         description="",
@@ -14077,7 +14077,7 @@ class RevisableDatum(Datum):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:RevisableDatum-vintage (1..1) | vintage | xsd:integer
+    # attribute cdi:RevisableDatum-vintage (1..1) | vintage | xsd:integer
     vintage: int = Field(
         alias="vintage",
         description="A revision sequence number for a datum.",
@@ -14091,7 +14091,7 @@ class RevisableDatum(Datum):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:RevisableDatum_correspondsTo_Revision (0..1) | correspondsTo_Revision | cdi:Revision
+    # association cdi:RevisableDatum_correspondsTo_Revision (0..1) | correspondsTo_Revision | cdi:Revision
     correspondsTo_Revision: URIRef | None = Field(
         alias="correspondsTo_Revision",
         default=None,
@@ -14135,7 +14135,7 @@ class CodeList(EnumerationDomain):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:CodeList-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
+    # attribute cdi:CodeList-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
     allowsDuplicates: bool = Field(
         alias="allowsDuplicates",
         description="If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical “bag” permits duplicates and is unordered - a “set” does not have duplicates and may be ordered.)",
@@ -14149,7 +14149,7 @@ class CodeList(EnumerationDomain):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:CodeList_has_Code (0..*) | has_Code | cdi:Code
+    # association cdi:CodeList_has_Code (0..*) | has_Code | cdi:Code
     has_Code: list[URIRef] | None = Field(
         alias="has_Code",
         default=None,
@@ -14160,7 +14160,7 @@ class CodeList(EnumerationDomain):
         },
     )
 
-    # cdi:CodeList_has_CodePosition (0..*) | has_CodePosition | cdi:CodePosition
+    # association cdi:CodeList_has_CodePosition (0..*) | has_CodePosition | cdi:CodePosition
     has_CodePosition: list[URIRef] | None = Field(
         alias="has_CodePosition",
         default=None,
@@ -14205,7 +14205,7 @@ class StatisticalClassification(EnumerationDomain):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:StatisticalClassification-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
+    # attribute cdi:StatisticalClassification-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
     allowsDuplicates: bool = Field(
         alias="allowsDuplicates",
         description="If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical “bag” permits duplicates and is unordered - a “set” does not have duplicates and may be ordered.)",
@@ -14215,7 +14215,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification-availableLanguage (0..*) | availableLanguage | xsd:language
+    # attribute cdi:StatisticalClassification-availableLanguage (0..*) | availableLanguage | xsd:language
     availableLanguage: list[Union[str, LiteralField]] | None = Field(
         alias="availableLanguage",
         default=None,
@@ -14226,7 +14226,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
+    # attribute cdi:StatisticalClassification-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
@@ -14242,7 +14242,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification-changeFromBase (0..1) | changeFromBase | cdi:InternationalString
+    # attribute cdi:StatisticalClassification-changeFromBase (0..1) | changeFromBase | cdi:InternationalString
     changeFromBase: InternationalString | None = Field(
         alias="changeFromBase",
         default=None,
@@ -14253,7 +14253,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification-copyright (0..*) | copyright | cdi:InternationalString
+    # attribute cdi:StatisticalClassification-copyright (0..*) | copyright | cdi:InternationalString
     copyright: list[InternationalString] | None = Field(
         alias="copyright",
         default=None,
@@ -14264,7 +14264,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
+    # attribute cdi:StatisticalClassification-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
     displayLabel: list[LabelForDisplay] | None = Field(
         alias="displayLabel",
         default=None,
@@ -14275,7 +14275,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification-isCurrent (0..1) | isCurrent | xsd:boolean
+    # attribute cdi:StatisticalClassification-isCurrent (0..1) | isCurrent | xsd:boolean
     isCurrent: bool | None = Field(
         alias="isCurrent",
         default=None,
@@ -14286,7 +14286,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification-isFloating (0..1) | isFloating | xsd:boolean
+    # attribute cdi:StatisticalClassification-isFloating (0..1) | isFloating | xsd:boolean
     isFloating: bool | None = Field(
         alias="isFloating",
         default=None,
@@ -14297,7 +14297,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification-purposeOfVariant (0..1) | purposeOfVariant | cdi:InternationalString
+    # attribute cdi:StatisticalClassification-purposeOfVariant (0..1) | purposeOfVariant | cdi:InternationalString
     purposeOfVariant: InternationalString | None = Field(
         alias="purposeOfVariant",
         default=None,
@@ -14308,7 +14308,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification-rationale (0..1) | rationale | cdi:InternationalString
+    # attribute cdi:StatisticalClassification-rationale (0..1) | rationale | cdi:InternationalString
     rationale: InternationalString | None = Field(
         alias="rationale",
         default=None,
@@ -14319,7 +14319,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification-releaseDate (0..1) | releaseDate | cdi:CombinedDate
+    # attribute cdi:StatisticalClassification-releaseDate (0..1) | releaseDate | cdi:CombinedDate
     releaseDate: CombinedDate | None = Field(
         alias="releaseDate",
         default=None,
@@ -14330,7 +14330,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification-updateChanges (0..*) | updateChanges | cdi:InternationalString
+    # attribute cdi:StatisticalClassification-updateChanges (0..*) | updateChanges | cdi:InternationalString
     updateChanges: list[InternationalString] | None = Field(
         alias="updateChanges",
         default=None,
@@ -14341,7 +14341,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification-usage (0..1) | usage | cdi:InternationalString
+    # attribute cdi:StatisticalClassification-usage (0..1) | usage | cdi:InternationalString
     usage: InternationalString | None = Field(
         alias="usage",
         default=None,
@@ -14352,7 +14352,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification-validDates (0..1) | validDates | cdi:DateRange
+    # attribute cdi:StatisticalClassification-validDates (0..1) | validDates | cdi:DateRange
     validDates: DateRange | None = Field(
         alias="validDates",
         default=None,
@@ -14367,7 +14367,7 @@ class StatisticalClassification(EnumerationDomain):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:StatisticalClassification_isMaintainedBy_Organization (0..*) | isMaintainedBy | cdi:Organization
+    # association cdi:StatisticalClassification_isMaintainedBy_Organization (0..*) | isMaintainedBy | cdi:Organization
     isMaintainedBy: list[URIRef] | None = Field(
         alias="isMaintainedBy",
         default=None,
@@ -14378,7 +14378,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification_has_ClassificationItem (0..*) | has_ClassificationItem | cdi:ClassificationItem
+    # association cdi:StatisticalClassification_has_ClassificationItem (0..*) | has_ClassificationItem | cdi:ClassificationItem
     has_ClassificationItem: list[URIRef] | None = Field(
         alias="has_ClassificationItem",
         default=None,
@@ -14389,7 +14389,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification_has_ClassificationItemPosition (0..*) | has_ClassificationItemPosition | cdi:ClassificationItemPosition
+    # association cdi:StatisticalClassification_has_ClassificationItemPosition (0..*) | has_ClassificationItemPosition | cdi:ClassificationItemPosition
     has_ClassificationItemPosition: list[URIRef] | None = Field(
         alias="has_ClassificationItemPosition",
         default=None,
@@ -14400,7 +14400,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification_has_LevelStructure (0..1) | has_LevelStructure | cdi:LevelStructure
+    # association cdi:StatisticalClassification_has_LevelStructure (0..1) | has_LevelStructure | cdi:LevelStructure
     has_LevelStructure: URIRef | None = Field(
         alias="has_LevelStructure",
         default=None,
@@ -14411,7 +14411,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification_isIndexedBy_ClassificationIndex (0..*) | isIndexedBy | cdi:ClassificationIndex
+    # association cdi:StatisticalClassification_isIndexedBy_ClassificationIndex (0..*) | isIndexedBy | cdi:ClassificationIndex
     isIndexedBy: list[URIRef] | None = Field(
         alias="isIndexedBy",
         default=None,
@@ -14422,7 +14422,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification_isPredecessorOf_StatisticalClassification (0..*) | isPredecessorOf | cdi:StatisticalClassification
+    # association cdi:StatisticalClassification_isPredecessorOf_StatisticalClassification (0..*) | isPredecessorOf | cdi:StatisticalClassification
     isPredecessorOf: list[URIRef] | None = Field(
         alias="isPredecessorOf",
         default=None,
@@ -14433,7 +14433,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification_isSuccessorOf_StatisticalClassification (0..*) | isSuccessorOf | cdi:StatisticalClassification
+    # association cdi:StatisticalClassification_isSuccessorOf_StatisticalClassification (0..*) | isSuccessorOf | cdi:StatisticalClassification
     isSuccessorOf: list[URIRef] | None = Field(
         alias="isSuccessorOf",
         default=None,
@@ -14444,7 +14444,7 @@ class StatisticalClassification(EnumerationDomain):
         },
     )
 
-    # cdi:StatisticalClassification_isVariantOf_StatisticalClassification (0..1) | isVariantOf | cdi:StatisticalClassification
+    # association cdi:StatisticalClassification_isVariantOf_StatisticalClassification (0..1) | isVariantOf | cdi:StatisticalClassification
     isVariantOf: URIRef | None = Field(
         alias="isVariantOf",
         default=None,
@@ -14480,7 +14480,7 @@ class KeyMember(InstanceValue):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:KeyMember_isBasedOn_DataStructureComponent (0..*) | isBasedOn | cdi:DataStructureComponent
+    # association cdi:KeyMember_isBasedOn_DataStructureComponent (0..*) | isBasedOn | cdi:DataStructureComponent
     isBasedOn: list[URIRef] | None = Field(
         alias="isBasedOn",
         default=None,
@@ -14522,7 +14522,7 @@ class ReferenceValue(InstanceValue):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ReferenceValue_correspondsTo_VariableValueComponent (1..1) | correspondsTo_VariableValueComponent | cdi:VariableValueComponent
+    # association cdi:ReferenceValue_correspondsTo_VariableValueComponent (1..1) | correspondsTo_VariableValueComponent | cdi:VariableValueComponent
     correspondsTo_VariableValueComponent: URIRef = Field(
         alias="correspondsTo_VariableValueComponent",
         description="",
@@ -14532,7 +14532,7 @@ class ReferenceValue(InstanceValue):
         },
     )
 
-    # cdi:ReferenceValue_hasValueFrom_ReferenceValueDomain (1..1) | hasValueFrom_ReferenceValueDomain | cdi:ReferenceValueDomain
+    # association cdi:ReferenceValue_hasValueFrom_ReferenceValueDomain (1..1) | hasValueFrom_ReferenceValueDomain | cdi:ReferenceValueDomain
     hasValueFrom_ReferenceValueDomain: URIRef = Field(
         alias="hasValueFrom_ReferenceValueDomain",
         description="",
@@ -14602,7 +14602,7 @@ class InstanceKey(Key):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:InstanceKey_has_InstanceValue (0..1) | has_InstanceValue | cdi:InstanceValue
+    # association cdi:InstanceKey_has_InstanceValue (0..1) | has_InstanceValue | cdi:InstanceValue
     has_InstanceValue: URIRef | None = Field(
         alias="has_InstanceValue",
         default=None,
@@ -14613,7 +14613,7 @@ class InstanceKey(Key):
         },
     )
 
-    # cdi:InstanceKey_refersTo_ReferenceValue (1..1) | refersTo | cdi:ReferenceValue
+    # association cdi:InstanceKey_refersTo_ReferenceValue (1..1) | refersTo | cdi:ReferenceValue
     refersTo: URIRef = Field(
         alias="refersTo",
         description="",
@@ -14766,7 +14766,7 @@ class SegmentByText(PhysicalSegmentLocation):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:SegmentByText-characterLength (0..1) | characterLength | xsd:integer
+    # attribute cdi:SegmentByText-characterLength (0..1) | characterLength | xsd:integer
     characterLength: int | None = Field(
         alias="characterLength",
         default=None,
@@ -14777,7 +14777,7 @@ class SegmentByText(PhysicalSegmentLocation):
         },
     )
 
-    # cdi:SegmentByText-endCharacterPosition (0..1) | endCharacterPosition | xsd:integer
+    # attribute cdi:SegmentByText-endCharacterPosition (0..1) | endCharacterPosition | xsd:integer
     endCharacterPosition: int | None = Field(
         alias="endCharacterPosition",
         default=None,
@@ -14788,7 +14788,7 @@ class SegmentByText(PhysicalSegmentLocation):
         },
     )
 
-    # cdi:SegmentByText-endLine (0..1) | endLine | xsd:integer
+    # attribute cdi:SegmentByText-endLine (0..1) | endLine | xsd:integer
     endLine: int | None = Field(
         alias="endLine",
         default=None,
@@ -14799,7 +14799,7 @@ class SegmentByText(PhysicalSegmentLocation):
         },
     )
 
-    # cdi:SegmentByText-startCharacterPosition (0..1) | startCharacterPosition | xsd:integer
+    # attribute cdi:SegmentByText-startCharacterPosition (0..1) | startCharacterPosition | xsd:integer
     startCharacterPosition: int | None = Field(
         alias="startCharacterPosition",
         default=None,
@@ -14810,7 +14810,7 @@ class SegmentByText(PhysicalSegmentLocation):
         },
     )
 
-    # cdi:SegmentByText-startLine (0..1) | startLine | xsd:integer
+    # attribute cdi:SegmentByText-startLine (0..1) | startLine | xsd:integer
     startLine: int | None = Field(
         alias="startLine",
         default=None,
@@ -14879,7 +14879,7 @@ class SentinelValueDomain(ValueDomain):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:SentinelValueDomain-platformType (0..1) | platformType | cdi:ControlledVocabularyEntry
+    # attribute cdi:SentinelValueDomain-platformType (0..1) | platformType | cdi:ControlledVocabularyEntry
     platformType: ControlledVocabularyEntry | None = Field(
         alias="platformType",
         default=None,
@@ -14901,7 +14901,7 @@ class SentinelValueDomain(ValueDomain):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:SentinelValueDomain_takesConceptsFrom_SentinelConceptualDomain (0..1) | takesConceptsFrom | cdi:SentinelConceptualDomain
+    # association cdi:SentinelValueDomain_takesConceptsFrom_SentinelConceptualDomain (0..1) | takesConceptsFrom | cdi:SentinelConceptualDomain
     takesConceptsFrom: URIRef | None = Field(
         alias="takesConceptsFrom",
         default=None,
@@ -14912,7 +14912,7 @@ class SentinelValueDomain(ValueDomain):
         },
     )
 
-    # cdi:SentinelValueDomain_isDescribedBy_ValueAndConceptDescription (0..1) | isDescribedBy | cdi:ValueAndConceptDescription
+    # association cdi:SentinelValueDomain_isDescribedBy_ValueAndConceptDescription (0..1) | isDescribedBy | cdi:ValueAndConceptDescription
     isDescribedBy: URIRef | None = Field(
         alias="isDescribedBy",
         default=None,
@@ -14923,7 +14923,7 @@ class SentinelValueDomain(ValueDomain):
         },
     )
 
-    # cdi:SentinelValueDomain_takesValuesFrom_EnumerationDomain (0..1) | takesValuesFrom | cdi:EnumerationDomain
+    # association cdi:SentinelValueDomain_takesValuesFrom_EnumerationDomain (0..1) | takesValuesFrom | cdi:EnumerationDomain
     takesValuesFrom: URIRef | None = Field(
         alias="takesValuesFrom",
         default=None,
@@ -14971,7 +14971,7 @@ class SubstantiveValueDomain(ValueDomain):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:SubstantiveValueDomain_takesConceptsFrom_SubstantiveConceptualDomain (0..1) | takesConceptsFrom | cdi:SubstantiveConceptualDomain
+    # association cdi:SubstantiveValueDomain_takesConceptsFrom_SubstantiveConceptualDomain (0..1) | takesConceptsFrom | cdi:SubstantiveConceptualDomain
     takesConceptsFrom: URIRef | None = Field(
         alias="takesConceptsFrom",
         default=None,
@@ -14982,7 +14982,7 @@ class SubstantiveValueDomain(ValueDomain):
         },
     )
 
-    # cdi:SubstantiveValueDomain_isDescribedBy_ValueAndConceptDescription (0..1) | isDescribedBy | cdi:ValueAndConceptDescription
+    # association cdi:SubstantiveValueDomain_isDescribedBy_ValueAndConceptDescription (0..1) | isDescribedBy | cdi:ValueAndConceptDescription
     isDescribedBy: URIRef | None = Field(
         alias="isDescribedBy",
         default=None,
@@ -14993,7 +14993,7 @@ class SubstantiveValueDomain(ValueDomain):
         },
     )
 
-    # cdi:SubstantiveValueDomain_takesValuesFrom_EnumerationDomain (0..1) | takesValuesFrom | cdi:EnumerationDomain
+    # association cdi:SubstantiveValueDomain_takesValuesFrom_EnumerationDomain (0..1) | takesValuesFrom | cdi:EnumerationDomain
     takesValuesFrom: URIRef | None = Field(
         alias="takesValuesFrom",
         default=None,
@@ -15091,7 +15091,7 @@ class DimensionalKeyDefinitionMember(ConceptualValue):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:DimensionalKeyDefinitionMember_isRepresentedBy_DimensionalKeyMember (1..*) | isRepresentedBy | cdi:DimensionalKeyMember
+    # association cdi:DimensionalKeyDefinitionMember_isRepresentedBy_DimensionalKeyMember (1..*) | isRepresentedBy | cdi:DimensionalKeyMember
     isRepresentedBy: list[URIRef] = Field(
         alias="isRepresentedBy",
         description="",
@@ -15155,7 +15155,7 @@ class RepresentedVariable(ConceptualVariable):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:RepresentedVariable-describedUnitOfMeasure (0..1) | describedUnitOfMeasure | cdi:ControlledVocabularyEntry
+    # attribute cdi:RepresentedVariable-describedUnitOfMeasure (0..1) | describedUnitOfMeasure | cdi:ControlledVocabularyEntry
     describedUnitOfMeasure: ControlledVocabularyEntry | None = Field(
         alias="describedUnitOfMeasure",
         default=None,
@@ -15166,7 +15166,7 @@ class RepresentedVariable(ConceptualVariable):
         },
     )
 
-    # cdi:RepresentedVariable-hasIntendedDataType (0..1) | hasIntendedDataType | cdi:ControlledVocabularyEntry
+    # attribute cdi:RepresentedVariable-hasIntendedDataType (0..1) | hasIntendedDataType | cdi:ControlledVocabularyEntry
     hasIntendedDataType: ControlledVocabularyEntry | None = Field(
         alias="hasIntendedDataType",
         default=None,
@@ -15177,7 +15177,7 @@ class RepresentedVariable(ConceptualVariable):
         },
     )
 
-    # cdi:RepresentedVariable-simpleUnitOfMeasure (0..1) | simpleUnitOfMeasure | xsd:string
+    # attribute cdi:RepresentedVariable-simpleUnitOfMeasure (0..1) | simpleUnitOfMeasure | xsd:string
     simpleUnitOfMeasure: Union[str, LiteralField] | None = Field(
         alias="simpleUnitOfMeasure",
         default=None,
@@ -15192,7 +15192,7 @@ class RepresentedVariable(ConceptualVariable):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:RepresentedVariable_takesSentinelValuesFrom_SentinelValueDomain (0..*) | takesSentinelValuesFrom | cdi:SentinelValueDomain
+    # association cdi:RepresentedVariable_takesSentinelValuesFrom_SentinelValueDomain (0..*) | takesSentinelValuesFrom | cdi:SentinelValueDomain
     takesSentinelValuesFrom: list[URIRef] | None = Field(
         alias="takesSentinelValuesFrom",
         default=None,
@@ -15203,7 +15203,7 @@ class RepresentedVariable(ConceptualVariable):
         },
     )
 
-    # cdi:RepresentedVariable_takesSubstantiveValuesFrom_SubstantiveValueDomain (0..1) | takesSubstantiveValuesFrom_SubstantiveValueDomain | cdi:SubstantiveValueDomain
+    # association cdi:RepresentedVariable_takesSubstantiveValuesFrom_SubstantiveValueDomain (0..1) | takesSubstantiveValuesFrom_SubstantiveValueDomain | cdi:SubstantiveValueDomain
     takesSubstantiveValuesFrom_SubstantiveValueDomain: URIRef | None = Field(
         alias="takesSubstantiveValuesFrom_SubstantiveValueDomain",
         default=None,
@@ -15253,7 +15253,7 @@ class Universe(UnitType):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Universe-isInclusive (0..1) | isInclusive | xsd:boolean
+    # attribute cdi:Universe-isInclusive (0..1) | isInclusive | xsd:boolean
     isInclusive: bool | None = Field(
         alias="isInclusive",
         default=None,
@@ -15293,7 +15293,7 @@ class ConditionalControlLogic(DeterministicImperative):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:ConditionalControlLogic-condition (1..1) | condition | cdi:CommandCode
+    # attribute cdi:ConditionalControlLogic-condition (1..1) | condition | cdi:CommandCode
     condition: CommandCode = Field(
         alias="condition",
         description="A condition associated with the construct property of the ConditionalControlLogic. It is a logical expression which can be evaluated as either true or false to determine the specific execution of the associated  construct.",
@@ -15303,7 +15303,7 @@ class ConditionalControlLogic(DeterministicImperative):
         },
     )
 
-    # cdi:ConditionalControlLogic-construct (1..1) | construct | cdi:ControlConstruct
+    # attribute cdi:ConditionalControlLogic-construct (1..1) | construct | cdi:ControlConstruct
     construct_: ControlConstruct = Field(
         alias="construct",
         description="controlConstruct is an enumeration of type ControlConstructType. The enumeration consists of IfThen, Else, Loop, RepeatUntil and RepeatWhile.",
@@ -15346,7 +15346,7 @@ class Sequence(DeterministicImperative):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:Sequence_has_SequencePosition (0..*) | has_SequencePosition | cdi:SequencePosition
+    # association cdi:Sequence_has_SequencePosition (0..*) | has_SequencePosition | cdi:SequencePosition
     has_SequencePosition: list[URIRef] | None = Field(
         alias="has_SequencePosition",
         default=None,
@@ -15390,7 +15390,7 @@ class RuleBasedScheduling(NonDeterministicDeclarative):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:RuleBasedScheduling-schedulingType (1..1) | schedulingType | cdi:SchedulingStrategy
+    # attribute cdi:RuleBasedScheduling-schedulingType (1..1) | schedulingType | cdi:SchedulingStrategy
     schedulingType: SchedulingStrategy = Field(
         alias="schedulingType",
         description="Indicated if rule-based scheduling is forward-chaining or backward-chaining.",
@@ -15404,7 +15404,7 @@ class RuleBasedScheduling(NonDeterministicDeclarative):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:RuleBasedScheduling_has_Curator (0..*) | has_Curator | cdi:Curator
+    # association cdi:RuleBasedScheduling_has_Curator (0..*) | has_Curator | cdi:Curator
     has_Curator: list[URIRef] | None = Field(
         alias="has_Curator",
         default=None,
@@ -15415,7 +15415,7 @@ class RuleBasedScheduling(NonDeterministicDeclarative):
         },
     )
 
-    # cdi:RuleBasedScheduling_has_RuleSet (0..*) | has_RuleSet | cdi:RuleSet
+    # association cdi:RuleBasedScheduling_has_RuleSet (0..*) | has_RuleSet | cdi:RuleSet
     has_RuleSet: list[URIRef] | None = Field(
         alias="has_RuleSet",
         default=None,
@@ -15484,7 +15484,7 @@ class DimensionalDataStructure(DataStructure):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:DimensionalDataStructure_uses_DimensionGroup (0..*) | uses_DimensionGroup | cdi:DimensionGroup
+    # association cdi:DimensionalDataStructure_uses_DimensionGroup (0..*) | uses_DimensionGroup | cdi:DimensionGroup
     uses_DimensionGroup: list[URIRef] | None = Field(
         alias="uses_DimensionGroup",
         default=None,
@@ -15599,7 +15599,7 @@ class QualifiedMeasure(MeasureComponent):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:QualifiedMeasure_refines_MeasureComponent (0..1) | refines | cdi:MeasureComponent
+    # association cdi:QualifiedMeasure_refines_MeasureComponent (0..1) | refines | cdi:MeasureComponent
     refines: URIRef | None = Field(
         alias="refines",
         default=None,
@@ -15639,7 +15639,7 @@ class Descriptor(KeyMember):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:Descriptor_hasValueFrom_DescriptorValueDomain (1..1) | hasValueFrom_DescriptorValueDomain | cdi:DescriptorValueDomain
+    # association cdi:Descriptor_hasValueFrom_DescriptorValueDomain (1..1) | hasValueFrom_DescriptorValueDomain | cdi:DescriptorValueDomain
     hasValueFrom_DescriptorValueDomain: URIRef = Field(
         alias="hasValueFrom_DescriptorValueDomain",
         description="",
@@ -15649,7 +15649,7 @@ class Descriptor(KeyMember):
         },
     )
 
-    # cdi:Descriptor_identifies_ReferenceVariable (1..1) | identifies | cdi:ReferenceVariable
+    # association cdi:Descriptor_identifies_ReferenceVariable (1..1) | identifies | cdi:ReferenceVariable
     identifies: URIRef = Field(
         alias="identifies",
         description="",
@@ -15659,7 +15659,7 @@ class Descriptor(KeyMember):
         },
     )
 
-    # cdi:Descriptor_refersTo_ReferenceValue (1..*) | refersTo | cdi:ReferenceValue
+    # association cdi:Descriptor_refersTo_ReferenceValue (1..*) | refersTo | cdi:ReferenceValue
     refersTo: list[URIRef] = Field(
         alias="refersTo",
         description="",
@@ -15698,7 +15698,7 @@ class DimensionalKeyMember(KeyMember):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:DimensionalKeyMember_hasValueFrom_CodeList (1..1) | hasValueFrom_CodeList | cdi:CodeList
+    # association cdi:DimensionalKeyMember_hasValueFrom_CodeList (1..1) | hasValueFrom_CodeList | cdi:CodeList
     hasValueFrom_CodeList: URIRef = Field(
         alias="hasValueFrom_CodeList",
         description="",
@@ -15763,7 +15763,7 @@ class MainKeyMember(KeyMember):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:MainKeyMember_hasValueFrom_SubstantiveValueDomain (0..1) | hasValueFrom_SubstantiveValueDomain | cdi:SubstantiveValueDomain
+    # association cdi:MainKeyMember_hasValueFrom_SubstantiveValueDomain (0..1) | hasValueFrom_SubstantiveValueDomain | cdi:SubstantiveValueDomain
     hasValueFrom_SubstantiveValueDomain: URIRef | None = Field(
         alias="hasValueFrom_SubstantiveValueDomain",
         default=None,
@@ -15861,7 +15861,7 @@ class InstanceVariable(RepresentedVariable):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:InstanceVariable-physicalDataType (0..1) | physicalDataType | cdi:ControlledVocabularyEntry
+    # attribute cdi:InstanceVariable-physicalDataType (0..1) | physicalDataType | cdi:ControlledVocabularyEntry
     physicalDataType: ControlledVocabularyEntry | None = Field(
         alias="physicalDataType",
         default=None,
@@ -15872,7 +15872,7 @@ class InstanceVariable(RepresentedVariable):
         },
     )
 
-    # cdi:InstanceVariable-platformType (0..1) | platformType | cdi:ControlledVocabularyEntry
+    # attribute cdi:InstanceVariable-platformType (0..1) | platformType | cdi:ControlledVocabularyEntry
     platformType: ControlledVocabularyEntry | None = Field(
         alias="platformType",
         default=None,
@@ -15883,7 +15883,7 @@ class InstanceVariable(RepresentedVariable):
         },
     )
 
-    # cdi:InstanceVariable-source (0..1) | source | cdi:Reference
+    # attribute cdi:InstanceVariable-source (0..1) | source | cdi:Reference
     source: Reference | None = Field(
         alias="source",
         default=None,
@@ -15894,7 +15894,7 @@ class InstanceVariable(RepresentedVariable):
         },
     )
 
-    # cdi:InstanceVariable-variableFunction (0..*) | variableFunction | cdi:ControlledVocabularyEntry
+    # attribute cdi:InstanceVariable-variableFunction (0..*) | variableFunction | cdi:ControlledVocabularyEntry
     variableFunction: list[ControlledVocabularyEntry] | None = Field(
         alias="variableFunction",
         default=None,
@@ -15909,7 +15909,7 @@ class InstanceVariable(RepresentedVariable):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:InstanceVariable_has_PhysicalSegmentLayout (0..*) | has_PhysicalSegmentLayout | cdi:PhysicalSegmentLayout
+    # association cdi:InstanceVariable_has_PhysicalSegmentLayout (0..*) | has_PhysicalSegmentLayout | cdi:PhysicalSegmentLayout
     has_PhysicalSegmentLayout: list[URIRef] | None = Field(
         alias="has_PhysicalSegmentLayout",
         default=None,
@@ -15920,7 +15920,7 @@ class InstanceVariable(RepresentedVariable):
         },
     )
 
-    # cdi:InstanceVariable_has_ValueMapping (0..1) | has_ValueMapping | cdi:ValueMapping
+    # association cdi:InstanceVariable_has_ValueMapping (0..1) | has_ValueMapping | cdi:ValueMapping
     has_ValueMapping: URIRef | None = Field(
         alias="has_ValueMapping",
         default=None,
@@ -15966,7 +15966,7 @@ class Population(Universe):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:Population-timePeriodOfPopulation (0..*) | timePeriodOfPopulation | cdi:DateRange
+    # attribute cdi:Population-timePeriodOfPopulation (0..*) | timePeriodOfPopulation | cdi:DateRange
     timePeriodOfPopulation: list[DateRange] | None = Field(
         alias="timePeriodOfPopulation",
         default=None,
@@ -15981,7 +15981,7 @@ class Population(Universe):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:Population_isComposedOf_Unit (0..*) | isComposedOf | cdi:Unit
+    # association cdi:Population_isComposedOf_Unit (0..*) | isComposedOf | cdi:Unit
     isComposedOf: list[URIRef] | None = Field(
         alias="isComposedOf",
         default=None,
@@ -16025,7 +16025,7 @@ class AllenIntervalAlgebra(TemporalConstraints):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:AllenIntervalAlgebra-temporalIntervalRelation (1..1) | temporalIntervalRelation | cdi:TemporalRelation
+    # attribute cdi:AllenIntervalAlgebra-temporalIntervalRelation (1..1) | temporalIntervalRelation | cdi:TemporalRelation
     temporalIntervalRelation: TemporalRelation = Field(
         alias="temporalIntervalRelation",
         description="Temporal constraint specified as an Allen's interval relation.",
@@ -16065,7 +16065,7 @@ class TemporalControlConstruct(TemporalConstraints):
     #
     #  DOMAIN ATTRIBUTES
     #
-    # cdi:TemporalControlConstruct-temporalControl (1..1) | temporalControl | cdi:TemporalOperator
+    # attribute cdi:TemporalControlConstruct-temporalControl (1..1) | temporalControl | cdi:TemporalOperator
     temporalControl: TemporalOperator = Field(
         alias="temporalControl",
         description="TemporalControl is a property of type TemporalControlConstructType. There are four members of this enumeration: AND-split, XOR-split, AND-join and XOR-join.",
@@ -16106,7 +16106,7 @@ class DescriptorVariable(InstanceVariable):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:DescriptorVariable_takesSubstantiveValuesFrom_DescriptorValueDomain (0..1) | takesSubstantiveValuesFrom_DescriptorValueDomain | cdi:DescriptorValueDomain
+    # association cdi:DescriptorVariable_takesSubstantiveValuesFrom_DescriptorValueDomain (0..1) | takesSubstantiveValuesFrom_DescriptorValueDomain | cdi:DescriptorValueDomain
     takesSubstantiveValuesFrom_DescriptorValueDomain: URIRef | None = Field(
         alias="takesSubstantiveValuesFrom_DescriptorValueDomain",
         default=None,
@@ -16148,7 +16148,7 @@ class ReferenceVariable(InstanceVariable):
     #
     # FROM ASSOCIATIONS
     #
-    # cdi:ReferenceVariable_takesValuesFrom_ReferenceValueDomain (0..1) | takesValuesFrom | cdi:ReferenceValueDomain
+    # association cdi:ReferenceVariable_takesValuesFrom_ReferenceValueDomain (0..1) | takesValuesFrom | cdi:ReferenceValueDomain
     takesValuesFrom: URIRef | None = Field(
         alias="takesValuesFrom",
         default=None,
