@@ -3,17 +3,20 @@ This script converts the DDI-CDI specification into Pydantic classes with annota
 SemPyRO package, enabling serialization to RDF.
 
 How to use:
-python lab/ddicdi_to_sempyro.py specifications/ddi-cdi-1.0 src/dartfx/ddi
+python lab/ddicdi_to_sempyro.py specifications/ddi-cdi-1.0 src/dartfx/ddi/ddicdi
 
 How to test:
 pytest -s tests/test_ddicdi_sempyro.py
 
+SPDX-License-Identifier: MIT
+
 """
 import argparse
 from datetime import datetime
+import logging
 import os
 import sys
-from dartfx.ddi.ddicdi_specification import DdiCdiModel
+from dartfx.ddi.ddicdi.specification import DdiCdiModel
 
 INDENT = " "*4
 
@@ -37,7 +40,7 @@ def escape_description(description):
 
 def generate(model, output_dir):
     # create file
-    output_file = os.path.join(output_dir, "ddicdi_sempyro.py")
+    output_file = os.path.join(output_dir, "sempyro_model.py")
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -70,7 +73,7 @@ def generate_classes(model) -> str:
     sorted_resources = topological_sort_resources(resources, subclass_of)
     
     for resource_uri in sorted_resources:  
-        code += generate_resource(model, resource_uri)
+        code += generate_resource(model, resource_uri, type='class')
     return code
 
 def generate_datatypes(model) -> str:
@@ -81,13 +84,25 @@ def generate_datatypes(model) -> str:
     sorted_resources = topological_sort_resources(resources, subclass_of)
     
     for resource_uri in sorted_resources:  
-        code += generate_resource(model, resource_uri)
+        code += generate_resource(model, resource_uri, type='datatype')
     return code
 
-def generate_field(resource, cardinality):
-    # a resource is either an attribute or an association
+def generate_field(resource, cardinality, type:str):
+    # a field is either an attribute or an association
+    if type == 'attribute':
+        use_class:bool=True
+        use_uriref:bool=False
+    elif type == 'association':
+        use_class = False
+        use_uriref = True
+    else:
+        raise ValueError(f"Invalid field type {type}")
+    if not use_class and not use_uriref:
+        raise ValueError("At least one of use_class or use_uriref must be True")
     code  = ""
+    # class comment
     code += f'# {resource.get("uri")} ({cardinality.get("display")}) | {resource.get("label")} | {resource.get("range")}\n'
+    # get field name
     field_name = resource.get("label")
     # handle reserved Python/Pydantic keywords
     if field_name in ('for','from','construct'): # exception for reserved Python keyword (for, from) and Pydantic (construct)
@@ -95,7 +110,7 @@ def generate_field(resource, cardinality):
     code += f'{field_name}: '
     # convert range to python type
     range = resource.get("range")
-    python_type = range_to_python_type(range)
+    python_type = range_to_python_type(range, use_class, use_uriref)
     # check if list
     if cardinality.get('maxOccurs') == "unbounded" or int(cardinality.get('maxOccurs')) > 1:
         python_type = f'list[{python_type}]'
@@ -112,7 +127,7 @@ def generate_field(resource, cardinality):
     # description
     description = escape_description(resource.get("description"))
     code += f'{INDENT}description={description},\n'
-    # json schema extra
+    # json schema extra (for sempyro)
     attribute_name = resource.get("uri").split(":")[-1]
     rdf_type = resource.get("range")
     if rdf_type.startswith("cdi:"):
@@ -192,7 +207,6 @@ SPDX-License-Identifier: MIT
 """
     code += (
         "from __future__ import annotations  # to allow forward references with Pydantic\n"
-        "from abc import ABCMeta\n"
         "from datetime import date, datetime\n"
         "from enum import Enum\n"
         "from pydantic import ConfigDict, Field\n"
@@ -201,12 +215,25 @@ SPDX-License-Identifier: MIT
         
         "from typing import Union\n"
         "\n"
-        "CDI = Namespace('http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/')"
+        "CDI = Namespace('http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/')\n"
+        "\n"
+        "class DdiCdiResource(RDFModel):\n"
+        "    pass\n"
+        "\n"        
+        "\n"
+        "class DdiCdiClass(DdiCdiResource):\n"
+        "    pass\n"
+        "\n"        
+        "\n"
+        "class DdiCdiType(DdiCdiResource):\n"
+        "    pass\n"
+        "\n"        
+        "\n"
     )
     code += '\n'
     return code
 
-def generate_resource(model, resource_uri):
+def generate_resource(model, resource_uri:str, type:str):
     print(resource_uri)
     properties = model.get_resource_properties(resource_uri)
     class_name = properties.get('rdfs:label')
@@ -219,7 +246,13 @@ def generate_resource(model, resource_uri):
         class_inheritance = subclass_of
         #class_inline_comment = '# type: ignore # noqa: F821'
     else:
-        class_inheritance = "RDFModel"
+        if type == 'class':
+            class_inheritance = "DdiCdiClass"
+        elif type == 'datatype':
+            class_inheritance = "DdiCdiType"
+        else:
+            logging.warning(f"Unknown type '{type}' for resource '{resource_uri}'")
+            class_inheritance = "DdiCdiResource"
         #class_inline_comment = ''
     code  = ""
     code += f"class {class_name}({class_inheritance}):\n"
@@ -252,7 +285,7 @@ def generate_resource(model, resource_uri):
         code += indent_code('#\n#  DOMAIN ATTRIBUTES\n#\n\n', 1)
         for attribute_uri, attribute in domain_attributes.items():
             cardinality = model.get_resource_attribute_cardinality(resource_uri, attribute_uri)
-            code += indent_code(generate_field(attribute, cardinality), 1)
+            code += indent_code(generate_field(attribute, cardinality, type="attribute"), 1)
         code += '\n'
 
     # from associations
@@ -261,7 +294,7 @@ def generate_resource(model, resource_uri):
         code += indent_code('#\n# FROM ASSOCIATIONS\n#\n\n', 1)
         for association_uri, association in from_associations.items():
             cardinality = association.get('from')
-            code += indent_code(generate_field(association, cardinality), 1)
+            code += indent_code(generate_field(association, cardinality, type="association"), 1)
         code += '\n'
 
     # range attributes
@@ -313,16 +346,18 @@ def parse_args():
 
     return args
 
-def range_to_python_type(range):
+def range_to_python_type(range, use_class:bool, use_uriref:bool):
+    if not use_class and not use_uriref:
+        raise ValueError("At least one of use_class or use_uriref must be True")
     if isinstance(range, list):
         # if only one range, return that type directly
         if len(range) == 1:
-            return range_to_python_type(range[0])
+            return range_to_python_type(range[0], use_class, use_uriref)
         # if multiple ranges, use Union
         python_type = "Union["
         ranges = []
         for r in range:
-            ranges.append(range_to_python_type(r))
+            ranges.append(range_to_python_type(r, use_class, use_uriref))
         python_type += ", ".join(ranges)
         python_type += "]"
         if len(ranges) == 1:
@@ -353,7 +388,13 @@ def range_to_python_type(range):
                 python_type = None
                 raise ValueError(f"{range}: Unknown XSD type: {rdf_type}")
         elif prefix == "cdi":
-            python_type = rdf_type
+            if use_class:
+                if use_uriref:
+                    python_type = f"Union[{rdf_type}, URIRef]"
+                else:
+                    python_type = rdf_type
+            else:
+                python_type = 'URIRef'
         else:
             raise ValueError(f"{range}: Unknown prefix: {prefix}")
     return python_type

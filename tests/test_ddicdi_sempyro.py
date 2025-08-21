@@ -1,5 +1,5 @@
 from rdflib import URIRef
-from dartfx.ddi.ddicdi_sempyro import Identifier, InstanceVariable, InternationalRegistrationDataIdentifier, ObjectName
+from dartfx.ddi.ddicdi.sempyro_model import Identifier, InstanceVariable, InternationalRegistrationDataIdentifier, ObjectName
 import uuid
 
 def test_instance_variable_foo():

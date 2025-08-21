@@ -1,7 +1,7 @@
 import logging
 import uuid
 from .ddicodebook import codeBookType
-from .ddicdi import (
+from .ddicdi.dataclass_model import (
     Category,
     CategorySet,
     Code,
@@ -19,6 +19,7 @@ from .ddicdi import (
 from dartfx.rdf import skos
 from rdflib import Graph
 import urllib.parse
+
 
 def codebook_to_cdif(
     codebook: codeBookType, baseuri: str = None, files: list[str] = None, use_skos=True

@@ -2,159 +2,159 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<b1770450-436d-4901-be66-be13e5c5aaab_SentinelConceptScheme_V1> a skos:ConceptScheme ;
-    skos:hasTopConcept <b1770450-436d-4901-be66-be13e5c5aaab_Concept_V1_9> .
+<688a241d-54ac-4a87-89d3-ac971426ac4d_SentinelConceptScheme_V1> a skos:ConceptScheme ;
+    skos:hasTopConcept <688a241d-54ac-4a87-89d3-ac971426ac4d_Concept_V1_9> .
 
-<b1770450-436d-4901-be66-be13e5c5aaab_Concept_V1_1> a skos:Concept ;
+<688a241d-54ac-4a87-89d3-ac971426ac4d_Concept_V1_1> a skos:Concept ;
     skos:notation "1"^^xsd:string ;
     skos:prefLabel "Yes"^^xsd:string .
 
-<b1770450-436d-4901-be66-be13e5c5aaab_Concept_V1_2> a skos:Concept ;
+<688a241d-54ac-4a87-89d3-ac971426ac4d_Concept_V1_2> a skos:Concept ;
     skos:notation "2"^^xsd:string ;
     skos:prefLabel "No"^^xsd:string .
 
-<b1770450-436d-4901-be66-be13e5c5aaab_Concept_V1_9> a skos:Concept ;
+<688a241d-54ac-4a87-89d3-ac971426ac4d_Concept_V1_9> a skos:Concept ;
     skos:notation "9"^^xsd:string ;
     skos:prefLabel "Don't know"^^xsd:string .
 
-<b1770450-436d-4901-be66-be13e5c5aaab_SubstantiveConceptScheme_V1> a skos:ConceptScheme ;
-    skos:hasTopConcept <b1770450-436d-4901-be66-be13e5c5aaab_Concept_V1_1>,
-        <b1770450-436d-4901-be66-be13e5c5aaab_Concept_V1_2> .
+<688a241d-54ac-4a87-89d3-ac971426ac4d_SubstantiveConceptScheme_V1> a skos:ConceptScheme ;
+    skos:hasTopConcept <688a241d-54ac-4a87-89d3-ac971426ac4d_Concept_V1_1>,
+        <688a241d-54ac-4a87-89d3-ac971426ac4d_Concept_V1_2> .
 
-<urn:ddi-cdi:b1770450-436d-4901-be66-be13e5c5aaab_LogicalRecord_F1> a ns1:LogicalRecord ;
-    ns1:LogicalRecord_has_InstanceVariable <urn:ddi-cdi:b1770450-436d-4901-be66-be13e5c5aaab_InstanceVariable_V1> ;
-    ns1:LogicalRecord_organizes_DataSet <urn:ddi-cdi:b1770450-436d-4901-be66-be13e5c5aaab_DataSet_F1> ;
-    ns1:identifier <urn:uuid:4399fe2d-6501-4092-bcdd-0642df97b7c9> .
+<urn:ddi-cdi:688a241d-54ac-4a87-89d3-ac971426ac4d_LogicalRecord_F1> a ns1:LogicalRecord ;
+    ns1:LogicalRecord_has_InstanceVariable <urn:ddi-cdi:688a241d-54ac-4a87-89d3-ac971426ac4d_InstanceVariable_V1> ;
+    ns1:LogicalRecord_organizes_DataSet <urn:ddi-cdi:688a241d-54ac-4a87-89d3-ac971426ac4d_DataSet_F1> ;
+    ns1:identifier <urn:uuid:6c4c7709-89be-48da-8964-85eda221c63b> .
 
-<urn:uuid:10aea35d-b418-4525-9862-254d1d248140> a ns1:Identifier ;
-    ns1:ddiIdentifier <urn:uuid:982ba322-1518-41c6-b968-c5da10ff0b5e> ;
-    ns1:uri <urn:ddi-cdi:b1770450-436d-4901-be66-be13e5c5aaab_SentinelValueDomain_V1> .
-
-<urn:uuid:19d5a9a1-d2fb-4d51-b8fd-5b9d3fc76d0f> a ns1:LabelForDisplay ;
-    ns1:languageSpecificString <urn:uuid:a5626898-957b-45aa-b634-f70c61b8c137> .
-
-<urn:uuid:2ce68e38-f5d5-401c-a0d9-4d9e2a48f0f2> a ns1:InternationalRegistrationDataIdentifier ;
-    ns1:dataIdentifier "b1770450-436d-4901-be66-be13e5c5aaab_LogicalRecord_F1"^^xsd:string ;
+<urn:uuid:0042ca1d-dc44-4c9e-8548-08a083e6f86a> a ns1:InternationalRegistrationDataIdentifier ;
+    ns1:dataIdentifier "688a241d-54ac-4a87-89d3-ac971426ac4d_LogicalRecord_F1"^^xsd:string ;
     ns1:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
     ns1:versionIdentifier "1"^^xsd:string .
 
-<urn:uuid:2f91a358-d521-45e5-b400-e714c3a25980> a ns1:NonDdiIdentifier ;
-    ns1:type "ddi-codebook"^^xsd:string ;
-    ns1:value "simple_yndk"^^xsd:string .
+<urn:uuid:1161cbac-5bb9-408e-a471-ed47aec877aa> a ns1:Identifier ;
+    ns1:ddiIdentifier <urn:uuid:85e016d6-0388-4786-bf66-a86830b18f59> ;
+    ns1:nonDdiIdentifier <urn:uuid:aad6cf83-1048-4399-a094-174a97a6be8a> ;
+    ns1:uri <urn:ddi-cdi:688a241d-54ac-4a87-89d3-ac971426ac4d_DataStructure_simple_yndk> .
 
-<urn:uuid:427d4ecb-b783-4cca-9fcd-843ce81f18e2> a ns1:ObjectName ;
-    ns1:name "yesnodk"^^xsd:string .
+<urn:uuid:26dc4b06-0fcb-4d63-a894-2d6f51257ff4> a ns1:Identifier ;
+    ns1:ddiIdentifier <urn:uuid:435df97d-bd34-40b4-b08a-2d71061e9818> ;
+    ns1:nonDdiIdentifier <urn:uuid:5e06f35e-758e-4e1f-bc4b-ae75a7e151a5> ;
+    ns1:uri <urn:ddi-cdi:688a241d-54ac-4a87-89d3-ac971426ac4d_InstanceVariable_V1> .
 
-<urn:uuid:4399fe2d-6501-4092-bcdd-0642df97b7c9> a ns1:Identifier ;
-    ns1:ddiIdentifier <urn:uuid:2ce68e38-f5d5-401c-a0d9-4d9e2a48f0f2> ;
-    ns1:nonDdiIdentifier <urn:uuid:911a4a26-2b7b-4704-a828-a62909ffea3a> ;
-    ns1:uri <urn:ddi-cdi:b1770450-436d-4901-be66-be13e5c5aaab_LogicalRecord_F1> .
-
-<urn:uuid:5244bee5-5c49-4b0d-9502-f99dd481dace> a ns1:InternationalRegistrationDataIdentifier ;
-    ns1:dataIdentifier "b1770450-436d-4901-be66-be13e5c5aaab_DataStructure_simple_yndk"^^xsd:string ;
+<urn:uuid:30c97e1d-0dfa-44ce-a3fb-ace3c59de3b4> a ns1:InternationalRegistrationDataIdentifier ;
+    ns1:dataIdentifier "688a241d-54ac-4a87-89d3-ac971426ac4d_SentinelValueDomain_V1"^^xsd:string ;
     ns1:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
     ns1:versionIdentifier "1"^^xsd:string .
 
-<urn:uuid:71a76bbb-5d5a-48d7-8637-d60aad54b9f2> a ns1:NonDdiIdentifier ;
-    ns1:type "ddi-codebook"^^xsd:string ;
-    ns1:value "F1"^^xsd:string .
+<urn:uuid:36d7324e-a1b5-4b3b-9b63-01fb68b46c9c> a ns1:Identifier ;
+    ns1:ddiIdentifier <urn:uuid:30c97e1d-0dfa-44ce-a3fb-ace3c59de3b4> ;
+    ns1:uri <urn:ddi-cdi:688a241d-54ac-4a87-89d3-ac971426ac4d_SentinelValueDomain_V1> .
 
-<urn:uuid:751d1f83-ef66-433c-b424-8bb6bfb73734> a ns1:Identifier ;
-    ns1:ddiIdentifier <urn:uuid:8344fdd4-42e5-49a4-a346-24dfee6ea52c> ;
-    ns1:nonDdiIdentifier <urn:uuid:e5359ea4-5326-4471-91bb-9c7cfbe911f5> ;
-    ns1:uri <urn:ddi-cdi:b1770450-436d-4901-be66-be13e5c5aaab_InstanceVariable_V1> .
+<urn:uuid:3b9dc8a0-799d-4522-b481-7488f4be1d4f> a ns1:Identifier ;
+    ns1:ddiIdentifier <urn:uuid:a315864a-471f-4f61-a9ae-3bbcd03a4ff3> ;
+    ns1:uri <urn:ddi-cdi:a5da8006-5314-45a4-b806-3a1fe6170759_ComponentPosition> .
 
-<urn:uuid:7c50c700-23b0-4c35-90ec-ee3d21f76368> a ns1:Identifier ;
-    ns1:ddiIdentifier <urn:uuid:8616e523-9fad-4c28-b375-27a5c10f30f4> ;
-    ns1:nonDdiIdentifier <urn:uuid:71a76bbb-5d5a-48d7-8637-d60aad54b9f2> ;
-    ns1:uri <urn:ddi-cdi:b1770450-436d-4901-be66-be13e5c5aaab_DataSet_F1> .
-
-<urn:uuid:803bca0a-6f0c-480c-8b03-e25f0fd3892f> a ns1:Identifier ;
-    ns1:ddiIdentifier <urn:uuid:bc1d3d1c-854f-481d-b0ef-d3859c781d5d> ;
-    ns1:uri <urn:ddi-cdi:b1770450-436d-4901-be66-be13e5c5aaab_SubstantiveValueDomain_V1> .
-
-<urn:uuid:8344fdd4-42e5-49a4-a346-24dfee6ea52c> a ns1:InternationalRegistrationDataIdentifier ;
-    ns1:dataIdentifier "b1770450-436d-4901-be66-be13e5c5aaab_InstanceVariable_V1"^^xsd:string ;
+<urn:uuid:435df97d-bd34-40b4-b08a-2d71061e9818> a ns1:InternationalRegistrationDataIdentifier ;
+    ns1:dataIdentifier "688a241d-54ac-4a87-89d3-ac971426ac4d_InstanceVariable_V1"^^xsd:string ;
     ns1:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
     ns1:versionIdentifier "1"^^xsd:string .
 
-<urn:uuid:84834ca5-4b5e-43b8-9533-b2ae6483de21> a ns1:InternationalRegistrationDataIdentifier ;
-    ns1:dataIdentifier "62703658-1d14-4932-b1c4-d2d018ca7db8_DataStructureComponent"^^xsd:string ;
-    ns1:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
-    ns1:versionIdentifier "1"^^xsd:string .
+<urn:uuid:4a421f7e-e104-4ebd-b8bf-06d8b37f14c9> a ns1:Identifier ;
+    ns1:ddiIdentifier <urn:uuid:8012eda8-528d-411c-836c-a201153ccf45> ;
+    ns1:nonDdiIdentifier <urn:uuid:a9fd4e97-54a5-4334-a58e-1c722e39b896> ;
+    ns1:uri <urn:ddi-cdi:688a241d-54ac-4a87-89d3-ac971426ac4d_DataSet_F1> .
 
-<urn:uuid:8616e523-9fad-4c28-b375-27a5c10f30f4> a ns1:InternationalRegistrationDataIdentifier ;
-    ns1:dataIdentifier "b1770450-436d-4901-be66-be13e5c5aaab_DataSet_F1"^^xsd:string ;
-    ns1:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
-    ns1:versionIdentifier "1"^^xsd:string .
-
-<urn:uuid:87fa2c91-d9cd-4f0f-bd08-1b7a8d767a9b> a ns1:Identifier ;
-    ns1:ddiIdentifier <urn:uuid:5244bee5-5c49-4b0d-9502-f99dd481dace> ;
-    ns1:nonDdiIdentifier <urn:uuid:2f91a358-d521-45e5-b400-e714c3a25980> ;
-    ns1:uri <urn:ddi-cdi:b1770450-436d-4901-be66-be13e5c5aaab_DataStructure_simple_yndk> .
-
-<urn:uuid:911a4a26-2b7b-4704-a828-a62909ffea3a> a ns1:NonDdiIdentifier ;
+<urn:uuid:57007465-d435-455c-8d84-fac2054da2cb> a ns1:NonDdiIdentifier ;
     ns1:type "ddi-codebook"^^xsd:string ;
     ns1:value "F1"^^xsd:string .
 
-<urn:uuid:982ba322-1518-41c6-b968-c5da10ff0b5e> a ns1:InternationalRegistrationDataIdentifier ;
-    ns1:dataIdentifier "b1770450-436d-4901-be66-be13e5c5aaab_SentinelValueDomain_V1"^^xsd:string ;
-    ns1:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
-    ns1:versionIdentifier "1"^^xsd:string .
+<urn:uuid:5c910ba0-31c1-4583-ab50-123732739a73> a ns1:Identifier ;
+    ns1:ddiIdentifier <urn:uuid:d6b6fc99-e034-4dde-94c9-bcc9b1aaa084> ;
+    ns1:uri <urn:ddi-cdi:688a241d-54ac-4a87-89d3-ac971426ac4d_SubstantiveValueDomain_V1> .
 
-<urn:uuid:a5626898-957b-45aa-b634-f70c61b8c137> a ns1:LanguageString ;
-    ns1:content "Yes / No / Dont' know"^^xsd:string .
-
-<urn:uuid:aedda139-5f5d-4124-9203-626244c5d8cd> a ns1:Identifier ;
-    ns1:ddiIdentifier <urn:uuid:fe93d6ab-164b-48c6-ae0a-4bff86735bfe> ;
-    ns1:uri <urn:ddi-cdi:62703658-1d14-4932-b1c4-d2d018ca7db8_ComponentPosition> .
-
-<urn:uuid:b4f70f9c-d095-43d8-843a-c87fea355c61> a ns1:Identifier ;
-    ns1:ddiIdentifier <urn:uuid:84834ca5-4b5e-43b8-9533-b2ae6483de21> ;
-    ns1:uri <urn:ddi-cdi:62703658-1d14-4932-b1c4-d2d018ca7db8_DataStructureComponent> .
-
-<urn:uuid:bc1d3d1c-854f-481d-b0ef-d3859c781d5d> a ns1:InternationalRegistrationDataIdentifier ;
-    ns1:dataIdentifier "b1770450-436d-4901-be66-be13e5c5aaab_SubstantiveValueDomain_V1"^^xsd:string ;
-    ns1:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
-    ns1:versionIdentifier "1"^^xsd:string .
-
-<urn:uuid:e5359ea4-5326-4471-91bb-9c7cfbe911f5> a ns1:NonDdiIdentifier ;
+<urn:uuid:5e06f35e-758e-4e1f-bc4b-ae75a7e151a5> a ns1:NonDdiIdentifier ;
     ns1:type "ddi-codebook"^^xsd:string ;
     ns1:value "V1"^^xsd:string .
 
-<urn:uuid:fe93d6ab-164b-48c6-ae0a-4bff86735bfe> a ns1:InternationalRegistrationDataIdentifier ;
-    ns1:dataIdentifier "62703658-1d14-4932-b1c4-d2d018ca7db8_ComponentPosition"^^xsd:string ;
+<urn:uuid:5f56073e-66ba-4ea3-a8db-ace689b50504> a ns1:Identifier ;
+    ns1:ddiIdentifier <urn:uuid:a02c042e-c81e-4098-a2ee-54ad2735c400> ;
+    ns1:uri <urn:ddi-cdi:a5da8006-5314-45a4-b806-3a1fe6170759_DataStructureComponent> .
+
+<urn:uuid:60b8415a-34e1-4582-9472-e2f8d48c84c9> a ns1:LanguageString ;
+    ns1:content "Yes / No / Dont' know"^^xsd:string .
+
+<urn:uuid:6c4c7709-89be-48da-8964-85eda221c63b> a ns1:Identifier ;
+    ns1:ddiIdentifier <urn:uuid:0042ca1d-dc44-4c9e-8548-08a083e6f86a> ;
+    ns1:nonDdiIdentifier <urn:uuid:57007465-d435-455c-8d84-fac2054da2cb> ;
+    ns1:uri <urn:ddi-cdi:688a241d-54ac-4a87-89d3-ac971426ac4d_LogicalRecord_F1> .
+
+<urn:uuid:8012eda8-528d-411c-836c-a201153ccf45> a ns1:InternationalRegistrationDataIdentifier ;
+    ns1:dataIdentifier "688a241d-54ac-4a87-89d3-ac971426ac4d_DataSet_F1"^^xsd:string ;
     ns1:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
     ns1:versionIdentifier "1"^^xsd:string .
 
-<urn:ddi-cdi:62703658-1d14-4932-b1c4-d2d018ca7db8_ComponentPosition> a ns1:ComponentPosition ;
-    ns1:identifier <urn:uuid:aedda139-5f5d-4124-9203-626244c5d8cd> ;
+<urn:uuid:85e016d6-0388-4786-bf66-a86830b18f59> a ns1:InternationalRegistrationDataIdentifier ;
+    ns1:dataIdentifier "688a241d-54ac-4a87-89d3-ac971426ac4d_DataStructure_simple_yndk"^^xsd:string ;
+    ns1:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    ns1:versionIdentifier "1"^^xsd:string .
+
+<urn:uuid:9241c188-edda-4a70-a297-695624144a4c> a ns1:ObjectName ;
+    ns1:name "yesnodk"^^xsd:string .
+
+<urn:uuid:9a80b017-0145-48e3-8a89-92b30f4706da> a ns1:LabelForDisplay ;
+    ns1:languageSpecificString <urn:uuid:60b8415a-34e1-4582-9472-e2f8d48c84c9> .
+
+<urn:uuid:a02c042e-c81e-4098-a2ee-54ad2735c400> a ns1:InternationalRegistrationDataIdentifier ;
+    ns1:dataIdentifier "a5da8006-5314-45a4-b806-3a1fe6170759_DataStructureComponent"^^xsd:string ;
+    ns1:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    ns1:versionIdentifier "1"^^xsd:string .
+
+<urn:uuid:a315864a-471f-4f61-a9ae-3bbcd03a4ff3> a ns1:InternationalRegistrationDataIdentifier ;
+    ns1:dataIdentifier "a5da8006-5314-45a4-b806-3a1fe6170759_ComponentPosition"^^xsd:string ;
+    ns1:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    ns1:versionIdentifier "1"^^xsd:string .
+
+<urn:uuid:a9fd4e97-54a5-4334-a58e-1c722e39b896> a ns1:NonDdiIdentifier ;
+    ns1:type "ddi-codebook"^^xsd:string ;
+    ns1:value "F1"^^xsd:string .
+
+<urn:uuid:aad6cf83-1048-4399-a094-174a97a6be8a> a ns1:NonDdiIdentifier ;
+    ns1:type "ddi-codebook"^^xsd:string ;
+    ns1:value "simple_yndk"^^xsd:string .
+
+<urn:uuid:d6b6fc99-e034-4dde-94c9-bcc9b1aaa084> a ns1:InternationalRegistrationDataIdentifier ;
+    ns1:dataIdentifier "688a241d-54ac-4a87-89d3-ac971426ac4d_SubstantiveValueDomain_V1"^^xsd:string ;
+    ns1:registrationAuthorityIdentifier "int.dataartifex"^^xsd:string ;
+    ns1:versionIdentifier "1"^^xsd:string .
+
+<urn:ddi-cdi:688a241d-54ac-4a87-89d3-ac971426ac4d_DataSet_F1> a ns1:DataSet ;
+    ns1:identifier <urn:uuid:4a421f7e-e104-4ebd-b8bf-06d8b37f14c9> ;
+    ns1:isStructuredBy_DataStructure <urn:ddi-cdi:688a241d-54ac-4a87-89d3-ac971426ac4d_DataStructure_simple_yndk> .
+
+<urn:ddi-cdi:688a241d-54ac-4a87-89d3-ac971426ac4d_DataStructure_simple_yndk> a ns1:DataStructure ;
+    ns1:DataStructure_has_ComponentPosition <urn:ddi-cdi:a5da8006-5314-45a4-b806-3a1fe6170759_ComponentPosition> ;
+    ns1:DataStructure_has_DataStructureComponent <urn:ddi-cdi:a5da8006-5314-45a4-b806-3a1fe6170759_DataStructureComponent> ;
+    ns1:identifier <urn:uuid:1161cbac-5bb9-408e-a471-ed47aec877aa> .
+
+<urn:ddi-cdi:688a241d-54ac-4a87-89d3-ac971426ac4d_SentinelValueDomain_V1> a ns1:SentinelValueDomain ;
+    ns1:identifier <urn:uuid:36d7324e-a1b5-4b3b-9b63-01fb68b46c9c> .
+
+<urn:ddi-cdi:688a241d-54ac-4a87-89d3-ac971426ac4d_SubstantiveValueDomain_V1> a ns1:SubstantiveValueDomain ;
+    ns1:identifier <urn:uuid:5c910ba0-31c1-4583-ab50-123732739a73> ;
+    ns1:takesValuesFrom <688a241d-54ac-4a87-89d3-ac971426ac4d_SubstantiveConceptScheme_V1> .
+
+<urn:ddi-cdi:a5da8006-5314-45a4-b806-3a1fe6170759_ComponentPosition> a ns1:ComponentPosition ;
+    ns1:identifier <urn:uuid:3b9dc8a0-799d-4522-b481-7488f4be1d4f> ;
     ns1:value 1 .
 
-<urn:ddi-cdi:62703658-1d14-4932-b1c4-d2d018ca7db8_DataStructureComponent> a ns1:DataStructureComponent ;
-    ns1:identifier <urn:uuid:b4f70f9c-d095-43d8-843a-c87fea355c61> ;
-    ns1:isDefinedBy_RepresentedVariable <urn:ddi-cdi:b1770450-436d-4901-be66-be13e5c5aaab_InstanceVariable_V1> .
+<urn:ddi-cdi:a5da8006-5314-45a4-b806-3a1fe6170759_DataStructureComponent> a ns1:DataStructureComponent ;
+    ns1:identifier <urn:uuid:5f56073e-66ba-4ea3-a8db-ace689b50504> ;
+    ns1:isDefinedBy_RepresentedVariable <urn:ddi-cdi:688a241d-54ac-4a87-89d3-ac971426ac4d_InstanceVariable_V1> .
 
-<urn:ddi-cdi:b1770450-436d-4901-be66-be13e5c5aaab_DataSet_F1> a ns1:DataSet ;
-    ns1:identifier <urn:uuid:7c50c700-23b0-4c35-90ec-ee3d21f76368> ;
-    ns1:isStructuredBy_DataStructure <urn:ddi-cdi:b1770450-436d-4901-be66-be13e5c5aaab_DataStructure_simple_yndk> .
-
-<urn:ddi-cdi:b1770450-436d-4901-be66-be13e5c5aaab_DataStructure_simple_yndk> a ns1:DataStructure ;
-    ns1:DataStructure_has_ComponentPosition <urn:ddi-cdi:62703658-1d14-4932-b1c4-d2d018ca7db8_ComponentPosition> ;
-    ns1:DataStructure_has_DataStructureComponent <urn:ddi-cdi:62703658-1d14-4932-b1c4-d2d018ca7db8_DataStructureComponent> ;
-    ns1:identifier <urn:uuid:87fa2c91-d9cd-4f0f-bd08-1b7a8d767a9b> .
-
-<urn:ddi-cdi:b1770450-436d-4901-be66-be13e5c5aaab_SentinelValueDomain_V1> a ns1:SentinelValueDomain ;
-    ns1:identifier <urn:uuid:10aea35d-b418-4525-9862-254d1d248140> .
-
-<urn:ddi-cdi:b1770450-436d-4901-be66-be13e5c5aaab_SubstantiveValueDomain_V1> a ns1:SubstantiveValueDomain ;
-    ns1:identifier <urn:uuid:803bca0a-6f0c-480c-8b03-e25f0fd3892f> ;
-    ns1:takesValuesFrom <b1770450-436d-4901-be66-be13e5c5aaab_SubstantiveConceptScheme_V1> .
-
-<urn:ddi-cdi:b1770450-436d-4901-be66-be13e5c5aaab_InstanceVariable_V1> a ns1:InstanceVariable ;
-    ns1:displayLabel <urn:uuid:19d5a9a1-d2fb-4d51-b8fd-5b9d3fc76d0f> ;
-    ns1:identifier <urn:uuid:751d1f83-ef66-433c-b424-8bb6bfb73734> ;
-    ns1:name <urn:uuid:427d4ecb-b783-4cca-9fcd-843ce81f18e2> ;
-    ns1:takesSentinelValues <urn:ddi-cdi:b1770450-436d-4901-be66-be13e5c5aaab_SentinelValueDomain_V1> ;
-    ns1:takesSubstantiveValues <urn:ddi-cdi:b1770450-436d-4901-be66-be13e5c5aaab_SubstantiveValueDomain_V1> .
+<urn:ddi-cdi:688a241d-54ac-4a87-89d3-ac971426ac4d_InstanceVariable_V1> a ns1:InstanceVariable ;
+    ns1:displayLabel <urn:uuid:9a80b017-0145-48e3-8a89-92b30f4706da> ;
+    ns1:identifier <urn:uuid:26dc4b06-0fcb-4d63-a894-2d6f51257ff4> ;
+    ns1:name <urn:uuid:9241c188-edda-4a70-a297-695624144a4c> ;
+    ns1:takesSentinelValues <urn:ddi-cdi:688a241d-54ac-4a87-89d3-ac971426ac4d_SentinelValueDomain_V1> ;
+    ns1:takesSubstantiveValues <urn:ddi-cdi:688a241d-54ac-4a87-89d3-ac971426ac4d_SubstantiveValueDomain_V1> .
 
