@@ -131,7 +131,10 @@ def generate_field(resource, cardinality, type:str):
     attribute_name = resource.get("uri").split(":")[-1]
     rdf_type = resource.get("range")
     if rdf_type.startswith("cdi:"):
-        rdf_type = rdf_type.replace("cdi:", "CDI.") # CDI.Foo
+        if type == 'attribute':
+            rdf_type = rdf_type.replace("cdi:", "CDI.") # CDI.Foo
+        elif type == 'association':
+            rdf_type = '"uri"'
     elif rdf_type.startswith("xsd:"):
         rdf_type = f'"{rdf_type}"' # "xsd:string" or "xsd:integer"
     else:
