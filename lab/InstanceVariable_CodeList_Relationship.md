@@ -93,7 +93,7 @@ graph TD
 5. **CodeList** (inherits from EnumerationDomain)
    - Has association `has_Code` → **Code**
    - Contains `allowsDuplicates` boolean attribute
-   - Represents structured list of codes and categories
+   - Represents a structured list of codes and categories
 
 6. **Code**
    - Has association `denotes` → **Category**
@@ -119,4 +119,5 @@ For a Gender variable:
 - **Codes**: "M", "F", "O"
 - **Categories**: "Male", "Female", "Other"
 
-This structure allows for standardized representation of categorical data with clear mapping between codes used in datasets and their semantic meaning.
+This structure enables the standardized representation of categorical data, with a precise mapping between the codes used in datasets and their corresponding semantic meaning.
+
