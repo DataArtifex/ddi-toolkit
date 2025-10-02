@@ -8,7 +8,7 @@
 
 ## Overview
 
-This package provides Python classes and utilities for working with metadata based on the [Data Documentation Initiative (DDI)](https://ddialliance.org/), an international standard for describing the data produced by surveys and other observational methods in the social, behavioral, economic, and health sciences.
+This package provides Python classes and utilities for working with metadata based on the [Data Documentation Initiative (DDI)](https://ddialliance.org/), an international standard for describing the data produced by surveys and other observational methods in the social, behavio◊◊al, economic, and health sciences.
 
 ## DDI Specifications Supported
 
@@ -175,7 +175,7 @@ ddi-toolkit/
 ### Short term
 - [x] Migrate model from Python @dataclass to Pydantic
 - [x] Integrate SeMPyRO for RDF annotation and serialization
-- [ ] Cover all DDI-CDI resources/classes
+- [ ] High level wrappers to hide DDi-CDI complexities for non-expert users
 - [ ] Comprehensive test coverage
 - [ ] RDF deserializer (from graph to Python)
 - [ ] Complete documentation

@@ -3,20 +3,21 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+import os
+import sys
+sys.path.insert(0, os.path.abspath("../../src"))
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'Data Artifex DDI Toolkit'
-copyright = '2024, Pascal L.G.A. Heus'
+copyright = '2024-2025, Pascal L.G.A. Heus'
 author = 'Pascal Heus'
-release = '0.1.0'
+release = '0.0.2'
+version = '0.0.2'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
-
-import os
-import sys
-sys.path.insert(0, os.path.abspath("../../src"))
 
 extensions = [
     'sphinx.ext.autodoc',
@@ -24,6 +25,8 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.coverage',
     'myst_parser'
 ]
 
@@ -37,8 +40,12 @@ autodoc_default_options = {
 
 # Mock imports for problematic modules
 autodoc_mock_imports = [
-    'dartfx.ddi.sempyro.ddicdi_datatypes',
-    'dartfx.ddi.ddicdi_sempyro',
+    'pydantic_rdf',
+    'sempyro',
+    'rdflib',
+    'lxml',
+    'dartfx.ddi.ddicdi.specification',
+    'dartfx.ddi.ddicdi.sempyro_model',
 ]
 
 # Skip autodoc errors for modules that can't be imported

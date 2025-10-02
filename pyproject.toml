@@ -21,7 +21,6 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-  "pydantic_rdf",
   "rdflib>=7",
   "sempyro>=2.0.0"
 ]
