@@ -74,6 +74,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#working-with-attributes-and-associations">Working with Attributes and Associations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sparql-queries">SPARQL Queries</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#creating-ddi-cdi-resources-experimental">Creating DDI-CDI Resources (Experimental)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rdf-serialization-and-deserialization">RDF Serialization and Deserialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#round-trip-serialization-example">Round-Trip Serialization Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#batch-processing-with-deserialization">Batch Processing with Deserialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#error-handling-in-deserialization">Error Handling in Deserialization</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#advanced-ddi-codebook-usage">Advanced DDI-Codebook Usage</a><ul>
@@ -1043,7 +1047,10 @@
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#architecture">Architecture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#key-features">Key Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#basic-usage">Basic Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ddicdi.html#sempyro-deserialization">SemPyRO Deserialization</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#model-structure">Model Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#class-naming-conventions">Class Naming Conventions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#advanced-usage">Advanced Usage</a></li>
@@ -1112,6 +1119,12 @@
 <li class="toctree-l3"><a class="reference internal" href="sempyro.html#working-with-enumerations">Working with Enumerations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sempyro.html#complex-resource-creation">Complex Resource Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sempyro.html#rdf-serialization">RDF Serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sempyro.html#rdf-deserialization">RDF Deserialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sempyro.html#using-the-deserializer-class">Using the Deserializer Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sempyro.html#using-the-deserializable-mixin">Using the Deserializable Mixin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sempyro.html#round-trip-serialization">Round-Trip Serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sempyro.html#working-with-multiple-formats">Working with Multiple Formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sempyro.html#error-handling">Error Handling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sempyro.html#validation-and-type-safety">Validation and Type Safety</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sempyro.html#working-with-references">Working with References</a></li>
 </ul>
@@ -1124,7 +1137,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="sempyro.html#best-practices">Best Practices</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="sempyro.html#resource-identification">Resource Identification</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#error-handling">Error Handling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sempyro.html#id1">Error Handling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sempyro.html#performance-considerations">Performance Considerations</a></li>
 </ul>
 </li>
@@ -1332,6 +1345,119 @@
 <span class="n">age_stats</span> <span class="o">=</span> <span class="n">CategoryStatistic</span><span class="p">(</span>
     <span class="n">typeOfCategoryStatistic</span><span class="o">=</span><span class="s2">&quot;frequency&quot;</span>
 <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="rdf-serialization-and-deserialization">
+<h3>RDF Serialization and Deserialization<a class="headerlink" href="#rdf-serialization-and-deserialization" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rdflib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Graph</span><span class="p">,</span> <span class="n">URIRef</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi</span><span class="w"> </span><span class="kn">import</span> <span class="n">sempyro_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.sempyro_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">InstanceVariable</span><span class="p">,</span> <span class="n">ObjectName</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.sempyro_deserializer</span><span class="w"> </span><span class="kn">import</span> <span class="n">from_graph</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+
+<span class="c1"># Create a variable</span>
+<span class="n">var</span> <span class="o">=</span> <span class="n">InstanceVariable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="p">[</span><span class="n">ObjectName</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;TestVariable&quot;</span><span class="p">)])</span>
+<span class="n">uri</span> <span class="o">=</span> <span class="n">URIRef</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;http://example.org/variables/</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Serialize to RDF</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">to_graph</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Serialized to </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span><span class="si">}</span><span class="s2"> triples&quot;</span><span class="p">)</span>
+
+<span class="c1"># Export to different formats</span>
+<span class="n">turtle_output</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;turtle&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Turtle format:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">turtle_output</span><span class="p">[:</span><span class="mi">200</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span><span class="p">)</span>
+
+<span class="c1"># Deserialize back to Python</span>
+<span class="n">deserialized</span> <span class="o">=</span> <span class="n">from_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">sempyro_model</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Deserialized: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">deserialized</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Name: </span><span class="si">{</span><span class="n">deserialized</span><span class="o">.</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">deserialized</span><span class="o">.</span><span class="n">name</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;N/A&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="round-trip-serialization-example">
+<h3>Round-Trip Serialization Example<a class="headerlink" href="#round-trip-serialization-example" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.sempyro_model</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">InstanceVariable</span><span class="p">,</span>
+    <span class="n">ObjectName</span><span class="p">,</span>
+    <span class="n">Identifier</span><span class="p">,</span>
+    <span class="n">InternationalRegistrationDataIdentifier</span>
+<span class="p">)</span>
+
+<span class="c1"># Create an instance variable with full metadata</span>
+<span class="n">original</span> <span class="o">=</span> <span class="n">InstanceVariable</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="p">[</span><span class="n">ObjectName</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Age&quot;</span><span class="p">)],</span>
+    <span class="n">identifier</span><span class="o">=</span><span class="p">[</span><span class="n">Identifier</span><span class="p">(</span><span class="n">ddiIdentifier</span><span class="o">=</span><span class="n">InternationalRegistrationDataIdentifier</span><span class="p">(</span>
+        <span class="n">dataIdentifier</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;http://example.org/</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">registrationAuthorityIdentifier</span><span class="o">=</span><span class="s2">&quot;http://example.org/authority&quot;</span><span class="p">,</span>
+        <span class="n">versionIdentifier</span><span class="o">=</span><span class="s2">&quot;1.0.0&quot;</span>
+    <span class="p">))]</span>
+<span class="p">)</span>
+
+<span class="c1"># Serialize to RDF</span>
+<span class="n">uri</span> <span class="o">=</span> <span class="n">URIRef</span><span class="p">(</span><span class="n">original</span><span class="o">.</span><span class="n">identifier</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ddiIdentifier</span><span class="o">.</span><span class="n">dataIdentifier</span><span class="p">)</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">original</span><span class="o">.</span><span class="n">to_graph</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
+
+<span class="c1"># Save to file</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">destination</span><span class="o">=</span><span class="s2">&quot;variable.ttl&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;turtle&quot;</span><span class="p">)</span>
+
+<span class="c1"># Load from file</span>
+<span class="n">loaded_graph</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">()</span>
+<span class="n">loaded_graph</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;variable.ttl&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;turtle&quot;</span><span class="p">)</span>
+
+<span class="c1"># Deserialize</span>
+<span class="n">deserialized</span> <span class="o">=</span> <span class="n">from_graph</span><span class="p">(</span><span class="n">loaded_graph</span><span class="p">,</span> <span class="n">sempyro_model</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="n">uri</span><span class="p">)</span>
+
+<span class="c1"># Verify data integrity</span>
+<span class="k">assert</span> <span class="n">deserialized</span><span class="o">.</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">original</span><span class="o">.</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Round-trip successful!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="batch-processing-with-deserialization">
+<h3>Batch Processing with Deserialization<a class="headerlink" href="#batch-processing-with-deserialization" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.sempyro_deserializer</span><span class="w"> </span><span class="kn">import</span> <span class="n">SemPyRODeserializer</span>
+
+<span class="c1"># Load a graph containing multiple variables</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;multiple_variables.ttl&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;turtle&quot;</span><span class="p">)</span>
+
+<span class="c1"># Deserialize all InstanceVariable objects</span>
+<span class="n">deserializer</span> <span class="o">=</span> <span class="n">SemPyRODeserializer</span><span class="p">(</span><span class="n">sempyro_model</span><span class="p">)</span>
+<span class="n">instances</span> <span class="o">=</span> <span class="n">deserializer</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span>
+    <span class="n">graph</span><span class="p">,</span>
+    <span class="n">root_types</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InstanceVariable&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Process each variable</span>
+<span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">InstanceVariable</span><span class="p">)</span> <span class="ow">and</span> <span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Variable: </span><span class="si">{</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">identifier</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  ID: </span><span class="si">{</span><span class="n">var</span><span class="o">.</span><span class="n">identifier</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ddiIdentifier</span><span class="o">.</span><span class="n">dataIdentifier</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="error-handling-in-deserialization">
+<h3>Error Handling in Deserialization<a class="headerlink" href="#error-handling-in-deserialization" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.sempyro_deserializer</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SemPyRODeserializer</span><span class="p">,</span>
+    <span class="n">SemPyRODeserializationError</span>
+<span class="p">)</span>
+
+<span class="n">deserializer</span> <span class="o">=</span> <span class="n">SemPyRODeserializer</span><span class="p">(</span><span class="n">sempyro_model</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Attempt to deserialize a subject</span>
+    <span class="n">instance</span> <span class="o">=</span> <span class="n">deserializer</span><span class="o">.</span><span class="n">deserialize_subject</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">unknown_uri</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">SemPyRODeserializationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Deserialization failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># Handle the error - maybe try alternate strategies</span>
+
+<span class="c1"># Deserialize multiple objects with error recovery</span>
+<span class="n">instances</span> <span class="o">=</span> <span class="n">deserializer</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>  <span class="c1"># Continues despite errors</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully deserialized </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span><span class="si">}</span><span class="s2"> instances&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>

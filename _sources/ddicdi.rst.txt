@@ -89,6 +89,35 @@ Working with SemPyRO Models::
    # Serialize to RDF (when RDF functionality is available)
    # rdf_output = var.to_rdf()
 
+SemPyRO Deserialization
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The toolkit includes utilities for deserializing RDF graphs back into Pydantic model instances::
+
+   from rdflib import Graph, URIRef
+   from dartfx.ddi.ddicdi import sempyro_model
+   from dartfx.ddi.ddicdi.sempyro_deserializer import from_graph
+   
+   # Load an RDF graph
+   graph = Graph()
+   graph.parse("data.ttl", format="turtle")
+   
+   # Deserialize a specific subject
+   subject_uri = URIRef("http://example.org/var1")
+   instance = from_graph(graph, sempyro_model, subject=subject_uri)
+   
+   # Deserialize all instances
+   all_instances = from_graph(graph, sempyro_model)
+   
+   # Filter by type
+   variables = from_graph(
+       graph,
+       sempyro_model,
+       root_types=["http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InstanceVariable"]
+   )
+
+For more details on deserialization, see ``README_SEMPYRO_DESERIALIZER.md`` in the source directory.
+
 Model Structure
 ---------------
 

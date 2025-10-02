@@ -74,6 +74,10 @@
 <li class="toctree-l3"><a class="reference internal" href="examples.html#working-with-attributes-and-associations">Working with Attributes and Associations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="examples.html#sparql-queries">SPARQL Queries</a></li>
 <li class="toctree-l3"><a class="reference internal" href="examples.html#creating-ddi-cdi-resources-experimental">Creating DDI-CDI Resources (Experimental)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#rdf-serialization-and-deserialization">RDF Serialization and Deserialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#round-trip-serialization-example">Round-Trip Serialization Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#batch-processing-with-deserialization">Batch Processing with Deserialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#error-handling-in-deserialization">Error Handling in Deserialization</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#advanced-ddi-codebook-usage">Advanced DDI-Codebook Usage</a><ul>
@@ -1043,7 +1047,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#architecture">Architecture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#key-features">Key Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sempyro-deserialization">SemPyRO Deserialization</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#model-structure">Model Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#class-naming-conventions">Class Naming Conventions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#advanced-usage">Advanced Usage</a></li>
@@ -1112,6 +1119,12 @@
 <li class="toctree-l3"><a class="reference internal" href="sempyro.html#working-with-enumerations">Working with Enumerations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sempyro.html#complex-resource-creation">Complex Resource Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sempyro.html#rdf-serialization">RDF Serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sempyro.html#rdf-deserialization">RDF Deserialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sempyro.html#using-the-deserializer-class">Using the Deserializer Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sempyro.html#using-the-deserializable-mixin">Using the Deserializable Mixin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sempyro.html#round-trip-serialization">Round-Trip Serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sempyro.html#working-with-multiple-formats">Working with Multiple Formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sempyro.html#error-handling">Error Handling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sempyro.html#validation-and-type-safety">Validation and Type Safety</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sempyro.html#working-with-references">Working with References</a></li>
 </ul>
@@ -1124,7 +1137,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="sempyro.html#best-practices">Best Practices</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="sempyro.html#resource-identification">Resource Identification</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#error-handling">Error Handling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sempyro.html#id1">Error Handling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sempyro.html#performance-considerations">Performance Considerations</a></li>
 </ul>
 </li>
@@ -1267,6 +1280,34 @@
 <span class="c1"># rdf_output = var.to_rdf()</span>
 </pre></div>
 </div>
+<section id="sempyro-deserialization">
+<h3>SemPyRO Deserialization<a class="headerlink" href="#sempyro-deserialization" title="Link to this heading"></a></h3>
+<p>The toolkit includes utilities for deserializing RDF graphs back into Pydantic model instances:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rdflib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Graph</span><span class="p">,</span> <span class="n">URIRef</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi</span><span class="w"> </span><span class="kn">import</span> <span class="n">sempyro_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.sempyro_deserializer</span><span class="w"> </span><span class="kn">import</span> <span class="n">from_graph</span>
+
+<span class="c1"># Load an RDF graph</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;data.ttl&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;turtle&quot;</span><span class="p">)</span>
+
+<span class="c1"># Deserialize a specific subject</span>
+<span class="n">subject_uri</span> <span class="o">=</span> <span class="n">URIRef</span><span class="p">(</span><span class="s2">&quot;http://example.org/var1&quot;</span><span class="p">)</span>
+<span class="n">instance</span> <span class="o">=</span> <span class="n">from_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">sempyro_model</span><span class="p">,</span> <span class="n">subject</span><span class="o">=</span><span class="n">subject_uri</span><span class="p">)</span>
+
+<span class="c1"># Deserialize all instances</span>
+<span class="n">all_instances</span> <span class="o">=</span> <span class="n">from_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">sempyro_model</span><span class="p">)</span>
+
+<span class="c1"># Filter by type</span>
+<span class="n">variables</span> <span class="o">=</span> <span class="n">from_graph</span><span class="p">(</span>
+    <span class="n">graph</span><span class="p">,</span>
+    <span class="n">sempyro_model</span><span class="p">,</span>
+    <span class="n">root_types</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InstanceVariable&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>For more details on deserialization, see <code class="docutils literal notranslate"><span class="pre">README_SEMPYRO_DESERIALIZER.md</span></code> in the source directory.</p>
+</section>
 </section>
 <section id="model-structure">
 <h2>Model Structure<a class="headerlink" href="#model-structure" title="Link to this heading"></a></h2>

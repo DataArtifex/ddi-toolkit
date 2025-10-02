@@ -71,6 +71,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../examples.html#working-with-attributes-and-associations">Working with Attributes and Associations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../examples.html#sparql-queries">SPARQL Queries</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../examples.html#creating-ddi-cdi-resources-experimental">Creating DDI-CDI Resources (Experimental)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples.html#rdf-serialization-and-deserialization">RDF Serialization and Deserialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples.html#round-trip-serialization-example">Round-Trip Serialization Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples.html#batch-processing-with-deserialization">Batch Processing with Deserialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples.html#error-handling-in-deserialization">Error Handling in Deserialization</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../examples.html#advanced-ddi-codebook-usage">Advanced DDI-Codebook Usage</a><ul>
@@ -1040,7 +1044,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../ddicdi.html#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../ddicdi.html#architecture">Architecture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../ddicdi.html#key-features">Key Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../ddicdi.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ddicdi.html#basic-usage">Basic Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../ddicdi.html#sempyro-deserialization">SemPyRO Deserialization</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../ddicdi.html#model-structure">Model Structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../ddicdi.html#class-naming-conventions">Class Naming Conventions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../ddicdi.html#advanced-usage">Advanced Usage</a></li>
@@ -1109,6 +1116,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../sempyro.html#working-with-enumerations">Working with Enumerations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sempyro.html#complex-resource-creation">Complex Resource Creation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sempyro.html#rdf-serialization">RDF Serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sempyro.html#rdf-deserialization">RDF Deserialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sempyro.html#using-the-deserializer-class">Using the Deserializer Class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sempyro.html#using-the-deserializable-mixin">Using the Deserializable Mixin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sempyro.html#round-trip-serialization">Round-Trip Serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sempyro.html#working-with-multiple-formats">Working with Multiple Formats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sempyro.html#error-handling">Error Handling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sempyro.html#validation-and-type-safety">Validation and Type Safety</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sempyro.html#working-with-references">Working with References</a></li>
 </ul>
@@ -1121,7 +1134,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../sempyro.html#best-practices">Best Practices</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../sempyro.html#resource-identification">Resource Identification</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../sempyro.html#error-handling">Error Handling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sempyro.html#id1">Error Handling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sempyro.html#performance-considerations">Performance Considerations</a></li>
 </ul>
 </li>
