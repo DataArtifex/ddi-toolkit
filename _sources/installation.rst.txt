@@ -4,17 +4,21 @@ Installation
 Requirements
 ------------
 
-* Python 3.8+
-* rdflib
-* pydantic
-* lxml
+* Python 3.12+
+* pydantic_rdf
+* rdflib >= 7.0
+* sempyro >= 2.0.0
 
 Installation from PyPI
 ----------------------
 
+.. note::
+   Once stable, this package will be officially released and distributed through PyPI. Stay tuned for updates!
+
 .. code-block:: bash
 
-   pip install dartfx-ddi-toolkit
+   # Coming soon
+   pip install dartfx-ddi
 
 Development Installation
 ------------------------
@@ -30,19 +34,19 @@ Dependencies
 
 The toolkit has several key dependencies:
 
-* **rdflib**: For RDF graph operations and SPARQL queries
-* **pydantic**: For data validation and serialization
-* **lxml**: For XML processing and DDI-Codebook parsing
-* **sempyro**: For RDF model generation (DDI-CDI)
+* **pydantic_rdf**: For RDF-aware Pydantic models
+* **rdflib**: For RDF graph operations and SPARQL queries  
+* **sempyro**: For semantic Python RDF objects (DDI-CDI support)
 
-Optional Dependencies
----------------------
+Development Dependencies
+------------------------
 
 For development and testing:
 
 * **pytest**: For running tests
 * **sphinx**: For building documentation
-* **black**: For code formatting
+* **sphinx_rtd_theme**: For documentation theme
+* **myst_parser**: For Markdown support in documentation
 
 Verification
 ------------
@@ -51,12 +55,16 @@ To verify your installation works correctly:
 
 .. code-block:: python
 
-   from dartfx.ddi import codebook
+   from dartfx.ddi import ddicodebook
    print("DDI Toolkit installed successfully!")
 
    # Test DDI-CDI if you have the specifications
    try:
-       from dartfx.ddi.ddicdi_specification import DdiCdiModel
+       from dartfx.ddi.ddicdi.specification import DdiCdiSpecification
        print("DDI-CDI support available!")
    except ImportError:
        print("DDI-CDI specifications not found - install separately if needed")
+
+   # Check version
+   from dartfx.ddi.__about__ import __version__
+   print(f"DDI Toolkit version: {__version__}")

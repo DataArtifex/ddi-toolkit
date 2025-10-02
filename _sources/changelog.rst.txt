@@ -3,10 +3,10 @@ Changelog
 
 All notable changes to this project will be documented in this file.
 
-Version 0.1.0 (Current)
-------------------------
+Version 0.0.2 (Current)
+-----------------------
 
-Initial release of the DDI Toolkit.
+Current development release of the DDI Toolkit.
 
 Features
 ~~~~~~~~
@@ -22,11 +22,12 @@ Features
 **DDI-CDI Support (Experimental):**
 
 - Load DDI-CDI specifications from directory
-- RDF graph operations with rdflib
+- RDF graph operations with rdflib >= 7.0
 - SPARQL query support
-- Resource property and relationship exploration
-- Class hierarchy navigation
-- Sempyro integration for type-safe RDF objects
+- Generated SemPyRO model classes with Pydantic validation
+- Resource property and relationship exploration  
+- Integration with pydantic_rdf for RDF serialization
+- Support for DDI-CDI 1.0 specification
 
 **Documentation:**
 

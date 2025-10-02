@@ -18,8 +18,8 @@ Development Setup
 
 .. code-block:: bash
 
-   # Clone the repository
-   git clone https://github.com/DataArtifex/ddi-toolkit.git
+   # Fork and clone the repository
+   git clone https://github.com/yourusername/ddi-toolkit.git
    cd ddi-toolkit
    
    # Create a virtual environment
@@ -27,7 +27,10 @@ Development Setup
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    
    # Install development dependencies
-   pip install -e .[dev]
+   pip install -e .
+   
+   # Verify installation
+   pytest
 
 Running Tests
 -------------
@@ -37,24 +40,35 @@ Running Tests
    # Run all tests
    pytest
    
-   # Run tests with coverage
-   pytest --cov=dartfx.ddi
+   # Run tests with verbose output
+   pytest -v
    
    # Run specific test file
-   pytest tests/test_ddicdi_model.py
+   pytest tests/test_ddicodebook.py
+   
+   # Run tests for specific module
+   pytest tests/test_ddicdi_specification.py
 
 Code Style
 ----------
 
-We use Black for code formatting:
+Follow PEP 8 guidelines and use meaningful names:
 
-.. code-block:: bash
+.. code-block:: python
 
-   # Format code
-   black src/ tests/
+   # Good
+   def load_ddi_codebook(file_path: str) -> codeBookType:
+       """Load a DDI-Codebook from XML file."""
+       return ddicodebook.loadxml(file_path)
    
-   # Check formatting
-   black --check src/ tests/
+   # Use type hints
+   from typing import Optional, List, Dict
+   
+   def extract_variables(codebook: codeBookType, 
+                        var_type: Optional[str] = None) -> List[Dict]:
+       """Extract variable information from codebook."""
+       # Implementation here
+       pass
 
 Documentation
 -------------
@@ -83,17 +97,55 @@ Submitting Changes
 Types of Contributions
 ----------------------
 
-- Bug fixes
-- New features
-- Documentation improvements
-- Test coverage improvements
+**High Priority:**
+
+- DDI-CDI specification coverage improvements
+- Test coverage enhancements  
+- Documentation updates and examples
+- Bug fixes in DDI-Codebook processing
+
+**Medium Priority:**
+
 - Performance optimizations
+- Additional utility functions
+- Integration improvements
+- Error handling enhancements
+
+**Experimental:**
+
+- DDI-Codebook to DDI-CDI conversion
+- Advanced RDF serialization features
+- Integration with external tools
 
 Guidelines
 ----------
 
+**Code Quality:**
+
 - Keep changes focused and atomic
 - Include tests for new functionality
 - Update documentation for user-facing changes
-- Follow Python naming conventions
-- Add type hints where appropriate
+- Follow Python naming conventions (except DDI-CDI classes)
+- Add comprehensive type hints
+- Write clear docstrings with examples
+
+**Testing:**
+
+- Write unit tests for all new functions
+- Test edge cases and error conditions
+- Ensure existing tests continue to pass
+- Use meaningful test names and assertions
+
+**Documentation:**
+
+- Update API documentation for new features
+- Add examples to demonstrate usage
+- Update changelog for significant changes
+- Keep README current with new capabilities
+
+**DDI-Specific Guidelines:**
+
+- Maintain compatibility with DDI specifications
+- Handle malformed XML gracefully in DDI-Codebook
+- Follow DDI-CDI naming conventions for model classes
+- Test with real-world DDI documents when possible
