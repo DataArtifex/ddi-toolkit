@@ -206,6 +206,164 @@ RDF Serialization
    print("Turtle format:")
    print(turtle_output)
 
+RDF Deserialization
+~~~~~~~~~~~~~~~~~~~
+
+Deserialize RDF graphs back into Pydantic model instances:
+
+.. code-block:: python
+
+   from rdflib import Graph, URIRef
+   from dartfx.ddi.ddicdi import sempyro_model
+   from dartfx.ddi.ddicdi.sempyro_deserializer import (
+       from_graph,
+       SemPyRODeserializer,
+       SemPyRODeserializableMixin
+   )
+   
+   # Load an RDF graph
+   graph = Graph()
+   graph.parse("data.ttl", format="turtle")
+   
+   # Deserialize a specific subject
+   subject_uri = URIRef("http://example.org/variables/age")
+   instance = from_graph(graph, sempyro_model, subject=subject_uri)
+   
+   print(f"Deserialized: {type(instance).__name__}")
+   if hasattr(instance, 'name') and instance.name:
+       print(f"Name: {instance.name[0].name}")
+
+   # Deserialize all instances in a graph
+   all_instances = from_graph(graph, sempyro_model)
+   print(f"Found {len(all_instances)} instances")
+   
+   # Filter by specific RDF types
+   variables = from_graph(
+       graph,
+       sempyro_model,
+       root_types=["http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InstanceVariable"]
+   )
+   print(f"Found {len(variables)} InstanceVariable instances")
+
+Using the Deserializer Class
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For more control over the deserialization process:
+
+.. code-block:: python
+
+   from dartfx.ddi.ddicdi.sempyro_deserializer import SemPyRODeserializer
+   
+   # Create a deserializer instance
+   deserializer = SemPyRODeserializer(sempyro_model)
+   
+   # Check the class registry
+   print(f"Registered classes: {len(deserializer.class_registry)}")
+   
+   # Deserialize a specific subject
+   instance = deserializer.deserialize_subject(graph, subject_uri)
+   
+   # Access the instances cache (tracks all deserialized objects)
+   for uri, obj in deserializer.instances.items():
+       print(f"{uri} -> {type(obj).__name__}")
+
+Using the Deserializable Mixin
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Add deserialization capability directly to model classes:
+
+.. code-block:: python
+
+   from dartfx.ddi.ddicdi.sempyro_deserializer import SemPyRODeserializableMixin
+   from dartfx.ddi.ddicdi.sempyro_model import InstanceVariable
+   
+   class DeserializableInstanceVariable(SemPyRODeserializableMixin, InstanceVariable):
+       """InstanceVariable with built-in deserialization."""
+       pass
+   
+   # Now you can deserialize directly
+   var = DeserializableInstanceVariable.from_graph(graph, subject_uri)
+   print(f"Deserialized: {var.name[0].name if var.name else 'Unnamed'}")
+
+Round-Trip Serialization
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Serialize and deserialize objects to verify data integrity:
+
+.. code-block:: python
+
+   from rdflib import URIRef
+   import uuid
+   
+   # Create an instance variable
+   original = InstanceVariable(
+       name=[ObjectName(name="AgeVariable")],
+       identifier=[Identifier(ddiIdentifier=InternationalRegistrationDataIdentifier(
+           dataIdentifier=f"http://example.org/{uuid.uuid4()}",
+           registrationAuthorityIdentifier="http://example.org/authority",
+           versionIdentifier="1.0.0"
+       ))]
+   )
+   
+   # Serialize to RDF
+   uri = URIRef(original.identifier[0].ddiIdentifier.dataIdentifier)
+   graph = original.to_graph(uri)
+   
+   # Deserialize back
+   deserialized = from_graph(graph, sempyro_model, subject=uri)
+   
+   # Verify
+   assert type(deserialized).__name__ == type(original).__name__
+   assert deserialized.name[0].name == original.name[0].name
+   print("Round-trip successful!")
+
+Working with Multiple Formats
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The deserializer supports all RDF formats supported by rdflib:
+
+.. code-block:: python
+
+   # Turtle format
+   graph = Graph()
+   graph.parse("data.ttl", format="turtle")
+   instances = from_graph(graph, sempyro_model)
+   
+   # JSON-LD format
+   graph = Graph()
+   graph.parse("data.jsonld", format="json-ld")
+   instances = from_graph(graph, sempyro_model)
+   
+   # RDF/XML format
+   graph = Graph()
+   graph.parse("data.rdf", format="xml")
+   instances = from_graph(graph, sempyro_model)
+   
+   # N-Triples format
+   graph = Graph()
+   graph.parse("data.nt", format="nt")
+   instances = from_graph(graph, sempyro_model)
+
+Error Handling
+~~~~~~~~~~~~~~
+
+Handle deserialization errors gracefully:
+
+.. code-block:: python
+
+   from dartfx.ddi.ddicdi.sempyro_deserializer import SemPyRODeserializationError
+   
+   try:
+       instance = from_graph(graph, sempyro_model, subject=unknown_uri)
+   except SemPyRODeserializationError as e:
+       print(f"Deserialization failed: {e}")
+       # Handle the error appropriately
+   
+   # Deserialize multiple objects with error handling
+   deserializer = SemPyRODeserializer(sempyro_model)
+   instances = deserializer.deserialize(graph)  # Continues on errors
+   print(f"Successfully deserialized {len(instances)} instances")
+
 Validation and Type Safety
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

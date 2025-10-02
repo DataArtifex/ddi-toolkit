@@ -164,6 +164,123 @@ Creating DDI-CDI Resources (Experimental)
        typeOfCategoryStatistic="frequency"
    )
 
+RDF Serialization and Deserialization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from rdflib import Graph, URIRef
+   from dartfx.ddi.ddicdi import sempyro_model
+   from dartfx.ddi.ddicdi.sempyro_model import InstanceVariable, ObjectName
+   from dartfx.ddi.ddicdi.sempyro_deserializer import from_graph
+   import uuid
+   
+   # Create a variable
+   var = InstanceVariable(name=[ObjectName(name="TestVariable")])
+   uri = URIRef(f"http://example.org/variables/{uuid.uuid4()}")
+   
+   # Serialize to RDF
+   graph = var.to_graph(uri)
+   print(f"Serialized to {len(graph)} triples")
+   
+   # Export to different formats
+   turtle_output = graph.serialize(format='turtle')
+   print("Turtle format:")
+   print(turtle_output[:200] + "...")
+   
+   # Deserialize back to Python
+   deserialized = from_graph(graph, sempyro_model, subject=uri)
+   print(f"Deserialized: {type(deserialized).__name__}")
+   print(f"Name: {deserialized.name[0].name if deserialized.name else 'N/A'}")
+
+Round-Trip Serialization Example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from dartfx.ddi.ddicdi.sempyro_model import (
+       InstanceVariable,
+       ObjectName,
+       Identifier,
+       InternationalRegistrationDataIdentifier
+   )
+   
+   # Create an instance variable with full metadata
+   original = InstanceVariable(
+       name=[ObjectName(name="Age")],
+       identifier=[Identifier(ddiIdentifier=InternationalRegistrationDataIdentifier(
+           dataIdentifier=f"http://example.org/{uuid.uuid4()}",
+           registrationAuthorityIdentifier="http://example.org/authority",
+           versionIdentifier="1.0.0"
+       ))]
+   )
+   
+   # Serialize to RDF
+   uri = URIRef(original.identifier[0].ddiIdentifier.dataIdentifier)
+   graph = original.to_graph(uri)
+   
+   # Save to file
+   graph.serialize(destination="variable.ttl", format="turtle")
+   
+   # Load from file
+   loaded_graph = Graph()
+   loaded_graph.parse("variable.ttl", format="turtle")
+   
+   # Deserialize
+   deserialized = from_graph(loaded_graph, sempyro_model, subject=uri)
+   
+   # Verify data integrity
+   assert deserialized.name[0].name == original.name[0].name
+   print("Round-trip successful!")
+
+Batch Processing with Deserialization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from dartfx.ddi.ddicdi.sempyro_deserializer import SemPyRODeserializer
+   
+   # Load a graph containing multiple variables
+   graph = Graph()
+   graph.parse("multiple_variables.ttl", format="turtle")
+   
+   # Deserialize all InstanceVariable objects
+   deserializer = SemPyRODeserializer(sempyro_model)
+   instances = deserializer.deserialize(
+       graph,
+       root_types=["http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InstanceVariable"]
+   )
+   
+   # Process each variable
+   for var in instances:
+       if isinstance(var, InstanceVariable) and var.name:
+           print(f"Variable: {var.name[0].name}")
+           if var.identifier:
+               print(f"  ID: {var.identifier[0].ddiIdentifier.dataIdentifier}")
+
+Error Handling in Deserialization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from dartfx.ddi.ddicdi.sempyro_deserializer import (
+       SemPyRODeserializer,
+       SemPyRODeserializationError
+   )
+   
+   deserializer = SemPyRODeserializer(sempyro_model)
+   
+   try:
+       # Attempt to deserialize a subject
+       instance = deserializer.deserialize_subject(graph, unknown_uri)
+   except SemPyRODeserializationError as e:
+       print(f"Deserialization failed: {e}")
+       # Handle the error - maybe try alternate strategies
+   
+   # Deserialize multiple objects with error recovery
+   instances = deserializer.deserialize(graph)  # Continues despite errors
+   print(f"Successfully deserialized {len(instances)} instances")
+
 Advanced DDI-Codebook Usage
 ---------------------------
 
