@@ -337,6 +337,62 @@ def test_instance_variable_with_uses_concept():
     assert len(concepts) >= 1
 
 
+def test_uriref_fields_not_deserialized():
+    """Test that fields with rdf_type: 'uri' are deserialized as URIRef objects, not full objects.
+    
+    This tests both:
+    - Singular URIRef fields (InstanceVariable.uses_Concept - already tested above)
+    - list[URIRef] fields (Activity.has_Step)
+    
+    This test manually creates an RDF graph with URIRef relationships to avoid SemPyRO serialization
+    limitations with required fields like AgentListing.allowsDuplicates.
+    """
+    from dartfx.ddi.ddicdi.sempyro_model import Activity, Step
+    from rdflib import RDF
+    
+    # Define URIs
+    activity_uri = URIRef("http://example.org/activity1")
+    step1_uri = URIRef("http://example.org/step1")
+    step2_uri = URIRef("http://example.org/step2")
+    
+    # Manually create an RDF graph with an Activity that references Steps
+    graph = Graph()
+    graph.bind("cdi", CDI)
+    
+    # Add Activity with has_Step references
+    graph.add((activity_uri, RDF.type, CDI.Activity))
+    graph.add((activity_uri, CDI["Activity_has_Step"], step1_uri))
+    graph.add((activity_uri, CDI["Activity_has_Step"], step2_uri))
+    
+    # Add the Step objects to the graph
+    graph.add((step1_uri, RDF.type, CDI.Step))
+    graph.add((step2_uri, RDF.type, CDI.Step))
+    
+    # Deserialize the Activity
+    deserializer = SemPyRODeserializer(sempyro_model)
+    deserialized_activity = deserializer.deserialize_subject(graph, activity_uri)
+    
+    # Verify Activity was deserialized
+    assert isinstance(deserialized_activity, Activity)
+    
+    # Check list[URIRef] field - has_Step should be a list of URIRef, NOT Step objects
+    assert deserialized_activity.has_Step is not None
+    assert isinstance(deserialized_activity.has_Step, list)
+    assert len(deserialized_activity.has_Step) == 2
+    
+    for step_ref in deserialized_activity.has_Step:
+        assert isinstance(step_ref, URIRef), f"Expected URIRef but got {type(step_ref)}"
+        assert not isinstance(step_ref, Step), "URIRef should NOT be deserialized to Step object"
+        assert step_ref in [step1_uri, step2_uri]
+    
+    # Verify we can still deserialize the referenced Steps separately if needed
+    deserialized_step1 = deserializer.deserialize_subject(graph, step1_uri)
+    assert isinstance(deserialized_step1, Step)
+    
+    deserialized_step2 = deserializer.deserialize_subject(graph, step2_uri)
+    assert isinstance(deserialized_step2, Step)
+
+
 
 if __name__ == "__main__":
     # Run a quick manual test
