@@ -1,6 +1,9 @@
 from rdflib import URIRef
+from dartfx.ddi.ddicdi import sempyro_model
 from dartfx.ddi.ddicdi.sempyro_model import Identifier, InstanceVariable, InternationalRegistrationDataIdentifier, LabelForDisplay, LanguageString, ObjectName
+from dartfx.ddi.ddicdi.sempyro_deserializer import from_graph
 import uuid
+
 
 def test_instance_variable_foo():
     var = InstanceVariable(name = [ObjectName(name="Foo")])
@@ -31,10 +34,14 @@ def test_instance_variable_uses_concept():
         identifier=instance_variable_identifier,
         name=[ObjectName(name="Foo")],
         displayLabel=display_label_list,
-        uses_Concept=[URIRef("http://example.org/concept/foo")]
+        #uses_Concept=[URIRef("http://example.org/concept/foo")]
     )
     assert instance_variable
 
     g = instance_variable.to_graph(URIRef("http://example.org/variable/foo"))
-    
     print(g.serialize(format='turtle'))
+
+    # deserialize
+    instance_variable = from_graph(g, sempyro_model)
+
+    print(instance_variable)

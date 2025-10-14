@@ -19,7 +19,8 @@ from dartfx.ddi.ddicdi.sempyro_model import (
     InstanceVariable, 
     ObjectName,
     Identifier,
-    InternationalRegistrationDataIdentifier
+    InternationalRegistrationDataIdentifier,
+    Concept
 )
 
 
@@ -261,6 +262,8 @@ def test_invalid_rdf_type_raises_error():
         deserializer.deserialize_subject(graph, subject)
 
 
+
+
 def test_deserialize_empty_graph():
     """Test deserializing an empty graph returns empty list."""
     graph = Graph()
@@ -268,6 +271,71 @@ def test_deserialize_empty_graph():
     instances = from_graph(graph, sempyro_model)
     
     assert instances == []
+
+
+def test_instance_variable_with_uses_concept():
+    """Test serializing and deserializing an InstanceVariable with uses_Concept relationship."""
+    # Create a Concept that will be referenced
+    concept = Concept(
+        name=[ObjectName(name="AgeConcept")],
+        identifier=Identifier(ddiIdentifier=InternationalRegistrationDataIdentifier(
+            dataIdentifier="http://example.org/concept/age",
+            registrationAuthorityIdentifier="http://example.org/authority",
+            versionIdentifier="1.0.0"
+        ))
+    )
+    concept_uri = URIRef("http://example.org/concept/age")
+    
+    # Create an InstanceVariable that uses this Concept
+    var = InstanceVariable(
+        name=[ObjectName(name="AgeVariable")],
+        identifier=Identifier(ddiIdentifier=InternationalRegistrationDataIdentifier(
+            dataIdentifier="http://example.org/variable/age",
+            registrationAuthorityIdentifier="http://example.org/authority",
+            versionIdentifier="1.0.0"
+        )),
+        uses_Concept=[concept_uri]  # Reference to the concept
+    )
+    var_uri = URIRef("http://example.org/variable/age")
+    
+    # Serialize both to the same graph
+    graph = Graph()
+    graph += concept.to_graph(concept_uri)
+    graph += var.to_graph(var_uri)
+    
+    # Verify the graph contains the relationship
+    assert len(graph) > 0
+    
+    # Deserialize the InstanceVariable
+    deserializer = SemPyRODeserializer(sempyro_model)
+    deserialized_var = deserializer.deserialize_subject(graph, var_uri)
+    
+    # Verify the InstanceVariable was deserialized correctly
+    assert isinstance(deserialized_var, InstanceVariable)
+    assert deserialized_var.name is not None
+    assert len(deserialized_var.name) > 0
+    assert deserialized_var.name[0].name == "AgeVariable"
+    
+    # Verify the uses_Concept relationship was preserved
+    assert deserialized_var.uses_Concept is not None
+    assert len(deserialized_var.uses_Concept) == 1
+    assert deserialized_var.uses_Concept[0] == concept_uri
+    
+    # Deserialize the Concept as well to verify it's in the graph
+    deserialized_concept = deserializer.deserialize_subject(graph, concept_uri)
+    assert isinstance(deserialized_concept, Concept)
+    assert deserialized_concept.name[0].name == "AgeConcept"
+    
+    # Verify we can deserialize all instances and get both objects
+    all_instances = deserializer.deserialize(graph)
+    
+    # Should have at least the InstanceVariable and Concept (plus nested objects)
+    instance_vars = [inst for inst in all_instances if isinstance(inst, InstanceVariable)]
+    concepts = [inst for inst in all_instances if isinstance(inst, Concept) and not isinstance(inst, InstanceVariable)]
+    
+    assert len(instance_vars) >= 1
+    assert len(concepts) >= 1
+
 
 
 if __name__ == "__main__":

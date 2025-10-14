@@ -371,6 +371,14 @@ class SemPyRODeserializer:
         elif isinstance(value, (URIRef, BNode)):
             value_str = str(value)
             
+            # Check if the field is explicitly marked as a URI reference (rdf_type: "uri")
+            # If so, return the URIRef as-is without trying to deserialize
+            if field_info.json_schema_extra and isinstance(field_info.json_schema_extra, dict):
+                rdf_type = field_info.json_schema_extra.get('rdf_type')
+                if rdf_type == "uri":
+                    # Keep as URIRef for URI reference fields
+                    return value
+            
             # Check if it's an enum value
             if inner_type and inspect.isclass(inner_type) and hasattr(inner_type, '__members__'):
                 try:
