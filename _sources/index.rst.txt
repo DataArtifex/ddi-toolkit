@@ -70,6 +70,7 @@ DDI-CDI experimental usage::
    installation
    quickstart
    examples
+   codebook_to_cdi_mappings
 
 .. toctree::
    :maxdepth: 2

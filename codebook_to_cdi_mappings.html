@@ -3,25 +3,25 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Search &mdash; Data Artifex DDI Toolkit 0.0.2 documentation</title>
+  <title>DDI-Codebook to DDI-CDI CDIF Mappings &mdash; Data Artifex DDI Toolkit 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css?v=96a89a29" />
 
   
-    
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=e3a6060d"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
-    <script src="_static/searchtools.js"></script>
-    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="#" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="DDI-Codebook Processing" href="ddicodebook.html" />
+    <link rel="prev" title="Examples" href="examples.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -36,7 +36,7 @@
             Data Artifex DDI Toolkit
           </a>
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="#" method="get">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -44,7 +44,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">User Guide:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#installation-from-pypi">Installation from PyPI</a></li>
@@ -92,68 +92,68 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="codebook_to_cdi_mappings.html">DDI-Codebook to DDI-CDI CDIF Mappings</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="codebook_to_cdi_mappings.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="codebook_to_cdi_mappings.html#general-approach">General Approach</a></li>
-<li class="toctree-l2"><a class="reference internal" href="codebook_to_cdi_mappings.html#variable-level-mappings">Variable-Level Mappings</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#ddi-codebook-variable-ddi-cdi-instancevariable">DDI-Codebook Variable → DDI-CDI InstanceVariable</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">DDI-Codebook to DDI-CDI CDIF Mappings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#general-approach">General Approach</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#variable-level-mappings">Variable-Level Mappings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ddi-codebook-variable-ddi-cdi-instancevariable">DDI-Codebook Variable → DDI-CDI InstanceVariable</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="codebook_to_cdi_mappings.html#value-domain-mappings">Value Domain Mappings</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#substantive-value-domain-non-missing-categories">Substantive Value Domain (Non-Missing Categories)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="codebook_to_cdi_mappings.html#standard-mode-use-skos-false">Standard Mode (use_skos=False)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="codebook_to_cdi_mappings.html#skos-mode-use-skos-true">SKOS Mode (use_skos=True)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#value-domain-mappings">Value Domain Mappings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#substantive-value-domain-non-missing-categories">Substantive Value Domain (Non-Missing Categories)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#standard-mode-use-skos-false">Standard Mode (use_skos=False)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#skos-mode-use-skos-true">SKOS Mode (use_skos=True)</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#sentinel-value-domain-missing-categories">Sentinel Value Domain (Missing Categories)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="codebook_to_cdi_mappings.html#id1">Standard Mode (use_skos=False)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="codebook_to_cdi_mappings.html#id2">SKOS Mode (use_skos=True)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sentinel-value-domain-missing-categories">Sentinel Value Domain (Missing Categories)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Standard Mode (use_skos=False)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">SKOS Mode (use_skos=True)</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="codebook_to_cdi_mappings.html#category-and-code-mappings">Category and Code Mappings</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#id3">Standard Mode (use_skos=False)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#id4">SKOS Mode (use_skos=True)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#category-and-code-mappings">Category and Code Mappings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Standard Mode (use_skos=False)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">SKOS Mode (use_skos=True)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="codebook_to_cdi_mappings.html#dataset-and-structure-mappings">Dataset and Structure Mappings</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#ddi-codebook-filedscr-ddi-cdi-dataset">DDI-Codebook fileDscr → DDI-CDI DataSet</a></li>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#ddi-codebook-filedscr-ddi-cdi-logicalrecord">DDI-Codebook fileDscr → DDI-CDI LogicalRecord</a></li>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#ddi-codebook-ddi-cdi-datastructure">DDI-Codebook → DDI-CDI DataStructure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#variable-positioning-in-datastructure">Variable Positioning in DataStructure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dataset-and-structure-mappings">Dataset and Structure Mappings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ddi-codebook-filedscr-ddi-cdi-dataset">DDI-Codebook fileDscr → DDI-CDI DataSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ddi-codebook-filedscr-ddi-cdi-logicalrecord">DDI-Codebook fileDscr → DDI-CDI LogicalRecord</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ddi-codebook-ddi-cdi-datastructure">DDI-Codebook → DDI-CDI DataStructure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#variable-positioning-in-datastructure">Variable Positioning in DataStructure</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="codebook_to_cdi_mappings.html#resource-organization">Resource Organization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="codebook_to_cdi_mappings.html#identifier-strategy">Identifier Strategy</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#uuid-generation">UUID Generation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#id-suffix-patterns">ID Suffix Patterns</a></li>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#non-ddi-identifiers">Non-DDI Identifiers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#resource-organization">Resource Organization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#identifier-strategy">Identifier Strategy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#uuid-generation">UUID Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id-suffix-patterns">ID Suffix Patterns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#non-ddi-identifiers">Non-DDI Identifiers</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="codebook_to_cdi_mappings.html#important-assumptions">Important Assumptions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="codebook_to_cdi_mappings.html#processing-order">Processing Order</a></li>
-<li class="toctree-l2"><a class="reference internal" href="codebook_to_cdi_mappings.html#skos-vs-standard-mode-comparison">SKOS vs Standard Mode Comparison</a></li>
-<li class="toctree-l2"><a class="reference internal" href="codebook_to_cdi_mappings.html#method-signature">Method Signature</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#parameters">Parameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#returns">Returns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#important-assumptions">Important Assumptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#processing-order">Processing Order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#skos-vs-standard-mode-comparison">SKOS vs Standard Mode Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#method-signature">Method Signature</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#returns">Returns</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="codebook_to_cdi_mappings.html#usage-example">Usage Example</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#basic-conversion">Basic Conversion</a></li>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#standard-mode-conversion">Standard Mode Conversion</a></li>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#converting-to-rdf-graph">Converting to RDF Graph</a></li>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#exploring-resources">Exploring Resources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage-example">Usage Example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#basic-conversion">Basic Conversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#standard-mode-conversion">Standard Mode Conversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#converting-to-rdf-graph">Converting to RDF Graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exploring-resources">Exploring Resources</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="codebook_to_cdi_mappings.html#related-functions">Related Functions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#codebook-to-cdif-graph">codebook_to_cdif_graph()</a></li>
-<li class="toctree-l3"><a class="reference internal" href="codebook_to_cdi_mappings.html#ddi-cdi-resources-to-graph">ddi_cdi_resources_to_graph()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#related-functions">Related Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#codebook-to-cdif-graph">codebook_to_cdif_graph()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ddi-cdi-resources-to-graph">ddi_cdi_resources_to_graph()</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="codebook_to_cdi_mappings.html#version-information">Version Information</a></li>
-<li class="toctree-l2"><a class="reference internal" href="codebook_to_cdi_mappings.html#references">References</a></li>
-<li class="toctree-l2"><a class="reference internal" href="codebook_to_cdi_mappings.html#see-also">See Also</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#version-information">Version Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See Also</a></li>
 </ul>
 </li>
 </ul>
@@ -1247,8 +1247,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Search</li>
+      <li class="breadcrumb-item active">DDI-Codebook to DDI-CDI CDIF Mappings</li>
       <li class="wy-breadcrumbs-aside">
+            <a href="_sources/codebook_to_cdi_mappings.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -1256,22 +1257,796 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <noscript>
-  <div id="fallback" class="admonition warning">
-    <p class="last">
-      Please activate JavaScript to enable the search functionality.
-    </p>
-  </div>
-  </noscript>
+  <section id="ddi-codebook-to-ddi-cdi-cdif-mappings">
+<h1>DDI-Codebook to DDI-CDI CDIF Mappings<a class="headerlink" href="#ddi-codebook-to-ddi-cdi-cdif-mappings" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>This document describes the mappings implemented in the <code class="docutils literal notranslate"><span class="pre">codebook_to_cdif</span></code> method that converts DDI-Codebook (version 2.5) metadata into DDI-CDI (version 1.0) CDIF profile resources.</p>
+<p>The conversion process transforms DDI-Codebook elements into a dictionary of DDI-CDI resources that can be serialized to RDF or other formats. The mapping follows the Cross Domain Integration Framework (CDIF) profile specifications.</p>
+</section>
+<section id="general-approach">
+<h2>General Approach<a class="headerlink" href="#general-approach" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Each DDI-Codebook resource is assigned a UUID-based identifier</p></li>
+<li><p>Codebook IDs are preserved as non-DDI identifiers with type <code class="docutils literal notranslate"><span class="pre">&quot;ddi-codebook&quot;</span></code></p></li>
+<li><p>The method supports two modes for representing value domains:</p>
+<ul>
+<li><p><strong>SKOS mode</strong> (<code class="docutils literal notranslate"><span class="pre">use_skos=True</span></code>): Uses SKOS ConceptSchemes and Concepts</p></li>
+<li><p><strong>Standard mode</strong> (<code class="docutils literal notranslate"><span class="pre">use_skos=False</span></code>): Uses DDI-CDI Code, CodeList, Category, and CategorySet</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="variable-level-mappings">
+<h2>Variable-Level Mappings<a class="headerlink" href="#variable-level-mappings" title="Link to this heading"></a></h2>
+<section id="ddi-codebook-variable-ddi-cdi-instancevariable">
+<h3>DDI-Codebook Variable → DDI-CDI InstanceVariable<a class="headerlink" href="#ddi-codebook-variable-ddi-cdi-instancevariable" title="Link to this heading"></a></h3>
+<p>For each variable (<code class="docutils literal notranslate"><span class="pre">var</span></code>) in the codebook:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 30.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Source (DDI-Codebook)</p></th>
+<th class="head"><p>Target (DDI-CDI)</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">var/&#64;ID</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">InstanceVariable.id_suffix</span></code></p></td>
+<td><p>Used as part of the unique identifier</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">var/&#64;ID</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">InstanceVariable.non_ddi_id</span></code></p></td>
+<td><p>Preserved with type <code class="docutils literal notranslate"><span class="pre">&quot;ddi-codebook&quot;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">var/varName</span></code> or <code class="docutils literal notranslate"><span class="pre">var/&#64;name</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">InstanceVariable.name</span></code></p></td>
+<td><p>Set via <code class="docutils literal notranslate"><span class="pre">set_simple_name()</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">var/labl</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">InstanceVariable.displayLabel</span></code></p></td>
+<td><p>Set via <code class="docutils literal notranslate"><span class="pre">set_simple_display_label()</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="value-domain-mappings">
+<h2>Value Domain Mappings<a class="headerlink" href="#value-domain-mappings" title="Link to this heading"></a></h2>
+<p>Variables with categories are mapped to value domains. The mapping depends on whether categories are substantive (data values) or sentinel (missing values).</p>
+<section id="substantive-value-domain-non-missing-categories">
+<h3>Substantive Value Domain (Non-Missing Categories)<a class="headerlink" href="#substantive-value-domain-non-missing-categories" title="Link to this heading"></a></h3>
+<p>Created when <code class="docutils literal notranslate"><span class="pre">var.n_non_missing_catgry</span> <span class="pre">&gt;</span> <span class="pre">0</span></code></p>
+<section id="standard-mode-use-skos-false">
+<h4>Standard Mode (use_skos=False)<a class="headerlink" href="#standard-mode-use-skos-false" title="Link to this heading"></a></h4>
+<p>Mapping hierarchy:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DDI-Codebook Variable (with non-missing categories)
+    ↓
+DDI-CDI SubstantiveValueDomain
+    ↓ (takesValuesFrom)
+DDI-CDI CodeList
+    ↓ (has CategorySet)
+DDI-CDI CategorySet
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 30.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Source</p></th>
+<th class="head"><p>Target</p></th>
+<th class="head"><p>Relationship</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">var</span></code> (with categories)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SubstantiveValueDomain</span></code></p></td>
+<td><p>Created with <code class="docutils literal notranslate"><span class="pre">id_suffix=var.id</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>SubstantiveValueDomain</p></td>
+<td><p>InstanceVariable</p></td>
+<td><p>Relationship: <code class="docutils literal notranslate"><span class="pre">takesSubstantiveValues</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>SubstantiveValueDomain</p></td>
+<td><p>CodeList</p></td>
+<td><p>Relationship: <code class="docutils literal notranslate"><span class="pre">takesValuesFrom</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>CodeList</p></td>
+<td><p>CategorySet</p></td>
+<td><p>Relationship: <code class="docutils literal notranslate"><span class="pre">has</span></code> (via <code class="docutils literal notranslate"><span class="pre">set_category_set()</span></code>)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="skos-mode-use-skos-true">
+<h4>SKOS Mode (use_skos=True)<a class="headerlink" href="#skos-mode-use-skos-true" title="Link to this heading"></a></h4>
+<p>Mapping hierarchy:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DDI-Codebook Variable (with non-missing categories)
+    ↓
+DDI-CDI SubstantiveValueDomain
+    ↓ (takesValuesFrom)
+SKOS ConceptScheme
+    ↓ (hasTopConcept)
+SKOS Concept(s)
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 30.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Source</p></th>
+<th class="head"><p>Target</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">var</span></code> (with categories)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SubstantiveValueDomain</span></code></p></td>
+<td><p>Created with <code class="docutils literal notranslate"><span class="pre">id_suffix=var.id</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>SubstantiveValueDomain</p></td>
+<td><p>SKOS ConceptScheme</p></td>
+<td><p>URI: <code class="docutils literal notranslate"><span class="pre">{base_uuid}_SubstantiveConceptScheme_{var.id}</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="sentinel-value-domain-missing-categories">
+<h3>Sentinel Value Domain (Missing Categories)<a class="headerlink" href="#sentinel-value-domain-missing-categories" title="Link to this heading"></a></h3>
+<p>Created when <code class="docutils literal notranslate"><span class="pre">var.n_missing_catgry</span> <span class="pre">&gt;</span> <span class="pre">0</span></code></p>
+<section id="id1">
+<h4>Standard Mode (use_skos=False)<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<p>Mapping hierarchy:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DDI-Codebook Variable (with missing categories)
+    ↓
+DDI-CDI SentinelValueDomain
+    ↓ (takesValuesFrom)
+DDI-CDI CodeList (sentinel)
+    ↓ (has CategorySet)
+DDI-CDI CategorySet (sentinel)
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 30.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Source</p></th>
+<th class="head"><p>Target</p></th>
+<th class="head"><p>Relationship</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">var</span></code> (with missing categories)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SentinelValueDomain</span></code></p></td>
+<td><p>Created with <code class="docutils literal notranslate"><span class="pre">id_suffix=var.id</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>SentinelValueDomain</p></td>
+<td><p>InstanceVariable</p></td>
+<td><p>Relationship: <code class="docutils literal notranslate"><span class="pre">takesSentinelValues</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>SentinelValueDomain</p></td>
+<td><p>CodeList</p></td>
+<td><p>Relationship: <code class="docutils literal notranslate"><span class="pre">takesValuesFrom</span></code>, ID suffix: <code class="docutils literal notranslate"><span class="pre">var.id</span> <span class="pre">+</span> <span class="pre">&quot;_sentinel&quot;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>CodeList</p></td>
+<td><p>CategorySet</p></td>
+<td><p>Relationship: <code class="docutils literal notranslate"><span class="pre">has</span></code>, ID suffix: <code class="docutils literal notranslate"><span class="pre">var.id</span> <span class="pre">+</span> <span class="pre">&quot;_sentinel&quot;</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id2">
+<h4>SKOS Mode (use_skos=True)<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<p>Mapping hierarchy:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DDI-Codebook Variable (with missing categories)
+    ↓
+DDI-CDI SentinelValueDomain
+    ↓ (takesValuesFrom)
+SKOS ConceptScheme (sentinel)
+    ↓ (hasTopConcept)
+SKOS Concept(s)
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 30.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Source</p></th>
+<th class="head"><p>Target</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">var</span></code> (with missing categories)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SentinelValueDomain</span></code></p></td>
+<td><p>Created with <code class="docutils literal notranslate"><span class="pre">id_suffix=var.id</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>SentinelValueDomain</p></td>
+<td><p>SKOS ConceptScheme</p></td>
+<td><p>URI: <code class="docutils literal notranslate"><span class="pre">{base_uuid}_SentinelConceptScheme_{var.id}</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="category-and-code-mappings">
+<h2>Category and Code Mappings<a class="headerlink" href="#category-and-code-mappings" title="Link to this heading"></a></h2>
+<p>For each category (<code class="docutils literal notranslate"><span class="pre">catgry</span></code>) within a variable:</p>
+<section id="id3">
+<h3>Standard Mode (use_skos=False)<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<p>Mapping hierarchy:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DDI-Codebook catgry
+    ↓
+DDI-CDI Code ← (usesNotation) ← Notation
+    ↓ (denotes)
+DDI-CDI Category
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 30.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Source (DDI-Codebook)</p></th>
+<th class="head"><p>Target (DDI-CDI)</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">catgry/catValu</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Code.identifier</span></code></p></td>
+<td><p>Sanitized and URL-encoded as <code class="docutils literal notranslate"><span class="pre">code_value_uid</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">catgry/catValu</span></code></p></td>
+<td><p>Non-DDI identifier on Code</p></td>
+<td><p>Type: <code class="docutils literal notranslate"><span class="pre">&quot;code-value&quot;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">catgry/labl</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Notation.content</span></code></p></td>
+<td><p>If label exists; otherwise uses <code class="docutils literal notranslate"><span class="pre">catValu</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">catgry/labl</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Category.name</span></code></p></td>
+<td><p>Set via <code class="docutils literal notranslate"><span class="pre">set_simple_name()</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Code</p></td>
+<td><p>Notation</p></td>
+<td><p>Relationship: <code class="docutils literal notranslate"><span class="pre">usesNotation</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Code</p></td>
+<td><p>Category</p></td>
+<td><p>Relationship: <code class="docutils literal notranslate"><span class="pre">denotes</span></code> (via <code class="docutils literal notranslate"><span class="pre">set_category()</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p>Notation</p></td>
+<td><p>Category</p></td>
+<td><p>Relationship: <code class="docutils literal notranslate"><span class="pre">formats</span></code> (via <code class="docutils literal notranslate"><span class="pre">set_category()</span></code>)</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Code-Category Distribution:</strong></p>
+<ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">catgry.is_missing</span> <span class="pre">==</span> <span class="pre">False</span></code>: Added to substantive CodeList and CategorySet</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">catgry.is_missing</span> <span class="pre">==</span> <span class="pre">True</span></code>: Added to sentinel CodeList and CategorySet</p></li>
+</ul>
+</section>
+<section id="id4">
+<h3>SKOS Mode (use_skos=True)<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<p>Mapping hierarchy:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DDI-Codebook catgry
+    ↓
+SKOS Concept
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 30.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Source (DDI-Codebook)</p></th>
+<th class="head"><p>Target (SKOS)</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">catgry/catValu</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Concept.notation</span></code></p></td>
+<td><p>Added via <code class="docutils literal notranslate"><span class="pre">add_notation()</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">catgry/labl</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Concept.prefLabel</span></code></p></td>
+<td><p>Added via <code class="docutils literal notranslate"><span class="pre">add_pref_label()</span></code> if exists</p></td>
+</tr>
+<tr class="row-even"><td><p>Concept</p></td>
+<td><p>ConceptScheme</p></td>
+<td><p>Relationship: <code class="docutils literal notranslate"><span class="pre">hasTopConcept</span></code> (substantive or sentinel based on <code class="docutils literal notranslate"><span class="pre">is_missing</span></code>)</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Concept URI Format:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{base_uuid}_Concept_{var.id}_{code_value_uid}
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">code_value_uid</span></code> is the URL-encoded, sanitized version of <code class="docutils literal notranslate"><span class="pre">catValu</span></code>.</p>
+</section>
+</section>
+<section id="dataset-and-structure-mappings">
+<h2>Dataset and Structure Mappings<a class="headerlink" href="#dataset-and-structure-mappings" title="Link to this heading"></a></h2>
+<p>For each file description (<code class="docutils literal notranslate"><span class="pre">fileDscr</span></code>) in the codebook:</p>
+<section id="ddi-codebook-filedscr-ddi-cdi-dataset">
+<h3>DDI-Codebook fileDscr → DDI-CDI DataSet<a class="headerlink" href="#ddi-codebook-filedscr-ddi-cdi-dataset" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 30.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Source (DDI-Codebook)</p></th>
+<th class="head"><p>Target (DDI-CDI)</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fileDscr/&#64;ID</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DataSet.id_suffix</span></code></p></td>
+<td><p>Used as part of unique identifier</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fileDscr/&#64;ID</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DataSet.non_ddi_id</span></code></p></td>
+<td><p>Preserved with type <code class="docutils literal notranslate"><span class="pre">&quot;ddi-codebook&quot;</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ddi-codebook-filedscr-ddi-cdi-logicalrecord">
+<h3>DDI-Codebook fileDscr → DDI-CDI LogicalRecord<a class="headerlink" href="#ddi-codebook-filedscr-ddi-cdi-logicalrecord" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 30.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Source (DDI-Codebook)</p></th>
+<th class="head"><p>Target (DDI-CDI)</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fileDscr/&#64;ID</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">LogicalRecord.id_suffix</span></code></p></td>
+<td><p>Used as part of unique identifier</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fileDscr/&#64;ID</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">LogicalRecord.non_ddi_id</span></code></p></td>
+<td><p>Preserved with type <code class="docutils literal notranslate"><span class="pre">&quot;ddi-codebook&quot;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>LogicalRecord</p></td>
+<td><p>DataSet</p></td>
+<td><p>Relationship: <code class="docutils literal notranslate"><span class="pre">correspondsTo</span></code> (via <code class="docutils literal notranslate"><span class="pre">add_dataset()</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>LogicalRecord</p></td>
+<td><p>InstanceVariable(s)</p></td>
+<td><p>Relationship: <code class="docutils literal notranslate"><span class="pre">has</span></code> (via <code class="docutils literal notranslate"><span class="pre">add_variable()</span></code>) for each variable in file</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ddi-codebook-ddi-cdi-datastructure">
+<h3>DDI-Codebook → DDI-CDI DataStructure<a class="headerlink" href="#ddi-codebook-ddi-cdi-datastructure" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 30.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Source (DDI-Codebook)</p></th>
+<th class="head"><p>Target (DDI-CDI)</p></th>
+<th class="head"><p>Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">codebook/&#64;ID</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DataStructure.id_suffix</span></code></p></td>
+<td><p>Uses codebook ID, not file ID</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">codebook/&#64;ID</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DataStructure.non_ddi_id</span></code></p></td>
+<td><p>Preserved with type <code class="docutils literal notranslate"><span class="pre">&quot;ddi-codebook&quot;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>DataStructure</p></td>
+<td><p>DataSet</p></td>
+<td><p>Relationship: <code class="docutils literal notranslate"><span class="pre">structures</span></code> (via <code class="docutils literal notranslate"><span class="pre">add_data_structure()</span></code>)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="variable-positioning-in-datastructure">
+<h3>Variable Positioning in DataStructure<a class="headerlink" href="#variable-positioning-in-datastructure" title="Link to this heading"></a></h3>
+<p>For each variable in a file:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>Value / Notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Position</p></td>
+<td><p>Sequential (1, 2, 3…) - Order within file</p></td>
+</tr>
+<tr class="row-odd"><td><p>Component</p></td>
+<td><p>DataStructureComponent - Created via <code class="docutils literal notranslate"><span class="pre">add_represented_variable()</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>ComponentPosition</p></td>
+<td><p>ComponentPosition - Holds the ordinal position</p></td>
+</tr>
+</tbody>
+</table>
+<p>Mapping hierarchy:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DataStructure
+    ↓ (has component)
+DataStructureComponent
+    ↓ (represents)
+InstanceVariable
+    ↓ (has position)
+ComponentPosition (value = var_position)
+</pre></div>
+</div>
+</section>
+</section>
+<section id="resource-organization">
+<h2>Resource Organization<a class="headerlink" href="#resource-organization" title="Link to this heading"></a></h2>
+<p>All created resources are stored in a dictionary with their URI as the key:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;uri1&quot;</span><span class="p">:</span> <span class="n">InstanceVariable</span><span class="p">,</span>
+    <span class="s2">&quot;uri2&quot;</span><span class="p">:</span> <span class="n">SubstantiveValueDomain</span><span class="p">,</span>
+    <span class="s2">&quot;uri3&quot;</span><span class="p">:</span> <span class="n">CodeList</span><span class="p">,</span>
+    <span class="s2">&quot;uri4&quot;</span><span class="p">:</span> <span class="n">Category</span><span class="p">,</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This structure allows for:</p>
+<ul class="simple">
+<li><p>Efficient lookup by URI</p></li>
+<li><p>Easy serialization to RDF via <code class="docutils literal notranslate"><span class="pre">add_to_rdf_graph()</span></code></p></li>
+<li><p>Preservation of all relationships between resources</p></li>
+</ul>
+</section>
+<section id="identifier-strategy">
+<h2>Identifier Strategy<a class="headerlink" href="#identifier-strategy" title="Link to this heading"></a></h2>
+<section id="uuid-generation">
+<h3>UUID Generation<a class="headerlink" href="#uuid-generation" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>A single <code class="docutils literal notranslate"><span class="pre">base_uuid</span></code> is generated for the entire conversion</p></li>
+<li><p>All resource IDs use this base UUID with unique suffixes</p></li>
+</ul>
+</section>
+<section id="id-suffix-patterns">
+<h3>ID Suffix Patterns<a class="headerlink" href="#id-suffix-patterns" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 30.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Resource Type</p></th>
+<th class="head"><p>Suffix Pattern</p></th>
+<th class="head"><p>Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>InstanceVariable</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">{var.id}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VAR001</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>SubstantiveValueDomain</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">{var.id}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VAR001</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>SentinelValueDomain</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">{var.id}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VAR001</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Substantive CodeList</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">{var.id}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VAR001</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Sentinel CodeList</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">{var.id}_sentinel</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VAR001_sentinel</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Substantive CategorySet</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">{var.id}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VAR001</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Sentinel CategorySet</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">{var.id}_sentinel</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VAR001_sentinel</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Code/Category/Notation</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">{var.id}_{code_value_uid}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VAR001_1</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>DataSet</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">{file.id}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">FILE001</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>LogicalRecord</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">{file.id}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">FILE001</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>DataStructure</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">{codebook.id}</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CODEBOOK001</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="non-ddi-identifiers">
+<h3>Non-DDI Identifiers<a class="headerlink" href="#non-ddi-identifiers" title="Link to this heading"></a></h3>
+<p>All resources that map from DDI-Codebook elements preserve the original ID:</p>
+<ul class="simple">
+<li><p>Type: <code class="docutils literal notranslate"><span class="pre">&quot;ddi-codebook&quot;</span></code></p></li>
+<li><p>Value: Original <code class="docutils literal notranslate"><span class="pre">&#64;ID</span></code> attribute from Codebook</p></li>
+</ul>
+</section>
+</section>
+<section id="important-assumptions">
+<h2>Important Assumptions<a class="headerlink" href="#important-assumptions" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>ID Requirements</strong>: The codebook files and variables must have their <code class="docutils literal notranslate"><span class="pre">&#64;ID</span></code> attribute set</p></li>
+<li><p><strong>File Subsetting</strong>: The <code class="docutils literal notranslate"><span class="pre">files</span></code> parameter for selective conversion is not yet implemented</p></li>
+<li><p><strong>Category Classification</strong>: Categories are classified as missing/sentinel based on the <code class="docutils literal notranslate"><span class="pre">is_missing</span></code> attribute</p></li>
+<li><p><strong>Label Fallback</strong>: If a category has no label, the code value is used as the label</p></li>
+<li><p><strong>URI Sanitization</strong>: Code values are URL-encoded and spaces are replaced with underscores for URI safety</p></li>
+</ol>
+</section>
+<section id="processing-order">
+<h2>Processing Order<a class="headerlink" href="#processing-order" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Variables</strong>: Process all variables and their categories first</p></li>
+<li><p><strong>Datasets</strong>: Process file descriptions and create dataset structures</p></li>
+<li><p><strong>Associations</strong>: Link variables to logical records and data structures</p></li>
+</ol>
+<p>This order ensures that all InstanceVariable objects are created before they are referenced by LogicalRecords and DataStructures.</p>
+</section>
+<section id="skos-vs-standard-mode-comparison">
+<h2>SKOS vs Standard Mode Comparison<a class="headerlink" href="#skos-vs-standard-mode-comparison" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 40.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>SKOS Mode</p></th>
+<th class="head"><p>Standard Mode</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Value representation</p></td>
+<td><p>SKOS ConceptScheme + Concepts</p></td>
+<td><p>CodeList + CategorySet + Code + Category</p></td>
+</tr>
+<tr class="row-odd"><td><p>Notation</p></td>
+<td><p>On Concept</p></td>
+<td><p>Separate Notation resource</p></td>
+</tr>
+<tr class="row-even"><td><p>Label</p></td>
+<td><p>prefLabel on Concept</p></td>
+<td><p>Name on Category + content on Notation</p></td>
+</tr>
+<tr class="row-odd"><td><p>Hierarchy</p></td>
+<td><p>hasTopConcept relationship</p></td>
+<td><p>Code denotes Category</p></td>
+</tr>
+<tr class="row-even"><td><p>Complexity</p></td>
+<td><p>Simpler (2 resource types)</p></td>
+<td><p>More complex (4 resource types)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Standards alignment</p></td>
+<td><p>Uses W3C SKOS</p></td>
+<td><p>Pure DDI-CDI</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="method-signature">
+<h2>Method Signature<a class="headerlink" href="#method-signature" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">codebook_to_cdif</span><span class="p">(</span>
+    <span class="n">codebook</span><span class="p">:</span> <span class="n">codeBookType</span><span class="p">,</span>
+    <span class="n">baseuri</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">use_skos</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">DdiCdiResource</span><span class="p">]</span>
+</pre></div>
+</div>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">codebook<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The DDI-Codebook object to convert (must be <code class="docutils literal notranslate"><span class="pre">codeBookType</span></code>)</p>
+</dd>
+<dt class="field-even">baseuri<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional base URI for resources (currently not used; UUID-based IDs are generated)</p>
+</dd>
+<dt class="field-odd">files<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional list of file IDs to process (not yet implemented)</p>
+</dd>
+<dt class="field-even">use_skos<span class="colon">:</span></dt>
+<dd class="field-even"><p>Boolean flag to use SKOS mode (True) or standard DDI-CDI mode (False)</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<p>A dictionary mapping resource URIs to <code class="docutils literal notranslate"><span class="pre">DdiCdiResource</span></code> objects.</p>
+</section>
+</section>
+<section id="usage-example">
+<h2>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h2>
+<section id="basic-conversion">
+<h3>Basic Conversion<a class="headerlink" href="#basic-conversion" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi</span><span class="w"> </span><span class="kn">import</span> <span class="n">ddicodebook</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">codebook_to_cdif</span>
 
-  
-  <div id="search-results">
-  
-  </div>
+<span class="c1"># Load DDI-Codebook</span>
+<span class="n">cb</span> <span class="o">=</span> <span class="n">ddicodebook</span><span class="o">.</span><span class="n">loadxml</span><span class="p">(</span><span class="s1">&#39;survey_data.xml&#39;</span><span class="p">)</span>
+
+<span class="c1"># Convert to DDI-CDI CDIF resources (using SKOS)</span>
+<span class="n">resources</span> <span class="o">=</span> <span class="n">codebook_to_cdif</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="n">use_skos</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Access specific resources</span>
+<span class="k">for</span> <span class="n">uri</span><span class="p">,</span> <span class="n">resource</span> <span class="ow">in</span> <span class="n">resources</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">uri</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="standard-mode-conversion">
+<h3>Standard Mode Conversion<a class="headerlink" href="#standard-mode-conversion" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert using standard DDI-CDI mode (without SKOS)</span>
+<span class="n">resources</span> <span class="o">=</span> <span class="n">codebook_to_cdif</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="n">use_skos</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Find all InstanceVariables</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.dataclass_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">InstanceVariable</span>
+
+<span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">InstanceVariable</span><span class="p">)]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2"> variables&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="converting-to-rdf-graph">
+<h3>Converting to RDF Graph<a class="headerlink" href="#converting-to-rdf-graph" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">codebook_to_cdif_graph</span>
+
+<span class="c1"># Convert directly to RDF graph</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">codebook_to_cdif_graph</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="n">use_skos</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Serialize to Turtle format</span>
+<span class="n">turtle_output</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;turtle&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">turtle_output</span><span class="p">)</span>
+
+<span class="c1"># Save to file</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="s1">&#39;output.ttl&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;turtle&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="exploring-resources">
+<h3>Exploring Resources<a class="headerlink" href="#exploring-resources" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.dataclass_model</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">InstanceVariable</span><span class="p">,</span>
+    <span class="n">SubstantiveValueDomain</span><span class="p">,</span>
+    <span class="n">CodeList</span><span class="p">,</span>
+    <span class="n">Category</span>
+<span class="p">)</span>
+
+<span class="n">resources</span> <span class="o">=</span> <span class="n">codebook_to_cdif</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="n">use_skos</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Count different resource types</span>
+<span class="n">resource_counts</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">resource</span> <span class="ow">in</span> <span class="n">resources</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+    <span class="n">type_name</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="n">resource_counts</span><span class="p">[</span><span class="n">type_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">resource_counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">type_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Resource counts:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">resource_counts</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">type_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="related-functions">
+<h2>Related Functions<a class="headerlink" href="#related-functions" title="Link to this heading"></a></h2>
+<section id="codebook-to-cdif-graph">
+<h3>codebook_to_cdif_graph()<a class="headerlink" href="#codebook-to-cdif-graph" title="Link to this heading"></a></h3>
+<p>Helper function that wraps <code class="docutils literal notranslate"><span class="pre">codebook_to_cdif()</span></code> and converts the result to an RDF Graph:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">codebook_to_cdif_graph</span><span class="p">(</span>
+    <span class="n">codebook</span><span class="p">:</span> <span class="n">codeBookType</span><span class="p">,</span>
+    <span class="n">baseuri</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">files</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">use_skos</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Graph</span>
+</pre></div>
+</div>
+</section>
+<section id="ddi-cdi-resources-to-graph">
+<h3>ddi_cdi_resources_to_graph()<a class="headerlink" href="#ddi-cdi-resources-to-graph" title="Link to this heading"></a></h3>
+<p>Utility function to convert a dictionary of DDI-CDI resources to an RDF Graph:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">ddi_cdi_resources_to_graph</span><span class="p">(</span>
+    <span class="n">resources</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">DdiCdiResource</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Graph</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="version-information">
+<h2>Version Information<a class="headerlink" href="#version-information" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>DDI-Codebook Version</strong>: 2.5</p></li>
+<li><p><strong>DDI-CDI Version</strong>: 1.0</p></li>
+<li><p><strong>Profile</strong>: CDIF (Cross Domain Integration Framework)</p></li>
+</ul>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://ddialliance.org/Specification/DDI-Codebook/2.5/">DDI-Codebook 2.5 Specification</a></p></li>
+<li><p><a class="reference external" href="https://ddialliance.org/Specification/DDI-CDI/1.0/">DDI-CDI 1.0 Specification</a></p></li>
+<li><p>CDIF Profile Documentation</p></li>
+<li><p><a class="reference external" href="https://www.w3.org/2004/02/skos/">W3C SKOS (Simple Knowledge Organization System)</a></p></li>
+</ul>
+</section>
+<section id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="ddicodebook.html"><span class="doc">DDI-Codebook Processing</span></a> - DDI-Codebook API reference</p></li>
+<li><p><a class="reference internal" href="ddicdi.html"><span class="doc">DDI Cross Domain Integration (CDI)</span></a> - DDI-CDI API reference</p></li>
+<li><p><a class="reference internal" href="examples.html"><span class="doc">Examples</span></a> - More conversion examples</p></li>
+</ul>
+<hr class="docutils" />
+<p><em>This documentation describes the implementation in</em> <code class="docutils literal notranslate"><span class="pre">src/dartfx/ddi/utils.py</span></code></p>
+</section>
+</section>
+
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ddicodebook.html" class="btn btn-neutral float-right" title="DDI-Codebook Processing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
@@ -1293,14 +2068,7 @@
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-  <script>
-    jQuery(function() { Search.loadIndex("searchindex.js"); });
-  </script>
-  
-  <script id="searchindexloader"></script>
-   
-
+  </script> 
 
 </body>
 </html>
