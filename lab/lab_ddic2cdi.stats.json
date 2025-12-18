@@ -1,17 +1,17 @@
 {
-    "n_triples": 241,
+    "n_triples": 271,
     "types": {
         "ns1:Category": {
             "count": 3
         },
         "ns1:CategorySet": {
-            "count": 1
+            "count": 2
         },
         "ns1:Code": {
             "count": 3
         },
         "ns1:CodeList": {
-            "count": 1
+            "count": 2
         },
         "ns1:ComponentPosition": {
             "count": 1
@@ -26,13 +26,13 @@
             "count": 1
         },
         "ns1:Identifier": {
-            "count": 18
+            "count": 21
         },
         "ns1:InstanceVariable": {
             "count": 1
         },
         "ns1:InternationalRegistrationDataIdentifier": {
-            "count": 18
+            "count": 21
         },
         "ns1:LabelForDisplay": {
             "count": 1
@@ -51,6 +51,9 @@
         },
         "ns1:ObjectName": {
             "count": 4
+        },
+        "ns1:SentinelValueDomain": {
+            "count": 1
         },
         "ns1:SubstantiveValueDomain": {
             "count": 1
@@ -76,10 +79,10 @@
             "count": 7
         },
         "ns1:dataIdentifier": {
-            "count": 18
+            "count": 21
         },
         "ns1:ddiIdentifier": {
-            "count": 18
+            "count": 21
         },
         "ns1:denotesCategory": {
             "count": 3
@@ -94,7 +97,7 @@
             "count": 3
         },
         "ns1:identifier": {
-            "count": 18
+            "count": 21
         },
         "ns1:isDefinedBy_RepresentedVariable": {
             "count": 1
@@ -112,25 +115,28 @@
             "count": 7
         },
         "ns1:referencesCategorySet": {
-            "count": 1
+            "count": 2
         },
         "ns1:registrationAuthorityIdentifier": {
-            "count": 18
+            "count": 21
         },
         "ns1:representsCategory": {
             "count": 3
+        },
+        "ns1:takesSentinelValues": {
+            "count": 1
         },
         "ns1:takesSubstantiveValues": {
             "count": 1
         },
         "ns1:takesValuesFrom": {
-            "count": 1
+            "count": 2
         },
         "ns1:type": {
             "count": 7
         },
         "ns1:uri": {
-            "count": 18
+            "count": 21
         },
         "ns1:usesNotation": {
             "count": 3
@@ -139,10 +145,10 @@
             "count": 8
         },
         "ns1:versionIdentifier": {
-            "count": 18
+            "count": 21
         },
         "rdf:type": {
-            "count": 70
+            "count": 79
         }
     }
 }
