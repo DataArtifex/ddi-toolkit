@@ -10,9 +10,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
 keywords = []
-authors = [
-  { name = "kulnor", email = "pascal.heus@gmail.com" },
-]
+authors = [{ name = "kulnor", email = "pascal.heus@gmail.com" }]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Programming Language :: Python",
@@ -20,10 +18,7 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = [
-  "rdflib>=7",
-  "sempyro>=2.0.0"
-]
+dependencies = ["dartfx-rdf", "rdflib>=7", "sempyro>=2.0.0"]
 
 [project.urls]
 Documentation = "https://github.com/DataArtifex/dartfx-ddi#readme"
@@ -32,10 +27,7 @@ Source = "https://github.com/DataArtifex/dartfx-ddi"
 
 
 [tool.hatch.build.targets.sdist]
-exclude = [
-  "/.github",
-  "/docs",
-]
+exclude = ["/.github", "/docs"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/dartfx"]
@@ -44,29 +36,18 @@ packages = ["src/dartfx"]
 path = "src/dartfx/ddi/__about__.py"
 
 [tool.hatch.envs.default]
-dependencies = [
-  "coverage[toml]>=6.5",
-  "pytest",
-]
+dependencies = ["coverage[toml]>=6.5", "pytest"]
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
 test-cov = "coverage run -m pytest {args:tests}"
-cov-report = [
-  "- coverage combine",
-  "coverage report",
-]
-cov = [
-  "test-cov",
-  "cov-report",
-]
+cov-report = ["- coverage combine", "coverage report"]
+cov = ["test-cov", "cov-report"]
 
 [[tool.hatch.envs.all.matrix]]
-python = ["3.12","3.13"]
+python = ["3.12", "3.13"]
 
 [tool.hatch.envs.types]
-dependencies = [
-  "mypy>=1.0.0",
-]
+dependencies = ["mypy>=1.0.0"]
 [tool.hatch.envs.types.scripts]
 check = "mypy --install-types --non-interactive {args:src/dartfx/ddi tests}"
 
@@ -74,20 +55,14 @@ check = "mypy --install-types --non-interactive {args:src/dartfx/ddi tests}"
 source_pkgs = ["ddi", "tests"]
 branch = true
 parallel = true
-omit = [
-  "src/dartfx/ddi/__about__.py",
-]
+omit = ["src/dartfx/ddi/__about__.py"]
 
 [tool.coverage.paths]
 ddi = ["src/dartfx/ddi", "*/dartfx-ddi/src/dartfx/ddi"]
 tests = ["tests", "*/dartfx/dartfx-ddi/tests"]
 
 [tool.coverage.report]
-exclude_lines = [
-  "no cov",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
-]
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
