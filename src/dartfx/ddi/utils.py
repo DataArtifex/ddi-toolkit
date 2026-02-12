@@ -1,11 +1,14 @@
 import logging
 import uuid
+from decimal import Decimal
 import urllib.parse
+from pydantic import BaseModel, Field
 from .ddicodebook import codeBookType
 from .ddicdi.assistants import CdiResourceAssistant, CdiClassAssistant, CdiAssistant
 from .ddicdi import model_1_0_0 as model
 from .ddicdi.model_1_0_0 import TypedString
 from dartfx.rdf import skos
+from .ddicdi.utils import validate_ddi_cdi
 from rdflib import Graph, URIRef
 
 
@@ -271,3 +274,26 @@ def ddi_cdi_resources_to_graph(resources: dict[str, CdiAssistant]) -> Graph:
         r.add_to_rdf_graph(g)
             
     return g
+
+
+
+#
+# SIMPLIFIED MODEL
+#
+class Variable(BaseModel):
+    name: str
+    data_type: str | None = Field(default="str")
+
+class Code(BaseModel):
+    value: str|int|Decimal
+    label: str | None = Field(default=None) 
+    is_missing: bool | None = Field(default=None)
+
+class CodeList(BaseModel):
+    codes: list[Code] = Field(default_factory=list)
+
+
+class DataDictionary(BaseModel):    
+    variables: list[Variable] = Field(default_factory=list)
+    codes: list[Code] = Field(default_factory=list)
+

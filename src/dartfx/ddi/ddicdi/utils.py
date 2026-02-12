@@ -1,134 +1,45 @@
-import warnings
-
-warnings.warn(
-    "dartfx.ddi.ddicdi.utils is deprecated and will be removed in a future version. "
-    "Please use the generated model_1_0_0 and the Assistant framework instead.",
-    DeprecationWarning,
-    stacklevel=2
-)
-
-from decimal import Decimal
+import os
 import logging
-from typing import cast
-from pydantic import BaseModel, Field
-from rdflib import Graph, URIRef, Namespace
-from sempyro import CDI
-import uuid
-from ..ddicodebook import codeBookType
-from ddicdi.sempyro_model import CDI, DdiCdiClass, DdiCdiResource, Identifier, InstanceVariable
+from typing import Tuple, Union, Any
 
-class DdiCdiResourceManager(BaseModel):
-    """To manage a stack of DDI-CDI resources."""
-    resources: dict[str, DdiCdiResource] = Field(default_factory=dict)
+from rdflib import Graph
+import pyshacl
 
-    #
-    # Generic Resource
-    #
-    def create_resource(self, cls: type[DdiCdiResource], *args, **kwargs) -> DdiCdiResource:
-        """Create a new DDI-CDI resource from a class derived from DdiCdiResource."""
-        resource = cls(*args, **kwargs)
-        self.add_resource(resource)
-        return resource
-
-    def add_resource(self, resource: DdiCdiResource) -> DdiCdiResource:
-        """Add an existing DDI-CDI resource. Only accepts DdiCdiResource instances."""
-        if not isinstance(resource, DdiCdiResource):
-            raise TypeError("resource must be an instance of DdiCdiResource")
-        uri = getattr(resource, "uri", None)
-        if uri is not None:
-            self.resources[uri] = resource
-        else:
-            raise ValueError("Resource must have a URI attribute to be added to the manager.")
-        return resource
-    #
-    # Identification
-    #
-    def create_identifier(self, uri:str|None=None) -> Identifier:
-        """Create a new identifier for a resource."""
-        if uri is None:
-            uri = f"urn:uuid:{str(uuid.uuid4())}"
-        return Identifier(uri=uri)
+def validate_ddi_cdi(data: Union[Graph, str, Any]) -> Tuple[bool, Graph, str]:
+    """
+    Validates a DDI-CDI graph or Assistant resources using the model_1_0_0.shacl.ttl file.
     
-    def set_identifier(self, resource: DdiCdiClass, identifier: Identifier|None = None) -> Identifier:
-        """Set the identifier for a resource."""
-        if not isinstance(resource, DdiCdiClass):
-            raise TypeError("resource must be an instance of DdiCdiClass")   
-        if not identifier:
-            identifier = self.create_identifier()
-
-        resource.identifier = identifier
-        return identifier
-
-    #
-    # Variables
-    #
-
-    def create_instance_variable(self, name: str, data_type: str | None = "str") -> InstanceVariable:
-        """Create a new instance variable."""
-        variable = InstanceVariable(name=name, data_type=data_type)
-        self.add_resource(variable)
-        return variable
-
-    #
-    # RDF Graph Representation
-    #  
-    def to_graph(self):
-        # Convert the resource manager's resources to a graph representation.
+    Args:
+        data: The DDI-CDI graph to validate (rdflib.Graph, path to file, or dictionary of CdiAssistant resources).
+        
+    Returns:
+        A tuple containing:
+        - conforms (bool): True if the graph is valid, False otherwise.
+        - results_graph (rdflib.Graph): The validation report graph.
+        - results_text (str): The validation report as text.
+    """
+    shacl_path = os.path.join(os.path.dirname(__file__), "model_1_0_0.shacl.ttl")
+    
+    if isinstance(data, str):
         g = Graph()
-        g.bind("cdi", CDI)
-        for uri, resource in self.resources.items():
-            g += resource.to_graph(URIRef(uri))
-        return g
-
-
-#
-# SIMPLIFIED MODEL
-#
-class Variable(BaseModel):
-    name: str
-    data_type: str | None = Field(default="str")
-
-class Code(BaseModel):
-    value: str|int|Decimal
-    label: str | None = Field(default=None) 
-    is_missing: bool | None = Field(default=None)
-
-class CodeList(BaseModel):
-    codes: list[Code] = Field(default_factory=list)
-
-
-class DataDictionary(BaseModel):    
-    variables: list[Variable] = Field(default_factory=list)
-    codes: list[Code] = Field(default_factory=list)
-
-
-def codebook_to_cdif_sempyro(
-    codebook: codeBookType, cdiManager: DdiCdiResourceManager = DdiCdiResourceManager(), base_uri: str = None, files: list[str] = None, use_skos=True
-) ->  DdiCdiResourceManager:
-    """
-    Converts a DDI-Codebook into a dictionary of DDI-CDI resources based on the CDIF Profile.
+        g.parse(data)
+    elif isinstance(data, Graph):
+        g = data
+    elif isinstance(data, dict):
+        # Assume it's a dictionary of CdiAssistant resources
+        # We import here to avoid circular dependency
+        from ..utils import ddi_cdi_resources_to_graph
+        g = ddi_cdi_resources_to_graph(data)
+    else:
+        raise ValueError("Unsupported data type for validation. Expected Graph, file path, or resources dict.")
+        
+    logging.info(f"Validating DDI-CDI graph against {shacl_path}")
     
-    Note that this assumes the codebook files and variables have their @ID attribute set
+    conforms, results_graph, results_text = pyshacl.validate(
+        data_graph=g,
+        shacl_graph=shacl_path,
+        inference='rdfs',
+        serialize_report_graph=True
+    )
     
-    """
-    if files:  # not implemented
-        raise NotImplementedError("Files subset not yet implemented")
-
-    base_uuid = str(uuid.uuid4())
-    if not base_uri:
-        base_uri = f"urn:uuid:{base_uuid}"
-    # variables
-    cb_cdi_vars = {}  # to lookup CDI instance variable by DDI ID
-    logging.debug("Processing variables")
-    for cb_var in codebook.search_variables():
-        # instance variable
-        cdi_instance_var = cast(InstanceVariable, cdiManager.create_resource(InstanceVariable))
-        cdi_instance_var.identifier.uri = base_uri + f"var-{cb_var.id}"
-
-        cdi_instance_var.set_simple_name(cb_var.get_name())
-        cdi_instance_var.set_simple_display_label(cb_var.get_label())
-        cdi_resources[cdi_instance_var.get_uri()] = cdi_instance_var
-        cb_cdi_vars[cb_var.id] = cdi_instance_var
-    return cdiManager
-)
-
+    return conforms, results_graph, results_text
