@@ -186,10 +186,12 @@ def codebook_to_cdif(
                         model.Notation,
                         id_prefix=base_uuid, id_suffix=f"{cb_var.id}_{code_value_uid}",
                         non_ddi_id=code_value,
-                        non_ddi_id_type="code-value"
+                        non_ddi_id_type="code-value",
                     )
                     cdi_code_notation.content = TypedString(content=code_label)
                     cdi_resources[cdi_code_notation.get_uri()] = cdi_code_notation
+                    # add inverse relation on Category 
+                    cdi_category.add_resources(cdi_code_notation, "notation_represents_category")
 
                     # code
                     cdi_code = CdiClassAssistant.factory(
@@ -246,7 +248,10 @@ def codebook_to_cdif(
     pos = 0
     for cb_var_id, cdi_var in cb_cdi_vars.items():
         cdi_logical_record.add_variable(cdi_var)
-        cdi_data_structure.add_represented_variable(cdi_var, position=pos)
+        # variable position
+        component_position = CdiClassAssistant.factory(model.ComponentPosition, value=pos)
+        cdi_data_structure.add_resources(component_position, "has_ComponentPosition", exact_match=False)
+        cdi_resources[component_position.get_uri()] = component_position
         pos += 1
 
     return cdi_resources

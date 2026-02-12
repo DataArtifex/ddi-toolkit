@@ -17,8 +17,9 @@ It includes annotations for the DataArtifex rdf-toolkit package which can be use
   See https://github.com/DataArtifex/rdf-toolkit for more information.
 """
 
-
 from __future__ import annotations  # to allow forward references with Pydantic
+from rdflib import XSD
+from pydantic import AnyUrl
 from datetime import date
 from enum import Enum
 from typing import Annotated, Optional, Any
@@ -573,7 +574,7 @@ class Identifier (CDIResource):
   isDdiIdentifierPersistent: Annotated[Optional[bool], RdfProperty(CDI.Identifier_isDdiIdentifierPersistent)] = None
   isDdiIdentifierUniversallyUnique: Annotated[Optional[bool], RdfProperty(CDI.Identifier_isDdiIdentifierUniversallyUnique)] = None
   nonDdiIdentifier: Annotated[Optional[list[NonDdiIdentifier]], RdfProperty(CDI.Identifier_nonDdiIdentifier)] = None
-  uri: Annotated[Optional[str], RdfProperty(CDI.Identifier_uri)] = None
+  uri: Annotated[Optional[AnyUrl], RdfProperty(CDI.Identifier_uri,datatype=XSD.anyURI)] = None
   versionDate: Annotated[Optional[date], RdfProperty(CDI.Identifier_versionDate)] = None
   versionRationale: Annotated[Optional[RationaleDefinition], RdfProperty(CDI.Identifier_versionRationale)] = None
   versionResponsibility: Annotated[Optional[AgentInRole], RdfProperty(CDI.Identifier_versionResponsibility)] = None
@@ -660,7 +661,7 @@ class LanguageString (CDIResource):
   content: Annotated[str, RdfProperty(CDI.LanguageString_content)]
   isTranslatable: Annotated[Optional[bool], RdfProperty(CDI.LanguageString_isTranslatable)] = None
   isTranslated: Annotated[Optional[bool], RdfProperty(CDI.LanguageString_isTranslated)] = None
-  language: Annotated[Optional[str], RdfProperty(CDI.LanguageString_language)] = None
+  language: Annotated[Optional[str], RdfProperty(CDI.LanguageString_language, XSD.language)] = None
   scope: Annotated[Optional[str], RdfProperty(CDI.LanguageString_scope)] = None
   structureUsed: Annotated[Optional[ControlledVocabularyEntry], RdfProperty(CDI.LanguageString_structureUsed)] = None
   translationDate: Annotated[Optional[date], RdfProperty(CDI.LanguageString_translationDate)] = None

@@ -706,7 +706,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: DataStructureComponent
     # attributes
-    sh:property <#DataStructureComponent_identifier>;
+    sh:property <#DataStructureComponent-identifier>;
     sh:property <#DataStructureComponent-semantic>;
     sh:property <#DataStructureComponent-specialization>;
     # associations from DataStructureComponent
@@ -881,10 +881,10 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # attributes
     sh:property <#Concept-catalogDetails>;
     sh:property <#Concept-definition>;
-    sh:property <#Concept_displayLabel>;
+    sh:property <#Concept-displayLabel>;
     sh:property <#Concept-externalDefinition>;
-    sh:property <#Concept_identifier>;
-    sh:property <#Concept_name>;
+    sh:property <#Concept-identifier>;
+    sh:property <#Concept-name>;
     # associations from Concept
     sh:property <#Concept_uses_Concept>;
     # associations to Concept
@@ -1173,10 +1173,10 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: ConceptSystem
     # attributes
-    sh:property <#ConceptSystem_allowsDuplicates>;
+    sh:property <#ConceptSystem-allowsDuplicates>;
     sh:property <#ConceptSystem-catalogDetails>;
     sh:property <#ConceptSystem-externalDefinition>;
-    sh:property <#ConceptSystem_identifier>;
+    sh:property <#ConceptSystem-identifier>;
     sh:property <#ConceptSystem-name>;
     sh:property <#ConceptSystem-purpose>;
     # associations from ConceptSystem
@@ -2434,7 +2434,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 			 ) ;
     ];
     # attributes
-    sh:property <#Code_identifier>;
+    sh:property <#Code-identifier>;
     # associations from Code
     sh:property <#Code_denotes_Category>;
     sh:property <#Code_uses_Notation>;
@@ -2448,8 +2448,8 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
 .
 
-<#Code_identifier> a sh:PropertyShape ;
-    sh:path cdi:Code_identifier;
+<#Code-identifier> a sh:PropertyShape ;
+    sh:path cdi:Code-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
       
@@ -2495,7 +2495,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 			 ) ;
     ];
     # attributes
-    sh:property <#CodeList_allowsDuplicates>;
+    sh:property <#CodeList-allowsDuplicates>;
     # associations from CodeList
     sh:property <#CodeList_has_Code>;
     sh:property <#CodeList_has_CodePosition>;
@@ -2505,7 +2505,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: EnumerationDomain
     # attributes
-    sh:property <#EnumerationDomain_identifier>;
+    sh:property <#EnumerationDomain-identifier>;
     sh:property <#EnumerationDomain-name>;
     sh:property <#EnumerationDomain-purpose>;
     # associations from EnumerationDomain
@@ -2522,8 +2522,8 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
 .
 
-<#CodeList_allowsDuplicates> a sh:PropertyShape ;
-    sh:path cdi:CodeList_allowsDuplicates;
+<#CodeList-allowsDuplicates> a sh:PropertyShape ;
+    sh:path cdi:CodeList-allowsDuplicates;
     sh:datatype xsd:boolean;
     sh:minCount 1;
     sh:maxCount 1;
@@ -2791,8 +2791,8 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 			 ) ;
     ];
     # attributes
-    sh:property <#ComponentPosition_identifier>;
-    sh:property <#ComponentPosition_value>;
+    sh:property <#ComponentPosition-identifier>;
+    sh:property <#ComponentPosition-value>;
     # associations from ComponentPosition
     sh:property <#ComponentPosition_indexes_DataStructureComponent>;
     # associations to ComponentPosition
@@ -2802,16 +2802,16 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
 .
 
-<#ComponentPosition_identifier> a sh:PropertyShape ;
-    sh:path cdi:ComponentPosition_identifier;
+<#ComponentPosition-identifier> a sh:PropertyShape ;
+    sh:path cdi:ComponentPosition-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
       
     ) ]];
     sh:maxCount 1;
 .
-<#ComponentPosition_value> a sh:PropertyShape ;
-    sh:path cdi:ComponentPosition_value;
+<#ComponentPosition-value> a sh:PropertyShape ;
+    sh:path cdi:ComponentPosition-value;
     sh:datatype xsd:integer;
     sh:minCount 1;
     sh:maxCount 1;
@@ -2870,10 +2870,10 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # attributes
     sh:property <#Concept-catalogDetails>;
     sh:property <#Concept-definition>;
-    sh:property <#Concept_displayLabel>;
+    sh:property <#Concept-displayLabel>;
     sh:property <#Concept-externalDefinition>;
-    sh:property <#Concept_identifier>;
-    sh:property <#Concept_name>;
+    sh:property <#Concept-identifier>;
+    sh:property <#Concept-name>;
     # associations from Concept
     sh:property <#Concept_uses_Concept>;
     # associations to Concept
@@ -2919,8 +2919,8 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     ) ]];
     sh:maxCount 1;
 .
-<#Concept_displayLabel> a sh:PropertyShape ;
-    sh:path cdi:Concept_displayLabel;
+<#Concept-displayLabel> a sh:PropertyShape ;
+    sh:path cdi:Concept-displayLabel;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LabelForDisplay
       
@@ -2934,16 +2934,16 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     ) ]];
     sh:maxCount 1;
 .
-<#Concept_identifier> a sh:PropertyShape ;
-    sh:path cdi:Concept_identifier;
+<#Concept-identifier> a sh:PropertyShape ;
+    sh:path cdi:Concept-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
       
     ) ]];
     sh:maxCount 1;
 .
-<#Concept_name> a sh:PropertyShape ;
-    sh:path cdi:Concept_name;
+<#Concept-name> a sh:PropertyShape ;
+    sh:path cdi:Concept-name;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
@@ -3309,10 +3309,10 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 			 ) ;
     ];
     # attributes
-    sh:property <#ConceptSystem_allowsDuplicates>;
+    sh:property <#ConceptSystem-allowsDuplicates>;
     sh:property <#ConceptSystem-catalogDetails>;
     sh:property <#ConceptSystem-externalDefinition>;
-    sh:property <#ConceptSystem_identifier>;
+    sh:property <#ConceptSystem-identifier>;
     sh:property <#ConceptSystem-name>;
     sh:property <#ConceptSystem-purpose>;
     # associations from ConceptSystem
@@ -3327,8 +3327,8 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
 .
 
-<#ConceptSystem_allowsDuplicates> a sh:PropertyShape ;
-    sh:path cdi:ConceptSystem_allowsDuplicates;
+<#ConceptSystem-allowsDuplicates> a sh:PropertyShape ;
+    sh:path cdi:ConceptSystem-allowsDuplicates;
     sh:datatype xsd:boolean;
     sh:minCount 1;
     sh:maxCount 1;
@@ -3349,8 +3349,8 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     ) ]];
     sh:maxCount 1;
 .
-<#ConceptSystem_identifier> a sh:PropertyShape ;
-    sh:path cdi:ConceptSystem_identifier;
+<#ConceptSystem-identifier> a sh:PropertyShape ;
+    sh:path cdi:ConceptSystem-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
       
@@ -3617,10 +3617,10 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # attributes
     sh:property <#Concept-catalogDetails>;
     sh:property <#Concept-definition>;
-    sh:property <#Concept_displayLabel>;
+    sh:property <#Concept-displayLabel>;
     sh:property <#Concept-externalDefinition>;
-    sh:property <#Concept_identifier>;
-    sh:property <#Concept_name>;
+    sh:property <#Concept-identifier>;
+    sh:property <#Concept-name>;
     # associations from Concept
     sh:property <#Concept_uses_Concept>;
     # associations to Concept
@@ -3699,10 +3699,10 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # attributes
     sh:property <#Concept-catalogDetails>;
     sh:property <#Concept-definition>;
-    sh:property <#Concept_displayLabel>;
+    sh:property <#Concept-displayLabel>;
     sh:property <#Concept-externalDefinition>;
-    sh:property <#Concept_identifier>;
-    sh:property <#Concept_name>;
+    sh:property <#Concept-identifier>;
+    sh:property <#Concept-name>;
     # associations from Concept
     sh:property <#Concept_uses_Concept>;
     # associations to Concept
@@ -3871,7 +3871,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: DataStructureComponent
     # attributes
-    sh:property <#DataStructureComponent_identifier>;
+    sh:property <#DataStructureComponent-identifier>;
     sh:property <#DataStructureComponent-semantic>;
     sh:property <#DataStructureComponent-specialization>;
     # associations from DataStructureComponent
@@ -4448,7 +4448,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     ];
     # attributes
     sh:property <#DataSet-catalogDetails>;
-    sh:property <#DataSet_identifier>;
+    sh:property <#DataSet-identifier>;
     # associations from DataSet
     sh:property <#DataSet_has_DataPoint>;
     sh:property <#DataSet_has_Key>;
@@ -4469,8 +4469,8 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     ) ]];
     sh:maxCount 1;
 .
-<#DataSet_identifier> a sh:PropertyShape ;
-    sh:path cdi:DataSet_identifier;
+<#DataSet-identifier> a sh:PropertyShape ;
+    sh:path cdi:DataSet-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
       
@@ -4709,7 +4709,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: DataStructureComponent
     # attributes
-    sh:property <#DataStructureComponent_identifier>;
+    sh:property <#DataStructureComponent-identifier>;
     sh:property <#DataStructureComponent-semantic>;
     sh:property <#DataStructureComponent-specialization>;
     # associations from DataStructureComponent
@@ -4820,7 +4820,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 			 ) ;
     ];
     # attributes
-    sh:property <#DataStructureComponent_identifier>;
+    sh:property <#DataStructureComponent-identifier>;
     sh:property <#DataStructureComponent-semantic>;
     sh:property <#DataStructureComponent-specialization>;
     # associations from DataStructureComponent
@@ -4838,8 +4838,8 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
 .
 
-<#DataStructureComponent_identifier> a sh:PropertyShape ;
-    sh:path cdi:DataStructureComponent_identifier;
+<#DataStructureComponent-identifier> a sh:PropertyShape ;
+    sh:path cdi:DataStructureComponent-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
       
@@ -5098,7 +5098,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # attributes
     sh:property <#ValueDomain-catalogDetails>;
     sh:property <#ValueDomain-displayLabel>;
-    sh:property <#ValueDomain_identifier>;
+    sh:property <#ValueDomain-identifier>;
     sh:property <#ValueDomain-recommendedDataType>;
     # associations from ValueDomain
     # associations to ValueDomain
@@ -5180,10 +5180,10 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # attributes
     sh:property <#Concept-catalogDetails>;
     sh:property <#Concept-definition>;
-    sh:property <#Concept_displayLabel>;
+    sh:property <#Concept-displayLabel>;
     sh:property <#Concept-externalDefinition>;
-    sh:property <#Concept_identifier>;
-    sh:property <#Concept_name>;
+    sh:property <#Concept-identifier>;
+    sh:property <#Concept-name>;
     # associations from Concept
     sh:property <#Concept_uses_Concept>;
     # associations to Concept
@@ -5295,7 +5295,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: DataStructureComponent
     # attributes
-    sh:property <#DataStructureComponent_identifier>;
+    sh:property <#DataStructureComponent-identifier>;
     sh:property <#DataStructureComponent-semantic>;
     sh:property <#DataStructureComponent-specialization>;
     # associations from DataStructureComponent
@@ -5411,7 +5411,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # ---- superclass: DataSet
     # attributes
     sh:property <#DataSet-catalogDetails>;
-    sh:property <#DataSet_identifier>;
+    sh:property <#DataSet-identifier>;
     # associations from DataSet
     sh:property <#DataSet_has_DataPoint>;
     sh:property <#DataSet_has_Key>;
@@ -5476,7 +5476,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: DataStructureComponent
     # attributes
-    sh:property <#DataStructureComponent_identifier>;
+    sh:property <#DataStructureComponent-identifier>;
     sh:property <#DataStructureComponent-semantic>;
     sh:property <#DataStructureComponent-specialization>;
     # associations from DataStructureComponent
@@ -5610,10 +5610,10 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # attributes
     sh:property <#Concept-catalogDetails>;
     sh:property <#Concept-definition>;
-    sh:property <#Concept_displayLabel>;
+    sh:property <#Concept-displayLabel>;
     sh:property <#Concept-externalDefinition>;
-    sh:property <#Concept_identifier>;
-    sh:property <#Concept_name>;
+    sh:property <#Concept-identifier>;
+    sh:property <#Concept-name>;
     # associations from Concept
     sh:property <#Concept_uses_Concept>;
     # associations to Concept
@@ -5734,7 +5734,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 			 ) ;
     ];
     # attributes
-    sh:property <#EnumerationDomain_identifier>;
+    sh:property <#EnumerationDomain-identifier>;
     sh:property <#EnumerationDomain-name>;
     sh:property <#EnumerationDomain-purpose>;
     # associations from EnumerationDomain
@@ -5749,8 +5749,8 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
 .
 
-<#EnumerationDomain_identifier> a sh:PropertyShape ;
-    sh:path cdi:EnumerationDomain_identifier;
+<#EnumerationDomain-identifier> a sh:PropertyShape ;
+    sh:path cdi:EnumerationDomain-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
       
@@ -5958,7 +5958,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: DataStructureComponent
     # attributes
-    sh:property <#DataStructureComponent_identifier>;
+    sh:property <#DataStructureComponent-identifier>;
     sh:property <#DataStructureComponent-semantic>;
     sh:property <#DataStructureComponent-specialization>;
     # associations from DataStructureComponent
@@ -6326,10 +6326,10 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # attributes
     sh:property <#Concept-catalogDetails>;
     sh:property <#Concept-definition>;
-    sh:property <#Concept_displayLabel>;
+    sh:property <#Concept-displayLabel>;
     sh:property <#Concept-externalDefinition>;
-    sh:property <#Concept_identifier>;
-    sh:property <#Concept_name>;
+    sh:property <#Concept-identifier>;
+    sh:property <#Concept-name>;
     # associations from Concept
     sh:property <#Concept_uses_Concept>;
     # associations to Concept
@@ -6706,10 +6706,10 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # attributes
     sh:property <#Concept-catalogDetails>;
     sh:property <#Concept-definition>;
-    sh:property <#Concept_displayLabel>;
+    sh:property <#Concept-displayLabel>;
     sh:property <#Concept-externalDefinition>;
-    sh:property <#Concept_identifier>;
-    sh:property <#Concept_name>;
+    sh:property <#Concept-identifier>;
+    sh:property <#Concept-name>;
     # associations from Concept
     sh:property <#Concept_uses_Concept>;
     # associations to Concept
@@ -6830,7 +6830,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # ---- superclass: DataSet
     # attributes
     sh:property <#DataSet-catalogDetails>;
-    sh:property <#DataSet_identifier>;
+    sh:property <#DataSet-identifier>;
     # associations from DataSet
     sh:property <#DataSet_has_DataPoint>;
     sh:property <#DataSet_has_Key>;
@@ -6876,7 +6876,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: DataStructureComponent
     # attributes
-    sh:property <#DataStructureComponent_identifier>;
+    sh:property <#DataStructureComponent-identifier>;
     sh:property <#DataStructureComponent-semantic>;
     sh:property <#DataStructureComponent-specialization>;
     # associations from DataStructureComponent
@@ -7079,7 +7079,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 			 ) ;
     ];
     # attributes
-    sh:property <#LogicalRecord_identifier>;
+    sh:property <#LogicalRecord-identifier>;
     # associations from LogicalRecord
     sh:property <#LogicalRecord_has_InstanceVariable>;
     sh:property <#LogicalRecord_isDefinedBy_Concept>;
@@ -7097,8 +7097,8 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
 .
 
-<#LogicalRecord_identifier> a sh:PropertyShape ;
-    sh:path cdi:LogicalRecord_identifier;
+<#LogicalRecord-identifier> a sh:PropertyShape ;
+    sh:path cdi:LogicalRecord-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
       
@@ -7398,7 +7398,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # ---- superclass: DataSet
     # attributes
     sh:property <#DataSet-catalogDetails>;
-    sh:property <#DataSet_identifier>;
+    sh:property <#DataSet-identifier>;
     # associations from DataSet
     sh:property <#DataSet_has_DataPoint>;
     sh:property <#DataSet_has_Key>;
@@ -7444,7 +7444,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: DataStructureComponent
     # attributes
-    sh:property <#DataStructureComponent_identifier>;
+    sh:property <#DataStructureComponent-identifier>;
     sh:property <#DataStructureComponent-semantic>;
     sh:property <#DataStructureComponent-specialization>;
     # associations from DataStructureComponent
@@ -7727,7 +7727,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: DataStructureComponent
     # attributes
-    sh:property <#DataStructureComponent_identifier>;
+    sh:property <#DataStructureComponent-identifier>;
     sh:property <#DataStructureComponent-semantic>;
     sh:property <#DataStructureComponent-specialization>;
     # associations from DataStructureComponent
@@ -7814,8 +7814,8 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 			 ) ;
     ];
     # attributes
-    sh:property <#Notation_content>;
-    sh:property <#Notation_identifier>;
+    sh:property <#Notation-content>;
+    sh:property <#Notation-identifier>;
     sh:property <#Notation-whiteSpace>;
     # associations from Notation
     sh:property <#Notation_represents_Category>;
@@ -7828,16 +7828,16 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
 .
 
-<#Notation_content> a sh:PropertyShape ;
-    sh:path cdi:Notation_content;
+<#Notation-content> a sh:PropertyShape ;
+    sh:path cdi:Notation-content;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:TypedString
       
     ) ]];
     sh:maxCount 1;
 .
-<#Notation_identifier> a sh:PropertyShape ;
-    sh:path cdi:Notation_identifier;
+<#Notation-identifier> a sh:PropertyShape ;
+    sh:path cdi:Notation-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
       
@@ -9145,10 +9145,10 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # attributes
     sh:property <#Concept-catalogDetails>;
     sh:property <#Concept-definition>;
-    sh:property <#Concept_displayLabel>;
+    sh:property <#Concept-displayLabel>;
     sh:property <#Concept-externalDefinition>;
-    sh:property <#Concept_identifier>;
-    sh:property <#Concept_name>;
+    sh:property <#Concept-identifier>;
+    sh:property <#Concept-name>;
     # associations from Concept
     sh:property <#Concept_uses_Concept>;
     # associations to Concept
@@ -9461,7 +9461,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: DataStructureComponent
     # attributes
-    sh:property <#DataStructureComponent_identifier>;
+    sh:property <#DataStructureComponent-identifier>;
     sh:property <#DataStructureComponent-semantic>;
     sh:property <#DataStructureComponent-specialization>;
     # associations from DataStructureComponent
@@ -9679,7 +9679,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # attributes
     sh:property <#ValueDomain-catalogDetails>;
     sh:property <#ValueDomain-displayLabel>;
-    sh:property <#ValueDomain_identifier>;
+    sh:property <#ValueDomain-identifier>;
     sh:property <#ValueDomain-recommendedDataType>;
     # associations from ValueDomain
     # associations to ValueDomain
@@ -9759,10 +9759,10 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # attributes
     sh:property <#Concept-catalogDetails>;
     sh:property <#Concept-definition>;
-    sh:property <#Concept_displayLabel>;
+    sh:property <#Concept-displayLabel>;
     sh:property <#Concept-externalDefinition>;
-    sh:property <#Concept_identifier>;
-    sh:property <#Concept_name>;
+    sh:property <#Concept-identifier>;
+    sh:property <#Concept-name>;
     # associations from Concept
     sh:property <#Concept_uses_Concept>;
     # associations to Concept
@@ -9854,10 +9854,10 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # attributes
     sh:property <#Concept-catalogDetails>;
     sh:property <#Concept-definition>;
-    sh:property <#Concept_displayLabel>;
+    sh:property <#Concept-displayLabel>;
     sh:property <#Concept-externalDefinition>;
-    sh:property <#Concept_identifier>;
-    sh:property <#Concept_name>;
+    sh:property <#Concept-identifier>;
+    sh:property <#Concept-name>;
     # associations from Concept
     sh:property <#Concept_uses_Concept>;
     # associations to Concept
@@ -10410,7 +10410,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # attributes
     sh:property <#ValueDomain-catalogDetails>;
     sh:property <#ValueDomain-displayLabel>;
-    sh:property <#ValueDomain_identifier>;
+    sh:property <#ValueDomain-identifier>;
     sh:property <#ValueDomain-recommendedDataType>;
     # associations from ValueDomain
     # associations to ValueDomain
@@ -10685,7 +10685,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: EnumerationDomain
     # attributes
-    sh:property <#EnumerationDomain_identifier>;
+    sh:property <#EnumerationDomain-identifier>;
     sh:property <#EnumerationDomain-name>;
     sh:property <#EnumerationDomain-purpose>;
     # associations from EnumerationDomain
@@ -11119,7 +11119,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # attributes
     sh:property <#ValueDomain-catalogDetails>;
     sh:property <#ValueDomain-displayLabel>;
-    sh:property <#ValueDomain_identifier>;
+    sh:property <#ValueDomain-identifier>;
     sh:property <#ValueDomain-recommendedDataType>;
     # associations from ValueDomain
     # associations to ValueDomain
@@ -11187,7 +11187,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: DataStructureComponent
     # attributes
-    sh:property <#DataStructureComponent_identifier>;
+    sh:property <#DataStructureComponent-identifier>;
     sh:property <#DataStructureComponent-semantic>;
     sh:property <#DataStructureComponent-specialization>;
     # associations from DataStructureComponent
@@ -11492,10 +11492,10 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # attributes
     sh:property <#Concept-catalogDetails>;
     sh:property <#Concept-definition>;
-    sh:property <#Concept_displayLabel>;
+    sh:property <#Concept-displayLabel>;
     sh:property <#Concept-externalDefinition>;
-    sh:property <#Concept_identifier>;
-    sh:property <#Concept_name>;
+    sh:property <#Concept-identifier>;
+    sh:property <#Concept-name>;
     # associations from Concept
     sh:property <#Concept_uses_Concept>;
     # associations to Concept
@@ -11569,10 +11569,10 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # attributes
     sh:property <#Concept-catalogDetails>;
     sh:property <#Concept-definition>;
-    sh:property <#Concept_displayLabel>;
+    sh:property <#Concept-displayLabel>;
     sh:property <#Concept-externalDefinition>;
-    sh:property <#Concept_identifier>;
-    sh:property <#Concept_name>;
+    sh:property <#Concept-identifier>;
+    sh:property <#Concept-name>;
     # associations from Concept
     sh:property <#Concept_uses_Concept>;
     # associations to Concept
@@ -11733,7 +11733,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # attributes
     sh:property <#ValueDomain-catalogDetails>;
     sh:property <#ValueDomain-displayLabel>;
-    sh:property <#ValueDomain_identifier>;
+    sh:property <#ValueDomain-identifier>;
     sh:property <#ValueDomain-recommendedDataType>;
     # associations from ValueDomain
     # associations to ValueDomain
@@ -11759,8 +11759,8 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
       
     ) ]];
 .
-<#ValueDomain_identifier> a sh:PropertyShape ;
-    sh:path cdi:ValueDomain_identifier;
+<#ValueDomain-identifier> a sh:PropertyShape ;
+    sh:path cdi:ValueDomain-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
       
@@ -12196,7 +12196,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: DataStructureComponent
     # attributes
-    sh:property <#DataStructureComponent_identifier>;
+    sh:property <#DataStructureComponent-identifier>;
     sh:property <#DataStructureComponent-semantic>;
     sh:property <#DataStructureComponent-specialization>;
     # associations from DataStructureComponent
@@ -12499,7 +12499,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: DataStructureComponent
     # attributes
-    sh:property <#DataStructureComponent_identifier>;
+    sh:property <#DataStructureComponent-identifier>;
     sh:property <#DataStructureComponent-semantic>;
     sh:property <#DataStructureComponent-specialization>;
     # associations from DataStructureComponent
@@ -12540,7 +12540,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # ---- superclass: DataSet
     # attributes
     sh:property <#DataSet-catalogDetails>;
-    sh:property <#DataSet_identifier>;
+    sh:property <#DataSet-identifier>;
     # associations from DataSet
     sh:property <#DataSet_has_DataPoint>;
     sh:property <#DataSet_has_Key>;
@@ -12586,7 +12586,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: DataStructureComponent
     # attributes
-    sh:property <#DataStructureComponent_identifier>;
+    sh:property <#DataStructureComponent-identifier>;
     sh:property <#DataStructureComponent-semantic>;
     sh:property <#DataStructureComponent-specialization>;
     # associations from DataStructureComponent
@@ -12982,7 +12982,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: InternationalString
     # attributes
-    sh:property <#InternationalString_languageSpecificString>;
+    sh:property <#InternationalString-languageSpecificString>;
 
 
 
@@ -13789,11 +13789,11 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 			 ) ;
     ];
     # attributes
-    sh:property <#Identifier_ddiIdentifier>;
+    sh:property <#Identifier-ddiIdentifier>;
     sh:property <#Identifier-isDdiIdentifierPersistent>;
     sh:property <#Identifier-isDdiIdentifierUniversallyUnique>;
-    sh:property <#Identifier_nonDdiIdentifier>;
-    sh:property <#Identifier_uri>;
+    sh:property <#Identifier-nonDdiIdentifier>;
+    sh:property <#Identifier-uri>;
     sh:property <#Identifier-versionDate>;
     sh:property <#Identifier-versionRationale>;
     sh:property <#Identifier-versionResponsibility>;
@@ -13802,8 +13802,8 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
 .
 
-<#Identifier_ddiIdentifier> a sh:PropertyShape ;
-    sh:path cdi:Identifier_ddiIdentifier;
+<#Identifier-ddiIdentifier> a sh:PropertyShape ;
+    sh:path cdi:Identifier-ddiIdentifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:InternationalRegistrationDataIdentifier
       
@@ -13820,15 +13820,15 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:datatype xsd:boolean;
     sh:maxCount 1;
 .
-<#Identifier_nonDdiIdentifier> a sh:PropertyShape ;
-    sh:path cdi:Identifier_nonDdiIdentifier;
+<#Identifier-nonDdiIdentifier> a sh:PropertyShape ;
+    sh:path cdi:Identifier-nonDdiIdentifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:NonDdiIdentifier
       
     ) ]];
 .
-<#Identifier_uri> a sh:PropertyShape ;
-    sh:path cdi:Identifier_uri;
+<#Identifier-uri> a sh:PropertyShape ;
+    sh:path cdi:Identifier-uri;
     sh:datatype xsd:anyURI;
     sh:maxCount 1;
 .
@@ -14023,28 +14023,28 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 			 ) ;
     ];
     # attributes
-    sh:property <#InternationalRegistrationDataIdentifier_dataIdentifier>;
-    sh:property <#InternationalRegistrationDataIdentifier_registrationAuthorityIdentifier>;
-    sh:property <#InternationalRegistrationDataIdentifier_versionIdentifier>;
+    sh:property <#InternationalRegistrationDataIdentifier-dataIdentifier>;
+    sh:property <#InternationalRegistrationDataIdentifier-registrationAuthorityIdentifier>;
+    sh:property <#InternationalRegistrationDataIdentifier-versionIdentifier>;
 
 
 
 .
 
-<#InternationalRegistrationDataIdentifier_dataIdentifier> a sh:PropertyShape ;
-    sh:path cdi:InternationalRegistrationDataIdentifier_dataIdentifier;
+<#InternationalRegistrationDataIdentifier-dataIdentifier> a sh:PropertyShape ;
+    sh:path cdi:InternationalRegistrationDataIdentifier-dataIdentifier;
     sh:datatype xsd:string;
     sh:minCount 1;
     sh:maxCount 1;
 .
-<#InternationalRegistrationDataIdentifier_registrationAuthorityIdentifier> a sh:PropertyShape ;
-    sh:path cdi:InternationalRegistrationDataIdentifier_registrationAuthorityIdentifier;
+<#InternationalRegistrationDataIdentifier-registrationAuthorityIdentifier> a sh:PropertyShape ;
+    sh:path cdi:InternationalRegistrationDataIdentifier-registrationAuthorityIdentifier;
     sh:datatype xsd:string;
     sh:minCount 1;
     sh:maxCount 1;
 .
-<#InternationalRegistrationDataIdentifier_versionIdentifier> a sh:PropertyShape ;
-    sh:path cdi:InternationalRegistrationDataIdentifier_versionIdentifier;
+<#InternationalRegistrationDataIdentifier-versionIdentifier> a sh:PropertyShape ;
+    sh:path cdi:InternationalRegistrationDataIdentifier-versionIdentifier;
     sh:datatype xsd:string;
     sh:minCount 1;
     sh:maxCount 1;
@@ -14065,14 +14065,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 			 ) ;
     ];
     # attributes
-    sh:property <#InternationalString_languageSpecificString>;
+    sh:property <#InternationalString-languageSpecificString>;
 
 
 
 .
 
-<#InternationalString_languageSpecificString> a sh:PropertyShape ;
-    sh:path cdi:InternationalString_languageSpecificString;
+<#InternationalString-languageSpecificString> a sh:PropertyShape ;
+    sh:path cdi:InternationalString-languageSpecificString;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LanguageString
       
@@ -14098,7 +14098,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
     # ---- superclass: InternationalString
     # attributes
-    sh:property <#InternationalString_languageSpecificString>;
+    sh:property <#InternationalString-languageSpecificString>;
 
 
 
@@ -14141,10 +14141,10 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 			 ) ;
     ];
     # attributes
-    sh:property <#LanguageString_content>;
+    sh:property <#LanguageString-content>;
     sh:property <#LanguageString-isTranslatable>;
     sh:property <#LanguageString-isTranslated>;
-    sh:property <#LanguageString_language>;
+    sh:property <#LanguageString-language>;
     sh:property <#LanguageString-scope>;
     sh:property <#LanguageString-structureUsed>;
     sh:property <#LanguageString-translationDate>;
@@ -14154,8 +14154,8 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
 .
 
-<#LanguageString_content> a sh:PropertyShape ;
-    sh:path cdi:LanguageString_content;
+<#LanguageString-content> a sh:PropertyShape ;
+    sh:path cdi:LanguageString-content;
     sh:datatype xsd:string;
     sh:minCount 1;
     sh:maxCount 1;
@@ -14170,8 +14170,8 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:datatype xsd:boolean;
     sh:maxCount 1;
 .
-<#LanguageString_language> a sh:PropertyShape ;
-    sh:path cdi:LanguageString_language;
+<#LanguageString-language> a sh:PropertyShape ;
+    sh:path cdi:LanguageString-language;
     sh:datatype xsd:language;
     sh:maxCount 1;
 .
@@ -14355,8 +14355,8 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     ];
     # attributes
     sh:property <#NonDdiIdentifier-managingAgency>;
-    sh:property <#NonDdiIdentifier_type>;
-    sh:property <#NonDdiIdentifier_value>;
+    sh:property <#NonDdiIdentifier-type>;
+    sh:property <#NonDdiIdentifier-value>;
     sh:property <#NonDdiIdentifier-version>;
 
 
@@ -14368,14 +14368,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:datatype xsd:string;
     sh:maxCount 1;
 .
-<#NonDdiIdentifier_type> a sh:PropertyShape ;
-    sh:path cdi:NonDdiIdentifier_type;
+<#NonDdiIdentifier-type> a sh:PropertyShape ;
+    sh:path cdi:NonDdiIdentifier-type;
     sh:datatype xsd:string;
     sh:minCount 1;
     sh:maxCount 1;
 .
-<#NonDdiIdentifier_value> a sh:PropertyShape ;
-    sh:path cdi:NonDdiIdentifier_value;
+<#NonDdiIdentifier-value> a sh:PropertyShape ;
+    sh:path cdi:NonDdiIdentifier-value;
     sh:datatype xsd:string;
     sh:minCount 1;
     sh:maxCount 1;
@@ -14490,7 +14490,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     ];
     # attributes
     sh:property <#ObjectName-context>;
-    sh:property <#ObjectName_name>;
+    sh:property <#ObjectName-name>;
 
 
 
@@ -14504,8 +14504,8 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     ) ]];
     sh:maxCount 1;
 .
-<#ObjectName_name> a sh:PropertyShape ;
-    sh:path cdi:ObjectName_name;
+<#ObjectName-name> a sh:PropertyShape ;
+    sh:path cdi:ObjectName-name;
     sh:datatype xsd:string;
     sh:maxCount 1;
 .
@@ -14531,7 +14531,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     # ---- superclass: ObjectName
     # attributes
     sh:property <#ObjectName-context>;
-    sh:property <#ObjectName_name>;
+    sh:property <#ObjectName-name>;
 
 
 
@@ -15254,15 +15254,15 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 			 ) ;
     ];
     # attributes
-    sh:property <#TypedString_content>;
+    sh:property <#TypedString-content>;
     sh:property <#TypedString-typeOfContent>;
 
 
 
 .
 
-<#TypedString_content> a sh:PropertyShape ;
-    sh:path cdi:TypedString_content;
+<#TypedString-content> a sh:PropertyShape ;
+    sh:path cdi:TypedString-content;
     sh:datatype xsd:string;
     sh:minCount 1;
     sh:maxCount 1;

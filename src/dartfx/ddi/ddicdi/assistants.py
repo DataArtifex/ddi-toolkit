@@ -251,6 +251,27 @@ class CdiClassAssistant(CdiAssistant):
 
     @classmethod
     def add_resources(cls, resource: model.CDIResource, target_resources: Any, property_name: str, clear: bool = False, exact_match: bool = True):
+        """
+        Attaches one or more resources to a specified property of the CDI resource.
+
+        This method is the primary engine for building relationships between CDI objects.
+        It handles URI resolution from various input types (Assistant wrappers, raw 
+        model objects, or strings/URIRefs) and ensures correct assignment based on 
+        the target property's type (list vs. singular).
+
+        Args:
+            resource: The source CDI resource to which properties will be added.
+            target_resources: A single resource or a list of resources to add. 
+                Can be ClassAssistants, CDI model objects, strings, or URIRefs.
+            property_name: The name of the property (field) on the resource to populate.
+            clear: If True, existing values in a list property will be removed before adding new ones.
+            exact_match: If False, performs a prefix search for the property name if an 
+                exact match is not found (useful for DDI-CDI properties which often have 
+                complex prefixed names like 'isDefinedBy_RepresentedVariable').
+
+        Returns:
+            bool: True if the resources were successfully added, False otherwise.
+        """
         target_property = property_name
         if not hasattr(resource, target_property):
             if not exact_match:
@@ -325,18 +346,6 @@ class CdiClassAssistant(CdiAssistant):
     @classmethod
     def add_dataset(cls, resource: model.CDIResource, dataset: Any):
         return cls.add_resources(resource, dataset, "has_DataSet", exact_match=False)
-
-    @classmethod
-    def add_represented_variable(cls, resource: model.CDIResource, variable: Any, position: int = None):
-        component = CdiClassAssistant.create(model.DataStructureComponent)
-        cls.add_resources(component, variable, "isDefinedBy_RepresentedVariable", exact_match=False)
-        cls.add_resources(resource, component, "has_DataStructureComponent", exact_match=False)
-        component_position = None
-        if position is not None:
-             component_position = CdiClassAssistant.create(model.ComponentPosition, value=position)
-             cls.add_resources(component_position, component, "indexes", exact_match=False)
-             cls.add_resources(resource, component_position, "has_ComponentPosition", exact_match=False)
-        return (component, component_position)
 
     @classmethod
     def add_variable(cls, resource: model.CDIResource, variable: Any):

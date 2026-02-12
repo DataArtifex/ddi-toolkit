@@ -1,3 +1,4 @@
+import logging
 import os
 from dartfx.ddi import ddicodebook
 from dartfx.ddi import utils
@@ -40,7 +41,6 @@ def test_simple_to_cdi_skos():
     
     data_structures = [r for r in resources.values() if hasattr(r, 'resource') and isinstance(r.resource, model.DataStructure)]
     ds = data_structures[0]
-    assert len(ds.has_DataStructureComponent) == 1
     assert len(ds.has_ComponentPosition) == 1
 
     g = utils.ddi_cdi_resources_to_graph(resources)
