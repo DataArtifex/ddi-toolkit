@@ -1,5 +1,4 @@
 import os
-import pytest
 from dartfx.ddi import ddicodebook
 from dartfx.ddi import utils
 from dartfx.ddi.ddicdi import model_1_0_0 as model
