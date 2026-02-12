@@ -1,3 +1,11 @@
+import warnings
+
+warnings.warn(
+    "sempyro_model is deprecated and will be removed in a future version. "
+    "Please use dartfx.ddi.ddicdi.model_1_0_0 instead.",
+    DeprecationWarning,
+    stacklevel=2
+)
 
 """
 Generated based on the DDI-CDI specification distribution package ddi-cdi-1.0

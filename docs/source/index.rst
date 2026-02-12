@@ -29,12 +29,12 @@ Key Features
 Quick Start
 -----------
 
-Installation::
+Installation (using `uv` is recommended)::
 
-   # Local installation (PyPI release coming soon)
+   # Local installation
    git clone https://github.com/DataArtifex/ddi-toolkit.git
    cd ddi-toolkit
-   pip install -e .
+   uv pip install -e .
 
 Basic DDI-Codebook usage::
 
@@ -43,25 +43,25 @@ Basic DDI-Codebook usage::
    # Load from file
    my_codebook = ddicodebook.loadxml('mycodebook.xml')
 
-   # Access study metadata
-   study = my_codebook.studyDscr
-   title = study.citation.titlStmt.titl.content if study.citation else "No title"
-
    # Access variables from data files
    if my_codebook.dataDscr:
        for var in my_codebook.dataDscr.var:
            print(f"Variable: {var.name}, Label: {var.labl.content if var.labl else 'No label'}")
 
-DDI-CDI experimental usage::
+DDI-CDI & Assistant Framework usage::
 
-   from dartfx.ddi.ddicdi.specification import DdiCdiSpecification
+   from dartfx.ddi.ddicdi import model_1_0_0 as model
+   from dartfx.ddi.ddicdi.assistants import CdiClassAssistant
 
-   # Load DDI-CDI specification
-   spec = DdiCdiSpecification('specifications/ddi-cdi-1.0')
+   # Create a resource (Handles DDI Identification/URI automatically)
+   dataset = CdiClassAssistant.create(model.DataSet, name="MyDataset")
 
-   # Get model information
-   classes = spec.get_classes()
-   enumerations = spec.get_enumerations()
+   # Add elements
+   variable = CdiClassAssistant.create(model.InstanceVariable, name="AGE")
+   dataset.add_variable(variable)
+
+   # Serialize to RDF
+   graph = dataset.to_rdf_graph()
 
 .. toctree::
    :maxdepth: 2
@@ -87,6 +87,9 @@ DDI-CDI experimental usage::
 
    contributing
    changelog
+
+.. note::
+   Legacy modules like ``dataclass_model.py``, ``sempyro_model.py``, and ``utils.py`` are now deprecated in favor of the Assistant framework and the definitive ``model_1_0_0.py``.
 
 Indices and tables
 ==================

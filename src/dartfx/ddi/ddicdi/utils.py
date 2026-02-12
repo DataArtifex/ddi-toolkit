@@ -1,3 +1,12 @@
+import warnings
+
+warnings.warn(
+    "dartfx.ddi.ddicdi.utils is deprecated and will be removed in a future version. "
+    "Please use the generated model_1_0_0 and the Assistant framework instead.",
+    DeprecationWarning,
+    stacklevel=2
+)
+
 from decimal import Decimal
 import logging
 from typing import cast
@@ -71,6 +80,10 @@ class DdiCdiResourceManager(BaseModel):
             g += resource.to_graph(URIRef(uri))
         return g
 
+
+#
+# SIMPLIFIED MODEL
+#
 class Variable(BaseModel):
     name: str
     data_type: str | None = Field(default="str")

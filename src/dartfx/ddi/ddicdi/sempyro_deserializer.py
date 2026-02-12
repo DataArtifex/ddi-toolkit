@@ -1,3 +1,12 @@
+import warnings
+
+warnings.warn(
+    "sempyro_deserializer is deprecated and will be removed in a future version. "
+    "Please use the new model infrastructure for deserialization.",
+    DeprecationWarning,
+    stacklevel=2
+)
+
 """SemPyRO Deserialization Utility for SemPyRO Model Classes.
 
 This module provides utilities to deserialize RDF graphs into sempyro_model Pydantic classes.

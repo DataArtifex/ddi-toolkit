@@ -2,7 +2,7 @@
 
 ## Overview
 
-The DDI Toolkit is an open-source project that welcomes contributions from the community. This document outlines the governance structure of the project and the processes for making decisions.
+The US BLS Toolkit is an open-source project that welcomes contributions from the community. This document outlines the governance structure of the project and the processes for making decisions.
 
 ## Governance Model
 

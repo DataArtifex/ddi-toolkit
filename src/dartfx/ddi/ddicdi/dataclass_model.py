@@ -1,3 +1,12 @@
+import warnings
+
+warnings.warn(
+    "dataclass_model is deprecated and will be removed in a future version. "
+    "Please use dartfx.ddi.ddicdi.model_1_0_0 instead.",
+    DeprecationWarning,
+    stacklevel=2
+)
+
 """
 Classes to manage DDI Cross-Domain Integration (CDI) resources
 
@@ -32,6 +41,14 @@ Roadmap:
 
 References:
      - https://ddi-alliance.atlassian.net/wiki/spaces/DDI4/pages/3126951969/DDI-CDI+Process+Review
+import warnings
+
+warnings.warn(
+    "sempyro_model is deprecated and will be removed in a future version. "
+    "Please use dartfx.ddi.ddicdi.model_1_0_0 instead.",
+    DeprecationWarning,
+    stacklevel=2
+)
 
 """
 
