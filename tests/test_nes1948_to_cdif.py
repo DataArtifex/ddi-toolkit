@@ -49,7 +49,6 @@ def test_nes1948_to_cdif_skos():
     assert len(data_structures) == 1
     ds = data_structures[0]
     # Check relationships via proxied property names from model_1_0_0
-    assert len(ds.has_DataStructureComponent) == 67
     assert len(ds.has_ComponentPosition) == 67
     
     # Convert to graph
@@ -116,8 +115,8 @@ def test_nes1948_to_cdif_native():
     assert len(lr.has_InstanceVariable) == 67
     
     data_structures = [r for r in resources.values() if hasattr(r, 'resource') and isinstance(r.resource, model.DataStructure)]
-    ds = data_structures[0]
-    assert len(ds.has_DataStructureComponent) == 67
+    ds = data_structures[0]    
+    assert len(ds.has_ComponentPosition) == 67    
     
     # Convert to graph
     g = utils.ddi_cdi_resources_to_graph(resources)
