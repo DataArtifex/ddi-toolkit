@@ -47,6 +47,16 @@ def test_simple_to_cdi_skos():
     g.serialize(os.path.join(data_dir(),'cdi/simple_yndk.cdif.skos.ttl'),format="turtle")
     assert len(g) > 0
 
+    # Validate
+    conforms, results_graph, results_text = utils.validate_ddi_cdi(g)
+    if not conforms:
+        report = utils.shacl_report_to_markdown(results_graph)
+        report_path = os.path.join(data_dir(), 'cdi/simple_yndk.cdif.skos.validation.md')
+        with open(report_path, 'w') as f:
+            f.write(report)
+        print(f"SHACL Validation Report (SKOS) saved to: {report_path}")
+    assert conforms, "DDI-CDI Graph (SKOS) does not conform to SHACL rules"
+
 def test_simple_to_cdi_native():
     cb = ddicodebook.loadxml(os.path.join(data_dir(),'codebook/simple_yndk.xml'))
     resources = utils.codebook_to_cdif(cb, use_skos=False)
@@ -88,3 +98,13 @@ def test_simple_to_cdi_native():
     g = utils.ddi_cdi_resources_to_graph(resources)
     g.serialize(os.path.join(data_dir(),'cdi/simple_yndk.cdif.native.ttl'),format="turtle")
     assert len(g) > 0
+
+    # Validate
+    conforms, results_graph, results_text = utils.validate_ddi_cdi(g)
+    if not conforms:
+        report = utils.shacl_report_to_markdown(results_graph)
+        report_path = os.path.join(data_dir(), 'cdi/simple_yndk.cdif.native.validation.md')
+        with open(report_path, 'w') as f:
+            f.write(report)
+        print(f"SHACL Validation Report (Native) saved to: {report_path}")
+    assert conforms, "DDI-CDI Graph (Native) does not conform to SHACL rules"

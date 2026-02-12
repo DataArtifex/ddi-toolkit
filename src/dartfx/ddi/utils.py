@@ -8,7 +8,7 @@ from .ddicdi.assistants import CdiResourceAssistant, CdiClassAssistant, CdiAssis
 from .ddicdi import model_1_0_0 as model
 from .ddicdi.model_1_0_0 import TypedString
 from dartfx.rdf import skos
-from .ddicdi.utils import validate_ddi_cdi
+from .ddicdi.utils import validate_ddi_cdi, shacl_report_to_markdown
 from rdflib import Graph, URIRef
 
 
