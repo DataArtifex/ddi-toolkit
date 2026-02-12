@@ -18,7 +18,12 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = ["dartfx-rdf", "rdflib>=7", "sempyro>=2.0.0", "pyshacl"]
+dependencies = [
+  "dartfx-rdf @ git+https://github.com/DataArtifex/dartfx-rdf.git@main",
+  "rdflib>=7",
+  "sempyro>=2.0.0",
+  "pyshacl",
+]
 
 [project.urls]
 Documentation = "https://github.com/DataArtifex/dartfx-ddi#readme"
