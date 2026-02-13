@@ -8,6 +8,9 @@ from dartfx.rdf import skos
 def data_dir():
     return os.path.join(os.path.dirname(os.path.realpath(__file__)),'data')
 
+def outputs_dir():
+    return os.path.join(os.path.dirname(os.path.realpath(__file__)),'outputs')
+
 def test_simple_to_cdi_skos():  
     cb = ddicodebook.loadxml(os.path.join(data_dir(),'codebook/simple_yndk.xml'))
     resources = utils.codebook_to_cdif(cb, use_skos=True)
@@ -44,14 +47,14 @@ def test_simple_to_cdi_skos():
     assert len(ds.has_ComponentPosition) == 1
 
     g = utils.ddi_cdi_resources_to_graph(resources)
-    g.serialize(os.path.join(data_dir(),'cdi/simple_yndk.cdif.skos.ttl'),format="turtle")
+    g.serialize(os.path.join(outputs_dir(),'cdi/simple_yndk.cdif.skos.ttl'),format="turtle")
     assert len(g) > 0
 
     # Validate
     conforms, results_graph, results_text = utils.validate_ddi_cdi(g)
     if not conforms:
         report = utils.shacl_report_to_markdown(results_graph)
-        report_path = os.path.join(data_dir(), 'cdi/simple_yndk.cdif.skos.validation.md')
+        report_path = os.path.join(outputs_dir(), 'cdi/simple_yndk.cdif.skos.validation.md')
         with open(report_path, 'w') as f:
             f.write(report)
         print(f"SHACL Validation Report (SKOS) saved to: {report_path}")
@@ -96,14 +99,14 @@ def test_simple_to_cdi_native():
     assert code.uses_Notation is not None
 
     g = utils.ddi_cdi_resources_to_graph(resources)
-    g.serialize(os.path.join(data_dir(),'cdi/simple_yndk.cdif.native.ttl'),format="turtle")
+    g.serialize(os.path.join(outputs_dir(),'cdi/simple_yndk.cdif.native.ttl'),format="turtle")
     assert len(g) > 0
 
     # Validate
     conforms, results_graph, results_text = utils.validate_ddi_cdi(g)
     if not conforms:
         report = utils.shacl_report_to_markdown(results_graph)
-        report_path = os.path.join(data_dir(), 'cdi/simple_yndk.cdif.native.validation.md')
+        report_path = os.path.join(outputs_dir(), 'cdi/simple_yndk.cdif.native.validation.md')
         with open(report_path, 'w') as f:
             f.write(report)
         print(f"SHACL Validation Report (Native) saved to: {report_path}")
