@@ -5,7 +5,7 @@ Requirements
 ------------
 
 * Python 3.12+
-* pydantic_rdf
+* pydantic
 * rdflib >= 7.0
 * sempyro >= 2.0.0
 
@@ -23,10 +23,14 @@ Installation from PyPI
 Development Installation
 ------------------------
 
-.. code-block:: bash
+Using `uv` (recommended)::
 
    git clone https://github.com/DataArtifex/ddi-toolkit.git
    cd ddi-toolkit
+   uv pip install -e .[dev]
+
+Using standard `pip`::
+
    pip install -e .[dev]
 
 Dependencies

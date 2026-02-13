@@ -8,20 +8,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contributing &mdash; Data Artifex DDI Toolkit 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css?v=96a89a29" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=e3a6060d"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Changelog" href="changelog.html" />
-    <link rel="prev" title="Sempyro Integration" href="sempyro.html" /> 
+    <link rel="prev" title="SemPyRO Integration" href="sempyro.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -56,40 +56,26 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#ddi-codebook">DDI-Codebook</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#ddi-cdi-experimental">DDI-CDI (Experimental)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#common-use-cases">Common Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#ddi-cdi-assistant-framework">DDI-CDI &amp; Assistant Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#conversion-from-ddi-codebook">Conversion from DDI-Codebook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#specification-loader">Specification Loader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#next-steps">Next Steps</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#ddi-codebook-examples">DDI-Codebook Examples</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="examples.html#basic-metadata-extraction">Basic Metadata Extraction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#variable-analysis">Variable Analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#filtering-variables">Filtering Variables</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#ddi-cdi-examples">DDI-CDI Examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#model-exploration">Model Exploration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#resource-properties-and-relationships">Resource Properties and Relationships</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#working-with-attributes-and-associations">Working with Attributes and Associations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#sparql-queries">SPARQL Queries</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#creating-ddi-cdi-resources-experimental">Creating DDI-CDI Resources (Experimental)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#rdf-serialization-and-deserialization">RDF Serialization and Deserialization</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#round-trip-serialization-example">Round-Trip Serialization Example</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#batch-processing-with-deserialization">Batch Processing with Deserialization</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#error-handling-in-deserialization">Error Handling in Deserialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#ddi-cdi-assistant-framework">DDI-CDI Assistant Framework</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#creating-a-dataset-with-variables">Creating a DataSet with Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#serialization-to-rdf">Serialization to RDF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#automated-identification">Automated Identification</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#advanced-ddi-codebook-usage">Advanced DDI-Codebook Usage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#custom-variable-filtering">Custom Variable Filtering</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#generating-data-documentation-reports">Generating Data Documentation Reports</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#error-handling-and-best-practices">Error Handling and Best Practices</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#robust-file-loading">Robust File Loading</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#validating-ddi-cdi-model">Validating DDI-CDI Model</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#direct-model-usage-sempyro">Direct Model Usage (SemPyRO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#ddi-codebook-to-ddi-cdi-mapping">DDI-Codebook to DDI-CDI Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#specification-loader">Specification Loader</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="codebook_to_cdi_mappings.html">DDI-Codebook to DDI-CDI CDIF Mappings</a><ul>
@@ -1108,103 +1094,30 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ddicdi.html">DDI Cross Domain Integration (CDI)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#architecture">Architecture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#key-features">Key Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#basic-usage">Basic Usage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ddicdi.html#sempyro-deserialization">SemPyRO Deserialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#deprecated-modules">Deprecated Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#api-reference-notes">API Reference Notes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#model-structure">Model Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#class-naming-conventions">Class Naming Conventions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#advanced-usage">Advanced Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#current-limitations">Current Limitations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#development-status">Development Status</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#api-reference">API Reference</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="specification.html">DDI-CDI Specification Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="specification.html#id1">DDI-CDI Specification Module</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="specification.html">DDI-CDI Specification Module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="specification.html#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="specification.html#key-features">Key Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="specification.html#basic-usage">Basic Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="specification.html#advanced-queries">Advanced Queries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="specification.html#model-statistics">Model Statistics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="specification.html#integration-with-sempyro">Integration with SemPyRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="specification.html#error-handling">Error Handling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="specification.html#file-structure-requirements">File Structure Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="specification.html#performance-considerations">Performance Considerations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="specification.html#future-enhancements">Future Enhancements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="specification.html#api-reference">API Reference</a></li>
-<li class="toctree-l2"><a class="reference internal" href="specification.html#main-classes">Main Classes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="specification.html#ddicdimodel">DdiCdiModel</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="specification.html#usage-examples">Usage Examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="specification.html#basic-model-operations">Basic Model Operations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="specification.html#resource-introspection">Resource Introspection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="specification.html#working-with-attributes">Working with Attributes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="specification.html#working-with-associations">Working with Associations</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="specification.html#sparql-queries">SPARQL Queries</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="specification.html#custom-queries">Custom Queries</a></li>
-<li class="toctree-l3"><a class="reference internal" href="specification.html#complex-relationship-queries">Complex Relationship Queries</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="specification.html#utility-methods">Utility Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="specification.html#uri-handling">URI Handling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="specification.html#class-frequency-analysis">Class Frequency Analysis</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="specification.html#advanced-features">Advanced Features</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="specification.html#id2">Model Statistics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="specification.html#export-and-serialization">Export and Serialization</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="specification.html#id3">Error Handling</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="specification.html#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="specification.html#api-reference">API Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="specification.html#ddicdimodel">DdiCdiModel</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="specification.html#dartfx.ddi.ddicdi.specification.DdiCdiModel"><code class="docutils literal notranslate"><span class="pre">DdiCdiModel</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="sempyro.html">Sempyro Integration</a><ul>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sempyro.html">SemPyRO Integration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="sempyro.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#generated-classes">Generated Classes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#data-types">Data Types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#main-classes">Main Classes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#usage-examples">Usage Examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#loading-ddi-cdi-with-sempyro">Loading DDI-CDI with Sempyro</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#working-with-rdf-resources">Working with RDF Resources</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#advanced-queries">Advanced Queries</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#class-generation">Class Generation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#working-with-enumerations">Working with Enumerations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#complex-resource-creation">Complex Resource Creation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#rdf-serialization">RDF Serialization</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#rdf-deserialization">RDF Deserialization</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#using-the-deserializer-class">Using the Deserializer Class</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#using-the-deserializable-mixin">Using the Deserializable Mixin</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#round-trip-serialization">Round-Trip Serialization</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#working-with-multiple-formats">Working with Multiple Formats</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#error-handling">Error Handling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#validation-and-type-safety">Validation and Type Safety</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#working-with-references">Working with References</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#advanced-features">Advanced Features</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#custom-field-validation">Custom Field Validation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#model-extensions">Model Extensions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#integration-with-specification-module">Integration with Specification Module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#best-practices">Best Practices</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#resource-identification">Resource Identification</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#id1">Error Handling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#performance-considerations">Performance Considerations</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="sempyro.html#the-definitive-model-v1-0-0">The Definitive Model (v1.0.0)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sempyro.html#usage">Usage</a></li>
 </ul>
 </li>
 </ul>
@@ -1409,7 +1322,7 @@ open<span class="w"> </span>build/html/index.html
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="sempyro.html" class="btn btn-neutral float-left" title="Sempyro Integration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sempyro.html" class="btn btn-neutral float-left" title="SemPyRO Integration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="changelog.html" class="btn btn-neutral float-right" title="Changelog" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

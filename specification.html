@@ -8,19 +8,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DDI-CDI Specification Module &mdash; Data Artifex DDI Toolkit 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css?v=96a89a29" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=e3a6060d"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Sempyro Integration" href="sempyro.html" />
+    <link rel="next" title="SemPyRO Integration" href="sempyro.html" />
     <link rel="prev" title="DDI Cross Domain Integration (CDI)" href="ddicdi.html" /> 
 </head>
 
@@ -56,40 +56,26 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#ddi-codebook">DDI-Codebook</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#ddi-cdi-experimental">DDI-CDI (Experimental)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html#common-use-cases">Common Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#ddi-cdi-assistant-framework">DDI-CDI &amp; Assistant Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#conversion-from-ddi-codebook">Conversion from DDI-Codebook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#specification-loader">Specification Loader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#next-steps">Next Steps</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#ddi-codebook-examples">DDI-Codebook Examples</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="examples.html#basic-metadata-extraction">Basic Metadata Extraction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#variable-analysis">Variable Analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#filtering-variables">Filtering Variables</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#ddi-cdi-examples">DDI-CDI Examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#model-exploration">Model Exploration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#resource-properties-and-relationships">Resource Properties and Relationships</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#working-with-attributes-and-associations">Working with Attributes and Associations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#sparql-queries">SPARQL Queries</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#creating-ddi-cdi-resources-experimental">Creating DDI-CDI Resources (Experimental)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#rdf-serialization-and-deserialization">RDF Serialization and Deserialization</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#round-trip-serialization-example">Round-Trip Serialization Example</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#batch-processing-with-deserialization">Batch Processing with Deserialization</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#error-handling-in-deserialization">Error Handling in Deserialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#ddi-cdi-assistant-framework">DDI-CDI Assistant Framework</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#creating-a-dataset-with-variables">Creating a DataSet with Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#serialization-to-rdf">Serialization to RDF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#automated-identification">Automated Identification</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#advanced-ddi-codebook-usage">Advanced DDI-Codebook Usage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#custom-variable-filtering">Custom Variable Filtering</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#generating-data-documentation-reports">Generating Data Documentation Reports</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#error-handling-and-best-practices">Error Handling and Best Practices</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#robust-file-loading">Robust File Loading</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples.html#validating-ddi-cdi-model">Validating DDI-CDI Model</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#direct-model-usage-sempyro">Direct Model Usage (SemPyRO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#ddi-codebook-to-ddi-cdi-mapping">DDI-Codebook to DDI-CDI Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#specification-loader">Specification Loader</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="codebook_to_cdi_mappings.html">DDI-Codebook to DDI-CDI CDIF Mappings</a><ul>
@@ -1108,103 +1094,30 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ddicdi.html">DDI Cross Domain Integration (CDI)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#architecture">Architecture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#key-features">Key Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#basic-usage">Basic Usage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ddicdi.html#sempyro-deserialization">SemPyRO Deserialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#deprecated-modules">Deprecated Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#api-reference-notes">API Reference Notes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#model-structure">Model Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#class-naming-conventions">Class Naming Conventions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#advanced-usage">Advanced Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#current-limitations">Current Limitations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#development-status">Development Status</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#api-reference">API Reference</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">DDI-CDI Specification Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#id1">DDI-CDI Specification Module</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">DDI-CDI Specification Module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#key-features">Key Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#advanced-queries">Advanced Queries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#model-statistics">Model Statistics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#integration-with-sempyro">Integration with SemPyRO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#error-handling">Error Handling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#file-structure-requirements">File Structure Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#performance-considerations">Performance Considerations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#future-enhancements">Future Enhancements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#api-reference">API Reference</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#main-classes">Main Classes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#ddicdimodel">DdiCdiModel</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#usage-examples">Usage Examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#basic-model-operations">Basic Model Operations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#resource-introspection">Resource Introspection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#working-with-attributes">Working with Attributes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#working-with-associations">Working with Associations</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#sparql-queries">SPARQL Queries</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#custom-queries">Custom Queries</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#complex-relationship-queries">Complex Relationship Queries</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#utility-methods">Utility Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#uri-handling">URI Handling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#class-frequency-analysis">Class Frequency Analysis</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#advanced-features">Advanced Features</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id2">Model Statistics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#export-and-serialization">Export and Serialization</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">Error Handling</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api-reference">API Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ddicdimodel">DdiCdiModel</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dartfx.ddi.ddicdi.specification.DdiCdiModel"><code class="docutils literal notranslate"><span class="pre">DdiCdiModel</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="sempyro.html">Sempyro Integration</a><ul>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sempyro.html">SemPyRO Integration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="sempyro.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#generated-classes">Generated Classes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#data-types">Data Types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#main-classes">Main Classes</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#usage-examples">Usage Examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#loading-ddi-cdi-with-sempyro">Loading DDI-CDI with Sempyro</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#working-with-rdf-resources">Working with RDF Resources</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#advanced-queries">Advanced Queries</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#class-generation">Class Generation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#working-with-enumerations">Working with Enumerations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#complex-resource-creation">Complex Resource Creation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#rdf-serialization">RDF Serialization</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#rdf-deserialization">RDF Deserialization</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#using-the-deserializer-class">Using the Deserializer Class</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#using-the-deserializable-mixin">Using the Deserializable Mixin</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#round-trip-serialization">Round-Trip Serialization</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#working-with-multiple-formats">Working with Multiple Formats</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#error-handling">Error Handling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#validation-and-type-safety">Validation and Type Safety</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#working-with-references">Working with References</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#advanced-features">Advanced Features</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#custom-field-validation">Custom Field Validation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#model-extensions">Model Extensions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#integration-with-specification-module">Integration with Specification Module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#best-practices">Best Practices</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#resource-identification">Resource Identification</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#id1">Error Handling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sempyro.html#performance-considerations">Performance Considerations</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="sempyro.html#the-definitive-model-v1-0-0">The Definitive Model (v1.0.0)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sempyro.html#usage">Usage</a></li>
 </ul>
 </li>
 </ul>
@@ -1259,504 +1172,74 @@
              
   <section id="ddi-cdi-specification-module">
 <h1>DDI-CDI Specification Module<a class="headerlink" href="#ddi-cdi-specification-module" title="Link to this heading"></a></h1>
-<p>The specification module provides tools for working with DDI-CDI specifications,
-including RDF graph operations and SPARQL queries.</p>
-</section>
-<section id="id1">
-<h1>DDI-CDI Specification Module<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
-<p>The specification module provides functionality for loading, querying, and working with DDI-CDI specifications. It uses RDF graphs and SPARQL queries to provide programmatic access to the DDI-CDI model structure.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">specification</span></code> module provides functionality for loading, querying, and working with DDI-CDI specification files (RDF and XML Schema). It enables the toolkit to be “specification-aware,” providing programmatic access to the DDI-CDI model structure.</p>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
-<p>The specification module is built around the <code class="docutils literal notranslate"><span class="pre">DdiCdiSpecification</span></code> class, which:</p>
+<p>The module is centered around the <code class="docutils literal notranslate"><span class="pre">DdiCdiModel</span></code> class, which:</p>
 <ul class="simple">
-<li><p>Loads DDI-CDI specifications from Turtle/RDF files</p></li>
-<li><p>Provides SPARQL query capabilities</p></li>
-<li><p>Extracts model metadata, classes, attributes, and relationships</p></li>
-<li><p>Supports namespace management and URI resolution</p></li>
+<li><p>Loads DDI-CDI ontology files (.ttl) and XML Schemas (.xsd).</p></li>
+<li><p>Provides SPARQL query capabilities against the specification.</p></li>
+<li><p>Extracts model metadata, class hierarchies, and attribute cardinalities.</p></li>
+<li><p>Resolves URIs and handles namespace prefixing.</p></li>
 </ul>
 </section>
 <section id="key-features">
 <h2>Key Features<a class="headerlink" href="#key-features" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt><strong>Model Loading</strong></dt><dd><p>Load DDI-CDI specifications from local directories containing RDF files</p>
+<dt><strong>Model Loading</strong></dt><dd><p>Discover and load all Turtle files in a specification directory.</p>
 </dd>
-<dt><strong>SPARQL Queries</strong></dt><dd><p>Execute complex queries to extract model structure and relationships</p>
+<dt><strong>SPARQL Capabilities</strong></dt><dd><p>Direct access to the specification graph for complex structural queries.</p>
 </dd>
-<dt><strong>Class Discovery</strong></dt><dd><p>Find and enumerate all classes, attributes, and enumerations in the model</p>
+<dt><strong>Resource Introspection</strong></dt><dd><p>Retrieve superclasses, subclasses, and detailed property definitions.</p>
 </dd>
-<dt><strong>Relationship Mapping</strong></dt><dd><p>Discover associations, inheritance relationships, and cardinalities</p>
-</dd>
-<dt><strong>Namespace Support</strong></dt><dd><p>Handle DDI-CDI namespaces and prefixed URIs automatically</p>
+<dt><strong>Cardinality Resolution</strong></dt><dd><p>Queries the DDI-CDI XML Schema to determine multiplicity/cardinality constraints not present in the RDF ontology.</p>
 </dd>
 </dl>
 </section>
 <section id="basic-usage">
 <h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Link to this heading"></a></h2>
-<p>Loading a Specification:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.specification</span><span class="w"> </span><span class="kn">import</span> <span class="n">DdiCdiSpecification</span>
+<p>Loading the Specification:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.specification</span><span class="w"> </span><span class="kn">import</span> <span class="n">DdiCdiModel</span>
 
-<span class="c1"># Load from directory containing DDI-CDI RDF files</span>
-<span class="n">spec</span> <span class="o">=</span> <span class="n">DdiCdiSpecification</span><span class="p">(</span><span class="s1">&#39;specifications/ddi-cdi-1.0&#39;</span><span class="p">)</span>
+<span class="c1"># Load from directory containing DDI-CDI sources</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">DdiCdiModel</span><span class="p">(</span><span class="n">root_dir</span><span class="o">=</span><span class="s1">&#39;specifications/ddi-cdi-1.0&#39;</span><span class="p">)</span>
 
-<span class="c1"># Access the underlying RDF graph</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">graph</span>
+<span class="c1"># Access the underlying rdflib Graph</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">graph</span>
 </pre></div>
 </div>
-<p>Querying Classes and Enumerations:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get all classes</span>
-<span class="n">classes</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">get_classes</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span><span class="si">}</span><span class="s2"> classes&quot;</span><span class="p">)</span>
+<p>Querying Model Structure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get all classes defined in the specification</span>
+<span class="n">classes</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_ucmis_classes</span><span class="p">()</span>
 
-<span class="c1"># Get all enumerations</span>
-<span class="n">enumerations</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">get_enumerations</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">enumerations</span><span class="p">)</span><span class="si">}</span><span class="s2"> enumerations&quot;</span><span class="p">)</span>
-
-<span class="c1"># Search for specific patterns</span>
-<span class="n">variable_classes</span> <span class="o">=</span> <span class="p">[</span><span class="bp">cls</span> <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">classes</span> <span class="k">if</span> <span class="s1">&#39;Variable&#39;</span> <span class="ow">in</span> <span class="bp">cls</span><span class="p">]</span>
+<span class="c1"># Search for specific class names</span>
+<span class="n">variable_results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">search_classes</span><span class="p">(</span><span class="s1">&#39;Variable&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Working with Namespaces:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># The specification handles standard DDI-CDI namespaces automatically</span>
-<span class="c1"># Common prefixes: cdi, ucmis, rdfs, rdf, xsd</span>
+<p>Introspecting a Class:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get superclasses of InstanceVariable</span>
+<span class="n">supers</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_resource_superclasses</span><span class="p">(</span><span class="s1">&#39;cdi:InstanceVariable&#39;</span><span class="p">)</span>
 
-<span class="c1"># Use full URIs or prefixed names</span>
-<span class="n">full_uri</span> <span class="o">=</span> <span class="s2">&quot;http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InstanceVariable&quot;</span>
-<span class="n">prefixed</span> <span class="o">=</span> <span class="s2">&quot;cdi:InstanceVariable&quot;</span>  <span class="c1"># Equivalent</span>
+<span class="c1"># Get associations for a class, including inherited ones</span>
+<span class="n">associations</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_resource_associations</span><span class="p">(</span><span class="s1">&#39;cdi:InstanceVariable&#39;</span><span class="p">,</span> <span class="n">inherited</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="advanced-queries">
-<h2>Advanced Queries<a class="headerlink" href="#advanced-queries" title="Link to this heading"></a></h2>
-<p>Custom SPARQL Queries:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Execute raw SPARQL queries</span>
-<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">PREFIX cdi: &lt;http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/&gt;</span>
-<span class="s2">PREFIX ucmis: &lt;tag:ddialliance.org,2024:ucmis:&gt;</span>
-
-<span class="s2">SELECT DISTINCT ?class WHERE {</span>
-<span class="s2">  ?class a ucmis:Class .</span>
-<span class="s2">  ?class rdfs:label ?label .</span>
-<span class="s2">  FILTER(CONTAINS(LCASE(?label), &quot;variable&quot;))</span>
-<span class="s2">}</span>
-<span class="s2">ORDER BY ?class</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
-<span class="c1"># results = spec.query(query)</span>
-<span class="c1"># for row in results:</span>
-<span class="c1">#     print(row[&#39;class&#39;])</span>
+<p>Cardinality Information:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Associations in RDF often lack cardinality; query the XML schema instead</span>
+<span class="n">card</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_association_cardinalities</span><span class="p">(</span><span class="s1">&#39;cdi:InstanceVariable_has_PhysicalSegmentLayout&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Resource Properties:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get properties of a specific resource (when implemented)</span>
-<span class="c1"># props = spec.get_resource_properties(&#39;cdi:InstanceVariable&#39;)</span>
-<span class="c1"># print(f&quot;Properties: {props}&quot;)</span>
-</pre></div>
-</div>
-<p>Class Hierarchies:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get inheritance relationships (when implemented)</span>
-<span class="c1"># superclasses = spec.get_superclasses(&#39;cdi:InstanceVariable&#39;)</span>
-<span class="c1"># subclasses = spec.get_subclasses(&#39;cdi:InstanceVariable&#39;)</span>
-</pre></div>
-</div>
-</section>
-<section id="model-statistics">
-<h2>Model Statistics<a class="headerlink" href="#model-statistics" title="Link to this heading"></a></h2>
-<p>Getting Model Overview:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic statistics about the loaded model</span>
-<span class="n">classes</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">get_classes</span><span class="p">()</span>
-<span class="n">enumerations</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">get_enumerations</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model Statistics:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Classes: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Enumerations: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">enumerations</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="c1"># Group classes by type/category</span>
-<span class="n">class_types</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
-    <span class="c1"># Extract type from class name patterns</span>
-    <span class="k">if</span> <span class="s1">&#39;Variable&#39;</span> <span class="ow">in</span> <span class="bp">cls</span><span class="p">:</span>
-        <span class="n">class_types</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;Variables&#39;</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="s1">&#39;Agent&#39;</span> <span class="ow">in</span> <span class="bp">cls</span><span class="p">:</span>
-        <span class="n">class_types</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;Agents&#39;</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="s1">&#39;Activity&#39;</span> <span class="ow">in</span> <span class="bp">cls</span><span class="p">:</span>
-        <span class="n">class_types</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;Activities&#39;</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">class_types</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;Other&#39;</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">category</span><span class="p">,</span> <span class="n">class_list</span> <span class="ow">in</span> <span class="n">class_types</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">category</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">class_list</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="integration-with-sempyro">
-<h2>Integration with SemPyRO<a class="headerlink" href="#integration-with-sempyro" title="Link to this heading"></a></h2>
-<p>The specification module works closely with the SemPyRO-generated model classes:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.specification</span><span class="w"> </span><span class="kn">import</span> <span class="n">DdiCdiSpecification</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.sempyro_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">InstanceVariable</span>
-
-<span class="c1"># Load specification for reference</span>
-<span class="n">spec</span> <span class="o">=</span> <span class="n">DdiCdiSpecification</span><span class="p">(</span><span class="s1">&#39;specifications/ddi-cdi-1.0&#39;</span><span class="p">)</span>
-
-<span class="c1"># Use specification to understand model structure</span>
-<span class="n">classes</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">get_classes</span><span class="p">()</span>
-<span class="k">if</span> <span class="s1">&#39;InstanceVariable&#39;</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">]:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;InstanceVariable is available in the specification&quot;</span><span class="p">)</span>
-
-<span class="c1"># Create instances using SemPyRO models</span>
-<span class="n">var</span> <span class="o">=</span> <span class="n">InstanceVariable</span><span class="p">()</span>
-</pre></div>
-</div>
-</section>
-<section id="error-handling">
-<h2>Error Handling<a class="headerlink" href="#error-handling" title="Link to this heading"></a></h2>
-<p>Robust Specification Loading:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.specification</span><span class="w"> </span><span class="kn">import</span> <span class="n">DdiCdiSpecification</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">safe_load_specification</span><span class="p">(</span><span class="n">spec_dir</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Safely load a DDI-CDI specification with error handling.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">spec_dir</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Specification directory not found: </span><span class="si">{</span><span class="n">spec_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">spec</span> <span class="o">=</span> <span class="n">DdiCdiSpecification</span><span class="p">(</span><span class="n">spec_dir</span><span class="p">)</span>
-
-        <span class="c1"># Validate that the specification loaded properly</span>
-        <span class="n">classes</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">get_classes</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">classes</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: No classes found in specification&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Specification loaded successfully: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span><span class="si">}</span><span class="s2"> classes&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">spec</span>
-
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error loading specification: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="kc">None</span>
-
-<span class="c1"># Usage</span>
-<span class="n">spec</span> <span class="o">=</span> <span class="n">safe_load_specification</span><span class="p">(</span><span class="s1">&#39;specifications/ddi-cdi-1.0&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="file-structure-requirements">
-<h2>File Structure Requirements<a class="headerlink" href="#file-structure-requirements" title="Link to this heading"></a></h2>
-<p>The specification loader expects a directory structure containing DDI-CDI RDF files:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>specifications/ddi-cdi-1.0/
-├── ddi-cdi.ttl                 # Main specification file
-├── ucmis-model.ttl             # UCMIS model definitions
-├── enumerations.ttl            # Enumeration definitions
-└── other-rdf-files.ttl         # Additional RDF files
-</pre></div>
-</div>
-<p>The loader will automatically discover and load all <code class="docutils literal notranslate"><span class="pre">.ttl</span></code> and <code class="docutils literal notranslate"><span class="pre">.rdf</span></code> files in the specified directory.</p>
-</section>
-<section id="performance-considerations">
-<h2>Performance Considerations<a class="headerlink" href="#performance-considerations" title="Link to this heading"></a></h2>
-<p>For large DDI-CDI specifications:</p>
-<ul class="simple">
-<li><p>Initial loading may take several seconds</p></li>
-<li><p>SPARQL queries are cached when possible</p></li>
-<li><p>Consider loading specifications once and reusing the instance</p></li>
-<li><p>Memory usage scales with specification size</p></li>
-</ul>
-</section>
-<section id="future-enhancements">
-<h2>Future Enhancements<a class="headerlink" href="#future-enhancements" title="Link to this heading"></a></h2>
-<p>Planned improvements include:</p>
-<ul class="simple">
-<li><p>Caching of frequently-used queries</p></li>
-<li><p>Better error messages and validation</p></li>
-<li><p>Support for remote specification loading</p></li>
-<li><p>Integration with DDI-CDI registries</p></li>
-<li><p>Advanced relationship discovery methods</p></li>
-</ul>
 </section>
 <section id="api-reference">
 <h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The specification module contains the <code class="docutils literal notranslate"><span class="pre">DdiCdiSpecification</span></code> class that provides
-programmatic access to DDI-CDI specifications. Due to complex dependencies,
-the full API documentation is not automatically generated here. Please refer
-to the source code and examples above for usage details.</p>
-</div>
-<p>Key Classes and Functions:</p>
-<dl class="simple">
-<dt><strong>DdiCdiSpecification</strong></dt><dd><p>Main class for loading and querying DDI-CDI specifications</p>
-</dd>
-<dt><strong>Key Methods:</strong></dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">get_classes()</span></code> - Get all classes in the specification</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">get_enumerations()</span></code> - Get all enumerations</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">query(sparql)</span></code> - Execute SPARQL queries</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">load_specification(directory)</span></code> - Load specification from directory</p></li>
-</ul>
-</dd>
-</dl>
-</section>
-<section id="main-classes">
-<h2>Main Classes<a class="headerlink" href="#main-classes" title="Link to this heading"></a></h2>
 <section id="ddicdimodel">
 <h3>DdiCdiModel<a class="headerlink" href="#ddicdimodel" title="Link to this heading"></a></h3>
-</section>
-</section>
-<section id="usage-examples">
-<h2>Usage Examples<a class="headerlink" href="#usage-examples" title="Link to this heading"></a></h2>
-<section id="basic-model-operations">
-<h3>Basic Model Operations<a class="headerlink" href="#basic-model-operations" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi_specification</span><span class="w"> </span><span class="kn">import</span> <span class="n">DdiCdiModel</span>
+<dl class="py class">
+<dt class="sig sig-object py" id="dartfx.ddi.ddicdi.specification.DdiCdiModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">dartfx.ddi.ddicdi.specification.</span></span><span class="sig-name descname"><span class="pre">DdiCdiModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dartfx/ddi/ddicdi/specification.html#DdiCdiModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dartfx.ddi.ddicdi.specification.DdiCdiModel" title="Link to this definition"></a></dt>
+<dd><p>Bases:</p>
+</dd></dl>
 
-<span class="c1"># Initialize model</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">DdiCdiModel</span><span class="p">(</span><span class="n">root_dir</span><span class="o">=</span><span class="s1">&#39;specifications/ddi-cdi-1.0&#39;</span><span class="p">)</span>
-
-<span class="c1"># Get all classes</span>
-<span class="n">classes</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_ucmis_classes</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span><span class="si">}</span><span class="s2"> classes&quot;</span><span class="p">)</span>
-
-<span class="c1"># Search for specific classes</span>
-<span class="n">variable_classes</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">search_classes</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Variable-related classes: </span><span class="si">{</span><span class="n">variable_classes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="resource-introspection">
-<h3>Resource Introspection<a class="headerlink" href="#resource-introspection" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get properties of a specific resource</span>
-<span class="n">props</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_resource_properties</span><span class="p">(</span><span class="s1">&#39;cdi:InstanceVariable&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;InstanceVariable properties:&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">prop</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">props</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">prop</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="c1"># Get class hierarchy</span>
-<span class="n">superclasses</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_resource_superclasses</span><span class="p">(</span><span class="s1">&#39;cdi:InstanceVariable&#39;</span><span class="p">)</span>
-<span class="n">subclasses</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_resource_subclasses</span><span class="p">(</span><span class="s1">&#39;cdi:InstanceVariable&#39;</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Superclasses: </span><span class="si">{</span><span class="n">superclasses</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Subclasses: </span><span class="si">{</span><span class="n">subclasses</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="working-with-attributes">
-<h3>Working with Attributes<a class="headerlink" href="#working-with-attributes" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get domain attributes (attributes where this resource is the domain)</span>
-<span class="n">domain_attrs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_resource_domain_attributes</span><span class="p">(</span>
-    <span class="s1">&#39;cdi:InstanceVariable&#39;</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">inherited</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Domain attributes:&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">attr_uri</span><span class="p">,</span> <span class="n">attr_info</span> <span class="ow">in</span> <span class="n">domain_attrs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">attr_uri</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">attr_info</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">attr_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;inherited&#39;</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    (inherited from </span><span class="si">{</span><span class="n">attr_info</span><span class="p">[</span><span class="s1">&#39;inherited_from&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-
-<span class="c1"># Get range attributes (attributes where this resource is the range)</span>
-<span class="n">range_attrs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_resource_range_attributes</span><span class="p">(</span>
-    <span class="s1">&#39;cdi:InstanceVariable&#39;</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="working-with-associations">
-<h3>Working with Associations<a class="headerlink" href="#working-with-associations" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get associations with cardinality information</span>
-<span class="n">associations</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_resource_associations</span><span class="p">(</span>
-    <span class="s1">&#39;cdi:InstanceVariable&#39;</span><span class="p">,</span>
-    <span class="n">cardinalities</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">inherited</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Associations:&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">assoc_uri</span><span class="p">,</span> <span class="n">assoc_info</span> <span class="ow">in</span> <span class="n">associations</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">assoc_uri</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">assoc_info</span><span class="p">[</span><span class="s1">&#39;direction&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s1">&#39;from&#39;</span> <span class="ow">in</span> <span class="n">assoc_info</span><span class="p">:</span>
-        <span class="n">from_card</span> <span class="o">=</span> <span class="n">assoc_info</span><span class="p">[</span><span class="s1">&#39;from&#39;</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    From cardinality: </span><span class="si">{</span><span class="n">from_card</span><span class="p">[</span><span class="s1">&#39;display&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s1">&#39;to&#39;</span> <span class="ow">in</span> <span class="n">assoc_info</span><span class="p">:</span>
-        <span class="n">to_card</span> <span class="o">=</span> <span class="n">assoc_info</span><span class="p">[</span><span class="s1">&#39;to&#39;</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    To cardinality: </span><span class="si">{</span><span class="n">to_card</span><span class="p">[</span><span class="s1">&#39;display&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="sparql-queries">
-<h2>SPARQL Queries<a class="headerlink" href="#sparql-queries" title="Link to this heading"></a></h2>
-<p>The model provides direct access to the RDF graph for custom SPARQL queries:</p>
-<section id="custom-queries">
-<h3>Custom Queries<a class="headerlink" href="#custom-queries" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Count instances by class</span>
-<span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">PREFIX ucmis: &lt;tag:ddialliance.org,2024:ucmis:&gt;</span>
-
-<span class="s1">SELECT ?class (COUNT(?instance) AS ?count)</span>
-<span class="s1">WHERE {</span>
-<span class="s1">  ?instance a ?class .</span>
-<span class="s1">  ?class a ucmis:Class .</span>
-<span class="s1">}</span>
-<span class="s1">GROUP BY ?class</span>
-<span class="s1">ORDER BY DESC(?count)</span>
-<span class="s1">&#39;&#39;&#39;</span>
-
-<span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Class instance counts:&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-    <span class="n">class_name</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">prefixed_uri</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-    <span class="n">count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="complex-relationship-queries">
-<h3>Complex Relationship Queries<a class="headerlink" href="#complex-relationship-queries" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Find all variables and their physical data types</span>
-<span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">PREFIX cdi: &lt;http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/&gt;</span>
-
-<span class="s1">SELECT ?variable ?varName ?dataType</span>
-<span class="s1">WHERE {</span>
-<span class="s1">  ?variable a cdi:InstanceVariable ;</span>
-<span class="s1">            cdi:InstanceVariable-name ?varName .</span>
-<span class="s1">  OPTIONAL {</span>
-<span class="s1">    ?variable cdi:InstanceVariable-physicalDataType ?dataType .</span>
-<span class="s1">  }</span>
-<span class="s1">}</span>
-<span class="s1">ORDER BY ?varName</span>
-<span class="s1">&#39;&#39;&#39;</span>
-
-<span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-    <span class="n">var_uri</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">prefixed_uri</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-    <span class="n">var_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;unnamed&quot;</span>
-    <span class="n">data_type</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">prefixed_uri</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span> <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;unspecified&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">var_uri</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">data_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="utility-methods">
-<h2>Utility Methods<a class="headerlink" href="#utility-methods" title="Link to this heading"></a></h2>
-<section id="uri-handling">
-<h3>URI Handling<a class="headerlink" href="#uri-handling" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert between full and prefixed URIs</span>
-<span class="n">full_uri</span> <span class="o">=</span> <span class="s2">&quot;http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/InstanceVariable&quot;</span>
-<span class="n">prefixed</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">prefixed_uri</span><span class="p">(</span><span class="n">full_uri</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Prefixed: </span><span class="si">{</span><span class="n">prefixed</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># Output: cdi:InstanceVariable</span>
-
-<span class="c1"># Convert back to full URI</span>
-<span class="n">full</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">full_uri</span><span class="p">(</span><span class="n">prefixed</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Full URI: </span><span class="si">{</span><span class="n">full</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="class-frequency-analysis">
-<h3>Class Frequency Analysis<a class="headerlink" href="#class-frequency-analysis" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get frequency of instances for a specific class</span>
-<span class="n">frequency</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_class_frequency</span><span class="p">(</span><span class="s1">&#39;cdi:InstanceVariable&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;InstanceVariable instances: </span><span class="si">{</span><span class="n">frequency</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="c1"># Analyze all class frequencies</span>
-<span class="n">classes</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_ucmis_classes</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">class_uri</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
-    <span class="n">freq</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_class_frequency</span><span class="p">(</span><span class="n">class_uri</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">freq</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">class_uri</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">freq</span><span class="si">}</span><span class="s2"> instances&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="advanced-features">
-<h2>Advanced Features<a class="headerlink" href="#advanced-features" title="Link to this heading"></a></h2>
-<section id="id2">
-<h3>Model Statistics<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">analyze_model_statistics</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate comprehensive model statistics.&quot;&quot;&quot;</span>
-    <span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;classes&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">get_ucmis_classes</span><span class="p">()),</span>
-        <span class="s1">&#39;attributes&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">get_ucmis_attributes</span><span class="p">()),</span>
-        <span class="s1">&#39;associations&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">get_ucmis_associations_from</span><span class="p">()),</span>
-        <span class="s1">&#39;enumerations&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">get_ucmis_enumerations</span><span class="p">()),</span>
-        <span class="s1">&#39;structured_datatypes&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">get_ucmis_structureddatatypes</span><span class="p">())</span>
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="n">stats</span>
-
-<span class="c1"># Usage</span>
-<span class="n">stats</span> <span class="o">=</span> <span class="n">analyze_model_statistics</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model Statistics:&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">key</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">()</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="export-and-serialization">
-<h3>Export and Serialization<a class="headerlink" href="#export-and-serialization" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Export the RDF graph to different formats</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">export_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;turtle&#39;</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Export the model graph to a file or string.&quot;&quot;&quot;</span>
-    <span class="n">serialized</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">output_file</span><span class="p">:</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">serialized</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model exported to </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">serialized</span>
-
-<span class="c1"># Export to Turtle format</span>
-<span class="n">export_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;turtle&#39;</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="s1">&#39;model_export.ttl&#39;</span><span class="p">)</span>
-
-<span class="c1"># Get as JSON-LD string</span>
-<span class="n">jsonld_string</span> <span class="o">=</span> <span class="n">export_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;json-ld&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="id3">
-<h2>Error Handling<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
-<section id="best-practices">
-<h3>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi_specification</span><span class="w"> </span><span class="kn">import</span> <span class="n">DdiCdiModel</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">safe_load_model</span><span class="p">(</span><span class="n">root_dir</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Safely load a DDI-CDI model with proper error handling.&quot;&quot;&quot;</span>
-
-    <span class="c1"># Check if directory exists</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">root_dir</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Directory does not exist: </span><span class="si">{</span><span class="n">root_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Check for required files</span>
-    <span class="n">ontology_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_dir</span><span class="p">,</span> <span class="s1">&#39;build&#39;</span><span class="p">,</span> <span class="s1">&#39;encoding&#39;</span><span class="p">,</span> <span class="s1">&#39;ontology&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">ontology_dir</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ontology directory not found: </span><span class="si">{</span><span class="n">ontology_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">DdiCdiModel</span><span class="p">(</span><span class="n">root_dir</span><span class="o">=</span><span class="n">root_dir</span><span class="p">)</span>
-
-        <span class="c1"># Validate model loaded correctly</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">model</span><span class="o">.</span><span class="n">graph</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Model graph is empty&quot;</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model loaded successfully from </span><span class="si">{</span><span class="n">root_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Graph contains </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">graph</span><span class="p">)</span><span class="si">}</span><span class="s2"> triples&quot;</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">model</span>
-
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error loading model: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">raise</span>
-
-<span class="c1"># Usage</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">safe_load_model</span><span class="p">(</span><span class="s1">&#39;specifications/ddi-cdi-1.0&#39;</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 </section>
 </section>
 </section>
@@ -1766,7 +1249,7 @@ to the source code and examples above for usage details.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ddicdi.html" class="btn btn-neutral float-left" title="DDI Cross Domain Integration (CDI)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="sempyro.html" class="btn btn-neutral float-right" title="Sempyro Integration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="sempyro.html" class="btn btn-neutral float-right" title="SemPyRO Integration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
