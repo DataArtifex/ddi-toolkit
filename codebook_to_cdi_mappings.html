@@ -73,7 +73,7 @@
 <li class="toctree-l3"><a class="reference internal" href="examples.html#automated-identification">Automated Identification</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#direct-model-usage-sempyro">Direct Model Usage (SemPyRO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#direct-model-usage">Direct Model Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#ddi-codebook-to-ddi-cdi-mapping">DDI-Codebook to DDI-CDI Mapping</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#specification-loader">Specification Loader</a></li>
 </ul>
@@ -1097,6 +1097,8 @@
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#architecture">Architecture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#key-features">Key Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#working-with-associations">Working with Associations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#mapping-from-ddi-codebook">Mapping from DDI-Codebook</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#deprecated-modules">Deprecated Modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#api-reference-notes">API Reference Notes</a></li>
 </ul>
@@ -1114,10 +1116,12 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="sempyro.html">SemPyRO Integration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#the-definitive-model-v1-0-0">The Definitive Model (v1.0.0)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#usage">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdf_integration.html">RDF Integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#the-definitive-model-v1-0-0">The Definitive Model (v1.0.0)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#direct-model-usage">Direct Model Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#shacl-validation">SHACL Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#legacy-sempyro">Legacy: SemPyRO</a></li>
 </ul>
 </li>
 </ul>
@@ -1612,24 +1616,17 @@ SKOS Concept
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Position</p></td>
-<td><p>Sequential (1, 2, 3…) - Order within file</p></td>
+<td><p>Sequential (0, 1, 2…) - Zero-based order within file</p></td>
 </tr>
-<tr class="row-odd"><td><p>Component</p></td>
-<td><p>DataStructureComponent - Created via <code class="docutils literal notranslate"><span class="pre">add_represented_variable()</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>ComponentPosition</p></td>
-<td><p>ComponentPosition - Holds the ordinal position</p></td>
+<tr class="row-odd"><td><p>ComponentPosition</p></td>
+<td><p>Created for each variable to track its ordinal sequence in the data structure</p></td>
 </tr>
 </tbody>
 </table>
 <p>Mapping hierarchy:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DataStructure
-    ↓ (has component)
-DataStructureComponent
-    ↓ (represents)
-InstanceVariable
-    ↓ (has position)
-ComponentPosition (value = var_position)
+    ↓ (has_ComponentPosition)
+ComponentPosition (value = pos)
 </pre></div>
 </div>
 </section>
@@ -1851,7 +1848,7 @@ ComponentPosition (value = var_position)
 <span class="n">resources</span> <span class="o">=</span> <span class="n">codebook_to_cdif</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="n">use_skos</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1"># Find all InstanceVariables</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.dataclass_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">InstanceVariable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.model_1_0_0</span><span class="w"> </span><span class="kn">import</span> <span class="n">InstanceVariable</span>
 
 <span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">resources</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
              <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">InstanceVariable</span><span class="p">)]</span>
@@ -1878,7 +1875,7 @@ ComponentPosition (value = var_position)
 </section>
 <section id="exploring-resources">
 <h3>Exploring Resources<a class="headerlink" href="#exploring-resources" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.dataclass_model</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.model_1_0_0</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">InstanceVariable</span><span class="p">,</span>
     <span class="n">SubstantiveValueDomain</span><span class="p">,</span>
     <span class="n">CodeList</span><span class="p">,</span>

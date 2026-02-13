@@ -22,12 +22,15 @@ Development Setup
    git clone https://github.com/yourusername/ddi-toolkit.git
    cd ddi-toolkit
    
-   # Create a virtual environment
+   # Option 1: Using uv (recommended)
+   uv venv
+   source .venv/bin/activate
+   uv pip install -e .[dev]
+
+   # Option 2: Using standard pip
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
-   
-   # Install development dependencies
-   pip install -e .
+   pip install -e .[dev]
    
    # Verify installation
    pytest

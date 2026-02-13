@@ -73,7 +73,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#automated-identification">Automated Identification</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#direct-model-usage-sempyro">Direct Model Usage (SemPyRO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#direct-model-usage">Direct Model Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ddi-codebook-to-ddi-cdi-mapping">DDI-Codebook to DDI-CDI Mapping</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#specification-loader">Specification Loader</a></li>
 </ul>
@@ -1097,6 +1097,8 @@
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#architecture">Architecture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#key-features">Key Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#working-with-associations">Working with Associations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#mapping-from-ddi-codebook">Mapping from DDI-Codebook</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#deprecated-modules">Deprecated Modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#api-reference-notes">API Reference Notes</a></li>
 </ul>
@@ -1114,10 +1116,12 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="sempyro.html">SemPyRO Integration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#the-definitive-model-v1-0-0">The Definitive Model (v1.0.0)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#usage">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdf_integration.html">RDF Integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#the-definitive-model-v1-0-0">The Definitive Model (v1.0.0)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#direct-model-usage">Direct Model Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#shacl-validation">SHACL Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#legacy-sempyro">Legacy: SemPyRO</a></li>
 </ul>
 </li>
 </ul>
@@ -1236,8 +1240,8 @@
 </div>
 </section>
 </section>
-<section id="direct-model-usage-sempyro">
-<h2>Direct Model Usage (SemPyRO)<a class="headerlink" href="#direct-model-usage-sempyro" title="Link to this heading"></a></h2>
+<section id="direct-model-usage">
+<h2>Direct Model Usage<a class="headerlink" href="#direct-model-usage" title="Link to this heading"></a></h2>
 <p>For power users who need to avoid the Assistant wrapper and work directly with the Pydantic models:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi</span><span class="w"> </span><span class="kn">import</span> <span class="n">model_1_0_0</span> <span class="k">as</span> <span class="n">model</span>
 

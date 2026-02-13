@@ -21,7 +21,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Changelog" href="changelog.html" />
-    <link rel="prev" title="SemPyRO Integration" href="sempyro.html" /> 
+    <link rel="prev" title="RDF Integration" href="rdf_integration.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -73,7 +73,7 @@
 <li class="toctree-l3"><a class="reference internal" href="examples.html#automated-identification">Automated Identification</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#direct-model-usage-sempyro">Direct Model Usage (SemPyRO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#direct-model-usage">Direct Model Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#ddi-codebook-to-ddi-cdi-mapping">DDI-Codebook to DDI-CDI Mapping</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#specification-loader">Specification Loader</a></li>
 </ul>
@@ -1097,6 +1097,8 @@
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#architecture">Architecture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#key-features">Key Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#working-with-associations">Working with Associations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#mapping-from-ddi-codebook">Mapping from DDI-Codebook</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#deprecated-modules">Deprecated Modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#api-reference-notes">API Reference Notes</a></li>
 </ul>
@@ -1114,10 +1116,12 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="sempyro.html">SemPyRO Integration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#the-definitive-model-v1-0-0">The Definitive Model (v1.0.0)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#usage">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdf_integration.html">RDF Integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#the-definitive-model-v1-0-0">The Definitive Model (v1.0.0)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#direct-model-usage">Direct Model Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#shacl-validation">SHACL Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#legacy-sempyro">Legacy: SemPyRO</a></li>
 </ul>
 </li>
 </ul>
@@ -1190,12 +1194,15 @@
 git<span class="w"> </span>clone<span class="w"> </span>https://github.com/yourusername/ddi-toolkit.git
 <span class="nb">cd</span><span class="w"> </span>ddi-toolkit
 
-<span class="c1"># Create a virtual environment</span>
+<span class="c1"># Option 1: Using uv (recommended)</span>
+uv<span class="w"> </span>venv
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="o">[</span>dev<span class="o">]</span>
+
+<span class="c1"># Option 2: Using standard pip</span>
 python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
 <span class="nb">source</span><span class="w"> </span>venv/bin/activate<span class="w">  </span><span class="c1"># On Windows: venv\Scripts\activate</span>
-
-<span class="c1"># Install development dependencies</span>
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="o">[</span>dev<span class="o">]</span>
 
 <span class="c1"># Verify installation</span>
 pytest
@@ -1322,7 +1329,7 @@ open<span class="w"> </span>build/html/index.html
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="sempyro.html" class="btn btn-neutral float-left" title="SemPyRO Integration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rdf_integration.html" class="btn btn-neutral float-left" title="RDF Integration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="changelog.html" class="btn btn-neutral float-right" title="Changelog" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

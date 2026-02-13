@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SemPyRO Integration &mdash; Data Artifex DDI Toolkit 0.0.2 documentation</title>
+  <title>RDF Integration &mdash; Data Artifex DDI Toolkit 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css?v=96a89a29" />
@@ -73,7 +73,7 @@
 <li class="toctree-l3"><a class="reference internal" href="examples.html#automated-identification">Automated Identification</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#direct-model-usage-sempyro">Direct Model Usage (SemPyRO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#direct-model-usage">Direct Model Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#ddi-codebook-to-ddi-cdi-mapping">DDI-Codebook to DDI-CDI Mapping</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#specification-loader">Specification Loader</a></li>
 </ul>
@@ -1097,6 +1097,8 @@
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#architecture">Architecture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#key-features">Key Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#working-with-associations">Working with Associations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#mapping-from-ddi-codebook">Mapping from DDI-Codebook</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#deprecated-modules">Deprecated Modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#api-reference-notes">API Reference Notes</a></li>
 </ul>
@@ -1114,10 +1116,12 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">SemPyRO Integration</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">RDF Integration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#the-definitive-model-v1-0-0">The Definitive Model (v1.0.0)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#direct-model-usage">Direct Model Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#shacl-validation">SHACL Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#legacy-sempyro">Legacy: SemPyRO</a></li>
 </ul>
 </li>
 </ul>
@@ -1160,9 +1164,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">SemPyRO Integration</li>
+      <li class="breadcrumb-item active">RDF Integration</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/sempyro.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/rdf_integration.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -1170,48 +1174,61 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="sempyro-integration">
-<h1>SemPyRO Integration<a class="headerlink" href="#sempyro-integration" title="Link to this heading"></a></h1>
-<p>The DDI Toolkit leverages <strong>SemPyRO</strong> (Semantic Python RDF Objects) via the definitive Pydantic models in <code class="docutils literal notranslate"><span class="pre">model_1_0_0.py</span></code>. This ensures that all metadata objects are natively RDF-aware.</p>
+  <section id="rdf-integration">
+<h1>RDF Integration<a class="headerlink" href="#rdf-integration" title="Link to this heading"></a></h1>
+<p>The DDI Toolkit provides deep integration with RDF (Resource Description Framework) using the <strong>DataArtifex RDF Toolkit</strong>. This allows DDI metadata to be handled as high-level Python objects while remaining fully compatible with semantic web technologies.</p>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
-<p>SemPyRO enables working with RDF data using standard Pydantic models. The DDI-CDI classes in this toolkit are generated directly from the specification, providing:</p>
+<p>The toolkit uses Pydantic models that are annotated with RDF property mappings. This approach provides several benefits:</p>
 <ul class="simple">
-<li><p><strong>Type Safety</strong>: Pydantic validation for all DDI attributes and associations.</p></li>
-<li><p><strong>RDF Awareness</strong>: Automatic mapping between Python fields and RDF predicates.</p></li>
-<li><p><strong>Serialization</strong>: Native methods to convert Python objects into <code class="docutils literal notranslate"><span class="pre">rdflib</span></code> graphs.</p></li>
+<li><p><strong>Type Safety</strong>: Full Pydantic validation for all DDI attributes and associations.</p></li>
+<li><p><strong>Native RDF Mapping</strong>: Automatic conversion between Python fields and RDF predicates using the <code class="docutils literal notranslate"><span class="pre">dartfx.rdf</span></code> package.</p></li>
+<li><p><strong>Seamless Serialization</strong>: Built-in functionality to generate <code class="docutils literal notranslate"><span class="pre">rdflib</span></code> graphs for export to Turtle, JSON-LD, or other RDF formats.</p></li>
+<li><p><strong>Identifier Management</strong>: Automated handling of IRDI (International Registration Data Identifier) and URI generation.</p></li>
 </ul>
 </section>
 <section id="the-definitive-model-v1-0-0">
 <h2>The Definitive Model (v1.0.0)<a class="headerlink" href="#the-definitive-model-v1-0-0" title="Link to this heading"></a></h2>
-<p>The module <code class="docutils literal notranslate"><span class="pre">dartfx.ddi.ddicdi.model_1_0_0</span></code> contains the complete set of DDI-CDI 1.0 resources.</p>
-<p><strong>Key Resource Types:</strong></p>
+<p>The module <code class="docutils literal notranslate"><span class="pre">dartfx.ddi.ddicdi.model_1_0_0</span></code> contains the definitive set of DDI-CDI 1.0 resources. These classes inherit from <code class="docutils literal notranslate"><span class="pre">CDIResource</span></code>, which provides the core RDF integration.</p>
+<p><strong>Core Resource Classes:</strong></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Agent</span></code>: Persons, organizations, or systems.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">InstanceVariable</span></code>: Use of a represented variable within a dataset.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">DataStructure</span></code>: Logical and physical data organization.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">DataSet</span></code>: Collections of data.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Activity</span></code>: Data collection and processing activities.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Agent</span></code>: Represents individuals, organizations, or software systems.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InstanceVariable</span></code>: Describes the use of a variable within a specific dataset.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DataStructure</span></code>: Defines the logical and physical layout of data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DataSet</span></code>: A collection of data points organized by a data structure.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Activity</span></code>: Records information about data collection and processing steps.</p></li>
 </ul>
 </section>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
-<p>While we recommend using the <a class="reference internal" href="ddicdi.html"><span class="doc">DDI Cross Domain Integration (CDI)</span></a> (Assistant framework) for most tasks, you can work with the models directly:</p>
+<section id="direct-model-usage">
+<h2>Direct Model Usage<a class="headerlink" href="#direct-model-usage" title="Link to this heading"></a></h2>
+<p>While the <a class="reference internal" href="ddicdi.html"><span class="doc">DDI Cross Domain Integration (CDI)</span></a> (Assistant framework) is the recommended way to build DDI-CDI objects, you can work with the models directly:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi</span><span class="w"> </span><span class="kn">import</span> <span class="n">model_1_0_0</span> <span class="k">as</span> <span class="n">model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rdflib</span><span class="w"> </span><span class="kn">import</span> <span class="n">URIRef</span>
 
-<span class="c1"># Create an InstanceVariable</span>
+<span class="c1"># Create a resource instance</span>
 <span class="n">var</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">InstanceVariable</span><span class="p">()</span>
-<span class="n">var</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="s2">&quot;http://example.org/var1&quot;</span> <span class="c1"># Setting ID prevents blank nodes</span>
 
-<span class="c1"># Serialize to a Graph</span>
+<span class="c1"># Setting an ID is crucial to avoid blank nodes during serialization</span>
+<span class="n">var</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="s2">&quot;http://example.org/variables/age_1&quot;</span>
+
+<span class="c1"># Populate properties</span>
+<span class="n">var</span><span class="o">.</span><span class="n">set_simple_name</span><span class="p">(</span><span class="s2">&quot;AGE&quot;</span><span class="p">)</span>
+
+<span class="c1"># Generate an RDF Graph</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">to_rdf_graph</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;turtle&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
+</section>
+<section id="shacl-validation">
+<h2>SHACL Validation<a class="headerlink" href="#shacl-validation" title="Link to this heading"></a></h2>
+<p>The toolkit includes support for validating generated RDF graphs against the official DDI-CDI SHACL (Shapes Constraint Language) rules. This ensures that the generated metadata conforms to the specification’s structural and cardinality requirements.</p>
+</section>
+<section id="legacy-sempyro">
+<h2>Legacy: SemPyRO<a class="headerlink" href="#legacy-sempyro" title="Link to this heading"></a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Legacy modules like <code class="docutils literal notranslate"><span class="pre">sempyro_model.py</span></code> are deprecated and should be replaced with <code class="docutils literal notranslate"><span class="pre">model_1_0_0.py</span></code>.</p>
+<p>The initial implementation of RDF support was based on the <strong>SemPyRO</strong> (Semantic Python RDF Objects) library. While legacy modules like <code class="docutils literal notranslate"><span class="pre">sempyro_model.py</span></code> are preserved for reverse compatibility, all new development should use the definitive <code class="docutils literal notranslate"><span class="pre">model_1_0_0.py</span></code> based on the newer RDF Toolkit.</p>
 </div>
 </section>
 </section>

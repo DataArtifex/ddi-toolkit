@@ -73,7 +73,7 @@
 <li class="toctree-l3"><a class="reference internal" href="examples.html#automated-identification">Automated Identification</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#direct-model-usage-sempyro">Direct Model Usage (SemPyRO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#direct-model-usage">Direct Model Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#ddi-codebook-to-ddi-cdi-mapping">DDI-Codebook to DDI-CDI Mapping</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#specification-loader">Specification Loader</a></li>
 </ul>
@@ -1097,6 +1097,8 @@
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#architecture">Architecture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#key-features">Key Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#working-with-associations">Working with Associations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ddicdi.html#mapping-from-ddi-codebook">Mapping from DDI-Codebook</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#deprecated-modules">Deprecated Modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ddicdi.html#api-reference-notes">API Reference Notes</a></li>
 </ul>
@@ -1114,10 +1116,12 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="sempyro.html">SemPyRO Integration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#the-definitive-model-v1-0-0">The Definitive Model (v1.0.0)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#usage">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdf_integration.html">RDF Integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#the-definitive-model-v1-0-0">The Definitive Model (v1.0.0)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#direct-model-usage">Direct Model Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#shacl-validation">SHACL Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#legacy-sempyro">Legacy: SemPyRO</a></li>
 </ul>
 </li>
 </ul>
@@ -1178,7 +1182,9 @@
 <li><p>Python 3.12+</p></li>
 <li><p>pydantic</p></li>
 <li><p>rdflib &gt;= 7.0</p></li>
-<li><p>sempyro &gt;= 2.0.0</p></li>
+<li><p>dartfx-rdf (RDF Toolkit)</p></li>
+<li><p>sempyro &gt;= 2.0.0 (legacy support)</p></li>
+<li><p>pyshacl</p></li>
 </ul>
 </section>
 <section id="installation-from-pypi">
@@ -1209,9 +1215,10 @@ pip<span class="w"> </span>install<span class="w"> </span>dartfx-ddi
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading"></a></h2>
 <p>The toolkit has several key dependencies:</p>
 <ul class="simple">
-<li><p><strong>pydantic_rdf</strong>: For RDF-aware Pydantic models</p></li>
+<li><p><strong>dartfx-rdf</strong>: DataArtifex RDF Toolkit for RDF-aware Pydantic models</p></li>
 <li><p><strong>rdflib</strong>: For RDF graph operations and SPARQL queries</p></li>
-<li><p><strong>sempyro</strong>: For semantic Python RDF objects (DDI-CDI support)</p></li>
+<li><p><strong>sempyro</strong>: Legacy support for semantic Python RDF objects</p></li>
+<li><p><strong>pyshacl</strong>: For SHACL validation of DDI-CDI graphs</p></li>
 </ul>
 </section>
 <section id="development-dependencies">

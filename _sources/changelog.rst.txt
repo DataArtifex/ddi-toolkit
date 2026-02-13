@@ -24,10 +24,11 @@ Features
 - Load DDI-CDI specifications from directory
 - RDF graph operations with rdflib >= 7.0
 - SPARQL query support
-- Generated SemPyRO model classes with Pydantic validation
+- **Assistant Framework**: High-level wrapper for simplified object creation and association management
+- **RDF Toolkit Migration**: Transitioned to the DataArtifex RDF Toolkit for definitive Pydantic models
 - Resource property and relationship exploration  
-- Integration with pydantic_rdf for RDF serialization
 - Support for DDI-CDI 1.0 specification
+- SHACL validation support for DDI-CDI graphs
 
 **Documentation:**
 

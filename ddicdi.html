@@ -73,7 +73,7 @@
 <li class="toctree-l3"><a class="reference internal" href="examples.html#automated-identification">Automated Identification</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#direct-model-usage-sempyro">Direct Model Usage (SemPyRO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#direct-model-usage">Direct Model Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#ddi-codebook-to-ddi-cdi-mapping">DDI-Codebook to DDI-CDI Mapping</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#specification-loader">Specification Loader</a></li>
 </ul>
@@ -1097,6 +1097,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#architecture">Architecture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#key-features">Key Features</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#working-with-associations">Working with Associations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mapping-from-ddi-codebook">Mapping from DDI-Codebook</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#deprecated-modules">Deprecated Modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#api-reference-notes">API Reference Notes</a></li>
 </ul>
@@ -1114,10 +1116,12 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="sempyro.html">SemPyRO Integration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#the-definitive-model-v1-0-0">The Definitive Model (v1.0.0)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sempyro.html#usage">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rdf_integration.html">RDF Integration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#the-definitive-model-v1-0-0">The Definitive Model (v1.0.0)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#direct-model-usage">Direct Model Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#shacl-validation">SHACL Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rdf_integration.html#legacy-sempyro">Legacy: SemPyRO</a></li>
 </ul>
 </li>
 </ul>
@@ -1217,15 +1221,31 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;turtle&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>Mapping from DDI-Codebook:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi</span><span class="w"> </span><span class="kn">import</span> <span class="n">ddicodebook</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">codebook_to_cdif</span>
-
-<span class="c1"># Convert an existing Codebook to a CDI resource dictionary</span>
-<span class="n">cb</span> <span class="o">=</span> <span class="n">ddicodebook</span><span class="o">.</span><span class="n">loadxml</span><span class="p">(</span><span class="s2">&quot;survey.xml&quot;</span><span class="p">)</span>
-<span class="n">cdi_resources</span> <span class="o">=</span> <span class="n">codebook_to_cdif</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span>
+</section>
+<section id="working-with-associations">
+<h2>Working with Associations<a class="headerlink" href="#working-with-associations" title="Link to this heading"></a></h2>
+<p>DDI-CDI objects often have complex relationships. The Assistant framework simplifies managing these using the <code class="docutils literal notranslate"><span class="pre">add_resources</span></code> method:</p>
+<ul class="simple">
+<li><p><strong>Automated URI Handling</strong>: You can pass Assistant objects, models, or raw URIRefs.</p></li>
+<li><p><strong>Cardinality Management</strong>: Handles both list-based (many) and singular (one) associations automatically.</p></li>
+<li><p><strong>Type Safety</strong>: Ensures that related objects are compatible with the target property.</p></li>
+</ul>
+<p>Example using <code class="docutils literal notranslate"><span class="pre">add_resources</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add multiple variables to a dataset at once</span>
+<span class="c1"># The method matches the correct property (has_InstanceVariable)</span>
+<span class="n">dataset</span><span class="o">.</span><span class="n">add_resources</span><span class="p">([</span><span class="n">var1</span><span class="p">,</span> <span class="n">var2</span><span class="p">,</span> <span class="n">var3</span><span class="p">],</span> <span class="s2">&quot;has_InstanceVariable&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="mapping-from-ddi-codebook">
+<h2>Mapping from DDI-Codebook<a class="headerlink" href="#mapping-from-ddi-codebook" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>from dartfx.ddi import ddicodebook
+from dartfx.ddi.utils import codebook_to_cdif</p>
+<p># Convert an existing Codebook to a CDI resource dictionary
+cb = ddicodebook.loadxml(“survey.xml”)
+cdi_resources = codebook_to_cdif(cb)</p>
+</div></blockquote>
 <p>Advanced: Specification Loading:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.specification</span><span class="w"> </span><span class="kn">import</span> <span class="n">DdiCdiModel</span>
 

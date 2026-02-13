@@ -342,21 +342,15 @@ For each variable in a file:
    * - Attribute
      - Value / Notes
    * - Position
-     - Sequential (1, 2, 3...) - Order within file
-   * - Component
-     - DataStructureComponent - Created via ``add_represented_variable()``
+     - Sequential (0, 1, 2...) - Zero-based order within file
    * - ComponentPosition
-     - ComponentPosition - Holds the ordinal position
+     - Created for each variable to track its ordinal sequence in the data structure
 
 Mapping hierarchy::
 
    DataStructure
-       ↓ (has component)
-   DataStructureComponent
-       ↓ (represents)
-   InstanceVariable
-       ↓ (has position)
-   ComponentPosition (value = var_position)
+       ↓ (has_ComponentPosition)
+   ComponentPosition (value = pos)
 
 Resource Organization
 ---------------------
@@ -542,7 +536,7 @@ Standard Mode Conversion
    resources = codebook_to_cdif(cb, use_skos=False)
 
    # Find all InstanceVariables
-   from dartfx.ddi.ddicdi.dataclass_model import InstanceVariable
+   from dartfx.ddi.ddicdi.model_1_0_0 import InstanceVariable
    
    variables = [r for r in resources.values() 
                 if isinstance(r, InstanceVariable)]
@@ -571,7 +565,7 @@ Exploring Resources
 
 .. code-block:: python
 
-   from dartfx.ddi.ddicdi.dataclass_model import (
+   from dartfx.ddi.ddicdi.model_1_0_0 import (
        InstanceVariable,
        SubstantiveValueDomain,
        CodeList,
