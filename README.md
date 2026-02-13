@@ -11,6 +11,8 @@
 
 This package provides Python classes and utilities for working with metadata based on the [Data Documentation Initiative (DDI)](https://ddialliance.org/), an international standard for describing the data produced by surveys and other observational methods in the social, behavioral, economic, and health sciences.
 
+**Detailed documentation is available at [https://dataartifex.org/docs/dartfx-dditoolkit/](https://dataartifex.org/docs/dartfx-dditoolkit/)**
+
 ## DDI Specifications Supported
 
 There are three major flavors of DDI. This package currently supports:

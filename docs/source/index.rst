@@ -22,7 +22,7 @@ Key Features
 
 * **DDI-Codebook XML Processing**: Load, parse, and extract structured metadata from DDI-Codebook documents
 * **DDI-CDI Model Classes**: Work with Pydantic-based classes representing the full DDI-CDI specification  
-* **RDF Integration**: Generate RDF representations using SemPyRO (Semantic Python RDF Objects)
+* **RDF Integration**: Generate RDF representations using the `DataArtifex RDF Toolkit <https://github.com/DataArtifex/rdf-toolkit>`_
 * **Data Dictionary Extraction**: Convert DDI metadata into usable data dictionaries
 * **Cross-Format Conversion**: Transform between DDI-Codebook and DDI-CDI formats (experimental)
 
@@ -79,7 +79,7 @@ DDI-CDI & Assistant Framework usage::
    ddicodebook
    ddicdi
    specification
-   sempyro
+   rdf_integration
 
 .. toctree::
    :maxdepth: 1
@@ -89,7 +89,7 @@ DDI-CDI & Assistant Framework usage::
    changelog
 
 .. note::
-   Legacy modules like ``dataclass_model.py``, ``sempyro_model.py``, and ``utils.py`` are now deprecated in favor of the Assistant framework and the definitive ``model_1_0_0.py``.
+   Legacy modules like ``dataclass_model.py``, ``sempyro_model.py``, and ``utils.py`` are now deprecated in favor of the Assistant framework and the definitive ``model_1_0_0.py``. The project has migrated from the initial **SemPyRO** implementation to a more robust **RDF Toolkit** integration.
 
 Indices and tables
 ==================

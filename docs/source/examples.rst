@@ -70,8 +70,8 @@ The Assistant framework uses a factory pattern to handle prefixing and unique ID
    )
    print(dataset.id) # Output: http://example.org/study/dataset-01
 
-Direct Model Usage (SemPyRO)
------------------------------
+Direct Model Usage
+------------------
 
 For power users who need to avoid the Assistant wrapper and work directly with the Pydantic models::
 

@@ -49,7 +49,23 @@ Working with the Assistant Framework::
    graph = dataset.to_rdf_graph()
    print(graph.serialize(format="turtle"))
 
-Mapping from DDI-Codebook::
+Working with Associations
+-------------------------
+
+DDI-CDI objects often have complex relationships. The Assistant framework simplifies managing these using the ``add_resources`` method:
+
+- **Automated URI Handling**: You can pass Assistant objects, models, or raw URIRefs.
+- **Cardinality Management**: Handles both list-based (many) and singular (one) associations automatically.
+- **Type Safety**: Ensures that related objects are compatible with the target property.
+
+Example using ``add_resources``::
+
+   # Add multiple variables to a dataset at once
+   # The method matches the correct property (has_InstanceVariable)
+   dataset.add_resources([var1, var2, var3], "has_InstanceVariable")
+
+Mapping from DDI-Codebook
+-------------------------
 
    from dartfx.ddi import ddicodebook
    from dartfx.ddi.utils import codebook_to_cdif

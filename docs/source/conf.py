@@ -40,7 +40,7 @@ autodoc_default_options = {
 
 # Mock imports for problematic modules
 autodoc_mock_imports = [
-    'pydantic_rdf',
+    'dartfx.rdf',
     'sempyro',
     'rdflib',
     'lxml',
