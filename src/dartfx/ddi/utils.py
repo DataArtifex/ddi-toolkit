@@ -73,9 +73,9 @@ def codebook_to_cdif(
                     cdi_substantive_concept_scheme.rdf_uri_generator = lambda _, u=uri: u  # type: ignore
                     cdi_resources[str(uri)] = cdi_substantive_concept_scheme
                     cdi_substantive_value_domain.add_resources(  # type: ignore
-                        cdi_substantive_concept_scheme,
+                        cdi_substantive_concept_scheme,  # type: ignore[arg-type]
                         "takesValuesFrom",
-                        exact_match=False,  # type: ignore
+                        exact_match=False,
                     )
                 else:
                     # substantive code list
@@ -90,9 +90,9 @@ def codebook_to_cdif(
                     cdi_resources[cdi_substantive_code_list.get_uri()] = cdi_substantive_code_list  # type: ignore
                     # associate code list with substantive value domain
                     cdi_substantive_value_domain.add_resources(  # type: ignore
-                        cdi_substantive_code_list,
+                        cdi_substantive_code_list,  # type: ignore[arg-type]
                         "takesValuesFrom",
-                        exact_match=False,  # type: ignore
+                        exact_match=False,
                     )
                     # substantive category set
                     cdi_substantive_category_set = CdiClassAssistant.factory(
@@ -129,9 +129,9 @@ def codebook_to_cdif(
                     cdi_sentinel_concept_scheme.rdf_uri_generator = lambda _, u=uri: u  # type: ignore
                     cdi_resources[str(uri)] = cdi_sentinel_concept_scheme
                     cdi_sentinel_value_domain.add_resources(  # type: ignore
-                        cdi_sentinel_concept_scheme,
+                        cdi_sentinel_concept_scheme,  # type: ignore[arg-type]
                         "takesValuesFrom",
-                        exact_match=False,  # type: ignore
+                        exact_match=False,
                     )
                 else:
                     # substantive code list
@@ -146,10 +146,11 @@ def codebook_to_cdif(
                     cdi_resources[cdi_sentinel_code_list.get_uri()] = cdi_sentinel_code_list  # type: ignore
                     # associate code list with substantive value domain
                     cdi_sentinel_value_domain.add_resources(  # type: ignore
-                        cdi_sentinel_code_list,
+                        cdi_sentinel_code_list,  # type: ignore[arg-type]
                         "takesValuesFrom",
-                        exact_match=False,  # type: ignore
+                        exact_match=False,
                     )
+
                     # substantive category set
                     cdi_sentinel_category_set = CdiClassAssistant.factory(
                         model.CategorySet,

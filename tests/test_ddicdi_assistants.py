@@ -81,7 +81,7 @@ def test_automated_instance_binding_isolation():
     def assistant_only_method(_self):
         return "I am private to the assistant"
 
-    CdiClassAssistant.assistant_only_method = assistant_only_method
+    CdiClassAssistant.assistant_only_method = assistant_only_method  # type: ignore[attr-defined]
 
     # Check that the assistant instance DOES have it
     assistant = CdiClassAssistant.create(model.InstanceVariable, name="isolation_test")
