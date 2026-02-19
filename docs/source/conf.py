@@ -96,3 +96,21 @@ html_theme_options = {
 html_css_files = [
     "custom.css",
 ]
+
+# -- Custom Setup -----------------------------------------------------------
+
+
+def setup(app):
+    """
+    Custom Sphinx setup to handle Pydantic internal attributes and other issues.
+    """
+
+    def skip_pydantic_members(_app, _what, name, _obj, skip, _options):
+        # Skip Pydantic internal attributes that cause issues with Sphinx inspection
+        # particularly when using mock imports or advanced type hints
+        if name.startswith("__pydantic_"):
+            return True
+        return skip
+
+    # Connect with high priority (lower number) to run before other handlers
+    app.connect("autodoc-skip-member", skip_pydantic_members, priority=100)
