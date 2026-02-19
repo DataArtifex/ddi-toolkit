@@ -1,0 +1,779 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.5, pytest-9.0.2, pluggy-1.6.0 -- /Users/pascal/Library/CloudStorage/Dropbox/git-dartfx/ddi-toolkit/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/pascal/Library/CloudStorage/Dropbox/git-dartfx/ddi-toolkit
+configfile: pyproject.toml
+collecting ... collected 2 items / 1 deselected / 1 selected
+
+tests/test_nes1948_to_cdif.py::test_nes1948_to_cdif_skos
+-------------------------------- live log call ---------------------------------
+2026-02-19 13:02:40 [DEBUG] Processing variables (utils.py:33)
+FAILED                                                                   [100%]
+
+=================================== FAILURES ===================================
+__________________________ test_nes1948_to_cdif_skos ___________________________
+
+    def test_nes1948_to_cdif_skos():
+        cb_path = os.path.join(data_dir(), 'codebook/NES1948.xml')
+        cb = ddicodebook.loadxml(cb_path)
+
+        # 67 variables in NES1948.xml
+        vars = cb.search_variables()
+        assert len(vars) == 67
+
+        resources = utils.codebook_to_cdif(cb, use_skos=True)
+
+        assert isinstance(resources, dict)
+
+        # InstanceVariables (wrapped in assistants)
+        instance_vars = [
+            r for r in resources.values()
+            if hasattr(r, 'resource') and isinstance(r.resource, model.InstanceVariable)
+        ]
+        assert len(instance_vars) == 67
+
+        # ConceptSchemes
+        concept_schemes = [r for r in resources.values() if isinstance(r, skos.ConceptScheme)]
+        vars_with_cats = [v for v in vars if v.n_catgry > 0]
+        # In NES1948, no categories are marked as missing, so only substantive schemes are created.
+        assert len(concept_schemes) == len(vars_with_cats)
+
+        # Concepts
+        concepts = [r for r in resources.values() if isinstance(r, skos.Concept)]
+        total_cats = sum(v.n_catgry for v in vars)
+        assert len(concepts) == total_cats
+
+        # DataSets, LogicalRecords, DataStructures (wrapped in assistants)
+        datasets = [
+            r for r in resources.values()
+            if hasattr(r, 'resource') and isinstance(r.resource, model.DataSet)
+        ]
+        assert len(datasets) == 1
+
+        logical_records = [
+            r for r in resources.values()
+            if hasattr(r, 'resource') and isinstance(r.resource, model.LogicalRecord)
+        ]
+        assert len(logical_records) == 1
+        lr = logical_records[0]
+        # Check relationships via proxied property
+        assert len(lr.has_InstanceVariable) == 67
+
+        data_structures = [
+            r for r in resources.values()
+            if hasattr(r, 'resource') and isinstance(r.resource, model.DataStructure)
+        ]
+        assert len(data_structures) == 1
+        ds = data_structures[0]
+        # Check relationships via proxied property names from model_1_0_0
+        assert len(ds.has_ComponentPosition) == 67
+
+        # Convert to graph
+>       g = utils.ddi_cdi_resources_to_graph(resources)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_nes1948_to_cdif.py:67:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src/dartfx/ddi/utils.py:305: in ddi_cdi_resources_to_graph
+    r.to_rdf_graph(graph=g)
+.venv/lib/python3.13/site-packages/dartfx/rdf/pydantic/_base.py:520: in to_rdf_graph
+    self._serialise_into_graph(graph, base_uri=base_uri, rdf_uri_generator=rdf_uri_generator)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ConceptScheme(rdf_auto_uuid=True, rdf_uri_generator=None, id='M39SPjTQlxKgsei6_SubstantiveConceptScheme', pref_label=N...t_match=None, broad_match=None, narrow_match=None, related_match=None, semantic_relation=None, mapping_relation=None)])
+graph = <Graph identifier=N4d4950682600447089191c3a59d6526e (<class 'rdflib.graph.Graph'>)>
+
+    def _serialise_into_graph(
+        self,
+        graph: Graph,
+        *,
+        base_uri: str | None = None,
+        rdf_uri_generator: Callable[[Any], URIRef | BNode] | None = None,
+    ) -> URIRef | BNode:
+        """Internal method to serialize this model into an RDF graph.
+
+        Converts all annotated fields to RDF triples and adds them to the graph.
+        This method handles the core serialization logic.
+
+        Parameters
+        ----------
+        graph : Graph
+            The rdflib Graph to add triples to.
+        base_uri : str | None, optional
+            Base URI for subject generation.
+        rdf_uri_generator : Callable[[Any], Union[URIRef, BNode]] | None, optional
+            A custom function to generate subject URIs for model instances.
+
+        Returns
+        -------
+        URIRef | BNode
+            The subject URI of the serialized resource.
+        """
+>       subject = self._subject_uri(base_uri=base_uri, rdf_uri_generator=rdf_uri_generator)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: 'URIRef' object is not callable
+
+.venv/lib/python3.13/site-packages/dartfx/rdf/pydantic/_base.py:852: TypeError
+----------------------------- Captured stdout call -----------------------------
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: Union args: (<class 'rdflib.term.URIRef'>, <class 'NoneType'>)
+DEBUG: Checking arg <class 'rdflib.term.URIRef'>, origin=None
+DEBUG: Checking arg <class 'NoneType'>, origin=None
+DEBUG: add_resources: property=takesValuesFrom, is_list=False
+DEBUG: cb_cdi_vars has 67 items
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_InstanceVariable, is_list=True
+DEBUG: Union args: (list[rdflib.term.URIRef], <class 'NoneType'>)
+DEBUG: Checking arg list[rdflib.term.URIRef], origin=<class 'list'>
+DEBUG: add_resources: property=has_ComponentPosition, is_list=True
+DEBUG: cdi_logical_record has 67 instance variables
+DEBUG: cdi_logical_record vars: ['urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_fNuMk40jV2vQBozK', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_jnLsUiIP87qGQC8v', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_gzTZpbJPg6fZmaYC', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_ud5xKvfsm8dCRCp3', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_M39SPjTQlxKgsei6', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_PLhFsrK3gTo1kCsw', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_yNn4OeQEhOBq43P4', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_hFdQufzfDGnrqJdk', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_uKO9M1obtpU2AwfY', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_V7AhoKccjuAC3qsS', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_aSKnFgMNwO1Yi176', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_U1nVKPbem6ptHtji', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_jLu7hyXuj3MEFm1N', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_BOqtA6XUt8VWPqSo', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_iKgHmRbO6YuttcrH', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_rcsG2EF3VGWuz974', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_RUNXH6OTXoPLhQKP', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_WY4wwpGnFnLkrKRU', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_mOpsrEUsuEU67C2E', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_vvnJiPTnsdtSBFym', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_aVRO14OPEI64SQ6Z', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_l7JGVGQKgUOwfvtw', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_roCXPpNyPcYD5wAp', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_LEkUxN10A1kVj9zl', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_xKBPVsGQYw84e2cE', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_xZjBurCq3q23Tdsv', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_V8CpcohsWGhDC2q6', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_tg5AwZfSWlQS6AUz', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_ZyImivToEiTkKzK7', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_LoKaEMEq6Tum91t0', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_byBegeHZGUMm7mFv', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_Z8KiL02qz9xyiwGO', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_Ej0cxm2Y7vKw1Nxs', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_j46wvcGt0xD79WvT', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_nrbS3Tktv7HQS6Cj', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_mR4Set0azVMk3hTv', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_JJfpWr0pVMatcYER', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_MVtZvjXRxdVzc3iM', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_XRQSkkIJbD4kpFwV', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_Xza08qQXIcfWsD1W', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_PBxsPl0LtwBnaM0d', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_ObV3l8D6UKRSYR9k', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_f4lSXrcQvdBxyNQz', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_B9Z1fQ5GwbiPC02w', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_F2qndEXT5ofhwoSk', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_yQYBvlDshfH6f28U', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_Hgd8118J8vjFXeZE', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_Ld8mN90tcCcNuYJd', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_QTchKaa3zFwl53of', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_z2n5DGrKYnSdPSYK', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_iLKoB7Ut3T1zMcdS', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_gPanJ9rlIdky1Aye', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_F2YQJwzqDdwXZIW0', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_CGxAutwAdQJb9M8L', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_x4HCiUOAtiZYuBe8', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_BNXSoKrf50UkX7oe', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_priIBrqnlAxZy7Fd', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_IyLn0KNsuzdeCgdG', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_dO3PNET1ZbXg8Hst', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_Jx3IZXZirdpl5pzP', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_QtFhO0Y8WZ4c4vEr', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_wr3nFxu0ZraeazFE', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_ho1CMy2AYE4Fkp01', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_VU2nS3zAEmSjJqNA', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_o7TYGE92lQXXVhBV', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_dbn1fBSZlQsVrEqW', 'urn:ddi-cdi:b7ae9b18-a462-4681-93ac-f285f38b69ce_InstanceVariable_emPyiXTeYB4WcxtW']
+------------------------------ Captured log call -------------------------------
+DEBUG    root:utils.py:33 Processing variables
+=========================== short test summary info ============================
+FAILED tests/test_nes1948_to_cdif.py::test_nes1948_to_cdif_skos - TypeError: ...
+======================= 1 failed, 1 deselected in 1.85s ========================

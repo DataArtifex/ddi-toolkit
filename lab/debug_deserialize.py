@@ -1,22 +1,22 @@
 """Debug deserialization step by step."""
 
 import uuid
-from rdflib import URIRef, Graph, RDF, Namespace
+
+from rdflib import RDF, Namespace, URIRef
+
 from dartfx.ddi.ddicdi import sempyro_model
 from dartfx.ddi.ddicdi.sempyro_model import (
-    InstanceVariable, 
-    ObjectName,
     Identifier,
-    InternationalRegistrationDataIdentifier
+    InstanceVariable,
+    InternationalRegistrationDataIdentifier,
+    ObjectName,
 )
 
 # Create an InstanceVariable
 var = InstanceVariable(name=[ObjectName(name="TestVariable")])
 uri = f"http://example.org/{uuid.uuid4()}"
 irdi = InternationalRegistrationDataIdentifier(
-    dataIdentifier=uri,
-    registrationAuthorityIdentifier="http://example.org/authority",
-    versionIdentifier="1.0.0"
+    dataIdentifier=uri, registrationAuthorityIdentifier="http://example.org/authority", versionIdentifier="1.0.0"
 )
 identifier = Identifier(ddiIdentifier=irdi)
 var.identifier = identifier
@@ -31,7 +31,7 @@ CDI = Namespace("http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/")
 print("\n Instance Variable fields:")
 for field_name, field_info in InstanceVariable.model_fields.items():
     if field_info.json_schema_extra:
-        rdf_term = field_info.json_schema_extra.get('rdf_term')
+        rdf_term = field_info.json_schema_extra.get("rdf_term")
         if rdf_term:
             print(f"  {field_name}: {rdf_term}")
 
@@ -56,34 +56,34 @@ field_values = {}
 for field_name, field_info in InstanceVariable.model_fields.items():
     if not field_info.json_schema_extra:
         continue
-    
-    rdf_term = field_info.json_schema_extra.get('rdf_term')
+
+    rdf_term = field_info.json_schema_extra.get("rdf_term")
     if not rdf_term:
         continue
-    
+
     values = list(graph.objects(subject, URIRef(rdf_term)))
     if values:
         print(f"\n{field_name} (rdf_term={rdf_term}):")
         for v in values:
             print(f"  Value: {v} (type: {type(v).__name__})")
-            
+
             # Check if it has a type
             has_rdf_type = list(graph.objects(v, RDF.type))
             if has_rdf_type:
                 print(f"  RDF type: {has_rdf_type}")
-                
+
                 # Try to deserialize it
                 try:
                     nested = deserializer.deserialize_subject(graph, v)
                     print(f"  Deserialized to: {type(nested).__name__}")
                     print(f"  Content: {nested}")
-                    
+
                     # Check if it's iterable (causing the tuple issue?)
                     try:
                         items = list(nested)
                         print(f"  ⚠️  Object is iterable! Items: {items}")
                     except TypeError:
-                        print(f"  ✓  Object is not iterable")
+                        print("  ✓  Object is not iterable")
                 except Exception as e:
                     print(f"  ✗  Deserialization failed: {e}")
 
@@ -95,4 +95,5 @@ try:
 except Exception as e:
     print(f"Failed: {e}")
     import traceback
+
     traceback.print_exc()

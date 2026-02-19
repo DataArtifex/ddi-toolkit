@@ -103,7 +103,7 @@ log_cli_format = "%(asctime)s [%(levelname)s] %(message)s (%(filename)s:%(lineno
 log_cli_date_format = "%Y-%m-%d %H:%M:%S"
 
 [tool.ruff]
-line-length = 88
+line-length = 120
 target-version = "py312"
 src = ["src"]
 
@@ -120,6 +120,17 @@ select = [
   "PT",  # flake8-pytest-style
 ]
 ignore = []
+
+[tool.ruff.lint.per-file-ignores]
+"src/dartfx/ddi/ddicdi/model_1_0_0.py" = ["E501", "F821"]
+"src/dartfx/ddi/ddicdi/sempyro_model.py" = ["E501", "E402", "F404"]
+"src/dartfx/ddi/ddicdi/dataclass_model.py" = ["E501", "E402", "F821", "B008"]
+"src/dartfx/ddi/ddicdi/sempyro_deserializer.py" = ["E402"]
+"src/dartfx/ddi/ddicdi/specification.py" = ["E501"]
+"src/dartfx/ddi/ddicodebook.py" = ["E501"]
+"src/dartfx/ddi/utils.py" = ["E501"]
+"src/dartfx/ddi/ddicdi/utils.py" = ["E501"]
+"lab/*" = ["E501", "E402"]
 
 [tool.hatch.metadata]
 allow-direct-references = true

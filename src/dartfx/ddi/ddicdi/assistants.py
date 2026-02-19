@@ -1,44 +1,46 @@
 """
 DDI-CDI Assistant Module
 
-This module provides a suite of 'Assistants' designed to simplify the creation, 
+This module provides a suite of 'Assistants' designed to simplify the creation,
 manipulation, and management of DDI-CDI model resources.
 
 Key Architecture Features:
-1.  **Automatic Instance Binding**: Any @classmethod defined in an assistant that 
-    takes a `resource` (or CDIResource) as its first parameter after `cls` is 
+1.  **Automatic Instance Binding**: Any @classmethod defined in an assistant that
+    takes a `resource` (or CDIResource) as its first parameter after `cls` is
     automatically attached as an instance method to the `model.CDIResource` class.
-2.  **Transparent Proxying**: Assistants like `CdiResourceAssistant` can wrap 
-    a specific model instance. They proxy all attribute and method access to 
+2.  **Transparent Proxying**: Assistants like `CdiResourceAssistant` can wrap
+    a specific model instance. They proxy all attribute and method access to
     the underlying resource, allowing them to be used as smart wrappers.
-3.  **Opt-in Complexity**: Use generic factories for simple classes, and 
-    specialized assistants (like `VariableAssistant`) only when complex 
+3.  **Opt-in Complexity**: Use generic factories for simple classes, and
+    specialized assistants (like `VariableAssistant`) only when complex
     domain logic is required.
 
 Creation Methods:
-- **`create()`**: The high-level "User API". A one-liner convenience method that 
+- **`create()`**: The high-level "User API". A one-liner convenience method that
   calls the factory and sets common attributes like 'name' in a single step.
-- **`factory()`**: The internal "Engine API". Handles the heavy lifting of 
+- **`factory()`**: The internal "Engine API". Handles the heavy lifting of
   instantiation, DDI Identifier generation, and URI creation.
 
 Basic Usage:
     # Generic creation of any CDI class
     record = CdiClassAssistant.create(model.Category, name="MainCategory")
-    
+
     # Specific creation using specialized assistants
     var = VariableAssistant.create_instance_variable(name="INCOME")
 
     # Both return 'Assistant' instances that proxy to the underlying CDI model objects.
 """
-import uuid
-import logging
-import inspect
+
 import functools
+import inspect
+import uuid
+from typing import Annotated, Any, Union, get_args, get_origin
+
 from pydantic import BaseModel
-from typing import Optional, Any, Union, get_origin, get_args
-from rdflib import URIRef, Graph
+from rdflib import Graph, URIRef
 
 from . import model_1_0_0 as model
+
 
 class AssistantMethodDescriptor:
     """
@@ -46,6 +48,7 @@ class AssistantMethodDescriptor:
     1. When accessed via Class: returns a method bound to the class (normal classmethod).
     2. When accessed via Instance: returns a method bound to the class AND the instance's resource.
     """
+
     def __init__(self, cls, func):
         self.cls = cls
         self.func = func
@@ -57,23 +60,23 @@ class AssistantMethodDescriptor:
             # Bound to class: (cls, ...)
             return functools.partial(self.func, owner)
         # Bound to class and instance.resource: (cls, resource, ...)
-        print(f"DEBUG: Descriptor __get__ for {self.__name__}")
-        print(f"DEBUG: func={self.func}")
-        print(f"DEBUG: cls={self.cls}")
-        print(f"DEBUG: instance.resource={instance.resource}")
+        # Bound to class and instance.resource: (cls, resource, ...)
         return functools.partial(self.func, self.cls, instance.resource)
+
 
 def _bind_assistant_methods(assistant_cls, target_class):
     """
     Internal helper to attach classmethods from an assistant class to a target model class.
-    
+
     A method is attached ONLY if it is a @classmethod and its first parameter after 'cls'
     is either named 'resource' or type-hinted as 'target_class' (CDIResource).
     """
+
     def make_instance_wrapper(f, c):
         @functools.wraps(f)
         def instance_wrapper(self, *args, **kwargs):
             return f(c, self, *args, **kwargs)
+
         return instance_wrapper
 
     for name, attr in list(assistant_cls.__dict__.items()):
@@ -82,47 +85,52 @@ def _bind_assistant_methods(assistant_cls, target_class):
             try:
                 sig = inspect.signature(func)
                 params = list(sig.parameters.values())
-                
+
                 # Check for (cls, resource, ...) pattern
                 if len(params) >= 2:
                     p_name = params[1].name
                     p_type = params[1].annotation
                     # Robust check: name is 'resource' OR is type-hinted as CDIResource (or subclass)
                     is_resource_param = (
-                        p_name == 'resource' or 
-                        p_type is model.CDIResource or 
-                        (isinstance(p_type, type) and issubclass(p_type, model.CDIResource)) or
-                        'CDIResource' in str(p_type)
+                        p_name == "resource"
+                        or p_type is model.CDIResource
+                        or (isinstance(p_type, type) and issubclass(p_type, model.CDIResource))
+                        or "CDIResource" in str(p_type)
                     )
-                    
+
                     if is_resource_param:
                         # Bind to the model class (e.g. model.CDIResource)
                         if not hasattr(target_class, name):
-                             setattr(target_class, name, make_instance_wrapper(func, assistant_cls))
-                        
+                            setattr(target_class, name, make_instance_wrapper(func, assistant_cls))
+
                         # Bind to the assistant class using our descriptor
                         if isinstance(attr, classmethod):
-                             setattr(assistant_cls, name, AssistantMethodDescriptor(assistant_cls, func))
+                            setattr(assistant_cls, name, AssistantMethodDescriptor(assistant_cls, func))
             except (ValueError, TypeError):
                 # Skip methods that can't be inspected (e.g. some built-ins)
                 continue
+
 
 def automate_instance_methods(target_class):
     """
     Decorator for manual assistant method binding.
     """
+
     def decorator(cls):
         _bind_assistant_methods(cls, target_class)
         return cls
+
     return decorator
+
 
 class CdiAssistant(BaseModel):
     """
     Base class for all DDI-CDI Assistants.
     """
-    resource: Optional[Any] = None
-    
-    model_config = {'extra': 'allow'}
+
+    resource: Any | None = None
+
+    model_config = {"extra": "allow"}
 
     @classmethod
     def _bind_to_model(cls, target_class: type):
@@ -133,15 +141,15 @@ class CdiAssistant(BaseModel):
         """Proxy attribute and method access to the wrapped resource."""
         if name == "resource":
             raise AttributeError(name)
-        
+
         # Use object.__getattribute__ to avoid recursion during init
         try:
-            res = object.__getattribute__(self, 'resource')
+            res = object.__getattribute__(self, "resource")
             if res is not None:
                 return getattr(res, name)
         except AttributeError:
             pass
-            
+
         raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
 
     def __setattr__(self, name: str, value: Any):
@@ -153,13 +161,15 @@ class CdiAssistant(BaseModel):
         else:
             super().__setattr__(name, value)
 
+
 @automate_instance_methods(model.CDIResource)
 class CdiResourceAssistant(CdiAssistant):
     """
     Base assistant for all CDI Resources (both Classes and DataTypes).
     Methods defined here are available on all objects inheriting from CDIResource.
     """
-    resource: Optional[model.CDIResource] = None
+
+    resource: model.CDIResource | None = None
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
@@ -167,42 +177,49 @@ class CdiResourceAssistant(CdiAssistant):
         cls._bind_to_model(model.CDIResource)
 
     @classmethod
-    def get_uri(cls, resource: model.CDIResource) -> Optional[str]:
-        if getattr(resource, 'identifier', None) is not None:
-            if getattr(resource.identifier, 'uri', None) is not None: 
+    def get_uri(cls, resource: model.CDIResource) -> str | None:
+        if getattr(resource, "identifier", None) is not None:
+            if getattr(resource.identifier, "uri", None) is not None:
                 return resource.identifier.uri
-        elif getattr(resource, 'id', None) is not None:
+        elif getattr(resource, "id", None) is not None:
             return str(resource.id)
         return None
 
     @classmethod
     def set_uri(cls, resource: model.CDIResource, value: str):
-        if hasattr(resource, 'identifier'):
+        if hasattr(resource, "identifier"):
             if resource.identifier is None:
                 resource.identifier = model.Identifier()
             resource.identifier.uri = value
-            
-        # Crucial: Sync with resource.id field. 
+
+        # Crucial: Sync with resource.id field.
         # In RdfBaseModel, the 'id' field determines the RDF subject URI.
-        # CDI resources set rdf_auto_uuid=False, so failing to set this 
+        # CDI resources set rdf_auto_uuid=False, so failing to set this
         # would result in the resource being serialized as a blank node [].
         resource.id = value
         return value
 
     @classmethod
-    def add_resources(cls, resource: model.CDIResource, target_resources: Any, property_name: str, clear: bool = False, exact_match: bool = True):
+    def add_resources(
+        cls,
+        resource: model.CDIResource,
+        target_resources: Any,
+        property_name: str,
+        clear: bool = False,
+        exact_match: bool = True,
+    ):
         """
         Attaches one or more resources to a specified property of the CDI resource.
 
         This method is the primary engine for building relationships between CDI objects.
-        It handles URI resolution from various input types (Assistant wrappers, raw 
-        model objects, or strings/URIRefs) and ensures correct assignment based on 
+        It handles URI resolution from various input types (Assistant wrappers, raw
+        model objects, or strings/URIRefs) and ensures correct assignment based on
         the target property's type (list vs. singular).
         """
         target_property = property_name
         if not hasattr(resource, target_property):
             if not exact_match:
-                # Dir(resource) might be expensive, but needed for prefix search 
+                # Dir(resource) might be expensive, but needed for prefix search
                 # (e.g. 'isDefinedBy' matching 'isDefinedBy_RepresentedVariable')
                 matches = [p for p in dir(resource) if p.startswith(property_name)]
                 if matches:
@@ -211,32 +228,51 @@ class CdiResourceAssistant(CdiAssistant):
                     return False
             else:
                 return False
-            
+
         if not isinstance(target_resources, list):
             target_resources = [target_resources]
-            
+
         uris = []
         for r in target_resources:
             uri = None
-            if hasattr(r, 'get_uri') and callable(r.get_uri): uri = r.get_uri()
-            elif hasattr(r, 'resource') and hasattr(r.resource, 'identifier') and r.resource.identifier: uri = r.resource.identifier.uri
-            elif hasattr(r, 'identifier') and r.identifier: uri = r.identifier.uri
-            elif hasattr(r, 'id') and r.id: uri = str(r.id)
-            elif isinstance(r, (str, URIRef)): uri = str(r)
-            
-            if uri: uris.append(URIRef(uri))
-                    
-        # Determine if the target property is a list or a singular value in the model.
+            if hasattr(r, "get_uri") and callable(r.get_uri):
+                uri = r.get_uri()
+            elif hasattr(r, "resource") and hasattr(r.resource, "identifier") and r.resource.identifier:
+                uri = r.resource.identifier.uri
+            elif hasattr(r, "identifier") and r.identifier:
+                uri = r.identifier.uri
+            elif hasattr(r, "id") and r.id:
+                uri = str(r.id)
+            elif isinstance(r, (str, URIRef)):
+                uri = str(r)
+
+            if uri:
+                uris.append(URIRef(uri))
+
         field = resource.model_fields.get(target_property)
         is_list = False
         if field:
-            origin = get_origin(field.annotation)
+            annotation = field.annotation
+            # Unwrap Annotated if present
+            if get_origin(annotation) is Annotated:
+                annotation = get_args(annotation)[0]
+
+            import types
+
+            origin = get_origin(annotation)
             if origin is list:
                 is_list = True
-            elif origin is Union:
-                args = get_args(field.annotation)
-                if any(get_origin(arg) is list for arg in args):
-                    is_list = True
+            elif origin is Union or (hasattr(types, "UnionType") and origin is types.UnionType):
+                args = get_args(annotation)
+                for arg in args:
+                    if get_origin(arg) is list:
+                        is_list = True
+                        break
+
+        if target_property == "has_InstanceVariable":
+            # Force list for debug if detection fails
+            # is_list = True
+            pass
 
         current = getattr(resource, target_property)
         if is_list:
@@ -247,7 +283,7 @@ class CdiResourceAssistant(CdiAssistant):
                 current.clear()
             current.extend(uris)
         else:
-            if uris: 
+            if uris:
                 setattr(resource, target_property, uris[0])
         return True
 
@@ -256,13 +292,15 @@ class CdiResourceAssistant(CdiAssistant):
         """Helper to add the resource to an RDF graph."""
         return resource.to_rdf_graph(graph=graph)
 
+
 @automate_instance_methods(model.CDIClass)
 class CdiClassAssistant(CdiResourceAssistant):
     """
     General assistant for CDI Classes.
     Methods defined here are available on all objects inheriting from CDIClass.
     """
-    resource: Optional[model.CDIClass] = None
+
+    resource: model.CDIClass | None = None
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
@@ -270,9 +308,9 @@ class CdiClassAssistant(CdiResourceAssistant):
         cls._bind_to_model(model.CDIClass)
 
     @classmethod
-    def get_ddi_identifier_value(cls, resource: model.CDIClass) -> Optional[str]:
-        if getattr(resource, 'identifier', None) is not None:
-            if getattr(resource.identifier, 'ddiIdentifier', None) is not None: 
+    def get_ddi_identifier_value(cls, resource: model.CDIClass) -> str | None:
+        if getattr(resource, "identifier", None) is not None:
+            if getattr(resource.identifier, "ddiIdentifier", None) is not None:
                 return resource.identifier.ddiIdentifier.dataIdentifier
         return None
 
@@ -280,25 +318,23 @@ class CdiClassAssistant(CdiResourceAssistant):
     def set_identifiers(cls, resource: model.CDIClass, ddi: str = None, nonddi: str = None, uri: str = None):
         if resource.identifier is None:
             resource.identifier = model.Identifier()
-            
+
         if ddi:
             if resource.identifier.ddiIdentifier is None:
                 resource.identifier.ddiIdentifier = model.InternationalRegistrationDataIdentifier(
-                    dataIdentifier=ddi, 
-                    registrationAuthorityIdentifier="int.dataartifex", 
-                    versionIdentifier="1"
+                    dataIdentifier=ddi, registrationAuthorityIdentifier="int.dataartifex", versionIdentifier="1"
                 )
             else:
                 resource.identifier.ddiIdentifier.dataIdentifier = ddi
-                
+
         if nonddi:
             if resource.identifier.nonDdiIdentifier is None:
-                resource.identifier.nonDdiIdentifier = list()
+                resource.identifier.nonDdiIdentifier = []
             resource.identifier.nonDdiIdentifier.append(model.NonDdiIdentifier(value=nonddi, type="generic"))
-            
+
         if uri:
             cls.set_uri(resource, uri)
-            
+
         return resource.identifier
 
     @classmethod
@@ -321,7 +357,7 @@ class CdiClassAssistant(CdiResourceAssistant):
 
     @classmethod
     def set_simple_name(cls, resource: model.CDIClass, value: str):
-        if hasattr(resource, 'name'):
+        if hasattr(resource, "name"):
             instance = model.ObjectName(name=value)
             resource.name = [instance]
             return instance
@@ -329,11 +365,11 @@ class CdiClassAssistant(CdiResourceAssistant):
 
     @classmethod
     def set_simple_display_label(cls, resource: model.CDIClass, value: str, language: str = "en"):
-        if hasattr(resource, 'displayLabel') and value:
-             lang_string = model.LanguageString(content=value, language=language)
-             display_label = model.LabelForDisplay(languageSpecificString=[lang_string])
-             resource.displayLabel = [display_label]
-             return display_label
+        if hasattr(resource, "displayLabel") and value:
+            lang_string = model.LanguageString(content=value, language=language)
+            display_label = model.LabelForDisplay(languageSpecificString=[lang_string])
+            resource.displayLabel = [display_label]
+            return display_label
         return None
 
     @classmethod
@@ -365,24 +401,34 @@ class CdiClassAssistant(CdiResourceAssistant):
         return cls.add_resources(resource, variable, "has_InstanceVariable", exact_match=False)
 
     @classmethod
-    def factory(cls, target_cls: type[model.CDIClass], id_prefix=None, id_suffix=None, base_uri: str = "urn:ddi-cdi:", non_ddi_id=None, non_ddi_id_type=None, *args, **kwargs) -> "CdiClassAssistant":
+    def factory(
+        cls,
+        target_cls: type[model.CDIClass],
+        id_prefix=None,
+        id_suffix=None,
+        base_uri: str = "urn:ddi-cdi:",
+        non_ddi_id=None,
+        non_ddi_id_type=None,
+        *args,
+        **kwargs,
+    ) -> "CdiClassAssistant":
         if id_prefix is None:
             id_prefix = str(uuid.uuid4())
-            
+
         cdi_resource = target_cls(*args, **kwargs)
-        
+
         cdi_resource_uid = f"{id_prefix}_{cdi_resource.__class__.__name__}"
         if id_suffix:
-            cdi_resource_uid += f"_{id_suffix}"        
-        
+            cdi_resource_uid += f"_{id_suffix}"
+
         cls.set_ddi_identifier(cdi_resource, cdi_resource_uid)
-        
+
         cdi_resource_uri = f"{base_uri}{cdi_resource_uid}"
         cls.set_uri(cdi_resource, cdi_resource_uri)
-        
+
         if non_ddi_id:
             cls.add_nonddi_identifier(cdi_resource, non_ddi_id, type=non_ddi_id_type)
-            
+
         return cls(resource=cdi_resource)
 
     @classmethod
@@ -392,13 +438,15 @@ class CdiClassAssistant(CdiResourceAssistant):
             assistant.set_simple_name(name)
         return assistant
 
+
 @automate_instance_methods(model.CDIDataType)
 class CdiDataTypeAssistant(CdiResourceAssistant):
     """
     General assistant for CDI Data Types.
     Methods defined here are available on all objects inheriting from CDIDataType.
     """
-    resource: Optional[model.CDIDataType] = None
+
+    resource: model.CDIDataType | None = None
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
@@ -406,20 +454,30 @@ class CdiDataTypeAssistant(CdiResourceAssistant):
         cls._bind_to_model(model.CDIDataType)
 
     @classmethod
-    def factory(cls, target_cls: type[model.CDIDataType], id_prefix=None, id_suffix=None, base_uri: str = "urn:ddi-cdi:", *args, **kwargs) -> "CdiDataTypeAssistant":
+    def factory(
+        cls,
+        target_cls: type[model.CDIDataType],
+        id_prefix=None,
+        id_suffix=None,
+        base_uri: str = "urn:ddi-cdi:",
+        *args,
+        **kwargs,
+    ) -> "CdiDataTypeAssistant":
         """Factory for creating data types. Unlike classes, they don't have DDI identifiers."""
         cdi_datatype = target_cls(*args, **kwargs)
-        
+
         if id_prefix:
             uid = f"{id_prefix}_{cdi_datatype.__class__.__name__}"
-            if id_suffix: uid += f"_{id_suffix}"
+            if id_suffix:
+                uid += f"_{id_suffix}"
             cls.set_uri(cdi_datatype, f"{base_uri}{uid}")
-            
+
         return cls(resource=cdi_datatype)
 
     @classmethod
     def create(cls, target_cls: type[model.CDIDataType], **kwargs) -> "CdiDataTypeAssistant":
         return cls.factory(target_cls, **kwargs)
+
 
 # For backward compatibility
 CdiResourceAssistantAlias = CdiClassAssistant  # If needed for extremely old code

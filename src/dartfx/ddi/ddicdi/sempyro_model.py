@@ -4,7 +4,7 @@ warnings.warn(
     "sempyro_model is deprecated and will be removed in a future version. "
     "Please use dartfx.ddi.ddicdi.model_1_0_0 instead.",
     DeprecationWarning,
-    stacklevel=2
+    stacklevel=2,
 )
 
 """
@@ -23,8 +23,8 @@ Example:
 var = InstanceVariable(name = [ObjectName(name="Foo")])
 uri = f"http://example.org/{uuid.uuid4()}"
 irdi = InternationalRegistrationDataIdentifier(
-    dataIdentifier=uri, 
-    registrationAuthorityIdentifier= "http://example.org/authority/bar", 
+    dataIdentifier=uri,
+    registrationAuthorityIdentifier= "http://example.org/authority/bar",
     versionIdentifier= "1.0.0")
 identifier = Identifier(ddiIdentifier=irdi)
 var.identifier = identifier
@@ -35,14 +35,16 @@ SPDX-License-Identifier: MIT
 """
 
 from __future__ import annotations  # to allow forward references with Pydantic
-from datetime import date, datetime
-from enum import Enum
-from pydantic import ConfigDict, Field
-from rdflib import Namespace, URIRef, XSD
-from sempyro import LiteralField, RDFModel
-from typing import Union
 
-CDI = Namespace('http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/')
+from datetime import date, datetime
+from enum import StrEnum
+
+from pydantic import ConfigDict, Field
+from rdflib import Namespace, URIRef
+from sempyro import LiteralField, RDFModel
+
+CDI = Namespace("http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/")
+
 
 class DdiCdiResource(RDFModel):
     pass
@@ -56,20 +58,20 @@ class DdiCdiType(DdiCdiResource):
     pass
 
 
-
-
 #
 # ENUMERATIONS
 #
 
-class CategoryRelationCode(str, Enum):
-    """ CategoryRelationCode.
+
+class CategoryRelationCode(StrEnum):
+    """CategoryRelationCode.
 
     Definition
     ============
     Indicates the type of relationship, nominal, ordinal, interval, ratio, or continuous. Use where appropriate for the representation type.
 
     """
+
     CONTINUOUS = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Continuous"  # May be used to identify both interval and ratio classification levels, when more precise information is not available.
     INTERVAL = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Interval"  # The categories in the domain are in rank order and have a consistent interval between each category so that differences between arbitrary pairs of measurements can be meaningfully compared.
     NOMINAL = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Nominal"  # A relationship of less than, or greater than, cannot be established among the included categories. This type of relationship is also called categorical or discrete.
@@ -77,14 +79,15 @@ class CategoryRelationCode(str, Enum):
     RATIO = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Ratio"  # The categories have all the features of interval measurement and also have meaningful ratios between arbitrary pairs of numbers.
 
 
-class ComparisonOperator(str, Enum):
-    """ ComparisonOperator.
+class ComparisonOperator(StrEnum):
+    """ComparisonOperator.
 
     Definition
     ============
     Defines the relationship between values in key/value pair.
 
     """
+
     EQUAL = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Equal"  # The value the key's in the source and target must be equal.
     GREATERTHAN = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/GreaterThan"  # The value the key in the source must be greater than the key in the target.
     GREATERTHANOREQUALTO = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/GreaterThanOrEqualTo"  # The value the key in the source must be greater than or equal to the key in the target.
@@ -93,27 +96,29 @@ class ComparisonOperator(str, Enum):
     NOTEQUAL = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/NotEqual"  # The value the key's in the source and target must be unequal.
 
 
-class ComputationBaseList(str, Enum):
-    """ ComputationBaseList.
+class ComputationBaseList(StrEnum):
+    """ComputationBaseList.
 
     Definition
     ============
     Defines the cases included in determining the statistic.
 
     """
+
     MISSINGONLY = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/MissingOnly"  # Only missing (invalid) cases included in the calculation.
     TOTAL = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Total"  # All cases, both valid and missing (invalid). All members of a collection C are related to each other.
     VALIDONLY = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ValidOnly"  # Only valid values, missing (invalid) are not included in the calculation.
 
 
-class ControlConstruct(str, Enum):
-    """ ControlConstruct.
+class ControlConstruct(StrEnum):
+    """ControlConstruct.
 
     Definition
     ============
     Type of control construct used by the conditional control logic related to an activity.
 
     """
+
     ELSE = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Else"  # Describes an Else type of control construct.
     IFTHEN = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/IfThen"  # Describes an IfThen type of control construct.  If the stated condition is met, the Then clause is triggered.
     LOOP = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Loop"  # Describes a Loop type of control construct (loops until a limiting condition is met).
@@ -121,74 +126,83 @@ class ControlConstruct(str, Enum):
     REPEATWHILE = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/RepeatWhile"  # Describes a RepeatWhile type of control construct (to be repeated while a specified condition is met).
 
 
-class MatchingCriterion(str, Enum):
-    """ MatchingCriterion.
+class MatchingCriterion(StrEnum):
+    """MatchingCriterion.
 
     Definition
     ============
     Supports mapping comparative relationships by type of match. Not used for causative, sequential, temporal or special relations.
 
     """
+
     CLOSEMATCH = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/CloseMatch"  # The identified objects (source and target) are not exact but are similar. Equivalent to SKOS closeMatch - see the W3C Recommendation "SKOS Simple Knowledge Organization System Reference" - 10. Mapping Properties (https://www.w3.org/TR/skos-reference/#L4186).
     DISJOINT = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Disjoint"  # The identified objects are do not have a close or exact match. Equivalent to disjoint objects in SKOS  - see the W3C Recommendation "SKOS Simple Knowledge Organization System Reference" (https://www.w3.org/TR/skos-reference/#L4186).
     EXACTMATCH = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ExactMatch"  # The identified objects (source and target) are identical. Equivalent to SKOS exactMatch - see the W3C Recommendation "SKOS Simple Knowledge Organization System Reference" - 10. Mapping Properties (https://www.w3.org/TR/skos-reference/#L4186).
 
 
-class MemberRelationshipScope(str, Enum):
-    """ MemberRelationshipScope.
+class MemberRelationshipScope(StrEnum):
+    """MemberRelationshipScope.
 
     Definition
     ============
     A vocabulary for the specification of how much of a collection is referenced. All, some or none of the collection may be indicated.
 
     """
+
     ALL = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/All"  # Every member of the collection is indicated.
     NONE = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/None"  # This indicates that no member of the collection is indicated, e.g. None of the relationships are symmetric.
     SOME = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Some"  # Some, but not necessarily all of the members of the collection are indicated.
 
 
-class PointFormat(str, Enum):
-    """ PointFormat.
+class PointFormat(StrEnum):
+    """PointFormat.
 
     Definition
     ============
     Provides an enumerated list of valid point format types for capturing a coordinate point.
 
     """
-    DECIMALDEGREE = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/DecimalDegree"  # Value is expressed as a decimal degree.
-    DECIMALMINUTES = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/DecimalMinutes"  # Value is expressed as decimal minutes.
+
+    DECIMALDEGREE = (
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/DecimalDegree"  # Value is expressed as a decimal degree.
+    )
+    DECIMALMINUTES = (
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/DecimalMinutes"  # Value is expressed as decimal minutes.
+    )
     DEGREESMINUTESSECONDS = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/DegreesMinutesSeconds"  # Value is expressed as degrees-minutes-seconds.
     FEET = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Feet"  # Value is expressed in feet.
     METERS = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Meters"  # Value is expressed in meters.
 
 
-class SchedulingStrategy(str, Enum):
-    """ SchedulingStrategy.
+class SchedulingStrategy(StrEnum):
+    """SchedulingStrategy.
 
     Definition
     ============
     Enumeration that consists of forward chaining and backward chaining. Rule based scheduling is guided by its scheduling strategy.
 
     """
+
     BACKWARDCHAINING = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/BackwardChaining"  # Backward chaining is a strategy of first identifying the goal/completion date and working backward in time from there to achieve it.
     FORWARDCHAINING = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/ForwardChaining"  # Forward chaining is a strategy of planning to complete each step as soon as possible to reach the goal at the earliest date.
 
 
-class SexSpecification(str, Enum):
-    """ SexSpecification.
+class SexSpecification(StrEnum):
+    """SexSpecification.
 
     Definition
     ============
     Sex specification is limited to the purpose of determining the proper pronoun to use in addressing the individual. This may be based on conventional usage or personal preference.
 
     """
+
     FEMININE = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Feminine"  # Use the feminine pronoun (equivalent of English she, her, her's).
     GENDERNEUTRAL = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/GenderNeutral"  # Use a gender neutral or non-specified pronoun. (equivalent of English they, them, theirs).
     MASCULINE = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Masculine"  # Use the masculine pronoun (equivalent of English he, him, his).
 
 
-class StructureExtent(str, Enum):
-    """ StructureExtent.
+class StructureExtent(StrEnum):
+    """StructureExtent.
 
     Definition
     ============
@@ -199,39 +213,42 @@ class StructureExtent(str, Enum):
     A binary relation R on a collection C is total if all members of C are related to each other in R. The relation is partial otherwise.
 
     """
+
     PARTIAL = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Partial"  # Some members of a collection C are not related to each other.
     TOTAL = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Total"  # All cases, both valid and missing (invalid). All members of a collection C are related to each other.
 
 
-class TableDirectionValues(str, Enum):
-    """ TableDirectionValues.
+class TableDirectionValues(StrEnum):
+    """TableDirectionValues.
 
     Definition
     ============
     Indicates whether the tables in the group should be displayed with the first column on the right, on the left, or based on the first character in the table that has a specific direction.
 
     """
+
     AUTO = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Auto"  # Display table based on the first character in the table that has a specific direction. Text in the cells should be according to the content of the cell (auto).
     LTR = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Ltr"  # Display table with first column on the left. Text in cells should be displayed left-to-right (ltr).
     RTL = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Rtl"  # Display table with first column on the right. Text in cells should be displayed right-to-left (rtl).
 
 
-class TemporalOperator(str, Enum):
-    """ TemporalOperator.
+class TemporalOperator(StrEnum):
+    """TemporalOperator.
 
     Definition
     ============
     Set of control flow operators where the continuation of the execution flow depends on the finalization of one or more preceding activities.
 
     """
+
     ANDJOIN = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AndJoin"  # Given three activities A, B and C, if ANDJoin(A, B) -> C, then C is executed after both A and B finish executing. ANDJoin is sometimes referred to as synchronization.
     ANDSPLIT = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/AndSplit"  # Given three activities A, B and C, if ANDSplit(A) -> (B, C), then both B and C are executed after A finishes executing.
     XORJOIN = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XorJoin"  # Given three activities A, B and C, if XORJoin(A, B) -> C, then C is executed after either A or B finishes executing. XORJoin is sometimes referred to as simple merge.
     XORSPLIT = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/XorSplit"  # Given three activities A, B and C, if XORSplit(A) -> (B, C), then either B or C is executed, not both, after A finishes executing. XORSplit is sometimes referred to as exclusive choice.
 
 
-class TemporalRelation(str, Enum):
-    """ TemporalRelation.
+class TemporalRelation(StrEnum):
+    """TemporalRelation.
 
     Definition
     ==========
@@ -250,6 +267,7 @@ class TemporalRelation(str, Enum):
     - a and b equal (e) each other
 
     """
+
     CONTAINS = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Contains"  # A contains interval relation. Representation of the contains relation in Allen's interval algebra. We say that an interval A contains another interval B if and only if A begins before B but finishes after it. More precisely, A.start < B.start < B.end < A.end. Instead of saying that A contains B we can also say that B is during A (converse). An asymmetric relationship: anti-reflexive, anti-symmetric, transitive.
     EQUALS = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Equals"  # An equals interval relation. Representation of the equals relation in Allen's interval algebra. We say that an interval A equals another interval B if and only if they both begin and finish at the same time. More precisely, A.start = B.start < A.end = B.end. Instead of saying that A equals B we can also say the B equals A (reflexive). An equivalence symmetric relationship: reflexive, symmetric, transitive.
     FINISHES = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Finishes"  # A finishes interval relation. Representation of the finishes relation in Allen's interval algebra. We say that an interval A finishes another interval B if and only if A begins after B but both finish at the same time. More precisely, B.start < A.start < B.end = A.end. Instead of saying that A finishes B we can also say that B is finished by A (converse). An asymmetric relationship: anti-reflexive, anti-symmetric, transitive.
@@ -259,60 +277,64 @@ class TemporalRelation(str, Enum):
     STARTS = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Starts"  # A starts interval relation. Representation of the starts relation in Allen's interval algebra. We say that an interval A starts another interval B if and only if they both start at the same time but A finishes first. More precisely, A.start = B.start < A.end. An asymmetric relationship: anti-reflexive, anti-symmetric, transitive.
 
 
-class TextDirectionValues(str, Enum):
-    """ TextDirectionValues.
+class TextDirectionValues(StrEnum):
+    """TextDirectionValues.
 
     Definition
     ============
     Indicates whether the text within cells should be displayed as left-to-right text (ltr), as right-to-left text (rtl), according to the content of the cell (auto) or in the direction inherited from the table direction annotation of the table.
 
     """
+
     AUTO = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Auto"  # Display table based on the first character in the table that has a specific direction. Text in the cells should be according to the content of the cell (auto).
     INHERIT = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Inherit"  # Text in the cells should inherit its direction from the table direction annotation of the table.
     LTR = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Ltr"  # Display table with first column on the left. Text in cells should be displayed left-to-right (ltr).
     RTL = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Rtl"  # Display table with first column on the right. Text in cells should be displayed right-to-left (rtl).
 
 
-class TrimValues(str, Enum):
-    """ TrimValues.
+class TrimValues(StrEnum):
+    """TrimValues.
 
     Definition
     ============
     Specifies which spaces to remove from a data value (start, end, both, neither).
 
     """
+
     BOTH = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Both"  # Trim whitespace characters from both the start and the end of the value.
     END = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/End"  # Trim whitespace characters from the end of the value.
     NEITHER = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Neither"  # Trim whitespace characters from neither the start nor the end of the value.
     START = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Start"  # Trim whitespce characters from the start of the value.
 
 
-class WhiteSpaceRule(str, Enum):
-    """ WhiteSpaceRule.
+class WhiteSpaceRule(StrEnum):
+    """WhiteSpaceRule.
 
     Definition
     ============
     WhiteSpace constrains the value space of types derived from string.
 
     """
+
     COLLAPSE = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Collapse"  # After the processing implied by the replace, contiguous sequences of Unicode hexadecimal #x20's are collapsed to a single #x20, and any #x20 at the start or end of the string is then removed.
     PRESERVE = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Preserve"  # No normalization is done, the value is not changed (this is the behavior required by XML for element content).
     REPLACE = "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/Replace"  # All occurrences of Unicode hexadecimal #x9 (tab), #xA (line feed) and #xD (carriage return) are replaced with #x20 (space).
-
 
 
 #
 # DATA TYPES
 #
 
+
 class AccessInformation(DdiCdiType):
-    """ AccessInformation.
+    """AccessInformation.
 
     Definition
     ============
     A set of information important for understanding access conditions. Examples include license, embargo details.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -334,7 +356,7 @@ class AccessInformation(DdiCdiType):
         description="The copyright statement.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "AccessInformation-copyright"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -343,10 +365,7 @@ class AccessInformation(DdiCdiType):
         alias="embargo",
         default=None,
         description="Specific information about any relevant embargo",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AccessInformation-embargo"),
-            "rdf_type": CDI.EmbargoInformation
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AccessInformation-embargo"), "rdf_type": CDI.EmbargoInformation},
     )
 
     # attribute cdi:AccessInformation-license (0..*) | license | cdi:LicenseInformation
@@ -354,10 +373,7 @@ class AccessInformation(DdiCdiType):
         alias="license",
         default=None,
         description="Information about any relevant license",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AccessInformation-license"),
-            "rdf_type": CDI.LicenseInformation
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AccessInformation-license"), "rdf_type": CDI.LicenseInformation},
     )
 
     # attribute cdi:AccessInformation-rights (0..*) | rights | cdi:InternationalString
@@ -365,23 +381,19 @@ class AccessInformation(DdiCdiType):
         alias="rights",
         default=None,
         description="Information about rights held in and over the resource. Typically, rights information includes a statement about various property rights associated with the resource, including intellectual property rights.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AccessInformation-rights"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AccessInformation-rights"), "rdf_type": CDI.InternationalString},
     )
 
 
-
-
 class AccessLocation(DdiCdiType):
-    """ AccessLocation.
+    """AccessLocation.
 
     Definition
     ============
     A set of access information for a machine including URI, mime type, and physical location.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -403,7 +415,7 @@ class AccessLocation(DdiCdiType):
         description="The MIME type. MIME stands for \"Multipurpose Internet Mail Extensions. It's a way of identifying files on the Internet according to their nature and format. Supports the use of an controlled vocabulary.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "AccessLocation-mimeType"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -414,26 +426,21 @@ class AccessLocation(DdiCdiType):
         description="The physical location of the machine.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "AccessLocation-physicalLocation"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
     # attribute cdi:AccessLocation-uri (0..*) | uri | xsd:anyURI
-    uri: list[Union[str, LiteralField]] | None = Field(
+    uri: list[str | LiteralField] | None = Field(
         alias="uri",
         default=None,
         description="A Uniform Resource Identifier (URI) is a string of characters that unambiguously identifies a particular resource. A URI is normally expressed as a URL.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AccessLocation-uri"),
-            "rdf_type": "xsd:anyURI"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AccessLocation-uri"), "rdf_type": "xsd:anyURI"},
     )
 
 
-
-
 class Address(DdiCdiType):
-    """ Address.
+    """Address.
 
     Definition
     ==========
@@ -447,6 +454,7 @@ class Address(DdiCdiType):
     2. OFFICE, Institute of Education, 20 Bedford Way, London, WC1H 0AL, UK
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -462,14 +470,11 @@ class Address(DdiCdiType):
     #  DOMAIN ATTRIBUTES
     #
     # attribute cdi:Address-cityPlaceLocal (0..1) | cityPlaceLocal | xsd:string
-    cityPlaceLocal: Union[str, LiteralField] | None = Field(
+    cityPlaceLocal: str | LiteralField | None = Field(
         alias="cityPlaceLocal",
         default=None,
         description="City, place, or local area used as part of an address.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Address-cityPlaceLocal"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Address-cityPlaceLocal"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:Address-countryCode (0..1) | countryCode | cdi:ControlledVocabularyEntry
@@ -477,10 +482,7 @@ class Address(DdiCdiType):
         alias="countryCode",
         default=None,
         description="Country of the location.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Address-countryCode"),
-            "rdf_type": CDI.ControlledVocabularyEntry
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Address-countryCode"), "rdf_type": CDI.ControlledVocabularyEntry},
     )
 
     # attribute cdi:Address-effectiveDates (0..1) | effectiveDates | cdi:DateRange
@@ -488,10 +490,7 @@ class Address(DdiCdiType):
         alias="effectiveDates",
         default=None,
         description="Clarifies when the identification information is accurate.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Address-effectiveDates"),
-            "rdf_type": CDI.DateRange
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Address-effectiveDates"), "rdf_type": CDI.DateRange},
     )
 
     # attribute cdi:Address-geographicPoint (0..1) | geographicPoint | cdi:SpatialPoint
@@ -499,10 +498,7 @@ class Address(DdiCdiType):
         alias="geographicPoint",
         default=None,
         description="Geographic coordinates corresponding to the address.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Address-geographicPoint"),
-            "rdf_type": CDI.SpatialPoint
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Address-geographicPoint"), "rdf_type": CDI.SpatialPoint},
     )
 
     # attribute cdi:Address-isPreferred (0..1) | isPreferred | xsd:boolean
@@ -510,21 +506,15 @@ class Address(DdiCdiType):
         alias="isPreferred",
         default=None,
         description="Set to True if this is the preferred location for contacting the organization or individual.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Address-isPreferred"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Address-isPreferred"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:Address-line (0..*) | line | xsd:string
-    line: list[Union[str, LiteralField]] | None = Field(
+    line: list[str | LiteralField] | None = Field(
         alias="line",
         default=None,
         description="Number and street including office or suite number. May use multiple lines.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Address-line"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Address-line"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:Address-locationName (0..1) | locationName | cdi:ObjectName
@@ -532,21 +522,15 @@ class Address(DdiCdiType):
         alias="locationName",
         default=None,
         description="Name of the location if applicable.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Address-locationName"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Address-locationName"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:Address-postalCode (0..1) | postalCode | xsd:string
-    postalCode: Union[str, LiteralField] | None = Field(
+    postalCode: str | LiteralField | None = Field(
         alias="postalCode",
         default=None,
         description="Postal or ZIP Code.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Address-postalCode"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Address-postalCode"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:Address-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
@@ -554,10 +538,7 @@ class Address(DdiCdiType):
         alias="privacy",
         default=None,
         description="Specify the level privacy for the address as public, restricted, or private. Supports the use of an external controlled vocabulary.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Address-privacy"),
-            "rdf_type": CDI.ControlledVocabularyEntry
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Address-privacy"), "rdf_type": CDI.ControlledVocabularyEntry},
     )
 
     # attribute cdi:Address-regionalCoverage (0..1) | regionalCoverage | cdi:ControlledVocabularyEntry
@@ -567,19 +548,16 @@ class Address(DdiCdiType):
         description="The region covered by the agent at this address.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "Address-regionalCoverage"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
     # attribute cdi:Address-stateProvince (0..1) | stateProvince | xsd:string
-    stateProvince: Union[str, LiteralField] | None = Field(
+    stateProvince: str | LiteralField | None = Field(
         alias="stateProvince",
         default=None,
         description="A major sub-national division such as a state or province used to identify a major region within an address.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Address-stateProvince"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Address-stateProvince"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:Address-timeZone (0..1) | timeZone | cdi:ControlledVocabularyEntry
@@ -587,10 +565,7 @@ class Address(DdiCdiType):
         alias="timeZone",
         default=None,
         description="Time zone of the location expressed as code.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Address-timeZone"),
-            "rdf_type": CDI.ControlledVocabularyEntry
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Address-timeZone"), "rdf_type": CDI.ControlledVocabularyEntry},
     )
 
     # attribute cdi:Address-typeOfAddress (0..1) | typeOfAddress | cdi:ControlledVocabularyEntry
@@ -600,7 +575,7 @@ class Address(DdiCdiType):
         description="Indicates address type (i.e. home, office, mailing, etc.).",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "Address-typeOfAddress"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -611,15 +586,13 @@ class Address(DdiCdiType):
         description="The type or purpose of the location (i.e. regional office, distribution center, home).",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "Address-typeOfLocation"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
 
-
-
 class AgentInRole(DdiCdiType):
-    """ AgentInRole.
+    """AgentInRole.
 
     Definition
     ==========
@@ -630,6 +603,7 @@ class AgentInRole(DdiCdiType):
     Reference to John Doe as the lead author.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -649,10 +623,7 @@ class AgentInRole(DdiCdiType):
         alias="agentName",
         default=None,
         description="Full name of the contributor. Language equivalents should be expressed within the international string structure.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentInRole-agentName"),
-            "rdf_type": CDI.BibliographicName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentInRole-agentName"), "rdf_type": CDI.BibliographicName},
     )
 
     # attribute cdi:AgentInRole-reference (0..1) | reference | cdi:Reference
@@ -660,10 +631,7 @@ class AgentInRole(DdiCdiType):
         alias="reference",
         default=None,
         description="Reference to an agent described in DDI or some other platform.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentInRole-reference"),
-            "rdf_type": CDI.Reference
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentInRole-reference"), "rdf_type": CDI.Reference},
     )
 
     # attribute cdi:AgentInRole-role (0..*) | role | cdi:PairedControlledVocabularyEntry
@@ -673,15 +641,13 @@ class AgentInRole(DdiCdiType):
         description="Role of the of the agent within the context of the parent property name.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "AgentInRole-role"),
-            "rdf_type": CDI.PairedControlledVocabularyEntry
+            "rdf_type": CDI.PairedControlledVocabularyEntry,
         },
     )
 
 
-
-
 class CatalogDetails(DdiCdiType):
-    """ CatalogDetails.
+    """CatalogDetails.
 
     Definition
     ============
@@ -692,6 +658,7 @@ class CatalogDetails(DdiCdiType):
     Creator, contributor, title, copyright, license information.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -711,10 +678,7 @@ class CatalogDetails(DdiCdiType):
         alias="access",
         default=None,
         description="Information important for understanding access conditions.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CatalogDetails-access"),
-            "rdf_type": CDI.AccessInformation
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CatalogDetails-access"), "rdf_type": CDI.AccessInformation},
     )
 
     # attribute cdi:CatalogDetails-alternativeTitle (0..*) | alternativeTitle | cdi:InternationalString
@@ -724,7 +688,7 @@ class CatalogDetails(DdiCdiType):
         description="An alternative title by which a data collection is commonly referred, or an abbreviation for the title.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CatalogDetails-alternativeTitle"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -733,10 +697,7 @@ class CatalogDetails(DdiCdiType):
         alias="contributor",
         default=None,
         description="The name of a contributing author or creator, who worked in support of the primary creator given above.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CatalogDetails-contributor"),
-            "rdf_type": CDI.AgentInRole
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CatalogDetails-contributor"), "rdf_type": CDI.AgentInRole},
     )
 
     # attribute cdi:CatalogDetails-creator (0..*) | creator | cdi:AgentInRole
@@ -744,10 +705,7 @@ class CatalogDetails(DdiCdiType):
         alias="creator",
         default=None,
         description="Person, corporate body, or agency responsible for the substantive and intellectual content of the described object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CatalogDetails-creator"),
-            "rdf_type": CDI.AgentInRole
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CatalogDetails-creator"), "rdf_type": CDI.AgentInRole},
     )
 
     # attribute cdi:CatalogDetails-date (0..*) | date | cdi:CombinedDate
@@ -755,10 +713,7 @@ class CatalogDetails(DdiCdiType):
         alias="date",
         default=None,
         description="A date associated with the annotated object (not the coverage period). Use typeOfDate to specify the type of date such as Version, Publication, Submitted, Copyrighted, Accepted, etc.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CatalogDetails-date"),
-            "rdf_type": CDI.CombinedDate
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CatalogDetails-date"), "rdf_type": CDI.CombinedDate},
     )
 
     # attribute cdi:CatalogDetails-identifier (0..1) | identifier | cdi:InternationalIdentifier
@@ -768,7 +723,7 @@ class CatalogDetails(DdiCdiType):
         description="An identifier or locator. Contains identifier and Managing agency (ISBN, ISSN, DOI, local archive). Indicates if it is a URI.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CatalogDetails-identifier"),
-            "rdf_type": CDI.InternationalIdentifier
+            "rdf_type": CDI.InternationalIdentifier,
         },
     )
 
@@ -779,19 +734,16 @@ class CatalogDetails(DdiCdiType):
         description="The name or identifier of source information for the annotated object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CatalogDetails-informationSource"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
     # attribute cdi:CatalogDetails-languageOfObject (0..*) | languageOfObject | xsd:language
-    languageOfObject: list[Union[str, LiteralField]] | None = Field(
+    languageOfObject: list[str | LiteralField] | None = Field(
         alias="languageOfObject",
         default=None,
         description="Language of the intellectual content of the described object. Multiple languages are supported by the structure itself as defined in the transformation to specific bindings. Use language codes supported by xs:language which include the 2 and 3 character and extended structures defined by RFC4646 or its successors. Supports multiple language codes.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CatalogDetails-languageOfObject"),
-            "rdf_type": "xsd:language"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CatalogDetails-languageOfObject"), "rdf_type": "xsd:language"},
     )
 
     # attribute cdi:CatalogDetails-provenance (0..1) | provenance | cdi:ProvenanceInformation
@@ -801,7 +753,7 @@ class CatalogDetails(DdiCdiType):
         description="Information about the origins of the object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CatalogDetails-provenance"),
-            "rdf_type": CDI.ProvenanceInformation
+            "rdf_type": CDI.ProvenanceInformation,
         },
     )
 
@@ -810,10 +762,7 @@ class CatalogDetails(DdiCdiType):
         alias="publisher",
         default=None,
         description="Person or organization responsible for making the resource available in its present form.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CatalogDetails-publisher"),
-            "rdf_type": CDI.AgentInRole
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CatalogDetails-publisher"), "rdf_type": CDI.AgentInRole},
     )
 
     # attribute cdi:CatalogDetails-relatedResource (0..*) | relatedResource | cdi:Reference
@@ -821,10 +770,7 @@ class CatalogDetails(DdiCdiType):
         alias="relatedResource",
         default=None,
         description="Provide the identifier, managing agency, and type of resource related to this object. Use to specify related resources similar to Dublin Core isPartOf and hasPart to indicate collection/series membership for objects where there is an identifiable record. If not an identified object use the relationship to ExternalMaterial using a type that indicates a series description.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CatalogDetails-relatedResource"),
-            "rdf_type": CDI.Reference
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CatalogDetails-relatedResource"), "rdf_type": CDI.Reference},
     )
 
     # attribute cdi:CatalogDetails-subTitle (0..*) | subTitle | cdi:InternationalString
@@ -832,10 +778,7 @@ class CatalogDetails(DdiCdiType):
         alias="subTitle",
         default=None,
         description="Secondary or explanatory title.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CatalogDetails-subTitle"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CatalogDetails-subTitle"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:CatalogDetails-summary (0..1) | summary | cdi:InternationalString
@@ -843,10 +786,7 @@ class CatalogDetails(DdiCdiType):
         alias="summary",
         default=None,
         description="A summary description (abstract) of the annotated object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CatalogDetails-summary"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CatalogDetails-summary"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:CatalogDetails-title (0..1) | title | cdi:InternationalString
@@ -854,10 +794,7 @@ class CatalogDetails(DdiCdiType):
         alias="title",
         default=None,
         description="Full authoritative title. List any additional titles for this item as alternativeTitle.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CatalogDetails-title"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CatalogDetails-title"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:CatalogDetails-typeOfResource (0..*) | typeOfResource | cdi:ControlledVocabularyEntry
@@ -867,15 +804,13 @@ class CatalogDetails(DdiCdiType):
         description="Provide the type of the resource. This supports the use of a controlled vocabulary. It should be appropriate to the level of the annotation.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CatalogDetails-typeOfResource"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
 
-
-
 class CombinedDate(DdiCdiType):
-    """ CombinedDate.
+    """CombinedDate.
 
     Definition
     ============
@@ -886,6 +821,7 @@ class CombinedDate(DdiCdiType):
     Date allows one of a set of date-time (YYYY-MM-DDThh:mm:ss), date (YYYY-MM-DD), year-month (YYYY-MM), year (YYYY), time (hh:mm:ss) and duration (PnYnMnDnHnMnS), or time interval (YYYY-MM-DDThh:mm:ss/YYYY-MM-DDThh:mm:ss, YYYY-MM-DDThh:mm:ss/PnYnMnDnHnMnS, PnYnMnDnHnMnS/ YYYY-MM-DDThh:mm:ss) which is formatted according to ISO 8601 and backed supported by regular expressions in the BaseDateType. Time Zone designation and negative/positive prefixes are allowed as are dates before and after 0000 through 9999.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -901,14 +837,11 @@ class CombinedDate(DdiCdiType):
     #  DOMAIN ATTRIBUTES
     #
     # attribute cdi:CombinedDate-isoDate (0..1) | isoDate | xsd:date
-    isoDate: Union[date, datetime] | None = Field(
+    isoDate: date | datetime | None = Field(
         alias="isoDate",
         default=None,
         description="Strongly recommend that ALL dates be expressed in an ISO format at a minimum. A single point in time expressed in an ISO standard structure. Note that while it supports an ISO date range structure this should be used in Date only when the single date is unclear i.e. occurring at some time between two dates.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CombinedDate-isoDate"),
-            "rdf_type": "xsd:date"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CombinedDate-isoDate"), "rdf_type": "xsd:date"},
     )
 
     # attribute cdi:CombinedDate-nonIsoDate (0..*) | nonIsoDate | cdi:NonIsoDate
@@ -916,10 +849,7 @@ class CombinedDate(DdiCdiType):
         alias="nonIsoDate",
         default=None,
         description="A simple date expressed in a non-ISO date format, including a specification of the date format and calendar used.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CombinedDate-nonIsoDate"),
-            "rdf_type": CDI.NonIsoDate
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CombinedDate-nonIsoDate"), "rdf_type": CDI.NonIsoDate},
     )
 
     # attribute cdi:CombinedDate-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
@@ -929,21 +859,20 @@ class CombinedDate(DdiCdiType):
         description="Use to specify the type of date. This may reflect the refinements of dc:date such as dateAccepted, dateCopyrighted, dateSubmitted, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CombinedDate-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
 
-
-
 class Command(DdiCdiType):
-    """ Command.
+    """Command.
 
     Definition
     ============
     Provides the following information on the command: The content of the command and the programming language used.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -963,10 +892,7 @@ class Command(DdiCdiType):
         alias="commandContent",
         default=None,
         description="Content of the command itself expressed in the language designated in programming language.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Command-commandContent"),
-            "rdf_type": CDI.TypedString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Command-commandContent"), "rdf_type": CDI.TypedString},
     )
 
     # attribute cdi:Command-programLanguage (0..1) | programLanguage | cdi:ControlledVocabularyEntry
@@ -976,21 +902,20 @@ class Command(DdiCdiType):
         description="Designates the programming language used for the command. Supports the use of a controlled vocabulary.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "Command-programLanguage"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
 
-
-
 class CommandCode(DdiCdiType):
-    """ CommandCode.
+    """CommandCode.
 
     Definition
     ============
     Contains information on the command used for processing data. Contains a description of the command which should clarify for the user the purpose and process of the command, an in-line provision of the command itself, and a reference to an external version of the command such as a coding script.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -1010,10 +935,7 @@ class CommandCode(DdiCdiType):
         alias="command",
         default=None,
         description="This is an in-line provision of the command itself. It provides the programming language used as well as the command.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CommandCode-command"),
-            "rdf_type": CDI.Command
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CommandCode-command"), "rdf_type": CDI.Command},
     )
 
     # attribute cdi:CommandCode-commandFile (0..*) | commandFile | cdi:CommandFile
@@ -1021,10 +943,7 @@ class CommandCode(DdiCdiType):
         alias="commandFile",
         default=None,
         description="Identifies and provides a link to an external copy of the command, for example, a SAS Command Code script. Designates the programming language of the command file as well as the URI for the file.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CommandCode-commandFile"),
-            "rdf_type": CDI.CommandFile
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CommandCode-commandFile"), "rdf_type": CDI.CommandFile},
     )
 
     # attribute cdi:CommandCode-description (0..1) | description | cdi:InternationalString
@@ -1032,23 +951,19 @@ class CommandCode(DdiCdiType):
         alias="description",
         default=None,
         description="A description of the purpose and use of the command code provided. Supports multiple languages.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CommandCode-description"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CommandCode-description"), "rdf_type": CDI.InternationalString},
     )
 
 
-
-
 class CommandFile(DdiCdiType):
-    """ CommandFile.
+    """CommandFile.
 
     Definition
     ============
     Identifies and provides a link to an external copy of the command, for example, a SAS Command Code script. Designates the programming language of the command file, a description of the location of the file , and a URN or URL for the command file.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -1068,34 +983,27 @@ class CommandFile(DdiCdiType):
         alias="location",
         default=None,
         description="A description of the location of the file. This may not be machine actionable. It supports a description expressed in multiple languages.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CommandFile-location"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CommandFile-location"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:CommandFile-uri (0..1) | uri | xsd:anyURI
-    uri: Union[str, LiteralField] | None = Field(
+    uri: str | LiteralField | None = Field(
         alias="uri",
         default=None,
         description="The URL or URN of the command file.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CommandFile-uri"),
-            "rdf_type": "xsd:anyURI"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CommandFile-uri"), "rdf_type": "xsd:anyURI"},
     )
 
 
-
-
 class ContactInformation(DdiCdiType):
-    """ ContactInformation.
+    """ContactInformation.
 
     Definition
     ============
     Contact information for the individual or organization including location specification, address, web site, phone numbers, and other means of communication access. Address, location, telephone, and other means of communication can be repeated to express multiple means of a single type or change over time. Each major piece of contact information contains the element effectiveDates in order to date stamp the period for which the information is valid.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -1115,10 +1023,7 @@ class ContactInformation(DdiCdiType):
         alias="address",
         default=None,
         description="The address for contact.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ContactInformation-address"),
-            "rdf_type": CDI.Address
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ContactInformation-address"), "rdf_type": CDI.Address},
     )
 
     # attribute cdi:ContactInformation-email (0..*) | email | cdi:Email
@@ -1126,10 +1031,7 @@ class ContactInformation(DdiCdiType):
         alias="email",
         default=None,
         description="Email contact information.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ContactInformation-email"),
-            "rdf_type": CDI.Email
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ContactInformation-email"), "rdf_type": CDI.Email},
     )
 
     # attribute cdi:ContactInformation-emessaging (0..*) | emessaging | cdi:ElectronicMessageSystem
@@ -1139,7 +1041,7 @@ class ContactInformation(DdiCdiType):
         description="Electronic messaging other than email.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ContactInformation-emessaging"),
-            "rdf_type": CDI.ElectronicMessageSystem
+            "rdf_type": CDI.ElectronicMessageSystem,
         },
     )
 
@@ -1148,10 +1050,7 @@ class ContactInformation(DdiCdiType):
         alias="telephone",
         default=None,
         description="Telephone for contact.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ContactInformation-telephone"),
-            "rdf_type": CDI.Telephone
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ContactInformation-telephone"), "rdf_type": CDI.Telephone},
     )
 
     # attribute cdi:ContactInformation-website (0..*) | website | cdi:WebLink
@@ -1159,23 +1058,19 @@ class ContactInformation(DdiCdiType):
         alias="website",
         default=None,
         description="The URL of the Agent's website.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ContactInformation-website"),
-            "rdf_type": CDI.WebLink
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ContactInformation-website"), "rdf_type": CDI.WebLink},
     )
 
 
-
-
 class ControlledVocabularyEntry(DdiCdiType):
-    """ ControlledVocabularyEntry.
+    """ControlledVocabularyEntry.
 
     Definition
     ============
     Allows for unstructured content which may be an entry from an externally maintained controlled vocabulary.If the content is from a controlled vocabulary provide the code value of the entry, as well as a reference to the controlled vocabulary from which the value is taken. Provide as many of the identifying attributes as needed to adequately identify the controlled vocabulary. Note that DDI has published a number of controlled vocabularies applicable to several locations using the external controlled vocabulary entry structure. If the code portion of the controlled vocabulary entry is language specific (i.e. a list of keywords or subject headings) use language to specify that language. In most cases the code portion of an entry is not language specific although the description and usage may be managed in one or more languages. Use of shared controlled vocabularies helps support interoperability and machine actionability.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -1197,40 +1092,34 @@ class ControlledVocabularyEntry(DdiCdiType):
         description="A reference to the specific item in the vocabulary referenced in the vocabulary attribute, using a URI or other resolvable identifier.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ControlledVocabularyEntry-entryReference"),
-            "rdf_type": CDI.Reference
+            "rdf_type": CDI.Reference,
         },
     )
 
     # attribute cdi:ControlledVocabularyEntry-entryValue (0..*) | entryValue | xsd:string
-    entryValue: list[Union[str, LiteralField]] | None = Field(
+    entryValue: list[str | LiteralField] | None = Field(
         alias="entryValue",
         default=None,
         description="The value of the entry of the controlled vocabulary. If no controlled vocabulary is used the term is entered here and none of the properties defining the controlled vocabulary location are used.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ControlledVocabularyEntry-entryValue"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ControlledVocabularyEntry-entryValue"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:ControlledVocabularyEntry-name (0..1) | name | xsd:string
-    name: Union[str, LiteralField] | None = Field(
+    name: str | LiteralField | None = Field(
         alias="name",
         default=None,
         description="The name of the code list (controlled vocabulary).",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ControlledVocabularyEntry-name"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ControlledVocabularyEntry-name"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:ControlledVocabularyEntry-valueForOther (0..1) | valueForOther | xsd:string
-    valueForOther: Union[str, LiteralField] | None = Field(
+    valueForOther: str | LiteralField | None = Field(
         alias="valueForOther",
         default=None,
-        description="If the value of the string is \"Other\" or the equivalent from the codelist, this attribute can provide a more specific value not found in the codelist.",
+        description='If the value of the string is "Other" or the equivalent from the codelist, this attribute can provide a more specific value not found in the codelist.',
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ControlledVocabularyEntry-valueForOther"),
-            "rdf_type": "xsd:string"
+            "rdf_type": "xsd:string",
         },
     )
 
@@ -1239,23 +1128,19 @@ class ControlledVocabularyEntry(DdiCdiType):
         alias="vocabulary",
         default=None,
         description="A reference to the external controlled vocabulary, using a URI or other resolvable identifier.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ControlledVocabularyEntry-vocabulary"),
-            "rdf_type": CDI.Reference
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ControlledVocabularyEntry-vocabulary"), "rdf_type": CDI.Reference},
     )
 
 
-
-
 class CorrespondenceDefinition(DdiCdiType):
-    """ CorrespondenceDefinition.
+    """CorrespondenceDefinition.
 
     Definition
     ============
     Describes the commonalities and differences between two members using a textual description of both commonalities and differences plus an optional coding of the type of commonality.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -1277,7 +1162,7 @@ class CorrespondenceDefinition(DdiCdiType):
         description="A description of the common features of the two items. Supports multiple language versions of the same content as well as optional formatting of the content.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CorrespondenceDefinition-commonality"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -1288,7 +1173,7 @@ class CorrespondenceDefinition(DdiCdiType):
         description="Commonality expressed as a term or code. Supports the use of an external controlled vocabulary. If repeated, clarify each external controlled vocabulary used.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CorrespondenceDefinition-commonalityCode"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -1299,7 +1184,7 @@ class CorrespondenceDefinition(DdiCdiType):
         description="A description of the differences between the two items. Supports multiple language versions of the same content as well as optional formatting of the content.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CorrespondenceDefinition-difference"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -1310,21 +1195,20 @@ class CorrespondenceDefinition(DdiCdiType):
         description="Allows specification of exact match, close match, or disjoint. These relationships can be further defined by describing commonalities or differences or providing additional controlled vocabulary descriptions of relationships.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CorrespondenceDefinition-matching"),
-            "rdf_type": CDI.MatchingCriterion
+            "rdf_type": CDI.MatchingCriterion,
         },
     )
 
 
-
-
 class DateRange(DdiCdiType):
-    """ DateRange.
+    """DateRange.
 
     Definition
     ============
     Expresses a date/time range using a start date and end date (both with the structure of Date and supporting the use of ISO and non-ISO date structures). Use in all locations where a range of dates is required, i.e. validFor, embargoPeriod, collectionPeriod, etc.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -1344,10 +1228,7 @@ class DateRange(DdiCdiType):
         alias="endDate",
         default=None,
         description="The date (time) designating the end of the period or range.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DateRange-endDate"),
-            "rdf_type": CDI.CombinedDate
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DateRange-endDate"), "rdf_type": CDI.CombinedDate},
     )
 
     # attribute cdi:DateRange-startDate (0..1) | startDate | cdi:CombinedDate
@@ -1355,27 +1236,23 @@ class DateRange(DdiCdiType):
         alias="startDate",
         default=None,
         description="The date (time) designating the beginning of the period or range.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DateRange-startDate"),
-            "rdf_type": CDI.CombinedDate
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DateRange-startDate"), "rdf_type": CDI.CombinedDate},
     )
 
 
-
-
 class ElectronicMessageSystem(DdiCdiType):
-    """ ElectronicMessageSystem.
+    """ElectronicMessageSystem.
 
     Definition
     ============
-    Any non-email means of relaying a message electronically. This would include text messaging, Skype, Twitter, ICQ, or other emerging means of electronic message conveyance. 
+    Any non-email means of relaying a message electronically. This would include text messaging, Skype, Twitter, ICQ, or other emerging means of electronic message conveyance.
 
     Examples
     ==========
     Skype account, etc.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -1391,13 +1268,13 @@ class ElectronicMessageSystem(DdiCdiType):
     #  DOMAIN ATTRIBUTES
     #
     # attribute cdi:ElectronicMessageSystem-contactAddress (0..1) | contactAddress | xsd:string
-    contactAddress: Union[str, LiteralField] | None = Field(
+    contactAddress: str | LiteralField | None = Field(
         alias="contactAddress",
         default=None,
         description="Account identification for contacting.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ElectronicMessageSystem-contactAddress"),
-            "rdf_type": "xsd:string"
+            "rdf_type": "xsd:string",
         },
     )
 
@@ -1408,7 +1285,7 @@ class ElectronicMessageSystem(DdiCdiType):
         description="Time period during which the account is valid.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ElectronicMessageSystem-effectiveDates"),
-            "rdf_type": CDI.DateRange
+            "rdf_type": CDI.DateRange,
         },
     )
 
@@ -1417,10 +1294,7 @@ class ElectronicMessageSystem(DdiCdiType):
         alias="isPreferred",
         default=None,
         description="Set to True if this is the preferred address.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ElectronicMessageSystem-isPreferred"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ElectronicMessageSystem-isPreferred"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:ElectronicMessageSystem-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
@@ -1430,7 +1304,7 @@ class ElectronicMessageSystem(DdiCdiType):
         description="Specify the level privacy for the address as public, restricted, or private. Supports the use of an external controlled vocabulary.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ElectronicMessageSystem-privacy"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -1441,15 +1315,13 @@ class ElectronicMessageSystem(DdiCdiType):
         description="Indicates the type of service used. Supports the use of a controlled vocabulary.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ElectronicMessageSystem-typeOfService"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
 
-
-
 class Email(DdiCdiType):
-    """ Email.
+    """Email.
 
     Definition
     ============
@@ -1460,6 +1332,7 @@ class Email(DdiCdiType):
     info@ddialliance.org; ex.ample@somewhere.org
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -1479,21 +1352,15 @@ class Email(DdiCdiType):
         alias="effectiveDates",
         default=None,
         description="Time period for which the e-mail address is valid.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Email-effectiveDates"),
-            "rdf_type": CDI.DateRange
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Email-effectiveDates"), "rdf_type": CDI.DateRange},
     )
 
     # attribute cdi:Email-internetEmail (0..1) | internetEmail | xsd:string
-    internetEmail: Union[str, LiteralField] | None = Field(
+    internetEmail: str | LiteralField | None = Field(
         alias="internetEmail",
         default=None,
         description="The email address expressed as a string (should follow the Internet format specification - RFC 5322) e.g. user@server.ext, more complex and flexible examples are also supported by the format.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Email-internetEmail"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Email-internetEmail"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:Email-isPreferred (0..1) | isPreferred | xsd:boolean
@@ -1501,10 +1368,7 @@ class Email(DdiCdiType):
         alias="isPreferred",
         default=None,
         description="Set to True if this is the preferred email.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Email-isPreferred"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Email-isPreferred"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:Email-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
@@ -1512,10 +1376,7 @@ class Email(DdiCdiType):
         alias="privacy",
         default=None,
         description="Indicates the level of privacy.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Email-privacy"),
-            "rdf_type": CDI.ControlledVocabularyEntry
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Email-privacy"), "rdf_type": CDI.ControlledVocabularyEntry},
     )
 
     # attribute cdi:Email-typeOfEmail (0..1) | typeOfEmail | cdi:ControlledVocabularyEntry
@@ -1523,23 +1384,19 @@ class Email(DdiCdiType):
         alias="typeOfEmail",
         default=None,
         description="Code indicating the type of e-mail address. Supports the use of an external controlled vocabulary. (e.g. home, office).",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Email-typeOfEmail"),
-            "rdf_type": CDI.ControlledVocabularyEntry
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Email-typeOfEmail"), "rdf_type": CDI.ControlledVocabularyEntry},
     )
 
 
-
-
 class EmbargoInformation(DdiCdiType):
-    """ EmbargoInformation.
+    """EmbargoInformation.
 
     Definition
     ============
     Specific information about any relevant embargo.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -1561,7 +1418,7 @@ class EmbargoInformation(DdiCdiType):
         description="A text description of the terms of an embargo on the object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "EmbargoInformation-description"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -1570,23 +1427,19 @@ class EmbargoInformation(DdiCdiType):
         alias="period",
         default=None,
         description="The time range(s) for embargo of the object",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "EmbargoInformation-period"),
-            "rdf_type": CDI.DateRange
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "EmbargoInformation-period"), "rdf_type": CDI.DateRange},
     )
 
 
-
-
 class FundingInformation(DdiCdiType):
-    """ FundingInformation.
+    """FundingInformation.
 
     Definition
     ============
     Information regarding the source of funds used to develop or support the resource being described.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -1606,34 +1459,27 @@ class FundingInformation(DdiCdiType):
         alias="fundingAgent",
         default=None,
         description="A reference to the agent (e.g. organization) that provided funding for a grant.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "FundingInformation-fundingAgent"),
-            "rdf_type": CDI.AgentInRole
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "FundingInformation-fundingAgent"), "rdf_type": CDI.AgentInRole},
     )
 
     # attribute cdi:FundingInformation-grantNumber (0..1) | grantNumber | xsd:string
-    grantNumber: Union[str, LiteralField] | None = Field(
+    grantNumber: str | LiteralField | None = Field(
         alias="grantNumber",
         default=None,
         description="The identification number for the grant at least partly provided by the funding agent.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "FundingInformation-grantNumber"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "FundingInformation-grantNumber"), "rdf_type": "xsd:string"},
     )
 
 
-
-
 class Identifier(DdiCdiType):
-    """ Identifier.
+    """Identifier.
 
     Definition
     ============
     Identifier for objects requiring short- or long-lasting referencing and management.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -1655,7 +1501,7 @@ class Identifier(DdiCdiType):
         description="A globally unique identifier. The values of the three attributes can be used to create a DDI URN.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "Identifier-ddiIdentifier"),
-            "rdf_type": CDI.InternationalRegistrationDataIdentifier
+            "rdf_type": CDI.InternationalRegistrationDataIdentifier,
         },
     )
 
@@ -1664,10 +1510,7 @@ class Identifier(DdiCdiType):
         alias="isDdiIdentifierPersistent",
         default=None,
         description="Default value is False indicating that the content of the current version may change (may be in development mode). Set to True when the content of this version will no longer change.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Identifier-isDdiIdentifierPersistent"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Identifier-isDdiIdentifierPersistent"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:Identifier-isDdiIdentifierUniversallyUnique (0..1) | isDdiIdentifierUniversallyUnique | xsd:boolean
@@ -1677,7 +1520,7 @@ class Identifier(DdiCdiType):
         description="Default value is False. If the id of the object was created as a Universally Unique ID (UUID) set to True.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "Identifier-isDdiIdentifierUniversallyUnique"),
-            "rdf_type": "xsd:boolean"
+            "rdf_type": "xsd:boolean",
         },
     )
 
@@ -1686,32 +1529,23 @@ class Identifier(DdiCdiType):
         alias="nonDdiIdentifier",
         default=None,
         description="Any identifier other than a DDI identifier.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Identifier-nonDdiIdentifier"),
-            "rdf_type": CDI.NonDdiIdentifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Identifier-nonDdiIdentifier"), "rdf_type": CDI.NonDdiIdentifier},
     )
 
     # attribute cdi:Identifier-uri (0..1) | uri | xsd:anyURI
-    uri: Union[str, LiteralField] | None = Field(
+    uri: str | LiteralField | None = Field(
         alias="uri",
         default=None,
         description="A Universal Resource Identifier, valid according to the W3C XML Schema specification.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Identifier-uri"),
-            "rdf_type": "xsd:anyURI"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Identifier-uri"), "rdf_type": "xsd:anyURI"},
     )
 
     # attribute cdi:Identifier-versionDate (0..1) | versionDate | xsd:date
-    versionDate: Union[date, datetime] | None = Field(
+    versionDate: date | datetime | None = Field(
         alias="versionDate",
         default=None,
         description="Date and time the object was changed expressed in standard ISO formats.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Identifier-versionDate"),
-            "rdf_type": "xsd:date"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Identifier-versionDate"), "rdf_type": "xsd:date"},
     )
 
     # attribute cdi:Identifier-versionRationale (0..1) | versionRationale | cdi:RationaleDefinition
@@ -1721,7 +1555,7 @@ class Identifier(DdiCdiType):
         description="Reason for making a new version of the object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "Identifier-versionRationale"),
-            "rdf_type": CDI.RationaleDefinition
+            "rdf_type": CDI.RationaleDefinition,
         },
     )
 
@@ -1730,23 +1564,19 @@ class Identifier(DdiCdiType):
         alias="versionResponsibility",
         default=None,
         description="Contributor who has the ownership and responsibility for the current version.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Identifier-versionResponsibility"),
-            "rdf_type": CDI.AgentInRole
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Identifier-versionResponsibility"), "rdf_type": CDI.AgentInRole},
     )
 
 
-
-
 class IndividualName(DdiCdiType):
-    """ IndividualName.
+    """IndividualName.
 
     Definition
     ============
     The name of an individual broken out into its component parts of prefix, first/given name, middle name, last/family/surname, and suffix. The preferred compilation of the name parts may also be provided. The legal or formal name of the individual should have the isFormal attribute set to true. The preferred name should be noted with the isPreferred attribute. The attribute sex provides information to assist in the appropriate use of pronouns.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -1768,7 +1598,7 @@ class IndividualName(DdiCdiType):
         description="An abbreviation or acronym for the name. This may be expressed in multiple languages. It is assumed that if only a single language is provided that it may be used in any of the other languages within which the name itself is expressed.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "IndividualName-abbreviation"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -1779,7 +1609,7 @@ class IndividualName(DdiCdiType):
         description="A name may be specific to a particular context, i.e. common usage, business, social, etc.. Identify the context related to the specified name. Supports the use of an external controlled vocabulary.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "IndividualName-context"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -1788,21 +1618,15 @@ class IndividualName(DdiCdiType):
         alias="effectiveDates",
         default=None,
         description="Clarifies when the name information is accurate.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "IndividualName-effectiveDates"),
-            "rdf_type": CDI.DateRange
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "IndividualName-effectiveDates"), "rdf_type": CDI.DateRange},
     )
 
     # attribute cdi:IndividualName-firstGiven (0..1) | firstGiven | xsd:string
-    firstGiven: Union[str, LiteralField] | None = Field(
+    firstGiven: str | LiteralField | None = Field(
         alias="firstGiven",
         default=None,
         description="First (given) name of the individual.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "IndividualName-firstGiven"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "IndividualName-firstGiven"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:IndividualName-fullName (0..1) | fullName | cdi:InternationalString
@@ -1810,10 +1634,7 @@ class IndividualName(DdiCdiType):
         alias="fullName",
         default=None,
         description="This provides a means of providing a full name as a single object for display or print such as identification badges etc. For example a person with the name of William Grace for official use may prefer a display name of Bill Grace on a name tag or other informal publication.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "IndividualName-fullName"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "IndividualName-fullName"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:IndividualName-isFormal (0..1) | isFormal | xsd:boolean
@@ -1821,10 +1642,7 @@ class IndividualName(DdiCdiType):
         alias="isFormal",
         default=None,
         description="The legal or formal name of the individual should have the isFormal attribute set to True. To avoid confusion only one individual name should have the isFormal attribute set to True. Use the TypeOfIndividualName to further differentiate the type and applied usage when multiple names are provided.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "IndividualName-isFormal"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "IndividualName-isFormal"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:IndividualName-isPreferred (0..1) | isPreferred | xsd:boolean
@@ -1832,43 +1650,31 @@ class IndividualName(DdiCdiType):
         alias="isPreferred",
         default=None,
         description="If more than one name for the object is provided, use the isPreferred attribute to indicate which is the preferred name content. All other names should be set to isPreferred=False.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "IndividualName-isPreferred"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "IndividualName-isPreferred"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:IndividualName-lastFamily (0..1) | lastFamily | xsd:string
-    lastFamily: Union[str, LiteralField] | None = Field(
+    lastFamily: str | LiteralField | None = Field(
         alias="lastFamily",
         default=None,
         description="Last (family) name /surname of the individual.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "IndividualName-lastFamily"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "IndividualName-lastFamily"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:IndividualName-middle (0..*) | middle | xsd:string
-    middle: list[Union[str, LiteralField]] | None = Field(
+    middle: list[str | LiteralField] | None = Field(
         alias="middle",
         default=None,
         description="Middle name or initial of the individual.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "IndividualName-middle"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "IndividualName-middle"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:IndividualName-prefix (0..1) | prefix | xsd:string
-    prefix: Union[str, LiteralField] | None = Field(
+    prefix: str | LiteralField | None = Field(
         alias="prefix",
         default=None,
         description="Title that precedes the name of the individual, such as Ms., or Dr.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "IndividualName-prefix"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "IndividualName-prefix"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:IndividualName-sex (0..1) | sex | cdi:SexSpecification
@@ -1876,21 +1682,15 @@ class IndividualName(DdiCdiType):
         alias="sex",
         default=None,
         description="Sex allows for the specification of male, female or neutral. The purpose of providing this information is to assist others in the appropriate use of pronouns when addressing the individual. Note that many countries/languages may offer a neutral pronoun form.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "IndividualName-sex"),
-            "rdf_type": CDI.SexSpecification
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "IndividualName-sex"), "rdf_type": CDI.SexSpecification},
     )
 
     # attribute cdi:IndividualName-suffix (0..1) | suffix | xsd:string
-    suffix: Union[str, LiteralField] | None = Field(
+    suffix: str | LiteralField | None = Field(
         alias="suffix",
         default=None,
         description="Title that follows the name of the individual, such as Esq. (abbreviation for Esquire. This is usually a courtesy title).",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "IndividualName-suffix"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "IndividualName-suffix"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:IndividualName-typeOfIndividualName (0..1) | typeOfIndividualName | cdi:ControlledVocabularyEntry
@@ -1900,15 +1700,13 @@ class IndividualName(DdiCdiType):
         description="The type of individual name provided. the use of a controlled vocabulary is strongly recommended. At minimum his should include, e.g. PreviousFormalName, Nickname (or CommonName), Other.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "IndividualName-typeOfIndividualName"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
 
-
-
 class InternationalIdentifier(DdiCdiType):
-    """ InternationalIdentifier.
+    """InternationalIdentifier.
 
     Definition
     ============
@@ -1919,6 +1717,7 @@ class InternationalIdentifier(DdiCdiType):
     For use in annotation or other citation format.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -1934,13 +1733,13 @@ class InternationalIdentifier(DdiCdiType):
     #  DOMAIN ATTRIBUTES
     #
     # attribute cdi:InternationalIdentifier-identifierContent (0..1) | identifierContent | xsd:string
-    identifierContent: Union[str, LiteralField] | None = Field(
+    identifierContent: str | LiteralField | None = Field(
         alias="identifierContent",
         default=None,
         description="An identifier as it should be listed for identification purposes.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "InternationalIdentifier-identifierContent"),
-            "rdf_type": "xsd:string"
+            "rdf_type": "xsd:string",
         },
     )
 
@@ -1949,10 +1748,7 @@ class InternationalIdentifier(DdiCdiType):
         alias="isURI",
         default=None,
         description="Set to True if Identifier is a URI.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "InternationalIdentifier-isURI"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "InternationalIdentifier-isURI"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:InternationalIdentifier-managingAgency (0..1) | managingAgency | cdi:ControlledVocabularyEntry
@@ -1962,15 +1758,13 @@ class InternationalIdentifier(DdiCdiType):
         description="The identification of the Agency which assigns and manages the identifier, i.e., ISBN, ISSN, DOI, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "InternationalIdentifier-managingAgency"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
 
-
-
 class InternationalRegistrationDataIdentifier(DdiCdiType):
-    """ InternationalRegistrationDataIdentifier.
+    """InternationalRegistrationDataIdentifier.
 
     Definition
     ==========
@@ -1978,6 +1772,7 @@ class InternationalRegistrationDataIdentifier(DdiCdiType):
     The uniqueness of an InternationalRegistrationDataIdentifier (IRDI) is determined by the combination of the values of three identifying attributes.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -1993,46 +1788,45 @@ class InternationalRegistrationDataIdentifier(DdiCdiType):
     #  DOMAIN ATTRIBUTES
     #
     # attribute cdi:InternationalRegistrationDataIdentifier-dataIdentifier (1..1) | dataIdentifier | xsd:string
-    dataIdentifier: Union[str, LiteralField] = Field(
+    dataIdentifier: str | LiteralField = Field(
         alias="dataIdentifier",
         description="Identifier assigned to an Administered Item within a Registration Authority, hereafter called Data Identifier (DI). The DI is called 'id' in DDI-Codebook and DDI-Lifecycle.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "InternationalRegistrationDataIdentifier-dataIdentifier"),
-            "rdf_type": "xsd:string"
+            "rdf_type": "xsd:string",
         },
     )
 
     # attribute cdi:InternationalRegistrationDataIdentifier-registrationAuthorityIdentifier (1..1) | registrationAuthorityIdentifier | xsd:string
-    registrationAuthorityIdentifier: Union[str, LiteralField] = Field(
+    registrationAuthorityIdentifier: str | LiteralField = Field(
         alias="registrationAuthorityIdentifier",
         description="Identifier assigned to a Registration Authority, hereafter called Registration Authority Identifier (RAI). The RAI is called 'agency' in DDI-Codebook and DDI-Lifecycle.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "InternationalRegistrationDataIdentifier-registrationAuthorityIdentifier"),
-            "rdf_type": "xsd:string"
+            "rdf_type": "xsd:string",
         },
     )
 
     # attribute cdi:InternationalRegistrationDataIdentifier-versionIdentifier (1..1) | versionIdentifier | xsd:string
-    versionIdentifier: Union[str, LiteralField] = Field(
+    versionIdentifier: str | LiteralField = Field(
         alias="versionIdentifier",
-        description="Identifier assigned to a version under which an Administered Item registration is submitted or updated hereafter called Version Identifier (VI). The VI is called \"version\" in DDI-Codebook and DDI-Lifecycle.",
+        description='Identifier assigned to a version under which an Administered Item registration is submitted or updated hereafter called Version Identifier (VI). The VI is called "version" in DDI-Codebook and DDI-Lifecycle.',
         json_schema_extra={
             "rdf_term": URIRef(CDI + "InternationalRegistrationDataIdentifier-versionIdentifier"),
-            "rdf_type": "xsd:string"
+            "rdf_type": "xsd:string",
         },
     )
 
 
-
-
 class InternationalString(DdiCdiType):
-    """ InternationalString.
+    """InternationalString.
 
     Definition
     ============
     Packaging structure for multilingual versions of the same string content, represented by a set of LanguageString. Only one LanguageString per language/scope type is allowed. Where an element of this type (InternationalString) is repeatable, the expectation is that each repetition contains a different content, each of which can be expressed in multiple languages.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -2054,21 +1848,20 @@ class InternationalString(DdiCdiType):
         description="A non-formatted string of text with an attribute that designates the language of the text. Repeat this object to express the same content in another language.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "InternationalString-languageSpecificString"),
-            "rdf_type": CDI.LanguageString
+            "rdf_type": CDI.LanguageString,
         },
     )
 
 
-
-
 class LanguageString(DdiCdiType):
-    """ LanguageString.
+    """LanguageString.
 
     Definition
     ============
     A data type which describes a string specific to a language/scope combination. It contains the following attributes: language to designate the language, isTranslated with a default value of false to designate if an object is a translation of another language, isTranslatable with a default value of true to designate if the content can be translated, translationSourceLanguage to indicate the source languages used in creating this translation, translationDate, and scope which can be used to define intended audience or use such as internal, external, etc.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -2084,13 +1877,10 @@ class LanguageString(DdiCdiType):
     #  DOMAIN ATTRIBUTES
     #
     # attribute cdi:LanguageString-content (1..1) | content | xsd:string
-    content: Union[str, LiteralField] = Field(
+    content: str | LiteralField = Field(
         alias="content",
         description="The content of the string.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LanguageString-content"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LanguageString-content"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:LanguageString-isTranslatable (0..1) | isTranslatable | xsd:boolean
@@ -2098,10 +1888,7 @@ class LanguageString(DdiCdiType):
         alias="isTranslatable",
         default=None,
         description="Indicates whether content is translatable (True) or not (False). An example of something that is not translatable would be a MNEMONIC of an object or a number.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LanguageString-isTranslatable"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LanguageString-isTranslatable"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:LanguageString-isTranslated (0..1) | isTranslated | xsd:boolean
@@ -2109,32 +1896,23 @@ class LanguageString(DdiCdiType):
         alias="isTranslated",
         default=None,
         description="Indicates whether content is a translation (True) or an original (False).",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LanguageString-isTranslated"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LanguageString-isTranslated"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:LanguageString-language (0..1) | language | xsd:language
-    language: Union[str, LiteralField] | None = Field(
+    language: str | LiteralField | None = Field(
         alias="language",
         default=None,
         description="Indicates the natural language of content.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LanguageString-language"),
-            "rdf_type": "xsd:language"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LanguageString-language"), "rdf_type": "xsd:language"},
     )
 
     # attribute cdi:LanguageString-scope (0..1) | scope | xsd:string
-    scope: Union[str, LiteralField] | None = Field(
+    scope: str | LiteralField | None = Field(
         alias="scope",
         default=None,
         description="Supports specification of scope for the contained content. Use with the language specification to filter application of content.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LanguageString-scope"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LanguageString-scope"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:LanguageString-structureUsed (0..1) | structureUsed | cdi:ControlledVocabularyEntry
@@ -2144,37 +1922,32 @@ class LanguageString(DdiCdiType):
         description="The structure type used. Examples are HTML or restructured text.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "LanguageString-structureUsed"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
     # attribute cdi:LanguageString-translationDate (0..1) | translationDate | xsd:date
-    translationDate: Union[date, datetime] | None = Field(
+    translationDate: date | datetime | None = Field(
         alias="translationDate",
         default=None,
         description="The date the content was translated. Provision of translation date allows user to verify if translation was available during data collection or other time linked activity.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LanguageString-translationDate"),
-            "rdf_type": "xsd:date"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LanguageString-translationDate"), "rdf_type": "xsd:date"},
     )
 
     # attribute cdi:LanguageString-translationSourceLanguage (0..*) | translationSourceLanguage | xsd:language
-    translationSourceLanguage: list[Union[str, LiteralField]] | None = Field(
+    translationSourceLanguage: list[str | LiteralField] | None = Field(
         alias="translationSourceLanguage",
         default=None,
         description="Lists the natural language(s) of the source. Repeat if source is in multiple languages.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "LanguageString-translationSourceLanguage"),
-            "rdf_type": "xsd:language"
+            "rdf_type": "xsd:language",
         },
     )
 
 
-
-
 class LicenseInformation(DdiCdiType):
-    """ LicenseInformation.
+    """LicenseInformation.
 
     Definition
     ============
@@ -2185,6 +1958,7 @@ class LicenseInformation(DdiCdiType):
     Licensed under Creative Commons Attribution 2.0 Generic (CC BY 2.0).
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -2204,10 +1978,7 @@ class LicenseInformation(DdiCdiType):
         alias="contact",
         default=None,
         description="Information on whom to contact for details on licensing.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LicenseInformation-contact"),
-            "rdf_type": CDI.ContactInformation
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LicenseInformation-contact"), "rdf_type": CDI.ContactInformation},
     )
 
     # attribute cdi:LicenseInformation-description (0..*) | description | cdi:InternationalString
@@ -2217,7 +1988,7 @@ class LicenseInformation(DdiCdiType):
         description="A description of licensing terms.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "LicenseInformation-description"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -2226,10 +1997,7 @@ class LicenseInformation(DdiCdiType):
         alias="licenseAgent",
         default=None,
         description="Points to a description of an agent with information about, or responsible for licensing of the object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LicenseInformation-licenseAgent"),
-            "rdf_type": CDI.AgentInRole
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LicenseInformation-licenseAgent"), "rdf_type": CDI.AgentInRole},
     )
 
     # attribute cdi:LicenseInformation-licenseReference (0..*) | licenseReference | cdi:Reference
@@ -2237,23 +2005,19 @@ class LicenseInformation(DdiCdiType):
         alias="licenseReference",
         default=None,
         description="Points to published license terms, such as to a specific Creative Commons license.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LicenseInformation-licenseReference"),
-            "rdf_type": CDI.Reference
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LicenseInformation-licenseReference"), "rdf_type": CDI.Reference},
     )
 
 
-
-
 class ModelIdentification(DdiCdiType):
-    """ ModelIdentification.
+    """ModelIdentification.
 
     Definition
     ==========
     Attributes for the model identification with constant values.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -2269,86 +2033,64 @@ class ModelIdentification(DdiCdiType):
     #  DOMAIN ATTRIBUTES
     #
     # attribute cdi:ModelIdentification-acronym (1..1) | acronym | xsd:string
-    acronym: Union[str, LiteralField] = Field(
+    acronym: str | LiteralField = Field(
         alias="acronym",
         description="Acronym of the model.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ModelIdentification-acronym"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ModelIdentification-acronym"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:ModelIdentification-language (1..1) | language | xsd:string
-    language: Union[str, LiteralField] = Field(
+    language: str | LiteralField = Field(
         alias="language",
         description="Language of the model.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ModelIdentification-language"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ModelIdentification-language"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:ModelIdentification-majorVersion (1..1) | majorVersion | xsd:integer
     majorVersion: int = Field(
         alias="majorVersion",
         description="Major version number of the model.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ModelIdentification-majorVersion"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ModelIdentification-majorVersion"), "rdf_type": "xsd:integer"},
     )
 
     # attribute cdi:ModelIdentification-minorVersion (1..1) | minorVersion | xsd:integer
     minorVersion: int = Field(
         alias="minorVersion",
         description="Minor version number of the model.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ModelIdentification-minorVersion"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ModelIdentification-minorVersion"), "rdf_type": "xsd:integer"},
     )
 
     # attribute cdi:ModelIdentification-subtitle (1..1) | subtitle | xsd:string
-    subtitle: Union[str, LiteralField] = Field(
+    subtitle: str | LiteralField = Field(
         alias="subtitle",
         description="Subtitle of the model.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ModelIdentification-subtitle"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ModelIdentification-subtitle"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:ModelIdentification-title (1..1) | title | xsd:string
-    title: Union[str, LiteralField] = Field(
+    title: str | LiteralField = Field(
         alias="title",
         description="Title of the model.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ModelIdentification-title"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ModelIdentification-title"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:ModelIdentification-uri (1..1) | uri | xsd:string
-    uri: Union[str, LiteralField] = Field(
+    uri: str | LiteralField = Field(
         alias="uri",
         description="URI of the specification.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ModelIdentification-uri"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ModelIdentification-uri"), "rdf_type": "xsd:string"},
     )
 
 
-
-
 class NonDdiIdentifier(DdiCdiType):
-    """ NonDdiIdentifier.
+    """NonDdiIdentifier.
 
     Definition
     ============
     A unique set of attributes, not conforming to the DDI identifier structure nor structured as a URI, used to identify some entity.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -2364,58 +2106,45 @@ class NonDdiIdentifier(DdiCdiType):
     #  DOMAIN ATTRIBUTES
     #
     # attribute cdi:NonDdiIdentifier-managingAgency (0..1) | managingAgency | xsd:string
-    managingAgency: Union[str, LiteralField] | None = Field(
+    managingAgency: str | LiteralField | None = Field(
         alias="managingAgency",
         default=None,
         description="The authority which maintains the identification scheme.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "NonDdiIdentifier-managingAgency"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "NonDdiIdentifier-managingAgency"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:NonDdiIdentifier-type (1..1) | type | xsd:string
-    type: Union[str, LiteralField] = Field(
+    type: str | LiteralField = Field(
         alias="type",
         description="The scheme of identifier, as distinct from a URI or a DDI-conforming identifier.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "NonDdiIdentifier-type"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "NonDdiIdentifier-type"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:NonDdiIdentifier-value (1..1) | value | xsd:string
-    value: Union[str, LiteralField] = Field(
+    value: str | LiteralField = Field(
         alias="value",
         description="The identifier, structured according to the specified type.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "NonDdiIdentifier-value"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "NonDdiIdentifier-value"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:NonDdiIdentifier-version (0..1) | version | xsd:string
-    version: Union[str, LiteralField] | None = Field(
+    version: str | LiteralField | None = Field(
         alias="version",
         default=None,
         description="The version of the object being identified, according to the versioning system provided by the identified scheme.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "NonDdiIdentifier-version"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "NonDdiIdentifier-version"), "rdf_type": "xsd:string"},
     )
 
 
-
-
 class NonIsoDate(DdiCdiType):
-    """ NonIsoDate.
+    """NonIsoDate.
 
     Definition
     ============
     Used to preserve an historical date, formatted in a non-ISO fashion.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -2435,20 +2164,14 @@ class NonIsoDate(DdiCdiType):
         alias="calendar",
         default=None,
         description="Specifies the type of calendar used (e.g., Gregorian, Julian, Jewish).",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "NonIsoDate-calendar"),
-            "rdf_type": CDI.ControlledVocabularyEntry
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "NonIsoDate-calendar"), "rdf_type": CDI.ControlledVocabularyEntry},
     )
 
     # attribute cdi:NonIsoDate-dateContent (1..1) | dateContent | xsd:string
-    dateContent: Union[str, LiteralField] = Field(
+    dateContent: str | LiteralField = Field(
         alias="dateContent",
         description="This is the date expressed in a non-ISO compliant structure. Primarily used to retain legacy content or to express non-Gregorian calendar dates.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "NonIsoDate-dateContent"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "NonIsoDate-dateContent"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:NonIsoDate-nonIsoDateFormat (0..1) | nonIsoDateFormat | cdi:ControlledVocabularyEntry
@@ -2458,15 +2181,13 @@ class NonIsoDate(DdiCdiType):
         description="Indicate the structure of the date provided in NonISODate. For example if the NonISODate contained 4/1/2000 the Historical Date Format would be mm/dd/yyyy. The use of a controlled vocabulary is strongly recommended to support interoperability.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "NonIsoDate-nonIsoDateFormat"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
 
-
-
 class ObjectName(DdiCdiType):
-    """ ObjectName.
+    """ObjectName.
 
     Definition
     ==========
@@ -2477,6 +2198,7 @@ class ObjectName(DdiCdiType):
     Use in model: In general the property name should be "name" as it is the name of the class object of which it is an attribute. Use a specific name (i.e. xxxName) only when naming something other than the class object of which it is an attribute.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -2496,28 +2218,20 @@ class ObjectName(DdiCdiType):
         alias="context",
         default=None,
         description="A name may be specific to a particular context, i.e., a type of software, or a section of a registry. Identify the context related to the specified name.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ObjectName-context"),
-            "rdf_type": CDI.ControlledVocabularyEntry
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ObjectName-context"), "rdf_type": CDI.ControlledVocabularyEntry},
     )
 
     # attribute cdi:ObjectName-name (0..1) | name | xsd:string
-    name: Union[str, LiteralField] | None = Field(
+    name: str | LiteralField | None = Field(
         alias="name",
         default=None,
         description="The expressed name of the object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ObjectName-name"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ObjectName-name"), "rdf_type": "xsd:string"},
     )
 
 
-
-
 class PairedControlledVocabularyEntry(DdiCdiType):
-    """ PairedControlledVocabularyEntry.
+    """PairedControlledVocabularyEntry.
 
     Definition
     ==========
@@ -2530,6 +2244,7 @@ class PairedControlledVocabularyEntry(DdiCdiType):
     Alternatively the term might be a controlled vocabulary from a list of controlled vocabularies, e.g. the Generic Longitudinal Business Process Model (GLBPM) in a list that could include other business process model frameworks. In this context the extent becomes the name of a business process model task, e.g. "integrate data" from the GLBPM.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -2551,7 +2266,7 @@ class PairedControlledVocabularyEntry(DdiCdiType):
         description="""Describes the extent to which the parent term applies for the specific case using an external controlled vocabulary. When associated with a role from the CASRAI Contributor Roles Taxonomy an appropriate vocabulary should be specified as either \"lead\", \"equal\", or \"supporting\".""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PairedControlledVocabularyEntry-extent"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -2561,21 +2276,20 @@ class PairedControlledVocabularyEntry(DdiCdiType):
         description="The term attributed to the parent class, for example the role of a contributor.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PairedControlledVocabularyEntry-term"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
 
-
-
 class PrivateImage(DdiCdiType):
-    """ PrivateImage.
+    """PrivateImage.
 
     Definition
     ============
     References an image using the standard Image description. In addition to the standard attributes provides an effective date (period) and a privacy ranking.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -2595,10 +2309,7 @@ class PrivateImage(DdiCdiType):
         alias="effectiveDates",
         default=None,
         description="The period for which this image is effective/valid.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PrivateImage-effectiveDates"),
-            "rdf_type": CDI.DateRange
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PrivateImage-effectiveDates"), "rdf_type": CDI.DateRange},
     )
 
     # attribute cdi:PrivateImage-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
@@ -2606,23 +2317,19 @@ class PrivateImage(DdiCdiType):
         alias="privacy",
         default=None,
         description="Specify the level privacy for the image as public, restricted, or private. Supports the use of an external controlled vocabulary.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PrivateImage-privacy"),
-            "rdf_type": CDI.ControlledVocabularyEntry
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PrivateImage-privacy"), "rdf_type": CDI.ControlledVocabularyEntry},
     )
 
 
-
-
 class ProvenanceInformation(DdiCdiType):
-    """ ProvenanceInformation.
+    """ProvenanceInformation.
 
     Definition
     ============
     Basic information about the provenance of the object. Includes a simple description, but not detailed modeling of a process.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -2644,7 +2351,7 @@ class ProvenanceInformation(DdiCdiType):
         description="Information about a funding source.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ProvenanceInformation-funding"),
-            "rdf_type": CDI.FundingInformation
+            "rdf_type": CDI.FundingInformation,
         },
     )
 
@@ -2655,43 +2362,42 @@ class ProvenanceInformation(DdiCdiType):
         description="A statement of any changes in ownership and custody of the resource since its creation that are significant for its authenticity, integrity, and interpretation.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ProvenanceInformation-provenanceStatement"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
     # attribute cdi:ProvenanceInformation-recordCreationDate (0..1) | recordCreationDate | xsd:date
-    recordCreationDate: Union[date, datetime] | None = Field(
+    recordCreationDate: date | datetime | None = Field(
         alias="recordCreationDate",
         default=None,
         description="Date the record was created.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ProvenanceInformation-recordCreationDate"),
-            "rdf_type": "xsd:date"
+            "rdf_type": "xsd:date",
         },
     )
 
     # attribute cdi:ProvenanceInformation-recordLastRevisionDate (0..1) | recordLastRevisionDate | xsd:date
-    recordLastRevisionDate: Union[date, datetime] | None = Field(
+    recordLastRevisionDate: date | datetime | None = Field(
         alias="recordLastRevisionDate",
         default=None,
         description="Date the record was last revised.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ProvenanceInformation-recordLastRevisionDate"),
-            "rdf_type": "xsd:date"
+            "rdf_type": "xsd:date",
         },
     )
 
 
-
-
 class RationaleDefinition(DdiCdiType):
-    """ RationaleDefinition.
+    """RationaleDefinition.
 
     Definition
     ============
     Textual description of the rationale/purpose for the version change and a coded value to provide an internal processing flag within and organization or system.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -2713,7 +2419,7 @@ class RationaleDefinition(DdiCdiType):
         description="Rationale  ode is primarily for internal processing flags within an organization or system. Supports the use of an external controlled vocabulary.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "RationaleDefinition-rationaleCode"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -2724,21 +2430,20 @@ class RationaleDefinition(DdiCdiType):
         description="Textual description of the rationale/purpose for the version change to inform users as to the extent and implication of the version change. May be expressed in multiple languages.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "RationaleDefinition-rationaleDescription"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
 
-
-
 class Reference(DdiCdiType):
-    """ Reference.
+    """Reference.
 
     Definition
     ============
     Provides a way of pointing to resources outside of the information described in the set of DDI-CDI metadata.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -2760,7 +2465,7 @@ class Reference(DdiCdiType):
         description="A DDI type reference to a DDI object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "Reference-ddiReference"),
-            "rdf_type": CDI.InternationalRegistrationDataIdentifier
+            "rdf_type": CDI.InternationalRegistrationDataIdentifier,
         },
     )
 
@@ -2769,21 +2474,15 @@ class Reference(DdiCdiType):
         alias="deepLink",
         default=None,
         description="The selector refers to the object identifier by the ddiReference and has deep linking purposes.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Reference-deepLink"),
-            "rdf_type": CDI.Selector
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Reference-deepLink"), "rdf_type": CDI.Selector},
     )
 
     # attribute cdi:Reference-description (0..1) | description | xsd:string
-    description: Union[str, LiteralField] | None = Field(
+    description: str | LiteralField | None = Field(
         alias="description",
         default=None,
         description="Human-readable description of the reference.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Reference-description"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Reference-description"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:Reference-location (0..1) | location | cdi:InternationalString
@@ -2791,10 +2490,7 @@ class Reference(DdiCdiType):
         alias="location",
         default=None,
         description="The location of the referenced resource, as appropriate to support retrieval.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Reference-location"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Reference-location"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:Reference-nonDdiReference (0..*) | nonDdiReference | cdi:NonDdiIdentifier
@@ -2802,10 +2498,7 @@ class Reference(DdiCdiType):
         alias="nonDdiReference",
         default=None,
         description="A non-DDI reference to any object using a system of identification which is not supported by a URI.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Reference-nonDdiReference"),
-            "rdf_type": CDI.NonDdiIdentifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Reference-nonDdiReference"), "rdf_type": CDI.NonDdiIdentifier},
     )
 
     # attribute cdi:Reference-semantic (0..1) | semantic | cdi:ControlledVocabularyEntry
@@ -2813,45 +2506,35 @@ class Reference(DdiCdiType):
         alias="semantic",
         default=None,
         description="External qualifier to describe the purpose or meaning of the reference.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Reference-semantic"),
-            "rdf_type": CDI.ControlledVocabularyEntry
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Reference-semantic"), "rdf_type": CDI.ControlledVocabularyEntry},
     )
 
     # attribute cdi:Reference-uri (0..1) | uri | xsd:anyURI
-    uri: Union[str, LiteralField] | None = Field(
+    uri: str | LiteralField | None = Field(
         alias="uri",
         default=None,
         description="A URI to any object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Reference-uri"),
-            "rdf_type": "xsd:anyURI"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Reference-uri"), "rdf_type": "xsd:anyURI"},
     )
 
     # attribute cdi:Reference-validType (0..*) | validType | xsd:string
-    validType: list[Union[str, LiteralField]] | None = Field(
+    validType: list[str | LiteralField] | None = Field(
         alias="validType",
         default=None,
         description="The expected type of the reference (e.g., the class or element according to the schema of the referenced resource).",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Reference-validType"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Reference-validType"), "rdf_type": "xsd:string"},
     )
 
 
-
-
 class Selector(DdiCdiType):
-    """ Selector.
+    """Selector.
 
     Definition
     ==========
     A resource which describes the segment of interest in a representation of a resource. This class is not used directly, only its subclasses. It is defined accordingly the related selector of the Web Annotation Vocabulary, see https://www.w3.org/TR/annotation-vocab/#selector.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -2864,15 +2547,15 @@ class Selector(DdiCdiType):
     )
 
 
-
 class SpatialCoordinate(DdiCdiType):
-    """ SpatialCoordinate.
+    """SpatialCoordinate.
 
     Definition
     ============
     Lists the value and format type for the coordinate value. Note that this is a single value (X coordinate or Y coordinate) rather than a coordinate pair.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -2888,14 +2571,11 @@ class SpatialCoordinate(DdiCdiType):
     #  DOMAIN ATTRIBUTES
     #
     # attribute cdi:SpatialCoordinate-content (0..1) | content | xsd:string
-    content: Union[str, LiteralField] | None = Field(
+    content: str | LiteralField | None = Field(
         alias="content",
         default=None,
         description="The value of the coordinate expressed as a string.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "SpatialCoordinate-content"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "SpatialCoordinate-content"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:SpatialCoordinate-coordinateType (0..1) | coordinateType | cdi:PointFormat
@@ -2903,23 +2583,19 @@ class SpatialCoordinate(DdiCdiType):
         alias="coordinateType",
         default=None,
         description="Identifies the type of point coordinate system using a controlled vocabulary. Point formats include decimal degree, degrees minutes seconds, decimal minutes, meters, and feet.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "SpatialCoordinate-coordinateType"),
-            "rdf_type": CDI.PointFormat
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "SpatialCoordinate-coordinateType"), "rdf_type": CDI.PointFormat},
     )
 
 
-
-
 class SpatialPoint(DdiCdiType):
-    """ SpatialPoint.
+    """SpatialPoint.
 
     Definition
     ============
     A geographic point consisting of an X and Y coordinate. Each coordinate value is expressed separately providing its value and format.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -2939,10 +2615,7 @@ class SpatialPoint(DdiCdiType):
         alias="xCoordinate",
         default=None,
         description="An X coordinate (latitudinal equivalent) value and format expressed using the Spatial Coordinate structure.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "SpatialPoint-xCoordinate"),
-            "rdf_type": CDI.SpatialCoordinate
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "SpatialPoint-xCoordinate"), "rdf_type": CDI.SpatialCoordinate},
     )
 
     # attribute cdi:SpatialPoint-yCoordinate (0..1) | yCoordinate | cdi:SpatialCoordinate
@@ -2950,23 +2623,19 @@ class SpatialPoint(DdiCdiType):
         alias="yCoordinate",
         default=None,
         description="A Y coordinate (longitudinal equivalent) value and format expressed using the Spatial Coordinate structure.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "SpatialPoint-yCoordinate"),
-            "rdf_type": CDI.SpatialCoordinate
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "SpatialPoint-yCoordinate"), "rdf_type": CDI.SpatialCoordinate},
     )
 
 
-
-
 class SpecializationRole(DdiCdiType):
-    """ SpecializationRole.
+    """SpecializationRole.
 
     Definition
     ============
     Specific roles played by represented variables in terms of time, geography, and other concepts which are important for the harmonization and integration of data.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -2979,15 +2648,15 @@ class SpecializationRole(DdiCdiType):
     )
 
 
-
 class Statistic(DdiCdiType):
-    """ Statistic.
+    """Statistic.
 
     Definition
     ============
     The value of the statistic expressed as a decimal, float and/or double. Indicates whether it is weighted value and the computation base.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -3007,10 +2676,7 @@ class Statistic(DdiCdiType):
         alias="computationBase",
         default=None,
         description="Defines the cases included in determining the statistic. The options are total = all cases, valid and missing (invalid); validOnly = Only valid values, missing (invalid) are not included in the calculation; missingOnly = Only missing (invalid) cases included in the calculation.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Statistic-computationBase"),
-            "rdf_type": CDI.ComputationBaseList
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Statistic-computationBase"), "rdf_type": CDI.ComputationBaseList},
     )
 
     # attribute cdi:Statistic-content (0..1) | content | xsd:double
@@ -3018,10 +2684,7 @@ class Statistic(DdiCdiType):
         alias="content",
         default=None,
         description="The value of the statistic expressed as a real number.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Statistic-content"),
-            "rdf_type": "xsd:double"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Statistic-content"), "rdf_type": "xsd:double"},
     )
 
     # attribute cdi:Statistic-isWeighted (0..1) | isWeighted | xsd:boolean
@@ -3029,34 +2692,27 @@ class Statistic(DdiCdiType):
         alias="isWeighted",
         default=None,
         description="Set to True if the statistic is weighted.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Statistic-isWeighted"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Statistic-isWeighted"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:Statistic-typeOfNumericValue (0..1) | typeOfNumericValue | xsd:string
-    typeOfNumericValue: Union[str, LiteralField] | None = Field(
+    typeOfNumericValue: str | LiteralField | None = Field(
         alias="typeOfNumericValue",
         default=None,
         description="Indicate the type of numeric value as decimal, float, double.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Statistic-typeOfNumericValue"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Statistic-typeOfNumericValue"), "rdf_type": "xsd:string"},
     )
 
 
-
-
 class StructureSpecification(DdiCdiType):
-    """ StructureSpecification.
+    """StructureSpecification.
 
     Definition
     ============
     The mathematical properties of the structure.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -3078,7 +2734,7 @@ class StructureSpecification(DdiCdiType):
         description="Members of the selected scope of the collection are related to themselves.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StructureSpecification-reflexive"),
-            "rdf_type": CDI.MemberRelationshipScope
+            "rdf_type": CDI.MemberRelationshipScope,
         },
     )
 
@@ -3089,7 +2745,7 @@ class StructureSpecification(DdiCdiType):
         description="For pairs of members, a, b in the indicated scope of the associated collection, whenever a is related to b then also b is related to a.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StructureSpecification-symmetric"),
-            "rdf_type": CDI.MemberRelationshipScope
+            "rdf_type": CDI.MemberRelationshipScope,
         },
     )
 
@@ -3100,15 +2756,13 @@ class StructureSpecification(DdiCdiType):
         description="For members a, b, c in the indicated scope of the associated collection, whenever a is related to b and b is related to c then a is also related to c.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StructureSpecification-transitive"),
-            "rdf_type": CDI.MemberRelationshipScope
+            "rdf_type": CDI.MemberRelationshipScope,
         },
     )
 
 
-
-
 class Telephone(DdiCdiType):
-    """ Telephone.
+    """Telephone.
 
     Definition
     ============
@@ -3119,6 +2773,7 @@ class Telephone(DdiCdiType):
     +12 345 67890123
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -3138,10 +2793,7 @@ class Telephone(DdiCdiType):
         alias="effectiveDates",
         default=None,
         description="Time period during which the telephone number is valid.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Telephone-effectiveDates"),
-            "rdf_type": CDI.DateRange
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Telephone-effectiveDates"), "rdf_type": CDI.DateRange},
     )
 
     # attribute cdi:Telephone-isPreferred (0..1) | isPreferred | xsd:boolean
@@ -3149,10 +2801,7 @@ class Telephone(DdiCdiType):
         alias="isPreferred",
         default=None,
         description="Set to True if this is the preferred telephone number for contact.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Telephone-isPreferred"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Telephone-isPreferred"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:Telephone-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
@@ -3160,21 +2809,15 @@ class Telephone(DdiCdiType):
         alias="privacy",
         default=None,
         description="Specify the level privacy for the telephone number as public, restricted, or private. Supports the use of an external controlled vocabulary.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Telephone-privacy"),
-            "rdf_type": CDI.ControlledVocabularyEntry
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Telephone-privacy"), "rdf_type": CDI.ControlledVocabularyEntry},
     )
 
     # attribute cdi:Telephone-telephoneNumber (0..1) | telephoneNumber | xsd:string
-    telephoneNumber: Union[str, LiteralField] | None = Field(
+    telephoneNumber: str | LiteralField | None = Field(
         alias="telephoneNumber",
         default=None,
         description="The telephone number including country code if appropriate.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Telephone-telephoneNumber"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Telephone-telephoneNumber"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:Telephone-typeOfTelephone (0..1) | typeOfTelephone | cdi:ControlledVocabularyEntry
@@ -3184,15 +2827,13 @@ class Telephone(DdiCdiType):
         description="Indicates type of telephone number provided (home, fax, office, cell, etc.). Supports the use of a controlled vocabulary.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "Telephone-typeOfTelephone"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
 
-
-
 class TypedString(DdiCdiType):
-    """ TypedString.
+    """TypedString.
 
     Definition
     ============
@@ -3207,6 +2848,7 @@ class TypedString(DdiCdiType):
     This is a generic type + string where property name and documentation should be used to define any specification for the content. If international structured string content is required use TypedStructuredString.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -3222,13 +2864,10 @@ class TypedString(DdiCdiType):
     #  DOMAIN ATTRIBUTES
     #
     # attribute cdi:TypedString-content (1..1) | content | xsd:string
-    content: Union[str, LiteralField] = Field(
+    content: str | LiteralField = Field(
         alias="content",
         description="Content of the property expressed as a simple string.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "TypedString-content"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "TypedString-content"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:TypedString-typeOfContent (0..1) | typeOfContent | cdi:ControlledVocabularyEntry
@@ -3238,21 +2877,20 @@ class TypedString(DdiCdiType):
         description="Optional use of a controlled vocabulary to specifically type the associated content.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "TypedString-typeOfContent"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
 
-
-
 class WebLink(DdiCdiType):
-    """ WebLink.
+    """WebLink.
 
     Definition
     ============
     A web site (normally a URL) with information on type of site, privacy flag, and effective dates.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -3272,10 +2910,7 @@ class WebLink(DdiCdiType):
         alias="effectiveDates",
         default=None,
         description="The period for which this URL is valid.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "WebLink-effectiveDates"),
-            "rdf_type": CDI.DateRange
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "WebLink-effectiveDates"), "rdf_type": CDI.DateRange},
     )
 
     # attribute cdi:WebLink-isPreferred (0..1) | isPreferred | xsd:boolean
@@ -3283,10 +2918,7 @@ class WebLink(DdiCdiType):
         alias="isPreferred",
         default=None,
         description="Set to True if this is the preferred URL.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "WebLink-isPreferred"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "WebLink-isPreferred"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:WebLink-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
@@ -3294,10 +2926,7 @@ class WebLink(DdiCdiType):
         alias="privacy",
         default=None,
         description="Indicates the privacy level of this URL.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "WebLink-privacy"),
-            "rdf_type": CDI.ControlledVocabularyEntry
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "WebLink-privacy"), "rdf_type": CDI.ControlledVocabularyEntry},
     )
 
     # attribute cdi:WebLink-typeOfWebsite (0..1) | typeOfWebsite | cdi:ControlledVocabularyEntry
@@ -3307,32 +2936,28 @@ class WebLink(DdiCdiType):
         description="The type of Website URL, for example personal, project, organization, division, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "WebLink-typeOfWebsite"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
     # attribute cdi:WebLink-uri (0..1) | uri | xsd:anyURI
-    uri: Union[str, LiteralField] | None = Field(
+    uri: str | LiteralField | None = Field(
         alias="uri",
         default=None,
         description="A Uniform Resource Identifier (URI) is a compact sequence of characters that identifies an abstract or physical resource. Normally a URL.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "WebLink-uri"),
-            "rdf_type": "xsd:anyURI"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "WebLink-uri"), "rdf_type": "xsd:anyURI"},
     )
 
 
-
-
 class BibliographicName(InternationalString):
-    """ BibliographicName.
+    """BibliographicName.
 
     Definition
     ============
     Personal names should be listed surname or family name first, followed by forename or given name. When in doubt, give the name as it appears, and do not invert. In the case of organizations where there is clearly a hierarchy present, list the parts of the hierarchy from largest to smallest, separated by full stops and a space. If it is not clear whether there is a hierarchy present, or unclear which is the larger or smaller portion of the body, give the name as it appears in the item. The name may be provided in one or more languages.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -3348,27 +2973,23 @@ class BibliographicName(InternationalString):
     #  DOMAIN ATTRIBUTES
     #
     # attribute cdi:BibliographicName-affiliation (0..1) | affiliation | xsd:string
-    affiliation: Union[str, LiteralField] | None = Field(
+    affiliation: str | LiteralField | None = Field(
         alias="affiliation",
         default=None,
         description="The affiliation of this person to an organization. This is generally an organization or sub-organization name and should be related to the specific role within which the individual is being listed.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "BibliographicName-affiliation"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "BibliographicName-affiliation"), "rdf_type": "xsd:string"},
     )
 
 
-
-
 class LabelForDisplay(InternationalString):
-    """ LabelForDisplay.
+    """LabelForDisplay.
 
     Definition
     ============
     A structured display label. Label provides display content of a fully human readable display for the identification of the object.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -3390,7 +3011,7 @@ class LabelForDisplay(InternationalString):
         description="Indicate the locality specification for content that is specific to a geographic area. May be a country code, sub-country code, or area name.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "LabelForDisplay-locationVariant"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -3399,10 +3020,7 @@ class LabelForDisplay(InternationalString):
         alias="maxLength",
         default=None,
         description="A positive integer indicating the maximum number of characters in the label.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LabelForDisplay-maxLength"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LabelForDisplay-maxLength"), "rdf_type": "xsd:integer"},
     )
 
     # attribute cdi:LabelForDisplay-validDates (0..1) | validDates | cdi:DateRange
@@ -3410,23 +3028,19 @@ class LabelForDisplay(InternationalString):
         alias="validDates",
         default=None,
         description="Allows for the specification of a starting date and ending date for the period that this label is valid.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LabelForDisplay-validDates"),
-            "rdf_type": CDI.DateRange
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LabelForDisplay-validDates"), "rdf_type": CDI.DateRange},
     )
 
 
-
-
 class OrganizationName(ObjectName):
-    """ OrganizationName.
+    """OrganizationName.
 
     Definition
     ==========
     Names by which the organization is known. Use the attribute isFormal with a value of True to designate the legal or formal name of the organization. Names may be typed with typeOfOrganizationName to indicate their appropriate usage.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -3448,7 +3062,7 @@ class OrganizationName(ObjectName):
         description="An abbreviation or acronym for the name. This may be expressed in multiple languages. It is assumed that if only a single language is provided that it may be used in any of the other languages within which the name itself is expressed.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "OrganizationName-abbreviation"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -3457,10 +3071,7 @@ class OrganizationName(ObjectName):
         alias="effectiveDates",
         default=None,
         description="The time period for which this name is accurate and in use.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "OrganizationName-effectiveDates"),
-            "rdf_type": CDI.DateRange
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "OrganizationName-effectiveDates"), "rdf_type": CDI.DateRange},
     )
 
     # attribute cdi:OrganizationName-isFormal (0..1) | isFormal | xsd:boolean
@@ -3468,10 +3079,7 @@ class OrganizationName(ObjectName):
         alias="isFormal",
         default=None,
         description="The legal or formal name of the organization should have the isFormal attribute set to True. To avoid confusion only one organization name should have the isFormal attribute set to True. Use the typeOfOrganizationName to further differentiate the type and applied usage when multiple names are provided.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "OrganizationName-isFormal"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "OrganizationName-isFormal"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:OrganizationName-typeOfOrganizationName (0..1) | typeOfOrganizationName | cdi:ControlledVocabularyEntry
@@ -3481,21 +3089,20 @@ class OrganizationName(ObjectName):
         description="The type of organization name provided. the use of a controlled vocabulary is strongly recommended. At minimum this should include, e.g. PreviousFormalName, Nickname (or CommonName), Other.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "OrganizationName-typeOfOrganizationName"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
 
-
-
 class ObjectAttributeSelector(Selector):
-    """ ObjectAttributeSelector.
+    """ObjectAttributeSelector.
 
     Definition
     ==========
     A resource which describes a specific attribute of an object. It is defined in the style of selectors of the Web Annotation Vocabulary, see https://www.w3.org/TR/annotation-vocab/. The selector can be nested dependent on the structure of the referenced object.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -3517,7 +3124,7 @@ class ObjectAttributeSelector(Selector):
         description="Nested object attribute selector.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ObjectAttributeSelector-refinedBy"),
-            "rdf_type": CDI.ObjectAttributeSelector
+            "rdf_type": CDI.ObjectAttributeSelector,
         },
     )
 
@@ -3528,32 +3135,28 @@ class ObjectAttributeSelector(Selector):
         description="Order number of the specific attribute.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ObjectAttributeSelector-refinedByOrderNumber"),
-            "rdf_type": "xsd:integer"
+            "rdf_type": "xsd:integer",
         },
     )
 
     # attribute cdi:ObjectAttributeSelector-value (0..1) | value | xsd:string
-    value: Union[str, LiteralField] | None = Field(
+    value: str | LiteralField | None = Field(
         alias="value",
         default=None,
         description="Name of the attribute.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ObjectAttributeSelector-value"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ObjectAttributeSelector-value"), "rdf_type": "xsd:string"},
     )
 
 
-
-
 class TextPositionSelector(Selector):
-    """ TextPositionSelector.
+    """TextPositionSelector.
 
     Definition
     ==========
     Describes a range of text by recording the start and end positions of the selection in the object. Position 0 would be immediately before the first character, position 1 would be immediately before the second character, and so on. It is defined accordingly the related selector of the Web Annotation Vocabulary, see https://www.w3.org/TR/annotation-vocab/#textpositionselector.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -3571,34 +3174,27 @@ class TextPositionSelector(Selector):
     # attribute cdi:TextPositionSelector-end (1..1) | end | xsd:integer
     end: int = Field(
         alias="end",
-        description="Position of the last character of the selection. Position 8 would be the end of the word \"Position\" of the previous sentence.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "TextPositionSelector-end"),
-            "rdf_type": "xsd:integer"
-        },
+        description='Position of the last character of the selection. Position 8 would be the end of the word "Position" of the previous sentence.',
+        json_schema_extra={"rdf_term": URIRef(CDI + "TextPositionSelector-end"), "rdf_type": "xsd:integer"},
     )
 
     # attribute cdi:TextPositionSelector-start (1..1) | start | xsd:integer
     start: int = Field(
         alias="start",
-        description="Position of the first character of the selection. Position 0 would be the start of the word \"Position\" of the previous sentence.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "TextPositionSelector-start"),
-            "rdf_type": "xsd:integer"
-        },
+        description='Position of the first character of the selection. Position 0 would be the start of the word "Position" of the previous sentence.',
+        json_schema_extra={"rdf_term": URIRef(CDI + "TextPositionSelector-start"), "rdf_type": "xsd:integer"},
     )
 
 
-
-
 class GeoRole(SpecializationRole):
-    """ GeoRole.
+    """GeoRole.
 
     Definition
     ============
     Geography-specific role given to a represented variable in the context of a data structure. The specific characterization of the role (e.g. reference, coordinates, etc.) may be given by a controlled vocabulary.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -3618,23 +3214,19 @@ class GeoRole(SpecializationRole):
         alias="geography",
         default=None,
         description="Function in relation to the specification of a place or physical area or feature, ideally drawn from a controlled vocabulary.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "GeoRole-geography"),
-            "rdf_type": CDI.ControlledVocabularyEntry
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "GeoRole-geography"), "rdf_type": CDI.ControlledVocabularyEntry},
     )
 
 
-
-
 class TimeRole(SpecializationRole):
-    """ TimeRole.
+    """TimeRole.
 
     Definition
     ============
     Time-specific role given to a represented variable in the context of a data structure. The specific characterization of the role (e.g. event, valid, transaction, reference, etc.) may be given by a controlled vocabulary.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -3654,36 +3246,32 @@ class TimeRole(SpecializationRole):
         alias="time",
         default=None,
         description="Holds a value from an external controlled vocabulary defining the time role.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "TimeRole-time"),
-            "rdf_type": CDI.ControlledVocabularyEntry
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "TimeRole-time"), "rdf_type": CDI.ControlledVocabularyEntry},
     )
-
-
-
 
 
 #
 # CLASSES
 #
 
+
 class Activity(DdiCdiClass):
-    """ Activity.
+    """Activity.
 
-    Definition 
-    ============ 
-    An activity is a task described at a conceptual level. It is not parameterized and as such is less reusable. For more logical/physical, fine-grained, reusable description there is a sub-type called step.  
+    Definition
+    ============
+    An activity is a task described at a conceptual level. It is not parameterized and as such is less reusable. For more logical/physical, fine-grained, reusable description there is a sub-type called step.
 
-    Examples 
-    ========== 
-    Phases and sub-processes of the Generic Statistical Business Process Model (GSBPM) are examples of activity.  
+    Examples
+    ==========
+    Phases and sub-processes of the Generic Statistical Business Process Model (GSBPM) are examples of activity.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     An activity is invoked by control logic. It may use and/or produce information objects referenced with the entityUsed and entityProduced attributes.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -3703,21 +3291,15 @@ class Activity(DdiCdiClass):
         alias="definition",
         default=None,
         description="Natural language statement conveying the meaning of a concept, differentiating it from other concepts. Supports the use of multiple languages and structured text. 'externalDefinition' can't be used if 'definition' is used.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Activity-definition"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Activity-definition"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:Activity-description (0..1) | description | xsd:string
-    description: Union[str, LiteralField] | None = Field(
+    description: str | LiteralField | None = Field(
         alias="description",
         default=None,
         description="A description of the Activity in human-readable language.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Activity-description"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Activity-description"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:Activity-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
@@ -3725,10 +3307,7 @@ class Activity(DdiCdiClass):
         alias="displayLabel",
         default=None,
         description="A human-readable display label for the object. Supports the use of multiple languages. Repeat for labels with different content, for example, labels with differing length limitations.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Activity-displayLabel"),
-            "rdf_type": CDI.LabelForDisplay
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Activity-displayLabel"), "rdf_type": CDI.LabelForDisplay},
     )
 
     # attribute cdi:Activity-entityProduced (0..*) | entityProduced | cdi:Reference
@@ -3736,10 +3315,7 @@ class Activity(DdiCdiClass):
         alias="entityProduced",
         default=None,
         description="The thing resulting from the activity.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Activity-entityProduced"),
-            "rdf_type": CDI.Reference
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Activity-entityProduced"), "rdf_type": CDI.Reference},
     )
 
     # attribute cdi:Activity-entityUsed (0..*) | entityUsed | cdi:Reference
@@ -3747,10 +3323,7 @@ class Activity(DdiCdiClass):
         alias="entityUsed",
         default=None,
         description="A thing employed in the activity.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Activity-entityUsed"),
-            "rdf_type": CDI.Reference
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Activity-entityUsed"), "rdf_type": CDI.Reference},
     )
 
     # attribute cdi:Activity-identifier (0..1) | identifier | cdi:Identifier
@@ -3758,10 +3331,7 @@ class Activity(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Activity-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Activity-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:Activity-name (0..*) | name | cdi:ObjectName
@@ -3769,10 +3339,7 @@ class Activity(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (linguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Activity-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Activity-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:Activity-standardModelMapping (0..*) | standardModelMapping | cdi:Reference
@@ -3780,12 +3347,8 @@ class Activity(DdiCdiClass):
         alias="standardModelMapping",
         default=None,
         description="""A reference to a standard process model from which the Activity is taken, such as The Generic Statistical Business Process Model (GSBPM), the Generic Longitudinal Business Process Model (GLBPM), Open Archive Information System (OAIS) model, etc. The model and step or sub-step corresponding to the Activity is noted here using the Paired External Controlled Vocabulary Entry. Enter the name of the model in \"term\" and the step, sub-step, or specific portion of the model in \"extent\".""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Activity-standardModelMapping"),
-            "rdf_type": CDI.Reference
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Activity-standardModelMapping"), "rdf_type": CDI.Reference},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -3795,10 +3358,7 @@ class Activity(DdiCdiClass):
         alias="has_Step",
         default=None,
         description="Activities may be broken out into Steps. Steps are also a subtype of Activity.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Activity_has_Step"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Activity_has_Step"), "rdf_type": "uri"},
     )
 
     # association cdi:Activity_hasInternal_ControlLogic (0..*) | hasInternal | cdi:ControlLogic
@@ -3806,10 +3366,7 @@ class Activity(DdiCdiClass):
         alias="hasInternal",
         default=None,
         description="An activity is embedded in the control construct which launches it.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Activity_hasInternal_ControlLogic"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Activity_hasInternal_ControlLogic"), "rdf_type": "uri"},
     )
 
     # association cdi:Activity_hasSubActivity_Activity (0..*) | hasSubActivity | cdi:Activity
@@ -3817,17 +3374,12 @@ class Activity(DdiCdiClass):
         alias="hasSubActivity",
         default=None,
         description="An Activity is a container for SubActivities.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Activity_hasSubActivity_Activity"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Activity_hasSubActivity_Activity"), "rdf_type": "uri"},
     )
 
 
-
-
 class Agent(DdiCdiClass):
-    """ Agent.
+    """Agent.
 
     Definition
     ==========
@@ -3842,6 +3394,7 @@ class Agent(DdiCdiClass):
     foaf:Agent is: An agent (eg. person, group, software or physical artifact). prov:Agent is: An agent is something that bears some form of responsibility for an activity taking place, for the existence of an entity, or for another agent's activity.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -3861,10 +3414,7 @@ class Agent(DdiCdiClass):
         alias="catalogDetails",
         default=None,
         description="Bundles the information useful for a data catalog entry. Examples would be creator, contributor, title, copyright, embargo, and license information. A set of information useful for attribution, data discovery, and access. This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Agent-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Agent-catalogDetails"), "rdf_type": CDI.CatalogDetails},
     )
 
     # attribute cdi:Agent-identifier (0..1) | identifier | cdi:Identifier
@@ -3872,10 +3422,7 @@ class Agent(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Agent-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Agent-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:Agent-image (0..*) | image | cdi:PrivateImage
@@ -3883,10 +3430,7 @@ class Agent(DdiCdiClass):
         alias="image",
         default=None,
         description="Information regarding image associated with the agent.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Agent-image"),
-            "rdf_type": CDI.PrivateImage
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Agent-image"), "rdf_type": CDI.PrivateImage},
     )
 
     # attribute cdi:Agent-purpose (0..1) | purpose | cdi:InternationalString
@@ -3894,31 +3438,27 @@ class Agent(DdiCdiClass):
         alias="purpose",
         default=None,
         description="Intent or reason for the object/the description of the object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Agent-purpose"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Agent-purpose"), "rdf_type": CDI.InternationalString},
     )
 
 
-
-
 class AgentListing(DdiCdiClass):
-    """ AgentListing.
+    """AgentListing.
 
-    Definition 
-    ============ 
-    Listing of agents of any type who may be organized to describe relationships between agents.  
+    Definition
+    ============
+    Listing of agents of any type who may be organized to describe relationships between agents.
 
-    Examples 
-    ========== 
+    Examples
+    ==========
     Organizations contributing to a project. Individuals within an agency. All organizations, individuals, and machines identified within the collections of an archive. A listing of organizations contributing to a network for the purposes of providing data.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Relationships between agents are fluid and reflect effective dates of the relationship. An agent may have multiple relationships which may be sequential or concurrent. Relationships may or may not be hierarchical in nature. All Agents are serialized individually and brought into relationships as appropriate.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -3937,10 +3477,7 @@ class AgentListing(DdiCdiClass):
     allowsDuplicates: bool = Field(
         alias="allowsDuplicates",
         description="""If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical \"bag\" permits duplicates and is unordered - a \"set\" does not have duplicates and may be ordered.)""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentListing-allowsDuplicates"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentListing-allowsDuplicates"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:AgentListing-identifier (0..1) | identifier | cdi:Identifier
@@ -3948,10 +3485,7 @@ class AgentListing(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentListing-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentListing-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:AgentListing-name (0..*) | name | cdi:ObjectName
@@ -3959,10 +3493,7 @@ class AgentListing(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentListing-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentListing-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:AgentListing-purpose (0..1) | purpose | cdi:InternationalString
@@ -3970,12 +3501,8 @@ class AgentListing(DdiCdiClass):
         alias="purpose",
         default=None,
         description="Intent or reason for the object/the description of the object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentListing-purpose"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentListing-purpose"), "rdf_type": CDI.InternationalString},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -3985,10 +3512,7 @@ class AgentListing(DdiCdiClass):
         alias="has_Agent",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentListing_has_Agent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentListing_has_Agent"), "rdf_type": "uri"},
     )
 
     # association cdi:AgentListing_has_AgentPosition (0..*) | has_AgentPosition | cdi:AgentPosition
@@ -3996,10 +3520,7 @@ class AgentListing(DdiCdiClass):
         alias="has_AgentPosition",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentListing_has_AgentPosition"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentListing_has_AgentPosition"), "rdf_type": "uri"},
     )
 
     # association cdi:AgentListing_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
@@ -4007,10 +3528,7 @@ class AgentListing(DdiCdiClass):
         alias="isDefinedBy_Concept",
         default=None,
         description="The conceptual basis for the collection of members.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentListing_isDefinedBy_Concept"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentListing_isDefinedBy_Concept"), "rdf_type": "uri"},
     )
 
     # association cdi:AgentListing_isMaintainedBy_Agent (0..1) | isMaintainedBy | cdi:Agent
@@ -4018,23 +3536,19 @@ class AgentListing(DdiCdiClass):
         alias="isMaintainedBy",
         default=None,
         description="The unit or group of persons within the organization responsible for the agent listing (i.e., for adding, changing or deleting agent entries).",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentListing_isMaintainedBy_Agent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentListing_isMaintainedBy_Agent"), "rdf_type": "uri"},
     )
 
 
-
-
 class AgentPosition(DdiCdiClass):
-    """ AgentPosition.
+    """AgentPosition.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Assigns a sequence number to an agent in an agent listing.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -4054,22 +3568,15 @@ class AgentPosition(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentPosition-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentPosition-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:AgentPosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="The index of the agent within an agent listing.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentPosition-value"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentPosition-value"), "rdf_type": "xsd:integer"},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -4079,31 +3586,27 @@ class AgentPosition(DdiCdiClass):
         alias="indexes",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentPosition_indexes_Agent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentPosition_indexes_Agent"), "rdf_type": "uri"},
     )
 
 
-
-
 class AgentRelationship(DdiCdiClass):
-    """ AgentRelationship.
+    """AgentRelationship.
 
-    Definition 
-    ============ 
-    Defines the relation of an agent within a structure.  
+    Definition
+    ============
+    Defines the relation of an agent within a structure.
 
-    Examples 
-    ========== 
-    An organization (source/parent) employing an individual (target/child); An individual (source/parent) supervisory to an individual (target/child); An organization (source/parent) overseeing a project (organization) (target/child). Select appropriate relationship using the controlled vocabulary available through the semantics attribute.   
+    Examples
+    ==========
+    An organization (source/parent) employing an individual (target/child); An individual (source/parent) supervisory to an individual (target/child); An organization (source/parent) overseeing a project (organization) (target/child). Select appropriate relationship using the controlled vocabulary available through the semantics attribute.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Used to define the relations of agents in a hierarchical structure, or in other networks. Projects can be understood as temporary organizations.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -4123,10 +3626,7 @@ class AgentRelationship(DdiCdiClass):
         alias="effectiveDates",
         default=None,
         description="Effective dates of the relationship expressed as a start and end Date (using ISO and/or non-ISO date structures).",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentRelationship-effectiveDates"),
-            "rdf_type": CDI.DateRange
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentRelationship-effectiveDates"), "rdf_type": CDI.DateRange},
     )
 
     # attribute cdi:AgentRelationship-identifier (0..1) | identifier | cdi:Identifier
@@ -4134,10 +3634,7 @@ class AgentRelationship(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentRelationship-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentRelationship-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:AgentRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
@@ -4147,10 +3644,9 @@ class AgentRelationship(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "AgentRelationship-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -4159,41 +3655,34 @@ class AgentRelationship(DdiCdiClass):
     hasSource: URIRef = Field(
         alias="hasSource",
         description="The subject in the description of a paired relationship – for example the Parent agent in the hierarchical Parent of Child relationship.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentRelationship_hasSource_Agent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentRelationship_hasSource_Agent"), "rdf_type": "uri"},
     )
 
     # association cdi:AgentRelationship_hasTarget_Agent (1..1) | hasTarget | cdi:Agent
     hasTarget: URIRef = Field(
         alias="hasTarget",
         description="The object in the description of a paired relationship – for example the Object agent in the hierarchical Parent of Child relationship.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentRelationship_hasTarget_Agent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentRelationship_hasTarget_Agent"), "rdf_type": "uri"},
     )
 
 
-
-
 class AgentStructure(DdiCdiClass):
-    """ AgentStructure.
+    """AgentStructure.
 
-    Definition 
-    ============ 
-    Defines the relationships between agents in a collection for a specified period and purpose.  
+    Definition
+    ============
+    Defines the relationships between agents in a collection for a specified period and purpose.
 
-    Examples 
-    ========== 
-    Individual employed by an organization. A unit or project (organization) within another organization. Individual supervised by another individual.  
+    Examples
+    ==========
+    Individual employed by an organization. A unit or project (organization) within another organization. Individual supervised by another individual.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Can describe relations between agents rather than roles within a project or in relationship to a product. Roles are defined by the parent class and relationship name that uses an agent as a target.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -4213,10 +3702,7 @@ class AgentStructure(DdiCdiClass):
         alias="effectiveDates",
         default=None,
         description="The effective start and end date of the relationship.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentStructure-effectiveDates"),
-            "rdf_type": CDI.DateRange
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentStructure-effectiveDates"), "rdf_type": CDI.DateRange},
     )
 
     # attribute cdi:AgentStructure-identifier (0..1) | identifier | cdi:Identifier
@@ -4224,10 +3710,7 @@ class AgentStructure(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentStructure-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentStructure-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:AgentStructure-name (0..*) | name | cdi:ObjectName
@@ -4235,10 +3718,7 @@ class AgentStructure(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentStructure-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentStructure-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:AgentStructure-privacy (0..1) | privacy | cdi:ControlledVocabularyEntry
@@ -4248,7 +3728,7 @@ class AgentStructure(DdiCdiClass):
         description="Level of privacy regarding this relationship.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "AgentStructure-privacy"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -4257,10 +3737,7 @@ class AgentStructure(DdiCdiClass):
         alias="purpose",
         default=None,
         description="Intent or reason for the object/the description of the object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentStructure-purpose"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentStructure-purpose"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:AgentStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
@@ -4270,7 +3747,7 @@ class AgentStructure(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "AgentStructure-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -4281,7 +3758,7 @@ class AgentStructure(DdiCdiClass):
         description="Provides information on reflexivity, transitivity, and symmetry of relationship using a descriptive term from an enumerated list. Use if all relations within this relation structure are of the same specification.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "AgentStructure-specification"),
-            "rdf_type": CDI.StructureSpecification
+            "rdf_type": CDI.StructureSpecification,
         },
     )
 
@@ -4292,7 +3769,7 @@ class AgentStructure(DdiCdiClass):
         description="Indicates the form of the associations among members of the collection. Specifies the way in which constituent parts are interrelated or arranged.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "AgentStructure-topology"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -4301,12 +3778,8 @@ class AgentStructure(DdiCdiClass):
         alias="totality",
         default=None,
         description="Indicates whether the related collections are comprehensive in terms of their coverage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentStructure-totality"),
-            "rdf_type": CDI.StructureExtent
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentStructure-totality"), "rdf_type": CDI.StructureExtent},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -4316,10 +3789,7 @@ class AgentStructure(DdiCdiClass):
         alias="has_AgentRelationship",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentStructure_has_AgentRelationship"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentStructure_has_AgentRelationship"), "rdf_type": "uri"},
     )
 
     # association cdi:AgentStructure_structures_AgentListing (0..1) | structures | cdi:AgentListing
@@ -4327,31 +3797,27 @@ class AgentStructure(DdiCdiClass):
         alias="structures",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AgentStructure_structures_AgentListing"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AgentStructure_structures_AgentListing"), "rdf_type": "uri"},
     )
 
 
-
-
 class AuthorizationSource(DdiCdiClass):
-    """ AuthorizationSource.
+    """AuthorizationSource.
 
-    Definition 
-    ============ 
-    Identifies the authorizing agency and allows for the full text of the authorization (law, regulation, or other form of authorization).  
+    Definition
+    ============
+    Identifies the authorizing agency and allows for the full text of the authorization (law, regulation, or other form of authorization).
 
-    Examples 
-    ========== 
-    May be used to list authorizations from oversight committees and other regulatory agencies.  
+    Examples
+    ==========
+    May be used to list authorizations from oversight committees and other regulatory agencies.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Supports requirements for some statistical offices to identify the agency or law authorizing the collection or management of data or metadata.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -4373,7 +3839,7 @@ class AuthorizationSource(DdiCdiClass):
         description="Identifies the date of authorization.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "AuthorizationSource-authorizationDate"),
-            "rdf_type": CDI.CombinedDate
+            "rdf_type": CDI.CombinedDate,
         },
     )
 
@@ -4381,7 +3847,7 @@ class AuthorizationSource(DdiCdiClass):
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
-        description="""Bundles the information useful for a data catalog entry. 
+        description="""Bundles the information useful for a data catalog entry.
 
     Examples would be creator, contributor, title, copyright, embargo, and license information
 
@@ -4389,7 +3855,7 @@ class AuthorizationSource(DdiCdiClass):
     This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "AuthorizationSource-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
+            "rdf_type": CDI.CatalogDetails,
         },
     )
 
@@ -4398,10 +3864,7 @@ class AuthorizationSource(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AuthorizationSource-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AuthorizationSource-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:AuthorizationSource-legalMandate (0..1) | legalMandate | cdi:InternationalString
@@ -4411,7 +3874,7 @@ class AuthorizationSource(DdiCdiClass):
         description="Provide a legal citation to a law authorizing the study/data collection. For example, a legal citation for a law authorizing a country's census.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "AuthorizationSource-legalMandate"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -4422,7 +3885,7 @@ class AuthorizationSource(DdiCdiClass):
         description="Intent or reason for the object/the description of the object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "AuthorizationSource-purpose"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -4433,10 +3896,9 @@ class AuthorizationSource(DdiCdiClass):
         description="Text of the authorization (law, mandate, approved business case).",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "AuthorizationSource-statementOfAuthorization"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -4446,23 +3908,19 @@ class AuthorizationSource(DdiCdiClass):
         alias="has_Agent",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "AuthorizationSource_has_Agent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "AuthorizationSource_has_Agent"), "rdf_type": "uri"},
     )
 
 
-
-
 class CategoryPosition(DdiCdiClass):
-    """ CategoryPosition.
+    """CategoryPosition.
 
     Definition
     ============
     Assigns a sequence number to a category within a list.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -4482,22 +3940,15 @@ class CategoryPosition(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CategoryPosition-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CategoryPosition-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:CategoryPosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CategoryPosition-value"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CategoryPosition-value"), "rdf_type": "xsd:integer"},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -4506,32 +3957,28 @@ class CategoryPosition(DdiCdiClass):
     indexes: URIRef = Field(
         alias="indexes",
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CategoryPosition_indexes_Category"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CategoryPosition_indexes_Category"), "rdf_type": "uri"},
     )
 
 
-
-
 class CategoryRelationStructure(DdiCdiClass):
-    """ CategoryRelationStructure.
+    """CategoryRelationStructure.
 
-    Definition 
-    ============ 
-    Description of the relationships between and among categories within a collection.  
+    Definition
+    ============
+    Description of the relationships between and among categories within a collection.
 
-    Examples 
-    ========== 
-    The category of "student" might be described as having sub-types of "primary school student" and "high school student".  
+    Examples
+    ==========
+    The category of "student" might be described as having sub-types of "primary school student" and "high school student".
 
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     The category relation structure employs a set of category relations to describe the relationship among concepts. Each category relation is a one to many description of connections between categories. Together they might commonly describe relationships as complex as a hierarchy or graph. This is a kind of a concept structure restricted to categories (which are concepts). Allows for the specification of complex relationships among categories.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -4553,7 +4000,7 @@ class CategoryRelationStructure(DdiCdiClass):
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CategoryRelationStructure-identifier"),
-            "rdf_type": CDI.Identifier
+            "rdf_type": CDI.Identifier,
         },
     )
 
@@ -4562,10 +4009,7 @@ class CategoryRelationStructure(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CategoryRelationStructure-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CategoryRelationStructure-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:CategoryRelationStructure-purpose (0..1) | purpose | cdi:InternationalString
@@ -4575,7 +4019,7 @@ class CategoryRelationStructure(DdiCdiClass):
         description="Intent or reason for the object/the description of the object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CategoryRelationStructure-purpose"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -4586,7 +4030,7 @@ class CategoryRelationStructure(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CategoryRelationStructure-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -4597,7 +4041,7 @@ class CategoryRelationStructure(DdiCdiClass):
         description="Provides information on reflexivity, transitivity, and symmetry of relationship using a descriptive term from an enumerated list. Use if all relations within this relation structure are of the same specification.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CategoryRelationStructure-specification"),
-            "rdf_type": CDI.StructureSpecification
+            "rdf_type": CDI.StructureSpecification,
         },
     )
 
@@ -4608,7 +4052,7 @@ class CategoryRelationStructure(DdiCdiClass):
         description="Indicates the form of the associations among members of the collection. Specifies the way in which constituent parts are interrelated or arranged.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CategoryRelationStructure-topology"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -4619,10 +4063,9 @@ class CategoryRelationStructure(DdiCdiClass):
         description="Indicates whether the related collections are comprehensive in terms of their coverage.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CategoryRelationStructure-totality"),
-            "rdf_type": CDI.StructureExtent
+            "rdf_type": CDI.StructureExtent,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -4634,7 +4077,7 @@ class CategoryRelationStructure(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CategoryRelationStructure_has_CategoryRelationship"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -4645,29 +4088,28 @@ class CategoryRelationStructure(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CategoryRelationStructure_structures_CategorySet"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class CategoryRelationship(DdiCdiClass):
-    """ CategoryRelationship.
+    """CategoryRelationship.
 
-    Definition 
-    ============ 
-    Source-to-target relationship between categories in a structure.   
+    Definition
+    ============
+    Source-to-target relationship between categories in a structure.
 
-    Examples 
-    ========== 
+    Examples
+    ==========
     In the International Standard Industrial Classification of All Economic Activities (ISIC) Revision 4 (https://unstats.un.org/unsd/demographic-social/census/documents/isic_rev4.pdf), the super-type/sub-type relation is used throughout. The super-type "Manufacturing Sector" has among its sub-types "Manufacture of Rubber and Plastics Products" (division 22). In this example, the super-type is the source (Manufacturing Sector") and the sub-type is the target. The semantics attribute will provide the type of the relationship.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Relationships between pairs of categories are linkages between them. The meaning of the linkage is determined by the relation.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -4687,10 +4129,7 @@ class CategoryRelationship(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CategoryRelationship-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CategoryRelationship-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:CategoryRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
@@ -4700,10 +4139,9 @@ class CategoryRelationship(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CategoryRelationship-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -4713,10 +4151,7 @@ class CategoryRelationship(DdiCdiClass):
         alias="hasSource",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CategoryRelationship_hasSource_Category"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CategoryRelationship_hasSource_Category"), "rdf_type": "uri"},
     )
 
     # association cdi:CategoryRelationship_hasTarget_Category (0..*) | hasTarget | cdi:Category
@@ -4724,31 +4159,27 @@ class CategoryRelationship(DdiCdiClass):
         alias="hasTarget",
         default=None,
         description="Second member in a relationship. Note that this can be realized as a collection to support tuples.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CategoryRelationship_hasTarget_Category"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CategoryRelationship_hasTarget_Category"), "rdf_type": "uri"},
     )
 
 
-
-
 class CategoryStatistic(DdiCdiClass):
-    """ CategoryStatistic.
+    """CategoryStatistic.
 
-    Definition 
-    ============ 
-    Statistics related to a specific category of an instance variable within a data set.  
+    Definition
+    ============
+    Statistics related to a specific category of an instance variable within a data set.
 
-    Examples 
-    ========== 
-    The percentage of females from a demographic data set.   
+    Examples
+    ==========
+    The percentage of females from a demographic data set.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Statistics at the data set are used as indicators during assessment of the appropriateness of using a some data for a particular purpose.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -4768,10 +4199,7 @@ class CategoryStatistic(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CategoryStatistic-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CategoryStatistic-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:CategoryStatistic-statistic (0..*) | statistic | cdi:Statistic
@@ -4779,10 +4207,7 @@ class CategoryStatistic(DdiCdiClass):
         alias="statistic",
         default=None,
         description="The value of the identified type of statistic for the category. May be repeated to provide unweighted or weighted values and different computation bases.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CategoryStatistic-statistic"),
-            "rdf_type": CDI.Statistic
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CategoryStatistic-statistic"), "rdf_type": CDI.Statistic},
     )
 
     # attribute cdi:CategoryStatistic-typeOfCategoryStatistic (0..1) | typeOfCategoryStatistic | cdi:ControlledVocabularyEntry
@@ -4792,10 +4217,9 @@ class CategoryStatistic(DdiCdiClass):
         description="Indicates the type of information about the appearance of categories within the instance variable.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CategoryStatistic-typeOfCategoryStatistic"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -4804,10 +4228,7 @@ class CategoryStatistic(DdiCdiClass):
     appliesTo: list[URIRef] = Field(
         alias="appliesTo",
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CategoryStatistic_appliesTo_InstanceVariable"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CategoryStatistic_appliesTo_InstanceVariable"), "rdf_type": "uri"},
     )
 
     # association cdi:CategoryStatistic_for_Category (0..1) | for | cdi:Category
@@ -4815,17 +4236,12 @@ class CategoryStatistic(DdiCdiClass):
         alias="for",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CategoryStatistic_for_Category"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CategoryStatistic_for_Category"), "rdf_type": "uri"},
     )
 
 
-
-
 class ClassificationFamily(DdiCdiClass):
-    """ ClassificationFamily.
+    """ClassificationFamily.
 
     Definition
     ============
@@ -4840,6 +4256,7 @@ class ClassificationFamily(DdiCdiClass):
     Different classification databases may use different types of classification families and have different names for the families, as no standard has been agreed upon. [GSIM1.1] This is documented by the definingConcept relationship   (e.g. economic activity).[GSIM1.1].
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -4858,7 +4275,7 @@ class ClassificationFamily(DdiCdiClass):
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
-        description="""Bundles the information useful for a data catalog entry. 
+        description="""Bundles the information useful for a data catalog entry.
 
     Examples would be creator, contributor, title, copyright, embargo, and license information
 
@@ -4866,7 +4283,7 @@ class ClassificationFamily(DdiCdiClass):
     This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationFamily-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
+            "rdf_type": CDI.CatalogDetails,
         },
     )
 
@@ -4875,10 +4292,7 @@ class ClassificationFamily(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationFamily-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationFamily-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:ClassificationFamily-name (0..*) | name | cdi:ObjectName
@@ -4886,10 +4300,7 @@ class ClassificationFamily(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationFamily-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationFamily-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:ClassificationFamily-purpose (0..1) | purpose | cdi:InternationalString
@@ -4899,10 +4310,9 @@ class ClassificationFamily(DdiCdiClass):
         description="Intent or reason for the object/the description of the object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationFamily-purpose"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -4912,10 +4322,7 @@ class ClassificationFamily(DdiCdiClass):
         alias="isDefinedBy_Concept",
         default=None,
         description="The conceptual basis for the collection of members.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationFamily_isDefinedBy_Concept"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationFamily_isDefinedBy_Concept"), "rdf_type": "uri"},
     )
 
     # association cdi:ClassificationFamily_groups_ClassificationSeries (0..*) | groups | cdi:ClassificationSeries
@@ -4925,7 +4332,7 @@ class ClassificationFamily(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationFamily_groups_ClassificationSeries"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -4936,29 +4343,28 @@ class ClassificationFamily(DdiCdiClass):
         description="Classification indexes associated to the classification family.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationFamily_uses_ClassificationIndex"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class ClassificationIndex(DdiCdiClass):
-    """ ClassificationIndex.
+    """ClassificationIndex.
 
-    Definition 
-    ============ 
-    Ordered list of classification index entries. 
+    Definition
+    ============
+    Ordered list of classification index entries.
 
-    Examples 
-    ========== 
-    An alphabetical index of a topically ordered statistical classification.  
+    Examples
+    ==========
+    An alphabetical index of a topically ordered statistical classification.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     A classification index shows the relationship between text found in statistical data sources (responses to survey questionnaires, administrative records) and one or more statistical classifications.  A classification index may be used to assign the codes for classification items to observations in statistical collections. Note that a GenericStatistical Information Model (GSIM) Node is the equivalent of a DDI-CDI Member, and a GSIM Node Set is a DDI-CDI Collection. A classification index can relate to one particular or to several statistical classifications. (See the GSIM Statistical Classification Model: https://statswiki.unece.org/display/gsim/Statistical+Classification+Model.)
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -4977,20 +4383,17 @@ class ClassificationIndex(DdiCdiClass):
     allowsDuplicates: bool = Field(
         alias="allowsDuplicates",
         description="If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical “bag” permits duplicates and is unordered - a “set” does not have duplicates and may be ordered.)",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationIndex-allowsDuplicates"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationIndex-allowsDuplicates"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:ClassificationIndex-availableLanguage (0..*) | availableLanguage | xsd:language
-    availableLanguage: list[Union[str, LiteralField]] | None = Field(
+    availableLanguage: list[str | LiteralField] | None = Field(
         alias="availableLanguage",
         default=None,
         description="A list of languages in which the Statistical Classification is available. If a Classification Index exists in several languages, the number of entries in each language may be different, as the number of terms describing any given phenomenon can change from one language to another. However, the same phenomena should be described in each language. Supports the indication of multiple languages within a single property. Supports use of codes defined by the RFC 1766.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationIndex-availableLanguage"),
-            "rdf_type": "xsd:language"
+            "rdf_type": "xsd:language",
         },
     )
 
@@ -4998,7 +4401,7 @@ class ClassificationIndex(DdiCdiClass):
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
-        description="""Bundles the information useful for a data catalog entry. 
+        description="""Bundles the information useful for a data catalog entry.
 
     Examples would be creator, contributor, title, copyright, embargo, and license information
 
@@ -5006,7 +4409,7 @@ class ClassificationIndex(DdiCdiClass):
     This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationIndex-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
+            "rdf_type": CDI.CatalogDetails,
         },
     )
 
@@ -5017,7 +4420,7 @@ class ClassificationIndex(DdiCdiClass):
         description="Additional information which drives the coding process for all entries in a Classification Index.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationIndex-codingInstruction"),
-            "rdf_type": CDI.CommandCode
+            "rdf_type": CDI.CommandCode,
         },
     )
 
@@ -5028,7 +4431,7 @@ class ClassificationIndex(DdiCdiClass):
         description="Verbal summary description of corrections, which have occurred within the Classification Index. Corrections include changing the item code associated with a classification index entry.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationIndex-corrections"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -5037,10 +4440,7 @@ class ClassificationIndex(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationIndex-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationIndex-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:ClassificationIndex-name (0..*) | name | cdi:ObjectName
@@ -5048,10 +4448,7 @@ class ClassificationIndex(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationIndex-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationIndex-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:ClassificationIndex-purpose (0..1) | purpose | cdi:InternationalString
@@ -5061,7 +4458,7 @@ class ClassificationIndex(DdiCdiClass):
         description="Intent or reason for the object/the description of the object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationIndex-purpose"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -5070,12 +4467,8 @@ class ClassificationIndex(DdiCdiClass):
         alias="releaseDate",
         default=None,
         description="Date when the current version of the classification index was released.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationIndex-releaseDate"),
-            "rdf_type": CDI.CombinedDate
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationIndex-releaseDate"), "rdf_type": CDI.CombinedDate},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -5085,10 +4478,7 @@ class ClassificationIndex(DdiCdiClass):
         alias="hasContact",
         default=None,
         description="Person(s) who may be contacted for additional information about the classification index.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationIndex_hasContact_Agent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationIndex_hasContact_Agent"), "rdf_type": "uri"},
     )
 
     # association cdi:ClassificationIndex_isMaintainedBy_Agent (0..1) | isMaintainedBy | cdi:Agent
@@ -5096,10 +4486,7 @@ class ClassificationIndex(DdiCdiClass):
         alias="isMaintainedBy",
         default=None,
         description="The unit or group of persons within the organization responsible for the classification index (i.e., for adding, changing or deleting classification index entries).",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationIndex_isMaintainedBy_Agent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationIndex_isMaintainedBy_Agent"), "rdf_type": "uri"},
     )
 
     # association cdi:ClassificationIndex_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
@@ -5107,10 +4494,7 @@ class ClassificationIndex(DdiCdiClass):
         alias="isDefinedBy_Concept",
         default=None,
         description="The conceptual basis for the collection of members.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationIndex_isDefinedBy_Concept"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationIndex_isDefinedBy_Concept"), "rdf_type": "uri"},
     )
 
     # association cdi:ClassificationIndex_has_ClassificationIndexEntry (0..*) | has_ClassificationIndexEntry | cdi:ClassificationIndexEntry
@@ -5120,7 +4504,7 @@ class ClassificationIndex(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationIndex_has_ClassificationIndexEntry"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -5131,15 +4515,13 @@ class ClassificationIndex(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationIndex_has_ClassificationIndexEntryPosition"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class ClassificationIndexEntry(DdiCdiClass):
-    """ ClassificationIndexEntry.
+    """ClassificationIndexEntry.
 
     Definition
     ============
@@ -5156,6 +4538,7 @@ class ClassificationIndexEntry(DdiCdiClass):
     CIEs typically come from responses to survey questions or are verbatim descriptions in administrative records.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -5174,7 +4557,7 @@ class ClassificationIndexEntry(DdiCdiClass):
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
-        description="""Bundles the information useful for a data catalog entry. 
+        description="""Bundles the information useful for a data catalog entry.
 
     Examples would be creator, contributor, title, copyright, embargo, and license information
 
@@ -5182,7 +4565,7 @@ class ClassificationIndexEntry(DdiCdiClass):
     This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationIndexEntry-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
+            "rdf_type": CDI.CatalogDetails,
         },
     )
 
@@ -5193,7 +4576,7 @@ class ClassificationIndexEntry(DdiCdiClass):
         description="Additional information which drives the coding process for the Index Entry. Required when coding is dependent upon one or many other factors.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationIndexEntry-codingInstruction"),
-            "rdf_type": CDI.CommandCode
+            "rdf_type": CDI.CommandCode,
         },
     )
 
@@ -5204,7 +4587,7 @@ class ClassificationIndexEntry(DdiCdiClass):
         description="Text describing the type of object/unit or object property.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationIndexEntry-entry"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -5213,10 +4596,7 @@ class ClassificationIndexEntry(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationIndexEntry-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationIndexEntry-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:ClassificationIndexEntry-validDates (0..1) | validDates | cdi:DateRange
@@ -5224,23 +4604,19 @@ class ClassificationIndexEntry(DdiCdiClass):
         alias="validDates",
         default=None,
         description="""The dates describing the validity period of the object. The date from which the object became valid must be defined if the map belongs to a \"floating\" construct. The date at which the object became invalid must be defined if the map belongs to a \"floating\" construct and is no longer valid.""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationIndexEntry-validDates"),
-            "rdf_type": CDI.DateRange
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationIndexEntry-validDates"), "rdf_type": CDI.DateRange},
     )
 
 
-
-
 class ClassificationIndexEntryPosition(DdiCdiClass):
-    """ ClassificationIndexEntryPosition.
+    """ClassificationIndexEntryPosition.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Member indicator for use with member type classification index entry.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -5262,7 +4638,7 @@ class ClassificationIndexEntryPosition(DdiCdiClass):
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationIndexEntryPosition-identifier"),
-            "rdf_type": CDI.Identifier
+            "rdf_type": CDI.Identifier,
         },
     )
 
@@ -5272,10 +4648,9 @@ class ClassificationIndexEntryPosition(DdiCdiClass):
         description="Index value of the member in an ordered array.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationIndexEntryPosition-value"),
-            "rdf_type": "xsd:integer"
+            "rdf_type": "xsd:integer",
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -5286,29 +4661,28 @@ class ClassificationIndexEntryPosition(DdiCdiClass):
         description="Restricts member target class to classification index entry.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationIndexEntryPosition_indexes_ClassificationIndexEntry"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class ClassificationItem(DdiCdiClass):
-    """ ClassificationItem.
+    """ClassificationItem.
 
-    Definition 
-    ============ 
-    A space for a category within a statistical classification.   
+    Definition
+    ============
+    A space for a category within a statistical classification.
 
-    Examples 
-    ========== 
+    Examples
+    ==========
     In the 2012 North American Industry Classification System (NAICS) one classification item has the category "construction", and has the Code 23, which designates construction in NAICS.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     A classification item defines the content and the borders of the category. A unit can be classified to one and only one item at each level of a statistical classification. As such a classification item is a placeholder for a position in a statistical classification. It contains a designation, for which code is a common kind; a category; and possibly other things.   This differentiates it from code which is a only kind of designation, in particular if it is an alphanumeric string assigned to stand in place of a category. Statistical classifications often have multiple levels. A level is defined as a set of classification items each the same number of relationships from the top or root classification item.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -5330,7 +4704,7 @@ class ClassificationItem(DdiCdiClass):
         description="Describes the changes, which the item has been subject to from the previous version to the actual statistical classification.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItem-changeFromPreviousVersion"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -5341,7 +4715,7 @@ class ClassificationItem(DdiCdiClass):
         description="Describes the changes, which the item has been subject to during the life time of the actual statistical classification.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItem-changeLog"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -5352,7 +4726,7 @@ class ClassificationItem(DdiCdiClass):
         description="""A classification item may be associated with explanatory notes, which further describe and clarify the contents of the category. Explanatory notes consist of: General note: Contains either additional information about the category, or a general description of the category, which is not structured according to the \"includes\", \"includes also\", \"excludes\" pattern. Includes: Specifies the contents of the category. Includes also: A list of borderline cases, which belong to the described category. Excludes: A list of borderline cases, which do not belong to the described category. Excluded cases may contain a reference to the classification items to which the excluded cases belong.""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItem-explanatoryNotes"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -5363,7 +4737,7 @@ class ClassificationItem(DdiCdiClass):
         description="The future events describe an intended or implemented change (or a number of changes) related to an invalid item (e.g., these changes may have turned the now invalid item into one or several successor items). This allows for the possibility of following successors of the item in the future.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItem-futureNotes"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -5372,10 +4746,7 @@ class ClassificationItem(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationItem-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationItem-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:ClassificationItem-isGenerated (0..1) | isGenerated | xsd:boolean
@@ -5383,10 +4754,7 @@ class ClassificationItem(DdiCdiClass):
         alias="isGenerated",
         default=None,
         description="Indicates whether or not the item has been generated to make the level to which it belongs complete.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationItem-isGenerated"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationItem-isGenerated"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:ClassificationItem-isValid (0..1) | isValid | xsd:boolean
@@ -5394,10 +4762,7 @@ class ClassificationItem(DdiCdiClass):
         alias="isValid",
         default=None,
         description="Indicates whether or not the item is currently valid. If updates are allowed in the Statistical Classification, an item may be restricted in its validity, i.e. it may become valid or invalid after the Statistical Classification has been released.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationItem-isValid"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationItem-isValid"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:ClassificationItem-name (0..*) | name | cdi:ObjectName
@@ -5405,10 +4770,7 @@ class ClassificationItem(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage. A Classification Item has an official name as provided by the owner or maintenance unit. The name describes the content of the category. The name is unique within the Statistical Classification to which the item belongs, except for categories that are identical at more than one level in a hierarchical classification. Use the context attribute to differentiate official names or alternate names for the Classification Item.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationItem-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationItem-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:ClassificationItem-validDates (0..1) | validDates | cdi:DateRange
@@ -5416,12 +4778,8 @@ class ClassificationItem(DdiCdiClass):
         alias="validDates",
         default=None,
         description="""The dates describing the validity period of the object. The date from which the object became valid must be defined if the map belongs to a \"floating\" construct. The date at which the object became invalid must be defined if the map belongs to a \"floating\" construct and is no longer valid.""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationItem-validDates"),
-            "rdf_type": CDI.DateRange
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationItem-validDates"), "rdf_type": CDI.DateRange},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -5430,20 +4788,14 @@ class ClassificationItem(DdiCdiClass):
     denotes: URIRef = Field(
         alias="denotes",
         description="A definition for the code. Specialization of denotes for categories.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationItem_denotes_Category"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationItem_denotes_Category"), "rdf_type": "uri"},
     )
 
     # association cdi:ClassificationItem_uses_Notation (1..1) | uses_Notation | cdi:Notation
     uses_Notation: URIRef = Field(
         alias="uses_Notation",
         description="Classification item uses a notation.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationItem_uses_Notation"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationItem_uses_Notation"), "rdf_type": "uri"},
     )
 
     # association cdi:ClassificationItem_excludes_ClassificationItem (0..*) | excludes | cdi:ClassificationItem
@@ -5453,7 +4805,7 @@ class ClassificationItem(DdiCdiClass):
         description="Classification items to which the excluded cases belong (as described in explanatory notes).",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItem_excludes_ClassificationItem"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -5464,21 +4816,20 @@ class ClassificationItem(DdiCdiClass):
         description="Case law rulings related to the classification item.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItem_hasRulingBy_AuthorizationSource"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class ClassificationItemPosition(DdiCdiClass):
-    """ ClassificationItemPosition.
+    """ClassificationItemPosition.
 
     Definition
     ============
     Provides a classification item with an index conveying the order of the classification item within a sequence, expressed as an integer, progressing upward from 0 or 1.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -5500,7 +4851,7 @@ class ClassificationItemPosition(DdiCdiClass):
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItemPosition-identifier"),
-            "rdf_type": CDI.Identifier
+            "rdf_type": CDI.Identifier,
         },
     )
 
@@ -5508,12 +4859,8 @@ class ClassificationItemPosition(DdiCdiClass):
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationItemPosition-value"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationItemPosition-value"), "rdf_type": "xsd:integer"},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -5525,21 +4872,20 @@ class ClassificationItemPosition(DdiCdiClass):
         description="Classification item position indexes zero to one classification items. The member containing the designation of the classification item.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItemPosition_indexes_ClassificationItem"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class ClassificationItemRelationship(DdiCdiClass):
-    """ ClassificationItemRelationship.
+    """ClassificationItemRelationship.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Source-target relationship between classification items in a classification item relation structure.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -5561,7 +4907,7 @@ class ClassificationItemRelationship(DdiCdiClass):
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItemRelationship-identifier"),
-            "rdf_type": CDI.Identifier
+            "rdf_type": CDI.Identifier,
         },
     )
 
@@ -5572,10 +4918,9 @@ class ClassificationItemRelationship(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItemRelationship-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -5587,7 +4932,7 @@ class ClassificationItemRelationship(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItemRelationship_hasSource_ClassificationItem"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -5598,29 +4943,28 @@ class ClassificationItemRelationship(DdiCdiClass):
         description="Note that this can be realized as a collection to support tuples.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItemRelationship_hasTarget_ClassificationItem"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class ClassificationItemStructure(DdiCdiClass):
-    """ ClassificationItemStructure.
+    """ClassificationItemStructure.
 
-    Definition 
-    ============ 
-    Complex relation structure for use with statistical classification.  
+    Definition
+    ============
+    Complex relation structure for use with statistical classification.
 
-    Examples 
-    ========== 
-    A classification item structure for the International Standard Classification of Occupations (ISCO-08: https://www.ilo.org/public/english/bureau/stat/isco/isco08/) would describe each of the major classifications as a parent of its sub-classifications. 1 Managers, for example would be listed as a parent of four sub groups: 11 Chief Executives, Senior Officials and Legislators; 12 Chief Executives, Senior Officials and Legislators; 13 Production and Specialized Services Managers; and 14 Hospitality, Retail and Other Services Managers.   
+    Examples
+    ==========
+    A classification item structure for the International Standard Classification of Occupations (ISCO-08: https://www.ilo.org/public/english/bureau/stat/isco/isco08/) would describe each of the major classifications as a parent of its sub-classifications. 1 Managers, for example would be listed as a parent of four sub groups: 11 Chief Executives, Senior Officials and Legislators; 12 Chief Executives, Senior Officials and Legislators; 13 Production and Specialized Services Managers; and 14 Hospitality, Retail and Other Services Managers.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     The classification item structure has a set of classification item relationships which are basically adjacency lists. A source classification item has a described relationship to a target list of classification items. The semantic might be, for example, "parentOf", or "contains", etc.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -5642,7 +4986,7 @@ class ClassificationItemStructure(DdiCdiClass):
         description="A human-readable display label for the object. Supports the use of multiple languages. Repeat for labels with different content, for example, labels with differing length limitations.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItemStructure-displayLabel"),
-            "rdf_type": CDI.LabelForDisplay
+            "rdf_type": CDI.LabelForDisplay,
         },
     )
 
@@ -5653,7 +4997,7 @@ class ClassificationItemStructure(DdiCdiClass):
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItemStructure-identifier"),
-            "rdf_type": CDI.Identifier
+            "rdf_type": CDI.Identifier,
         },
     )
 
@@ -5662,10 +5006,7 @@ class ClassificationItemStructure(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationItemStructure-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationItemStructure-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:ClassificationItemStructure-purpose (0..1) | purpose | cdi:InternationalString
@@ -5675,7 +5016,7 @@ class ClassificationItemStructure(DdiCdiClass):
         description="Intent or reason for the object/the description of the object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItemStructure-purpose"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -5686,7 +5027,7 @@ class ClassificationItemStructure(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItemStructure-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -5697,7 +5038,7 @@ class ClassificationItemStructure(DdiCdiClass):
         description="Provides information on reflexivity, transitivity, and symmetry of relationship using a descriptive term from an enumerated list. Use if all relations within this relation structure are of the same specification.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItemStructure-specification"),
-            "rdf_type": CDI.StructureSpecification
+            "rdf_type": CDI.StructureSpecification,
         },
     )
 
@@ -5708,7 +5049,7 @@ class ClassificationItemStructure(DdiCdiClass):
         description="Indicates the form of the associations among members of the collection. Specifies the way in which constituent parts are interrelated or arranged.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItemStructure-topology"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -5719,10 +5060,9 @@ class ClassificationItemStructure(DdiCdiClass):
         description="Indicates whether the related collections are comprehensive in terms of their coverage.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItemStructure-totality"),
-            "rdf_type": CDI.StructureExtent
+            "rdf_type": CDI.StructureExtent,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -5734,7 +5074,7 @@ class ClassificationItemStructure(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItemStructure_has_ClassificationItemRelationship"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -5745,21 +5085,20 @@ class ClassificationItemStructure(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationItemStructure_structures_StatisticalClassification"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class ClassificationPosition(DdiCdiClass):
-    """ ClassificationPosition.
+    """ClassificationPosition.
 
-    Definition 
+    Definition
     ============
     The index of a classification within a classification family expressed as an integer, progressing upward from 0 or 1.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -5779,22 +5118,15 @@ class ClassificationPosition(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationPosition-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationPosition-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:ClassificationPosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationPosition-value"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationPosition-value"), "rdf_type": "xsd:integer"},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -5806,15 +5138,13 @@ class ClassificationPosition(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationPosition_indexes_StatisticalClassification"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class ClassificationSeries(DdiCdiClass):
-    """ ClassificationSeries.
+    """ClassificationSeries.
 
     Definition
     ============
@@ -5830,6 +5160,7 @@ class ClassificationSeries(DdiCdiClass):
     Typically, these statistical classifications have the same name.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -5850,7 +5181,7 @@ class ClassificationSeries(DdiCdiClass):
         description="If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical “bag” permits duplicates and is unordered - a “set” does not have duplicates and may be ordered.)",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationSeries-allowsDuplicates"),
-            "rdf_type": "xsd:boolean"
+            "rdf_type": "xsd:boolean",
         },
     )
 
@@ -5858,7 +5189,7 @@ class ClassificationSeries(DdiCdiClass):
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
-        description="""Bundles the information useful for a data catalog entry. 
+        description="""Bundles the information useful for a data catalog entry.
 
     Examples would be creator, contributor, title, copyright, embargo, and license information
 
@@ -5866,7 +5197,7 @@ class ClassificationSeries(DdiCdiClass):
     This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationSeries-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
+            "rdf_type": CDI.CatalogDetails,
         },
     )
 
@@ -5877,7 +5208,7 @@ class ClassificationSeries(DdiCdiClass):
         description="Classification series can be designed in a specific context of use. This property indicates that context, and supports the use of an external controlled vocabulary for this purpose.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationSeries-context"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -5886,10 +5217,7 @@ class ClassificationSeries(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationSeries-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationSeries-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:ClassificationSeries-keyword (0..*) | keyword | cdi:ControlledVocabularyEntry
@@ -5899,7 +5227,7 @@ class ClassificationSeries(DdiCdiClass):
         description="A classification series can be associated with one or a number of keywords.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationSeries-keyword"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -5908,10 +5236,7 @@ class ClassificationSeries(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationSeries-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationSeries-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:ClassificationSeries-objectsOrUnitsClassified (0..1) | objectsOrUnitsClassified | cdi:ControlledVocabularyEntry
@@ -5921,7 +5246,7 @@ class ClassificationSeries(DdiCdiClass):
         description="A classification series is designed to classify a specific type of object/unit according to a specific attribute.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationSeries-objectsOrUnitsClassified"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -5932,7 +5257,7 @@ class ClassificationSeries(DdiCdiClass):
         description="Intent or reason for the object/the description of the object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationSeries-purpose"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -5943,10 +5268,9 @@ class ClassificationSeries(DdiCdiClass):
         description="Scientific domains, disciplines, or areas of statistics in which the classification series is implemented.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationSeries-subject"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -5956,10 +5280,7 @@ class ClassificationSeries(DdiCdiClass):
         alias="isOwnedBy",
         default=None,
         description="The statistical office or other authority, which created and maintains the statistical classification(s) related to the classification series. A classification series may have several owners.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationSeries_isOwnedBy_Agent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationSeries_isOwnedBy_Agent"), "rdf_type": "uri"},
     )
 
     # association cdi:ClassificationSeries_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
@@ -5967,10 +5288,7 @@ class ClassificationSeries(DdiCdiClass):
         alias="isDefinedBy_Concept",
         default=None,
         description="The conceptual basis for the collection of members.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationSeries_isDefinedBy_Concept"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationSeries_isDefinedBy_Concept"), "rdf_type": "uri"},
     )
 
     # association cdi:ClassificationSeries_has_ClassificationPosition (0..*) | has_ClassificationPosition | cdi:ClassificationPosition
@@ -5980,7 +5298,7 @@ class ClassificationSeries(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationSeries_has_ClassificationPosition"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -5991,15 +5309,13 @@ class ClassificationSeries(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationSeries_has_StatisticalClassification"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class ClassificationSeriesStructure(DdiCdiClass):
-    """ ClassificationSeriesStructure.
+    """ClassificationSeriesStructure.
 
     Definition
     ============
@@ -6014,6 +5330,7 @@ class ClassificationSeriesStructure(DdiCdiClass):
     Can use relation specification information to more fully describe the relationship between members such as parent/child, whole/part, general/specific, equivalence, etc.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -6035,7 +5352,7 @@ class ClassificationSeriesStructure(DdiCdiClass):
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationSeriesStructure-identifier"),
-            "rdf_type": CDI.Identifier
+            "rdf_type": CDI.Identifier,
         },
     )
 
@@ -6044,10 +5361,7 @@ class ClassificationSeriesStructure(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ClassificationSeriesStructure-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ClassificationSeriesStructure-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:ClassificationSeriesStructure-purpose (0..1) | purpose | cdi:InternationalString
@@ -6057,7 +5371,7 @@ class ClassificationSeriesStructure(DdiCdiClass):
         description="Intent or reason for the object/the description of the object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationSeriesStructure-purpose"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -6068,7 +5382,7 @@ class ClassificationSeriesStructure(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationSeriesStructure-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -6079,7 +5393,7 @@ class ClassificationSeriesStructure(DdiCdiClass):
         description="Provides information on reflexivity, transitivity, and symmetry of relationship using a descriptive term from an enumerated list. Use if all relations within this relation structure are of the same specification.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationSeriesStructure-specification"),
-            "rdf_type": CDI.StructureSpecification
+            "rdf_type": CDI.StructureSpecification,
         },
     )
 
@@ -6090,7 +5404,7 @@ class ClassificationSeriesStructure(DdiCdiClass):
         description="Indicates the form of the associations among members of the collection. Specifies the way in which constituent parts are interrelated or arranged.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationSeriesStructure-topology"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -6101,10 +5415,9 @@ class ClassificationSeriesStructure(DdiCdiClass):
         description="Indicates whether the related collections are comprehensive in terms of their coverage.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationSeriesStructure-totality"),
-            "rdf_type": CDI.StructureExtent
+            "rdf_type": CDI.StructureExtent,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -6116,7 +5429,7 @@ class ClassificationSeriesStructure(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationSeriesStructure_has_StatisticalClassificationRelationship"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -6127,29 +5440,28 @@ class ClassificationSeriesStructure(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ClassificationSeriesStructure_structures_ClassificationSeries"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class Code(DdiCdiClass):
-    """ Code.
+    """Code.
 
-    Definition 
-    ============ 
-    The characters used as a symbol to designate a category within a codelist or classification. (Formally, a sign for which the signifier is non-linguistic alphanumeric string.)   
+    Definition
+    ============
+    The characters used as a symbol to designate a category within a codelist or classification. (Formally, a sign for which the signifier is non-linguistic alphanumeric string.)
 
-    Examples 
-    ========== 
-    The letter M might stand for the category "Male" in the codeList called "Gender".  
+    Examples
+    ==========
+    The letter M might stand for the category "Male" in the codeList called "Gender".
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     A non-linguistic alphanumeric string is one which does not correspond to a word in natural language. For use in a codelist. The representation property (value) is expressed as it would be found in a data file. Multiple representations may relate to the same category but should be expressed as separate codes.  It should not be confused with a classification item which is a placeholder for a position in a statistical classification.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -6169,12 +5481,8 @@ class Code(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Code-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Code-identifier"), "rdf_type": CDI.Identifier},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -6183,27 +5491,19 @@ class Code(DdiCdiClass):
     denotes: URIRef = Field(
         alias="denotes",
         description="A definition for the code. Specialization of denotes for categories.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Code_denotes_Category"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Code_denotes_Category"), "rdf_type": "uri"},
     )
 
     # association cdi:Code_uses_Notation (1..1) | uses_Notation | cdi:Notation
     uses_Notation: URIRef = Field(
         alias="uses_Notation",
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Code_uses_Notation"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Code_uses_Notation"), "rdf_type": "uri"},
     )
 
 
-
-
 class CodeListStructure(DdiCdiClass):
-    """ CodeListStructure.
+    """CodeListStructure.
 
     Definition
     ============
@@ -6214,6 +5514,7 @@ class CodeListStructure(DdiCdiClass):
     Allows for the specification of complex relationships among codes. The code list structure employs a set of code relationips to describe the relationship among concepts. Each code relationship is a one to many description of connections between codes. Together they might commonly describe relationships as complex as a hierarchy.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -6233,10 +5534,7 @@ class CodeListStructure(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CodeListStructure-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CodeListStructure-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:CodeListStructure-name (0..*) | name | cdi:ObjectName
@@ -6244,10 +5542,7 @@ class CodeListStructure(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CodeListStructure-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CodeListStructure-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:CodeListStructure-purpose (0..1) | purpose | cdi:InternationalString
@@ -6255,10 +5550,7 @@ class CodeListStructure(DdiCdiClass):
         alias="purpose",
         default=None,
         description="Intent or reason for the object/the description of the object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CodeListStructure-purpose"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CodeListStructure-purpose"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:CodeListStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
@@ -6268,7 +5560,7 @@ class CodeListStructure(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CodeListStructure-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -6279,7 +5571,7 @@ class CodeListStructure(DdiCdiClass):
         description="Provides information on reflexivity, transitivity, and symmetry of relationship using a descriptive term from an enumerated list. Use if all relations within this relation structure are of the same specification.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CodeListStructure-specification"),
-            "rdf_type": CDI.StructureSpecification
+            "rdf_type": CDI.StructureSpecification,
         },
     )
 
@@ -6289,7 +5581,7 @@ class CodeListStructure(DdiCdiClass):
         description="Indicates the form of the associations among members of the collection. Specifies the way in which constituent parts are interrelated or arranged.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CodeListStructure-topology"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -6298,12 +5590,8 @@ class CodeListStructure(DdiCdiClass):
         alias="totality",
         default=None,
         description="Indicates whether the related collections are comprehensive in terms of their coverage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CodeListStructure-totality"),
-            "rdf_type": CDI.StructureExtent
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CodeListStructure-totality"), "rdf_type": CDI.StructureExtent},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -6313,10 +5601,7 @@ class CodeListStructure(DdiCdiClass):
         alias="has_CodeRelationship",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CodeListStructure_has_CodeRelationship"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CodeListStructure_has_CodeRelationship"), "rdf_type": "uri"},
     )
 
     # association cdi:CodeListStructure_structures_CodeList (0..1) | structures | cdi:CodeList
@@ -6324,23 +5609,19 @@ class CodeListStructure(DdiCdiClass):
         alias="structures",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CodeListStructure_structures_CodeList"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CodeListStructure_structures_CodeList"), "rdf_type": "uri"},
     )
 
 
-
-
 class CodePosition(DdiCdiClass):
-    """ CodePosition.
+    """CodePosition.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     An index within an order intended for presentation (even though the content within levels of the hierarchy may be conceptually unordered). Expressed as an integer counting upward from 01 or 1.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -6360,22 +5641,15 @@ class CodePosition(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CodePosition-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CodePosition-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:CodePosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CodePosition-value"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CodePosition-value"), "rdf_type": "xsd:integer"},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -6385,23 +5659,19 @@ class CodePosition(DdiCdiClass):
         alias="indexes",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CodePosition_indexes_Code"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CodePosition_indexes_Code"), "rdf_type": "uri"},
     )
 
 
-
-
 class CodeRelationship(DdiCdiClass):
-    """ CodeRelationship.
+    """CodeRelationship.
 
     Definition
     ============
     Source target relationship between codes in a code relation structure.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -6421,10 +5691,7 @@ class CodeRelationship(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CodeRelationship-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CodeRelationship-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:CodeRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
@@ -6434,10 +5701,9 @@ class CodeRelationship(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CodeRelationship-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -6447,10 +5713,7 @@ class CodeRelationship(DdiCdiClass):
         alias="hasSource",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CodeRelationship_hasSource_Code"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CodeRelationship_hasSource_Code"), "rdf_type": "uri"},
     )
 
     # association cdi:CodeRelationship_hasTarget_Code (0..*) | hasTarget | cdi:Code
@@ -6458,23 +5721,19 @@ class CodeRelationship(DdiCdiClass):
         alias="hasTarget",
         default=None,
         description="Note that this can be realized as a collection to support tuples.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CodeRelationship_hasTarget_Code"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CodeRelationship_hasTarget_Code"), "rdf_type": "uri"},
     )
 
 
-
-
 class ComponentPosition(DdiCdiClass):
-    """ ComponentPosition.
+    """ComponentPosition.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Indexes the components in a data structure using integers with a position indicated by incrementing upward from 0 or 1.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -6494,22 +5753,15 @@ class ComponentPosition(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ComponentPosition-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ComponentPosition-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:ComponentPosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ComponentPosition-value"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ComponentPosition-value"), "rdf_type": "xsd:integer"},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -6521,30 +5773,29 @@ class ComponentPosition(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ComponentPosition_indexes_DataStructureComponent"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class Concept(DdiCdiClass):
-    """ Concept.
+    """Concept.
 
-    Definition 
-    ============ 
-    Unit of thought differentiated by characteristics (from the Generic Statistical Information Model version 1.2: https://statswiki.unece.org/display/clickablegsim/Concept).  
+    Definition
+    ============
+    Unit of thought differentiated by characteristics (from the Generic Statistical Information Model version 1.2: https://statswiki.unece.org/display/clickablegsim/Concept).
 
-    Examples 
-    ========== 
+    Examples
+    ==========
     Velocity, Distance, Poverty, Income, Household Relationship, Family, Gender, Business Establishment, Satisfaction, Mass, Air Quality, etc.
 
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Many DDI-CDI classes are subtypes of the concept class including category, universe, unit type, conceptual variable.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -6564,10 +5815,7 @@ class Concept(DdiCdiClass):
         alias="catalogDetails",
         default=None,
         description="Bundles the information useful for a data catalog entry. Examples would be creator, contributor, title, copyright, embargo, and license information. A set of information useful for attribution, data discovery, and access. This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Concept-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Concept-catalogDetails"), "rdf_type": CDI.CatalogDetails},
     )
 
     # attribute cdi:Concept-definition (0..1) | definition | cdi:InternationalString
@@ -6575,10 +5823,7 @@ class Concept(DdiCdiClass):
         alias="definition",
         default=None,
         description="Natural language statement conveying the meaning of a concept, differentiating it from other concepts. Supports the use of multiple languages and structured text. 'externalDefinition' can't be used if 'definition' is used.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Concept-definition"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Concept-definition"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:Concept-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
@@ -6586,10 +5831,7 @@ class Concept(DdiCdiClass):
         alias="displayLabel",
         default=None,
         description="A human-readable display label for the object. Supports the use of multiple languages. Repeat for labels with different content, for example, labels with differing length limitations.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Concept-displayLabel"),
-            "rdf_type": CDI.LabelForDisplay
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Concept-displayLabel"), "rdf_type": CDI.LabelForDisplay},
     )
 
     # attribute cdi:Concept-externalDefinition (0..1) | externalDefinition | cdi:Reference
@@ -6597,10 +5839,7 @@ class Concept(DdiCdiClass):
         alias="externalDefinition",
         default=None,
         description="A reference to an external definition of a concept (that is, a concept which is described outside the content of the DDI-CDI metadata description). An example is a SKOS concept. The definition property is assumed to duplicate the external one referenced if externalDefinition is used. Other corresponding properties are assumed to be included unchanged if used.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Concept-externalDefinition"),
-            "rdf_type": CDI.Reference
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Concept-externalDefinition"), "rdf_type": CDI.Reference},
     )
 
     # attribute cdi:Concept-identifier (0..1) | identifier | cdi:Identifier
@@ -6608,10 +5847,7 @@ class Concept(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Concept-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Concept-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:Concept-name (0..*) | name | cdi:ObjectName
@@ -6619,12 +5855,8 @@ class Concept(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (linguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Concept-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Concept-name"), "rdf_type": CDI.ObjectName},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -6633,32 +5865,28 @@ class Concept(DdiCdiClass):
     uses_Concept: list[URIRef] | None = Field(
         alias="uses_Concept",
         default=None,
-        description="The uses association is intended to describe specific relationships between Concepts and several of its sub-classes. This is documented in section VII.D.5 of the \"DDI-Cross Domain Integration: Detailed Model\" document.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Concept_uses_Concept"),
-            "rdf_type": "uri"
-        },
+        description='The uses association is intended to describe specific relationships between Concepts and several of its sub-classes. This is documented in section VII.D.5 of the "DDI-Cross Domain Integration: Detailed Model" document.',
+        json_schema_extra={"rdf_term": URIRef(CDI + "Concept_uses_Concept"), "rdf_type": "uri"},
     )
 
 
-
-
 class ConceptMap(DdiCdiClass):
-    """ ConceptMap.
+    """ConceptMap.
 
-    Definition 
-    ============ 
-    Correspondence between concepts in a correspondence table.  
+    Definition
+    ============
+    Correspondence between concepts in a correspondence table.
 
-    Examples 
-    ========== 
-    A simple example might map the following 2 martial status category sets:  MS1: single, married, widowed, divorced. MS2: single, married.  So, a correspondence table between these 2 category sets might look like this: MS1 single - MS2 single; MS1 widowed - MS2 single; MS1 divorced - MS2 single; MS1 married - MS2 married. 
+    Examples
+    ==========
+    A simple example might map the following 2 martial status category sets:  MS1: single, married, widowed, divorced. MS2: single, married.  So, a correspondence table between these 2 category sets might look like this: MS1 single - MS2 single; MS1 widowed - MS2 single; MS1 divorced - MS2 single; MS1 married - MS2 married.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     A concept map is the pairing of similar concepts. Each concept in the map belongs to a different collection. The collection of maps for all the concepts in corresponding collections is a correspondence table.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -6680,7 +5908,7 @@ class ConceptMap(DdiCdiClass):
         description="Type of correspondence in terms of commonalities and differences between two members.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConceptMap-correspondence"),
-            "rdf_type": CDI.CorrespondenceDefinition
+            "rdf_type": CDI.CorrespondenceDefinition,
         },
     )
 
@@ -6689,10 +5917,7 @@ class ConceptMap(DdiCdiClass):
         alias="displayLabel",
         default=None,
         description="A human-readable display label for the object. Supports the use of multiple languages. Repeat for labels with different content, for example, labels with differing length limitations.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptMap-displayLabel"),
-            "rdf_type": CDI.LabelForDisplay
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptMap-displayLabel"), "rdf_type": CDI.LabelForDisplay},
     )
 
     # attribute cdi:ConceptMap-identifier (0..1) | identifier | cdi:Identifier
@@ -6700,10 +5925,7 @@ class ConceptMap(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptMap-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptMap-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:ConceptMap-usage (0..1) | usage | cdi:InternationalString
@@ -6711,10 +5933,7 @@ class ConceptMap(DdiCdiClass):
         alias="usage",
         default=None,
         description="Explanation of the ways in which the object is employed.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptMap-usage"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptMap-usage"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:ConceptMap-validDates (0..1) | validDates | cdi:DateRange
@@ -6722,12 +5941,8 @@ class ConceptMap(DdiCdiClass):
         alias="validDates",
         default=None,
         description="""The dates describing the validity period of the object. The date from which the object became valid must be defined if the map belongs to a \"floating\" construct. The date at which the object became invalid must be defined if the map belongs to a \"floating\" construct and is no longer valid.""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptMap-validDates"),
-            "rdf_type": CDI.DateRange
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptMap-validDates"), "rdf_type": CDI.DateRange},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -6736,41 +5951,34 @@ class ConceptMap(DdiCdiClass):
     hasSource: list[URIRef] = Field(
         alias="hasSource",
         description="Concept map has one to many source concepts.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptMap_hasSource_Concept"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptMap_hasSource_Concept"), "rdf_type": "uri"},
     )
 
     # association cdi:ConceptMap_hasTarget_Concept (1..*) | hasTarget | cdi:Concept
     hasTarget: list[URIRef] = Field(
         alias="hasTarget",
         description="Concept map has one to many target concepts.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptMap_hasTarget_Concept"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptMap_hasTarget_Concept"), "rdf_type": "uri"},
     )
 
 
-
-
 class ConceptRelationship(DdiCdiClass):
-    """ ConceptRelationship.
+    """ConceptRelationship.
 
-    Definition 
-    ============ 
-    Relationship between a pair of concepts in a collection of concepts. Use controlled vocabulary provided in semantics to identify the type of relationship (relation, e.g. ParentChild, WholePart, etc.)  
+    Definition
+    ============
+    Relationship between a pair of concepts in a collection of concepts. Use controlled vocabulary provided in semantics to identify the type of relationship (relation, e.g. ParentChild, WholePart, etc.)
 
-    Examples 
-    ========== 
-    Apple (a specialized concept) is a kind of fruit (a generic concept). A wheel (a partitive concept) is part of a car (a whole concept).  
+    Examples
+    ==========
+    Apple (a specialized concept) is a kind of fruit (a generic concept). A wheel (a partitive concept) is part of a car (a whole concept).
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     The idea is similar to category relationship, except it applies generally and not just for categories.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -6790,10 +5998,7 @@ class ConceptRelationship(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptRelationship-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptRelationship-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:ConceptRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
@@ -6803,10 +6008,9 @@ class ConceptRelationship(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConceptRelationship-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -6815,41 +6019,34 @@ class ConceptRelationship(DdiCdiClass):
     hasSource: URIRef = Field(
         alias="hasSource",
         description="Restricts source object to concept for the relationship.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptRelationship_hasSource_Concept"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptRelationship_hasSource_Concept"), "rdf_type": "uri"},
     )
 
     # association cdi:ConceptRelationship_hasTarget_Concept (1..1) | hasTarget | cdi:Concept
     hasTarget: URIRef = Field(
         alias="hasTarget",
         description="Restricts target object to concept for the relationship.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptRelationship_hasTarget_Concept"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptRelationship_hasTarget_Concept"), "rdf_type": "uri"},
     )
 
 
-
-
 class ConceptStructure(DdiCdiClass):
-    """ ConceptStructure.
+    """ConceptStructure.
 
-    Definition 
-    ============ 
-    Relations of concepts within a collection.  
+    Definition
+    ============
+    Relations of concepts within a collection.
 
-    Examples 
-    ========== 
-    A concept of vacation might be described as having sub-types of beach vacation and mountain vacation.  
+    Examples
+    ==========
+    A concept of vacation might be described as having sub-types of beach vacation and mountain vacation.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     The concept structure employs a set of concept relationships to describe the relationship among concepts. Each concept relationship is a one to many description of connections between concepts. Together they can describe relationships as complex as a hierarchy or even a complete cyclical network as in a concept map. Allows for the specification of complex relationships among concepts.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -6869,10 +6066,7 @@ class ConceptStructure(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptStructure-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptStructure-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:ConceptStructure-name (0..*) | name | cdi:ObjectName
@@ -6880,10 +6074,7 @@ class ConceptStructure(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptStructure-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptStructure-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:ConceptStructure-purpose (0..1) | purpose | cdi:InternationalString
@@ -6891,10 +6082,7 @@ class ConceptStructure(DdiCdiClass):
         alias="purpose",
         default=None,
         description="Intent or reason for the object/the description of the object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptStructure-purpose"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptStructure-purpose"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:ConceptStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
@@ -6904,7 +6092,7 @@ class ConceptStructure(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConceptStructure-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -6915,7 +6103,7 @@ class ConceptStructure(DdiCdiClass):
         description="Provides information on reflexivity, transitivity, and symmetry of relationship using a descriptive term from an enumerated list. Use if all relations within this relation structure are of the same specification.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConceptStructure-specification"),
-            "rdf_type": CDI.StructureSpecification
+            "rdf_type": CDI.StructureSpecification,
         },
     )
 
@@ -6926,7 +6114,7 @@ class ConceptStructure(DdiCdiClass):
         description="Indicates the form of the associations among members of the collection. Specifies the way in which constituent parts are interrelated or arranged.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConceptStructure-topology"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -6935,12 +6123,8 @@ class ConceptStructure(DdiCdiClass):
         alias="totality",
         default=None,
         description="Indicates whether the related collections are comprehensive in terms of their coverage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptStructure-totality"),
-            "rdf_type": CDI.StructureExtent
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptStructure-totality"), "rdf_type": CDI.StructureExtent},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -6950,10 +6134,7 @@ class ConceptStructure(DdiCdiClass):
         alias="has_ConceptRelationship",
         default=None,
         description="Concept structure has zero to many concept relationships.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptStructure_has_ConceptRelationship"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptStructure_has_ConceptRelationship"), "rdf_type": "uri"},
     )
 
     # association cdi:ConceptStructure_structures_ConceptSystem (0..1) | structures | cdi:ConceptSystem
@@ -6961,17 +6142,12 @@ class ConceptStructure(DdiCdiClass):
         alias="structures",
         default=None,
         description="Concept structure structures concept system.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptStructure_structures_ConceptSystem"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptStructure_structures_ConceptSystem"), "rdf_type": "uri"},
     )
 
 
-
-
 class ConceptSystem(DdiCdiClass):
-    """ ConceptSystem.
+    """ConceptSystem.
 
     Definition
     ============
@@ -6979,7 +6155,7 @@ class ConceptSystem(DdiCdiClass):
 
     Examples
     ==========
-    1) Concept of Sex: Male, Female, Other. 
+    1) Concept of Sex: Male, Female, Other.
     2) Concept of Household Relationship: Household Head, Spouse of Household Head, Child of Household Head, Unrelated Household Member, etc.
 
     Explanatory notes
@@ -6987,6 +6163,7 @@ class ConceptSystem(DdiCdiClass):
     Note that this class can be used with concepts, classifications, universes, populations, unit types and any other class that extends from concept.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -7005,10 +6182,7 @@ class ConceptSystem(DdiCdiClass):
     allowsDuplicates: bool = Field(
         alias="allowsDuplicates",
         description="If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical “bag” permits duplicates and is unordered - a “set” does not have duplicates and may be ordered.)",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptSystem-allowsDuplicates"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptSystem-allowsDuplicates"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:ConceptSystem-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
@@ -7016,10 +6190,7 @@ class ConceptSystem(DdiCdiClass):
         alias="catalogDetails",
         default=None,
         description="Bundles the information useful for a data catalog entry. Examples would be creator, contributor, title, copyright, embargo, and license information. A set of information useful for attribution, data discovery, and access. This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptSystem-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptSystem-catalogDetails"), "rdf_type": CDI.CatalogDetails},
     )
 
     # attribute cdi:ConceptSystem-externalDefinition (0..1) | externalDefinition | cdi:Reference
@@ -7027,10 +6198,7 @@ class ConceptSystem(DdiCdiClass):
         alias="externalDefinition",
         default=None,
         description="A reference to an external definition of a concept (that is, a concept which is described outside the content of the DDI-CDI metadata description). An example is a SKOS concept. The definition property is assumed to duplicate the external one referenced if externalDefinition is used. Other corresponding properties are assumed to be included unchanged if used.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptSystem-externalDefinition"),
-            "rdf_type": CDI.Reference
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptSystem-externalDefinition"), "rdf_type": CDI.Reference},
     )
 
     # attribute cdi:ConceptSystem-identifier (0..1) | identifier | cdi:Identifier
@@ -7038,10 +6206,7 @@ class ConceptSystem(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptSystem-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptSystem-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:ConceptSystem-name (0..*) | name | cdi:ObjectName
@@ -7049,10 +6214,7 @@ class ConceptSystem(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptSystem-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptSystem-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:ConceptSystem-purpose (0..1) | purpose | cdi:InternationalString
@@ -7060,12 +6222,8 @@ class ConceptSystem(DdiCdiClass):
         alias="purpose",
         default=None,
         description="Intent or reason for the object/the description of the object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptSystem-purpose"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptSystem-purpose"), "rdf_type": CDI.InternationalString},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -7075,10 +6233,7 @@ class ConceptSystem(DdiCdiClass):
         alias="has_Concept",
         default=None,
         description="Concept system has zero to many concepts.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptSystem_has_Concept"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptSystem_has_Concept"), "rdf_type": "uri"},
     )
 
     # association cdi:ConceptSystem_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
@@ -7086,31 +6241,27 @@ class ConceptSystem(DdiCdiClass):
         alias="isDefinedBy_Concept",
         default=None,
         description="Concept system is defined by zero to many concepts. The conceptual basis for the collection of members.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptSystem_isDefinedBy_Concept"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptSystem_isDefinedBy_Concept"), "rdf_type": "uri"},
     )
 
 
-
-
 class ConceptSystemCorrespondence(DdiCdiClass):
-    """ ConceptSystemCorrespondence.
+    """ConceptSystemCorrespondence.
 
-    Definition 
-    ============ 
-    Relationship between 2 or more concept systems described through mapping similarity relationships between their member concepts.  
+    Definition
+    ============
+    Relationship between 2 or more concept systems described through mapping similarity relationships between their member concepts.
 
-    Examples 
-    ========== 
+    Examples
+    ==========
     Correspondence between the concepts used to define the amount of salt dissolved in a body of water: the concepts "salinity" and "saltiness" might be described as equivalent, for example.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Describes correspondence with one or more maps which identify a source and target concept and defines their commonality and difference using descriptive text and controlled vocabularies.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -7132,7 +6283,7 @@ class ConceptSystemCorrespondence(DdiCdiClass):
         description="Bundles the information useful for a data catalog entry. Examples would be creator, contributor, title, copyright, embargo, and license information. A set of information useful for attribution, data discovery, and access. This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConceptSystemCorrespondence-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
+            "rdf_type": CDI.CatalogDetails,
         },
     )
 
@@ -7143,7 +6294,7 @@ class ConceptSystemCorrespondence(DdiCdiClass):
         description="A human-readable display label for the object. Supports the use of multiple languages. Repeat for labels with different content, for example, labels with differing length limitations.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConceptSystemCorrespondence-displayLabel"),
-            "rdf_type": CDI.LabelForDisplay
+            "rdf_type": CDI.LabelForDisplay,
         },
     )
 
@@ -7154,7 +6305,7 @@ class ConceptSystemCorrespondence(DdiCdiClass):
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConceptSystemCorrespondence-identifier"),
-            "rdf_type": CDI.Identifier
+            "rdf_type": CDI.Identifier,
         },
     )
 
@@ -7165,7 +6316,7 @@ class ConceptSystemCorrespondence(DdiCdiClass):
         description="Intent or reason for the object/the description of the object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConceptSystemCorrespondence-purpose"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -7176,10 +6327,9 @@ class ConceptSystemCorrespondence(DdiCdiClass):
         description="Explanation of the ways in which the object is employed.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConceptSystemCorrespondence-usage"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -7189,10 +6339,7 @@ class ConceptSystemCorrespondence(DdiCdiClass):
         alias="has_ConceptMap",
         default=None,
         description="Concept system correspondence has zero to many concept maps.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptSystemCorrespondence_has_ConceptMap"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptSystemCorrespondence_has_ConceptMap"), "rdf_type": "uri"},
     )
 
     # association cdi:ConceptSystemCorrespondence_maps_ConceptSystem (2..*) | maps | cdi:ConceptSystem
@@ -7201,29 +6348,28 @@ class ConceptSystemCorrespondence(DdiCdiClass):
         description="Concept system correspondence maps two to many concept systems. Realization of structures in symmetric relation. When concepts of a single concept system are mapped, the Concept has to appear twice as target.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConceptSystemCorrespondence_maps_ConceptSystem"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class ConceptualDomain(DdiCdiClass):
-    """ ConceptualDomain.
+    """ConceptualDomain.
 
-    Definition 
-    ============ 
-    Set of concepts, where each concept is intended to be used as the meaning (signified) for a datum.  
+    Definition
+    ============
+    Set of concepts, where each concept is intended to be used as the meaning (signified) for a datum.
 
-    Examples 
-    ========== 
-    Substantive: Housing Unit Tenure - Owned, Rented, Vacant. Sentinel: Non-response - Refused, Don't Know, Not Applicable   
+    Examples
+    ==========
+    Substantive: Housing Unit Tenure - Owned, Rented, Vacant. Sentinel: Non-response - Refused, Don't Know, Not Applicable
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Intent of a conceptual domain is defining a set of concepts used to measure a broader concept. For effective use they should be discrete (non-overlapping) and provide exhaustive coverage of the broader concept. The constituent concepts can be either sentinel or substantive,  The set can be described by either enumeration or by an expression.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -7243,10 +6389,7 @@ class ConceptualDomain(DdiCdiClass):
         alias="catalogDetails",
         default=None,
         description="Bundles the information useful for a data catalog entry. Examples would be creator, contributor, title, copyright, embargo, and license information. A set of information useful for attribution, data discovery, and access. This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptualDomain-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptualDomain-catalogDetails"), "rdf_type": CDI.CatalogDetails},
     )
 
     # attribute cdi:ConceptualDomain-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
@@ -7254,10 +6397,7 @@ class ConceptualDomain(DdiCdiClass):
         alias="displayLabel",
         default=None,
         description="A human-readable display label for the object. Supports the use of multiple languages. Repeat for labels with different content, for example, labels with differing length limitations.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptualDomain-displayLabel"),
-            "rdf_type": CDI.LabelForDisplay
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptualDomain-displayLabel"), "rdf_type": CDI.LabelForDisplay},
     )
 
     # attribute cdi:ConceptualDomain-identifier (0..1) | identifier | cdi:Identifier
@@ -7265,12 +6405,8 @@ class ConceptualDomain(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptualDomain-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptualDomain-identifier"), "rdf_type": CDI.Identifier},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -7282,7 +6418,7 @@ class ConceptualDomain(DdiCdiClass):
         description="A description of the concepts in the domain. A numeric domain might use a logical expression to be machine actionable; a text domain might use a regular expression to describe strings that describe the concepts.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConceptualDomain_isDescribedBy_ValueAndConceptDescription"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -7293,29 +6429,28 @@ class ConceptualDomain(DdiCdiClass):
         description="Conceptual domain takes concept from zero to one concept system.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConceptualDomain_takesConceptsFrom_ConceptSystem"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class ControlLogic(DdiCdiClass):
-    """ ControlLogic.
+    """ControlLogic.
 
-    Definition 
-    ============ 
-    Control logic is a program in which the order of statements is explicit. Control logic is either deterministic (imperative) or non-deterministic (declarative). Deterministic control logic consists of control constructs. Declarative control logic is constraint- and/or rule-based. Control logic may contain control logic.  
+    Definition
+    ============
+    Control logic is a program in which the order of statements is explicit. Control logic is either deterministic (imperative) or non-deterministic (declarative). Deterministic control logic consists of control constructs. Declarative control logic is constraint- and/or rule-based. Control logic may contain control logic.
 
-    Examples 
-    ========== 
-    A loop control construct is deterministic control logic. A script is deterministic control logic. Rule based scheduling is declarative control logic.  
+    Examples
+    ==========
+    A loop control construct is deterministic control logic. A script is deterministic control logic. Rule based scheduling is declarative control logic.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     DDI-CDI has extended control logic to include non-deterministic activity and step controls, which are not specifically described in DDI Lifecycle or DDI Codebook.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -7331,14 +6466,11 @@ class ControlLogic(DdiCdiClass):
     #  DOMAIN ATTRIBUTES
     #
     # attribute cdi:ControlLogic-description (0..1) | description | xsd:string
-    description: Union[str, LiteralField] | None = Field(
+    description: str | LiteralField | None = Field(
         alias="description",
         default=None,
         description="A description of the control logic in human-readable language.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ControlLogic-description"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ControlLogic-description"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:ControlLogic-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
@@ -7346,10 +6478,7 @@ class ControlLogic(DdiCdiClass):
         alias="displayLabel",
         default=None,
         description="A human-readable display label for the object. Supports the use of multiple languages. Repeat for labels with different content, for example, labels with differing length limitations.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ControlLogic-displayLabel"),
-            "rdf_type": CDI.LabelForDisplay
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ControlLogic-displayLabel"), "rdf_type": CDI.LabelForDisplay},
     )
 
     # attribute cdi:ControlLogic-identifier (0..1) | identifier | cdi:Identifier
@@ -7357,10 +6486,7 @@ class ControlLogic(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ControlLogic-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ControlLogic-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:ControlLogic-name (0..*) | name | cdi:ObjectName
@@ -7368,10 +6494,7 @@ class ControlLogic(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (linguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ControlLogic-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ControlLogic-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:ControlLogic-workflow (0..1) | workflow | cdi:ControlledVocabularyEntry
@@ -7381,10 +6504,9 @@ class ControlLogic(DdiCdiClass):
         description="Reference to the system or standard from which the workflow was taken.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ControlLogic-workflow"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -7394,10 +6516,7 @@ class ControlLogic(DdiCdiClass):
         alias="has_InformationFlowDefinition",
         default=None,
         description="A control construct has zero or more information flow definitions each of which provides the control construct with zero or more input and output parameters used or produced in the step/sub-step with which it is associated.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ControlLogic_has_InformationFlowDefinition"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ControlLogic_has_InformationFlowDefinition"), "rdf_type": "uri"},
     )
 
     # association cdi:ControlLogic_hasSubControlLogic_ControlLogic (0..*) | hasSubControlLogic | cdi:ControlLogic
@@ -7405,10 +6524,7 @@ class ControlLogic(DdiCdiClass):
         alias="hasSubControlLogic",
         default=None,
         description="Control logic is a container of control logic which is in turn a container of control logic ad infinitum so that it is able to represent the structure of a program.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ControlLogic_hasSubControlLogic_ControlLogic"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ControlLogic_hasSubControlLogic_ControlLogic"), "rdf_type": "uri"},
     )
 
     # association cdi:ControlLogic_informs_ProcessingAgent (0..*) | informs | cdi:ProcessingAgent
@@ -7416,41 +6532,34 @@ class ControlLogic(DdiCdiClass):
         alias="informs",
         default=None,
         description="Control logic informs a processing agent. The information may be deterministic or non-deterministic.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ControlLogic_informs_ProcessingAgent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ControlLogic_informs_ProcessingAgent"), "rdf_type": "uri"},
     )
 
     # association cdi:ControlLogic_invokes_Activity (1..*) | invokes | cdi:Activity
     invokes: list[URIRef] = Field(
         alias="invokes",
         description="Control logic invokes an activity deterministically (either conditionally or unconditionally) or non-derministically (based on temporal constraints or rule-based scheduling).",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ControlLogic_invokes_Activity"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ControlLogic_invokes_Activity"), "rdf_type": "uri"},
     )
 
 
-
-
 class CorrespondenceTable(DdiCdiClass):
-    """ CorrespondenceTable.
+    """CorrespondenceTable.
 
-    Definition 
-    ============ 
-    Set of relationships between the members within or between statistical classifications.  
+    Definition
+    ============
+    Set of relationships between the members within or between statistical classifications.
 
-    Examples 
-    ========== 
-    Correspondence between the U.S. Standard Industrial Classification (SIC) and North American Industrial Classification System (NAICS).  
+    Examples
+    ==========
+    Correspondence between the U.S. Standard Industrial Classification (SIC) and North American Industrial Classification System (NAICS).
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Correspondence tables are used with statistical classifications. For instance, it can relate two versions from the same classification series; statistical classifications from different classification series; a variant and the version on which it is based; or different versions of a variant. In the first and last examples, the correspondence table facilitates comparability over time.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -7469,7 +6578,7 @@ class CorrespondenceTable(DdiCdiClass):
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
-        description="""Bundles the information useful for a data catalog entry. 
+        description="""Bundles the information useful for a data catalog entry.
 
     Examples would be creator, contributor, title, copyright, embargo, and license information
 
@@ -7477,7 +6586,7 @@ class CorrespondenceTable(DdiCdiClass):
     This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CorrespondenceTable-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
+            "rdf_type": CDI.CatalogDetails,
         },
     )
 
@@ -7486,10 +6595,7 @@ class CorrespondenceTable(DdiCdiClass):
         alias="effectiveDates",
         default=None,
         description="Effective period of validity of the correspondence table. The correspondence table expresses the relationships between the two classifications as they existed on the period specified in the table.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CorrespondenceTable-effectiveDates"),
-            "rdf_type": CDI.DateRange
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CorrespondenceTable-effectiveDates"), "rdf_type": CDI.DateRange},
     )
 
     # attribute cdi:CorrespondenceTable-identifier (0..1) | identifier | cdi:Identifier
@@ -7497,12 +6603,8 @@ class CorrespondenceTable(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CorrespondenceTable-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CorrespondenceTable-identifier"), "rdf_type": CDI.Identifier},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -7512,10 +6614,7 @@ class CorrespondenceTable(DdiCdiClass):
         alias="hasContact",
         default=None,
         description="The person(s) who may be contacted for additional information about the correspondence table. Can be an individual or organization.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CorrespondenceTable_hasContact_Agent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CorrespondenceTable_hasContact_Agent"), "rdf_type": "uri"},
     )
 
     # association cdi:CorrespondenceTable_isMaintainedBy_Agent (0..1) | isMaintainedBy | cdi:Agent
@@ -7523,10 +6622,7 @@ class CorrespondenceTable(DdiCdiClass):
         alias="isMaintainedBy",
         default=None,
         description="The unit or group of persons who are responsible for the correspondence table (i.e., for maintaining and updating it).",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CorrespondenceTable_isMaintainedBy_Agent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CorrespondenceTable_isMaintainedBy_Agent"), "rdf_type": "uri"},
     )
 
     # association cdi:CorrespondenceTable_isOwnedBy_Agent (0..*) | isOwnedBy | cdi:Agent
@@ -7534,10 +6630,7 @@ class CorrespondenceTable(DdiCdiClass):
         alias="isOwnedBy",
         default=None,
         description="The statistical office, other authority or section that created and maintains the correspondence table. A correspondence table may have several owners.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CorrespondenceTable_isOwnedBy_Agent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CorrespondenceTable_isOwnedBy_Agent"), "rdf_type": "uri"},
     )
 
     # association cdi:CorrespondenceTable_has_ConceptMap (0..*) | has_ConceptMap | cdi:ConceptMap
@@ -7545,10 +6638,7 @@ class CorrespondenceTable(DdiCdiClass):
         alias="has_ConceptMap",
         default=None,
         description="Correspondence table has zero to many concept maps.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CorrespondenceTable_has_ConceptMap"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CorrespondenceTable_has_ConceptMap"), "rdf_type": "uri"},
     )
 
     # association cdi:CorrespondenceTable_hasSource_Level (0..1) | hasSource | cdi:Level
@@ -7556,10 +6646,7 @@ class CorrespondenceTable(DdiCdiClass):
         alias="hasSource",
         default=None,
         description="Level from which the correspondence is made. Correspondences might be restricted to a specified level in the node set. In this case, target items are assigned only to source items on the given level. If no level is indicated, source items can be assigned to any level of the target node set.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CorrespondenceTable_hasSource_Level"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CorrespondenceTable_hasSource_Level"), "rdf_type": "uri"},
     )
 
     # association cdi:CorrespondenceTable_hasTarget_Level (0..1) | hasTarget | cdi:Level
@@ -7567,10 +6654,7 @@ class CorrespondenceTable(DdiCdiClass):
         alias="hasTarget",
         default=None,
         description="Level to which the correspondence is made. Correspondences might be restricted to a specified Level in the node set. In this case, target items are assigned only to source items on the given level. If no level is indicated, target items can be assigned to any level of the source node set.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CorrespondenceTable_hasTarget_Level"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CorrespondenceTable_hasTarget_Level"), "rdf_type": "uri"},
     )
 
     # association cdi:CorrespondenceTable_mapsTo_StatisticalClassification (2..*) | mapsTo | cdi:StatisticalClassification
@@ -7579,15 +6663,13 @@ class CorrespondenceTable(DdiCdiClass):
         description="The statistical classification(s) from which the correspondence is made.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "CorrespondenceTable_mapsTo_StatisticalClassification"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class DataPoint(DdiCdiClass):
-    """ DataPoint.
+    """DataPoint.
 
     Definition
     ============
@@ -7595,13 +6677,14 @@ class DataPoint(DdiCdiClass):
 
     Examples
     ==========
-    A cell in a data cube or a table. 
+    A cell in a data cube or a table.
 
     Explanatory notes
     ===================
     A data point could be empty. It exists independently of the instance value to be stored in it.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -7621,10 +6704,7 @@ class DataPoint(DdiCdiClass):
         alias="catalogDetails",
         default=None,
         description="Bundles the information useful for a data catalog entry. Examples would be creator, contributor, title, copyright, embargo, and license information. A set of information useful for attribution, data discovery, and access. This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataPoint-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataPoint-catalogDetails"), "rdf_type": CDI.CatalogDetails},
     )
 
     # attribute cdi:DataPoint-identifier (0..1) | identifier | cdi:Identifier
@@ -7632,12 +6712,8 @@ class DataPoint(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataPoint-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataPoint-identifier"), "rdf_type": CDI.Identifier},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -7646,10 +6722,7 @@ class DataPoint(DdiCdiClass):
     isDescribedBy: URIRef = Field(
         alias="isDescribedBy",
         description="The instance variable delimits the values which can populate a data point. Data point is described by one instance variable.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataPoint_isDescribedBy_InstanceVariable"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataPoint_isDescribedBy_InstanceVariable"), "rdf_type": "uri"},
     )
 
     # association cdi:DataPoint_correspondsTo_DataStructureComponent (0..*) | correspondsTo_DataStructureComponent | cdi:DataStructureComponent
@@ -7659,21 +6732,20 @@ class DataPoint(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "DataPoint_correspondsTo_DataStructureComponent"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class DataPointPosition(DdiCdiClass):
-    """ DataPointPosition.
+    """DataPointPosition.
 
     Definition
     ============
     Indexed location of the associated member within the associated list.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -7693,22 +6765,15 @@ class DataPointPosition(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataPointPosition-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataPointPosition-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:DataPointPosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataPointPosition-value"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataPointPosition-value"), "rdf_type": "xsd:integer"},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -7718,23 +6783,19 @@ class DataPointPosition(DdiCdiClass):
         alias="indexes",
         default=None,
         description="Data point position indexes zero to one data point.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataPointPosition_indexes_DataPoint"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataPointPosition_indexes_DataPoint"), "rdf_type": "uri"},
     )
 
 
-
-
 class DataPointRelationship(DdiCdiClass):
-    """ DataPointRelationship.
+    """DataPointRelationship.
 
     Definition
     ============
     Relations used by the data point relation structure of a logical record to describe specific source-target data points and their relationship.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -7754,10 +6815,7 @@ class DataPointRelationship(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataPointRelationship-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataPointRelationship-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:DataPointRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
@@ -7767,10 +6825,9 @@ class DataPointRelationship(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "DataPointRelationship-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -7780,10 +6837,7 @@ class DataPointRelationship(DdiCdiClass):
         alias="hasSource",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataPointRelationship_hasSource_DataPoint"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataPointRelationship_hasSource_DataPoint"), "rdf_type": "uri"},
     )
 
     # association cdi:DataPointRelationship_hasTarget_DataPoint (0..*) | hasTarget | cdi:DataPoint
@@ -7791,23 +6845,19 @@ class DataPointRelationship(DdiCdiClass):
         alias="hasTarget",
         default=None,
         description="Data point relationship has zero to many target data points.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataPointRelationship_hasTarget_DataPoint"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataPointRelationship_hasTarget_DataPoint"), "rdf_type": "uri"},
     )
 
 
-
-
 class DataSet(DdiCdiClass):
-    """ DataSet.
+    """DataSet.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Organized collection of data based on keys.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -7827,10 +6877,7 @@ class DataSet(DdiCdiClass):
         alias="catalogDetails",
         default=None,
         description="Bundles the information useful for a data catalog entry. Examples would be creator, contributor, title, copyright, embargo, and license information. A set of information useful for attribution, data discovery, and access. This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataSet-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataSet-catalogDetails"), "rdf_type": CDI.CatalogDetails},
     )
 
     # attribute cdi:DataSet-identifier (0..1) | identifier | cdi:Identifier
@@ -7838,12 +6885,8 @@ class DataSet(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataSet-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataSet-identifier"), "rdf_type": CDI.Identifier},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -7853,10 +6896,7 @@ class DataSet(DdiCdiClass):
         alias="has_DataPoint",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataSet_has_DataPoint"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataSet_has_DataPoint"), "rdf_type": "uri"},
     )
 
     # association cdi:DataSet_has_Key (0..*) | has_Key | cdi:Key
@@ -7864,10 +6904,7 @@ class DataSet(DdiCdiClass):
         alias="has_Key",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataSet_has_Key"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataSet_has_Key"), "rdf_type": "uri"},
     )
 
     # association cdi:DataSet_isStructuredBy_DataStructure (0..*) | isStructuredBy | cdi:DataStructure
@@ -7875,31 +6912,27 @@ class DataSet(DdiCdiClass):
         alias="isStructuredBy",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataSet_isStructuredBy_DataStructure"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataSet_isStructuredBy_DataStructure"), "rdf_type": "uri"},
     )
 
 
-
-
 class DataStore(DdiCdiClass):
-    """ DataStore.
+    """DataStore.
 
-    Definition 
-    ============ 
-    Collection of logical records.  
+    Definition
+    ============
+    Collection of logical records.
 
-    Examples 
-    ========== 
-    The data lineage of an individual business process or an entire data pipeline are both examples of a logical record relation structures. In a data lineage we can observe how logical records are connected within a business process or across business processes.  
+    Examples
+    ==========
+    The data lineage of an individual business process or an entire data pipeline are both examples of a logical record relation structures. In a data lineage we can observe how logical records are connected within a business process or across business processes.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Keep in mind that a logical records are definitions, not a "datasets". Logical records organized in a structured collection is called a logical record relation structure. Instances of logical records instantiated as organizations of data points hosting data are described in format description. A data store is reusable across studies. Each study has at most one data store.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -7919,20 +6952,14 @@ class DataStore(DdiCdiClass):
         alias="aboutMissing",
         default=None,
         description="General information about missing data, e.g., that missing data have been standardized across the collection, missing data are present because of merging, etc.-  corresponds to DDI2.5 dataMsng.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataStore-aboutMissing"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataStore-aboutMissing"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:DataStore-allowsDuplicates (1..1) | allowsDuplicates | xsd:boolean
     allowsDuplicates: bool = Field(
         alias="allowsDuplicates",
         description="If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical “bag” permits duplicates and is unordered - a “set” does not have duplicates and may be ordered.)",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataStore-allowsDuplicates"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataStore-allowsDuplicates"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:DataStore-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
@@ -7940,21 +6967,15 @@ class DataStore(DdiCdiClass):
         alias="catalogDetails",
         default=None,
         description="Bundles the information useful for a data catalog entry. Examples would be creator, contributor, title, copyright, embargo, and license information. A set of information useful for attribution, data discovery, and access. This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataStore-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataStore-catalogDetails"), "rdf_type": CDI.CatalogDetails},
     )
 
     # attribute cdi:DataStore-characterSet (0..1) | characterSet | xsd:string
-    characterSet: Union[str, LiteralField] | None = Field(
+    characterSet: str | LiteralField | None = Field(
         alias="characterSet",
         default=None,
         description="Default character set used in the Data Store.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataStore-characterSet"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataStore-characterSet"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:DataStore-dataStoreType (0..1) | dataStoreType | cdi:ControlledVocabularyEntry
@@ -7964,7 +6985,7 @@ class DataStore(DdiCdiClass):
         description="The type of datastore. Could be delimited file, fixed record length file, relational database, etc. Points to an external definition which can be part of a controlled vocabulary maintained by the DDI Alliance.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "DataStore-dataStoreType"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -7973,10 +6994,7 @@ class DataStore(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataStore-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataStore-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:DataStore-name (0..*) | name | cdi:ObjectName
@@ -7984,10 +7002,7 @@ class DataStore(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataStore-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataStore-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:DataStore-purpose (0..1) | purpose | cdi:InternationalString
@@ -7995,10 +7010,7 @@ class DataStore(DdiCdiClass):
         alias="purpose",
         default=None,
         description="Intent or reason for the object/the description of the object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataStore-purpose"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataStore-purpose"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:DataStore-recordCount (0..1) | recordCount | xsd:integer
@@ -8006,12 +7018,8 @@ class DataStore(DdiCdiClass):
         alias="recordCount",
         default=None,
         description="The number of records in the Data Store.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataStore-recordCount"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataStore-recordCount"), "rdf_type": "xsd:integer"},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -8021,10 +7029,7 @@ class DataStore(DdiCdiClass):
         alias="isDefinedBy_Concept",
         default=None,
         description="The conceptual basis for the collection of members.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataStore_isDefinedBy_Concept"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataStore_isDefinedBy_Concept"), "rdf_type": "uri"},
     )
 
     # association cdi:DataStore_has_LogicalRecord (0..*) | has_LogicalRecord | cdi:LogicalRecord
@@ -8032,10 +7037,7 @@ class DataStore(DdiCdiClass):
         alias="has_LogicalRecord",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataStore_has_LogicalRecord"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataStore_has_LogicalRecord"), "rdf_type": "uri"},
     )
 
     # association cdi:DataStore_has_LogicalRecordPosition (0..*) | has_LogicalRecordPosition | cdi:LogicalRecordPosition
@@ -8043,10 +7045,7 @@ class DataStore(DdiCdiClass):
         alias="has_LogicalRecordPosition",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataStore_has_LogicalRecordPosition"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataStore_has_LogicalRecordPosition"), "rdf_type": "uri"},
     )
 
     # association cdi:DataStore_has_RecordRelation (0..1) | has_RecordRelation | cdi:RecordRelation
@@ -8054,27 +7053,23 @@ class DataStore(DdiCdiClass):
         alias="has_RecordRelation",
         default=None,
         description="The record relation that defines the relationship and linking requirements between logical records in the data store.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataStore_has_RecordRelation"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataStore_has_RecordRelation"), "rdf_type": "uri"},
     )
 
 
-
-
 class DataStructureComponent(DdiCdiClass):
-    """ DataStructureComponent.
+    """DataStructureComponent.
 
-    Definition 
-    ============ 
-    Role given to a represented variable in the context of a data structure.  
+    Definition
+    ============
+    Role given to a represented variable in the context of a data structure.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     A represented variable can have different roles in different data structures. For instance, the variable sex can be a measure in a wide data structure and a dimension in a dimensional data structure.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -8094,10 +7089,7 @@ class DataStructureComponent(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataStructureComponent-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataStructureComponent-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:DataStructureComponent-semantic (0..*) | semantic | cdi:PairedControlledVocabularyEntry
@@ -8107,7 +7099,7 @@ class DataStructureComponent(DdiCdiClass):
         description="Qualifies the purpose or use expressed as a paired external controlled vocabulary.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "DataStructureComponent-semantic"),
-            "rdf_type": CDI.PairedControlledVocabularyEntry
+            "rdf_type": CDI.PairedControlledVocabularyEntry,
         },
     )
 
@@ -8118,10 +7110,9 @@ class DataStructureComponent(DdiCdiClass):
         description="The role played by the component for the data set for purposes of harmonization and integration, typically regarding geography, time, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "DataStructureComponent-specialization"),
-            "rdf_type": CDI.SpecializationRole
+            "rdf_type": CDI.SpecializationRole,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -8133,31 +7124,30 @@ class DataStructureComponent(DdiCdiClass):
         description="Data structure component is defined by zero to one represented variable.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "DataStructureComponent_isDefinedBy_RepresentedVariable"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class Datum(DdiCdiClass):
-    """ Datum.
+    """Datum.
 
-    Definition 
-    ============ 
-    Correspondence of a data instance to the concept it represents.  
+    Definition
+    ============
+    Correspondence of a data instance to the concept it represents.
 
-    Examples 
-    ========== 
-    A systolic blood pressure of 122 is measured. The single data instance (instance value) for that measurement is the character string "122". The datum in this case is the association of the conceptual value, i.e. the underlying measured concept (a blood pressure at that level), with the instance value.    
+    Examples
+    ==========
+    A systolic blood pressure of 122 is measured. The single data instance (instance value) for that measurement is the character string "122". The datum in this case is the association of the conceptual value, i.e. the underlying measured concept (a blood pressure at that level), with the instance value.
     if a datum represents the conceptual value “married” with a code “M,” it is not the same datum where that conceptual value is represented with a code “1”. If the datum which uses the code “M” is present in more than one data set, it is still the same datum.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     The datum is a reification of the association between instance value and conceptual value. It is a designation (a representation of a concept by a sign) in the signification pattern. The data instance (instance value) is the signifier and the concept it represents (conceptual value) is the signified. The datum has an association with an instance variable which allows the attachment of a unit of measurement, a datatype, and a population. These instance variable attributes are critical for interpreting the signifier.  NOTE: This is NOT datum as defined in The Data Documentation Initiative Lifecycle specification, which is more limited in breadth. This specification takes a little more formal (semiotic) description of a datum using the signification pattern.
     The datum is reusable, and may appear in more than one data set, carrying with it its full contextualized meaning and identity. The instance variables and instance values with which it is associated will therefore be functionally similar or identical across its appearance in different data instances. Instance variable and instance value are specific to a single data set instance – datum is not.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -8177,10 +7167,7 @@ class Datum(DdiCdiClass):
         alias="catalogDetails",
         default=None,
         description="Bundles the information useful for a data catalog entry. Examples would be creator, contributor, title, copyright, embargo, and license information. A set of information useful for attribution, data discovery, and access. This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Datum-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Datum-catalogDetails"), "rdf_type": CDI.CatalogDetails},
     )
 
     # attribute cdi:Datum-identifier (0..1) | identifier | cdi:Identifier
@@ -8188,12 +7175,8 @@ class Datum(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Datum-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Datum-identifier"), "rdf_type": CDI.Identifier},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -8202,30 +7185,21 @@ class Datum(DdiCdiClass):
     isBoundedBy: list[URIRef] = Field(
         alias="isBoundedBy",
         description="A datum is bounded by an instance variable. The datum is drawn from a set of values, either substantive or sentinel described by the value domain of the instance variable.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Datum_isBoundedBy_InstanceVariable"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Datum_isBoundedBy_InstanceVariable"), "rdf_type": "uri"},
     )
 
     # association cdi:Datum_denotes_ConceptualValue (1..1) | denotes | cdi:ConceptualValue
     denotes: URIRef = Field(
         alias="denotes",
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Datum_denotes_ConceptualValue"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Datum_denotes_ConceptualValue"), "rdf_type": "uri"},
     )
 
     # association cdi:Datum_uses_InstanceValue (1..*) | uses_InstanceValue | cdi:InstanceValue
     uses_InstanceValue: list[URIRef] = Field(
         alias="uses_InstanceValue",
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Datum_uses_InstanceValue"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Datum_uses_InstanceValue"), "rdf_type": "uri"},
     )
 
     # association cdi:Datum_uses_Notation (0..1) | uses_Notation | cdi:Notation
@@ -8233,17 +7207,12 @@ class Datum(DdiCdiClass):
         alias="uses_Notation",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Datum_uses_Notation"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Datum_uses_Notation"), "rdf_type": "uri"},
     )
 
 
-
-
 class DimensionGroup(DdiCdiClass):
-    """ DimensionGroup.
+    """DimensionGroup.
 
     Definition
     ============
@@ -8254,6 +7223,7 @@ class DimensionGroup(DdiCdiClass):
     Sex, Province and Marital Status is a common set of dimensions used across a variety of dimensional data structures and might need to be maintained separately.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -8273,10 +7243,7 @@ class DimensionGroup(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DimensionGroup-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DimensionGroup-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:DimensionGroup-name (0..*) | name | cdi:ObjectName
@@ -8284,12 +7251,8 @@ class DimensionGroup(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DimensionGroup-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DimensionGroup-name"), "rdf_type": CDI.ObjectName},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -8298,23 +7261,19 @@ class DimensionGroup(DdiCdiClass):
     has_DimensionComponent: list[URIRef] = Field(
         alias="has_DimensionComponent",
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DimensionGroup_has_DimensionComponent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DimensionGroup_has_DimensionComponent"), "rdf_type": "uri"},
     )
 
 
-
-
 class EnumerationDomain(DdiCdiClass):
-    """ EnumerationDomain.
+    """EnumerationDomain.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     A base class acting as an extension point to allow all codifications (codelist, statistical classification, etc.) to be understood as enumerated value domains.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -8334,10 +7293,7 @@ class EnumerationDomain(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "EnumerationDomain-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "EnumerationDomain-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:EnumerationDomain-name (0..*) | name | cdi:ObjectName
@@ -8345,10 +7301,7 @@ class EnumerationDomain(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "EnumerationDomain-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "EnumerationDomain-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:EnumerationDomain-purpose (0..1) | purpose | cdi:InternationalString
@@ -8356,12 +7309,8 @@ class EnumerationDomain(DdiCdiClass):
         alias="purpose",
         default=None,
         description="Intent or reason for the object/the description of the object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "EnumerationDomain-purpose"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "EnumerationDomain-purpose"), "rdf_type": CDI.InternationalString},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -8371,10 +7320,7 @@ class EnumerationDomain(DdiCdiClass):
         alias="isDefinedBy_Concept",
         default=None,
         description="The conceptual basis for the collection of members.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "EnumerationDomain_isDefinedBy_Concept"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "EnumerationDomain_isDefinedBy_Concept"), "rdf_type": "uri"},
     )
 
     # association cdi:EnumerationDomain_references_CategorySet (0..1) | references | cdi:CategorySet
@@ -8382,10 +7328,7 @@ class EnumerationDomain(DdiCdiClass):
         alias="references",
         default=None,
         description="Category set associated with the enumeration.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "EnumerationDomain_references_CategorySet"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "EnumerationDomain_references_CategorySet"), "rdf_type": "uri"},
     )
 
     # association cdi:EnumerationDomain_uses_LevelStructure (0..1) | uses_LevelStructure | cdi:LevelStructure
@@ -8393,17 +7336,12 @@ class EnumerationDomain(DdiCdiClass):
         alias="uses_LevelStructure",
         default=None,
         description="Has meaningful level to which members belong.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "EnumerationDomain_uses_LevelStructure"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "EnumerationDomain_uses_LevelStructure"), "rdf_type": "uri"},
     )
 
 
-
-
 class ForeignKey(DdiCdiClass):
-    """ ForeignKey.
+    """ForeignKey.
 
     Definition
     ============
@@ -8415,6 +7353,7 @@ class ForeignKey(DdiCdiClass):
     It can be used in conjunction with primary key to link data structures and their related data sets.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -8434,12 +7373,8 @@ class ForeignKey(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ForeignKey-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ForeignKey-identifier"), "rdf_type": CDI.Identifier},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -8448,17 +7383,12 @@ class ForeignKey(DdiCdiClass):
     isComposedOf: list[URIRef] = Field(
         alias="isComposedOf",
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ForeignKey_isComposedOf_ForeignKeyComponent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ForeignKey_isComposedOf_ForeignKeyComponent"), "rdf_type": "uri"},
     )
 
 
-
-
 class ForeignKeyComponent(DdiCdiClass):
-    """ ForeignKeyComponent.
+    """ForeignKeyComponent.
 
     Definition
     ============
@@ -8470,6 +7400,7 @@ class ForeignKeyComponent(DdiCdiClass):
     It can be used in conjunction with a primary key component to link data structures and their related data sets.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -8489,12 +7420,8 @@ class ForeignKeyComponent(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ForeignKeyComponent-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ForeignKeyComponent-identifier"), "rdf_type": CDI.Identifier},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -8505,7 +7432,7 @@ class ForeignKeyComponent(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ForeignKeyComponent_correspondsTo_DataStructureComponent"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -8515,29 +7442,28 @@ class ForeignKeyComponent(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ForeignKeyComponent_references_PrimaryKeyComponent"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class InformationFlowDefinition(DdiCdiClass):
-    """ InformationFlowDefinition.
+    """InformationFlowDefinition.
 
-    Definition 
-    ============ 
-    The relationships between parameters across steps is described by the information flow definition. Each relationship creates a pathway for an information object to follow.  
+    Definition
+    ============
+    The relationships between parameters across steps is described by the information flow definition. Each relationship creates a pathway for an information object to follow.
 
-    Examples 
-    ========== 
-    The output of one parameter might be the input of another one. Think of a Business Process Model and Notation (BPMN) diagram or an extract, transform, and load (ETL) pipeline definition as the sum of these relationships.  
+    Examples
+    ==========
+    The output of one parameter might be the input of another one. Think of a Business Process Model and Notation (BPMN) diagram or an extract, transform, and load (ETL) pipeline definition as the sum of these relationships.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     In DDI Lifecycle an information flow definition was referred to in terms of a "binding".
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -8559,10 +7485,9 @@ class InformationFlowDefinition(DdiCdiClass):
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "InformationFlowDefinition-identifier"),
-            "rdf_type": CDI.Identifier
+            "rdf_type": CDI.Identifier,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -8572,10 +7497,7 @@ class InformationFlowDefinition(DdiCdiClass):
         alias="from",
         default=None,
         description="From parameters are the outputs from a control construct produced in its step/sub-step.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "InformationFlowDefinition_from_Parameter"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "InformationFlowDefinition_from_Parameter"), "rdf_type": "uri"},
     )
 
     # association cdi:InformationFlowDefinition_to_Parameter (0..*) | to | cdi:Parameter
@@ -8583,31 +7505,27 @@ class InformationFlowDefinition(DdiCdiClass):
         alias="to",
         default=None,
         description="To parameters are the inputs to a control construct used in its step/sub-step.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "InformationFlowDefinition_to_Parameter"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "InformationFlowDefinition_to_Parameter"), "rdf_type": "uri"},
     )
 
 
-
-
 class InstanceValue(DdiCdiClass):
-    """ InstanceValue.
+    """InstanceValue.
 
-    Definition 
-    ============ 
-    Single data instance corresponding to a concept (with a notion of equality defined) being observed, captured, or derived.  
+    Definition
+    ============
+    Single data instance corresponding to a concept (with a notion of equality defined) being observed, captured, or derived.
 
-    Examples 
-    ========== 
-    A systolic blood pressure of 122 is measured. The single data instance (instance value) for that measurement is the character string "122". The associated measured concept (a blood pressure at that level) is the conceptual value.     
+    Examples
+    ==========
+    A systolic blood pressure of 122 is measured. The single data instance (instance value) for that measurement is the character string "122". The associated measured concept (a blood pressure at that level) is the conceptual value.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     This is the actual instance of data that populates a data point (the signifier of a datum in the signification pattern). The instance value comes from a value domain associated with an instance variable which allows the attachment of a unit of measurement, a datatype, and a population.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -8627,10 +7545,7 @@ class InstanceValue(DdiCdiClass):
         alias="content",
         default=None,
         description="The content of this value expressed as a string.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "InstanceValue-content"),
-            "rdf_type": CDI.TypedString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "InstanceValue-content"), "rdf_type": CDI.TypedString},
     )
 
     # attribute cdi:InstanceValue-identifier (0..1) | identifier | cdi:Identifier
@@ -8638,10 +7553,7 @@ class InstanceValue(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "InstanceValue-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "InstanceValue-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:InstanceValue-whiteSpace (0..1) | whiteSpace | cdi:WhiteSpaceRule
@@ -8649,12 +7561,8 @@ class InstanceValue(DdiCdiClass):
         alias="whiteSpace",
         default=None,
         description="""The usual setting \"collapse\" states that leading and trailing white space will be removed and multiple adjacent white spaces will be treated as a single white space. When setting to \"replace\" all occurrences of #x9 (tab), #xA (line feed) and #xD (carriage return) are replaced with #x20 (space) but leading and trailing spaces will be retained. If the existence of any of these white spaces is critical to the understanding of the content, change the value of this attribute to \"preserve\".""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "InstanceValue-whiteSpace"),
-            "rdf_type": CDI.WhiteSpaceRule
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "InstanceValue-whiteSpace"), "rdf_type": CDI.WhiteSpaceRule},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -8663,10 +7571,7 @@ class InstanceValue(DdiCdiClass):
     hasValueFrom_ValueDomain: URIRef = Field(
         alias="hasValueFrom_ValueDomain",
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "InstanceValue_hasValueFrom_ValueDomain"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "InstanceValue_hasValueFrom_ValueDomain"), "rdf_type": "uri"},
     )
 
     # association cdi:InstanceValue_isStoredIn_DataPoint (0..1) | isStoredIn | cdi:DataPoint
@@ -8674,10 +7579,7 @@ class InstanceValue(DdiCdiClass):
         alias="isStoredIn",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "InstanceValue_isStoredIn_DataPoint"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "InstanceValue_isStoredIn_DataPoint"), "rdf_type": "uri"},
     )
 
     # association cdi:InstanceValue_represents_ConceptualValue (0..1) | represents | cdi:ConceptualValue
@@ -8685,27 +7587,23 @@ class InstanceValue(DdiCdiClass):
         alias="represents",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "InstanceValue_represents_ConceptualValue"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "InstanceValue_represents_ConceptualValue"), "rdf_type": "uri"},
     )
 
 
-
-
 class InstanceVariableMap(DdiCdiClass):
-    """ InstanceVariableMap.
+    """InstanceVariableMap.
 
-    Definition 
-    ============ 
-    Key value relationship for two or more logical records where the key is one or more equivalent instance variables and the value is a defined relationship or a relationship to a set value.  
+    Definition
+    ============
+    Key value relationship for two or more logical records where the key is one or more equivalent instance variables and the value is a defined relationship or a relationship to a set value.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     The instance variable map identifies the variables which are used to connect two data sets, as when persons in one structure are associated with households in another structure. For logical records Household and Person, the keys are Household ID (HHID in Household Record), and Person ID (HHIDP in Person Record). Their value relationship is Equal, and set value is n.a. For each person in the person record, the value of HHIDP will be exactly the same as the value of HHID in the household record for the household to which they belong. (Correspondence type refers to the variables themselves rather than the value of the variables concerned.) In this context correspondence type will normally be set to ExactMatch.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -8726,7 +7624,7 @@ class InstanceVariableMap(DdiCdiClass):
         description="Relationship between the source and target instance variables or to the setValue if provided.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "InstanceVariableMap-comparison"),
-            "rdf_type": CDI.ComparisonOperator
+            "rdf_type": CDI.ComparisonOperator,
         },
     )
 
@@ -8736,7 +7634,7 @@ class InstanceVariableMap(DdiCdiClass):
         description="Describes the relationship between the source and target members using both controlled vocabularies and descriptive text. In this context the correspondence refers to the two instance variables, not their value. The relationship would normally be ExactMatch.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "InstanceVariableMap-correspondence"),
-            "rdf_type": CDI.CorrespondenceDefinition
+            "rdf_type": CDI.CorrespondenceDefinition,
         },
     )
 
@@ -8745,22 +7643,15 @@ class InstanceVariableMap(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "InstanceVariableMap-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "InstanceVariableMap-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:InstanceVariableMap-setValue (1..1) | setValue | xsd:string
-    setValue: Union[str, LiteralField] = Field(
+    setValue: str | LiteralField = Field(
         alias="setValue",
         description="A fixed value for the key source Instance Variables.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "InstanceVariableMap-setValue"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "InstanceVariableMap-setValue"), "rdf_type": "xsd:string"},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -8771,7 +7662,7 @@ class InstanceVariableMap(DdiCdiClass):
         description="The source instance variable for the relationship.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "InstanceVariableMap_hasSource_InstanceVariable"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -8782,21 +7673,20 @@ class InstanceVariableMap(DdiCdiClass):
         description="Target instance variables if a directional relation is used.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "InstanceVariableMap_hasTarget_InstanceVariable"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class Key(DdiCdiClass):
-    """ Key.
+    """Key.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Collection of data instances that uniquely identify a collection of data points in a dataset.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -8816,12 +7706,8 @@ class Key(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Key-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Key-identifier"), "rdf_type": CDI.Identifier},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -8831,10 +7717,7 @@ class Key(DdiCdiClass):
         alias="correspondsTo_Unit",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Key_correspondsTo_Unit"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Key_correspondsTo_Unit"), "rdf_type": "uri"},
     )
 
     # association cdi:Key_correspondsTo_Universe (0..1) | correspondsTo_Universe | cdi:Universe
@@ -8842,10 +7725,7 @@ class Key(DdiCdiClass):
         alias="correspondsTo_Universe",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Key_correspondsTo_Universe"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Key_correspondsTo_Universe"), "rdf_type": "uri"},
     )
 
     # association cdi:Key_has_KeyMember (0..*) | has_KeyMember | cdi:KeyMember
@@ -8853,20 +7733,14 @@ class Key(DdiCdiClass):
         alias="has_KeyMember",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Key_has_KeyMember"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Key_has_KeyMember"), "rdf_type": "uri"},
     )
 
     # association cdi:Key_identifies_DataPoint (1..*) | identifies | cdi:DataPoint
     identifies: list[URIRef] = Field(
         alias="identifies",
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Key_identifies_DataPoint"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Key_identifies_DataPoint"), "rdf_type": "uri"},
     )
 
     # association cdi:Key_represents_KeyDefinition (0..1) | represents | cdi:KeyDefinition
@@ -8874,23 +7748,19 @@ class Key(DdiCdiClass):
         alias="represents",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Key_represents_KeyDefinition"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Key_represents_KeyDefinition"), "rdf_type": "uri"},
     )
 
 
-
-
 class KeyDefinition(DdiCdiClass):
-    """ KeyDefinition.
+    """KeyDefinition.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Collection of concepts that uniquely defines a collection of data points in a dataset.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -8910,12 +7780,8 @@ class KeyDefinition(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "KeyDefinition-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "KeyDefinition-identifier"), "rdf_type": CDI.Identifier},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -8925,10 +7791,7 @@ class KeyDefinition(DdiCdiClass):
         alias="correspondsTo_Unit",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "KeyDefinition_correspondsTo_Unit"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "KeyDefinition_correspondsTo_Unit"), "rdf_type": "uri"},
     )
 
     # association cdi:KeyDefinition_correspondsTo_Universe (0..1) | correspondsTo_Universe | cdi:Universe
@@ -8936,10 +7799,7 @@ class KeyDefinition(DdiCdiClass):
         alias="correspondsTo_Universe",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "KeyDefinition_correspondsTo_Universe"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "KeyDefinition_correspondsTo_Universe"), "rdf_type": "uri"},
     )
 
     # association cdi:KeyDefinition_has_KeyDefinitionMember (0..*) | has_KeyDefinitionMember | cdi:KeyDefinitionMember
@@ -8947,17 +7807,12 @@ class KeyDefinition(DdiCdiClass):
         alias="has_KeyDefinitionMember",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "KeyDefinition_has_KeyDefinitionMember"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "KeyDefinition_has_KeyDefinitionMember"), "rdf_type": "uri"},
     )
 
 
-
-
 class Level(DdiCdiClass):
-    """ Level.
+    """Level.
 
     Definition
     ============
@@ -8965,13 +7820,14 @@ class Level(DdiCdiClass):
 
     Examples
     ==========
-    ISCO-08: index='1' label of associated category 'Major', index='2' label of associated category 'Sub-Major',  index='3' label of associated category 'Minor', 
+    ISCO-08: index='1' label of associated category 'Major', index='2' label of associated category 'Sub-Major',  index='3' label of associated category 'Minor',
 
     Explanatory notes
     ===================
     Provides level information for the members of the level structure. levelNumber provides the level number which may or may not be associated with a category which defines level.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -8991,10 +7847,7 @@ class Level(DdiCdiClass):
         alias="displayLabel",
         default=None,
         description="A human-readable display label for the object. Supports the use of multiple languages. Repeat for labels with different content, for example, labels with differing length limitations.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Level-displayLabel"),
-            "rdf_type": CDI.LabelForDisplay
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Level-displayLabel"), "rdf_type": CDI.LabelForDisplay},
     )
 
     # attribute cdi:Level-identifier (0..1) | identifier | cdi:Identifier
@@ -9002,22 +7855,15 @@ class Level(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Level-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Level-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:Level-levelNumber (1..1) | levelNumber | xsd:integer
     levelNumber: int = Field(
         alias="levelNumber",
         description="Provides an association between a level number and optional concept which defines it within an ordered array. Use is required.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Level-levelNumber"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Level-levelNumber"), "rdf_type": "xsd:integer"},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -9027,10 +7873,7 @@ class Level(DdiCdiClass):
         alias="isDefinedBy_Concept",
         default=None,
         description="A concept or concept sub-type which describes the level.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Level_isDefinedBy_Concept"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Level_isDefinedBy_Concept"), "rdf_type": "uri"},
     )
 
     # association cdi:Level_groups_ClassificationItem (0..*) | groups | cdi:ClassificationItem
@@ -9038,31 +7881,27 @@ class Level(DdiCdiClass):
         alias="groups",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Level_groups_ClassificationItem"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Level_groups_ClassificationItem"), "rdf_type": "uri"},
     )
 
 
-
-
 class LevelStructure(DdiCdiClass):
-    """ LevelStructure.
+    """LevelStructure.
 
-    Definition 
-    ============ 
-    Nesting structure of a hierarchical collection.   
+    Definition
+    ============
+    Nesting structure of a hierarchical collection.
 
-    Examples 
-    ========== 
+    Examples
+    ==========
     The International Standard Classification of Occupations (ISCO-08: https://www.ilo.org/public/english/bureau/stat/isco/isco08/) Major, Sub-Major, and Minor or the North American Industry Classification System (NAICS: https://www.census.gov/naics/) 2 digit sector codes, 3 digit subsector code list, 4 digit industry group code list, and 5 digit industry code list.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     The levels within the structure begin at the root level '1' and continue as an ordered array through each level of nesting. Levels are used to organize a hierarchy. Usually, a hierarchy contains one root member at the top, though it could contain several. These are the first level. All members directly related to those  in the first level compose the second level. The third and subsequent levels are defined similarly.  A level often is associated with a concept, which defines it. These correspond to kinds of aggregates. For example, in the US Standard Occupational Classification (2010), the level below the top is called Major Occupation Groups, and the next level is called Minor Occupational Groups. These ideas convey the structure. In particular, Health Care Practitioners (a major group) can be broken into Chiropractors, Dentists, Physicians, Vets, Therapists, etc. (minor groups) The categories in the nodes at the lower level aggregate to the category in node above them.  "Classification schemes are frequently organized in nested levels of increasing detail. ISCO-08, for example, has four levels: at the top level are ten major groups, each of which contain sub-major groups, which in turn are subdivided in minor groups, which contain unit groups. Even when a classification is not structured in levels ("flat classification"), the usual convention, which is adopted here, is to consider that it contains one unique level." (From the W3C Simple Knowlegde Organization System: http://rdf-vocabulary.ddialliance.org/xkos.html#) Individual classification items organized in a hierarchy may be associated with a specific level.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -9081,16 +7920,13 @@ class LevelStructure(DdiCdiClass):
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
-        description="""Bundles the information useful for a data catalog entry. 
+        description="""Bundles the information useful for a data catalog entry.
 
     Examples would be creator, contributor, title, copyright, embargo, and license information
 
     A set of information useful for attribution, data discovery, and access.
     This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LevelStructure-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LevelStructure-catalogDetails"), "rdf_type": CDI.CatalogDetails},
     )
 
     # attribute cdi:LevelStructure-identifier (0..1) | identifier | cdi:Identifier
@@ -9098,10 +7934,7 @@ class LevelStructure(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LevelStructure-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LevelStructure-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:LevelStructure-name (0..*) | name | cdi:ObjectName
@@ -9109,10 +7942,7 @@ class LevelStructure(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LevelStructure-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LevelStructure-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:LevelStructure-usage (0..1) | usage | cdi:InternationalString
@@ -9120,10 +7950,7 @@ class LevelStructure(DdiCdiClass):
         alias="usage",
         default=None,
         description="Explanation of the ways in which the object is employed.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LevelStructure-usage"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LevelStructure-usage"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:LevelStructure-validDateRange (0..1) | validDateRange | cdi:DateRange
@@ -9131,12 +7958,8 @@ class LevelStructure(DdiCdiClass):
         alias="validDateRange",
         default=None,
         description="The period for which the level object is valid, expressed as a start and end date (supports both ISO-standard and non-ISO date formats).",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LevelStructure-validDateRange"),
-            "rdf_type": CDI.DateRange
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LevelStructure-validDateRange"), "rdf_type": CDI.DateRange},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -9146,23 +7969,19 @@ class LevelStructure(DdiCdiClass):
         alias="has_Level",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LevelStructure_has_Level"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LevelStructure_has_Level"), "rdf_type": "uri"},
     )
 
 
-
-
 class LogicalRecord(DdiCdiClass):
-    """ LogicalRecord.
+    """LogicalRecord.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Collection of instance variables.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -9182,12 +8001,8 @@ class LogicalRecord(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LogicalRecord-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LogicalRecord-identifier"), "rdf_type": CDI.Identifier},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -9197,10 +8012,7 @@ class LogicalRecord(DdiCdiClass):
         alias="has_InstanceVariable",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LogicalRecord_has_InstanceVariable"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LogicalRecord_has_InstanceVariable"), "rdf_type": "uri"},
     )
 
     # association cdi:LogicalRecord_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
@@ -9208,10 +8020,7 @@ class LogicalRecord(DdiCdiClass):
         alias="isDefinedBy_Concept",
         default=None,
         description="The conceptual basis for the collection of members.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LogicalRecord_isDefinedBy_Concept"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LogicalRecord_isDefinedBy_Concept"), "rdf_type": "uri"},
     )
 
     # association cdi:LogicalRecord_organizes_DataSet (0..*) | organizes | cdi:DataSet
@@ -9219,23 +8028,19 @@ class LogicalRecord(DdiCdiClass):
         alias="organizes",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LogicalRecord_organizes_DataSet"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LogicalRecord_organizes_DataSet"), "rdf_type": "uri"},
     )
 
 
-
-
 class LogicalRecordPosition(DdiCdiClass):
-    """ LogicalRecordPosition.
+    """LogicalRecordPosition.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Assigns a position of the logical record within the data store.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -9255,22 +8060,15 @@ class LogicalRecordPosition(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LogicalRecordPosition-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LogicalRecordPosition-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:LogicalRecordPosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LogicalRecordPosition-value"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LogicalRecordPosition-value"), "rdf_type": "xsd:integer"},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -9279,17 +8077,12 @@ class LogicalRecordPosition(DdiCdiClass):
     indexes: URIRef = Field(
         alias="indexes",
         description="Logical record position indexes a logical record.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LogicalRecordPosition_indexes_LogicalRecord"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LogicalRecordPosition_indexes_LogicalRecord"), "rdf_type": "uri"},
     )
 
 
-
-
 class LogicalRecordRelationStructure(DdiCdiClass):
-    """ LogicalRecordRelationStructure.
+    """LogicalRecordRelationStructure.
 
     Definition
     ============
@@ -9300,6 +8093,7 @@ class LogicalRecordRelationStructure(DdiCdiClass):
     A data store with a Household, Family, and Person logical record type. Allows for describing parent/child, whole/part, or other relationships as appropriate.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -9321,7 +8115,7 @@ class LogicalRecordRelationStructure(DdiCdiClass):
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "LogicalRecordRelationStructure-identifier"),
-            "rdf_type": CDI.Identifier
+            "rdf_type": CDI.Identifier,
         },
     )
 
@@ -9330,10 +8124,7 @@ class LogicalRecordRelationStructure(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "LogicalRecordRelationStructure-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "LogicalRecordRelationStructure-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:LogicalRecordRelationStructure-purpose (0..1) | purpose | cdi:InternationalString
@@ -9343,7 +8134,7 @@ class LogicalRecordRelationStructure(DdiCdiClass):
         description="Intent or reason for the object/the description of the object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "LogicalRecordRelationStructure-purpose"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -9354,7 +8145,7 @@ class LogicalRecordRelationStructure(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "LogicalRecordRelationStructure-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -9365,7 +8156,7 @@ class LogicalRecordRelationStructure(DdiCdiClass):
         description="Provides information on reflexivity, transitivity, and symmetry of relationship using a descriptive term from an enumerated list. Use if all relations within this relation structure are of the same specification.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "LogicalRecordRelationStructure-specification"),
-            "rdf_type": CDI.StructureSpecification
+            "rdf_type": CDI.StructureSpecification,
         },
     )
 
@@ -9376,7 +8167,7 @@ class LogicalRecordRelationStructure(DdiCdiClass):
         description="Indicates the form of the associations among members of the collection. Specifies the way in which constituent parts are interrelated or arranged.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "LogicalRecordRelationStructure-topology"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -9387,10 +8178,9 @@ class LogicalRecordRelationStructure(DdiCdiClass):
         description="Indicates whether the related collections are comprehensive in terms of their coverage.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "LogicalRecordRelationStructure-totality"),
-            "rdf_type": CDI.StructureExtent
+            "rdf_type": CDI.StructureExtent,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -9402,7 +8192,7 @@ class LogicalRecordRelationStructure(DdiCdiClass):
         description="LogicalRecordRelationStructure has zero to many LogicalRecordRelationships.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "LogicalRecordRelationStructure_has_LogicalRecordRelationship"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -9413,21 +8203,20 @@ class LogicalRecordRelationStructure(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "LogicalRecordRelationStructure_structures_DataStore"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class LogicalRecordRelationship(DdiCdiClass):
-    """ LogicalRecordRelationship.
+    """LogicalRecordRelationship.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Relationships between logical records.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -9449,7 +8238,7 @@ class LogicalRecordRelationship(DdiCdiClass):
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "LogicalRecordRelationship-identifier"),
-            "rdf_type": CDI.Identifier
+            "rdf_type": CDI.Identifier,
         },
     )
 
@@ -9460,10 +8249,9 @@ class LogicalRecordRelationship(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "LogicalRecordRelationship-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -9475,7 +8263,7 @@ class LogicalRecordRelationship(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "LogicalRecordRelationship_hasSource_LogicalRecord"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -9486,25 +8274,24 @@ class LogicalRecordRelationship(DdiCdiClass):
         description="Note that this can be realized as a collection to support tuples.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "LogicalRecordRelationship_hasTarget_LogicalRecord"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class Notation(DdiCdiClass):
-    """ Notation.
+    """Notation.
 
-    Definition 
-    ============ 
-    Representation of a category in the context of a code or a classification item, as opposed of the corresponding instance value which would appear when used in a dataset. 
+    Definition
+    ============
+    Representation of a category in the context of a code or a classification item, as opposed of the corresponding instance value which would appear when used in a dataset.
 
-    Examples 
-    ========== 
+    Examples
+    ==========
     The number "334" used as a code for the "Computer and electronic product manufacturing" category in the North American Industry Classification System (NAICS).
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -9524,10 +8311,7 @@ class Notation(DdiCdiClass):
         alias="content",
         default=None,
         description="The actual content of this value as a string.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Notation-content"),
-            "rdf_type": CDI.TypedString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Notation-content"), "rdf_type": CDI.TypedString},
     )
 
     # attribute cdi:Notation-identifier (0..1) | identifier | cdi:Identifier
@@ -9535,10 +8319,7 @@ class Notation(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Notation-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Notation-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:Notation-whiteSpace (0..1) | whiteSpace | cdi:WhiteSpaceRule
@@ -9546,12 +8327,8 @@ class Notation(DdiCdiClass):
         alias="whiteSpace",
         default=None,
         description="""The usual setting \"collapse\" states that leading and trailing white space will be removed and multiple adjacent white spaces will be treated as a single white space. When setting to \"replace\" all occurrences of #x9 (tab), #xA (line feed) and #xD (carriage return) are replaced with #x20 (space) but leading and trailing spaces will be retained. If the existence of any of these white spaces is critical to the understanding of the content, change the value of this attribute to \"preserve\".""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Notation-whiteSpace"),
-            "rdf_type": CDI.WhiteSpaceRule
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Notation-whiteSpace"), "rdf_type": CDI.WhiteSpaceRule},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -9561,27 +8338,23 @@ class Notation(DdiCdiClass):
         alias="represents",
         default=None,
         description="Notation represents zero to many categories.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Notation_represents_Category"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Notation_represents_Category"), "rdf_type": "uri"},
     )
 
 
-
-
 class Parameter(DdiCdiClass):
-    """ Parameter.
+    """Parameter.
 
-    Definition 
-    ============ 
-    An input or output to control logic and the step/sub-step it invokes. Parameters may take the form of any information object, including data sets and structured metadata as well as configuration information for the step/sub-step.  
+    Definition
+    ============
+    An input or output to control logic and the step/sub-step it invokes. Parameters may take the form of any information object, including data sets and structured metadata as well as configuration information for the step/sub-step.
 
-    Examples 
-    ========== 
+    Examples
+    ==========
     A dimensional data set; a long data structure.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -9601,10 +8374,7 @@ class Parameter(DdiCdiClass):
         alias="entityBound",
         default=None,
         description="Specification of the object being used as a parameter, typically as a reference to a class in the DDI-CDI model, but may also be a specific instance of a class.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Parameter-entityBound"),
-            "rdf_type": CDI.Reference
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Parameter-entityBound"), "rdf_type": CDI.Reference},
     )
 
     # attribute cdi:Parameter-identifier (0..1) | identifier | cdi:Identifier
@@ -9612,10 +8382,7 @@ class Parameter(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Parameter-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Parameter-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:Parameter-name (0..*) | name | cdi:ObjectName
@@ -9623,17 +8390,12 @@ class Parameter(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (linguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Parameter-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Parameter-name"), "rdf_type": CDI.ObjectName},
     )
 
 
-
-
 class PhysicalDataSet(DdiCdiClass):
-    """ PhysicalDataSet.
+    """PhysicalDataSet.
 
     Definition
     ============
@@ -9648,6 +8410,7 @@ class PhysicalDataSet(DdiCdiClass):
     Multiple styles of structural description are supported: including describing files as unit-record (unit segment layout) files; describing cubes; and describing event-history (spell) data.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -9666,26 +8429,20 @@ class PhysicalDataSet(DdiCdiClass):
     allowsDuplicates: bool = Field(
         alias="allowsDuplicates",
         description="""If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical \"bag\" permits duplicates and is unordered - a \"set\" does not have duplicates and may be ordered.)""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalDataSet-allowsDuplicates"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalDataSet-allowsDuplicates"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:PhysicalDataSet-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
-        description="""Bundles the information useful for a data catalog entry. 
+        description="""Bundles the information useful for a data catalog entry.
 
     Examples would be creator, contributor, title, copyright, embargo, and license information
 
     A set of information useful for attribution, data discovery, and access.
     This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalDataSet-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalDataSet-catalogDetails"), "rdf_type": CDI.CatalogDetails},
     )
 
     # attribute cdi:PhysicalDataSet-identifier (0..1) | identifier | cdi:Identifier
@@ -9693,10 +8450,7 @@ class PhysicalDataSet(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalDataSet-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalDataSet-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:PhysicalDataSet-name (0..1) | name | cdi:ObjectName
@@ -9704,10 +8458,7 @@ class PhysicalDataSet(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalDataSet-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalDataSet-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:PhysicalDataSet-numberOfSegments (0..1) | numberOfSegments | xsd:integer
@@ -9715,10 +8466,7 @@ class PhysicalDataSet(DdiCdiClass):
         alias="numberOfSegments",
         default=None,
         description="The number of distinct segments (e.g., segments patterns with different structures, identified separately) in a physical dataset.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalDataSet-numberOfSegments"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalDataSet-numberOfSegments"), "rdf_type": "xsd:integer"},
     )
 
     # attribute cdi:PhysicalDataSet-overview (0..1) | overview | cdi:InternationalString
@@ -9726,21 +8474,15 @@ class PhysicalDataSet(DdiCdiClass):
         alias="overview",
         default=None,
         description="Short natural language account of the information obtained from the combination of properties and relationships associated with an object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalDataSet-overview"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalDataSet-overview"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:PhysicalDataSet-physicalFileName (0..1) | physicalFileName | xsd:string
-    physicalFileName: Union[str, LiteralField] | None = Field(
+    physicalFileName: str | LiteralField | None = Field(
         alias="physicalFileName",
         default=None,
         description="Use when multiple physical segments are stored in a single file.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalDataSet-physicalFileName"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalDataSet-physicalFileName"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:PhysicalDataSet-purpose (0..1) | purpose | cdi:InternationalString
@@ -9748,12 +8490,8 @@ class PhysicalDataSet(DdiCdiClass):
         alias="purpose",
         default=None,
         description="Intent or reason for the object/the description of the object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalDataSet-purpose"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalDataSet-purpose"), "rdf_type": CDI.InternationalString},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -9763,10 +8501,7 @@ class PhysicalDataSet(DdiCdiClass):
         alias="has_InstanceVariable",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalDataSet_has_InstanceVariable"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalDataSet_has_InstanceVariable"), "rdf_type": "uri"},
     )
 
     # association cdi:PhysicalDataSet_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
@@ -9774,10 +8509,7 @@ class PhysicalDataSet(DdiCdiClass):
         alias="isDefinedBy_Concept",
         default=None,
         description="The conceptual basis for the collection of members.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalDataSet_isDefinedBy_Concept"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalDataSet_isDefinedBy_Concept"), "rdf_type": "uri"},
     )
 
     # association cdi:PhysicalDataSet_correspondsTo_DataSet (0..1) | correspondsTo_DataSet | cdi:DataSet
@@ -9785,10 +8517,7 @@ class PhysicalDataSet(DdiCdiClass):
         alias="correspondsTo_DataSet",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalDataSet_correspondsTo_DataSet"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalDataSet_correspondsTo_DataSet"), "rdf_type": "uri"},
     )
 
     # association cdi:PhysicalDataSet_formats_DataStore (0..*) | formats | cdi:DataStore
@@ -9796,10 +8525,7 @@ class PhysicalDataSet(DdiCdiClass):
         alias="formats",
         default=None,
         description="Data store physically represented by the structure description.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalDataSet_formats_DataStore"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalDataSet_formats_DataStore"), "rdf_type": "uri"},
     )
 
     # association cdi:PhysicalDataSet_has_PhysicalRecordSegment (0..*) | has_PhysicalRecordSegment | cdi:PhysicalRecordSegment
@@ -9807,10 +8533,7 @@ class PhysicalDataSet(DdiCdiClass):
         alias="has_PhysicalRecordSegment",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalDataSet_has_PhysicalRecordSegment"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalDataSet_has_PhysicalRecordSegment"), "rdf_type": "uri"},
     )
 
     # association cdi:PhysicalDataSet_has_PhysicalRecordSegmentPosition (0..*) | has_PhysicalRecordSegmentPosition | cdi:PhysicalRecordSegmentPosition
@@ -9820,25 +8543,24 @@ class PhysicalDataSet(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalDataSet_has_PhysicalRecordSegmentPosition"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class PhysicalDataSetStructure(DdiCdiClass):
-    """ PhysicalDataSetStructure.
+    """PhysicalDataSetStructure.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Ordering for physical record segments, which map to a logical record.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     The same logical record layout may be the source member in several adjacency lists. This can happen when physical record segments are also population specific. In this instance each adjacency list associated with a logical record layout is associated with a different population.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -9858,10 +8580,7 @@ class PhysicalDataSetStructure(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalDataSetStructure-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalDataSetStructure-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:PhysicalDataSetStructure-name (0..1) | name | cdi:ObjectName
@@ -9869,10 +8588,7 @@ class PhysicalDataSetStructure(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalDataSetStructure-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalDataSetStructure-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:PhysicalDataSetStructure-purpose (0..1) | purpose | cdi:InternationalString
@@ -9882,7 +8598,7 @@ class PhysicalDataSetStructure(DdiCdiClass):
         description="Intent or reason for the object/the description of the object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalDataSetStructure-purpose"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -9893,7 +8609,7 @@ class PhysicalDataSetStructure(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalDataSetStructure-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -9904,7 +8620,7 @@ class PhysicalDataSetStructure(DdiCdiClass):
         description="Provides information on reflexivity, transitivity, and symmetry of relationship using a descriptive term from an enumerated list. Use if all relations within this relation structure are of the same specification.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalDataSetStructure-specification"),
-            "rdf_type": CDI.StructureSpecification
+            "rdf_type": CDI.StructureSpecification,
         },
     )
 
@@ -9915,7 +8631,7 @@ class PhysicalDataSetStructure(DdiCdiClass):
         description="Indicates the form of the associations among members of the collection. Specifies the way in which constituent parts are interrelated or arranged.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalDataSetStructure-topology"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -9926,10 +8642,9 @@ class PhysicalDataSetStructure(DdiCdiClass):
         description="Indicates whether the related collections are comprehensive in terms of their coverage.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalDataSetStructure-totality"),
-            "rdf_type": CDI.StructureExtent
+            "rdf_type": CDI.StructureExtent,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -9941,7 +8656,7 @@ class PhysicalDataSetStructure(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalDataSetStructure_correspondsTo_DataStructure"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -9952,7 +8667,7 @@ class PhysicalDataSetStructure(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalDataSetStructure_has_PhysicalRecordSegmentRelationship"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -9963,35 +8678,34 @@ class PhysicalDataSetStructure(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalDataSetStructure_structures_PhysicalDataSet"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class PhysicalLayoutRelationStructure(DdiCdiClass):
-    """ PhysicalLayoutRelationStructure.
+    """PhysicalLayoutRelationStructure.
 
     Definition
     ==========
-    Realization of relation structure that is used to describe the sequence of value mappings in a physical layout.  
+    Realization of relation structure that is used to describe the sequence of value mappings in a physical layout.
 
     Examples
-    ======== 
+    ========
     The W3C Tabular Data on the Web specification section 4.5 Cells (https://www.w3.org/TR/tabular-data-model/#content-type) allows for a list datatype within cells. In the example below there are three top level instance variables: PersonID - the person identifier; AgeYr - age in years; BpSys_Dia - blood pressure (a list containing Systolic and Diastolic values). There are two variables at a secondary level of the hierarchy: Systolic - the systolic pressure; Diastolic - the diastolic pressure. The delimited file below uses the comma to separate "columns" and forward slash to separate elements of a blood pressure list. ::
 
-       PersonID, AgeYr, BpSys_Dia  
-       1,22,119/67  
-       2,68,122/70  
+       PersonID, AgeYr, BpSys_Dia
+       1,22,119/67
+       2,68,122/70
 
-    The physical relation structure in this case would describe a BpSys_Dia list variable as containing an ordered sequence of the Systolic and Diastolic instance variables.   
+    The physical relation structure in this case would describe a BpSys_Dia list variable as containing an ordered sequence of the Systolic and Diastolic instance variables.
 
     Explanatory notes
     =================
     This can be more complex than a simple sequence.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -10013,7 +8727,7 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
         description="Intentional definition of the order criteria (e.g. alphabetical, numerical, increasing, decreasing, etc.).",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalLayoutRelationStructure-criteria"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -10024,7 +8738,7 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalLayoutRelationStructure-identifier"),
-            "rdf_type": CDI.Identifier
+            "rdf_type": CDI.Identifier,
         },
     )
 
@@ -10035,7 +8749,7 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
         description="A linguistic signifier. Human understandable name (word, phrase, or mnemonic) that reflects the ISO/IEC 11179-5 naming principles. If more than one name is provided then a context to differentiate usage must be provided as well.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalLayoutRelationStructure-name"),
-            "rdf_type": CDI.ObjectName
+            "rdf_type": CDI.ObjectName,
         },
     )
 
@@ -10046,7 +8760,7 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
         description="Intent or reason for the object/the description of the object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalLayoutRelationStructure-purpose"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -10057,7 +8771,7 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalLayoutRelationStructure-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -10068,7 +8782,7 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
         description="Provides information on reflexivity, transitivity, and symmetry of relationship using a descriptive term from an enumerated list. Use if all relations within this relation structure are of the same specification.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalLayoutRelationStructure-specification"),
-            "rdf_type": CDI.StructureSpecification
+            "rdf_type": CDI.StructureSpecification,
         },
     )
 
@@ -10078,7 +8792,7 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
         description="Indicates the form of the associations among members of the collection. Specifies the way in which constituent parts are interrelated or arranged.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalLayoutRelationStructure-topology"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -10089,10 +8803,9 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
         description="Indicates whether the related collections are comprehensive in terms of their coverage.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalLayoutRelationStructure-totality"),
-            "rdf_type": CDI.StructureExtent
+            "rdf_type": CDI.StructureExtent,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -10104,7 +8817,7 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalLayoutRelationStructure_has_ValueMappingRelationship"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -10115,15 +8828,13 @@ class PhysicalLayoutRelationStructure(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalLayoutRelationStructure_structures_PhysicalSegmentLayout"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class PhysicalRecordSegment(DdiCdiClass):
-    """ PhysicalRecordSegment.
+    """PhysicalRecordSegment.
 
     Definition
     ==========
@@ -10133,16 +8844,17 @@ class PhysicalRecordSegment(DdiCdiClass):
     ========
     The file below has four instance variables: PersonId, SegmentId, AgeYr, and HeightCm. The data for each person (identified by PersonId) is recorded in two segments (identified by SegmentId), "a" and "b". AgeYr is on physical segment a, and HeightCm is on segment b. These are the same data as described in the unit segment layout documentation. ::
 
-       1 a  22  
-       1 b 183  
+       1 a  22
+       1 b 183
        2 a  45
-       2 b 175  
+       2 b 175
 
     Explanatory notes
     =================
     A logical record may be stored in one or more segments housed hierarchically in a single file or in separate data files. All logical records have at least one segment.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -10161,7 +8873,7 @@ class PhysicalRecordSegment(DdiCdiClass):
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
-        description="""Bundles the information useful for a data catalog entry. 
+        description="""Bundles the information useful for a data catalog entry.
 
     Examples would be creator, contributor, title, copyright, embargo, and license information
 
@@ -10169,7 +8881,7 @@ class PhysicalRecordSegment(DdiCdiClass):
     This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalRecordSegment-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
+            "rdf_type": CDI.CatalogDetails,
         },
     )
 
@@ -10178,10 +8890,7 @@ class PhysicalRecordSegment(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalRecordSegment-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalRecordSegment-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:PhysicalRecordSegment-name (0..*) | name | cdi:ObjectName
@@ -10189,20 +8898,17 @@ class PhysicalRecordSegment(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalRecordSegment-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalRecordSegment-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:PhysicalRecordSegment-physicalFileName (0..1) | physicalFileName | xsd:string
-    physicalFileName: Union[str, LiteralField] | None = Field(
+    physicalFileName: str | LiteralField | None = Field(
         alias="physicalFileName",
         default=None,
         description="Use when each physical segment is stored in its own file.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalRecordSegment-physicalFileName"),
-            "rdf_type": "xsd:string"
+            "rdf_type": "xsd:string",
         },
     )
 
@@ -10213,10 +8919,9 @@ class PhysicalRecordSegment(DdiCdiClass):
         description="Intent or reason for the object/the description of the object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalRecordSegment-purpose"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -10226,10 +8931,7 @@ class PhysicalRecordSegment(DdiCdiClass):
         alias="isDefinedBy_Concept",
         default=None,
         description="The conceptual basis for the collection of members.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalRecordSegment_isDefinedBy_Concept"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalRecordSegment_isDefinedBy_Concept"), "rdf_type": "uri"},
     )
 
     # association cdi:PhysicalRecordSegment_represents_Population (0..1) | represents | cdi:Population
@@ -10237,10 +8939,7 @@ class PhysicalRecordSegment(DdiCdiClass):
         alias="represents",
         default=None,
         description="A record segment may represent a specific population or sub-population within a larger set of segments. Allows for the identification of this filter for membership in the segment.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalRecordSegment_represents_Population"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalRecordSegment_represents_Population"), "rdf_type": "uri"},
     )
 
     # association cdi:PhysicalRecordSegment_has_DataPoint (0..*) | has_DataPoint | cdi:DataPoint
@@ -10248,10 +8947,7 @@ class PhysicalRecordSegment(DdiCdiClass):
         alias="has_DataPoint",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalRecordSegment_has_DataPoint"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalRecordSegment_has_DataPoint"), "rdf_type": "uri"},
     )
 
     # association cdi:PhysicalRecordSegment_has_DataPointPosition (0..*) | has_DataPointPosition | cdi:DataPointPosition
@@ -10259,10 +8955,7 @@ class PhysicalRecordSegment(DdiCdiClass):
         alias="has_DataPointPosition",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalRecordSegment_has_DataPointPosition"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalRecordSegment_has_DataPointPosition"), "rdf_type": "uri"},
     )
 
     # association cdi:PhysicalRecordSegment_has_PhysicalSegmentLayout (0..1) | has_PhysicalSegmentLayout | cdi:PhysicalSegmentLayout
@@ -10272,7 +8965,7 @@ class PhysicalRecordSegment(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalRecordSegment_has_PhysicalSegmentLayout"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -10281,23 +8974,19 @@ class PhysicalRecordSegment(DdiCdiClass):
         alias="mapsTo",
         default=None,
         description="Every data record has zero to many physical record segments. It is possible to describe a physical data product and its record segment(s) without reference to a data record.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalRecordSegment_mapsTo_LogicalRecord"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalRecordSegment_mapsTo_LogicalRecord"), "rdf_type": "uri"},
     )
 
 
-
-
 class PhysicalRecordSegmentPosition(DdiCdiClass):
-    """ PhysicalRecordSegmentPosition.
+    """PhysicalRecordSegmentPosition.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Assigns a position of the physical record segment within the whole physical record. For example in what order does this 80 character segment fall within an 800 character record.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -10319,7 +9008,7 @@ class PhysicalRecordSegmentPosition(DdiCdiClass):
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalRecordSegmentPosition-identifier"),
-            "rdf_type": CDI.Identifier
+            "rdf_type": CDI.Identifier,
         },
     )
 
@@ -10327,12 +9016,8 @@ class PhysicalRecordSegmentPosition(DdiCdiClass):
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalRecordSegmentPosition-value"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalRecordSegmentPosition-value"), "rdf_type": "xsd:integer"},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -10343,21 +9028,20 @@ class PhysicalRecordSegmentPosition(DdiCdiClass):
         description="Assigns a position to a physical record segment within a physical record.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalRecordSegmentPosition_indexes_PhysicalRecordSegment"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class PhysicalRecordSegmentRelationship(DdiCdiClass):
-    """ PhysicalRecordSegmentRelationship.
+    """PhysicalRecordSegmentRelationship.
 
     Definition
     ============
     Structured relationship between physical record segments.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -10379,7 +9063,7 @@ class PhysicalRecordSegmentRelationship(DdiCdiClass):
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalRecordSegmentRelationship-identifier"),
-            "rdf_type": CDI.Identifier
+            "rdf_type": CDI.Identifier,
         },
     )
 
@@ -10390,10 +9074,9 @@ class PhysicalRecordSegmentRelationship(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalRecordSegmentRelationship-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -10405,7 +9088,7 @@ class PhysicalRecordSegmentRelationship(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalRecordSegmentRelationship_hasSource_PhysicalRecordSegment"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -10416,21 +9099,20 @@ class PhysicalRecordSegmentRelationship(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalRecordSegmentRelationship_hasTarget_PhysicalRecordSegment"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class PhysicalRecordSegmentStructure(DdiCdiClass):
-    """ PhysicalRecordSegmentStructure.
+    """PhysicalRecordSegmentStructure.
 
     Definition
     ============
     Means for describing the complex relational structure of data points in a physical record representing the logical record.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -10452,7 +9134,7 @@ class PhysicalRecordSegmentStructure(DdiCdiClass):
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalRecordSegmentStructure-identifier"),
-            "rdf_type": CDI.Identifier
+            "rdf_type": CDI.Identifier,
         },
     )
 
@@ -10461,10 +9143,7 @@ class PhysicalRecordSegmentStructure(DdiCdiClass):
         alias="name",
         default=None,
         description="A linguistic signifier. Human understandable name (word, phrase, or mnemonic) that reflects the ISO/IEC 11179-5 naming principles.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalRecordSegmentStructure-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalRecordSegmentStructure-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:PhysicalRecordSegmentStructure-purpose (0..1) | purpose | cdi:InternationalString
@@ -10474,7 +9153,7 @@ class PhysicalRecordSegmentStructure(DdiCdiClass):
         description="Intent or reason for the object/the description of the object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalRecordSegmentStructure-purpose"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -10485,7 +9164,7 @@ class PhysicalRecordSegmentStructure(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalRecordSegmentStructure-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -10496,7 +9175,7 @@ class PhysicalRecordSegmentStructure(DdiCdiClass):
         description="Provides information on reflexivity, transitivity, and symmetry of relationship using a descriptive term from an enumerated list. Use if all relations within this relation structure are of the same specification.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalRecordSegmentStructure-specification"),
-            "rdf_type": CDI.StructureSpecification
+            "rdf_type": CDI.StructureSpecification,
         },
     )
 
@@ -10507,7 +9186,7 @@ class PhysicalRecordSegmentStructure(DdiCdiClass):
         description="Indicates the form of the associations among members of the collection. Specifies the way in which constituent parts are interrelated or arranged.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalRecordSegmentStructure-topology"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -10518,10 +9197,9 @@ class PhysicalRecordSegmentStructure(DdiCdiClass):
         description="Indicates whether the related collections are comprehensive in terms of their coverage.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalRecordSegmentStructure-totality"),
-            "rdf_type": CDI.StructureExtent
+            "rdf_type": CDI.StructureExtent,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -10533,7 +9211,7 @@ class PhysicalRecordSegmentStructure(DdiCdiClass):
         description="PhysicalRecordSegmentStructure has zero to many DataPointRelationships.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalRecordSegmentStructure_has_DataPointRelationship"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -10544,29 +9222,28 @@ class PhysicalRecordSegmentStructure(DdiCdiClass):
         description="There may be cases where there is a more complex structure to a sequence of data points. A cell containing a list, for example, might be considered to have nested data points that are the elements of the list. (For simplicity's sake, each element of the list should be modeled as a data point if this is possible.)",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalRecordSegmentStructure_structures_PhysicalRecordSegment"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class PhysicalSegmentLayout(DdiCdiClass):
-    """ PhysicalSegmentLayout.
+    """PhysicalSegmentLayout.
 
-    Definition 
-    ============ 
-    Used as an extension point in the description of the different layout styles of data structure descriptions.  
+    Definition
+    ============
+    Used as an extension point in the description of the different layout styles of data structure descriptions.
 
-    Examples 
-    ========== 
-    Examples include unit segment layouts, event data layouts, and cube layouts (e.g. summary data).  
+    Examples
+    ==========
+    Examples include unit segment layouts, event data layouts, and cube layouts (e.g. summary data).
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     A physical segment layout is a physical description (e.g. unit segment layout) of the associated logical record Layout consisting of a collection of value mappings describing the physical interrelationship of each related value mapping and associated instance variable.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -10587,7 +9264,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         description="If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical “bag” permits duplicates and is unordered - a “set” does not have duplicates and may be ordered.)",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-allowsDuplicates"),
-            "rdf_type": "xsd:boolean"
+            "rdf_type": "xsd:boolean",
         },
     )
 
@@ -10595,18 +9272,15 @@ class PhysicalSegmentLayout(DdiCdiClass):
     arrayBase: int | None = Field(
         alias="arrayBase",
         default=None,
-        description="The starting value for the numbering of cells, rows, columns, etc. when they constitute an ordered sequence (an array). Note that in DDI, this is typically either 0 or 1. In related W3C work (Model for Tabular Data and Metadata on the Web), they appear to standardize on 1 (see https://www.w3.org/TR/tabular-data-model/ 4.3 [Columns] and 4.4 [Rows]: \"number - the position of the column amongst the columns for the associated table, starting from 1.\")",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-arrayBase"),
-            "rdf_type": "xsd:integer"
-        },
+        description='The starting value for the numbering of cells, rows, columns, etc. when they constitute an ordered sequence (an array). Note that in DDI, this is typically either 0 or 1. In related W3C work (Model for Tabular Data and Metadata on the Web), they appear to standardize on 1 (see https://www.w3.org/TR/tabular-data-model/ 4.3 [Columns] and 4.4 [Rows]: "number - the position of the column amongst the columns for the associated table, starting from 1.")',
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout-arrayBase"), "rdf_type": "xsd:integer"},
     )
 
     # attribute cdi:PhysicalSegmentLayout-catalogDetails (0..1) | catalogDetails | cdi:CatalogDetails
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
-        description="""Bundles the information useful for a data catalog entry. 
+        description="""Bundles the information useful for a data catalog entry.
 
     Examples would be creator, contributor, title, copyright, embargo, and license information
 
@@ -10614,30 +9288,24 @@ class PhysicalSegmentLayout(DdiCdiClass):
     This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
+            "rdf_type": CDI.CatalogDetails,
         },
     )
 
     # attribute cdi:PhysicalSegmentLayout-commentPrefix (0..1) | commentPrefix | xsd:string
-    commentPrefix: Union[str, LiteralField] | None = Field(
+    commentPrefix: str | LiteralField | None = Field(
         alias="commentPrefix",
         default=None,
         description="A string used to indicate that an input line is a comment, a string which precedes a comment in the data file. From https://www.w3.org/TR/tabular-metadata/ 5.9 Dialect  commentPrefix: 'An atomic property that sets the comment prefix flag to the single provided value, which MUST be a string. The default is \"#\".'",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-commentPrefix"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout-commentPrefix"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:PhysicalSegmentLayout-delimiter (0..1) | delimiter | xsd:string
-    delimiter: Union[str, LiteralField] | None = Field(
+    delimiter: str | LiteralField | None = Field(
         alias="delimiter",
         default=None,
         description="""The Delimiting character in the data. Must be used if isDelimited is True. \"The separator between cells, set by the delimiter property of a dialect description. The default is ,. See the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-data-model/#encoding). From the \"CSV Dialect\" specification (https://specs.frictionlessdata.io/csv-dialect/#specification): \"delimiter: specifies a one-character string to use as the field separator. Default = ,.\"""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-delimiter"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout-delimiter"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:PhysicalSegmentLayout-encoding (0..1) | encoding | cdi:ControlledVocabularyEntry
@@ -10647,19 +9315,16 @@ class PhysicalSegmentLayout(DdiCdiClass):
         description="""The character encoding of the represented data. From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/) 5.9 Dialect: \"encoding - An atomic property that sets the encoding flag to the single provided string value, which MUST be a defined in [encoding]. The default is 'utf-8'.\" From the same W3C recommendation 7.2 Encoding: \"CSV files should be encoded using UTF-8, and should be in Unicode Normal Form C as defined in [UAX15]. If a CSV file is not encoded using UTF-8, the encoding should be specified through the charset parameter in the Content-Type header.\"""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-encoding"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
     # attribute cdi:PhysicalSegmentLayout-escapeCharacter (0..1) | escapeCharacter | xsd:string
-    escapeCharacter: Union[str, LiteralField] | None = Field(
+    escapeCharacter: str | LiteralField | None = Field(
         alias="escapeCharacter",
         default=None,
         description="""\"The string that is used to escape the quote character within escaped cells, or null\" see https://www.w3.org/TR/tabular-data-model/#encoding. From https://www.w3.org/TR/tabular-metadata/ 5.9 Dialect \"doubleQuote: A boolean atomic property that, if true, sets the escape character flag to \". If false, to \\. The default is true.\" From http://specs.frictionlessdata.io/csv-dialect/ \"doubleQuote: controls the handling of quotes inside fields. If true, two consecutive quotes should be interpreted as one. Default = true\".""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-escapeCharacter"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout-escapeCharacter"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:PhysicalSegmentLayout-hasHeader (0..1) | hasHeader | xsd:boolean
@@ -10667,10 +9332,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         alias="hasHeader",
         default=None,
         description="""True if the file contains a header containing column names. From https://www.w3.org/TR/tabular-metadata/ 5.9 Dialect \"header: A boolean atomic property that, if true, sets the header row count flag to 1, and if false to 0, unless headerRowCount is provided, in which case the value provided for the header property is ignored. The default is true.\" From http://specs.frictionlessdata.io/csv-dialect/ \"header: indicates whether the file includes a header row. If true the first row in the file is a header row, not data. Default = true\".""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-hasHeader"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout-hasHeader"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:PhysicalSegmentLayout-headerIsCaseSensitive (0..1) | headerIsCaseSensitive | xsd:boolean
@@ -10680,7 +9342,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         description="""If True, the case of the labels in the header is significant. From the \"CSV Dialect\" specification (http://specs.frictionlessdata.io/csv-dialect/): \"caseSensitiveHeader: indicates that case in the header is meaningful. For example, columns CAT and Cat should not be equated. Default = false.\"""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-headerIsCaseSensitive"),
-            "rdf_type": "xsd:boolean"
+            "rdf_type": "xsd:boolean",
         },
     )
 
@@ -10688,11 +9350,8 @@ class PhysicalSegmentLayout(DdiCdiClass):
     headerRowCount: int | None = Field(
         alias="headerRowCount",
         default=None,
-        description="The number of lines in the header From https://www.w3.org/TR/tabular-metadata/ 5.9 Dialect \"headerRowCount: A numeric atomic property that sets the header row count flag to the single provided value, which MUST be a non-negative integer. The default is 1.\"",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-headerRowCount"),
-            "rdf_type": "xsd:integer"
-        },
+        description='The number of lines in the header From https://www.w3.org/TR/tabular-metadata/ 5.9 Dialect "headerRowCount: A numeric atomic property that sets the header row count flag to the single provided value, which MUST be a non-negative integer. The default is 1."',
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout-headerRowCount"), "rdf_type": "xsd:integer"},
     )
 
     # attribute cdi:PhysicalSegmentLayout-identifier (0..1) | identifier | cdi:Identifier
@@ -10700,41 +9359,29 @@ class PhysicalSegmentLayout(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:PhysicalSegmentLayout-isDelimited (1..1) | isDelimited | xsd:boolean
     isDelimited: bool = Field(
         alias="isDelimited",
         description="""Indicates whether the data are in a delimited format. If \"true,\" the format is delimited, and the isFixedWidth property must be set to \"false.\" If not set to \"true,\" the property isFixedWitdh must be set to \"true.\"""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-isDelimited"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout-isDelimited"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:PhysicalSegmentLayout-isFixedWidth (1..1) | isFixedWidth | xsd:boolean
     isFixedWidth: bool = Field(
         alias="isFixedWidth",
         description="Set to true if the file is fixed-width. If true, isDelimited must be set to false.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-isFixedWidth"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout-isFixedWidth"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:PhysicalSegmentLayout-lineTerminator (0..*) | lineTerminator | xsd:string
-    lineTerminator: list[Union[str, LiteralField]] | None = Field(
+    lineTerminator: list[str | LiteralField] | None = Field(
         alias="lineTerminator",
         default=None,
         description="""The strings that can be used at the end of a row, set by the lineTerminators property of a dialect description. The default is [CRLF, LF]. See the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-data-model/#encoding) 5.9 Dialect \"lineTerminators: An atomic property that sets the line terminators flag to either an array containing the single provided string value, or the provided array. The default is ['rn', 'n'].\" Also, from the \"CSV Dialect\" specification (http://specs.frictionlessdata.io/csv-dialect/): \"lineTerminator: specifies the character sequence which should terminate rows. Default = rn.\"""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-lineTerminator"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout-lineTerminator"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:PhysicalSegmentLayout-name (0..*) | name | cdi:ObjectName
@@ -10742,21 +9389,15 @@ class PhysicalSegmentLayout(DdiCdiClass):
         alias="name",
         default=None,
         description="A linguistic signifier. Human understandable name (word, phrase, or mnemonic) that reflects the ISO/IEC 11179-5 naming principles. If more than one name is provided provide a context to differentiate usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:PhysicalSegmentLayout-nullSequence (0..1) | nullSequence | xsd:string
-    nullSequence: Union[str, LiteralField] | None = Field(
+    nullSequence: str | LiteralField | None = Field(
         alias="nullSequence",
         default=None,
         description="""A string indicating a null value. From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/) 4.3: \"null: the string or strings which cause the value of cells having string value matching any of these values to be null.\" From the same source, Inherited 5.7: \"null: An atomic property giving the string or strings used for null values within the data. If the string value of the cell is equal to any one of these values, the cell value is null. See Parsing Cells in [tabular-data-model] for more details. If not specified, the default for the null property is the empty string ''. The value of this property becomes the null annotation for the described column.\"""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-nullSequence"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout-nullSequence"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:PhysicalSegmentLayout-overview (0..1) | overview | cdi:InternationalString
@@ -10766,7 +9407,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         description="Short natural language account of the information obtained from the combination of properties and relationships associated with an object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-overview"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -10777,19 +9418,16 @@ class PhysicalSegmentLayout(DdiCdiClass):
         description="Intent or reason for the object/the description of the object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-purpose"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
     # attribute cdi:PhysicalSegmentLayout-quoteCharacter (0..1) | quoteCharacter | xsd:string
-    quoteCharacter: Union[str, LiteralField] | None = Field(
+    quoteCharacter: str | LiteralField | None = Field(
         alias="quoteCharacter",
         default=None,
         description="""\"The string that is used around escaped cells, or null, set by the quoteChar property of a dialect description. The default is \".\". See W3C Recommendation \"Model for Tabular Data and Metadata on the Web\", https://www.w3.org/TR/tabular-data-model/#parsing. From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/) 5.9 Dialect: \"quoteChar: An atomic property that sets the quote character flag to the single provided value, which MUST be a string or null. If the value is null, the escape character flag is also set to null. The default is '\"'.\" From the CSV Dialect specification (http://specs.frictionlessdata.io/csv-dialect/): \"quoteChar: specifies a one-character string to use as the quoting character. Default = \".\"""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-quoteCharacter"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout-quoteCharacter"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:PhysicalSegmentLayout-skipBlankRows (0..1) | skipBlankRows | xsd:boolean
@@ -10797,10 +9435,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         alias="skipBlankRows",
         default=None,
         description="""If the value is True, blank rows are ignored. From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/) 5.9 Dialect: \"skipBlankRows: A boolean atomic property that sets the skip blank rows flag to the single provided boolean value. The default is false.\"""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-skipBlankRows"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout-skipBlankRows"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:PhysicalSegmentLayout-skipDataColumns (0..1) | skipDataColumns | xsd:integer
@@ -10810,7 +9445,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         description="""The number of columns to skip at the beginning of the row. From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/) 5.9 Dialect: \"skipColumns: A numeric atomic property that sets the skip columns flag to the single provided numeric value, which MUST be a non-negative integer. The default is 0.\" A value other than 0 will mean that the source numbers of columns will be different from their numbers.""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-skipDataColumns"),
-            "rdf_type": "xsd:integer"
+            "rdf_type": "xsd:integer",
         },
     )
 
@@ -10821,7 +9456,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         description="""If the value is True, skip whitespace at the beginning of a line or following a delimiter. From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/) 5.9 Dialect: \"skipInitialSpace: A boolean atomic property that, if true, sets the trim flag to 'start' and if false, to false. If the trim property is provided, the skipInitialSpace property is ignored. The default is false.\" From the CSV Dialect specification (http://specs.frictionlessdata.io/csv-dialect/): \"skipInitialSpace: specifies how to interpret whitespace which immediately follows a delimiter; if false, it means that whitespace immediately after a delimiter should be treated as part of the following field. Default = true.\"""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-skipInitialSpace"),
-            "rdf_type": "xsd:boolean"
+            "rdf_type": "xsd:boolean",
         },
     )
 
@@ -10830,10 +9465,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         alias="skipRows",
         default=None,
         description="""Number of input rows to skip preceding the header or data. From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/) 5.9 Dialect: \"skipRows: A numeric atomic property that sets the skip rows flag to the single provided numeric value, which MUST be a non-negative integer. The default is 0.\" A value greater than 0 will mean that the source numbers of rows will be different from their numbers.""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-skipRows"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout-skipRows"), "rdf_type": "xsd:integer"},
     )
 
     # attribute cdi:PhysicalSegmentLayout-tableDirection (0..1) | tableDirection | cdi:TableDirectionValues
@@ -10843,7 +9475,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         description="""Indicates the direction in which columns are arranged in each row. From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/)  5.3.2: \"tableDirection: An atomic property that MUST have a single string value that is one of 'rtl', 'ltr', or 'auto'. Indicates whether the tables in the group should be displayed with the first column on the right, on the left, or based on the first character in the table that has a specific direction. The value of this property becomes the value of the table direction annotation for all the tables in the table group. See Bidirectional Tables in [tabular-data-model] for details. The default value for this property is 'auto'.\"""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-tableDirection"),
-            "rdf_type": CDI.TableDirectionValues
+            "rdf_type": CDI.TableDirectionValues,
         },
     )
 
@@ -10854,7 +9486,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         description="""Indicates the reading order of text within cells. From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/) Inherited 5.7: \"textDirection: An atomic property that MUST have a single string value that is one of 'ltr', 'rtl', 'auto' or 'inherit' (the default). Indicates whether the text within cells should be displayed as left-to-right text (ltr), as right-to-left text (rtl), according to the content of the cell (auto) or in the direction inherited from the table direction annotation of the table. The value of this property determines the text direction annotation for the column, and the text direction annotation for the cells within that column: if the value is inherit then the value of the text direction annotation is the value of the table direction annotation on the table, otherwise it is the value of this property. See Bidirectional Tables in [tabular-data-model] for details.\"""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-textDirection"),
-            "rdf_type": CDI.TextDirectionValues
+            "rdf_type": CDI.TextDirectionValues,
         },
     )
 
@@ -10865,7 +9497,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         description="If the value is True, consecutive (adjacent) delimiters are treated as a single delimiter; if the value is False consecutive (adjacent) delimiters indicate a missing value.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-treatConsecutiveDelimitersAsOne"),
-            "rdf_type": "xsd:boolean"
+            "rdf_type": "xsd:boolean",
         },
     )
 
@@ -10874,12 +9506,8 @@ class PhysicalSegmentLayout(DdiCdiClass):
         alias="trim",
         default=None,
         description="""Specifies which spaces to remove from a data value (start, end, both, neither) From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/) 5.9 Dialect: \"trim: An atomic property that, if the boolean true, sets the trim flag to true and if the boolean false to false. If the value provided is a string, sets the trim flag to the provided value, which MUST be one of 'true', 'false', 'start', or 'end'. The default is true.\"""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout-trim"),
-            "rdf_type": CDI.TrimValues
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout-trim"), "rdf_type": CDI.TrimValues},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -10889,10 +9517,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         alias="isDefinedBy_Concept",
         default=None,
         description="The conceptual basis for the collection of members.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout_isDefinedBy_Concept"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout_isDefinedBy_Concept"), "rdf_type": "uri"},
     )
 
     # association cdi:PhysicalSegmentLayout_formats_LogicalRecord (0..1) | formats | cdi:LogicalRecord
@@ -10900,10 +9525,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         alias="formats",
         default=None,
         description="Logical record physically represented by the physical layout.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout_formats_LogicalRecord"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout_formats_LogicalRecord"), "rdf_type": "uri"},
     )
 
     # association cdi:PhysicalSegmentLayout_has_ValueMapping (0..*) | has_ValueMapping | cdi:ValueMapping
@@ -10911,10 +9533,7 @@ class PhysicalSegmentLayout(DdiCdiClass):
         alias="has_ValueMapping",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLayout_has_ValueMapping"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLayout_has_ValueMapping"), "rdf_type": "uri"},
     )
 
     # association cdi:PhysicalSegmentLayout_has_ValueMappingPosition (0..*) | has_ValueMappingPosition | cdi:ValueMappingPosition
@@ -10924,29 +9543,28 @@ class PhysicalSegmentLayout(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalSegmentLayout_has_ValueMappingPosition"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class PhysicalSegmentLocation(DdiCdiClass):
-    """ PhysicalSegmentLocation.
+    """PhysicalSegmentLocation.
 
-    Definition 
-    ============ 
-    Location of a data point in a physical segment.  
+    Definition
+    ============
+    Location of a data point in a physical segment.
 
-    Examples 
-    ========== 
-    A segment of text in a plain text file beginning at character 3 and ending at character 123. The location of the representation of a variable in a text file.  
+    Examples
+    ==========
+    A segment of text in a plain text file beginning at character 3 and ending at character 123. The location of the representation of a variable in a text file.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     While this has no properties or relationships of its own, it is useful as a target of relationships where its extensions may serve. This is an extension point since there are many different ways to describe the location of a segment - character counts, start and end times, etc.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -10965,7 +9583,7 @@ class PhysicalSegmentLocation(DdiCdiClass):
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
-        description="""Bundles the information useful for a data catalog entry. 
+        description="""Bundles the information useful for a data catalog entry.
 
     Examples would be creator, contributor, title, copyright, embargo, and license information
 
@@ -10973,7 +9591,7 @@ class PhysicalSegmentLocation(DdiCdiClass):
     This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PhysicalSegmentLocation-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
+            "rdf_type": CDI.CatalogDetails,
         },
     )
 
@@ -10982,17 +9600,12 @@ class PhysicalSegmentLocation(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PhysicalSegmentLocation-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PhysicalSegmentLocation-identifier"), "rdf_type": CDI.Identifier},
     )
 
 
-
-
 class PrimaryKey(DdiCdiClass):
-    """ PrimaryKey.
+    """PrimaryKey.
 
     Definition
     ============
@@ -11005,6 +9618,7 @@ class PrimaryKey(DdiCdiClass):
     It can also be used in conjunction with foreign key to link data structures and their related datasets.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -11024,12 +9638,8 @@ class PrimaryKey(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PrimaryKey-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PrimaryKey-identifier"), "rdf_type": CDI.Identifier},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -11038,17 +9648,12 @@ class PrimaryKey(DdiCdiClass):
     isComposedOf: list[URIRef] = Field(
         alias="isComposedOf",
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PrimaryKey_isComposedOf_PrimaryKeyComponent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PrimaryKey_isComposedOf_PrimaryKeyComponent"), "rdf_type": "uri"},
     )
 
 
-
-
 class PrimaryKeyComponent(DdiCdiClass):
-    """ PrimaryKeyComponent.
+    """PrimaryKeyComponent.
 
     Definition
     ============
@@ -11060,6 +9665,7 @@ class PrimaryKeyComponent(DdiCdiClass):
     It can be used in conjunction with a foreign key component to link data structures and their related datasets.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -11079,12 +9685,8 @@ class PrimaryKeyComponent(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "PrimaryKeyComponent-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "PrimaryKeyComponent-identifier"), "rdf_type": CDI.Identifier},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -11095,25 +9697,24 @@ class PrimaryKeyComponent(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "PrimaryKeyComponent_correspondsTo_DataStructureComponent"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class ProductionEnvironment(DdiCdiClass):
-    """ ProductionEnvironment.
+    """ProductionEnvironment.
 
-    Definition 
-    ============ 
-    Production environments consume and produce information objects by way of processing pipelines orchestrated by the processing agent.  
+    Definition
+    ============
+    Production environments consume and produce information objects by way of processing pipelines orchestrated by the processing agent.
 
-    Examples 
-    ========== 
+    Examples
+    ==========
     Data processing platforms and data analysis platforms are types of production environments. Each of these platforms may have subtypes.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -11129,14 +9730,11 @@ class ProductionEnvironment(DdiCdiClass):
     #  DOMAIN ATTRIBUTES
     #
     # attribute cdi:ProductionEnvironment-description (0..1) | description | xsd:string
-    description: Union[str, LiteralField] | None = Field(
+    description: str | LiteralField | None = Field(
         alias="description",
         default=None,
         description="A description of the control logic in human-readable language.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ProductionEnvironment-description"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ProductionEnvironment-description"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:ProductionEnvironment-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
@@ -11146,7 +9744,7 @@ class ProductionEnvironment(DdiCdiClass):
         description="A human-readable display label for the object. Supports the use of multiple languages. Repeat for labels with different content, for example, labels with differing length limitations.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ProductionEnvironment-displayLabel"),
-            "rdf_type": CDI.LabelForDisplay
+            "rdf_type": CDI.LabelForDisplay,
         },
     )
 
@@ -11155,10 +9753,7 @@ class ProductionEnvironment(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ProductionEnvironment-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ProductionEnvironment-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:ProductionEnvironment-name (0..*) | name | cdi:ObjectName
@@ -11166,17 +9761,12 @@ class ProductionEnvironment(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (linguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ProductionEnvironment-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ProductionEnvironment-name"), "rdf_type": CDI.ObjectName},
     )
 
 
-
-
 class RecordRelation(DdiCdiClass):
-    """ RecordRelation.
+    """RecordRelation.
 
     Definition
     ============
@@ -11193,6 +9783,7 @@ class RecordRelation(DdiCdiClass):
     For instance variables existing in a logical record with multiple record layouts, pairs of instance variables may function as paired keys to permit the expression of hierarchical links between records of different types. These links between keys in different record types could also be used to link records in a relational structure.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -11211,16 +9802,13 @@ class RecordRelation(DdiCdiClass):
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
-        description="""Bundles the information useful for a data catalog entry. 
+        description="""Bundles the information useful for a data catalog entry.
 
     Examples would be creator, contributor, title, copyright, embargo, and license information
 
     A set of information useful for attribution, data discovery, and access.
     This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "RecordRelation-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "RecordRelation-catalogDetails"), "rdf_type": CDI.CatalogDetails},
     )
 
     # attribute cdi:RecordRelation-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
@@ -11228,10 +9816,7 @@ class RecordRelation(DdiCdiClass):
         alias="displayLabel",
         default=None,
         description="A human-readable display label for the object. Supports the use of multiple languages. Repeat for labels with different content, for example, labels with differing length limitations.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "RecordRelation-displayLabel"),
-            "rdf_type": CDI.LabelForDisplay
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "RecordRelation-displayLabel"), "rdf_type": CDI.LabelForDisplay},
     )
 
     # attribute cdi:RecordRelation-identifier (0..1) | identifier | cdi:Identifier
@@ -11239,10 +9824,7 @@ class RecordRelation(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "RecordRelation-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "RecordRelation-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:RecordRelation-purpose (0..1) | purpose | cdi:InternationalString
@@ -11250,10 +9832,7 @@ class RecordRelation(DdiCdiClass):
         alias="purpose",
         default=None,
         description="Intent or reason for the object/the description of the object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "RecordRelation-purpose"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "RecordRelation-purpose"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:RecordRelation-usage (0..1) | usage | cdi:InternationalString
@@ -11261,12 +9840,8 @@ class RecordRelation(DdiCdiClass):
         alias="usage",
         default=None,
         description="Explanation of the ways in which the object is employed.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "RecordRelation-usage"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "RecordRelation-usage"), "rdf_type": CDI.InternationalString},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -11276,27 +9851,19 @@ class RecordRelation(DdiCdiClass):
         alias="has_InstanceVariableMap",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "RecordRelation_has_InstanceVariableMap"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "RecordRelation_has_InstanceVariableMap"), "rdf_type": "uri"},
     )
 
     # association cdi:RecordRelation_maps_LogicalRecord (2..*) | maps | cdi:LogicalRecord
     maps: list[URIRef] = Field(
         alias="maps",
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "RecordRelation_maps_LogicalRecord"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "RecordRelation_maps_LogicalRecord"), "rdf_type": "uri"},
     )
 
 
-
-
 class Revision(DdiCdiClass):
-    """ Revision.
+    """Revision.
 
     Definition
     ============
@@ -11307,6 +9874,7 @@ class Revision(DdiCdiClass):
     An adjustment to monthly employment numbers to adjust for errors (sampling or non-sampling) in the underlying data.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -11322,14 +9890,11 @@ class Revision(DdiCdiClass):
     #  DOMAIN ATTRIBUTES
     #
     # attribute cdi:Revision-algorithm (0..1) | algorithm | xsd:string
-    algorithm: Union[str, LiteralField] | None = Field(
+    algorithm: str | LiteralField | None = Field(
         alias="algorithm",
         default=None,
         description="Actual code or reference to specific algorithm",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Revision-algorithm"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Revision-algorithm"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:Revision-identifier (0..1) | identifier | cdi:Identifier
@@ -11337,10 +9902,7 @@ class Revision(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Revision-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Revision-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:Revision-overview (0..1) | overview | cdi:InternationalString
@@ -11348,27 +9910,23 @@ class Revision(DdiCdiClass):
         alias="overview",
         default=None,
         description="Short natural language account of the information obtained from the combination of properties and relationships associated with an object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Revision-overview"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Revision-overview"), "rdf_type": CDI.InternationalString},
     )
 
 
-
-
 class Rule(DdiCdiClass):
-    """ Rule.
+    """Rule.
 
-    Definition 
-    ============ 
-    A rule has a condition part and an action part. A rule takes the form of: If [Condition} Then [Action]. A rule belongs to a rule set which is a component of rule based scheduling performed by the processing agent  
+    Definition
+    ============
+    A rule has a condition part and an action part. A rule takes the form of: If [Condition} Then [Action]. A rule belongs to a rule set which is a component of rule based scheduling performed by the processing agent
 
-    Examples 
-    ========== 
+    Examples
+    ==========
     If Exists [InformationObject] Then Perform [Activity]
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -11388,12 +9946,8 @@ class Rule(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Rule-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Rule-identifier"), "rdf_type": CDI.Identifier},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -11403,31 +9957,27 @@ class Rule(DdiCdiClass):
         alias="hasPrecondition",
         default=None,
         description="The condition part of a rule is associated with conditonal control logic.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Rule_hasPrecondition_ConditionalControlLogic"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Rule_hasPrecondition_ConditionalControlLogic"), "rdf_type": "uri"},
     )
 
 
-
-
 class RuleSet(DdiCdiClass):
-    """ RuleSet.
+    """RuleSet.
 
-    Definition 
-    ============ 
-    A rule set is a collection of rules. A rule set is a component of rule based scheduling.  
+    Definition
+    ============
+    A rule set is a collection of rules. A rule set is a component of rule based scheduling.
 
-    Examples 
-    ========== 
+    Examples
+    ==========
     If [A overlaps B] Then [X] If [B occurs before C] Then [Y] If [C equals D] Then [Z]  It might take a curator to understand what these rules mean in the context of a research data store.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Rule based scheduling might have multiple rule sets each of which are domain-specific. The processing agent often helps with the selection of rule sets.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -11447,12 +9997,8 @@ class RuleSet(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "RuleSet-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "RuleSet-identifier"), "rdf_type": CDI.Identifier},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -11462,17 +10008,12 @@ class RuleSet(DdiCdiClass):
         alias="has_Rule",
         default=None,
         description="A rule is a member of a rule set.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "RuleSet_has_Rule"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "RuleSet_has_Rule"), "rdf_type": "uri"},
     )
 
 
-
-
 class ScopedMeasure(DdiCdiClass):
-    """ ScopedMeasure.
+    """ScopedMeasure.
 
     Definition
     ==========
@@ -11483,6 +10024,7 @@ class ScopedMeasure(DdiCdiClass):
     Seasonally adjusted income for Single, Ontarians, Females.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -11502,10 +10044,7 @@ class ScopedMeasure(DdiCdiClass):
         alias="frequency",
         default=None,
         description="Time interval between successive measurements (i.e. applications) of a Scoped Measure.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ScopedMeasure-frequency"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ScopedMeasure-frequency"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:ScopedMeasure-identifier (0..1) | identifier | cdi:Identifier
@@ -11513,12 +10052,8 @@ class ScopedMeasure(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ScopedMeasure-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ScopedMeasure-identifier"), "rdf_type": CDI.Identifier},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -11530,7 +10065,7 @@ class ScopedMeasure(DdiCdiClass):
         description="A universe is specific to the specific cell associated with a scoped measure.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ScopedMeasure_circumscribes_DimensionalKeyDefinition"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -11538,10 +10073,7 @@ class ScopedMeasure(DdiCdiClass):
     generates: URIRef = Field(
         alias="generates",
         description="Scoped measure generates one revisable datum.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ScopedMeasure_generates_RevisableDatum"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ScopedMeasure_generates_RevisableDatum"), "rdf_type": "uri"},
     )
 
     # association cdi:ScopedMeasure_restricts_QualifiedMeasure (0..1) | restricts | cdi:QualifiedMeasure
@@ -11549,23 +10081,19 @@ class ScopedMeasure(DdiCdiClass):
         alias="restricts",
         default=None,
         description="A scoped measure resticts a qualified measure to a particular cell.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ScopedMeasure_restricts_QualifiedMeasure"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ScopedMeasure_restricts_QualifiedMeasure"), "rdf_type": "uri"},
     )
 
 
-
-
 class SequencePosition(DdiCdiClass):
-    """ SequencePosition.
+    """SequencePosition.
 
     Definition
     ============
     Assigns a sequence number to an activity within a sequence.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -11585,22 +10113,15 @@ class SequencePosition(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "SequencePosition-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "SequencePosition-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:SequencePosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Indexes the activities in a sequence using integers with a position indicated by incrementing upward from 0 or 1.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "SequencePosition-value"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "SequencePosition-value"), "rdf_type": "xsd:integer"},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -11609,23 +10130,19 @@ class SequencePosition(DdiCdiClass):
     indexes: URIRef = Field(
         alias="indexes",
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "SequencePosition_indexes_Activity"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "SequencePosition_indexes_Activity"), "rdf_type": "uri"},
     )
 
 
-
-
 class StatisticalClassificationRelationship(DdiCdiClass):
-    """ StatisticalClassificationRelationship.
+    """StatisticalClassificationRelationship.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Specifies the statistical classifications for the source and target of a complex relationship and defines the relationship.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -11647,7 +10164,7 @@ class StatisticalClassificationRelationship(DdiCdiClass):
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassificationRelationship-identifier"),
-            "rdf_type": CDI.Identifier
+            "rdf_type": CDI.Identifier,
         },
     )
 
@@ -11658,10 +10175,9 @@ class StatisticalClassificationRelationship(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassificationRelationship-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -11673,7 +10189,7 @@ class StatisticalClassificationRelationship(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassificationRelationship_hasSource_StatisticalClassification"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -11684,15 +10200,13 @@ class StatisticalClassificationRelationship(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassificationRelationship_hasTarget_StatisticalClassification"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class Unit(DdiCdiClass):
-    """ Unit.
+    """Unit.
 
     Definition
     ==========
@@ -11717,6 +10231,7 @@ class Unit(DdiCdiClass):
     A big data table is sometimes referred to as a column-oriented data store whereas a traditional database is sometimes referred to as a row-oriented data store. The unit plays an identifier role in both types of data stores.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -11736,10 +10251,7 @@ class Unit(DdiCdiClass):
         alias="catalogDetails",
         default=None,
         description="Bundles the information useful for a data catalog entry. Examples would be creator, contributor, title, copyright, embargo, and license information. A set of information useful for attribution, data discovery, and access. This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Unit-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Unit-catalogDetails"), "rdf_type": CDI.CatalogDetails},
     )
 
     # attribute cdi:Unit-definition (0..1) | definition | cdi:InternationalString
@@ -11747,10 +10259,7 @@ class Unit(DdiCdiClass):
         alias="definition",
         default=None,
         description="Natural language statement conveying the meaning of a concept, differentiating it from other concepts. Supports the use of multiple languages and structured text.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Unit-definition"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Unit-definition"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:Unit-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
@@ -11758,10 +10267,7 @@ class Unit(DdiCdiClass):
         alias="displayLabel",
         default=None,
         description="A human-readable display label for the object. Supports the use of multiple languages. Repeat for labels with different content, for example, labels with differing length limitations.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Unit-displayLabel"),
-            "rdf_type": CDI.LabelForDisplay
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Unit-displayLabel"), "rdf_type": CDI.LabelForDisplay},
     )
 
     # attribute cdi:Unit-identifier (0..1) | identifier | cdi:Identifier
@@ -11769,10 +10275,7 @@ class Unit(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Unit-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Unit-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:Unit-name (0..*) | name | cdi:ObjectName
@@ -11780,12 +10283,8 @@ class Unit(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Unit-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Unit-name"), "rdf_type": CDI.ObjectName},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -11795,34 +10294,30 @@ class Unit(DdiCdiClass):
         alias="has_UnitType",
         default=None,
         description="The unit type of the unit.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Unit_has_UnitType"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Unit_has_UnitType"), "rdf_type": "uri"},
     )
 
 
-
-
 class ValueAndConceptDescription(DdiCdiClass):
-    """ ValueAndConceptDescription.
+    """ValueAndConceptDescription.
 
     Definition
     ==========
-    Formal description of a set of values.  
+    Formal description of a set of values.
 
     Examples
     ========
 
     1. The integers between 1 and 10, inclusive. The values of x satisfying the logicalExpression property: " (1 less than or equal to X less than or equalto 10) AND mod(x,10)=0" Also described with minimumValueInclusive = 1 and maximumValueInclusive = 10 (and datatype of integer).
     2. The upper case letters A through C and X described with the regularExpression "/[A-CX]/".
-    3. A date-time described with the Unicode Locale Data Markup Language pattern yyyy.MM.dd G 'at' HH:mm:ss zzz.   
+    3. A date-time described with the Unicode Locale Data Markup Language pattern yyyy.MM.dd G 'at' HH:mm:ss zzz.
 
     Explanatory notes
     =================
     The value and concept description may be used to describe either a value domain or a conceptual domain. For a value domain, the value and concept description contains the details for a described" domain (as opposed to an enumerated domain). There are a number of properties which can be used for the description. The description could be just text such as: "an even number greater than zero", or a more formal logical expression like "x>0 and mod(x,2)=0". A regular expression might be useful for describing a textual domain. It could also employ a format pattern from the Unicode Locale Data Markup Language (LDML: http://www.unicode.org/reports/tr35/tr35.html). Some conceptual domains might be described with just a narrative. Others, though, might be described in much the same way as a value domain depending on the specificity of the concept. In ISO 11404 a value domain may be described either through enumeration or description, or both. This class provides the facility for that description. It may be just a text description, but a description through a logical expression is machine actionable and might, for example, be rendered as an integrity constraint. If both text and a logical expression are provided the logical expression is to be taken as the canonical description. The logical expression could conform to an expression syntax like that of the Validation and Transformation Language (VTL: https://sdmx.org/?page_id=5096) or the Structured Data Transformation Language (SDTL: https://ddialliance.org/products/sdtl/1.0).
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -11844,7 +10339,7 @@ class ValueAndConceptDescription(DdiCdiClass):
         description="Indicates the type of relationship, nominal, ordinal, interval, ratio, or continuous. Use where appropriate for the representation type.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ValueAndConceptDescription-classificationLevel"),
-            "rdf_type": CDI.CategoryRelationCode
+            "rdf_type": CDI.CategoryRelationCode,
         },
     )
 
@@ -11855,7 +10350,7 @@ class ValueAndConceptDescription(DdiCdiClass):
         description="A formal description of the set of values in human-readable language.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ValueAndConceptDescription-description"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -11866,7 +10361,7 @@ class ValueAndConceptDescription(DdiCdiClass):
         description="A pattern for a number as described in Unicode Locale Data Markup Language (LDML) (http://www.unicode.org/reports/tr35/tr35.html) Part 3: Numbers  (http://www.unicode.org/reports/tr35/tr35-numbers.html#Number_Format_Patterns) and Part 4. Dates (http://www.unicode.org/reports/tr35/tr35-dates.html#Date_Format_Patterns) . Examples would be    #,##0.### to describe the pattern for a decimal number, or yyyy.MM.dd G 'at' HH:mm:ss zzz for a datetime pattern.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ValueAndConceptDescription-formatPattern"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -11877,7 +10372,7 @@ class ValueAndConceptDescription(DdiCdiClass):
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ValueAndConceptDescription-identifier"),
-            "rdf_type": CDI.Identifier
+            "rdf_type": CDI.Identifier,
         },
     )
 
@@ -11888,51 +10383,51 @@ class ValueAndConceptDescription(DdiCdiClass):
         description="""A logical expression where the values of \"x\" making the expression true are the members of the set of valid values.  For example, \"(all reals x such that  x > 0)\" describes the real numbers greater than 0.""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ValueAndConceptDescription-logicalExpression"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
     # attribute cdi:ValueAndConceptDescription-maximumValueExclusive (0..1) | maximumValueExclusive | xsd:string
-    maximumValueExclusive: Union[str, LiteralField] | None = Field(
+    maximumValueExclusive: str | LiteralField | None = Field(
         alias="maximumValueExclusive",
         default=None,
         description="""A string denoting the maximum possible value (excluding this value). From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/) 5.11.2: \"maxExclusive: An atomic property that contains a single number or string that is the maximum valid value (exclusive). The value of this property becomes the maximum exclusive annotation for the described datatype. See Value Constraints in [tabular-data-model] for details.\"""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ValueAndConceptDescription-maximumValueExclusive"),
-            "rdf_type": "xsd:string"
+            "rdf_type": "xsd:string",
         },
     )
 
     # attribute cdi:ValueAndConceptDescription-maximumValueInclusive (0..1) | maximumValueInclusive | xsd:string
-    maximumValueInclusive: Union[str, LiteralField] | None = Field(
+    maximumValueInclusive: str | LiteralField | None = Field(
         alias="maximumValueInclusive",
         default=None,
         description="""A string denoting the maximum possible value. From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/) 5.11.2: \"maximum: An atomic property that contains a single number or string that is the maximum valid value (inclusive); equivalent to maxInclusive. The value of this property becomes the maximum annotation for the described datatype. See Value Constraints in [tabular-data-model] for details.\"""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ValueAndConceptDescription-maximumValueInclusive"),
-            "rdf_type": "xsd:string"
+            "rdf_type": "xsd:string",
         },
     )
 
     # attribute cdi:ValueAndConceptDescription-minimumValueExclusive (0..1) | minimumValueExclusive | xsd:string
-    minimumValueExclusive: Union[str, LiteralField] | None = Field(
+    minimumValueExclusive: str | LiteralField | None = Field(
         alias="minimumValueExclusive",
         default=None,
         description="""A string denoting the minimum possible value (excluding this value). From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/) 5.11.2: \"minExclusive: An atomic property that contains a single number or string that is the minimum valid value (exclusive). The value of this property becomes the minimum exclusive annotation for the described datatype. See Value Constraints in [tabular-data-model] for details.\"""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ValueAndConceptDescription-minimumValueExclusive"),
-            "rdf_type": "xsd:string"
+            "rdf_type": "xsd:string",
         },
     )
 
     # attribute cdi:ValueAndConceptDescription-minimumValueInclusive (0..1) | minimumValueInclusive | xsd:string
-    minimumValueInclusive: Union[str, LiteralField] | None = Field(
+    minimumValueInclusive: str | LiteralField | None = Field(
         alias="minimumValueInclusive",
         default=None,
         description="""A string denoting the minimum possible value. From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/) 5.11.2: \"minimum: An atomic property that contains a single number or string that is the minimum valid value (inclusive); equivalent to minInclusive. The value of this property becomes the minimum annotation for the described datatype. See Value Constraints in [tabular-data-model] for details.\"""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ValueAndConceptDescription-minimumValueInclusive"),
-            "rdf_type": "xsd:string"
+            "rdf_type": "xsd:string",
         },
     )
 
@@ -11943,29 +10438,28 @@ class ValueAndConceptDescription(DdiCdiClass):
         description="A regular expression where strings matching the expression belong to the set of valid values. Use typeOfContent to specify the syntax of the regularExpression found in content.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ValueAndConceptDescription-regularExpression"),
-            "rdf_type": CDI.TypedString
+            "rdf_type": CDI.TypedString,
         },
     )
 
 
-
-
 class ValueDomain(DdiCdiClass):
-    """ ValueDomain.
+    """ValueDomain.
 
-    Definition 
-    ============ 
-    Set of permissible values for a variable (adapted from ISO/IEC 11179).  
+    Definition
+    ============
+    Set of permissible values for a variable (adapted from ISO/IEC 11179).
 
-    Examples 
-    ========== 
-    Age categories with a numeric code list; Age in years; Young, Middle-aged and Old.  
+    Examples
+    ==========
+    Age categories with a numeric code list; Age in years; Young, Middle-aged and Old.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     The values can be described by enumeration or by an expression. Value domains can be either substantive/sentinel, or described/enumeration.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -11984,16 +10478,13 @@ class ValueDomain(DdiCdiClass):
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
-        description="""Bundles the information useful for a data catalog entry. 
+        description="""Bundles the information useful for a data catalog entry.
 
     Examples would be creator, contributor, title, copyright, embargo, and license information
 
     A set of information useful for attribution, data discovery, and access.
     This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueDomain-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueDomain-catalogDetails"), "rdf_type": CDI.CatalogDetails},
     )
 
     # attribute cdi:ValueDomain-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
@@ -12001,10 +10492,7 @@ class ValueDomain(DdiCdiClass):
         alias="displayLabel",
         default=None,
         description="A human-readable display label for the object. Supports the use of multiple languages. Repeat for labels with different content, for example, labels with differing length limitations.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueDomain-displayLabel"),
-            "rdf_type": CDI.LabelForDisplay
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueDomain-displayLabel"), "rdf_type": CDI.LabelForDisplay},
     )
 
     # attribute cdi:ValueDomain-identifier (0..1) | identifier | cdi:Identifier
@@ -12012,10 +10500,7 @@ class ValueDomain(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueDomain-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueDomain-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:ValueDomain-recommendedDataType (0..*) | recommendedDataType | cdi:ControlledVocabularyEntry
@@ -12025,29 +10510,28 @@ class ValueDomain(DdiCdiClass):
         description="The data types that are recommended for use with this domain.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ValueDomain-recommendedDataType"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
 
-
-
 class ValueMapping(DdiCdiClass):
-    """ ValueMapping.
+    """ValueMapping.
 
-    Definition 
+    Definition
     ==========
     Physical characteristics for the value of an instance variable stored in a data point as part of a physical segment layout.
 
-    Examples 
+    Examples
     ========
-    A variable "age" might be represented in a file as a string with a maximum length of 5 characters and a number pattern of ##0.0  
+    A variable "age" might be represented in a file as a string with a maximum length of 5 characters and a number pattern of ##0.0
 
-    Explanatory notes 
+    Explanatory notes
     =================
     An instance variable has details of value domain and data type, but will not have the final details of how a value is physically represented in a data file. A variable for height, for example, may be represented as a real number, but may be represented as a string in multiple ways. The decimal separator might be, for example a period or a comma. The string representing the value of a payment might be preceded by a currency symbol. The same numeric value might be written as "1,234,567" or "1.234567". A missing value might be written as ".", "NA", ".R" or as "R". The value mapping describes how the value of an instance variable is physically expressed. The properties of the value mapping as intended to be compatible with the W3C Metadata Vocabulary for Tabular Data (https://www.w3.org/TR/tabular-metadata/) as well as common programming languages and statistical packages. The 'format' property, for example, can draw from an external controlled vocabulary such as the set of formats for Stata, SPSS, or SAS.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -12067,42 +10551,33 @@ class ValueMapping(DdiCdiClass):
         alias="decimalPositions",
         default=None,
         description="The number of decimal positions expressed as an integer. Used when the decimal position is implied (no decimal separator is present) See DDI 3.2 ManagedNumericRepresentation_decimalPositions",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueMapping-decimalPositions"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueMapping-decimalPositions"), "rdf_type": "xsd:integer"},
     )
 
     # attribute cdi:ValueMapping-defaultDecimalSeparator (0..1) | defaultDecimalSeparator | xsd:string
-    defaultDecimalSeparator: Union[str, LiteralField] | None = Field(
+    defaultDecimalSeparator: str | LiteralField | None = Field(
         alias="defaultDecimalSeparator",
         default=None,
         description="""Default value is \".\" (period). The character separating the integer part from the fractional part of a decimal or real number. From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/) 6.4.2: \"decimalChar: A string whose value is used to represent a decimal point within the number. If the supplied value is not a string, implementations MUST issue a warning and proceed as if the property had not been specified.\"""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueMapping-defaultDecimalSeparator"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueMapping-defaultDecimalSeparator"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:ValueMapping-defaultDigitGroupSeparator (0..1) | defaultDigitGroupSeparator | xsd:string
-    defaultDigitGroupSeparator: Union[str, LiteralField] | None = Field(
+    defaultDigitGroupSeparator: str | LiteralField | None = Field(
         alias="defaultDigitGroupSeparator",
         default=None,
-        description="Default value is null. A character separating groups of digits (for readability). In W3C part of the datatype format From https://www.w3.org/TR/tabular-metadata/ tabular 6.4.2 groupChar: \"A string whose value is used to group digits within the number. If the supplied value is not a string, implementations MUST issue a warning and proceed as if the property had not been specified.\"",
+        description='Default value is null. A character separating groups of digits (for readability). In W3C part of the datatype format From https://www.w3.org/TR/tabular-metadata/ tabular 6.4.2 groupChar: "A string whose value is used to group digits within the number. If the supplied value is not a string, implementations MUST issue a warning and proceed as if the property had not been specified."',
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ValueMapping-defaultDigitGroupSeparator"),
-            "rdf_type": "xsd:string"
+            "rdf_type": "xsd:string",
         },
     )
 
     # attribute cdi:ValueMapping-defaultValue (1..1) | defaultValue | xsd:string
-    defaultValue: Union[str, LiteralField] = Field(
+    defaultValue: str | LiteralField = Field(
         alias="defaultValue",
         description="""A default string indicating the value to substitute for an empty string. From https://www.w3.org/TR/tabular-metadata/ Inherited 5.7  \"default - An atomic property holding a single string that is used to create a default value for the cell in cases where the original string value is an empty string. See Parsing Cells in [tabular-data-model] for more details. If not specified, the default for the default property is the empty string, \"\". The value of this property becomes the default annotation for the described column.\"""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueMapping-defaultValue"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueMapping-defaultValue"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:ValueMapping-format (0..1) | format | cdi:ControlledVocabularyEntry
@@ -12110,10 +10585,7 @@ class ValueMapping(DdiCdiClass):
         alias="format",
         default=None,
         description="""This defines the format of the physical representation of the value. From https://www.w3.org/TR/tabular-metadata/ 5.11.2 format: \"An atomic property that contains either a single string or an object that defines the format of a value of this type, used when parsing a string value as described in Parsing Cells in [tabular-data-model]. The value of this property becomes the format annotation for the described datatype.\" See https://www.w3.org/TR/tabular-metadata/ Tabular 6.4.2 \"Formats for numeric datatypes\" this may include decimalChar, groupChar, pattern \"By default, numeric values must be in the formats defined in [xmlschema11-2]. It is not uncommon for numbers within tabular data to be formatted for human consumption, which may involve using commas for decimal points, grouping digits in the number using commas, or adding percent signs to the number.\" See https://www.w3.org/TR/tabular-metadata/ Tabular 6.4. Formats for Booleans \" Boolean values may be represented in many ways aside from the standard 1 and 0 or true and false.\" See https://www.w3.org/TR/tabular-metadata/ 6.4.4. Formats for dates and times \"By default, dates and times are assumed to be in the format defined in [xmlschema11-2]. However dates and times are commonly represented in tabular data in other formats.\" See https://www.w3.org/TR/tabular-metadata/ 6.4.5 Formats for durations \"Durations MUST be formatted and interpreted as defined in [xmlschema11-2], using the [ISO8601] format -?PnYnMnDTnHnMnS. For example, the duration P1Y1D is used for a year and a day; the duration PT2H30M for 2 hours and 30 minutes.\" See https://www.w3.org/TR/tabular-metadata/ 6.4.6 Formats for other types \"If the datatype base is not numeric, boolean, a date/time type, or a duration type, the datatype format annotation provides a regular expression for the string values, with syntax and processing defined by [ECMASCRIPT]. If the supplied value is not a valid regular expression, implementations MUST issue a warning and proceed as if no format had been provided.\" From DDI3.2 ManagedNumericRepresentation@format \"A format for number expressed as a string.\" From DDI3.2 ManagedDateTimeRepresentation_DateFieldFormat \"Describes the format of the date field, in formats such as YYYY/MM or MM-DD-YY, etc. If this element is omitted, then the format is assumed to be the XML Schema format corresponding to the type attribute value.\"""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueMapping-format"),
-            "rdf_type": CDI.ControlledVocabularyEntry
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueMapping-format"), "rdf_type": CDI.ControlledVocabularyEntry},
     )
 
     # attribute cdi:ValueMapping-identifier (0..1) | identifier | cdi:Identifier
@@ -12121,10 +10593,7 @@ class ValueMapping(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueMapping-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueMapping-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:ValueMapping-isRequired (0..1) | isRequired | xsd:boolean
@@ -12132,10 +10601,7 @@ class ValueMapping(DdiCdiClass):
         alias="isRequired",
         default=None,
         description="""If the value of this property is True indicates that a value is required for the referenced instance variable. From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/) 5.7 Inherited Properties: \"required: A boolean atomic property taking a single value which indicates whether the cell value can be null. See Parsing Cells in [tabular-data-model] for more details. The default is false, which means cells can have null values. The value of this property becomes the required annotation for the described column.\"""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueMapping-isRequired"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueMapping-isRequired"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:ValueMapping-length (0..1) | length | xsd:integer
@@ -12143,10 +10609,7 @@ class ValueMapping(DdiCdiClass):
         alias="length",
         default=None,
         description="""The length in characters of the physical representation of the value. From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/)  5.11.2 \"length: A numeric atomic property that contains a single integer that is the exact length of the value. The value of this property becomes the length annotation for the described datatype. See Length Constraints in [tabular-data-model] for details.\" Corresponds to DDI2.5 var/location/width and DDI 3.2 PhysicalLocation/Width.""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueMapping-length"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueMapping-length"), "rdf_type": "xsd:integer"},
     )
 
     # attribute cdi:ValueMapping-maximumLength (0..1) | maximumLength | xsd:integer
@@ -12154,10 +10617,7 @@ class ValueMapping(DdiCdiClass):
         alias="maximumLength",
         default=None,
         description="""The largest possible value of the length of the physical representation of the value. From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/) 5.11.2: \"maxLength: A numeric atomic property that contains a single integer that is the maximum length of the value. The value of this property becomes the maximum length annotation for the described datatype. See Length Constraints in [tabular-data-model] for details.\"""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueMapping-maximumLength"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueMapping-maximumLength"), "rdf_type": "xsd:integer"},
     )
 
     # attribute cdi:ValueMapping-minimumLength (0..1) | minimumLength | xsd:integer
@@ -12165,32 +10625,23 @@ class ValueMapping(DdiCdiClass):
         alias="minimumLength",
         default=None,
         description="""The smallest possible value for the length of the physical representation of the value. From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/)  5.11.2: \"minLength: An atomic property that contains a single integer that is the minimum length of the value. The value of this property becomes the minimum length annotation for the described datatype. See Length Constraints in [tabular-data-model] for details.\"""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueMapping-minimumLength"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueMapping-minimumLength"), "rdf_type": "xsd:integer"},
     )
 
     # attribute cdi:ValueMapping-nullSequence (0..1) | nullSequence | xsd:string
-    nullSequence: Union[str, LiteralField] | None = Field(
+    nullSequence: str | LiteralField | None = Field(
         alias="nullSequence",
         default=None,
         description="""A string indicating a null value. From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/) 4.3: \"null: the string or strings which cause the value of cells having string value matching any of these values to be null.\" From the same source, Inherited 5.7: \"null: An atomic property giving the string or strings used for null values within the data. If the string value of the cell is equal to any one of these values, the cell value is null. See Parsing Cells in [tabular-data-model] for more details. If not specified, the default for the null property is the empty string ''. The value of this property becomes the null annotation for the described column.\"""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueMapping-nullSequence"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueMapping-nullSequence"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:ValueMapping-numberPattern (0..1) | numberPattern | xsd:string
-    numberPattern: Union[str, LiteralField] | None = Field(
+    numberPattern: str | LiteralField | None = Field(
         alias="numberPattern",
         default=None,
         description="""A pattern description of the format of a numeric value. In W3C part of the datatype format From https://www.w3.org/TR/tabular-metadata/ tabular 6.4.2 pattern: \"A number format pattern as defined in [UAX35] http://www.unicode.org/reports/tr35/tr35-31/tr35-numbers.html#Number_Format_Patterns. Implementations MUST recognise number format patterns containing the symbols 0, #, the specified decimalChar (or \".\" if unspecified), the specified groupChar (or \",\" if unspecified), E, +, % and ‰. Implementations MAY additionally recognise number format patterns containing other special pattern characters defined in [UAX35]. If the supplied value is not a string, or if it contains an invalid number format pattern or uses special pattern characters that the implementation does not recognise, implementations MUST issue a warning and proceed as if the property had not been specified. If the datatype format annotation is a single string, this is interpreted in the same way as if it were an object with a pattern property whose value is that string. If the groupChar is specified, but no pattern is supplied, when parsing the string value of a cell against this format specification, implementations MUST recognise and parse numbers that consist of: an optional + or - sign, …  Implementations MAY also recognise numeric values that are in any of the standard-decimal, standard-percent or standard-scientific formats listed in the Unicode Common Locale Data Repository. …\"""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueMapping-numberPattern"),
-            "rdf_type": "xsd:string"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueMapping-numberPattern"), "rdf_type": "xsd:string"},
     )
 
     # attribute cdi:ValueMapping-physicalDataType (0..1) | physicalDataType | cdi:ControlledVocabularyEntry
@@ -12200,7 +10651,7 @@ class ValueMapping(DdiCdiClass):
         description="""The base datatype of the physical representation. An integer InstanceVariable might, for example, be stored as a floating point number. From the W3C Recommendation \"Metadata Vocabulary for Tabular Data\" (https://www.w3.org/TR/tabular-metadata/) Inherited 5.7: \"datatype: An atomic property that contains either a single string that is the main datatype of the values of the cell or a datatype description object. If the value of this property is a string, it MUST be the name of one of the built-in datatypes defined in section 5.11.1 Built-in Datatypes and this value is normalized to an object whose base property is the original string value. If it is an object then it describes a more specialized datatype. If a cell contains a sequence (i.e. the separator property is specified and not null) then this property specifies the datatype of each value within that sequence. See 5.11 Datatypes and Parsing Cells in [tabular-data-model] for more details.  The normalized value of this property becomes the datatype annotation for the described column.\"""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ValueMapping-physicalDataType"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -12209,12 +10660,8 @@ class ValueMapping(DdiCdiClass):
         alias="scale",
         default=None,
         description="The scale of the number expressed as an integer. A multiplier to be used in combination with the value to determine the measurement. (E.g., a number expressed in 100's with a value of 5 and a scale of 100 would be 500).",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueMapping-scale"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueMapping-scale"), "rdf_type": "xsd:integer"},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -12224,10 +10671,7 @@ class ValueMapping(DdiCdiClass):
         alias="formats",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueMapping_formats_DataPoint"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueMapping_formats_DataPoint"), "rdf_type": "uri"},
     )
 
     # association cdi:ValueMapping_uses_PhysicalSegmentLocation (0..1) | uses_PhysicalSegmentLocation | cdi:PhysicalSegmentLocation
@@ -12235,23 +10679,19 @@ class ValueMapping(DdiCdiClass):
         alias="uses_PhysicalSegmentLocation",
         default=None,
         description="Uses a physical segment location to describe where in the physical record a segment representing the data point is. This could be, for example, described as a start position and end position value for characters in a text record via the segment by text extension of physical segment location.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueMapping_uses_PhysicalSegmentLocation"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueMapping_uses_PhysicalSegmentLocation"), "rdf_type": "uri"},
     )
 
 
-
-
 class ValueMappingPosition(DdiCdiClass):
-    """ ValueMappingPosition.
+    """ValueMappingPosition.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Denotes the position of a value mapping in a sequence.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -12271,22 +10711,15 @@ class ValueMappingPosition(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueMappingPosition-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueMappingPosition-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:ValueMappingPosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueMappingPosition-value"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueMappingPosition-value"), "rdf_type": "xsd:integer"},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -12295,23 +10728,19 @@ class ValueMappingPosition(DdiCdiClass):
     indexes: URIRef = Field(
         alias="indexes",
         description="Assigns a position to a value mapping within a physical segment.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueMappingPosition_indexes_ValueMapping"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueMappingPosition_indexes_ValueMapping"), "rdf_type": "uri"},
     )
 
 
-
-
 class ValueMappingRelationship(DdiCdiClass):
-    """ ValueMappingRelationship.
+    """ValueMappingRelationship.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Relationships among data points in a physical layout.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -12331,10 +10760,7 @@ class ValueMappingRelationship(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ValueMappingRelationship-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ValueMappingRelationship-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:ValueMappingRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
@@ -12344,10 +10770,9 @@ class ValueMappingRelationship(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ValueMappingRelationship-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -12359,7 +10784,7 @@ class ValueMappingRelationship(DdiCdiClass):
         description="Specialization of source to variable mapping.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ValueMappingRelationship_hasSource_ValueMapping"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -12370,15 +10795,13 @@ class ValueMappingRelationship(DdiCdiClass):
         description="Specialization of target to variable mapping. Restricts cardinality.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ValueMappingRelationship_hasTarget_ValueMapping"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class VariableCollection(DdiCdiClass):
-    """ VariableCollection.
+    """VariableCollection.
 
     Definition
     ==========
@@ -12391,10 +10814,11 @@ class VariableCollection(DdiCdiClass):
     3. Variables at a specified level of development or review
 
     Explanatory notes
-    ================= 
+    =================
     A simple ordered or unordered list of variables can be described via a set of variable position parameters. An optional variable structure can describe a more complex structure for the collection. We might, for example, use the variable structure to group variables by content within a single collection of data or a wave of on-going data collection. For the purposes of management, conceptualization or anything other than organizing a logical record or physical layout.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -12413,10 +10837,7 @@ class VariableCollection(DdiCdiClass):
     allowsDuplicates: bool = Field(
         alias="allowsDuplicates",
         description="If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical “bag” permits duplicates and is unordered - a “set” does not have duplicates and may be ordered.)",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "VariableCollection-allowsDuplicates"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "VariableCollection-allowsDuplicates"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:VariableCollection-displayLabel (0..*) | displayLabel | cdi:LabelForDisplay
@@ -12426,7 +10847,7 @@ class VariableCollection(DdiCdiClass):
         description="A human-readable display label for the object. Supports the use of multiple languages. Repeat for labels with different content, for example, labels with differing length limitations.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "VariableCollection-displayLabel"),
-            "rdf_type": CDI.LabelForDisplay
+            "rdf_type": CDI.LabelForDisplay,
         },
     )
 
@@ -12437,7 +10858,7 @@ class VariableCollection(DdiCdiClass):
         description="A semantic term defining the factor used for defining this group.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "VariableCollection-groupingSemantic"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -12446,10 +10867,7 @@ class VariableCollection(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "VariableCollection-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "VariableCollection-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:VariableCollection-name (0..*) | name | cdi:ObjectName
@@ -12457,10 +10875,7 @@ class VariableCollection(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "VariableCollection-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "VariableCollection-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:VariableCollection-purpose (0..1) | purpose | cdi:InternationalString
@@ -12468,10 +10883,7 @@ class VariableCollection(DdiCdiClass):
         alias="purpose",
         default=None,
         description="Intent or reason for the object/the description of the object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "VariableCollection-purpose"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "VariableCollection-purpose"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:VariableCollection-usage (0..1) | usage | cdi:InternationalString
@@ -12479,12 +10891,8 @@ class VariableCollection(DdiCdiClass):
         alias="usage",
         default=None,
         description="Explanation of the ways in which the object is employed.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "VariableCollection-usage"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "VariableCollection-usage"), "rdf_type": CDI.InternationalString},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -12494,10 +10902,7 @@ class VariableCollection(DdiCdiClass):
         alias="has_ConceptualVariable",
         default=None,
         description="Variable collection has zero to many conceptual variables.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "VariableCollection_has_ConceptualVariable"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "VariableCollection_has_ConceptualVariable"), "rdf_type": "uri"},
     )
 
     # association cdi:VariableCollection_has_VariablePosition (0..*) | has_VariablePosition | cdi:VariablePosition
@@ -12505,10 +10910,7 @@ class VariableCollection(DdiCdiClass):
         alias="has_VariablePosition",
         default=None,
         description="Variable collection has zero to many variable positions.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "VariableCollection_has_VariablePosition"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "VariableCollection_has_VariablePosition"), "rdf_type": "uri"},
     )
 
     # association cdi:VariableCollection_isDefinedBy_Concept (0..*) | isDefinedBy_Concept | cdi:Concept
@@ -12516,17 +10918,12 @@ class VariableCollection(DdiCdiClass):
         alias="isDefinedBy_Concept",
         default=None,
         description="The conceptual basis for the collection of members.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "VariableCollection_isDefinedBy_Concept"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "VariableCollection_isDefinedBy_Concept"), "rdf_type": "uri"},
     )
 
 
-
-
 class VariablePosition(DdiCdiClass):
-    """ VariablePosition.
+    """VariablePosition.
 
     Definition
     ============
@@ -12537,6 +10934,7 @@ class VariablePosition(DdiCdiClass):
     Variable position allows a list of variables to be ordered.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -12556,22 +10954,15 @@ class VariablePosition(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "VariablePosition-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "VariablePosition-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:VariablePosition-value (1..1) | value | xsd:integer
     value: int = Field(
         alias="value",
         description="Index value of the member in an ordered array.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "VariablePosition-value"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "VariablePosition-value"), "rdf_type": "xsd:integer"},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -12580,23 +10971,19 @@ class VariablePosition(DdiCdiClass):
     indexes: URIRef = Field(
         alias="indexes",
         description="Variable position indexes a conceptual variable.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "VariablePosition_indexes_ConceptualVariable"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "VariablePosition_indexes_ConceptualVariable"), "rdf_type": "uri"},
     )
 
 
-
-
 class VariableRelationship(DdiCdiClass):
-    """ VariableRelationship.
+    """VariableRelationship.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Relationship between any variables in the variable cascade (conceptual, represented, instance), based on an ordered relation.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -12616,10 +11003,7 @@ class VariableRelationship(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "VariableRelationship-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "VariableRelationship-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:VariableRelationship-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
@@ -12629,10 +11013,9 @@ class VariableRelationship(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "VariableRelationship-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -12644,7 +11027,7 @@ class VariableRelationship(DdiCdiClass):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "VariableRelationship_hasSource_ConceptualVariable"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -12655,21 +11038,20 @@ class VariableRelationship(DdiCdiClass):
         description="Note that this can be realized as a collection to support tuples.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "VariableRelationship_hasTarget_ConceptualVariable"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class VariableStructure(DdiCdiClass):
-    """ VariableStructure.
+    """VariableStructure.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Relation structure for use with any set of variables in the variable cascade (conceptual, represented, instance).
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -12689,10 +11071,7 @@ class VariableStructure(DdiCdiClass):
         alias="identifier",
         default=None,
         description="Identifier for objects requiring short- or long-lasting referencing and management.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "VariableStructure-identifier"),
-            "rdf_type": CDI.Identifier
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "VariableStructure-identifier"), "rdf_type": CDI.Identifier},
     )
 
     # attribute cdi:VariableStructure-name (0..*) | name | cdi:OrganizationName
@@ -12700,10 +11079,7 @@ class VariableStructure(DdiCdiClass):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "VariableStructure-name"),
-            "rdf_type": CDI.OrganizationName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "VariableStructure-name"), "rdf_type": CDI.OrganizationName},
     )
 
     # attribute cdi:VariableStructure-purpose (0..1) | purpose | cdi:InternationalString
@@ -12711,10 +11087,7 @@ class VariableStructure(DdiCdiClass):
         alias="purpose",
         default=None,
         description="Intent or reason for the object/the description of the object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "VariableStructure-purpose"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "VariableStructure-purpose"), "rdf_type": CDI.InternationalString},
     )
 
     # attribute cdi:VariableStructure-semantics (0..1) | semantics | cdi:ControlledVocabularyEntry
@@ -12724,7 +11097,7 @@ class VariableStructure(DdiCdiClass):
         description="Specifies the semantics of the object in reference to a vocabulary, ontology, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "VariableStructure-semantics"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -12735,7 +11108,7 @@ class VariableStructure(DdiCdiClass):
         description="Provides information on reflexivity, transitivity, and symmetry of relationship using a descriptive term from an enumerated list. Use if all relations within this relation structure are of the same specification.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "VariableStructure-specification"),
-            "rdf_type": CDI.StructureSpecification
+            "rdf_type": CDI.StructureSpecification,
         },
     )
 
@@ -12746,7 +11119,7 @@ class VariableStructure(DdiCdiClass):
         description="Indicates the form of the associations among members of the collection. Specifies the way in which constituent parts are interrelated or arranged.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "VariableStructure-topology"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -12755,12 +11128,8 @@ class VariableStructure(DdiCdiClass):
         alias="totality",
         default=None,
         description="Indicates whether the related collections are comprehensive in terms of their coverage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "VariableStructure-totality"),
-            "rdf_type": CDI.StructureExtent
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "VariableStructure-totality"), "rdf_type": CDI.StructureExtent},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -12770,10 +11139,7 @@ class VariableStructure(DdiCdiClass):
         alias="has_VariableRelationship",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "VariableStructure_has_VariableRelationship"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "VariableStructure_has_VariableRelationship"), "rdf_type": "uri"},
     )
 
     # association cdi:VariableStructure_structures_VariableCollection (0..1) | structures | cdi:VariableCollection
@@ -12783,15 +11149,13 @@ class VariableStructure(DdiCdiClass):
         description="Variable structure structures zero to one variable collection.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "VariableStructure_structures_VariableCollection"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class Step(Activity):
-    """ Step.
+    """Step.
 
     Definition
     ============
@@ -12806,6 +11170,7 @@ class Step(Activity):
     Steps can be broken out into a sequence of sub steps ad infinitum.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -12825,10 +11190,7 @@ class Step(Activity):
         alias="script",
         default=None,
         description="The executable code for performing a process step, expressed in a formal language.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Step-script"),
-            "rdf_type": CDI.CommandCode
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Step-script"), "rdf_type": CDI.CommandCode},
     )
 
     # attribute cdi:Step-scriptingLanguage (0..1) | scriptingLanguage | cdi:ControlledVocabularyEntry
@@ -12838,10 +11200,9 @@ class Step(Activity):
         description="The formal language used by the script associated with the process step.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "Step-scriptingLanguage"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -12851,10 +11212,7 @@ class Step(Activity):
         alias="hasSubStep",
         default=None,
         description="A step can be broken out into steps ad infinitum.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Step_hasSubStep_Step"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Step_hasSubStep_Step"), "rdf_type": "uri"},
     )
 
     # association cdi:Step_produces_Parameter (0..*) | produces | cdi:Parameter
@@ -12862,10 +11220,7 @@ class Step(Activity):
         alias="produces",
         default=None,
         description="The Step creates Parameter as an output.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Step_produces_Parameter"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Step_produces_Parameter"), "rdf_type": "uri"},
     )
 
     # association cdi:Step_receives_Parameter (0..*) | receives | cdi:Parameter
@@ -12873,31 +11228,27 @@ class Step(Activity):
         alias="receives",
         default=None,
         description="The Step uses Parameter as an input.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Step_receives_Parameter"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Step_receives_Parameter"), "rdf_type": "uri"},
     )
 
 
-
-
 class Individual(Agent):
-    """ Individual.
+    """Individual.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     A person. (See for example the W3C Friend of a Friend Ontology - http://xmlns.com/foaf/spec/#term_Person).
 
-    Examples 
-    ========== 
-    Individual employed by an organization. A person within a unit or project (organization). Albert Einstein, Bugs Bunny, Harry Potter, Ashley G. Williams, Gandalf.  
+    Examples
+    ==========
+    Individual employed by an organization. A person within a unit or project (organization). Albert Einstein, Bugs Bunny, Harry Potter, Ashley G. Williams, Gandalf.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Describes people referred to in the description of data and process. Similar to the concept found in Schema.org, the W3C ORG Ontology, etc.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -12919,7 +11270,7 @@ class Individual(Agent):
         description="Contact information for the individual including location specification, address, URL, phone numbers, and other means of communication access. Sets of information can be repeated and date-stamped.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "Individual-contactInformation"),
-            "rdf_type": CDI.ContactInformation
+            "rdf_type": CDI.ContactInformation,
         },
     )
 
@@ -12928,17 +11279,12 @@ class Individual(Agent):
         alias="individualName",
         default=None,
         description="Name of an individual broken out into its component parts of prefix, first/given name, middle name, last/family/surname, and suffix.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Individual-individualName"),
-            "rdf_type": CDI.IndividualName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Individual-individualName"), "rdf_type": CDI.IndividualName},
     )
 
 
-
-
 class Machine(Agent):
-    """ Machine.
+    """Machine.
 
     Definition
     ============
@@ -12953,6 +11299,7 @@ class Machine(Agent):
     May be used as a target to identify the agent who performed an action. Used to define hardware or software that act as agents in data capture, data processing, or other related actions.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -12972,10 +11319,7 @@ class Machine(Agent):
         alias="accessLocation",
         default=None,
         description="Location of the machine for the purpose of access.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Machine-accessLocation"),
-            "rdf_type": CDI.AccessLocation
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Machine-accessLocation"), "rdf_type": CDI.AccessLocation},
     )
 
     # attribute cdi:Machine-function (0..*) | function | cdi:ControlledVocabularyEntry
@@ -12983,10 +11327,7 @@ class Machine(Agent):
         alias="function",
         default=None,
         description="The business function of the machine according to a classification or typology.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Machine-function"),
-            "rdf_type": CDI.ControlledVocabularyEntry
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Machine-function"), "rdf_type": CDI.ControlledVocabularyEntry},
     )
 
     # attribute cdi:Machine-machineInterface (0..*) | machineInterface | cdi:ControlledVocabularyEntry
@@ -12996,7 +11337,7 @@ class Machine(Agent):
         description="Reference to the type of the machine interface according to a classification or typology.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "Machine-machineInterface"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -13005,10 +11346,7 @@ class Machine(Agent):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Machine-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Machine-name"), "rdf_type": CDI.ObjectName},
     )
 
     # attribute cdi:Machine-ownerOperatorContact (0..1) | ownerOperatorContact | cdi:ContactInformation
@@ -13018,7 +11356,7 @@ class Machine(Agent):
         description="Contact information for the owner/operator including location specification, address, URL, phone numbers, and other means of communication access. Sets of information can be repeated and date-stamped.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "Machine-ownerOperatorContact"),
-            "rdf_type": CDI.ContactInformation
+            "rdf_type": CDI.ContactInformation,
         },
     )
 
@@ -13029,29 +11367,28 @@ class Machine(Agent):
         description="Describes the type of non-human actor (e.g., software, hardware, web service, etc.).",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "Machine-typeOfMachine"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
 
-
-
 class Organization(Agent):
-    """ Organization.
+    """Organization.
 
-    Definition 
-    ========== 
-    Collection of people organized within a framework of authority that can perform an act or be associated with another agent.  
+    Definition
+    ==========
+    Collection of people organized within a framework of authority that can perform an act or be associated with another agent.
 
-    Examples 
-    ========== 
-    Commonwealth Scientific and Industrial Research Organisation (CSIRO), U.S. Census Bureau, University of Michigan/Institute for Social Research, Research Data Alliance Agrisemantics Working Group.  
+    Examples
+    ==========
+    Commonwealth Scientific and Industrial Research Organisation (CSIRO), U.S. Census Bureau, University of Michigan/Institute for Social Research, Research Data Alliance Agrisemantics Working Group.
 
-    Explanatory notes 
+    Explanatory notes
     =================
     The W3C Organization Ontology (https://www.w3.org/TR/vocab-org/#organizational_structure) definition: "Represents a collection of people organized together into a community or other social, commercial or political structure. The group has some common purpose or reason for existence which goes beyond the set of people belonging to it and can act as an agent. Organizations are often decomposable into hierarchical structures."
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13073,7 +11410,7 @@ class Organization(Agent):
         description="Contact information for the organization including location specification, address, URL, phone numbers, and other means of communication access. Sets of information can be repeated and date-stamped.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "Organization-contactInformation"),
-            "rdf_type": CDI.ContactInformation
+            "rdf_type": CDI.ContactInformation,
         },
     )
 
@@ -13081,27 +11418,23 @@ class Organization(Agent):
     organizationName: list[OrganizationName] = Field(
         alias="organizationName",
         description="Names by which the organization is known.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Organization-organizationName"),
-            "rdf_type": CDI.OrganizationName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Organization-organizationName"), "rdf_type": CDI.OrganizationName},
     )
 
 
-
-
 class ProcessingAgent(Agent):
-    """ ProcessingAgent.
+    """ProcessingAgent.
 
-    Definition 
-    ============ 
-    A processing agent orchestrates the production of information objects in a production environment. There are processing agents which perform data capture, data editing/processing, and data analysis (etc.), each in the appropriate production environments. The processing agent performs an activity based on the control logic.  
+    Definition
+    ============
+    A processing agent orchestrates the production of information objects in a production environment. There are processing agents which perform data capture, data editing/processing, and data analysis (etc.), each in the appropriate production environments. The processing agent performs an activity based on the control logic.
 
-    Examples 
-    ========== 
+    Examples
+    ==========
     A processing agent initiates a data capture sequence, obtaining readings from a sensor. A processing agent initiates rule based scheduling. A processing agent is informed by control logic to invoke an imputation activity.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13123,7 +11456,7 @@ class ProcessingAgent(Agent):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ProcessingAgent_operatesOn_ProductionEnvironment"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -13132,32 +11465,28 @@ class ProcessingAgent(Agent):
         alias="performs",
         default=None,
         description="A processing agent performs an activity at the direction of control logic.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ProcessingAgent_performs_Activity"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ProcessingAgent_performs_Activity"), "rdf_type": "uri"},
     )
 
 
-
-
 class Category(Concept):
-    """ Category.
+    """Category.
 
-    Definition 
-    ============ 
-    Concept whose role is to define and measure a characteristic.  
+    Definition
+    ============
+    Concept whose role is to define and measure a characteristic.
 
-    Examples 
-    ========== 
-    The category "Male" is used to define or measure "Sex" or "Gender", which are characteristics. In turn, they are also variables. "Extremely Satisfied" is a category in an agreement scale. This can be used for many kinds of variables.  
+    Examples
+    ==========
+    The category "Male" is used to define or measure "Sex" or "Gender", which are characteristics. In turn, they are also variables. "Extremely Satisfied" is a category in an agreement scale. This can be used for many kinds of variables.
 
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     A category is a concept, typically associated with a code in the representation of a variable value. Categories are most often used in the allowed values for qualitative, i.e., nominal and ordinal, variables. A set of categories, say "Male" and "Female" for characteristics "Sex" or "Gender," helps define those characteristics. For describing location of measurement station, you might have categories "Urban", "Suburban", "Rural", etc.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13177,31 +11506,27 @@ class Category(Concept):
         alias="descriptiveText",
         default=None,
         description="A short natural language account of the characteristics of the object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Category-descriptiveText"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Category-descriptiveText"), "rdf_type": CDI.InternationalString},
     )
 
 
-
-
 class ConceptualValue(Concept):
-    """ ConceptualValue.
+    """ConceptualValue.
 
-    Definition 
-    ============ 
-    Concept (with a notion of equality defined) being observed, captured, or derived which is associated to a single data instance.   
+    Definition
+    ============
+    Concept (with a notion of equality defined) being observed, captured, or derived which is associated to a single data instance.
 
-    Examples 
-    ========== 
-    A systolic blood pressure of 122 is measured. The instance value for that measurement in this paragraph is the character string "122". The associated measured concept (a blood pressure at that level) is the conceptual value.  The conceptual value comes from a conceptual domain associated with a conceptual variable.   
+    Examples
+    ==========
+    A systolic blood pressure of 122 is measured. The instance value for that measurement in this paragraph is the character string "122". The associated measured concept (a blood pressure at that level) is the conceptual value.  The conceptual value comes from a conceptual domain associated with a conceptual variable.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     This is the concept associated to the actual instance of data that is stored in a data point (the signified of a datum in the signification pattern).
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13222,29 +11547,28 @@ class ConceptualValue(Concept):
         description="Conceptual value has concept from one conceptual domain.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConceptualValue_hasConceptFrom_ConceptualDomain"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class ConceptualVariable(Concept):
-    """ ConceptualVariable.
+    """ConceptualVariable.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     A variable at the highest level of abstraction.
-  
-    Examples 
-    ========== 
+
+    Examples
+    ==========
     A gender variable defining two categories – "male" and "female" allowing relating each of these to concepts having description of how these categories are decided.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     The conceptual variable allows for describing the domain of concepts it can take on as well as the type of unit that can be measured. A conceptual variable for blood pressure might, for example describe the conditions under which the pressure is to be taken (sitting as opposed to standing) and a conceptual value domain as height of mercury – without units. One represented variable would further refine this by specifying inches as the unit of measurement for the height. Another might specify that the height be represented in centimeters. Both represented variables could reference the same conceptual variable to indicate in what way they are comparable.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13266,7 +11590,7 @@ class ConceptualVariable(Concept):
         description="A short natural language account of the characteristics of the object.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConceptualVariable-descriptiveText"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -13277,10 +11601,9 @@ class ConceptualVariable(Concept):
         description="""Kind of unit of measure, so that it may be prone to translation to equivalent UOMs. Example values include \"acceleration,\" \"temperature,\" \"salinity\", etc. This description exists at the conceptual level, indicating a limitation on the type of representations which may be used for the variable as it is made more concrete.""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConceptualVariable-unitOfMeasureKind"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -13289,11 +11612,8 @@ class ConceptualVariable(Concept):
     measures: URIRef | None = Field(
         alias="measures",
         default=None,
-        description="The measures association is intended to describe specific relationships between the ConceptualVariable and UnitType classes, and similar relationships between their sub-classes. This is documented in section VII.D.5 of the \"DDI-Cross Domain Integration: Detailed Model\" document.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConceptualVariable_measures_UnitType"),
-            "rdf_type": "uri"
-        },
+        description='The measures association is intended to describe specific relationships between the ConceptualVariable and UnitType classes, and similar relationships between their sub-classes. This is documented in section VII.D.5 of the "DDI-Cross Domain Integration: Detailed Model" document.',
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConceptualVariable_measures_UnitType"), "rdf_type": "uri"},
     )
 
     # association cdi:ConceptualVariable_takesSentinelConceptsFrom_SentinelConceptualDomain (0..1) | takesSentinelConceptsFrom | cdi:SentinelConceptualDomain
@@ -13303,7 +11623,7 @@ class ConceptualVariable(Concept):
         description="Identifies the conceptual domain containing the set of sentinel concepts used to describe the conceptual variable.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConceptualVariable_takesSentinelConceptsFrom_SentinelConceptualDomain"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -13314,15 +11634,13 @@ class ConceptualVariable(Concept):
         description="Identifies the substantive conceptual domain containing the set of substantive concepts used to describe the conceptual variable.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConceptualVariable_takesSubstantiveConceptsFrom_SubstantiveConceptualDomain"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class UnitType(Concept):
-    """ UnitType.
+    """UnitType.
 
     Definition
     ==========
@@ -13341,6 +11659,7 @@ class UnitType(Concept):
     It concerns not only unit types used in dissemination, but anywhere in the statistical process. E.g. using administrative data might involve the use of a fiscal unit. [GSIM 1.1].
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13360,17 +11679,12 @@ class UnitType(Concept):
         alias="descriptiveText",
         default=None,
         description="A short natural language account of the characteristics of the object.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "UnitType-descriptiveText"),
-            "rdf_type": CDI.InternationalString
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "UnitType-descriptiveText"), "rdf_type": CDI.InternationalString},
     )
 
 
-
-
 class CategorySet(ConceptSystem):
-    """ CategorySet.
+    """CategorySet.
 
     Definition
     ============
@@ -13385,6 +11699,7 @@ class CategorySet(ConceptSystem):
     The categories in a category set help define the meaning of the category set. Gender can be defined as "male or female" - see example above. A category set can be used directly by questions to express a set of response choices.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13404,10 +11719,7 @@ class CategorySet(ConceptSystem):
         alias="has_Category",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CategorySet_has_Category"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CategorySet_has_Category"), "rdf_type": "uri"},
     )
 
     # association cdi:CategorySet_has_CategoryPosition (0..*) | has_CategoryPosition | cdi:CategoryPosition
@@ -13415,17 +11727,12 @@ class CategorySet(ConceptSystem):
         alias="has_CategoryPosition",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CategorySet_has_CategoryPosition"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CategorySet_has_CategoryPosition"), "rdf_type": "uri"},
     )
 
 
-
-
 class SentinelConceptualDomain(ConceptualDomain):
-    """ SentinelConceptualDomain.
+    """SentinelConceptualDomain.
 
     Definition
     ==========
@@ -13434,7 +11741,7 @@ class SentinelConceptualDomain(ConceptualDomain):
     Examples
     ========
 
-    - Refused 
+    - Refused
     - Don't know
     - Lost in processing
 
@@ -13443,6 +11750,7 @@ class SentinelConceptualDomain(ConceptualDomain):
     Sentinel values are intended for processing purposes whereas substantive values are used for subject matter concerns.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13455,23 +11763,23 @@ class SentinelConceptualDomain(ConceptualDomain):
     )
 
 
-
 class SubstantiveConceptualDomain(ConceptualDomain):
-    """ SubstantiveConceptualDomain.
+    """SubstantiveConceptualDomain.
 
-    Definition 
+    Definition
     ==========
-    Conceptual domain of substantive concepts.  
+    Conceptual domain of substantive concepts.
 
-    Examples 
-    ======== 
-    An enumeration of concepts for a categorical variable like "male" and "female" for gender, or "ozone" and "particulate matter less than 2.5 microns in diameter" for pollutant in an air quality measure.  
+    Examples
+    ========
+    An enumeration of concepts for a categorical variable like "male" and "female" for gender, or "ozone" and "particulate matter less than 2.5 microns in diameter" for pollutant in an air quality measure.
 
-    Explanatory notes 
+    Explanatory notes
     =================
     A conceptual variable links a unit type to a substantive conceptual domain. The latter can be an enumeration or description of the values that the variable may take on. In the enumerated case these are the categories in a category set that can be values, not the codes that represent the values. An example might be the conceptual domain for a variable representing self-identified gender. An enumeration might include the concept of "male" and the concept of "female". These, in turn, would be represented in a substantive value domain by codes in a code list like "m" and "f", or "0" and "1". A conceptual domain might be described through a value and concept description's description property of "a real number greater than 0" or through a more formal logical expression of "all reals x such that x > 0". Even in the described case, what is being described are conceptual, not the symbols used to represent the values. This may be a subtle distinction, but allows specifying that the same numeric value might be represented by 32 bits or by 64 bits or by an Arabic numeral or a Roman numeral.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13484,23 +11792,23 @@ class SubstantiveConceptualDomain(ConceptualDomain):
     )
 
 
-
 class DeterministicImperative(ControlLogic):
-    """ DeterministicImperative.
+    """DeterministicImperative.
 
-    Definition 
-    ============ 
-    Deterministic imperative is a subtype of control logic. Deterministic control logic consists of control constructs.   
+    Definition
+    ============
+    Deterministic imperative is a subtype of control logic. Deterministic control logic consists of control constructs.
 
-    Examples 
-    ========== 
-    A Loop control construct is deterministic control logic. A script is deterministic control logic.  
+    Examples
+    ==========
+    A Loop control construct is deterministic control logic. A script is deterministic control logic.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Because control logic covers both deterministic and non-deterministic forms, it has been divided into the appropriate subtypes.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13513,23 +11821,23 @@ class DeterministicImperative(ControlLogic):
     )
 
 
-
 class NonDeterministicDeclarative(ControlLogic):
-    """ NonDeterministicDeclarative.
+    """NonDeterministicDeclarative.
 
-    Definition 
-    ============ 
-    Non-deterministic control logic is a subtype of control logic. Non-deterministic (or declarative) control logic is constraint- and/or rule-based.  
+    Definition
+    ============
+    Non-deterministic control logic is a subtype of control logic. Non-deterministic (or declarative) control logic is constraint- and/or rule-based.
 
-    Examples 
-    ========== 
-    Rule based scheduling is declarative control logic.  
+    Examples
+    ==========
+    Rule based scheduling is declarative control logic.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Unlike DDI Lifecycle, DDI-CDI describes non-deterministic activity and step controls.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13542,9 +11850,8 @@ class NonDeterministicDeclarative(ControlLogic):
     )
 
 
-
 class DimensionalDataSet(DataSet):
-    """ DimensionalDataSet.
+    """DimensionalDataSet.
 
     Definition
     ============
@@ -13559,6 +11866,7 @@ class DimensionalDataSet(DataSet):
     Similar to Structural N-Cube.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13578,12 +11886,8 @@ class DimensionalDataSet(DataSet):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DimensionalDataSet-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DimensionalDataSet-name"), "rdf_type": CDI.ObjectName},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -13593,17 +11897,12 @@ class DimensionalDataSet(DataSet):
         alias="represents",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DimensionalDataSet_represents_ScopedMeasure"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DimensionalDataSet_represents_ScopedMeasure"), "rdf_type": "uri"},
     )
 
 
-
-
 class KeyValueDataStore(DataSet):
-    """ KeyValueDataStore.
+    """KeyValueDataStore.
 
     Definition
     ============
@@ -13615,10 +11914,11 @@ class KeyValueDataStore(DataSet):
 
     Explanatory notes
     ===================
-    A key-value datastore is just a collection of key-value pairs, i.e. instance keys and reference values. 
+    A key-value datastore is just a collection of key-value pairs, i.e. instance keys and reference values.
     Each instance key encodes all relevant information about the context, the unit of interest and the variable associated with the reference value of a given data point.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13631,9 +11931,8 @@ class KeyValueDataStore(DataSet):
     )
 
 
-
 class LongDataSet(DataSet):
-    """ LongDataSet.
+    """LongDataSet.
 
     Definition
     ============
@@ -13644,6 +11943,7 @@ class LongDataSet(DataSet):
     A unit dataset where each row corresponds to a set of data points capturing different characteristics of a unit, some of which can be transposed into variable descriptor and variable value components.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13656,9 +11956,8 @@ class LongDataSet(DataSet):
     )
 
 
-
 class WideDataSet(DataSet):
-    """ WideDataSet.
+    """WideDataSet.
 
     Definition
     ============
@@ -13669,6 +11968,7 @@ class WideDataSet(DataSet):
     A unit dataset where each row corresponds to a set of data points capturing different characteristics of a unit.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13681,19 +11981,19 @@ class WideDataSet(DataSet):
     )
 
 
-
 class AttributeComponent(DataStructureComponent):
-    """ AttributeComponent.
+    """AttributeComponent.
 
-    Definition 
-    ============ 
-    Role given to a represented variable in the context of a data structure to qualify observations or provide other types of supplementary information.  
+    Definition
+    ============
+    Role given to a represented variable in the context of a data structure to qualify observations or provide other types of supplementary information.
 
-    Examples 
-    ========== 
+    Examples
+    ==========
     The publication status of an observation (e.g. provisional, final, revised).
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13715,15 +12015,13 @@ class AttributeComponent(DataStructureComponent):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "AttributeComponent_qualifies_DataStructureComponent"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class ContextualComponent(DataStructureComponent):
-    """ ContextualComponent.
+    """ContextualComponent.
 
     Definition
     ============
@@ -13731,17 +12029,18 @@ class ContextualComponent(DataStructureComponent):
 
     Examples
     ==========
-    A partition, cluster name and any other key-value datastore organization information. 
+    A partition, cluster name and any other key-value datastore organization information.
 
     Explanatory notes
     ===================
-    A key-value datastore can be organized into multiple contextual components. 
-    Other data structure components that are part of the instance key, e.g. identifier and dimension components, guarantee uniqueness only within the scope of a contextual component. 
-    Synthetic id components do guarantee global uniqueness, but they might complex to setup and maintain in many organizations. 
-    Contextual components provide a simple mechanism to achieve uniqueness within a single key-value datastore. 
+    A key-value datastore can be organized into multiple contextual components.
+    Other data structure components that are part of the instance key, e.g. identifier and dimension components, guarantee uniqueness only within the scope of a contextual component.
+    Synthetic id components do guarantee global uniqueness, but they might complex to setup and maintain in many organizations.
+    Contextual components provide a simple mechanism to achieve uniqueness within a single key-value datastore.
     When a key-value datastore is organized in contextual components, a contextual component prefix is added to the instance key to make it unique across the entire key-value datastore.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13754,15 +12053,15 @@ class ContextualComponent(DataStructureComponent):
     )
 
 
-
 class DataStructure(DataStructureComponent):
-    """ DataStructure.
+    """DataStructure.
 
-    Definition 
+    Definition
     ============
     Data organization based on reusable data structure components.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13782,10 +12081,7 @@ class DataStructure(DataStructureComponent):
         alias="has_ComponentPosition",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataStructure_has_ComponentPosition"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataStructure_has_ComponentPosition"), "rdf_type": "uri"},
     )
 
     # association cdi:DataStructure_has_DataStructureComponent (0..*) | has_DataStructureComponent | cdi:DataStructureComponent
@@ -13793,10 +12089,7 @@ class DataStructure(DataStructureComponent):
         alias="has_DataStructureComponent",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataStructure_has_DataStructureComponent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataStructure_has_DataStructureComponent"), "rdf_type": "uri"},
     )
 
     # association cdi:DataStructure_has_ForeignKey (0..*) | has_ForeignKey | cdi:ForeignKey
@@ -13804,10 +12097,7 @@ class DataStructure(DataStructureComponent):
         alias="has_ForeignKey",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataStructure_has_ForeignKey"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataStructure_has_ForeignKey"), "rdf_type": "uri"},
     )
 
     # association cdi:DataStructure_has_PrimaryKey (0..1) | has_PrimaryKey | cdi:PrimaryKey
@@ -13815,27 +12105,23 @@ class DataStructure(DataStructureComponent):
         alias="has_PrimaryKey",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DataStructure_has_PrimaryKey"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DataStructure_has_PrimaryKey"), "rdf_type": "uri"},
     )
 
 
-
-
 class DimensionComponent(DataStructureComponent):
-    """ DimensionComponent.
+    """DimensionComponent.
 
-    Definition 
-    ============ 
-    Role given to a represented variable in the context of a dimensional data structure to identify the universes associated with data points. The variable acts as a field in the compound identifier (the key structure) to disambiguate the cells in the multi-dimensional "cube".  
+    Definition
+    ============
+    Role given to a represented variable in the context of a dimensional data structure to identify the universes associated with data points. The variable acts as a field in the compound identifier (the key structure) to disambiguate the cells in the multi-dimensional "cube".
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     The categories from each dimension often are used in combination to identify a cell. The meaning of the combination of the categories supplies meaning to the cell.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13854,15 +12140,14 @@ class DimensionComponent(DataStructureComponent):
     categoricalAdditivity: bool | None = Field(
         alias="categoricalAdditivity",
         default=None,
-        description="""Indicates whether categories at a specific level can be combined to provide the value for their shared parent category. Value is True if categories can be added together (collapsed) to create higher-level categories.  
+        description="""Indicates whether categories at a specific level can be combined to provide the value for their shared parent category. Value is True if categories can be added together (collapsed) to create higher-level categories.
 
     An example would be age categories. Five-year age categories can be collapsed into 10-year age categories.""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "DimensionComponent-categoricalAdditivity"),
-            "rdf_type": "xsd:boolean"
+            "rdf_type": "xsd:boolean",
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -13874,25 +12159,24 @@ class DimensionComponent(DataStructureComponent):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "DimensionComponent_isStructuredBy_ValueDomain"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class IdentifierComponent(DataStructureComponent):
-    """ IdentifierComponent.
+    """IdentifierComponent.
 
-    Definition 
-    ============ 
-    Role given to a represented variable in the context of a long or wide data structure to identify the units associated to data points, and in dimensional and key value data structures to provide identifying fields for the instance values.  
+    Definition
+    ============
+    Role given to a represented variable in the context of a long or wide data structure to identify the units associated to data points, and in dimensional and key value data structures to provide identifying fields for the instance values.
 
-    Examples 
-    ========== 
+    Examples
+    ==========
     The personal identification number of a Swedish citizen for unit data or the name of a country in the European Union for dimensional data.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13905,19 +12189,19 @@ class IdentifierComponent(DataStructureComponent):
     )
 
 
-
 class MeasureComponent(DataStructureComponent):
-    """ MeasureComponent.
+    """MeasureComponent.
 
-    Definition 
-    ============ 
-    Role given to a represented variable in the context of a data structure to hold the observed/derived values.  
+    Definition
+    ============
+    Role given to a represented variable in the context of a data structure to hold the observed/derived values.
 
-    Examples 
-    ========== 
+    Examples
+    ==========
     Height of a person in a wide or long dataset or number of citizens in a country in a dataset for multiple countries (dimensional dataset).
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13937,21 +12221,16 @@ class MeasureComponent(DataStructureComponent):
         alias="name",
         default=None,
         description="Human understandable name (liguistic signifier, word, phrase, or mnemonic). May follow ISO/IEC 11179-5 naming principles, and have context provided to specify usage.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "MeasureComponent-name"),
-            "rdf_type": CDI.ObjectName
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "MeasureComponent-name"), "rdf_type": CDI.ObjectName},
     )
 
 
-
-
 class SyntheticIdComponent(DataStructureComponent):
-    """ SyntheticIdComponent.
+    """SyntheticIdComponent.
 
     Definition
     ============
-    Persistent and unique identifier (PIDs) to provide standarized, long-lasting identification. 
+    Persistent and unique identifier (PIDs) to provide standarized, long-lasting identification.
 
     Examples
     ==========
@@ -13959,10 +12238,11 @@ class SyntheticIdComponent(DataStructureComponent):
 
     Explanatory notes
     ===================
-    This PIDs either complement or replace identifier and dimension components. 
+    This PIDs either complement or replace identifier and dimension components.
     They complement them when there is a need for having a globally unique identifier as part of an instance key. They replace them when identier components are not available (e.g. after de-identification for confidentiality).
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -13975,23 +12255,23 @@ class SyntheticIdComponent(DataStructureComponent):
     )
 
 
-
 class VariableDescriptorComponent(DataStructureComponent):
-    """ VariableDescriptorComponent.
+    """VariableDescriptorComponent.
 
-    Definition 
-    ============ 
-    Role given to a represented variable in the context of a data structure to provide codes for variable identification.   
+    Definition
+    ============
+    Role given to a represented variable in the context of a data structure to provide codes for variable identification.
 
-    Examples 
-    ========== 
-    Consider {"income", "age"} to be the value domain of the represented variable working as a variable descriptor component.  The two codes, i.e. those designating "income" and "age", are descriptors used to identify which values in the variable value component correspond to income and which ones to age.   
+    Examples
+    ==========
+    Consider {"income", "age"} to be the value domain of the represented variable working as a variable descriptor component.  The two codes, i.e. those designating "income" and "age", are descriptors used to identify which values in the variable value component correspond to income and which ones to age.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Whenever more than one variable appears in the same column, we need a mechanism to distinguish which values correspond to which variable. This mechanism is provided by the variable descriptor component, which contains the codes used to link the variables to their values.  This structure provides a flexible mechanism avoiding the need for a formal pointer.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -14013,7 +12293,7 @@ class VariableDescriptorComponent(DataStructureComponent):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "VariableDescriptorComponent_isDefinedBy_DescriptorVariable"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -14023,29 +12303,28 @@ class VariableDescriptorComponent(DataStructureComponent):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "VariableDescriptorComponent_refersTo_VariableValueComponent"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class VariableValueComponent(DataStructureComponent):
-    """ VariableValueComponent.
+    """VariableValueComponent.
 
-    Definition 
-    ============ 
-    Role given to a represented variable in the context of a data structure to record values of multiple variables.   
+    Definition
+    ============
+    Role given to a represented variable in the context of a data structure to record values of multiple variables.
 
-    Examples 
-    ========== 
-    Consider two variables, i.e. income and age, with their values living together in different entries in the same column.  The values of those two variables are now in the value domain of a single variable (the one working as a variable value component).  Another column, based on a variable descriptor component, use codes for "income" and "age" to distinguish income values from age values.   
+    Examples
+    ==========
+    Consider two variables, i.e. income and age, with their values living together in different entries in the same column.  The values of those two variables are now in the value domain of a single variable (the one working as a variable value component).  Another column, based on a variable descriptor component, use codes for "income" and "age" to distinguish income values from age values.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     A variable value component captures the values of multiple variables that have been transposed into a single column.  The variable descriptor component provides a mechanism to identify which of those values correspond to which variable.   This structure provides a flexible mechanism avoiding the need for a formal pointer.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -14058,9 +12337,8 @@ class VariableValueComponent(DataStructureComponent):
     )
 
 
-
 class RevisableDatum(Datum):
-    """ RevisableDatum.
+    """RevisableDatum.
 
     Definition
     ============
@@ -14071,6 +12349,7 @@ class RevisableDatum(Datum):
     The April datum for Income revised in June.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -14089,12 +12368,8 @@ class RevisableDatum(Datum):
     vintage: int = Field(
         alias="vintage",
         description="A revision sequence number for a datum.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "RevisableDatum-vintage"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "RevisableDatum-vintage"), "rdf_type": "xsd:integer"},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -14104,31 +12379,27 @@ class RevisableDatum(Datum):
         alias="correspondsTo_Revision",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "RevisableDatum_correspondsTo_Revision"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "RevisableDatum_correspondsTo_Revision"), "rdf_type": "uri"},
     )
 
 
-
-
 class CodeList(EnumerationDomain):
-    """ CodeList.
+    """CodeList.
 
-    Definition 
-    ============ 
-    List of codes and associated categories.  
+    Definition
+    ============
+    List of codes and associated categories.
 
-    Examples 
-    ========== 
-    The codes "M" and "F" could point to "Male" and "Female" categories respectively.  A code list for an occupational classification system like the International Standard Classification of Occupations (ISCO-08: https://www.ilo.org/public/english/bureau/stat/isco/isco08/) could use a classification relation structure to describe a hierarchy (Chief Executives and Administrative and Commercial Managers as subtypes of Managers).   
+    Examples
+    ==========
+    The codes "M" and "F" could point to "Male" and "Female" categories respectively.  A code list for an occupational classification system like the International Standard Classification of Occupations (ISCO-08: https://www.ilo.org/public/english/bureau/stat/isco/isco08/) could use a classification relation structure to describe a hierarchy (Chief Executives and Administrative and Commercial Managers as subtypes of Managers).
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     List may be flat or hierarchical. A hierarchical structure may have an indexed order for intended presentation even though the content within levels of the hierarchy are conceptually unordered. For hierarchical structures classification item structure is used to provide additional information on the structure and organization of the categories. Note that a category set can be structured by a classification relation structure without the need for associating any codes with the categories. This allows for the creation of a category set, for example for a response domain, without an associated codelist.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -14147,12 +12418,8 @@ class CodeList(EnumerationDomain):
     allowsDuplicates: bool = Field(
         alias="allowsDuplicates",
         description="If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical “bag” permits duplicates and is unordered - a “set” does not have duplicates and may be ordered.)",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CodeList-allowsDuplicates"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CodeList-allowsDuplicates"), "rdf_type": "xsd:boolean"},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -14162,10 +12429,7 @@ class CodeList(EnumerationDomain):
         alias="has_Code",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CodeList_has_Code"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CodeList_has_Code"), "rdf_type": "uri"},
     )
 
     # association cdi:CodeList_has_CodePosition (0..*) | has_CodePosition | cdi:CodePosition
@@ -14173,17 +12437,12 @@ class CodeList(EnumerationDomain):
         alias="has_CodePosition",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "CodeList_has_CodePosition"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "CodeList_has_CodePosition"), "rdf_type": "uri"},
     )
 
 
-
-
 class StatisticalClassification(EnumerationDomain):
-    """ StatisticalClassification.
+    """StatisticalClassification.
 
     Definition
     ============
@@ -14199,6 +12458,7 @@ class StatisticalClassification(EnumerationDomain):
     Each classification item represents a category. Every category is a member of a level within a statistical classification. The categories are defined with reference to one or more characteristics of a particular universe of units of observation.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -14219,18 +12479,18 @@ class StatisticalClassification(EnumerationDomain):
         description="If value is False, the members are unique within the collection - if True, there may be duplicates. (Note that a mathematical “bag” permits duplicates and is unordered - a “set” does not have duplicates and may be ordered.)",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassification-allowsDuplicates"),
-            "rdf_type": "xsd:boolean"
+            "rdf_type": "xsd:boolean",
         },
     )
 
     # attribute cdi:StatisticalClassification-availableLanguage (0..*) | availableLanguage | xsd:language
-    availableLanguage: list[Union[str, LiteralField]] | None = Field(
+    availableLanguage: list[str | LiteralField] | None = Field(
         alias="availableLanguage",
         default=None,
         description="A list of languages in which the Statistical Classification is available. Supports the indication of multiple languages within a single property. Supports use of codes defined by the RFC 1766.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassification-availableLanguage"),
-            "rdf_type": "xsd:language"
+            "rdf_type": "xsd:language",
         },
     )
 
@@ -14238,7 +12498,7 @@ class StatisticalClassification(EnumerationDomain):
     catalogDetails: CatalogDetails | None = Field(
         alias="catalogDetails",
         default=None,
-        description="""Bundles the information useful for a data catalog entry. 
+        description="""Bundles the information useful for a data catalog entry.
 
     Examples would be creator, contributor, title, copyright, embargo, and license information
 
@@ -14246,7 +12506,7 @@ class StatisticalClassification(EnumerationDomain):
     This is information that is tied to the identity of the object. If this information changes the version of the associated object changes.""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassification-catalogDetails"),
-            "rdf_type": CDI.CatalogDetails
+            "rdf_type": CDI.CatalogDetails,
         },
     )
 
@@ -14257,7 +12517,7 @@ class StatisticalClassification(EnumerationDomain):
         description="Describes the relationship between the variant and its base Statistical Classification, including regroupings, aggregations added and extensions. (Source: GSIM StatisticalClassification/Changes from base Statistical Classification).",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassification-changeFromBase"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -14268,7 +12528,7 @@ class StatisticalClassification(EnumerationDomain):
         description="Copyright of the statistical classification.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassification-copyright"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -14279,7 +12539,7 @@ class StatisticalClassification(EnumerationDomain):
         description="A human-readable display label for the object. Supports the use of multiple languages. Repeat for labels with different content, for example, labels with differing length limitations.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassification-displayLabel"),
-            "rdf_type": CDI.LabelForDisplay
+            "rdf_type": CDI.LabelForDisplay,
         },
     )
 
@@ -14288,10 +12548,7 @@ class StatisticalClassification(EnumerationDomain):
         alias="isCurrent",
         default=None,
         description="Indicates if the statistical classification is currently valid.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "StatisticalClassification-isCurrent"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "StatisticalClassification-isCurrent"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:StatisticalClassification-isFloating (0..1) | isFloating | xsd:boolean
@@ -14299,10 +12556,7 @@ class StatisticalClassification(EnumerationDomain):
         alias="isFloating",
         default=None,
         description="Indicates if the Statistical Classification is a floating classification. In a floating statistical classification, a validity period should be defined for all classification Items which will allow the display of the item structure and content at different points of time. (Source: GSIM StatisticalClassification/Floating).",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "StatisticalClassification-isFloating"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "StatisticalClassification-isFloating"), "rdf_type": "xsd:boolean"},
     )
 
     # attribute cdi:StatisticalClassification-purposeOfVariant (0..1) | purposeOfVariant | cdi:InternationalString
@@ -14312,7 +12566,7 @@ class StatisticalClassification(EnumerationDomain):
         description="If the Statistical Classification is a variant, notes the specific purpose for which it was developed. (Source: GSIM StatisticalClassification/Purpose of variant).",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassification-purposeOfVariant"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -14323,7 +12577,7 @@ class StatisticalClassification(EnumerationDomain):
         description="Explanation of the reason(s) some decision was made or some object exists.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassification-rationale"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -14334,7 +12588,7 @@ class StatisticalClassification(EnumerationDomain):
         description="Date when the current version of the Statistical Classification was released.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassification-releaseDate"),
-            "rdf_type": CDI.CombinedDate
+            "rdf_type": CDI.CombinedDate,
         },
     )
 
@@ -14345,7 +12599,7 @@ class StatisticalClassification(EnumerationDomain):
         description="Summary description of changes which have occurred since the most recent classification version or classification update came into force.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassification-updateChanges"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -14356,7 +12610,7 @@ class StatisticalClassification(EnumerationDomain):
         description="Explanation of the ways in which the object is employed.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassification-usage"),
-            "rdf_type": CDI.InternationalString
+            "rdf_type": CDI.InternationalString,
         },
     )
 
@@ -14365,12 +12619,8 @@ class StatisticalClassification(EnumerationDomain):
         alias="validDates",
         default=None,
         description="""The dates describing the validity period of the object. The date from which the object became valid must be defined if the map belongs to a \"floating\" construct. The date at which the object became invalid must be defined if the map belongs to a \"floating\" construct and is no longer valid. Per the Generic Statistical Information Model, Statistical Classification: \"The date the statistical classification enters production use and the date on which the Statistical Classification was superseded by a successor version or otherwise ceased to be valid.\"""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "StatisticalClassification-validDates"),
-            "rdf_type": CDI.DateRange
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "StatisticalClassification-validDates"), "rdf_type": CDI.DateRange},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -14382,7 +12632,7 @@ class StatisticalClassification(EnumerationDomain):
         description="Organization, agency, or group within an agency responsible for the maintenance and upkeep of the statistical classification.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassification_isMaintainedBy_Organization"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -14393,7 +12643,7 @@ class StatisticalClassification(EnumerationDomain):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassification_has_ClassificationItem"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -14404,7 +12654,7 @@ class StatisticalClassification(EnumerationDomain):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassification_has_ClassificationItemPosition"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -14413,10 +12663,7 @@ class StatisticalClassification(EnumerationDomain):
         alias="has_LevelStructure",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "StatisticalClassification_has_LevelStructure"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "StatisticalClassification_has_LevelStructure"), "rdf_type": "uri"},
     )
 
     # association cdi:StatisticalClassification_isIndexedBy_ClassificationIndex (0..*) | isIndexedBy | cdi:ClassificationIndex
@@ -14426,7 +12673,7 @@ class StatisticalClassification(EnumerationDomain):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassification_isIndexedBy_ClassificationIndex"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -14437,7 +12684,7 @@ class StatisticalClassification(EnumerationDomain):
         description="Statistical classification preceded by the actual statistical classification (for those statistical classifications that are versions or updates).",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassification_isPredecessorOf_StatisticalClassification"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -14448,7 +12695,7 @@ class StatisticalClassification(EnumerationDomain):
         description="Statistical classification preceded by the actual statistical classification (for those statistical classifications that are versions or updates).",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassification_isSuccessorOf_StatisticalClassification"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -14459,21 +12706,20 @@ class StatisticalClassification(EnumerationDomain):
         description="Statistical classification on which the current variant is based, and any subsequent versions of that statistical classification to which it is also applicable.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "StatisticalClassification_isVariantOf_StatisticalClassification"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class KeyMember(InstanceValue):
-    """ KeyMember.
+    """KeyMember.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Single data instance that is part of a key.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -14493,29 +12739,25 @@ class KeyMember(InstanceValue):
         alias="isBasedOn",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "KeyMember_isBasedOn_DataStructureComponent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "KeyMember_isBasedOn_DataStructureComponent"), "rdf_type": "uri"},
     )
 
 
-
-
 class ReferenceValue(InstanceValue):
-    """ ReferenceValue.
+    """ReferenceValue.
 
     Definition
     ============
-    Recorded value in a variable value component. 
+    Recorded value in a variable value component.
     Value referenced by a descriptor.
 
     Examples
     ==========
-    Consider two variables, i.e. income and age, with values appearing in the same column, e.g. 100000, 45, 85000, 34, etc. 
+    Consider two variables, i.e. income and age, with values appearing in the same column, e.g. 100000, 45, 85000, 34, etc.
     Codes "income" and "age" are descriptors whereas 100000, 45, 85000, 34 are reference values.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -14536,7 +12778,7 @@ class ReferenceValue(InstanceValue):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ReferenceValue_correspondsTo_VariableValueComponent"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -14546,15 +12788,13 @@ class ReferenceValue(InstanceValue):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ReferenceValue_hasValueFrom_ReferenceValueDomain"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class DimensionalKey(Key):
-    """ DimensionalKey.
+    """DimensionalKey.
 
     Definition
     ============
@@ -14565,6 +12805,7 @@ class DimensionalKey(Key):
     Collection of "male", "Ontario" and "married" strings in a dimensional dataset where data points are identified by Sex, Province and Marital Status dimensions.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -14577,13 +12818,12 @@ class DimensionalKey(Key):
     )
 
 
-
 class InstanceKey(Key):
-    """ InstanceKey.
+    """InstanceKey.
 
     Definition
     ============
-    Single-valued key representation produced from the merge of the representations of all key members and a descriptor. 
+    Single-valued key representation produced from the merge of the representations of all key members and a descriptor.
 
     Examples
     ==========
@@ -14596,6 +12836,7 @@ class InstanceKey(Key):
     For other classes, an appropriate merge representation can be defined.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -14615,27 +12856,19 @@ class InstanceKey(Key):
         alias="has_InstanceValue",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "InstanceKey_has_InstanceValue"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "InstanceKey_has_InstanceValue"), "rdf_type": "uri"},
     )
 
     # association cdi:InstanceKey_refersTo_ReferenceValue (1..1) | refersTo | cdi:ReferenceValue
     refersTo: URIRef = Field(
         alias="refersTo",
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "InstanceKey_refersTo_ReferenceValue"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "InstanceKey_refersTo_ReferenceValue"), "rdf_type": "uri"},
     )
 
 
-
-
 class LongKey(Key):
-    """ LongKey.
+    """LongKey.
 
     Definition
     ============
@@ -14646,6 +12879,7 @@ class LongKey(Key):
     Collection containing the single "K1Z1C1" string in a long dataset where rows are identified by postal code representations.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -14658,9 +12892,8 @@ class LongKey(Key):
     )
 
 
-
 class WideKey(Key):
-    """ WideKey.
+    """WideKey.
 
     Definition
     ==========
@@ -14671,6 +12904,7 @@ class WideKey(Key):
     Collection containing the single "1A2B3C" string in a wide dataset where rows are identified by postal code representations.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -14683,9 +12917,8 @@ class WideKey(Key):
     )
 
 
-
 class DimensionalKeyDefinition(KeyDefinition):
-    """ DimensionalKeyDefinition.
+    """DimensionalKeyDefinition.
 
     Definition
     ============
@@ -14696,6 +12929,7 @@ class DimensionalKeyDefinition(KeyDefinition):
     Collection of [Male], [Ontario] and [Married] categories in a dimensional dataset where data points are defined by Sex, Province and Marital Status dimensions.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -14708,9 +12942,8 @@ class DimensionalKeyDefinition(KeyDefinition):
     )
 
 
-
 class UnitSegmentLayout(PhysicalSegmentLayout):
-    """ UnitSegmentLayout.
+    """UnitSegmentLayout.
 
     Definition
     ==========
@@ -14731,6 +12964,7 @@ class UnitSegmentLayout(PhysicalSegmentLayout):
     This is the classic rectangular data table used by most statistical packages, with rows/cases/observations and columns/variables/measurements. Each cell (DataPoint) in the table is the intersection of a Unit (row) and an InstanceVariable. Each logical column will contain data relating to the values for a single variable.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -14743,23 +12977,23 @@ class UnitSegmentLayout(PhysicalSegmentLayout):
     )
 
 
-
 class SegmentByText(PhysicalSegmentLocation):
-    """ SegmentByText.
+    """SegmentByText.
 
-    Definition 
-    ============ 
-    Location of a segment of text through character or line counts.  
+    Definition
+    ============
+    Location of a segment of text through character or line counts.
 
-    Examples 
-    ========== 
-    The segment beginning at line 3, character 4 and ending at line 27 character 13. Alternatively the segment beginning at character 257 and ending at character 1350 of the whole body of text. StartLine of 10, endLine of 12, startCharacterPosition of 1, endCharacterPosition of 0 means all of lines 10, 11, and 12.  An endCharacterPosition of 0 indicates that whole lines are specified.  
+    Examples
+    ==========
+    The segment beginning at line 3, character 4 and ending at line 27 character 13. Alternatively the segment beginning at character 257 and ending at character 1350 of the whole body of text. StartLine of 10, endLine of 12, startCharacterPosition of 1, endCharacterPosition of 0 means all of lines 10, 11, and 12.  An endCharacterPosition of 0 indicates that whole lines are specified.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     An adequate description will always include a startCharacterPosition and then may include an endCharacterPosition or a characterLength. If StartLine is specified, the character counts begin within that line.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -14779,10 +13013,7 @@ class SegmentByText(PhysicalSegmentLocation):
         alias="characterLength",
         default=None,
         description="The number of characters in the segment. The segment may include text from multiple lines of the resource. If it does, the length includes any line termination characters.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "SegmentByText-characterLength"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "SegmentByText-characterLength"), "rdf_type": "xsd:integer"},
     )
 
     # attribute cdi:SegmentByText-endCharacterPosition (0..1) | endCharacterPosition | xsd:integer
@@ -14790,10 +13021,7 @@ class SegmentByText(PhysicalSegmentLocation):
         alias="endCharacterPosition",
         default=None,
         description="The character position of the last character of the segment.  If endLine is specified, the count begins at character 1 of endLine. If startLine and endLine are not specified, the count begins at character 1 of the first line of the resource and the count includes any line termination characters. The resulting segment may include text from multiple lines of the resource.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "SegmentByText-endCharacterPosition"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "SegmentByText-endCharacterPosition"), "rdf_type": "xsd:integer"},
     )
 
     # attribute cdi:SegmentByText-endLine (0..1) | endLine | xsd:integer
@@ -14801,10 +13029,7 @@ class SegmentByText(PhysicalSegmentLocation):
         alias="endLine",
         default=None,
         description="The last line on which to count characters. If missing this defaults to startLine.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "SegmentByText-endLine"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "SegmentByText-endLine"), "rdf_type": "xsd:integer"},
     )
 
     # attribute cdi:SegmentByText-startCharacterPosition (0..1) | startCharacterPosition | xsd:integer
@@ -14812,10 +13037,7 @@ class SegmentByText(PhysicalSegmentLocation):
         alias="startCharacterPosition",
         default=None,
         description="The character position of the first character of the segment, with the count beginning at character 1 of startLine.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "SegmentByText-startCharacterPosition"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "SegmentByText-startCharacterPosition"), "rdf_type": "xsd:integer"},
     )
 
     # attribute cdi:SegmentByText-startLine (0..1) | startLine | xsd:integer
@@ -14823,17 +13045,12 @@ class SegmentByText(PhysicalSegmentLocation):
         alias="startLine",
         default=None,
         description="The line number, where 1 is the first line, on which to begin counting characters. If missing this defaults to 1 (the first line).",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "SegmentByText-startLine"),
-            "rdf_type": "xsd:integer"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "SegmentByText-startLine"), "rdf_type": "xsd:integer"},
     )
 
 
-
-
 class ReferenceValueDomain(ValueDomain):
-    """ ReferenceValueDomain.
+    """ReferenceValueDomain.
 
     Definition
     ============
@@ -14844,6 +13061,7 @@ class ReferenceValueDomain(ValueDomain):
     Consider two variables, i.e. income and age, with values appearing in the same column. A reference variable in this case would be a type of represented variable that can take on values from both income and age. A long data structure might have a column that takes on values from this reference variable. A descriptor variable would then have values paired with the values from the reference variable, pointing to either the income or age variable.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -14856,23 +13074,23 @@ class ReferenceValueDomain(ValueDomain):
     )
 
 
-
 class SentinelValueDomain(ValueDomain):
-    """ SentinelValueDomain.
+    """SentinelValueDomain.
 
-    Definition 
-    ============ 
-    Value domain for a sentinel conceptual domain.   
+    Definition
+    ============
+    Value domain for a sentinel conceptual domain.
 
-    Examples 
-    ========== 
-    Missing categories expressed as codes: -9, refused; -8, Don't Know; for a numeric variable with values greater than zero.    
+    Examples
+    ==========
+    Missing categories expressed as codes: -9, refused; -8, Don't Know; for a numeric variable with values greater than zero.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Sentinel values are defined in ISO 11404 as "element of a value space that is not completely consistent with a datatype's properties and characterizing operations...". A common example would be codes for missing values. Sentinel values are used for processing, not to describe subject matter. Typical examples include missing values or invalid entry codes. Sentinel value domains are typically of the enumerated type, but they can be the described type, too. This is not to say that sentinel values carry no information. Data on gender might be enumerated by "0, male" and "1, female". These are the substantive values (see substantive value domain). However, there may be the need to include missing values along with that data, such as "m, missing" and "r, refused". These are sentinel values.  ISO/IEC 11404 - General Purpose Datatypes, defines sentinel values in terms of how that standard defines datatypes. But, the fact that the sentinels don't fit in terms of the calculations and statistics one would perform on the "clean" data is a distinguishing characteristic. In the example above, one would not include missing or refused data in calculating a ratio of females to the total population. Sentinel values may be described rather than enumerated. For instance, there might be a range of values, each representing an out of range value, but there could be too many to enumerate. It is easier to describe the range.  In some software missing values are represented as values not in the datatype of the valid values. R has values of NA, NaN, Inf, and -Inf. SAS and Stata have values displayed as ".", ".A" through ".Z", and "._"  Other software might use values like 999 for missing that would otherwise be the same datatype as valid values but outside the parameters of the domain. In the gender example above: For SPSS the sentinel values might be represented as: 998 = "refused" 999 = "not recorded"  For SAS or Stata the sentinel values might be represented as: .R = "refused" .N = "not recorded"  Sentinel values can also be used for other purposes beyond missing. For a numeric variable "A" might represent a value somewhere in a defined range to prevent disclosure of information about an individual. This might be considered a "semi-missing value". In SAS or Stata for example: .A = "greater than or equal to 100 and less than 1000 ".
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -14891,20 +13109,19 @@ class SentinelValueDomain(ValueDomain):
     platformType: ControlledVocabularyEntry | None = Field(
         alias="platformType",
         default=None,
-        description="""The type of platform under which sentinel codes will be used. Statistical software platforms use different sets of codes to indicate missing values. The external controlled vocabulary should list platform types and a description of the allowed missing value types. A sample list would be: 
+        description="""The type of platform under which sentinel codes will be used. Statistical software platforms use different sets of codes to indicate missing values. The external controlled vocabulary should list platform types and a description of the allowed missing value types. A sample list would be:
 
-    - BlankString - A Blank string indicates missing. Comparison is based on lexical order.  
-    - EmptyString - An empty string indicates missing. Use in comparisons returns missing.   
-    - Rstyle - Codes drawn from  NA and the IEEE 754 values of NaN  -Inf   +Inf.   Comparisons return NA.   
-    - SASNumeric - codes drawn from . ._ .A .B .C .D .E .F .G .H .I .J .K .L .M .N .O .P .Q .R .S .T .U .V .W .X .Y .Z    Sentinel code treated as less than any substantive value   
-    - SPSSstyle - System missing (a dot) a set of individual values drawn from the same datatype as the SubstantiveValueDomain, and a range of values  drawn from the same datatype as the SubstantiveValueDomain. Comparisons return system missing. Some functions substitute with valid values (e.g. SUM replaces missing values with 0).  
+    - BlankString - A Blank string indicates missing. Comparison is based on lexical order.
+    - EmptyString - An empty string indicates missing. Use in comparisons returns missing.
+    - Rstyle - Codes drawn from  NA and the IEEE 754 values of NaN  -Inf   +Inf.   Comparisons return NA.
+    - SASNumeric - codes drawn from . ._ .A .B .C .D .E .F .G .H .I .J .K .L .M .N .O .P .Q .R .S .T .U .V .W .X .Y .Z    Sentinel code treated as less than any substantive value
+    - SPSSstyle - System missing (a dot) a set of individual values drawn from the same datatype as the SubstantiveValueDomain, and a range of values  drawn from the same datatype as the SubstantiveValueDomain. Comparisons return system missing. Some functions substitute with valid values (e.g. SUM replaces missing values with 0).
     - StataNumeric - codes drawn from . ._ .A .B .C .D .E .F .G .H .I .J .K .L .M .N .O .P .Q .R .S .T .U .V .W .X .Y .Z  Sentinel code treated as greater than any substantive value  - Unrestricted - No restrictions on codes for sentinel values. Use in comparisons is indeterminate.""",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "SentinelValueDomain-platformType"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -14916,7 +13133,7 @@ class SentinelValueDomain(ValueDomain):
         description="Corresponding conceptual definition given by a sentinel conceptual domain.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "SentinelValueDomain_takesConceptsFrom_SentinelConceptualDomain"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -14927,7 +13144,7 @@ class SentinelValueDomain(ValueDomain):
         description="A formal description of the set of valid values - for described value domains.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "SentinelValueDomain_isDescribedBy_ValueAndConceptDescription"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -14938,25 +13155,23 @@ class SentinelValueDomain(ValueDomain):
         description="Any subtype of an enumeration domain enumerating the set of valid values.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "SentinelValueDomain_takesValuesFrom_EnumerationDomain"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class SubstantiveValueDomain(ValueDomain):
-    """ SubstantiveValueDomain.
+    """SubstantiveValueDomain.
 
-    Definition 
+    Definition
     ==========
-    Value domain for a substantive conceptual domain. Typically a description and/or enumeration of allowed values of interest.  
+    Value domain for a substantive conceptual domain. Typically a description and/or enumeration of allowed values of interest.
 
-    Examples 
+    Examples
     ========
-    All real decimal numbers relating to the subject matter of interest between 0 and 1 specified in Arabic numerals. (From the Generic Statistical Information Model [GSIM] 1.1). The codes "M" male and "F" for female .   
+    All real decimal numbers relating to the subject matter of interest between 0 and 1 specified in Arabic numerals. (From the Generic Statistical Information Model [GSIM] 1.1). The codes "M" male and "F" for female .
 
-    Explanatory notes 
+    Explanatory notes
     =================
     In DDI-CDI the value domain for a variable is separated into "substantive" and "sentinel" values. Substantive values are the values of primary interest. Sentinel values are additional values that may carry supplementary information, such as reasons for missing. This duality is described in ISO 11404. Substantive values for height might be real numbers expressed in meters. The full value domain might also include codes for different kinds of missing values - one code for "refused" and another for "don’t know". Sentinel values may also convey some substantive information and at the same time represent missing values.
 
@@ -14965,6 +13180,7 @@ class SubstantiveValueDomain(ValueDomain):
     An example is the categorical values for gender: the conceptual domain could consist of the concept of male and the concept of female. These might be represented in codes and associated labels as 1 ("Male") 2 ("Female"). The described case is one where some description is needed to define the set of values. Take the following description for height in meters: "a real number between 0 and 3, represented to two Arabic decimal places". This description might be structured in some way to be machine actionable (datatype="double”, min="0", max="3", decimals="2").
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -14986,7 +13202,7 @@ class SubstantiveValueDomain(ValueDomain):
         description="Corresponding conceptual definition given by an substantive conceptual domain.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "SubstantiveValueDomain_takesConceptsFrom_SubstantiveConceptualDomain"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -14997,7 +13213,7 @@ class SubstantiveValueDomain(ValueDomain):
         description="A formal description of the set of valid values - for described value domains.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "SubstantiveValueDomain_isDescribedBy_ValueAndConceptDescription"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -15008,29 +13224,28 @@ class SubstantiveValueDomain(ValueDomain):
         description="Any subtype of an enumeration domain enumerating the set of valid values.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "SubstantiveValueDomain_takesValuesFrom_EnumerationDomain"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class Curator(ProcessingAgent):
-    """ Curator.
+    """Curator.
 
-    Definition 
-    ============ 
-    Curator is a software agent that uses techniques such as natural language processing to map facts in the research data store to the condition part of a rule.  
+    Definition
+    ============
+    Curator is a software agent that uses techniques such as natural language processing to map facts in the research data store to the condition part of a rule.
 
-    Examples 
-    ========== 
-    Domain-specific curators are available as both open source and commercial products.   
+    Examples
+    ==========
+    Domain-specific curators are available as both open source and commercial products.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     The curator assists in identifying the rules that are currently in play in the rule set.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15043,23 +13258,23 @@ class Curator(ProcessingAgent):
     )
 
 
-
 class Service(ProcessingAgent):
-    """ Service.
+    """Service.
 
-    Definition 
-    ============ 
-    Service is a type of processing agent. Services are atomic. They execute acts which have input and output parameters.  
+    Definition
+    ============
+    Service is a type of processing agent. Services are atomic. They execute acts which have input and output parameters.
 
-    Examples 
-    ========== 
-    Given a location as input, a weather service provides weather data as output.  
+    Examples
+    ==========
+    Given a location as input, a weather service provides weather data as output.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     A service binds information objects to parameters at runtime.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15072,9 +13287,8 @@ class Service(ProcessingAgent):
     )
 
 
-
 class DimensionalKeyDefinitionMember(ConceptualValue):
-    """ DimensionalKeyDefinitionMember.
+    """DimensionalKeyDefinitionMember.
 
     Definition
     ============
@@ -15085,6 +13299,7 @@ class DimensionalKeyDefinitionMember(ConceptualValue):
     The [Ontario] category in a dimensional dataset where data points are defined by Province and other dimensions.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15105,21 +13320,20 @@ class DimensionalKeyDefinitionMember(ConceptualValue):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "DimensionalKeyDefinitionMember_isRepresentedBy_DimensionalKeyMember"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class KeyDefinitionMember(ConceptualValue):
-    """ KeyDefinitionMember.
+    """KeyDefinitionMember.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Single concept that is part of the structure of a key definition.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15132,23 +13346,23 @@ class KeyDefinitionMember(ConceptualValue):
     )
 
 
-
 class RepresentedVariable(ConceptualVariable):
-    """ RepresentedVariable.
+    """RepresentedVariable.
 
-    Definition 
-    ========== 
-    Conceptual variable with a substantive value domain specified.   
+    Definition
+    ==========
+    Conceptual variable with a substantive value domain specified.
 
-    Examples 
-    ========== 
-    The pair (Number of Employees, Integer), where "Number of Employees" is the characteristic of the population (variable) and "Integer" is how that measure will be represented (value domain).  
+    Examples
+    ==========
+    The pair (Number of Employees, Integer), where "Number of Employees" is the characteristic of the population (variable) and "Integer" is how that measure will be represented (value domain).
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Extends from conceptual variable and can contain all descriptive fields without creating a conceptual variable. By referencing a conceptual variable it can indicate a common relationship with represented variables expressing the same characteristic of a universe measured in another way, such as Age of Persons in hours rather than years. Represented variable constrains the coverage of the unit type to a specific universe. In the above case the universe with the measurement of Age in hours may be constrained to Persons under 5 days (120 hours old). Represented variable can define sentinel values for multiple storage systems which have the same conceptual domain but specialized value domains.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15170,7 +13384,7 @@ class RepresentedVariable(ConceptualVariable):
         description="The unit in which the data values are measured (kg, pound, euro), expressed as a value from a controlled system of entries (i.e., QDT). Supports the provision of an identifier for the entry in the authoritative source (a URI, etc.), and the specific vocabulary.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "RepresentedVariable-describedUnitOfMeasure"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -15181,21 +13395,20 @@ class RepresentedVariable(ConceptualVariable):
         description="The data type intended to be used by this variable. Supports the optional use of an external controlled vocabulary.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "RepresentedVariable-hasIntendedDataType"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
     # attribute cdi:RepresentedVariable-simpleUnitOfMeasure (0..1) | simpleUnitOfMeasure | xsd:string
-    simpleUnitOfMeasure: Union[str, LiteralField] | None = Field(
+    simpleUnitOfMeasure: str | LiteralField | None = Field(
         alias="simpleUnitOfMeasure",
         default=None,
         description="The unit in which the data values are measured (kg, pound, euro), expressed as a simple string, in cases where no additional information is available (in the legacy system) or needed (as in the case of broad agreement within the community of use [i.e., ISO country codes, currencies, etc. in SDMX])",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "RepresentedVariable-simpleUnitOfMeasure"),
-            "rdf_type": "xsd:string"
+            "rdf_type": "xsd:string",
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -15207,7 +13420,7 @@ class RepresentedVariable(ConceptualVariable):
         description="A represented variable may have more than one sets of sentinel value domains, one for each type of software platform on which related instance variables might be instantiated. All of the sentinel value domains must have sentinel conceptual domains that correspond exactly. This allows codes for missing values to be explicitly matched across platforms.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "RepresentedVariable_takesSentinelValuesFrom_SentinelValueDomain"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -15215,18 +13428,16 @@ class RepresentedVariable(ConceptualVariable):
     takesSubstantiveValuesFrom_SubstantiveValueDomain: URIRef | None = Field(
         alias="takesSubstantiveValuesFrom_SubstantiveValueDomain",
         default=None,
-        description="The substantive representation (substantive value domain) of the variable. This is equivalent to the relationship \"Measures\" in the Generic Statistical Information Model (GSIM) although GSIM makes no distinction between substantive and sentinel values.",
+        description='The substantive representation (substantive value domain) of the variable. This is equivalent to the relationship "Measures" in the Generic Statistical Information Model (GSIM) although GSIM makes no distinction between substantive and sentinel values.',
         json_schema_extra={
             "rdf_term": URIRef(CDI + "RepresentedVariable_takesSubstantiveValuesFrom_SubstantiveValueDomain"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class Universe(UnitType):
-    """ Universe.
+    """Universe.
 
     Definition
     ============
@@ -15235,18 +13446,19 @@ class Universe(UnitType):
     Examples
     ==========
     1. Canadian adults (not limited to those residing in Canada)
-    2. Computer companies 
+    2. Computer companies
     3. Universities
 
     Explanatory notes
     ===================
     Universe sits in a hierarchy between unit type and population, with unit type being most general and Population most specific. A universe is a set of entities defined by a more narrow specification than that of an underlying unit type. A population further narrows the specification to a specific time and geography.
 
-    If the Universe consists of people, a number of factors may be used in defining membership in the Universe, such as age, sex, residence, income, veteran status, criminal convictions, etc. The universe may consist of elements other than persons, such as housing units, court cases, deaths, countries, etc. A universe may be described as "inclusive" or "exclusive". 
+    If the Universe consists of people, a number of factors may be used in defining membership in the Universe, such as age, sex, residence, income, veteran status, criminal convictions, etc. The universe may consist of elements other than persons, such as housing units, court cases, deaths, countries, etc. A universe may be described as "inclusive" or "exclusive".
 
     Not to be confused with Population, which includes the specification of time and geography.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15266,27 +13478,23 @@ class Universe(UnitType):
         alias="isInclusive",
         default=None,
         description="""Default value is True. The description statement of a universe is generally stated in inclusive terms such as \"All persons with university degree\". Occasionally a universe is defined by what it excludes, i.e., \"All persons except those with university degree\". In this case the value would be changed to False.""",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Universe-isInclusive"),
-            "rdf_type": "xsd:boolean"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Universe-isInclusive"), "rdf_type": "xsd:boolean"},
     )
 
 
-
-
 class ConditionalControlLogic(DeterministicImperative):
-    """ ConditionalControlLogic.
+    """ConditionalControlLogic.
 
-    Definition 
-    ============ 
-    A set of decision points which determine the flow between the steps used to perform an activity. 
+    Definition
+    ============
+    A set of decision points which determine the flow between the steps used to perform an activity.
 
-    Examples 
-    ========== 
+    Examples
+    ==========
     Loop, IfThenElse, RepeatWhile, etc.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15305,10 +13513,7 @@ class ConditionalControlLogic(DeterministicImperative):
     condition: CommandCode = Field(
         alias="condition",
         description="A condition associated with the construct property of the ConditionalControlLogic. It is a logical expression which can be evaluated as either true or false to determine the specific execution of the associated  construct.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "ConditionalControlLogic-condition"),
-            "rdf_type": CDI.CommandCode
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "ConditionalControlLogic-condition"), "rdf_type": CDI.CommandCode},
     )
 
     # attribute cdi:ConditionalControlLogic-construct (1..1) | construct | cdi:ControlConstruct
@@ -15317,29 +13522,28 @@ class ConditionalControlLogic(DeterministicImperative):
         description="controlConstruct is an enumeration of type ControlConstructType. The enumeration consists of IfThen, Else, Loop, RepeatUntil and RepeatWhile.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ConditionalControlLogic-construct"),
-            "rdf_type": CDI.ControlConstruct
+            "rdf_type": CDI.ControlConstruct,
         },
     )
 
 
-
-
 class Sequence(DeterministicImperative):
-    """ Sequence.
+    """Sequence.
 
-    Definition 
-    ============ 
-    A sequence controls the order of activities or steps by defining a simple sequence. 
+    Definition
+    ============
+    A sequence controls the order of activities or steps by defining a simple sequence.
 
-    Examples 
-    ========== 
+    Examples
+    ==========
     A sequence might contain two subordinate sequences of activity - one for Round 1 activity of the research and the second for Round 2.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Unlike temporal constraints, sequence is NOT pairwise. However, a group of temporal constraints can specify an order with more precision than a sequence.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15359,31 +13563,27 @@ class Sequence(DeterministicImperative):
         alias="has_SequencePosition",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Sequence_has_SequencePosition"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Sequence_has_SequencePosition"), "rdf_type": "uri"},
     )
 
 
-
-
 class RuleBasedScheduling(NonDeterministicDeclarative):
-    """ RuleBasedScheduling.
+    """RuleBasedScheduling.
 
-    Definition 
-    ============ 
+    Definition
+    ============
     Rule based scheduling performs a fact check on rules from the rule set, testing their condition part against the facts in the research data store. Fact checking may be assisted by a curator who can semantically compare the condition part of each candidate rule with the facts. The fact checker returns the next activity which rule based scheduling performs according to the following function: factcheck (RuleSet, ResearchDataStore, Curator): Activity.
 
-    Examples 
-    ========== 
-    One real-life situation in which rule-based scheduling is performed involves data virtualization. Here the research datastore has a catalog of views available for use. Rule based scheduling might explore the catalog to determine the rule(s) in the rule set that currently apply. A software curator might assist in the decision in case there was no exact match between a rule and its condition(s) and given the current state of the research datastore. The curator typically uses natural language processing. 
+    Examples
+    ==========
+    One real-life situation in which rule-based scheduling is performed involves data virtualization. Here the research datastore has a catalog of views available for use. Rule based scheduling might explore the catalog to determine the rule(s) in the rule set that currently apply. A software curator might assist in the decision in case there was no exact match between a rule and its condition(s) and given the current state of the research datastore. The curator typically uses natural language processing.
 
-    Explanatory notes 
-    =================== 
+    Explanatory notes
+    ===================
     Rule based scheduling is guided by its scheduling strategy. This is described by an enumeration that consists of "forwardChaining" and "backwardChaining".
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15404,10 +13604,9 @@ class RuleBasedScheduling(NonDeterministicDeclarative):
         description="Indicated if rule-based scheduling is forward-chaining or backward-chaining.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "RuleBasedScheduling-schedulingType"),
-            "rdf_type": CDI.SchedulingStrategy
+            "rdf_type": CDI.SchedulingStrategy,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -15417,10 +13616,7 @@ class RuleBasedScheduling(NonDeterministicDeclarative):
         alias="has_Curator",
         default=None,
         description="Rule based scheduling has one or more curators. The curators may be commercial/off-the-shelf, open source and/or home grown. They are likely to be domain-specific which is why rule based scheduling might employ many.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "RuleBasedScheduling_has_Curator"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "RuleBasedScheduling_has_Curator"), "rdf_type": "uri"},
     )
 
     # association cdi:RuleBasedScheduling_has_RuleSet (0..*) | has_RuleSet | cdi:RuleSet
@@ -15428,17 +13624,12 @@ class RuleBasedScheduling(NonDeterministicDeclarative):
         alias="has_RuleSet",
         default=None,
         description="Rule sets are a component of rule based scheduling.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "RuleBasedScheduling_has_RuleSet"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "RuleBasedScheduling_has_RuleSet"), "rdf_type": "uri"},
     )
 
 
-
-
 class TemporalConstraints(NonDeterministicDeclarative):
-    """ TemporalConstraints.
+    """TemporalConstraints.
 
     Definition
     ============
@@ -15453,6 +13644,7 @@ class TemporalConstraints(NonDeterministicDeclarative):
     Allen's interval algebra is a calculus for temporal reasoning that was introduced in 1983. Reasoning with qualitative time in Allen's full interval algebra is nondeterministic polynomial time (NP) complete. Research since 1995 identified maximal tractable subclasses of this algebra via exhaustive computer search and also other ad-hoc methods. In 2003, the full classification of complexity for satisfiability problems over constraints in Allen's interval algebra was established algebraically.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15465,9 +13657,8 @@ class TemporalConstraints(NonDeterministicDeclarative):
     )
 
 
-
 class DimensionalDataStructure(DataStructure):
-    """ DimensionalDataStructure.
+    """DimensionalDataStructure.
 
     Definition
     ============
@@ -15478,6 +13669,7 @@ class DimensionalDataStructure(DataStructure):
     The structure described by [City, Average Income, Total Population] where City is a dimension and Average Income and Total Population are measures.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15497,17 +13689,12 @@ class DimensionalDataStructure(DataStructure):
         alias="uses_DimensionGroup",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DimensionalDataStructure_uses_DimensionGroup"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DimensionalDataStructure_uses_DimensionGroup"), "rdf_type": "uri"},
     )
 
 
-
-
 class KeyValueStructure(DataStructure):
-    """ KeyValueStructure.
+    """KeyValueStructure.
 
     Definition
     ============
@@ -15518,6 +13705,7 @@ class KeyValueStructure(DataStructure):
     The structure described by [Income distribution, Unit id, Period, Income] where Income distribution is the contextual component, Unit id identifies a statistical unit, period is a effective period and Income is the variable of interest.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15530,9 +13718,8 @@ class KeyValueStructure(DataStructure):
     )
 
 
-
 class LongDataStructure(DataStructure):
-    """ LongDataStructure.
+    """LongDataStructure.
 
     Definition
     ============
@@ -15543,6 +13730,7 @@ class LongDataStructure(DataStructure):
     The structure described by [Unit id, Income, Province, Variable name, Variable value] where Unit id identifies a statistical unit, Income and Province are two instance variables capturing characteristics, and other instance variables are represented by Variable name (a variable descriptor component) and Variable Value (a variable value component).
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15555,9 +13743,8 @@ class LongDataStructure(DataStructure):
     )
 
 
-
 class WideDataStructure(DataStructure):
-    """ WideDataStructure.
+    """WideDataStructure.
 
     Definition
     ==========
@@ -15568,6 +13755,7 @@ class WideDataStructure(DataStructure):
     The structure described by [Unit id, Income, Province] where Unit id identifies a statistical unit and Income and Province are two instance variables capturing characteristics.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15580,19 +13768,19 @@ class WideDataStructure(DataStructure):
     )
 
 
-
 class QualifiedMeasure(MeasureComponent):
-    """ QualifiedMeasure.
+    """QualifiedMeasure.
 
     Definition
     ============
-    A measure having a specific production method. 
+    A measure having a specific production method.
 
     Examples
     ==========
     Seasonally adjusted monthly income.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15612,17 +13800,12 @@ class QualifiedMeasure(MeasureComponent):
         alias="refines",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "QualifiedMeasure_refines_MeasureComponent"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "QualifiedMeasure_refines_MeasureComponent"), "rdf_type": "uri"},
     )
 
 
-
-
 class Descriptor(KeyMember):
-    """ Descriptor.
+    """Descriptor.
 
     Definition
     ==========
@@ -15633,6 +13816,7 @@ class Descriptor(KeyMember):
     Consider two variables, i.e. income and age, with values appearing in the same column. Codes "income" and "age" are descriptors. They appear multiple time in a variable descriptor component, one for each value in the variable value component. Each descriptor references one of those values. This way it's possible to identify which values correspond to income and which ones to age.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15653,7 +13837,7 @@ class Descriptor(KeyMember):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "Descriptor_hasValueFrom_DescriptorValueDomain"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
@@ -15661,37 +13845,30 @@ class Descriptor(KeyMember):
     identifies: URIRef = Field(
         alias="identifies",
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Descriptor_identifies_ReferenceVariable"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Descriptor_identifies_ReferenceVariable"), "rdf_type": "uri"},
     )
 
     # association cdi:Descriptor_refersTo_ReferenceValue (1..*) | refersTo | cdi:ReferenceValue
     refersTo: list[URIRef] = Field(
         alias="refersTo",
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Descriptor_refersTo_ReferenceValue"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Descriptor_refersTo_ReferenceValue"), "rdf_type": "uri"},
     )
 
 
-
-
 class DimensionalKeyMember(KeyMember):
-    """ DimensionalKeyMember.
+    """DimensionalKeyMember.
 
     Definition
     ============
-    Single data instance that is part of a dimensional key. 
+    Single data instance that is part of a dimensional key.
 
     Examples
     ==========
     The "Ontario" string in a dimensional dataset where data points are identified by Province and other dimensions.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15710,27 +13887,23 @@ class DimensionalKeyMember(KeyMember):
     hasValueFrom_CodeList: URIRef = Field(
         alias="hasValueFrom_CodeList",
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "DimensionalKeyMember_hasValueFrom_CodeList"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "DimensionalKeyMember_hasValueFrom_CodeList"), "rdf_type": "uri"},
     )
 
 
-
-
 class LongMainKeyMember(KeyMember):
-    """ LongMainKeyMember.
+    """LongMainKeyMember.
 
     Definition
     ============
-    Single data instance that is part of a long key. 
+    Single data instance that is part of a long key.
 
     Examples
     ==========
     The "K1Z1C1" string in a long dataset where rows are identified by postal code representations.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15743,20 +13916,20 @@ class LongMainKeyMember(KeyMember):
     )
 
 
-
 class MainKeyMember(KeyMember):
-    """ MainKeyMember.
+    """MainKeyMember.
 
     Definition
     ============
-    Identifies the unit of interest, either a statistical unit or a population, via identifier or dimension components, respectively, plus an optional contextual component. 
-    If neither identifier nor dimension components are present, then a synthetic id component is used. 
+    Identifies the unit of interest, either a statistical unit or a population, via identifier or dimension components, respectively, plus an optional contextual component.
+    If neither identifier nor dimension components are present, then a synthetic id component is used.
 
     Examples
     ==========
     The string "income_distribution:male:Ontario:married" in a dimensional key-value datastore, where instance key members are defined by context plus Sex, Province and Marital Status dimensions.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15778,25 +13951,24 @@ class MainKeyMember(KeyMember):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "MainKeyMember_hasValueFrom_SubstantiveValueDomain"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class WideKeyMember(KeyMember):
-    """ WideKeyMember.
+    """WideKeyMember.
 
-    Definition 
-    ============ 
-    Single data instance that is part of a wide key.   
+    Definition
+    ============
+    Single data instance that is part of a wide key.
 
-    Examples 
-    ========== 
+    Examples
+    ==========
     The "1A2B3C" string in a wide dataset where rows are identified by postal code representations.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15809,9 +13981,8 @@ class WideKeyMember(KeyMember):
     )
 
 
-
 class DescriptorValueDomain(SubstantiveValueDomain):
-    """ DescriptorValueDomain.
+    """DescriptorValueDomain.
 
     Definition
     ============
@@ -15819,10 +13990,11 @@ class DescriptorValueDomain(SubstantiveValueDomain):
 
     Examples
     ==========
-    Consider two variables, i.e. income and age, with values appearing in the same column. 
+    Consider two variables, i.e. income and age, with values appearing in the same column.
     Codes "income" and "age" are descriptors that appear in the descriptor value domain corresponding to the descriptor variable.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15835,26 +14007,26 @@ class DescriptorValueDomain(SubstantiveValueDomain):
     )
 
 
-
 class InstanceVariable(RepresentedVariable):
-    """ InstanceVariable.
+    """InstanceVariable.
 
     Definition
     ==========
-    Use of a represented variable within a data set.  
+    Use of a represented variable within a data set.
 
     Examples
-    ======== 
+    ========
     1. Gender: Dan Gillman has gender <m, male>, Arofan Gregory has gender <m, male>, etc.
     2. Number of employees: Microsoft has 90,000 employees; IBM has 433,000 employees, etc.
     3. Endowment: Johns Hopkins has endowment of <3, $1,000,000 and above>, Yale has endowment of <3, $1,000,000 and above>, etc.
     4. A tornado near Winterset, Iowa, had a peak wind speed of 170 mph. Two instance variables of a person's height reference the same represented variable. This indicates that they are intended to: be measured with the same unit of measurement, have the same intended data type, have the same substantive value domain, use a sentinel value domain drawn from the same set of sentinel value domains, have the same sentinel (missing value) concepts, and draw their population from the same universe. In other words, the two instance variables should be comparable.
 
     Explanatory notes
-    ================= 
+    =================
     The instance variable class inherits all of the properties and relationships of the represented variable class and, in turn, the conceptual variable class. This means that an instance variable can be completely populated without the need to create an associated represented variable or conceptual variable. If, however, a user wishes to indicate that a particular instance variable is patterned after a particular represented variable or a particular conceptual variable that may be indicated by including a relationship to the represented variable and/or conceptual variable. Including these references is an important method of indicating that multiple instance variables have the same representation, measure the same concept, and are drawn from the same universe. If two instance variables of a person's height reference the same represented variable. This indicates that they are intended to: be measured with the same unit of measurement, have the same intended data type, have the same substantive value domain, use a sentinel value domain drawn from the same set of sentinel value domains, have the same sentinel (missing value) concepts, and draw their population from the same universe. In other words, the two instance variables should be comparable. The instance variable describes actual instances of data that have been collected.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15876,7 +14048,7 @@ class InstanceVariable(RepresentedVariable):
         description="The data type of this variable. Supports the optional use of an external controlled vocabulary.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "InstanceVariable-physicalDataType"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -15887,7 +14059,7 @@ class InstanceVariable(RepresentedVariable):
         description="Describes the application or technical system context in which the variable has been realized. Typically a statistical processing package or other processing environment.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "InstanceVariable-platformType"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
 
@@ -15896,10 +14068,7 @@ class InstanceVariable(RepresentedVariable):
         alias="source",
         default=None,
         description="Reference capturing provenance information.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "InstanceVariable-source"),
-            "rdf_type": CDI.Reference
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "InstanceVariable-source"), "rdf_type": CDI.Reference},
     )
 
     # attribute cdi:InstanceVariable-variableFunction (0..*) | variableFunction | cdi:ControlledVocabularyEntry
@@ -15909,10 +14078,9 @@ class InstanceVariable(RepresentedVariable):
         description="Immutable characteristic of the variable such as geographic designator, weight, temporal designation, etc.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "InstanceVariable-variableFunction"),
-            "rdf_type": CDI.ControlledVocabularyEntry
+            "rdf_type": CDI.ControlledVocabularyEntry,
         },
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -15922,10 +14090,7 @@ class InstanceVariable(RepresentedVariable):
         alias="has_PhysicalSegmentLayout",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "InstanceVariable_has_PhysicalSegmentLayout"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "InstanceVariable_has_PhysicalSegmentLayout"), "rdf_type": "uri"},
     )
 
     # association cdi:InstanceVariable_has_ValueMapping (0..1) | has_ValueMapping | cdi:ValueMapping
@@ -15933,17 +14098,12 @@ class InstanceVariable(RepresentedVariable):
         alias="has_ValueMapping",
         default=None,
         description="",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "InstanceVariable_has_ValueMapping"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "InstanceVariable_has_ValueMapping"), "rdf_type": "uri"},
     )
 
 
-
-
 class Population(Universe):
-    """ Population.
+    """Population.
 
     Definition
     ============
@@ -15952,7 +14112,7 @@ class Population(Universe):
     Examples
     ==========
     1. Canadian adult persons residing in Canada on 13 November 1956.
-    2. US computer companies at the end of 2012.  
+    2. US computer companies at the end of 2012.
     3. Universities in Denmark 1 January 2011.
 
     Explanatory notes
@@ -15960,6 +14120,7 @@ class Population(Universe):
     Population is the most specific in the conceptually narrowing hierarchy of unit type, universe and population. Several populations having differing time and or geography may specialize the same universe.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -15979,12 +14140,8 @@ class Population(Universe):
         alias="timePeriodOfPopulation",
         default=None,
         description="The time period associated with the population.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Population-timePeriodOfPopulation"),
-            "rdf_type": CDI.DateRange
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Population-timePeriodOfPopulation"), "rdf_type": CDI.DateRange},
     )
-
 
     #
     # FROM ASSOCIATIONS
@@ -15994,31 +14151,27 @@ class Population(Universe):
         alias="isComposedOf",
         default=None,
         description="A unit in the population.",
-        json_schema_extra={
-            "rdf_term": URIRef(CDI + "Population_isComposedOf_Unit"),
-            "rdf_type": "uri"
-        },
+        json_schema_extra={"rdf_term": URIRef(CDI + "Population_isComposedOf_Unit"), "rdf_type": "uri"},
     )
 
 
-
-
 class AllenIntervalAlgebra(TemporalConstraints):
-    """ AllenIntervalAlgebra.
+    """AllenIntervalAlgebra.
 
-    Definition 
+    Definition
     ==========
     Control logic where the execution flow is determined by the satisfaction of temporal constraints specified with Allen's Interval Algebra over time intervals. Allen's interval algebra consists of thirteen temporal interval relations and the operations defined on them. Together these relations are distinct (any pair of definite intervals are described by one and only one of the relations), exhaustive (any pair of definite intervals are described by one of the relations), and qualitative (no numeric time spans are considered). See https://www.ics.uci.edu/~alspaugh/cls/shr/allen.html.
 
     Examples
     ========
-    An Allen overlap indicates that within a sequence two procedures overlap in time. 
+    An Allen overlap indicates that within a sequence two procedures overlap in time.
 
     Explanatory notes
     =================
     Allen's intervals are pairwise.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -16039,17 +14192,15 @@ class AllenIntervalAlgebra(TemporalConstraints):
         description="Temporal constraint specified as an Allen's interval relation.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "AllenIntervalAlgebra-temporalIntervalRelation"),
-            "rdf_type": CDI.TemporalRelation
+            "rdf_type": CDI.TemporalRelation,
         },
     )
 
 
-
-
 class TemporalControlConstruct(TemporalConstraints):
-    """ TemporalControlConstruct.
+    """TemporalControlConstruct.
 
-    Definition 
+    Definition
     ==========
     Declarative control flow operator where the continuation of the execution flow depends on the finalization of one or more preceding activities/steps.
 
@@ -16059,6 +14210,7 @@ class TemporalControlConstruct(TemporalConstraints):
     - ANDSplit: Given three activities A, B and C, if ANDSplit(A) -> (B, C), then both B and C are executed after A finishes executing.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -16079,15 +14231,13 @@ class TemporalControlConstruct(TemporalConstraints):
         description="TemporalControl is a property of type TemporalControlConstructType. There are four members of this enumeration: AND-split, XOR-split, AND-join and XOR-join.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "TemporalControlConstruct-temporalControl"),
-            "rdf_type": CDI.TemporalOperator
+            "rdf_type": CDI.TemporalOperator,
         },
     )
 
 
-
-
 class DescriptorVariable(InstanceVariable):
-    """ DescriptorVariable.
+    """DescriptorVariable.
 
     Definition
     ============
@@ -16096,10 +14246,11 @@ class DescriptorVariable(InstanceVariable):
 
     Examples
     ==========
-    Consider two variables, i.e. income and age, with values apearing in the same column. 
+    Consider two variables, i.e. income and age, with values apearing in the same column.
     Codes "income" and "age" are descriptors that appear in the descriptor value domain corresponding to the descriptor variable.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -16121,15 +14272,13 @@ class DescriptorVariable(InstanceVariable):
         description="",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "DescriptorVariable_takesSubstantiveValuesFrom_DescriptorValueDomain"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
 
 
-
-
 class ReferenceVariable(InstanceVariable):
-    """ ReferenceVariable.
+    """ReferenceVariable.
 
     Definition
     ============
@@ -16138,10 +14287,11 @@ class ReferenceVariable(InstanceVariable):
 
     Examples
     ==========
-    Consider two variables, i.e. income and age, with values appearing in the same column, e.g. 100000, 45, 85000, 34, etc. 
+    Consider two variables, i.e. income and age, with values appearing in the same column, e.g. 100000, 45, 85000, 34, etc.
     Values 100000, 45, 85000, 34 are reference values in the reference value domain corresponding to the reference variable.
 
     """
+
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         use_enum_values=True,
@@ -16163,11 +14313,6 @@ class ReferenceVariable(InstanceVariable):
         description="Points to a value domain that contains values that may be drawn from the domains of multiple simple variables.",
         json_schema_extra={
             "rdf_term": URIRef(CDI + "ReferenceVariable_takesValuesFrom_ReferenceValueDomain"),
-            "rdf_type": "uri"
+            "rdf_type": "uri",
         },
     )
-
-
-
-
-

@@ -1,9 +1,8 @@
-
-import sys
 import os
+import sys
 
 # Setup path
-sys.path.append(os.path.join(os.getcwd(), 'src'))
+sys.path.append(os.path.join(os.getcwd(), "src"))
 
 from dartfx.ddi.ddicdi import model_1_0_0 as model
 
@@ -19,7 +18,7 @@ classes_to_check = [
     model.ComponentPosition,
     model.Category,
     model.Code,
-    model.Notation
+    model.Notation,
 ]
 
 for cls in classes_to_check:

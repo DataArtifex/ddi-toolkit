@@ -1,8 +1,8 @@
 """Classes to read and process a DDI-Codebook XML document.
 
-This package is at this time not intended to be used for validation 
-or quality assurance purpose, just as a quick and easy way to load and 
-process existing DDI-C documents in Python. 
+This package is at this time not intended to be used for validation
+or quality assurance purpose, just as a quick and easy way to load and
+process existing DDI-C documents in Python.
 
 It is also not designed to create DDI from scratch.
 
@@ -42,1712 +42,1576 @@ References:
 
 """
 
-from abc import ABC
-from functools import lru_cache
+from __future__ import annotations
+
 import inspect
 import logging
 import os
 import re
-from typing import Dict, List
 import xml.etree.ElementTree as ET
 
+from pydantic import BaseModel, ConfigDict, Field
+
+
 def get_xml_base_name(tag):
-     """
-     Extracts the base name of an XML element, removing the namespace.
-     """
-     if '}' in tag:
-          return tag.split('}', 1)[1]
-     return tag
+    """
+    Extracts the base name of an XML element, removing the namespace.
+    """
+    if "}" in tag:
+        return tag.split("}", 1)[1]
+    return tag
 
 
-def loadxml(file) -> "codeBookType":
-     """Loads a DDI codebook from an XML file.
-     """
-     tree = ET.parse(file)
-     root = tree.getroot()
-     ddicodebook = codeBookType()
-     ddicodebook.from_xml_element(root)
-     return ddicodebook
+def loadxml(file) -> codeBookType:
+    """Loads a DDI codebook from an XML file."""
+    tree = ET.parse(file)
+    root = tree.getroot()
+    ddicodebook = codeBookType()
+    ddicodebook.from_xml_element(root)
+    return ddicodebook
 
-def loadxmlstring(xmlstring) -> "codeBookType":
-     """Loads a DDI codebook from an XML string.
-     """
-     root = ET.fromstring(xmlstring)
-     ddicodebook = codeBookType()
-     ddicodebook.from_xml_element(root)
-     return ddicodebook
+
+def loadxmlstring(xmlstring) -> codeBookType:
+    """Loads a DDI codebook from an XML string."""
+    root = ET.fromstring(xmlstring)
+    ddicodebook = codeBookType()
+    ddicodebook.from_xml_element(root)
+    return ddicodebook
+
 
 def get_mixed_content(element) -> str:
-     """Returns the mixed content of an XML element as a concatenated and potentially multiline string.
+    """Returns the mixed content of an XML element as a concatenated and potentially multiline string.
 
-     This is to avoid having to implement/parse various text
-     formatting options supported by DDI-C such as XHTML or forms.
-     """
-     content = ""
-     if element.text:
-          content += element.text.strip()
-     for child in element:
-          content += f"<{child.tag}>"
-          content += get_mixed_content(child)
-          content += f"</{child.tag}>"
-          if child.tail:
-               content += child.tail.strip()
-     return content
+    This is to avoid having to implement/parse various text
+    formatting options supported by DDI-C such as XHTML or forms.
+    """
+    content = ""
+    if element.text:
+        content += element.text.strip()
+    for child in element:
+        content += f"<{child.tag}>"
+        content += get_mixed_content(child)
+        content += f"</{child.tag}>"
+        if child.tail:
+            content += child.tail.strip()
+    return content
+
 
 class XmlAttribute:
-     """A simple structure to hold the name, value, and potentially other characteristics of an attribute.
-     """
-     def __init__(self, name, value=None, datatype=str, options=None):
-          self.name = name
-          self.value = value
-          self.datatype = datatype
-          self._options = options
+    """A simple structure to hold the name, value, and potentially other characteristics of an attribute."""
 
-     def __str__(self):
-          return str(self.value)
+    def __init__(self, name, value=None, datatype=str, options=None):
+        self.name = name
+        self.value = value
+        self.datatype = datatype
+        self._options = options
 
-class baseElementType(ABC):
-     """The base class all DDI elements are based on.
+    def __str__(self):
+        return str(self.value)
 
-     All the parsing and processing is done in this base class.
-     """
-     _attributes: Dict[str,XmlAttribute]
-     _valid_attributes: List[str]
-     _content: str
 
-     def __init__(self, options=None):
-          self._options = options
-          self._attributes = dict()
-          self._valid_attributes = []
-          self._valid_attributes.extend(["ID", "xml-lang", "xml:lang", "elementVersion", "elementVersionDate", "ddiLifecycleUrn", "ddiCodebookUrn"])
-          self._content = None
+class baseElementType(BaseModel):
+    """The base class all DDI elements are based on.
 
-     def _addAttribute(self, attribute: XmlAttribute):
-          if attribute.name in self._valid_attributes:
-               #print(f"adding {attribute.name}: {attribute.value} on {hex(id(self))}:{hex(id(self._attributes))} ({self.__class__.__name__})")
-               self._attributes[attribute.name] = attribute
-          else:
-               logging.warn(f"{self.__class__.__name__}: Invalid attribute {attribute.name}")
+    All the parsing and processing is done in this base class.
+    """
 
-     @property
-     def attributes(self) -> List[XmlAttribute]:
-          return self._attributes
+    model_config = ConfigDict(extra="allow", populate_by_name=True, arbitrary_types_allowed=True)
 
-     @property 
-     def id(self):
-          if "ID" in self._attributes:
-               return self._attributes["ID"].value
+    # Common attributes
+    id: str | None = Field(None, alias="ID")
+    xml_lang: str | None = Field(None, alias="xml:lang")
+    elementVersion: str | None = None
+    elementVersionDate: str | None = None
+    ddiLifecycleUrn: str | None = None
+    ddiCodebookUrn: str | None = None
 
-     def dump(self, name='codeBook', level=0, max_level=99, indent=3):
-          """Dumps the content to the console. 
+    content: str | None = None
 
-          Useful for debugging/development purposes.
+    def __init__(self, options=None, **data):
+        super().__init__(**data)
+        self._options = options
 
-          Uses ANSI escape code for coloring
-          See https://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html
-          """
+    @property
+    def _attributes(self) -> dict[str, XmlAttribute]:
+        """
+        Backward compatibility property to mimic the old _attributes dictionary.
+        Only returns attributes that have values.
+        """
+        attrs = {}
+        # Iterate over model fields
+        for field_name, field_info in self.model_fields.items():
+            value = getattr(self, field_name)
+            if value is not None and field_name != "content":
+                alias = field_info.alias or field_name
+                # Skip list/model fields that are children, only primitive attributes
+                # This is a heuristic - strict mapping would need metadata
+                if isinstance(value, (str, int, bool, float)):
+                    attrs[alias] = XmlAttribute(alias, value)
+        return attrs
 
-          if level > max_level:
-               return
-          cls_annotations = self.get_annotations()
-          print("\u001b[0m\u001b[34m",end="")
-          print(f"{' '*level*indent}{name} ({self.__class__.__name__})")
-          # attributes
-          print("\u001b[0m\u001b[32m",end="")
-          for attrib, value in self._attributes.items():
-               print(f"{' '*(level*indent+indent)}@{attrib}: {value.value}")
-          # content
-          if hasattr(self, "_content") and self._content:
-               lines = self._content.splitlines()
-               print("\u001b[0m\u001b[30m",end="")
-               for line in lines:
-                    print(f"{' '*(level*indent)}{line}")
-          # children
-          for attr in self.__dict__:
-               property_annotation = cls_annotations.get(attr)
-               if property_annotation and property_annotation['is_ddi_element']:
-                    if property_annotation['is_list']:
-                         for child in getattr(self, attr):
-                              child.dump(attr, level+1, max_level, indent)
+    @property
+    def attributes(self) -> dict[str, XmlAttribute]:
+        return self._attributes
+
+    @property
+    def _content(self) -> str | None:
+        return self.content
+
+    def dump(self, name="codeBook", level=0, max_level=99, indent=3):
+        """Dumps the content to the console.
+
+        Useful for debugging/development purposes.
+
+        Uses ANSI escape code for coloring
+        See https://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html
+        """
+
+        if level > max_level:
+            return
+        print("\u001b[0m\u001b[34m", end="")
+        print(f"{' ' * level * indent}{name} ({self.__class__.__name__})")
+        # attributes
+        print("\u001b[0m\u001b[32m", end="")
+        for attrib, value in self.attributes.items():
+            print(f"{' ' * (level * indent + indent)}@{attrib}: {value.value}")
+        # content
+        if self.content:
+            lines = self.content.splitlines()
+            print("\u001b[0m\u001b[30m", end="")
+            for line in lines:
+                print(f"{' ' * (level * indent)}{line}")
+        # children
+        for attr in self.__dict__:
+            if attr in ["_options", "content"] or attr in self.model_fields:
+                continue  # handled above or internal
+
+            value = getattr(self, attr)
+            if isinstance(value, list):
+                for child in value:
+                    if hasattr(child, "dump"):
+                        child.dump(attr, level + 1, max_level, indent)
+            elif hasattr(value, "dump"):
+                value.dump(attr, level + 1, max_level, indent)
+        print("\u001b[0m", end="")
+
+    def from_xml_element(self, element: ET.Element):
+        """Initializes the object from an XML element."""
+        cls_annotations = self.get_annotations()
+
+        # Add attributes
+        for attrib, value in element.attrib.items():
+            # Map XML attribute to model field
+            # simple mapping: check if field exists with alias match
+            field_found = False
+            for field_name, field_info in self.model_fields.items():
+                if field_info.alias == attrib or field_name == attrib:
+                    setattr(self, field_name, value)
+                    field_found = True
+                    break
+
+            if not field_found and attrib != "xsi:schemaLocation":  # ignore schema location
+                # Dynamic attribute handling not explicitly defined in model is discarded by default logic above
+                # unless we store them in extra fields. But the original code restricted to _valid_attributes
+                # For Pydantic, we rely on fields. If it's not a field, it's ignored (or warned).
+                # logging.warn(f"Attribute {attrib} ignored on {self.__class__.__name__}")
+                pass
+
+        # Add children
+        for child in element:
+            base_name = get_xml_base_name(child.tag)
+            # check if the property exists as a child DDI element
+            if base_name in cls_annotations:
+                # get the annotated type
+                property_annotation = cls_annotations[base_name]
+                # print(property_annotation)
+                if property_annotation:
+                    if property_annotation["is_ddi_element"]:
+                        # create the object instance based on the type/class
+                        instance_cls = globals()[property_annotation["type"]]
+                        instance = instance_cls()  # options=self._options
+
+                        # parse the XML element
+                        instance.from_xml_element(child)
+                        if property_annotation["is_list"]:
+                            # if this is a list, make sure it is initialized as an array
+                            if not hasattr(self, base_name) or getattr(self, base_name) is None:
+                                setattr(self, base_name, [])
+                            # add element to the list
+                            getattr(self, base_name).append(instance)
+                        else:
+                            # set the non-repeatable element value
+                            setattr(self, base_name, instance)
                     else:
-                         getattr(self, attr).dump(attr, level+1, max_level, indent)
-          print("\u001b[0m",end="")
+                        # annotated but does not appear to have an associated class
+                        logging.warn(f"No DDI class found for element {base_name} in {self.__class__.__name__}")
+                else:
+                    # this element in not annotated (likely a bug)
+                    logging.warn(f"No type annotation found for child element {base_name} in {self.__class__.__name__}")
+            else:
+                # don't know this element
+                logging.warn(f"Child element {base_name} ignored on {self.__class__.__name__}")
 
-     @lru_cache
-     def get_annotations(self):
-          """Helper function to parse annotated class properties.
-          """
-          annotations_info = {}
-          for property, annotation in inspect.get_annotations(self.__class__).items():               
-               # detect data type from Python annotations
-               # Examples:
-               #    typing.List[ForwardRef('distrbtrType')]
-               #    typing.List[codebook.simpleTextAndDateType]
-               #    <class 'codebook.simpleTextType'>
-               #    mrowType
-               #
-               annotation_str = str(annotation)
-               # detect if this is a List (repeatable property)
-               is_list = annotation_str.startswith("typing.List")
-               if is_list:
-                    # extract the type from list annotation (between brackets)
-                    annotation_str = re.search(r"\[(.*?)\]",annotation_str).group(1)
-               # check if this is a class (single property)
-               if annotation_str.startswith("<class "):
-                    # extract the type from class annotation
-                    annotation_str = re.search(r"<class \'(.*?)\'>",annotation_str).group(1)
-               # check if this is a ForwardRef
-               if annotation_str.startswith("ForwardRef"):
-                    # extract the type from ForwardRef (between ('...'))
-                    property_type = re.search(r"ForwardRef\(\'(.*?)\'\)",annotation_str).group(1)
-               elif 'codebook.' in annotation_str:
-                    # extract the type from local codebook definition 
-                    property_type = re.search(r"codebook\.(.*?)$",annotation_str).group(1)
-               else:
-                    # use the type as is
-                    property_type = annotation_str
-               # check if this inherits from baseElementType
-               cls = globals().get(property_type)
-               if cls and issubclass(cls, baseElementType):
-                    is_ddi_element = True
-               else: 
-                    # this does not appear to be a DDI class. Warn.
-                    logging.warn(f"Non-DDI property '{property}' of type '{property_type}' found on {self.__class__.__name__}")
-                    is_ddi_element = False
-               # initialize info to return for this property
-               annotation_info = {"name":property, "type": property_type, "is_list": is_list, "is_ddi_element": is_ddi_element}
-               # addd inherited properties
-               # TODO (don't think there is a use case / need for this...)
-               # add to the returned dictionary
-               annotations_info[property] = annotation_info
-          return annotations_info
+        # Parse text content - special handling for abstractTextType etc
+        # Rely on subclasses overriding mixed content logic or default here
+        if not list(element):  # if no children, take text
+            if element.text and element.text.strip():
+                self.content = element.text.strip()
 
-     def from_xml_element(self, element: ET.Element):
-          """Initializes the object from an XML element.          
-          """
-          cls_annotations = self.get_annotations()
-          # Add attributes
-          for attrib, value in element.attrib.items():
-               if attrib in self._valid_attributes:
-                    self._addAttribute(XmlAttribute(attrib,value))
-               else:
-                    logging.warn(f"Attribute {attrib} ignored on {self.__class__.__name__}")
-                    pass
-          # Add children
-          for child in element:
-               base_name = get_xml_base_name(child.tag)
-               # check if the property exists as a child DDI element
-               if base_name in cls_annotations:
-                    # get the annotated type
-                    property_annotation = cls_annotations[base_name]
-                    #print(property_annotation)
-                    if property_annotation:
-                         if property_annotation['is_ddi_element']:
-                              # create the object instance based on the type/class
-                              instance = globals()[property_annotation['type']](self._options)
-                              # parse the XML element
-                              instance.from_xml_element(child)
-                              if property_annotation['is_list']:
-                                   # if this is a list, make sure it is initialized as an array
-                                   if not hasattr(self, base_name):
-                                        setattr(self, base_name, [])
-                                   # add element to the list
-                                   getattr(self, base_name).append(instance)
-                              else:
-                                   # set the non-repeatable element value
-                                   setattr(self, base_name, instance)   
-                         else:
-                              # annotated but does not appear to have an associated class
-                              logging.warn(f"No DDI class found for element {base_name} in {self.__class__.__name__}")
-                    else:
-                         # this element in not annotated (likely a bug)
-                         logging.warn(f"No type annotation found for child element {base_name} in {self.__class__.__name__}")
-               else:
-                    # don't know this element
-                    logging.warn(f"Child element {base_name} ignored on {self.__class__.__name__}")
-          # Parse text content
-          # TODO?
-          # Don't think this is needed as this is only for
-          # abstractTextType (and derived classes) that overides this method
-          # and grabs the underlying mixed content as a single string
+    def get_annotations(self):
+        """Helper function to parse annotated class properties.
+        REIMPLEMENTED for Pydantic fields
+        """
+        annotations_info = {}
+        # Use type_hints to get forward refs resolved if possible, but fallback to manual parsing
+        # because globals() might be needed and strict Pydantic inspection is sometimes tricky with forward refs
+
+        for property, annotation in inspect.get_annotations(self.__class__).items():
+            # Ignore internal pydantic fields/methods
+            if property.startswith("_") or property in ["model_config", "model_fields"]:
+                continue
+
+            annotation_str = str(annotation)
+
+            # detect if this is a List (repeatable property)
+            is_list = "List" in annotation_str or "list" in annotation_str
+
+            # extract inner type
+            # This determines the target class
+            if "[" in annotation_str:
+                inner = annotation_str.split("[", 1)[1].rsplit("]", 1)[0]
+                # handle forward refs string
+                if "ForwardRef" in inner:
+                    property_type = re.search(r"ForwardRef\(\'(.*?)\'\)", inner).group(1)
+                elif "'" in inner:
+                    property_type = inner.replace("'", "").replace('"', "")
+                else:
+                    property_type = inner
+            else:
+                property_type = annotation_str.replace("'", "").replace('"', "")
+
+            # cleanup type name
+            if "codebook." in property_type:
+                property_type = property_type.split("codebook.")[1]
+
+            # check if this inherits from baseElementType (now BaseModel)
+            # We use string lookup
+            cls = globals().get(property_type)
+            is_ddi_element = False
+            if cls and issubclass(cls, BaseModel):
+                is_ddi_element = True
+
+            # initialize info to return for this property
+            annotation_info = {
+                "name": property,
+                "type": property_type,
+                "is_list": is_list,
+                "is_ddi_element": is_ddi_element,
+            }
+
+            annotations_info[property] = annotation_info
+        return annotations_info
 
 
-#
-# Don't need at this time, maybe some day
-#
-#     def to_xml_element(self) -> ET.Element:
-#          """Serializes the content to XML (not implemented).
-#          """
-#          
-#          logging.info(f"XML serialization for {self.__class__.__name__} not implemented")
-          
 #
 # THIS SECTION CONTAINS THE REUSABLE TEXT TYPES
 # BASED ON abstractTextType
 #
 
+
 class abstractTextType(baseElementType):
-     def __init__(self, options=None):
-          super().__init__(options)
-     
-     def from_xml_element(self, element: ET.Element):
-          """Override method to stop driling down and capture underlying mixed content as text
-          """
-          self._content = get_mixed_content(element)
+    def from_xml_element(self, element: ET.Element):
+        """Override method to stop driling down and capture underlying mixed content as text"""
+        super().from_xml_element(element)  # process attributes
+        # but explicitly capture mixed content
+        self.content = get_mixed_content(element)
+
 
 class dateType(abstractTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          
+    pass
+
+
 class stringType(abstractTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("varRef")
+    varRef: str | None = None
+
 
 class simpleTextType(abstractTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
+    pass
+
 
 class simpleTextAndDateType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("date")
+    date: str | None = None
+
 
 class phraseType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("varRef")
+    varRef: str | None = None
+
 
 class tableType(baseElementType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("frame")
-          self._valid_attributes.append("colsep")
-          self._valid_attributes.append("rowsep")
-          self._valid_attributes.append("pgwide")
+    frame: str | None = None
+    colsep: str | None = None
+    rowsep: str | None = None
+    pgwide: str | None = None
+
 
 class tableAndTextType(abstractTextType):
-     table: tableType
-     def __init__(self, options=None):
-          super().__init__(options)
-     
+    table: tableType | None = None
+
+
 class txtType(tableAndTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("level")
-          self._valid_attributes.append("sdatrefs")
+    level: str | None = None
+    sdatrefs: str | None = None
+
 
 class conceptType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("vocab")
-          self._valid_attributes.append("vocabUri")
-          
+    vocab: str | None = None
+    vocabUri: str | None = None
+
+
 class conceptualTextType(abstractTextType):
-     concept: conceptType
-     txt: txtType
-     def __init__(self, options=None):
-          super().__init__(options)
+    concept: conceptType | None = None
+    txt: txtType | None = None
+
 
 #
 # THIS SECTION CONTAINS ALL THE DDI ELEMENT TYPES
-# 
-          
+#
+
+
 class abstractType(simpleTextAndDateType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("contentType")
+    contentType: str | None = None
+
 
 class accsPlacType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("URI")
+    URI: str | None = None
+
 
 class anlyInfoType(baseElementType):
-     respRate: List[simpleTextType]
-     EstSmpErr: List[simpleTextType]
-     dataAppr: List["dataApprType"]
+    respRate: list[simpleTextType] = Field(default_factory=list)
+    EstSmpErr: list[simpleTextType] = Field(default_factory=list)
+    dataAppr: list[dataApprType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class anlyUnitType(conceptualTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("unit")
+    unit: str | None = None
+
 
 class attributeType(stringType):
-     # note: this is a xs:string in the schema (on usageType)
-     def __init__(self, options=None):
-          super().__init__(options)
+    # note: this is a xs:string in the schema (on usageType)
+    pass
+
 
 class AuthEntyType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("affiliation")
+    affiliation: str | None = None
+
 
 class authorizingAgencyType(stringType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("affiliation")
-          self._valid_attributes.append("abbr")
+    affiliation: str | None = None
+    abbr: str | None = None
+
 
 class backwardType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("qstn")
+    qstn: str | None = None
+
 
 class biblCitType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("format")
+    format: str | None = None
+
 
 class boundPolyType(baseElementType):
-     polygon: List["polygonType"]
-
-     def __init__(self, options=None):
-          super().__init__(options)
+    polygon: list[polygonType] = Field(default_factory=list)
 
 
 class catgryGrpType(baseElementType):
-     labl: List["lablType"]
-     catStat: List["catStatType"]
-     txt: List[txtType]
+    labl: list[lablType] = Field(default_factory=list)
+    catStat: list[catStatType] = Field(default_factory=list)
+    txt: list[txtType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("missing")
-          self._valid_attributes.append("missType")
-          self._valid_attributes.append("catgry")
-          self._valid_attributes.append("catGrp")
-          self._valid_attributes.append("levelno")
-          self._valid_attributes.append("levelnm")
-          self._valid_attributes.append("compl")
-          self._valid_attributes.append("excls")
+    missing: str | None = None
+    missType: str | None = None
+    catgry: str | None = None
+    catGrp: str | None = None
+    levelno: str | None = None
+    levelnm: str | None = None
+    compl: str | None = None
+    excls: str | None = None
+
 
 class catgryType(baseElementType):
-     catValu: simpleTextType
-     labl: List["lablType"]
-     txt: List["txtType"]
-     catStat: List["catStatType"]
-     mrow: "mrowType"
+    catValu: simpleTextType | None = None  # Optional because it can be missing
+    labl: list[lablType] = Field(default_factory=list)
+    txt: list[txtType] = Field(default_factory=list)
+    catStat: list[catStatType] = Field(default_factory=list)
+    mrow: mrowType | None = None
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("missing")
-          self._valid_attributes.append("missType")
-          self._valid_attributes.append("country")
-          self._valid_attributes.append("sdatrefs")
-          self._valid_attributes.append("excls")
-          self._valid_attributes.append("catgry")
-          self._valid_attributes.append("level")
-          
-     @property
-     def is_missing(self):
-          return str(self._attributes.get("missing","N")) == "Y"
+    missing: str | None = None
+    missType: str | None = None
+    country: str | None = None
+    sdatrefs: str | None = None
+    excls: str | None = None
+    catgry: str | None = None
+    level: str | None = None
+
+    @property
+    def is_missing(self):
+        return str(self.missing) == "Y"
+
 
 class catLevelType(baseElementType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("levelnm")
-          self._valid_attributes.append("geoMap")
+    levelnm: str | None = None
+    geoMap: str | None = None
+
 
 class catStatType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
-          self._valid_attributes.append("otherType")
-          self._valid_attributes.append("URI")
-          self._valid_attributes.append("methrefs")
-          self._valid_attributes.append("wgtd")
-          self._valid_attributes.append("wgt-var")
-          self._valid_attributes.append("weight")
-          self._valid_attributes.append("sdatrefs")
+    type: str | None = None
+    otherType: str | None = None
+    URI: str | None = None
+    methrefs: str | None = None
+    wgtd: str | None = None
+    wgt_var: str | None = Field(None, alias="wgt-var")
+    weight: str | None = None
+    sdatrefs: str | None = None
+
 
 class citationType(baseElementType):
-     titlStmt: "titlStmtType"
-     rspStmt: "rspStmtType"
-     prodStmt: "prodStmtType"
-     distStmt: "distStmtType"
-     serStmt: List["serStmtType"]
-     verStmt: List["verStmtType"]
-     biblCit: List["biblCitType"]
-     holdings: List["holdingsType"]
-     notes: List["notesType"]    
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("MARCURI")
+    titlStmt: titlStmtType | None = None
+    rspStmt: rspStmtType | None = None
+    prodStmt: prodStmtType | None = None
+    distStmt: distStmtType | None = None
+    serStmt: list[serStmtType] = Field(default_factory=list)
+    verStmt: list[verStmtType] = Field(default_factory=list)
+    biblCit: list[biblCitType] = Field(default_factory=list)
+    holdings: list[holdingsType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
+
+    MARCURI: str | None = None
+
 
 class confDecType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("required")
-          self._valid_attributes.append("formNo")
-          self._valid_attributes.append("URI")
+    required: str | None = None
+    formNo: str | None = None
+    URI: str | None = None
+
 
 class cleanOpsType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("agency")
+    agency: str | None = None
+
 
 class ConOpsType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("agency")
+    agency: str | None = None
 
-class contactType(simpleTextType): 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("affiliation")
-          self._valid_attributes.append("URI")
-          self._valid_attributes.append("email")
+
+class contactType(simpleTextType):
+    affiliation: str | None = None
+    URI: str | None = None
+    email: str | None = None
+
 
 class codeBookType(baseElementType):
-     docDscr: List["docDscrType"]
-     stdyDscr: List["stdyDscrType"]
-     fileDscr: List["fileDscrType"]
-     dataDscr: List["dataDscrType"]
-     otherMat: List["otherMatType"]
+    docDscr: list[docDscrType] = Field(default_factory=list)
+    stdyDscr: list[stdyDscrType] = Field(default_factory=list)
+    fileDscr: list[fileDscrType] = Field(default_factory=list)
+    dataDscr: list[dataDscrType] = Field(default_factory=list)
+    otherMat: list[otherMatType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          # atributes
-          self._valid_attributes.extend(["version", "codeBookAgency"])
+    version: str | None = None
+    codeBookAgency: str | None = None
 
-     # HELPERS
-     def get_abstract(self) -> str:
-          """Returns the abstract from the study description if it exists."""
-          value = None
-          if self.stdyDscr:
-               stdyDscr = self.stdyDscr[0]
-               if stdyDscr.stdyInfo:
-                    stdyInfo = stdyDscr.stdyInfo[0] 
-                    if stdyInfo.abstract:
-                         abstract = stdyInfo.abstract[0]
-                         value = str(abstract._content)
-          return value
+    # HELPERS
+    def get_abstract(self) -> str:
+        """Returns the abstract from the study description if it exists."""
+        value = None
+        if self.stdyDscr:
+            stdyDscr = self.stdyDscr[0]
+            if stdyDscr.stdyInfo:
+                stdyInfo = stdyDscr.stdyInfo[0]
+                if stdyInfo.abstract:
+                    abstract = stdyInfo.abstract[0]
+                    value = str(abstract.content)
+        return value
 
-     def get_alternate_title(self) -> str:
-          """Returns the alternate title from the study description if it exists."""
-          value = None
-          if self.stdyDscr:
-               stdyDscr = self.stdyDscr[0]
-               if stdyDscr.citation:
-                    citation = stdyDscr.citation[0] 
-                    if hasattr(citation,"titlStmt"): # not repeatable
-                         titlStmt = citation.titlStmt
-                         if titlStmt.altTitl:
-                              altTitle = titlStmt.altTitl[0]
-                              value = str(altTitle._content)
-          return value
+    def get_alternate_title(self) -> str:
+        """Returns the alternate title from the study description if it exists."""
+        value = None
+        if self.stdyDscr:
+            stdyDscr = self.stdyDscr[0]
+            if stdyDscr.citation:
+                citation = stdyDscr.citation[0]
+                if hasattr(citation, "titlStmt") and citation.titlStmt:
+                    titlStmt = citation.titlStmt
+                    if titlStmt.altTitl:
+                        altTitle = titlStmt.altTitl[0]
+                        value = str(altTitle.content)
+        return value
 
-     def get_data_dictionary(self, file_id:str=None, name_regex:str=None, label_regex:str=None, categories:bool=False, questions:bool=False) -> dict[str,dict]:
-          """Generates a all-in-one data dictionary from the variable descriptions.
+    def get_data_dictionary(
+        self,
+        file_id: str = None,
+        name_regex: str = None,
+        label_regex: str = None,
+        categories: bool = False,
+        questions: bool = False,
+    ) -> dict[str, dict]:
+        """Generates a all-in-one data dictionary from the variable descriptions.
 
-          Supports various filtering and rendering options.
+        Supports various filtering and rendering options.
 
-          Args:
-               file_id: filter to a specific file identifier (`var/@files` attribute matching `fileDscr/@ID`)
-               name_regex: a regular expression to match variable names
-               label_regex: a regular expression to match variable names
-               categories: whether to include categories in the data dictionary
-               questions: whether to include questions in the data dictionary
-          """
-          value = {}
-          for dataDscr in self.dataDscr:
-               for var in dataDscr.var:
-                    if not file_id or file_id in var.attributes.get("files").value:
-                         var_info = {"id": var.id}
-                         # name
-                         if 'name' in var.attributes:
-                              var_name = var.attributes.get('name').value
-                              if name_regex and not re.match(name_regex, var_name, re.IGNORECASE):
-                                   continue
-                              var_info['name'] = var_name
-                         elif name_regex:
-                              continue
-                         # label
-                         if hasattr(var, 'labl'):
-                              var_label = var.labl[0]._content
-                              if label_regex and not re.match(label_regex, var_label, re.IGNORECASE):
-                                   continue
-                              var_info['label'] = var_label
-                         elif label_regex:
-                              continue
-                         # categories
-                         if hasattr(var, 'catgry'):
-                              var_info['n_categories'] = len(var.catgry)
-                              if categories:
-                                   cats = []
-                                   for catgry in var.catgry:
-                                        cat = {}
-                                        if hasattr(catgry,"catValu"):
-                                             cat['value'] = catgry.catValu._content
-                                        if hasattr(catgry,"labl"):
-                                             cat['label'] = catgry.labl[0]._content
-                                        if cat:
-                                             cats.append(cat)
-                                   var_info['categories'] = cats
-                         else:
-                              var_info['n_categories'] = 0
-                         # question
-                         var_info['has_question'] = hasattr(var, 'qstn')
-                         if var_info['has_question'] and questions:
-                              var_qstn = var.qstn[0]
-                              qstn_info = {}
-                              if hasattr(var_qstn,"preQTxt"):
-                                   qstn_info['pre'] = var_qstn.preQTxt._content
-                              if hasattr(var_qstn,"qstnLit"):
-                                   qstn_info['literal'] = var_qstn.qstnLit._content
-                              if hasattr(var_qstn,"postQTxt"):
-                                   qstn_info['post'] = var_qstn.postQTxt._content
-                              if hasattr(var_qstn,"forwardType"):
-                                   qstn_info['forward'] = var_qstn.forwardType._content
-                              if hasattr(var_qstn,"backwardType"):
-                                   qstn_info['backward'] = var_qstn.backwardType._content
-                              if hasattr(var_qstn,"ivuInstr"):
-                                   qstn_info['instructions'] = var_qstn.ivuInstr._content
-                              var_info['question'] = qstn_info
-                         # add to dictionary
-                         value[var.id] = var_info
-          return value
+        Args:
+             file_id: filter to a specific file identifier (`var/@files` attribute matching `fileDscr/@ID`)
+             name_regex: a regular expression to match variable names
+             label_regex: a regular expression to match variable names
+             categories: whether to include categories in the data dictionary
+             questions: whether to include questions in the data dictionary
+        """
+        value = {}
+        for dataDscr in self.dataDscr:
+            for var in dataDscr.var:
+                if not file_id or (var.files and file_id in var.files):
+                    var_info = {"id": var.id}
+                    # name
+                    if var.name:
+                        var_name = var.name
+                        if name_regex and not re.match(name_regex, var_name, re.IGNORECASE):
+                            continue
+                        var_info["name"] = var_name
+                    elif name_regex:
+                        continue
+                    # label
+                    if var.labl:
+                        var_label = var.labl[0].content
+                        if label_regex and not re.match(label_regex, var_label, re.IGNORECASE):
+                            continue
+                        var_info["label"] = var_label
+                    elif label_regex:
+                        continue
+                    # categories
+                    if var.catgry:
+                        var_info["n_categories"] = len(var.catgry)
+                        if categories:
+                            cats = []
+                            for catgry in var.catgry:
+                                cat = {}
+                                if catgry.catValu:
+                                    cat["value"] = catgry.catValu.content
+                                if catgry.labl:
+                                    cat["label"] = catgry.labl[0].content
+                                if cat:
+                                    cats.append(cat)
+                            var_info["categories"] = cats
+                    else:
+                        var_info["n_categories"] = 0
+                    # question
+                    var_info["has_question"] = bool(var.qstn)
+                    if var_info["has_question"] and questions:
+                        var_qstn = var.qstn[0]
+                        qstn_info = {}
+                        if var_qstn.preQTxt:
+                            qstn_info["pre"] = var_qstn.preQTxt.content
+                        if var_qstn.qstnLit:
+                            qstn_info["literal"] = var_qstn.qstnLit.content
+                        if var_qstn.postQTxt:
+                            qstn_info["post"] = var_qstn.postQTxt.content
+                        if var_qstn.forward:
+                            qstn_info["forward"] = var_qstn.forward.content
+                        if var_qstn.backward:
+                            qstn_info["backward"] = var_qstn.backward.content
+                        if var_qstn.ivuInstr:
+                            qstn_info["instructions"] = var_qstn.ivuInstr.content
+                        var_info["question"] = qstn_info
+                    # add to dictionary
+                    value[var.id] = var_info
+        return value
 
-     def get_files(self) -> dict[str,dict]:
-          """Returns the files and their documented infornation."""
-          value = {}
-          for fileDscr in self.fileDscr:
-               file = {}
-               file["id"] = fileDscr.attributes.get("ID").value
-               if fileDscr.fileTxt:
-                    fileTxt = fileDscr.fileTxt[0]
-                    if fileTxt.fileName:
-                         fileName = fileTxt.fileName[0]
-                         file["name"] = str(fileName._content)
-                         file["basename"] = os.path.splitext(file["name"])[0]
-                    if hasattr(fileTxt,"fileCont"): # not repeatable
-                         file["content"] = str(fileTxt.fileCont._content)
-                    if hasattr(fileTxt,"dimensns"): # not repeatable
-                         if fileTxt.dimensns.caseQnty:
-                              file["n_records"] = fileTxt.dimensns.caseQnty[0]._content
-                         if fileTxt.dimensns.varQnty:
-                              file["n_variables"] = fileTxt.dimensns.varQnty[0]._content
-               value[file["id"]] = file
-          return value
+    def get_files(self) -> dict[str, dict]:
+        """Returns the files and their documented infornation."""
+        value = {}
+        for fileDscr in self.fileDscr:
+            file = {}
+            file["id"] = fileDscr.id
+            if fileDscr.fileTxt:
+                fileTxt = fileDscr.fileTxt[0]
+                if fileTxt.fileName:
+                    fileName = fileTxt.fileName[0]
+                    file["name"] = str(fileName.content)
+                    file["basename"] = os.path.splitext(file["name"])[0]
+                if hasattr(fileTxt, "fileCont") and fileTxt.fileCont:
+                    file["content"] = str(fileTxt.fileCont.content)
+                if hasattr(fileTxt, "dimensns") and fileTxt.dimensns:
+                    if fileTxt.dimensns.caseQnty:
+                        file["n_records"] = fileTxt.dimensns.caseQnty[0].content
+                    if fileTxt.dimensns.varQnty:
+                        file["n_variables"] = fileTxt.dimensns.varQnty[0].content
+            value[file["id"]] = file
+        return value
 
-     def get_title(self) -> str:
-          """Returns the title of the study."""
-          value = None
-          if self.stdyDscr:
-               stdyDscr = self.stdyDscr[0]
-               if stdyDscr.citation:
-                    citation = stdyDscr.citation[0] 
-                    if hasattr(citation,"titlStmt"): # not repeatable
-                         titlStmt = citation.titlStmt
-                         if hasattr(titlStmt,"titl"): # not repeatable
-                              titl = titlStmt.titl
-                              value = str(titl._content)
-          return value
-     
-     def get_subtitle(self) -> str:
-          """Returns the subtitle of the study."""
-          value = None
-          if self.stdyDscr:
-               stdyDscr = self.stdyDscr[0]
-               if stdyDscr.citation:
-                    citation = stdyDscr.citation[0] 
-                    if citation.titlStmt:
-                         titlStmt = citation.titlStmt
-                         if titlStmt.subtitle:
-                              subtitl = titlStmt.subtitle[0]
-                              value = str(subtitl._content)
-          return value
+    def get_title(self) -> str:
+        """Returns the title of the study."""
+        value = None
+        if self.stdyDscr:
+            stdyDscr = self.stdyDscr[0]
+            if stdyDscr.citation:
+                citation = stdyDscr.citation[0]
+                if hasattr(citation, "titlStmt") and citation.titlStmt:
+                    titlStmt = citation.titlStmt
+                    if hasattr(titlStmt, "titl") and titlStmt.titl:
+                        titl = titlStmt.titl
+                        value = str(titl.content)
+        return value
 
-     def search_variables(self, file_id:str=None, name:str=None, label:str=None, has_catgry:bool=None, has_qstn:bool=None):
-          """
-          Search variables in the codebook
-          """
-          vars = []
-          for dataDscr in self.dataDscr:
-               for var in dataDscr.var:
-                    if file_id and file_id not in var.attributes.get("files").value:
-                         continue
-                    vars.append(var)
-          return vars
+    def get_subtitle(self) -> str:
+        """Returns the subtitle of the study."""
+        value = None
+        if self.stdyDscr:
+            stdyDscr = self.stdyDscr[0]
+            if stdyDscr.citation:
+                citation = stdyDscr.citation[0]
+                if citation.titlStmt:
+                    titlStmt = citation.titlStmt
+                    if titlStmt.subTitl:
+                        subtitl = titlStmt.subTitl[0]
+                        value = str(subtitl.content)
+        return value
+
+    def search_variables(
+        self,
+        _file_id: str = None,
+        _name: str = None,
+        _label: str = None,
+        _has_catgry: bool = None,
+        _has_qstn: bool = None,
+    ):
+        """
+        Search variables in the codebook
+        """
+        vars = []
+        for dataDscr in self.dataDscr:
+            for var in dataDscr.var:
+                vars.append(var)
+        return vars
 
 
 class codingInstructionsType(baseElementType):
-     txt: List[txtType]
-     command: List["commandType"]
+    txt: list[txtType] = Field(default_factory=list)
+    command: list[commandType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
-          self._valid_attributes.append("relatedProcesses")
+    type: str | None = None
+    relatedProcesses: str | None = None
+
 
 class cohortType(baseElementType):
-     range: List["rangeType"]
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("catRef")
-          self._valid_attributes.append("value")
+    range: list[rangeType] = Field(default_factory=list)
+
+    catRef: str | None = None
+    value: str | None = None
+
 
 class collDateType(simpleTextAndDateType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("event")
-          self._valid_attributes.append("cycle")
+    event: str | None = None
+    cycle: str | None = None
 
 
 class collectorTrainingType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
+    type: str | None = None
+
 
 class commandType(stringType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("formalLanguage")
+    formalLanguage: str | None = None
+
 
 class controlledVocabUsedType(baseElementType):
-     codeListID: stringType
-     codeListName: stringType
-     codeListAgencyName: stringType
-     codeListVersionID: stringType
-     codeListURN: stringType
-     codeListSchemeURN: stringType
-     usage: List["usageType"]
+    codeListID: stringType | None = None
+    codeListName: stringType | None = None
+    codeListAgencyName: stringType | None = None
+    codeListVersionID: stringType | None = None
+    codeListURN: stringType | None = None
+    codeListSchemeURN: stringType | None = None
+    usage: list[usageType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class CubeCoordType(baseElementType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("coordNo")
-          self._valid_attributes.append("coordVal")
-          self._valid_attributes.append("coordValRef")
+    coordNo: str | None = None
+    coordVal: str | None = None
+    coordValRef: str | None = None
+
 
 class custodianType(stringType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("affiliation")
-          self._valid_attributes.append("abbr")
+    affiliation: str | None = None
+    abbr: str | None = None
+
 
 class dataAccsType(baseElementType):
-     setAvail: List["setAvailType"]
-     useStmt:  List["useStmtType"]
-     notes: List["notesType"]
+    setAvail: list[setAvailType] = Field(default_factory=list)
+    useStmt: list[useStmtType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
-class dataApprType(simpleTextType): 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
+class dataApprType(simpleTextType):
+    type: str | None = None
+
 
 class dataCollectorType(conceptualTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("abbr")
-          self._valid_attributes.append("affiliation")
-          self._valid_attributes.append("role")
+    abbr: str | None = None
+    affiliation: str | None = None
+    role: str | None = None
+
 
 class dataDscrType(baseElementType):
-     varGrp: List["varGrpType"]
-     nCubeGrp: List["nCubeGrpType"]
-     var: List["varType"]
-     nCube: List["nCubeType"]
-     notes: List["notesType"]
+    varGrp: list[varGrpType] = Field(default_factory=list)
+    nCubeGrp: list[nCubeGrpType] = Field(default_factory=list)
+    var: list[varType] = Field(default_factory=list)
+    nCube: list[nCubeType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self.var =  []
 
 class dataKindType(conceptualTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
+    type: str | None = None
+
 
 class dataProcessingType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
+    type: str | None = None
 
-class depositrType(simpleTextType): 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("abbr")
-          self._valid_attributes.append("affiliation")
+
+class depositrType(simpleTextType):
+    abbr: str | None = None
+    affiliation: str | None = None
+
 
 class distrbtrType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("abbr")
-          self._valid_attributes.append("affiliation")
-          self._valid_attributes.append("URI")
+    abbr: str | None = None
+    affiliation: str | None = None
+    URI: str | None = None
+
 
 class distStmtType(baseElementType):
-     distrbtr: List["distrbtrType"]
-     contact: List["contactType"]
-     depositr: List["depositrType"]
-     depDate: List[simpleTextAndDateType]
-     distDate: List[simpleTextAndDateType]
-     def __init__(self, options=None):
-          super().__init__(options)
+    distrbtr: list[distrbtrType] = Field(default_factory=list)
+    contact: list[contactType] = Field(default_factory=list)
+    depositr: list[depositrType] = Field(default_factory=list)
+    depDate: list[simpleTextAndDateType] = Field(default_factory=list)
+    distDate: list[simpleTextAndDateType] = Field(default_factory=list)
+
 
 class dataCollType(baseElementType):
-     timeMeth: List["timeMethType"]
-     dataCollector: List["dataCollectorType"]
-     collectorTraining: List["collectorTrainingType"]
-     frequenc: List["frequencType"]
-     sampProc: List[conceptualTextType]
-     sampleFrame: List["sampleFrameType"]
-     targetSampleSize: List[conceptualTextType]
-     deviat: List[simpleTextType]
-     collMode: List[conceptualTextType]
-     resInstru: List["resInstruType"]
-     instrumentDevelopment: List["instrumentDevelopmentType"]
-     sources: List["sourcesType"] # this is not repeatable in the 2.5 schema, which seem to be a bug
-     collSitu: List[simpleTextType]
-     actMin: List[simpleTextType]
-     ConOps: List["ConOpsType"]
-     weight: List[simpleTextType]
-     cleanOps: List["cleanOpsType"]
+    timeMeth: list[timeMethType] = Field(default_factory=list)
+    dataCollector: list[dataCollectorType] = Field(default_factory=list)
+    collectorTraining: list[collectorTrainingType] = Field(default_factory=list)
+    frequenc: list[frequencType] = Field(default_factory=list)
+    sampProc: list[conceptualTextType] = Field(default_factory=list)
+    sampleFrame: list[sampleFrameType] = Field(default_factory=list)
+    targetSampleSize: list[conceptualTextType] = Field(default_factory=list)
+    deviat: list[simpleTextType] = Field(default_factory=list)
+    collMode: list[conceptualTextType] = Field(default_factory=list)
+    resInstru: list[resInstruType] = Field(default_factory=list)
+    instrumentDevelopment: list[instrumentDevelopmentType] = Field(default_factory=list)
+    sources: list[sourcesType] = Field(default_factory=list)
+    collSitu: list[simpleTextType] = Field(default_factory=list)
+    actMin: list[simpleTextType] = Field(default_factory=list)
+    ConOps: list[ConOpsType] = Field(default_factory=list)
+    weight: list[simpleTextType] = Field(default_factory=list)
+    cleanOps: list[cleanOpsType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class dataFingerprintType(baseElementType):
-     # Note that this type does no derive from baseElementType in the schema
-     # It also uses xs:string instead of stringType
-     digitalFingerprintValue: stringType
-     algorithmSpecification: stringType
-     algorithmversion: stringType
+    # Note that this type does no derive from baseElementType in the schema
+    # It also uses xs:string instead of stringType
+    digitalFingerprintValue: stringType | None = None
+    algorithmSpecification: stringType | None = None
+    algorithmversion: stringType | None = None
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class dataItemType(baseElementType):
-     CubeCoord: List["CubeCoordType"]
-     physLoc: List["physLocType"]
+    CubeCoord: list[CubeCoordType] = Field(default_factory=list)
+    physLoc: list[physLocType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("varRef")
-          self._valid_attributes.append("nCubeRef")
+    varRef: str | None = None
+    nCubeRef: str | None = None
+
 
 class derivationType(baseElementType):
-     drvdesc: List[simpleTextType]
-     drvcmd: List["drvcmdType"]
+    drvdesc: list[simpleTextType] = Field(default_factory=list)
+    drvcmd: list[drvcmdType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("var")
+    var: str | None = None
+
 
 class developmentActivityType(baseElementType):
-     description: List[simpleTextType]
-     participant: List["participantType"]
-     resource: List["resourceType"]
-     outcome: List[simpleTextType]
+    description: list[simpleTextType] = Field(default_factory=list)
+    participant: list[participantType] = Field(default_factory=list)
+    resource: list[resourceType] = Field(default_factory=list)
+    outcome: list[simpleTextType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
-     
+    type: str | None = None
+
+
 class dimensnsType(baseElementType):
-     caseQnty: List[simpleTextType]
-     varQnty: List[simpleTextType]
-     logRecL: List[simpleTextType]
-     recPrCase: List[simpleTextType]
-     recNumTot: List[simpleTextType]
+    caseQnty: list[simpleTextType] = Field(default_factory=list)
+    varQnty: list[simpleTextType] = Field(default_factory=list)
+    logRecL: list[simpleTextType] = Field(default_factory=list)
+    recPrCase: list[simpleTextType] = Field(default_factory=list)
+    recNumTot: list[simpleTextType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class dmnsType(baseElementType):
-     cohort: List["cohortType"]
+    cohort: list[cohortType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("rank")
-          self._valid_attributes.append("varRef")
+    rank: str | None = None
+    varRef: str | None = None
+
 
 class docDscrType(baseElementType):
-     citation: "citationType"
-     guide: List[simpleTextType]
-     docStatus: List[simpleTextType]
-     docSrc: List["docSrcType"]
-     controlledVocabUsed: List["controlledVocabUsedType"]
-     notes: List["notesType"]
+    citation: citationType | None = None
+    guide: list[simpleTextType] = Field(default_factory=list)
+    docStatus: list[simpleTextType] = Field(default_factory=list)
+    docSrc: list[docSrcType] = Field(default_factory=list)
+    controlledVocabUsed: list[controlledVocabUsedType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class docSrcType(baseElementType):
-     titlStmt: "titlStmtType"
-     rspStmt: "rspStmtType"
-     prodStmt: "prodStmtType"
-     distStmt: "distStmtType"
-     serStmt: List["serStmtType"]
-     verStmt: List["verStmtType"]
-     biblCit: List["biblCitType"]
-     holdngs: List["holdingsType"]
-     notes: List["notesType"]
+    titlStmt: titlStmtType | None = None
+    rspStmt: rspStmtType | None = None
+    prodStmt: prodStmtType | None = None
+    distStmt: distStmtType | None = None
+    serStmt: list[serStmtType] = Field(default_factory=list)
+    verStmt: list[verStmtType] = Field(default_factory=list)
+    biblCit: list[biblCitType] = Field(default_factory=list)
+    holdngs: list[holdingsType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("MARCURI")
+    MARCURI: str | None = None
+
 
 class drvcmdType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("syntax")
+    syntax: str | None = None
+
 
 class embargoType(simpleTextAndDateType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("event")
-          self._valid_attributes.append("format")
+    event: str | None = None
+    format: str | None = None
+
 
 class evaluatorType(stringType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("affiliation")
-          self._valid_attributes.append("abbr")
-          self._valid_attributes.append("role")
+    affiliation: str | None = None
+    abbr: str | None = None
+    role: str | None = None
+
 
 class eventDateType(dateType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("event")
+    event: str | None = None
+
 
 class exPostEvaluationType(baseElementType):
-     evaluator: List["evaluatorType"]
-     evaluationProcess: List[simpleTextType]
-     outcomes: List[simpleTextType]
+    evaluator: list[evaluatorType] = Field(default_factory=list)
+    evaluationProcess: list[simpleTextType] = Field(default_factory=list)
+    outcomes: list[simpleTextType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("completionDate")
-          self._valid_attributes.append("type")
+    completionDate: str | None = None
+    type: str | None = None
+
 
 class fileDscrType(baseElementType):
-     fileTxt: List["fileTxtType"]
-     locMap: "locMapType"
-     notes: List["notesType"]
+    fileTxt: list[fileTxtType] = Field(default_factory=list)
+    locMap: locMapType | None = None
+    notes: list[notesType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("URI")
-          self._valid_attributes.append("sdatrefs")
-          self._valid_attributes.append("methrefs")
-          self._valid_attributes.append("pubrefs")
-          self._valid_attributes.append("access")
+    URI: str | None = None
+    sdatrefs: str | None = None
+    methrefs: str | None = None
+    pubrefs: str | None = None
+    access: str | None = None
+
 
 class fileStrcType(baseElementType):
-     recGrp: List["recGrpType"]
-     notes: List["notesType"]
+    recGrp: list[recGrpType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
-          self._valid_attributes.append("otherType")
-          self._valid_attributes.append("fileStrcRef")
+    type: str | None = None
+    otherType: str | None = None
+    fileStrcRef: str | None = None
+
 
 class fileTxtType(baseElementType):
-     fileName: List[simpleTextType]
-     fileCitation: "citationType" # no repeatable
-     dataFingerprint: List["dataFingerprintType"]
-     fileCont: simpleTextType
-     fileStr: "fileStrcType"
-     dimensns: "dimensnsType"
-     fileType: List["fileTypeType"]
-     format: List[simpleTextType]
-     filePlac: List[simpleTextType]
-     dataChck: List[simpleTextType]
-     ProcStat: List[simpleTextType]
-     dataMsng: List[simpleTextType]
-     software: List["softwareType"]
-     verStmt: List["verStmtType"]
+    fileName: list[simpleTextType] = Field(default_factory=list)
+    fileCitation: citationType | None = None
+    dataFingerprint: list[dataFingerprintType] = Field(default_factory=list)
+    fileCont: simpleTextType | None = None
+    fileStr: fileStrcType | None = None
+    dimensns: dimensnsType | None = None
+    fileType: list[fileTypeType] = Field(default_factory=list)
+    format: list[simpleTextType] = Field(default_factory=list)
+    filePlac: list[simpleTextType] = Field(default_factory=list)
+    dataChck: list[simpleTextType] = Field(default_factory=list)
+    ProcStat: list[simpleTextType] = Field(default_factory=list)
+    dataMsng: list[simpleTextType] = Field(default_factory=list)
+    software: list[softwareType] = Field(default_factory=list)
+    verStmt: list[verStmtType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class fileTypeType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("charset")
+    charset: str | None = None
+
 
 class frequencType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("freq")
+    freq: str | None = None
+
 
 class forwardType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("qstn")
+    qstn: str | None = None
+
 
 class frameUnitType(baseElementType):
-     unitType: "unitTypeType"
-     txt: List[txtType]
+    unitType: unitTypeType | None = None
+    txt: list[txtType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("isPrimary")
+    isPrimary: str | None = None
+
 
 class fundAgType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("abbr")
-          self._valid_attributes.append("role")
+    abbr: str | None = None
+    role: str | None = None
+
 
 class geoBndBoxType(baseElementType):
-     westBL: phraseType
-     eastBL: phraseType
-     northBL: phraseType
-     southBL: phraseType
+    westBL: phraseType | None = None
+    eastBL: phraseType | None = None
+    northBL: phraseType | None = None
+    southBL: phraseType | None = None
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class geoMapType(baseElementType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("URI")
-          self._valid_attributes.append("mapFormat")
-          self._valid_attributes.append("levelno")
+    URI: str | None = None
+    mapFormat: str | None = None
+    levelno: str | None = None
+
 
 class grantNoType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("agency")
-          self._valid_attributes.append("role")          
+    agency: str | None = None
+    role: str | None = None
+
 
 class holdingsType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("location")
-          self._valid_attributes.append("callno")
-          self._valid_attributes.append("URI")
-          self._valid_attributes.append("media")
+    location: str | None = None
+    callno: str | None = None
+    URI: str | None = None
+    media: str | None = None
+
 
 class IDNoType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("agency")
-          self._valid_attributes.append("level")
+    agency: str | None = None
+    level: str | None = None
+
 
 class instrumentDevelopmentType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
+    type: str | None = None
+
 
 class invalrngType(baseElementType):
-     item: List["itemType"]
-     range: List["rangeType"]
-     key: List[tableAndTextType]
-     notes: List["notesType"]
-
-     def __init__(self, options=None):
-          super().__init__(options)
+    item: list[itemType] = Field(default_factory=list)
+    range: list[rangeType] = Field(default_factory=list)
+    key: list[tableAndTextType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
 
 
 class itemType(baseElementType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("UNITS")
-          self._valid_attributes.append("VALUE")
+    UNITS: str | None = None
+    VALUE: str | None = None
+
 
 class keywordType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("vocab")
-          self._valid_attributes.append("vocabURI")
+    vocab: str | None = None
+    vocabURI: str | None = None
+
 
 class lablType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("level")
-          self._valid_attributes.append("vendor")
-          self._valid_attributes.append("country")
-          self._valid_attributes.append("sdatrefs")
+    level: str | None = None
+    vendor: str | None = None
+    country: str | None = None
+    sdatrefs: str | None = None
+
 
 class locationType(baseElementType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("StartPos")
-          self._valid_attributes.append("EndPos")
-          self._valid_attributes.append("width")
-          self._valid_attributes.append("RecSegNo")
-          self._valid_attributes.append("field")
-          self._valid_attributes.append("locMap")
+    StartPos: str | None = None
+    EndPos: str | None = None
+    width: str | None = None
+    RecSegNo: str | None = None
+    field: str | None = None
+    locMap: str | None = None
+
 
 class locMapType(baseElementType):
-     dataItem: List["dataItemType"]
+    dataItem: list[dataItemType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class materialReferenceType(abstractTextType):
-     # TODO: This element requires special handlinas it
-     # allows mixed content and Citation elements
-     # citation: List["citationType"]
+    # TODO: This element requires special handlinas it
+    # allows mixed content and Citation elements
+    # citation: List["citationType"]
+    pass
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class measureType(baseElementType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("varRef")
-          self._valid_attributes.append("aggrMeth")
-          self._valid_attributes.append("otherAggrMeth")
-          self._valid_attributes.append("measUnit")
-          self._valid_attributes.append("scale")
-          self._valid_attributes.append("origin")
-          self._valid_attributes.append("additivity")
+    varRef: str | None = None
+    aggrMeth: str | None = None
+    otherAggrMeth: str | None = None
+    measUnit: str | None = None
+    scale: str | None = None
+    origin: str | None = None
+    additivity: str | None = None
+
 
 class methodType(baseElementType):
-     dataColl: List["dataCollType"]
-     notes: List["notesType"]
-     anlyInfo: List["anlyInfoType"]
-     stdyClas: List["stdyClasType"]
-     dataProcessing: List["dataProcessingType"]
-     codingInstructions: List["codingInstructionsType"]
+    dataColl: list[dataCollType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
+    anlyInfo: list[anlyInfoType] = Field(default_factory=list)
+    stdyClas: list[stdyClasType] = Field(default_factory=list)
+    dataProcessing: list[dataProcessingType] = Field(default_factory=list)
+    codingInstructions: list[codingInstructionsType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class miType(phraseType):
-     def __init__(self, options=None):
-          super().__init__(options)
+    pass
+
 
 class mrowType(baseElementType):
-     mi: List["miType"]
-     def __init__(self, options=None):
-          super().__init__(options)
+    mi: list[miType] = Field(default_factory=list)
+
 
 class nationType(conceptualTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("abbr")
+    abbr: str | None = None
+
 
 class nCubeType(baseElementType):
-     location: List["locationType"]
-     labl: List["lablType"]
-     txt: List["txtType"]
-     universe: List["universeType"]
-     imputation: List["simpleTextType"]
-     security: List["simpleTextAndDateType"]
-     embargo: List["embargoType"]
-     respUnit: List[simpleTextType]
-     anlysUnit: List[simpleTextType]
-     verStmt: List["verStmtType"]
-     purpose: List["purposeType"]
-     dmns: List["dmnsType"]
-     measure: List["measureType"]
-     notes: List["notesType"]
+    location: list[locationType] = Field(default_factory=list)
+    labl: list[lablType] = Field(default_factory=list)
+    txt: list[txtType] = Field(default_factory=list)
+    universe: list[universeType] = Field(default_factory=list)
+    imputation: list[simpleTextType] = Field(default_factory=list)
+    security: list[simpleTextAndDateType] = Field(default_factory=list)
+    embargo: list[embargoType] = Field(default_factory=list)
+    respUnit: list[simpleTextType] = Field(default_factory=list)
+    anlysUnit: list[simpleTextType] = Field(default_factory=list)
+    verStmt: list[verStmtType] = Field(default_factory=list)
+    purpose: list[purposeType] = Field(default_factory=list)
+    dmns: list[dmnsType] = Field(default_factory=list)
+    measure: list[measureType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("name")
-          self._valid_attributes.append("sdatrefs")
-          self._valid_attributes.append("methrefs")
-          self._valid_attributes.append("pubrefs")
-          self._valid_attributes.append("access")
-          self._valid_attributes.append("dmnsQnty")
-          self._valid_attributes.append("cellQnty")
+    name: str | None = None
+    sdatrefs: str | None = None
+    methrefs: str | None = None
+    pubrefs: str | None = None
+    access: str | None = None
+    dmnsQnty: str | None = None
+    cellQnty: str | None = None
+
 
 class nCubeGrpType(baseElementType):
-     labl: List["lablType"]
-     txt: List["txtType"]
-     concept: List["conceptType"]
-     defntn: List[simpleTextType]
-     universe: List["universeType"]
-     notes: List["notesType"]
+    labl: list[lablType] = Field(default_factory=list)
+    txt: list[txtType] = Field(default_factory=list)
+    concept: list[conceptType] = Field(default_factory=list)
+    defntn: list[simpleTextType] = Field(default_factory=list)
+    universe: list[universeType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
-          self._valid_attributes.append("otherType")
-          self._valid_attributes.append("nCube")
-          self._valid_attributes.append("nCubeGrp")
-          self._valid_attributes.append("name")
-          self._valid_attributes.append("sdatrefs")
-          self._valid_attributes.append("methrefs")
-          self._valid_attributes.append("pubrefs")
-          self._valid_attributes.append("access")
+    type: str | None = None
+    otherType: str | None = None
+    nCube: str | None = None
+    nCubeGrp: str | None = None
+    name: str | None = None
+    sdatrefs: str | None = None
+    methrefs: str | None = None
+    pubrefs: str | None = None
+    access: str | None = None
+
 
 class notesType(tableAndTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
-          self._valid_attributes.append("subject")
-          self._valid_attributes.append("level")
-          self._valid_attributes.append("resp")
-          self._valid_attributes.append("sdatrefs")
-          self._valid_attributes.append("parent")
-          self._valid_attributes.append("sameNote")
+    type: str | None = None
+    subject: str | None = None
+    level: str | None = None
+    resp: str | None = None
+    sdatrefs: str | None = None
+    parent: str | None = None
+    sameNote: str | None = None
+
 
 class otherMatType(baseElementType):
-     labl: List["lablType"]
-     txt: List["txtType"]
-     notes: List["notesType"]
-     table: List["tableType"]
-     citation: citationType
-     otherMat: List["otherMatType"]
+    labl: list[lablType] = Field(default_factory=list)
+    txt: list[txtType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
+    table: list[tableType] = Field(default_factory=list)
+    citation: citationType | None = None
+    otherMat: list[otherMatType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
-          self._valid_attributes.append("level")
-          self._valid_attributes.append("URI")
+    type: str | None = None
+    level: str | None = None
+    URI: str | None = None
+
 
 class othrStdyMatType(baseElementType):
-     relMat: List["relMatType"]
-     relStdy: List["materialReferenceType"]
-     relPubl: List["materialReferenceType"]
-     othRefs: List["materialReferenceType"] #the schema defines othRefsType but it's the same as materialReferenceType
+    relMat: list[relMatType] = Field(default_factory=list)
+    relStdy: list[materialReferenceType] = Field(default_factory=list)
+    relPubl: list[materialReferenceType] = Field(default_factory=list)
+    othRefs: list[materialReferenceType] = Field(
+        default_factory=list
+    )  # the schema defines othRefsType but it's the same as materialReferenceType
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class othIdType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
-          self._valid_attributes.append("role")
-          self._valid_attributes.append("affiliation")
+    type: str | None = None
+    role: str | None = None
+    affiliation: str | None = None
+
 
 class participantType(stringType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("affiliation")
-          self._valid_attributes.append("abbr")
-          self._valid_attributes.append("role")
+    affiliation: str | None = None
+    abbr: str | None = None
+    role: str | None = None
+
 
 class physLocType(baseElementType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
-          self._valid_attributes.append("recRef")
-          self._valid_attributes.append("startPos")
-          self._valid_attributes.append("width")
-          self._valid_attributes.append("endPos")
+    type: str | None = None
+    recRef: str | None = None
+    startPos: str | None = None
+    width: str | None = None
+    endPos: str | None = None
+
 
 class pointType(baseElementType):
-     gringLat: phraseType
-     gringLon: phraseType
+    gringLat: phraseType | None = None
+    gringLon: phraseType | None = None
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class polygonType(baseElementType):
-     point: List["pointType"]
+    point: list[pointType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)         
 
 class prodStmtType(baseElementType):
-     producer: List["producerType"]
-     copyright: List["simpleTextType"]
-     prodDate: List["simpleTextAndDateType"]
-     prodPlace: List["simpleTextType"]
-     software: List["softwareType"]
-     fundAg: List["fundAgType"]
-     grantNo: List["grantNoType"]   
-     def __init__(self, options=None):
-          super().__init__(options)
+    producer: list[producerType] = Field(default_factory=list)
+    copyright: list[simpleTextType] = Field(default_factory=list)
+    prodDate: list[simpleTextAndDateType] = Field(default_factory=list)
+    prodPlace: list[simpleTextType] = Field(default_factory=list)
+    software: list[softwareType] = Field(default_factory=list)
+    fundAg: list[fundAgType] = Field(default_factory=list)
+    grantNo: list[grantNoType] = Field(default_factory=list)
+
 
 class producerType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("abbr")
-          self._valid_attributes.append("affiliation")
-          self._valid_attributes.append("role")
+    abbr: str | None = None
+    affiliation: str | None = None
+    role: str | None = None
+
 
 class purposeType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("sdatrefs")
-          self._valid_attributes.append("methrefs")
-          self._valid_attributes.append("pubrefs")
-          self._valid_attributes.append("URI")
+    sdatrefs: str | None = None
+    methrefs: str | None = None
+    pubrefs: str | None = None
+    URI: str | None = None
+
 
 class qualityStatementType(baseElementType):
-     standardsCompliance: List["standardsComplianceType"]
-     otherQualityStatement: List[simpleTextType]
+    standardsCompliance: list[standardsComplianceType] = Field(default_factory=list)
+    otherQualityStatement: list[simpleTextType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class qstnType(baseElementType):
-     preQTxt: simpleTextType
-     qstnLit: "qstnLitType"
-     postQTxt: simpleTextType
-     forward: "forwardType"
-     backward: "backwardType"     
-     ivuInstr: simpleTextType
+    preQTxt: simpleTextType | None = None
+    qstnLit: qstnLitType | None = None
+    postQTxt: simpleTextType | None = None
+    forward: forwardType | None = None
+    backward: backwardType | None = None
+    ivuInstr: simpleTextType | None = None
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("qstn")
-          self._valid_attributes.append("var")
-          self._valid_attributes.append("seqNo")
-          self._valid_attributes.append("sdatrefs")
-          self._valid_attributes.append("responseDomainType")
-          self._valid_attributes.append("otherResponseDomainType")
+    qstn: str | None = None
+    var: str | None = None
+    seqNo: str | None = None
+    sdatrefs: str | None = None
+    responseDomainType: str | None = None
+    otherResponseDomainType: str | None = None
+
 
 class qstnLitType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("callno")
-          self._valid_attributes.append("label")
-          self._valid_attributes.append("media")
-          self._valid_attributes.append("type")
+    callno: str | None = None
+    label: str | None = None
+    media: str | None = None
+    type: str | None = None
+
 
 class rangeType(baseElementType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("UNITS")
-          self._valid_attributes.append("min")
-          self._valid_attributes.append("minExclusive")
-          self._valid_attributes.append("max")
-          self._valid_attributes.append("maxExclusive")
+    UNITS: str | None = None
+    min: str | None = None
+    minExclusive: str | None = None
+    max: str | None = None
+    maxExclusive: str | None = None
+
 
 class recDimnsnType(baseElementType):
-     varQnty: simpleTextType
-     caseQnty: simpleTextType
-     logRecL: simpleTextType
+    varQnty: simpleTextType | None = None
+    caseQnty: simpleTextType | None = None
+    logRecL: simpleTextType | None = None
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("level")
+    level: str | None = None
 
 
 class recGrpType(baseElementType):
-     labl: List["lablType"]
-     recDimnsn: "recDimnsnType"
+    labl: list[lablType] = Field(default_factory=list)
+    recDimnsn: recDimnsnType | None = None
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("recGrp")
-          self._valid_attributes.append("rectype")
-          self._valid_attributes.append("keyvar")
-          self._valid_attributes.append("rtypeloc")
-          self._valid_attributes.append("type")
-          self._valid_attributes.append("type")
-          self._valid_attributes.append("type")
+    recGrp: str | None = None
+    rectype: str | None = None
+    keyvar: str | None = None
+    rtypeloc: str | None = None
+    type: str | None = None
+
 
 class relMatType(materialReferenceType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("sdatrefs")
+    sdatrefs: str | None = None
+
 
 class resInstruType(conceptualTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
+    type: str | None = None
+
 
 class resourceType(baseElementType):
-     dataSrc: List[simpleTextType]
-     srgOrig: List[conceptualTextType]
-     srcChar: List[simpleTextType]
-     srcDocu: List[simpleTextType]
+    dataSrc: list[simpleTextType] = Field(default_factory=list)
+    srgOrig: list[conceptualTextType] = Field(default_factory=list)
+    srcChar: list[simpleTextType] = Field(default_factory=list)
+    srcDocu: list[simpleTextType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class rspStmtType(baseElementType):
-     AuthEnty: List["AuthEntyType"]
-     othId: List["othIdType"]    
-     def __init__(self, options=None):
-          super().__init__(options)
+    AuthEnty: list[AuthEntyType] = Field(default_factory=list)
+    othId: list[othIdType] = Field(default_factory=list)
+
 
 class sampleFrameType(baseElementType):
-     sampleFrameName: List[stringType]
-     labl: List["lablType"]
-     txt: List["txtType"]
-     validPeriod: List["eventDateType"]
-     custodian: List["custodianType"]
-     useStmt: List["useStmtType"]
-     universe: List["universeType"]
-     frameUnit: List["frameUnitType"]
-     referencePeriod: List["eventDateType"]
-     updateProcedure: List[simpleTextType]
+    sampleFrameName: list[stringType] = Field(default_factory=list)
+    labl: list[lablType] = Field(default_factory=list)
+    txt: list[txtType] = Field(default_factory=list)
+    validPeriod: list[eventDateType] = Field(default_factory=list)
+    custodian: list[custodianType] = Field(default_factory=list)
+    useStmt: list[useStmtType] = Field(default_factory=list)
+    universe: list[universeType] = Field(default_factory=list)
+    frameUnit: list[frameUnitType] = Field(default_factory=list)
+    referencePeriod: list[eventDateType] = Field(default_factory=list)
+    updateProcedure: list[simpleTextType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class selectorType(stringType):
-     # note: this is a xs:string in the schema  (on usageType)
-     def __init__(self, options=None):
-          super().__init__(options)
+    # note: this is a xs:string in the schema  (on usageType)
+    pass
+
 
 class serNameType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("abbr")
+    abbr: str | None = None
+
 
 class serStmtType(baseElementType):
-     serName: List["serNameType"]
-     serInfo: List[simpleTextType]
+    serName: list[serNameType] = Field(default_factory=list)
+    serInfo: list[simpleTextType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("URI")
+    URI: str | None = None
+
 
 class setAvailType(baseElementType):
-     accsPlac: List["accsPlacType"]
-     origArch: List[simpleTextType]
-     avlStatus: List[simpleTextType]
-     collSize: List[simpleTextType]
-     complete: List[simpleTextType]
-     fileQnty: List[simpleTextType]
-     notes: List["notesType"] 
+    accsPlac: list[accsPlacType] = Field(default_factory=list)
+    origArch: list[simpleTextType] = Field(default_factory=list)
+    avlStatus: list[simpleTextType] = Field(default_factory=list)
+    collSize: list[simpleTextType] = Field(default_factory=list)
+    complete: list[simpleTextType] = Field(default_factory=list)
+    fileQnty: list[simpleTextType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class softwareType(simpleTextAndDateType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("version")
+    version: str | None = None
+
 
 class sourcesType(baseElementType):
-     dataSrc: List[simpleTextType]
-     sourceCitation: List["citationType"]
-     srcOrig: List[conceptualTextType]
-     srcChar: List[simpleTextType]
-     srcDocu: List[simpleTextType]
-     sources: List["sourcesType"]
+    dataSrc: list[simpleTextType] = Field(default_factory=list)
+    sourceCitation: list[citationType] = Field(default_factory=list)
+    srcOrig: list[conceptualTextType] = Field(default_factory=list)
+    srcChar: list[simpleTextType] = Field(default_factory=list)
+    srcDocu: list[simpleTextType] = Field(default_factory=list)
+    sources: list[sourcesType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class specificElementType(stringType):
-     # note: this has no type in the schema (on usageType)
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("refs")
-          self._valid_attributes.append("authorizedCodeValue")
+    refs: str | None = None
+    authorizedCodeValue: str | None = None
+
 
 class specPermType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("required")
-          self._valid_attributes.append("formNo")
-          self._valid_attributes.append("URI")
+    required: str | None = None
+    formNo: str | None = None
+    URI: str | None = None
+
 
 class standardType(baseElementType):
-     standardName: List["standardNameType"]
-     producer: List["producerType"]
+    standardName: list[standardNameType] = Field(default_factory=list)
+    producer: list[producerType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class standardsComplianceType(baseElementType):
-     standard: standardType
-     complianceDescription: List[simpleTextType]
+    standard: standardType | None = None
+    complianceDescription: list[simpleTextType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class standardNameType(stringType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("date")
-          self._valid_attributes.append("version")
-          self._valid_attributes.append("URI")
+    date: str | None = None
+    version: str | None = None
+    URI: str | None = None
+
 
 class stdCatgryType(simpleTextAndDateType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("URI")
+    URI: str | None = None
+
 
 class stdyClasType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
+    type: str | None = None
+
 
 class stdyDscrType(baseElementType):
-     citation: List["citationType"]
-     studyAuthorization: List["studyAuthorizationType"]
-     stdyInfo: List["stdyInfoType"]
-     studyDevelopment: List["studyDevelopmentType"]
-     method: List["methodType"]
-     dataAccs: List["dataAccsType"]
-     othrStdyMat: List["othrStdyMatType"]
-     notes: List["notesType"] 
+    citation: list[citationType] = Field(default_factory=list)
+    studyAuthorization: list[studyAuthorizationType] = Field(default_factory=list)
+    stdyInfo: list[stdyInfoType] = Field(default_factory=list)
+    studyDevelopment: list[studyDevelopmentType] = Field(default_factory=list)
+    method: list[methodType] = Field(default_factory=list)
+    dataAccs: list[dataAccsType] = Field(default_factory=list)
+    othrStdyMat: list[othrStdyMatType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("access")
+    access: str | None = None
+
 
 class stdyInfoType(baseElementType):
-     studyBudget: List[simpleTextType]
-     subject: List["subjectType"]
-     abstract: List["abstractType"]
-     sumDscr: List["sumDscrType"]
-     qualityStatement: List["qualityStatementType"]
-     notes: List["notesType"]
-     exPostEvaluation: List["exPostEvaluationType"]
+    studyBudget: list[simpleTextType] = Field(default_factory=list)
+    subject: list[subjectType] = Field(default_factory=list)
+    abstract: list[abstractType] = Field(default_factory=list)
+    sumDscr: list[sumDscrType] = Field(default_factory=list)
+    qualityStatement: list[qualityStatementType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
+    exPostEvaluation: list[exPostEvaluationType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class studyAuthorizationType(baseElementType):
-     authorizingAgency: List["authorizingAgencyType"]
-     authorzingStatement: List[simpleTextType]
+    authorizingAgency: list[authorizingAgencyType] = Field(default_factory=list)
+    authorzingStatement: list[simpleTextType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("date")
+    date: str | None = None
+
 
 class studyDevelopmentType(baseElementType):
-     developmentActivity: List["developmentActivityType"]
+    developmentActivity: list[developmentActivityType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class subjectType(baseElementType):
-     keyword: List["keywordType"]
-     topcClass: List["topcClasType"]
+    keyword: list[keywordType] = Field(default_factory=list)
+    topcClass: list[topcClasType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class sumDscrType(baseElementType):
-     timePrd: List["timePrdType"]
-     collDate: List["collDateType"]
-     nation: List["nationType"]
-     geogCover: List[conceptualTextType]
-     geogUnit: List[conceptualTextType]
-     geoBndBox: List["geoBndBoxType"]
-     boundPoly: List["boundPolyType"]
-     anlyUnit: List["anlyUnitType"]
-     universe: List["universeType"]
-     dataKind: List["dataKindType"]
+    timePrd: list[timePrdType] = Field(default_factory=list)
+    collDate: list[collDateType] = Field(default_factory=list)
+    nation: list[nationType] = Field(default_factory=list)
+    geogCover: list[conceptualTextType] = Field(default_factory=list)
+    geogUnit: list[conceptualTextType] = Field(default_factory=list)
+    geoBndBox: list[geoBndBoxType] = Field(default_factory=list)
+    boundPoly: list[boundPolyType] = Field(default_factory=list)
+    anlyUnit: list[anlyUnitType] = Field(default_factory=list)
+    universe: list[universeType] = Field(default_factory=list)
+    dataKind: list[dataKindType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class sumStatType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("wgtd")
-          self._valid_attributes.append("wgt-var")
-          self._valid_attributes.append("weight")
-          self._valid_attributes.append("type")
-          self._valid_attributes.append("otherType")
+    wgtd: str | None = None
+    wgt_var: str | None = Field(None, alias="wgt-var")
+    weight: str | None = None
+    type: str | None = None
+    otherType: str | None = None
+
 
 class titlStmtType(baseElementType):
-     titl: simpleTextType
-     subTitl: List["simpleTextType"]
-     altTitl: List["simpleTextType"]
-     parTitl: List["simpleTextType"]
-     IDNo: List["IDNoType"]
-     def __init__(self, options=None):
-          super().__init__(options)
+    titl: simpleTextType | None = None
+    subTitl: list[simpleTextType] = Field(default_factory=list)
+    altTitl: list[simpleTextType] = Field(default_factory=list)
+    parTitl: list[simpleTextType] = Field(default_factory=list)
+    IDNo: list[IDNoType] = Field(default_factory=list)
+
 
 class timeMethType(conceptualTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("method")
-     
+    method: str | None = None
+
+
 class timePrdType(simpleTextAndDateType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("event")
-          self._valid_attributes.append("cycle")
+    event: str | None = None
+    cycle: str | None = None
+
 
 class topcClasType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("vocab")
-          self._valid_attributes.append("vocabURI")
+    vocab: str | None = None
+    vocabURI: str | None = None
 
-class universeType(conceptualTextType): 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("level")
-          self._valid_attributes.append("clusion")
+
+class universeType(conceptualTextType):
+    level: str | None = None
+    clusion: str | None = None
+
 
 class unitTypeType(stringType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("numberOfUnits")
+    numberOfUnits: str | None = None
+
 
 class usageType(baseElementType):
-     # Note: this does not derive from baseElementType in the schema
-     selector: "selectorType"
-     specificElement: "specificElementType"
-     attribute: "attributeType"
+    # Note: this does not derive from baseElementType in the schema
+    selector: selectorType | None = None
+    specificElement: specificElementType | None = None
+    attribute: attributeType | None = None
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class useStmtType(baseElementType):
-     confDec: List["confDecType"]
-     specPerm: List["specPermType"]
-     restrctn: List[simpleTextType]
-     contact: List["contactType"]
-     citReq: List[simpleTextType]
-     deposReq: List[simpleTextType]
-     conditions: List[simpleTextType]
-     disclaimer: List[simpleTextType]
+    confDec: list[confDecType] = Field(default_factory=list)
+    specPerm: list[specPermType] = Field(default_factory=list)
+    restrctn: list[simpleTextType] = Field(default_factory=list)
+    contact: list[contactType] = Field(default_factory=list)
+    citReq: list[simpleTextType] = Field(default_factory=list)
+    deposReq: list[simpleTextType] = Field(default_factory=list)
+    conditions: list[simpleTextType] = Field(default_factory=list)
+    disclaimer: list[simpleTextType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class valrngType(baseElementType):
-     item: List["itemType"]
-     range: List["rangeType"]
-     key: List[tableAndTextType]
-     notes: List["notesType"]
+    item: list[itemType] = Field(default_factory=list)
+    range: list[rangeType] = Field(default_factory=list)
+    key: list[tableAndTextType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class varType(baseElementType):
-     location: List["locationType"]
-     labl: List["lablType"]
-     imputation: List["simpleTextType"]
-     security: List["simpleTextAndDateType"]
-     embargo: List["embargoType"]
-     respUnit: List["simpleTextType"]
-     anlysUnit: List["conceptualTextType"]
-     qstn: List["qstnType"]
-     valrng: List["valrngType"]
-     invalrng: List["invalrngType"]
-     undocCod: List["simpleTextType"]
-     universe: List["universeType"]
-     totlresp: List["simpleTextType"]
-     sumStat: List["sumStatType"]
-     txt: List["txtType"]
-     stdCatgry: List["stdCatgryType"]
-     catgryGrp: List["catgryGrpType"]
-     catgry: List["catgryType"]
-     codInstr: List["simpleTextType"]
-     verStmt: List["verStmtType"]
-     concept: List["conceptType"]
-     derivation: "derivationType"
-     varFormat: "varFormatType"
-     geoMap: List["geoMapType"]
-     catLevel: List["catLevelType"]
-     notes: List["notesType"]
-     
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("name")
-          self._valid_attributes.append("wgt")
-          self._valid_attributes.append("wgt-var")
-          self._valid_attributes.append("weight")
-          self._valid_attributes.append("qstn")
-          self._valid_attributes.append("files")
-          self._valid_attributes.append("vendor")
-          self._valid_attributes.append("dcml")
-          self._valid_attributes.append("intrvl")
-          self._valid_attributes.append("rectype")
-          self._valid_attributes.append("sdatrefs")
-          self._valid_attributes.append("methrefs")
-          self._valid_attributes.append("pubrefs")
-          self._valid_attributes.append("access")
-          self._valid_attributes.append("aggrMeth")
-          self._valid_attributes.append("othAggrMeth")
-          self._valid_attributes.append("scale")
-          self._valid_attributes.append("origin")
-          self._valid_attributes.append("nature")
-          self._valid_attributes.append("additivity")
-          self._valid_attributes.append("otherAdditivity")
-          self._valid_attributes.append("temporal")
-          self._valid_attributes.append("geog")
-          self._valid_attributes.append("geoVocab")
-          self._valid_attributes.append("catQnty")
-          self._valid_attributes.append("representationType")
-          self._valid_attributes.append("otherRepresentationType")
+    location: list[locationType] = Field(default_factory=list)
+    labl: list[lablType] = Field(default_factory=list)
+    imputation: list[simpleTextType] = Field(default_factory=list)
+    security: list[simpleTextAndDateType] = Field(default_factory=list)
+    embargo: list[embargoType] = Field(default_factory=list)
+    respUnit: list[simpleTextType] = Field(default_factory=list)
+    anlysUnit: list[conceptualTextType] = Field(default_factory=list)
+    qstn: list[qstnType] = Field(default_factory=list)
+    valrng: list[valrngType] = Field(default_factory=list)
+    invalrng: list[invalrngType] = Field(default_factory=list)
+    undocCod: list[simpleTextType] = Field(default_factory=list)
+    universe: list[universeType] = Field(default_factory=list)
+    totlresp: list[simpleTextType] = Field(default_factory=list)
+    sumStat: list[sumStatType] = Field(default_factory=list)
+    txt: list[txtType] = Field(default_factory=list)
+    stdCatgry: list[stdCatgryType] = Field(default_factory=list)
+    catgryGrp: list[catgryGrpType] = Field(default_factory=list)
+    catgry: list[catgryType] = Field(default_factory=list)
+    codInstr: list[simpleTextType] = Field(default_factory=list)
+    verStmt: list[verStmtType] = Field(default_factory=list)
+    concept: list[conceptType] = Field(default_factory=list)
+    derivation: derivationType | None = None
+    varFormat: varFormatType | None = None
+    geoMap: list[geoMapType] = Field(default_factory=list)
+    catLevel: list[catLevelType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
 
-     @property
-     def n_catgry(self) -> int:
-          if hasattr(self, "catgry") and self.catgry:
-               return len(self.catgry)
-          return 0
+    name: str | None = None
+    wgt: str | None = None
+    wgt_var: str | None = Field(None, alias="wgt-var")
+    weight: str | None = None
+    var_qstn: str | None = Field(None, alias="qstn")  # qstn attribute vs qstn element
+    files: str | None = None
+    vendor: str | None = None
+    dcml: str | None = None
+    intrvl: str | None = None
+    rectype: str | None = None
+    sdatrefs: str | None = None
+    methrefs: str | None = None
+    pubrefs: str | None = None
+    access: str | None = None
+    aggrMeth: str | None = None
+    othAggrMeth: str | None = None
+    scale: str | None = None
+    origin: str | None = None
+    nature: str | None = None
+    additivity: str | None = None
+    otherAdditivity: str | None = None
+    temporal: str | None = None
+    geog: str | None = None
+    geoVocab: str | None = None
+    catQnty: str | None = None
+    representationType: str | None = None
+    otherRepresentationType: str | None = None
 
-     @property
-     def n_missing_catgry(self) -> int:
-          if self.n_catgry > 0:
-               n_missing = 0
-               for catgry in self.catgry:
-                    if catgry.is_missing:
-                         n_missing += 1
-               return n_missing
-          return 0
+    @property
+    def n_catgry(self) -> int:
+        if hasattr(self, "catgry") and self.catgry:
+            return len(self.catgry)
+        return 0
 
-     @property
-     def n_non_missing_catgry(self) -> int:
-          return self.n_catgry - self.n_missing_catgry
-    
-     def get_catgry_checksum(self, include_code:bool=True, include_label:bool=True, method=None) -> str:
-          # TODO: compute checksum for catgry
-          pass
+    @property
+    def n_missing_catgry(self) -> int:
+        if self.n_catgry > 0:
+            n_missing = 0
+            for catgry in self.catgry:
+                if catgry.is_missing:
+                    n_missing += 1
+            return n_missing
+        return 0
 
-     def get_label(self):
-          value = None
-          if self.labl:
-               labl = self.labl[0]
-               value = str(labl._content)
-          return value
+    @property
+    def n_non_missing_catgry(self) -> int:
+        return self.n_catgry - self.n_missing_catgry
 
-     def get_name(self):
-          value = str(self.attributes.get("name"))
-          return value
+    def get_catgry_checksum(self, include_code: bool = True, include_label: bool = True, method=None) -> str:
+        # TODO: compute checksum for catgry
+        pass
+
+    def get_label(self):
+        value = None
+        if self.labl:
+            labl = self.labl[0]
+            value = str(labl.content)
+        return value
+
+    def get_name(self):
+        return self.name
 
 
 class varFormatType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
-          self._valid_attributes.append("formatname")
-          self._valid_attributes.append("schema")
-          self._valid_attributes.append("otherSchema")
+    type: str | None = None
+    formatname: str | None = None
+    schema_: str | None = Field(None, alias="schema")
+    otherSchema: str | None = None
+
 
 class varGrpType(baseElementType):
-     labl: List["lablType"]
-     txt: List["txtType"]
-     concept: List["conceptType"]
-     defntn: List[simpleTextType]
-     universe: List["universeType"]
-     notes: List["notesType"]
+    labl: list[lablType] = Field(default_factory=list)
+    txt: list[txtType] = Field(default_factory=list)
+    concept: list[conceptType] = Field(default_factory=list)
+    defntn: list[simpleTextType] = Field(default_factory=list)
+    universe: list[universeType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
-          self._valid_attributes.append("otherType")
-          self._valid_attributes.append("var")
-          self._valid_attributes.append("varGrp")
-          self._valid_attributes.append("name")
-          self._valid_attributes.append("sdatrefs")
-          self._valid_attributes.append("methrefs")
-          self._valid_attributes.append("pubrefs")
-          self._valid_attributes.append("access")
-          self._valid_attributes.append("nCube")
+    type: str | None = None
+    otherType: str | None = None
+    var: str | None = None
+    varGrp: str | None = None
+    name: str | None = None
+    sdatrefs: str | None = None
+    methrefs: str | None = None
+    pubrefs: str | None = None
+    access: str | None = None
+    nCube: str | None = None
+
 
 class verStmtType(baseElementType):
-     version: List["versionType"]
-     verResp: List["verRespType"]
-     notes: List["notesType"]
+    version: list[versionType] = Field(default_factory=list)
+    verResp: list[verRespType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
 
-     def __init__(self, options=None):
-          super().__init__(options)
 
 class versionType(simpleTextAndDateType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("type")
+    type: str | None = None
+
 
 class verRespType(simpleTextType):
-     def __init__(self, options=None):
-          super().__init__(options)
-          self._valid_attributes.append("affiliation")
+    affiliation: str | None = None
