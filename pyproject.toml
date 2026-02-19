@@ -15,6 +15,7 @@ classifiers = [
   "Development Status :: 4 - Beta",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
@@ -40,11 +41,24 @@ packages = ["src/dartfx"]
 [tool.hatch.version]
 path = "src/dartfx/ddi/__about__.py"
 
-[tool.hatch.metadata]
-allow-direct-references = true
+[dependency-groups]
+dev = [
+  "coverage[toml]>=6.5",
+  "pytest>=7.0.0",
+  "mypy>=1.0.0",
+  "python-dotenv>=1.0.0",
+  "ruff>=0.3.0",
+  "pre-commit>=3.0.0",
+]
+docs = [
+  "sphinx>=7.0.0",
+  "sphinx-rtd-theme>=1.2.0",
+  "myst-parser>=1.0.0",
+  "sphinx-copybutton>=0.5.0",
+]
 
 [tool.hatch.envs.default]
-dependencies = ["coverage[toml]>=6.5", "pytest"]
+dependencies = ["dev"]
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
 test-cov = "coverage run -m pytest {args:tests}"
@@ -55,9 +69,17 @@ cov = ["test-cov", "cov-report"]
 python = ["3.12", "3.13"]
 
 [tool.hatch.envs.types]
-dependencies = ["mypy>=1.0.0"]
+dependencies = ["dev"]
+
 [tool.hatch.envs.types.scripts]
 check = "mypy --install-types --non-interactive {args:src/dartfx/ddi tests}"
+
+[tool.hatch.envs.docs]
+dependencies = ["docs"]
+[tool.hatch.envs.docs.scripts]
+build = "sphinx-build -b html docs/source docs/build/html"
+serve = "python -m http.server -d docs/build/html"
+
 
 [tool.coverage.run]
 source_pkgs = ["ddi", "tests"]
@@ -73,8 +95,40 @@ tests = ["tests", "*/dartfx/dartfx-ddi/tests"]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 
 [tool.pytest.ini_options]
+pythonpath = "src"
 testpaths = ["tests"]
 log_cli = true
 log_cli_level = "DEBUG"
 log_cli_format = "%(asctime)s [%(levelname)s] %(message)s (%(filename)s:%(lineno)s)"
 log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+src = ["src"]
+
+[tool.ruff.lint]
+select = [
+  "E",   # pycodestyle errors
+  "W",   # pycodestyle warnings
+  "F",   # pyflakes
+  "I",   # isort
+  "B",   # flake8-bugbear
+  "C4",  # flake8-comprehensions
+  "UP",  # pyupgrade
+  "ARG", # flake8-unused-arguments
+  "PT",  # flake8-pytest-style
+]
+ignore = []
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.ruff.lint.isort]
+known-first-party = ["dartfx"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"

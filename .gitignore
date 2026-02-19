@@ -79,7 +79,14 @@ instance/
 .scrapy
 
 # Sphinx documentation
+docs/build/
 docs/_build/
+
+# Hatch
+.hatch/
+
+# Ruff
+.ruff_cache/
 
 # PyBuilder
 .pybuilder/
