@@ -154,9 +154,9 @@ class CdiAssistant(BaseModel):
             super().__setattr__(name, value)
 
 @automate_instance_methods(model.CDIResource)
-class CdiClassAssistant(CdiAssistant):
+class CdiResourceAssistant(CdiAssistant):
     """
-    General assistant for CDI Resources.
+    Base assistant for all CDI Resources (both Classes and DataTypes).
     Methods defined here are available on all objects inheriting from CDIResource.
     """
     resource: Optional[model.CDIResource] = None
@@ -165,89 +165,29 @@ class CdiClassAssistant(CdiAssistant):
         super().__init_subclass__(**kwargs)
         # Automatically bind methods of the new subclass to CDIResource
         cls._bind_to_model(model.CDIResource)
-    @classmethod
-    def get_ddi_identifier_value(cls, resource: model.CDIResource) -> Optional[str]:
-        if getattr(resource, 'identifier', None) is not None:
-            if getattr(resource.identifier, 'ddiIdentifier', None) is not None: 
-                return resource.identifier.ddiIdentifier.dataIdentifier
-        return None
 
     @classmethod
     def get_uri(cls, resource: model.CDIResource) -> Optional[str]:
         if getattr(resource, 'identifier', None) is not None:
             if getattr(resource.identifier, 'uri', None) is not None: 
                 return resource.identifier.uri
+        elif getattr(resource, 'id', None) is not None:
+            return str(resource.id)
         return None
-    
-    @classmethod
-    def set_identifiers(cls, resource: model.CDIResource, ddi: str = None, nonddi: str = None, uri: str = None):
-        if resource.identifier is None:
-            resource.identifier = model.Identifier()
-            
-        if ddi:
-            if resource.identifier.ddiIdentifier is None:
-                resource.identifier.ddiIdentifier = model.InternationalRegistrationDataIdentifier(
-                    dataIdentifier=ddi, 
-                    registrationAuthorityIdentifier="int.dataartifex", 
-                    versionIdentifier="1"
-                )
-            else:
-                resource.identifier.ddiIdentifier.dataIdentifier = ddi
-                
-        if nonddi:
-            if resource.identifier.nonDdiIdentifier is None:
-                resource.identifier.nonDdiIdentifier = list()
-            resource.identifier.nonDdiIdentifier.append(model.NonDdiIdentifier(value=nonddi, type="generic"))
-            
-        if uri:
-            resource.identifier.uri = uri 
-            
-        return resource.identifier
-
-    @classmethod
-    def set_ddi_identifier(cls, resource: model.CDIResource, value: str, authority: str = None, version: str = None):
-        if cls.set_identifiers(resource, ddi=value):
-            if authority:
-                resource.identifier.ddiIdentifier.registrationAuthorityIdentifier = authority
-            if version:
-                resource.identifier.ddiIdentifier.versionIdentifier = version
-            return resource.identifier.ddiIdentifier
-
-    @classmethod
-    def add_nonddi_identifier(cls, resource: model.CDIResource, value: str, type=None, clear=False):
-        if clear:
-            resource.identifier.nonDdiIdentifier = None
-        if cls.set_identifiers(resource, nonddi=value):
-            if type:
-                resource.identifier.nonDdiIdentifier[-1].type = type
-            return resource.identifier.nonDdiIdentifier[-1]
 
     @classmethod
     def set_uri(cls, resource: model.CDIResource, value: str):
-        if cls.set_identifiers(resource, uri=value):
-            # Crucial: Sync with resource.id field. 
-            # In RdfBaseModel, the 'id' field determines the RDF subject URI.
-            # CDI resources set rdf_auto_uuid=False, so failing to set this 
-            # would result in the resource being serialized as a blank node [].
-            resource.id = value
-            return resource.identifier.uri
-
-    @classmethod
-    def set_simple_name(cls, resource: model.CDIResource, value: str):
-        if hasattr(resource, 'name'):
-            instance = model.ObjectName(name=value)
-            resource.name = [instance]
-            return instance
-        return None
-
-    @classmethod
-    def set_simple_display_label(cls, resource: model.CDIResource, value: str, language: str = "en"):
-        if hasattr(resource, 'displayLabel') and value:
-             lang_string = model.LanguageString(content=value, language=language)
-             display_label = model.LabelForDisplay(languageSpecificString=[lang_string])
-             resource.displayLabel = [display_label]
-             return display_label
-        return None
+        if hasattr(resource, 'identifier'):
+            if resource.identifier is None:
+                resource.identifier = model.Identifier()
+            resource.identifier.uri = value
+            
+        # Crucial: Sync with resource.id field. 
+        # In RdfBaseModel, the 'id' field determines the RDF subject URI.
+        # CDI resources set rdf_auto_uuid=False, so failing to set this 
+        # would result in the resource being serialized as a blank node [].
+        resource.id = value
+        return value
 
     @classmethod
     def add_resources(cls, resource: model.CDIResource, target_resources: Any, property_name: str, clear: bool = False, exact_match: bool = True):
@@ -258,23 +198,12 @@ class CdiClassAssistant(CdiAssistant):
         It handles URI resolution from various input types (Assistant wrappers, raw 
         model objects, or strings/URIRefs) and ensures correct assignment based on 
         the target property's type (list vs. singular).
-
-        Args:
-            resource: The source CDI resource to which properties will be added.
-            target_resources: A single resource or a list of resources to add. 
-                Can be ClassAssistants, CDI model objects, strings, or URIRefs.
-            property_name: The name of the property (field) on the resource to populate.
-            clear: If True, existing values in a list property will be removed before adding new ones.
-            exact_match: If False, performs a prefix search for the property name if an 
-                exact match is not found (useful for DDI-CDI properties which often have 
-                complex prefixed names like 'isDefinedBy_RepresentedVariable').
-
-        Returns:
-            bool: True if the resources were successfully added, False otherwise.
         """
         target_property = property_name
         if not hasattr(resource, target_property):
             if not exact_match:
+                # Dir(resource) might be expensive, but needed for prefix search 
+                # (e.g. 'isDefinedBy' matching 'isDefinedBy_RepresentedVariable')
                 matches = [p for p in dir(resource) if p.startswith(property_name)]
                 if matches:
                     target_property = matches[0]
@@ -292,18 +221,16 @@ class CdiClassAssistant(CdiAssistant):
             if hasattr(r, 'get_uri') and callable(r.get_uri): uri = r.get_uri()
             elif hasattr(r, 'resource') and hasattr(r.resource, 'identifier') and r.resource.identifier: uri = r.resource.identifier.uri
             elif hasattr(r, 'identifier') and r.identifier: uri = r.identifier.uri
+            elif hasattr(r, 'id') and r.id: uri = str(r.id)
             elif isinstance(r, (str, URIRef)): uri = str(r)
+            
             if uri: uris.append(URIRef(uri))
                     
         # Determine if the target property is a list or a singular value in the model.
-        # This is critical for RDF serialization: assigning a list to a singular field 
-        # (like ValueDomain.takesValuesFrom) causes Pydantic to stringify the list 
-        # (e.g. "[URIRef(...)]"), which breaks the RDF graph serialization.
         field = resource.model_fields.get(target_property)
         is_list = False
         if field:
             origin = get_origin(field.annotation)
-            # Handle both list and Optional[list] (which is Union in some Python versions)
             if origin is list:
                 is_list = True
             elif origin is Union:
@@ -323,41 +250,122 @@ class CdiClassAssistant(CdiAssistant):
             if uris: 
                 setattr(resource, target_property, uris[0])
         return True
-    @classmethod
-    def add_data_structure(cls, resource: model.CDIResource, data_structure: Any):
-        return cls.add_resources(resource, data_structure, "has_DataStructure", exact_match=False)
-
-    @classmethod
-    def add_categories(cls, resource: model.CDIResource, category: Any):
-        return cls.add_resources(resource, category, "has_Category", exact_match=False)
-
-    @classmethod
-    def set_category(cls, resource: model.CDIResource, category: Any):
-        return cls.add_resources(resource, category, "denotes", exact_match=False)
-
-    @classmethod
-    def set_category_set(cls, resource: model.CDIResource, category_set: Any):
-        return cls.add_resources(resource, category_set, "has_CategorySet", exact_match=False)
-
-    @classmethod
-    def add_code(cls, resource: model.CDIResource, code: Any):
-        return cls.add_resources(resource, code, "has_Code", exact_match=False)
-
-    @classmethod
-    def add_dataset(cls, resource: model.CDIResource, dataset: Any):
-        return cls.add_resources(resource, dataset, "has_DataSet", exact_match=False)
-
-    @classmethod
-    def add_variable(cls, resource: model.CDIResource, variable: Any):
-        return cls.add_resources(resource, variable, "has_InstanceVariable", exact_match=False)
 
     @classmethod
     def add_to_rdf_graph(cls, resource: model.CDIResource, graph: Graph):
         """Helper to add the resource to an RDF graph."""
         return resource.to_rdf_graph(graph=graph)
 
+@automate_instance_methods(model.CDIClass)
+class CdiClassAssistant(CdiResourceAssistant):
+    """
+    General assistant for CDI Classes.
+    Methods defined here are available on all objects inheriting from CDIClass.
+    """
+    resource: Optional[model.CDIClass] = None
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        # Automatically bind methods of the new subclass to CDIClass
+        cls._bind_to_model(model.CDIClass)
+
     @classmethod
-    def factory(cls, target_cls: type[model.CDIResource], id_prefix=None, id_suffix=None, base_uri: str = "urn:ddi-cdi:", non_ddi_id=None, non_ddi_id_type=None, *args, **kwargs) -> "CdiClassAssistant":
+    def get_ddi_identifier_value(cls, resource: model.CDIClass) -> Optional[str]:
+        if getattr(resource, 'identifier', None) is not None:
+            if getattr(resource.identifier, 'ddiIdentifier', None) is not None: 
+                return resource.identifier.ddiIdentifier.dataIdentifier
+        return None
+
+    @classmethod
+    def set_identifiers(cls, resource: model.CDIClass, ddi: str = None, nonddi: str = None, uri: str = None):
+        if resource.identifier is None:
+            resource.identifier = model.Identifier()
+            
+        if ddi:
+            if resource.identifier.ddiIdentifier is None:
+                resource.identifier.ddiIdentifier = model.InternationalRegistrationDataIdentifier(
+                    dataIdentifier=ddi, 
+                    registrationAuthorityIdentifier="int.dataartifex", 
+                    versionIdentifier="1"
+                )
+            else:
+                resource.identifier.ddiIdentifier.dataIdentifier = ddi
+                
+        if nonddi:
+            if resource.identifier.nonDdiIdentifier is None:
+                resource.identifier.nonDdiIdentifier = list()
+            resource.identifier.nonDdiIdentifier.append(model.NonDdiIdentifier(value=nonddi, type="generic"))
+            
+        if uri:
+            cls.set_uri(resource, uri)
+            
+        return resource.identifier
+
+    @classmethod
+    def set_ddi_identifier(cls, resource: model.CDIClass, value: str, authority: str = None, version: str = None):
+        if cls.set_identifiers(resource, ddi=value):
+            if authority:
+                resource.identifier.ddiIdentifier.registrationAuthorityIdentifier = authority
+            if version:
+                resource.identifier.ddiIdentifier.versionIdentifier = version
+            return resource.identifier.ddiIdentifier
+
+    @classmethod
+    def add_nonddi_identifier(cls, resource: model.CDIClass, value: str, type=None, clear=False):
+        if clear:
+            resource.identifier.nonDdiIdentifier = None
+        if cls.set_identifiers(resource, nonddi=value):
+            if type:
+                resource.identifier.nonDdiIdentifier[-1].type = type
+            return resource.identifier.nonDdiIdentifier[-1]
+
+    @classmethod
+    def set_simple_name(cls, resource: model.CDIClass, value: str):
+        if hasattr(resource, 'name'):
+            instance = model.ObjectName(name=value)
+            resource.name = [instance]
+            return instance
+        return None
+
+    @classmethod
+    def set_simple_display_label(cls, resource: model.CDIClass, value: str, language: str = "en"):
+        if hasattr(resource, 'displayLabel') and value:
+             lang_string = model.LanguageString(content=value, language=language)
+             display_label = model.LabelForDisplay(languageSpecificString=[lang_string])
+             resource.displayLabel = [display_label]
+             return display_label
+        return None
+
+    @classmethod
+    def add_data_structure(cls, resource: model.CDIClass, data_structure: Any):
+        return cls.add_resources(resource, data_structure, "has_DataStructure", exact_match=False)
+
+    @classmethod
+    def add_categories(cls, resource: model.CDIClass, category: Any):
+        return cls.add_resources(resource, category, "has_Category", exact_match=False)
+
+    @classmethod
+    def set_category(cls, resource: model.CDIClass, category: Any):
+        return cls.add_resources(resource, category, "denotes", exact_match=False)
+
+    @classmethod
+    def set_category_set(cls, resource: model.CDIClass, category_set: Any):
+        return cls.add_resources(resource, category_set, "has_CategorySet", exact_match=False)
+
+    @classmethod
+    def add_code(cls, resource: model.CDIClass, code: Any):
+        return cls.add_resources(resource, code, "has_Code", exact_match=False)
+
+    @classmethod
+    def add_dataset(cls, resource: model.CDIClass, dataset: Any):
+        return cls.add_resources(resource, dataset, "has_DataSet", exact_match=False)
+
+    @classmethod
+    def add_variable(cls, resource: model.CDIClass, variable: Any):
+        return cls.add_resources(resource, variable, "has_InstanceVariable", exact_match=False)
+
+    @classmethod
+    def factory(cls, target_cls: type[model.CDIClass], id_prefix=None, id_suffix=None, base_uri: str = "urn:ddi-cdi:", non_ddi_id=None, non_ddi_id_type=None, *args, **kwargs) -> "CdiClassAssistant":
         if id_prefix is None:
             id_prefix = str(uuid.uuid4())
             
@@ -378,14 +386,41 @@ class CdiClassAssistant(CdiAssistant):
         return cls(resource=cdi_resource)
 
     @classmethod
-    def create(cls, target_cls: type[model.CDIResource], name: str = None, **kwargs) -> "CdiClassAssistant":
+    def create(cls, target_cls: type[model.CDIClass], name: str = None, **kwargs) -> "CdiClassAssistant":
         assistant = cls.factory(target_cls, **kwargs)
         if name:
             assistant.set_simple_name(name)
         return assistant
 
-# For backward compatibility
-CdiResourceAssistant = CdiClassAssistant
+@automate_instance_methods(model.CDIDataType)
+class CdiDataTypeAssistant(CdiResourceAssistant):
+    """
+    General assistant for CDI Data Types.
+    Methods defined here are available on all objects inheriting from CDIDataType.
+    """
+    resource: Optional[model.CDIDataType] = None
 
-class CdiDataTypeAssistant(CdiAssistant):
-    pass
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        # Automatically bind methods of the new subclass to CDIDataType
+        cls._bind_to_model(model.CDIDataType)
+
+    @classmethod
+    def factory(cls, target_cls: type[model.CDIDataType], id_prefix=None, id_suffix=None, base_uri: str = "urn:ddi-cdi:", *args, **kwargs) -> "CdiDataTypeAssistant":
+        """Factory for creating data types. Unlike classes, they don't have DDI identifiers."""
+        cdi_datatype = target_cls(*args, **kwargs)
+        
+        if id_prefix:
+            uid = f"{id_prefix}_{cdi_datatype.__class__.__name__}"
+            if id_suffix: uid += f"_{id_suffix}"
+            cls.set_uri(cdi_datatype, f"{base_uri}{uid}")
+            
+        return cls(resource=cdi_datatype)
+
+    @classmethod
+    def create(cls, target_cls: type[model.CDIDataType], **kwargs) -> "CdiDataTypeAssistant":
+        return cls.factory(target_cls, **kwargs)
+
+# For backward compatibility
+CdiResourceAssistantAlias = CdiClassAssistant  # If needed for extremely old code
+# Note: CdiResourceAssistant is now a real class for CDIResource-level methods.
