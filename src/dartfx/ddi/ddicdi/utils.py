@@ -106,7 +106,7 @@ def shacl_report_to_markdown(results_graph: Graph) -> str:
         return "\n".join(md)
 
     # Group results by Focus Node
-    nodes = {}
+    nodes: dict[str, list[Any]] = {}
     for res in results:
         focus_node = results_graph.value(res, SH.focusNode)
         node_str = str(focus_node)

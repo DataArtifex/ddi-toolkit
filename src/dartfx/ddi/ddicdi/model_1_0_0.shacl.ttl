@@ -50,7 +50,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -63,28 +63,28 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Activity-displayLabel;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#Activity-entityProduced> a sh:PropertyShape ;
     sh:path cdi:Activity-entityProduced;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Reference
-      
+
     ) ]];
 .
 <#Activity-entityUsed> a sh:PropertyShape ;
     sh:path cdi:Activity-entityUsed;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Reference
-      
+
     ) ]];
 .
 <#Activity-identifier> a sh:PropertyShape ;
     sh:path cdi:Activity-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -93,14 +93,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#Activity-standardModelMapping> a sh:PropertyShape ;
     sh:path cdi:Activity-standardModelMapping;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Reference
-      
+
     ) ]];
 .
 
@@ -108,7 +108,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Activity_has_Step;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Step
-      
+
     ) ]];
 .
 <#rev_Activity_has_Step> a sh:PropertyShape ;
@@ -126,7 +126,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:TemporalConstraints
         cdi:AllenIntervalAlgebra
         cdi:TemporalControlConstruct
-      
+
     ) ]];
 .
 <#rev_Activity_hasInternal_ControlLogic> a sh:PropertyShape ;
@@ -137,7 +137,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Activity
         cdi:Step
-      
+
     ) ]];
 .
 <#rev_Activity_hasSubActivity_Activity> a sh:PropertyShape ;
@@ -191,7 +191,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Agent-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -199,7 +199,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Agent-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -207,7 +207,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Agent-image;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:PrivateImage
-      
+
     ) ]];
 .
 <#Agent-purpose> a sh:PropertyShape ;
@@ -216,7 +216,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -261,7 +261,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AgentListing-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -270,7 +270,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#AgentListing-purpose> a sh:PropertyShape ;
@@ -279,7 +279,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -294,7 +294,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:ProcessingAgent
         cdi:Curator
         cdi:Service
-      
+
     ) ]];
 .
 <#rev_AgentListing_has_Agent> a sh:PropertyShape ;
@@ -304,7 +304,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AgentListing_has_AgentPosition;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:AgentPosition
-      
+
     ) ]];
 .
 <#rev_AgentListing_has_AgentPosition> a sh:PropertyShape ;
@@ -328,7 +328,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
 .
 <#rev_AgentListing_isDefinedBy_Concept> a sh:PropertyShape ;
@@ -344,7 +344,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:ProcessingAgent
         cdi:Curator
         cdi:Service
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -380,7 +380,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AgentPosition-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -401,7 +401,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:ProcessingAgent
         cdi:Curator
         cdi:Service
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -439,7 +439,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AgentRelationship-effectiveDates;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -447,7 +447,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AgentRelationship-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -455,7 +455,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AgentRelationship-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -470,7 +470,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:ProcessingAgent
         cdi:Curator
         cdi:Service
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -488,7 +488,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:ProcessingAgent
         cdi:Curator
         cdi:Service
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -532,7 +532,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AgentStructure-effectiveDates;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -540,7 +540,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AgentStructure-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -549,14 +549,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#AgentStructure-privacy> a sh:PropertyShape ;
     sh:path cdi:AgentStructure-privacy;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -566,7 +566,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -574,7 +574,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AgentStructure-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -582,7 +582,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AgentStructure-specification;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StructureSpecification
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -590,7 +590,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AgentStructure-topology;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -605,7 +605,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AgentStructure_has_AgentRelationship;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:AgentRelationship
-      
+
     ) ]];
 .
 <#rev_AgentStructure_has_AgentRelationship> a sh:PropertyShape ;
@@ -617,7 +617,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AgentStructure_structures_AgentListing;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:AgentListing
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -745,7 +745,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:SyntheticIdComponent
         cdi:VariableDescriptorComponent
         cdi:VariableValueComponent
-      
+
     ) ]];
 .
 <#rev_AttributeComponent_qualifies_DataStructureComponent> a sh:PropertyShape ;
@@ -784,7 +784,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AuthorizationSource-authorizationDate;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CombinedDate
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -792,7 +792,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AuthorizationSource-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -800,7 +800,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AuthorizationSource-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -810,7 +810,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -820,7 +820,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -830,7 +830,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -845,7 +845,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:ProcessingAgent
         cdi:Curator
         cdi:Service
-      
+
     ) ]];
 .
 <#rev_AuthorizationSource_has_Agent> a sh:PropertyShape ;
@@ -920,7 +920,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -954,7 +954,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CategoryPosition-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -969,7 +969,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CategoryPosition_indexes_Category;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Category
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -1011,7 +1011,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CategoryRelationStructure-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1020,7 +1020,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#CategoryRelationStructure-purpose> a sh:PropertyShape ;
@@ -1029,7 +1029,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1037,7 +1037,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CategoryRelationStructure-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1045,7 +1045,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CategoryRelationStructure-specification;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StructureSpecification
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1053,7 +1053,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CategoryRelationStructure-topology;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1068,7 +1068,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CategoryRelationStructure_has_CategoryRelationship;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CategoryRelationship
-      
+
     ) ]];
 .
 <#rev_CategoryRelationStructure_has_CategoryRelationship> a sh:PropertyShape ;
@@ -1080,7 +1080,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CategoryRelationStructure_structures_CategorySet;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CategorySet
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1117,7 +1117,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CategoryRelationship-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1125,7 +1125,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CategoryRelationship-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1134,7 +1134,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CategoryRelationship_hasSource_Category;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Category
-      
+
     ) ]];
 .
 <#rev_CategoryRelationship_hasSource_Category> a sh:PropertyShape ;
@@ -1144,7 +1144,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CategoryRelationship_hasTarget_Category;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Category
-      
+
     ) ]];
 .
 <#rev_CategoryRelationship_hasTarget_Category> a sh:PropertyShape ;
@@ -1198,7 +1198,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CategorySet_has_Category;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Category
-      
+
     ) ]];
 .
 <#rev_CategorySet_has_Category> a sh:PropertyShape ;
@@ -1208,7 +1208,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CategorySet_has_CategoryPosition;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CategoryPosition
-      
+
     ) ]];
 .
 <#rev_CategorySet_has_CategoryPosition> a sh:PropertyShape ;
@@ -1246,7 +1246,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CategoryStatistic-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1254,14 +1254,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CategoryStatistic-statistic;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Statistic
-      
+
     ) ]];
 .
 <#CategoryStatistic-typeOfCategoryStatistic> a sh:PropertyShape ;
     sh:path cdi:CategoryStatistic-typeOfCategoryStatistic;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1272,7 +1272,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InstanceVariable
         cdi:DescriptorVariable
         cdi:ReferenceVariable
-      
+
     ) ]];
     sh:minCount 1;
 .
@@ -1283,7 +1283,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CategoryStatistic_for_Category;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Category
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1322,7 +1322,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationFamily-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1330,7 +1330,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationFamily-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1339,7 +1339,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#ClassificationFamily-purpose> a sh:PropertyShape ;
@@ -1348,7 +1348,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1369,7 +1369,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
 .
 <#rev_ClassificationFamily_isDefinedBy_Concept> a sh:PropertyShape ;
@@ -1379,7 +1379,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationFamily_groups_ClassificationSeries;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ClassificationSeries
-      
+
     ) ]];
 .
 <#rev_ClassificationFamily_groups_ClassificationSeries> a sh:PropertyShape ;
@@ -1390,7 +1390,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationFamily_uses_ClassificationIndex;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ClassificationIndex
-      
+
     ) ]];
 .
 <#rev_ClassificationFamily_uses_ClassificationIndex> a sh:PropertyShape ;
@@ -1447,7 +1447,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationIndex-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1455,7 +1455,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationIndex-codingInstruction;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CommandCode
-      
+
     ) ]];
 .
 <#ClassificationIndex-corrections> a sh:PropertyShape ;
@@ -1464,14 +1464,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#ClassificationIndex-identifier> a sh:PropertyShape ;
     sh:path cdi:ClassificationIndex-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1480,7 +1480,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#ClassificationIndex-purpose> a sh:PropertyShape ;
@@ -1489,7 +1489,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1497,7 +1497,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationIndex-releaseDate;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CombinedDate
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1512,7 +1512,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:ProcessingAgent
         cdi:Curator
         cdi:Service
-      
+
     ) ]];
 .
 <#rev_ClassificationIndex_hasContact_Agent> a sh:PropertyShape ;
@@ -1528,7 +1528,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:ProcessingAgent
         cdi:Curator
         cdi:Service
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1551,7 +1551,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
 .
 <#rev_ClassificationIndex_isDefinedBy_Concept> a sh:PropertyShape ;
@@ -1561,7 +1561,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationIndex_has_ClassificationIndexEntry;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ClassificationIndexEntry
-      
+
     ) ]];
 .
 <#rev_ClassificationIndex_has_ClassificationIndexEntry> a sh:PropertyShape ;
@@ -1571,7 +1571,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationIndex_has_ClassificationIndexEntryPosition;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ClassificationIndexEntryPosition
-      
+
     ) ]];
 .
 <#rev_ClassificationIndex_has_ClassificationIndexEntryPosition> a sh:PropertyShape ;
@@ -1611,7 +1611,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationIndexEntry-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1619,7 +1619,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationIndexEntry-codingInstruction;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CommandCode
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1629,7 +1629,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1637,7 +1637,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationIndexEntry-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1645,7 +1645,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationIndexEntry-validDates;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1679,7 +1679,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationIndexEntryPosition-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1694,7 +1694,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationIndexEntryPosition_indexes_ClassificationIndexEntry;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ClassificationIndexEntry
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -1748,7 +1748,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1758,7 +1758,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1768,7 +1768,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#ClassificationItem-futureNotes> a sh:PropertyShape ;
@@ -1777,14 +1777,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#ClassificationItem-identifier> a sh:PropertyShape ;
     sh:path cdi:ClassificationItem-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1803,14 +1803,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#ClassificationItem-validDates> a sh:PropertyShape ;
     sh:path cdi:ClassificationItem-validDates;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1819,7 +1819,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationItem_denotes_Category;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Category
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -1831,7 +1831,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationItem_uses_Notation;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Notation
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -1843,7 +1843,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationItem_excludes_ClassificationItem;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ClassificationItem
-      
+
     ) ]];
 .
 <#rev_ClassificationItem_excludes_ClassificationItem> a sh:PropertyShape ;
@@ -1853,7 +1853,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationItem_hasRulingBy_AuthorizationSource;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:AuthorizationSource
-      
+
     ) ]];
 .
 <#rev_ClassificationItem_hasRulingBy_AuthorizationSource> a sh:PropertyShape ;
@@ -1888,7 +1888,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationItemPosition-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1903,7 +1903,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationItemPosition_indexes_ClassificationItem;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ClassificationItem
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1940,7 +1940,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationItemRelationship-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1948,7 +1948,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationItemRelationship-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -1957,7 +1957,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationItemRelationship_hasSource_ClassificationItem;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ClassificationItem
-      
+
     ) ]];
 .
 <#rev_ClassificationItemRelationship_hasSource_ClassificationItem> a sh:PropertyShape ;
@@ -1967,7 +1967,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationItemRelationship_hasTarget_ClassificationItem;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ClassificationItem
-      
+
     ) ]];
 .
 <#rev_ClassificationItemRelationship_hasTarget_ClassificationItem> a sh:PropertyShape ;
@@ -2008,14 +2008,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationItemStructure-displayLabel;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#ClassificationItemStructure-identifier> a sh:PropertyShape ;
     sh:path cdi:ClassificationItemStructure-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2024,7 +2024,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#ClassificationItemStructure-purpose> a sh:PropertyShape ;
@@ -2033,7 +2033,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2041,7 +2041,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationItemStructure-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2049,7 +2049,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationItemStructure-specification;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StructureSpecification
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2057,7 +2057,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationItemStructure-topology;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2072,7 +2072,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationItemStructure_has_ClassificationItemRelationship;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ClassificationItemRelationship
-      
+
     ) ]];
 .
 <#rev_ClassificationItemStructure_has_ClassificationItemRelationship> a sh:PropertyShape ;
@@ -2084,7 +2084,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationItemStructure_structures_StatisticalClassification;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StatisticalClassification
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2120,7 +2120,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationPosition-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2135,7 +2135,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationPosition_indexes_StatisticalClassification;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StatisticalClassification
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2188,7 +2188,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationSeries-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2196,7 +2196,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationSeries-context;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2204,7 +2204,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationSeries-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2212,7 +2212,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationSeries-keyword;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
 .
 <#ClassificationSeries-name> a sh:PropertyShape ;
@@ -2220,14 +2220,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#ClassificationSeries-objectsOrUnitsClassified> a sh:PropertyShape ;
     sh:path cdi:ClassificationSeries-objectsOrUnitsClassified;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2237,7 +2237,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2245,7 +2245,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationSeries-subject;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
 .
 
@@ -2259,7 +2259,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:ProcessingAgent
         cdi:Curator
         cdi:Service
-      
+
     ) ]];
 .
 <#rev_ClassificationSeries_isOwnedBy_Agent> a sh:PropertyShape ;
@@ -2281,7 +2281,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
 .
 <#rev_ClassificationSeries_isDefinedBy_Concept> a sh:PropertyShape ;
@@ -2291,7 +2291,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationSeries_has_ClassificationPosition;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ClassificationPosition
-      
+
     ) ]];
 .
 <#rev_ClassificationSeries_has_ClassificationPosition> a sh:PropertyShape ;
@@ -2303,7 +2303,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationSeries_has_StatisticalClassification;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StatisticalClassification
-      
+
     ) ]];
 .
 <#rev_ClassificationSeries_has_StatisticalClassification> a sh:PropertyShape ;
@@ -2344,7 +2344,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationSeriesStructure-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2353,7 +2353,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#ClassificationSeriesStructure-purpose> a sh:PropertyShape ;
@@ -2362,7 +2362,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2370,7 +2370,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationSeriesStructure-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2378,7 +2378,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationSeriesStructure-specification;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StructureSpecification
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2386,7 +2386,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationSeriesStructure-topology;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2401,7 +2401,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationSeriesStructure_has_StatisticalClassificationRelationship;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StatisticalClassificationRelationship
-      
+
     ) ]];
 .
 <#rev_ClassificationSeriesStructure_has_StatisticalClassificationRelationship> a sh:PropertyShape ;
@@ -2413,7 +2413,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ClassificationSeriesStructure_structures_ClassificationSeries;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ClassificationSeries
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2452,7 +2452,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Code_identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2461,7 +2461,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Code_denotes_Category;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Category
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -2473,7 +2473,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Code_uses_Notation;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Notation
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -2533,7 +2533,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CodeList_has_Code;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Code
-      
+
     ) ]];
 .
 <#rev_CodeList_has_Code> a sh:PropertyShape ;
@@ -2543,7 +2543,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CodeList_has_CodePosition;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CodePosition
-      
+
     ) ]];
 .
 <#rev_CodeList_has_CodePosition> a sh:PropertyShape ;
@@ -2585,7 +2585,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CodeListStructure-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2594,7 +2594,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#CodeListStructure-purpose> a sh:PropertyShape ;
@@ -2603,7 +2603,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2611,7 +2611,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CodeListStructure-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2619,7 +2619,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CodeListStructure-specification;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StructureSpecification
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2627,7 +2627,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CodeListStructure-topology;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -2643,7 +2643,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CodeListStructure_has_CodeRelationship;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CodeRelationship
-      
+
     ) ]];
 .
 <#rev_CodeListStructure_has_CodeRelationship> a sh:PropertyShape ;
@@ -2655,7 +2655,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CodeListStructure_structures_CodeList;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CodeList
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2692,7 +2692,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CodePosition-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2707,7 +2707,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CodePosition_indexes_Code;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Code
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2744,7 +2744,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CodeRelationship-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2752,7 +2752,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CodeRelationship-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2761,7 +2761,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CodeRelationship_hasSource_Code;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Code
-      
+
     ) ]];
 .
 <#rev_CodeRelationship_hasSource_Code> a sh:PropertyShape ;
@@ -2771,7 +2771,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CodeRelationship_hasTarget_Code;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Code
-      
+
     ) ]];
 .
 <#rev_CodeRelationship_hasTarget_Code> a sh:PropertyShape ;
@@ -2806,7 +2806,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ComponentPosition_identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2835,7 +2835,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:SyntheticIdComponent
         cdi:VariableDescriptorComponent
         cdi:VariableValueComponent
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2905,7 +2905,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Concept-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2915,7 +2915,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2923,14 +2923,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Concept_displayLabel;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#Concept-externalDefinition> a sh:PropertyShape ;
     sh:path cdi:Concept-externalDefinition;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Reference
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2938,7 +2938,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Concept_identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -2947,7 +2947,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 
@@ -2967,7 +2967,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
 .
 <#rev_Concept_uses_Concept> a sh:PropertyShape ;
@@ -3007,7 +3007,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptMap-correspondence;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CorrespondenceDefinition
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3015,7 +3015,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptMap-displayLabel;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3023,7 +3023,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptMap-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3033,7 +3033,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3041,7 +3041,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptMap-validDates;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3062,7 +3062,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
     sh:minCount 1;
 .
@@ -3085,7 +3085,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
     sh:minCount 1;
 .
@@ -3122,7 +3122,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptRelationship-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3130,7 +3130,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptRelationship-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3151,7 +3151,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -3175,7 +3175,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -3217,7 +3217,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptStructure-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3226,7 +3226,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#ConceptStructure-purpose> a sh:PropertyShape ;
@@ -3235,7 +3235,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3243,7 +3243,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptStructure-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3251,7 +3251,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptStructure-specification;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StructureSpecification
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3259,7 +3259,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptStructure-topology;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3274,7 +3274,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptStructure_has_ConceptRelationship;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ConceptRelationship
-      
+
     ) ]];
 .
 <#rev_ConceptStructure_has_ConceptRelationship> a sh:PropertyShape ;
@@ -3287,7 +3287,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ConceptSystem
         cdi:CategorySet
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3337,7 +3337,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptSystem-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3345,7 +3345,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptSystem-externalDefinition;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Reference
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3353,7 +3353,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptSystem_identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3362,7 +3362,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#ConceptSystem-purpose> a sh:PropertyShape ;
@@ -3371,7 +3371,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3392,7 +3392,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
 .
 <#rev_ConceptSystem_has_Concept> a sh:PropertyShape ;
@@ -3414,7 +3414,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
 .
 <#rev_ConceptSystem_isDefinedBy_Concept> a sh:PropertyShape ;
@@ -3452,7 +3452,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptSystemCorrespondence-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3460,14 +3460,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptSystemCorrespondence-displayLabel;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#ConceptSystemCorrespondence-identifier> a sh:PropertyShape ;
     sh:path cdi:ConceptSystemCorrespondence-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3477,7 +3477,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3487,7 +3487,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3496,7 +3496,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptSystemCorrespondence_has_ConceptMap;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ConceptMap
-      
+
     ) ]];
 .
 <#rev_ConceptSystemCorrespondence_has_ConceptMap> a sh:PropertyShape ;
@@ -3508,7 +3508,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ConceptSystem
         cdi:CategorySet
-      
+
     ) ]];
     sh:minCount 2;
 .
@@ -3548,7 +3548,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptualDomain-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3556,14 +3556,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptualDomain-displayLabel;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#ConceptualDomain-identifier> a sh:PropertyShape ;
     sh:path cdi:ConceptualDomain-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3572,7 +3572,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptualDomain_isDescribedBy_ValueAndConceptDescription;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ValueAndConceptDescription
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3584,7 +3584,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ConceptSystem
         cdi:CategorySet
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3657,7 +3657,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:ConceptualDomain
         cdi:SentinelConceptualDomain
         cdi:SubstantiveConceptualDomain
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -3738,7 +3738,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3746,7 +3746,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptualVariable-unitOfMeasureKind;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3757,7 +3757,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3768,7 +3768,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptualVariable_takesSentinelConceptsFrom_SentinelConceptualDomain;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:SentinelConceptualDomain
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3779,7 +3779,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConceptualVariable_takesSubstantiveConceptsFrom_SubstantiveConceptualDomain;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:SubstantiveConceptualDomain
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3839,7 +3839,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ConditionalControlLogic-condition;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CommandCode
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -3941,14 +3941,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ControlLogic-displayLabel;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#ControlLogic-identifier> a sh:PropertyShape ;
     sh:path cdi:ControlLogic-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3957,14 +3957,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#ControlLogic-workflow> a sh:PropertyShape ;
     sh:path cdi:ControlLogic-workflow;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -3973,7 +3973,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ControlLogic_has_InformationFlowDefinition;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:InformationFlowDefinition
-      
+
     ) ]];
 .
 <#rev_ControlLogic_has_InformationFlowDefinition> a sh:PropertyShape ;
@@ -3991,7 +3991,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:TemporalConstraints
         cdi:AllenIntervalAlgebra
         cdi:TemporalControlConstruct
-      
+
     ) ]];
 .
 <#rev_ControlLogic_hasSubControlLogic_ControlLogic> a sh:PropertyShape ;
@@ -4004,7 +4004,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:ProcessingAgent
         cdi:Curator
         cdi:Service
-      
+
     ) ]];
 .
 <#rev_ControlLogic_informs_ProcessingAgent> a sh:PropertyShape ;
@@ -4015,7 +4015,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Activity
         cdi:Step
-      
+
     ) ]];
     sh:minCount 1;
 .
@@ -4057,7 +4057,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CorrespondenceTable-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4065,7 +4065,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CorrespondenceTable-effectiveDates;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4073,7 +4073,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CorrespondenceTable-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4088,7 +4088,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:ProcessingAgent
         cdi:Curator
         cdi:Service
-      
+
     ) ]];
 .
 <#rev_CorrespondenceTable_hasContact_Agent> a sh:PropertyShape ;
@@ -4104,7 +4104,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:ProcessingAgent
         cdi:Curator
         cdi:Service
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4121,7 +4121,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:ProcessingAgent
         cdi:Curator
         cdi:Service
-      
+
     ) ]];
 .
 <#rev_CorrespondenceTable_isOwnedBy_Agent> a sh:PropertyShape ;
@@ -4131,7 +4131,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CorrespondenceTable_has_ConceptMap;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ConceptMap
-      
+
     ) ]];
 .
 <#rev_CorrespondenceTable_has_ConceptMap> a sh:PropertyShape ;
@@ -4142,7 +4142,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CorrespondenceTable_hasSource_Level;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Level
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4153,7 +4153,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CorrespondenceTable_hasTarget_Level;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Level
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4164,7 +4164,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CorrespondenceTable_mapsTo_StatisticalClassification;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StatisticalClassification
-      
+
     ) ]];
     sh:minCount 2;
 .
@@ -4264,7 +4264,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataPoint-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4272,7 +4272,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataPoint-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4283,7 +4283,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InstanceVariable
         cdi:DescriptorVariable
         cdi:ReferenceVariable
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -4309,7 +4309,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:SyntheticIdComponent
         cdi:VariableDescriptorComponent
         cdi:VariableValueComponent
-      
+
     ) ]];
 .
 <#rev_DataPoint_correspondsTo_DataStructureComponent> a sh:PropertyShape ;
@@ -4344,7 +4344,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataPointPosition-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4359,7 +4359,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataPointPosition_indexes_DataPoint;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DataPoint
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4396,7 +4396,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataPointRelationship-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4404,7 +4404,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataPointRelationship-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4413,7 +4413,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataPointRelationship_hasSource_DataPoint;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DataPoint
-      
+
     ) ]];
 .
 <#rev_DataPointRelationship_hasSource_DataPoint> a sh:PropertyShape ;
@@ -4423,7 +4423,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataPointRelationship_hasTarget_DataPoint;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DataPoint
-      
+
     ) ]];
 .
 <#rev_DataPointRelationship_hasTarget_DataPoint> a sh:PropertyShape ;
@@ -4465,7 +4465,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataSet-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4473,7 +4473,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataSet_identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4482,7 +4482,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataSet_has_DataPoint;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DataPoint
-      
+
     ) ]];
 .
 <#rev_DataSet_has_DataPoint> a sh:PropertyShape ;
@@ -4498,7 +4498,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InstanceKey
         cdi:LongKey
         cdi:WideKey
-      
+
     ) ]];
 .
 <#rev_DataSet_has_Key> a sh:PropertyShape ;
@@ -4514,7 +4514,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:KeyValueStructure
         cdi:LongDataStructure
         cdi:WideDataStructure
-      
+
     ) ]];
 .
 <#rev_DataSet_isStructuredBy_DataStructure> a sh:PropertyShape ;
@@ -4562,7 +4562,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4576,7 +4576,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataStore-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4589,7 +4589,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataStore-dataStoreType;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4597,7 +4597,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataStore-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4606,7 +4606,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#DataStore-purpose> a sh:PropertyShape ;
@@ -4615,7 +4615,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4641,7 +4641,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
 .
 <#rev_DataStore_isDefinedBy_Concept> a sh:PropertyShape ;
@@ -4651,7 +4651,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataStore_has_LogicalRecord;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LogicalRecord
-      
+
     ) ]];
 .
 <#rev_DataStore_has_LogicalRecord> a sh:PropertyShape ;
@@ -4661,7 +4661,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataStore_has_LogicalRecordPosition;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LogicalRecordPosition
-      
+
     ) ]];
 .
 <#rev_DataStore_has_LogicalRecordPosition> a sh:PropertyShape ;
@@ -4673,7 +4673,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataStore_has_RecordRelation;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:RecordRelation
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4734,7 +4734,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataStructure_has_ComponentPosition;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ComponentPosition
-      
+
     ) ]];
 .
 <#rev_DataStructure_has_ComponentPosition> a sh:PropertyShape ;
@@ -4760,7 +4760,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:SyntheticIdComponent
         cdi:VariableDescriptorComponent
         cdi:VariableValueComponent
-      
+
     ) ]];
 .
 <#rev_DataStructure_has_DataStructureComponent> a sh:PropertyShape ;
@@ -4771,7 +4771,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataStructure_has_ForeignKey;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ForeignKey
-      
+
     ) ]];
 .
 <#rev_DataStructure_has_ForeignKey> a sh:PropertyShape ;
@@ -4783,7 +4783,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataStructure_has_PrimaryKey;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:PrimaryKey
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4842,7 +4842,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataStructureComponent_identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4850,7 +4850,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DataStructureComponent-semantic;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:PairedControlledVocabularyEntry
-      
+
     ) ]];
 .
 <#DataStructureComponent-specialization> a sh:PropertyShape ;
@@ -4859,7 +4859,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:SpecializationRole
         cdi:GeoRole
         cdi:TimeRole
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4871,7 +4871,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InstanceVariable
         cdi:DescriptorVariable
         cdi:ReferenceVariable
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4910,7 +4910,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Datum-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4918,7 +4918,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Datum-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -4929,7 +4929,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InstanceVariable
         cdi:DescriptorVariable
         cdi:ReferenceVariable
-      
+
     ) ]];
     sh:minCount 1;
 .
@@ -4942,7 +4942,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:ConceptualValue
         cdi:DimensionalKeyDefinitionMember
         cdi:KeyDefinitionMember
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -4961,7 +4961,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:MainKeyMember
         cdi:WideKeyMember
         cdi:ReferenceValue
-      
+
     ) ]];
     sh:minCount 1;
 .
@@ -4972,7 +4972,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Datum_uses_Notation;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Notation
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -5032,7 +5032,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Descriptor_hasValueFrom_DescriptorValueDomain;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DescriptorValueDomain
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -5044,7 +5044,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Descriptor_identifies_ReferenceVariable;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ReferenceVariable
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -5056,7 +5056,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Descriptor_refersTo_ReferenceValue;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ReferenceValue
-      
+
     ) ]];
     sh:minCount 1;
 .
@@ -5224,7 +5224,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DescriptorVariable_takesSubstantiveValuesFrom_DescriptorValueDomain;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DescriptorValueDomain
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -5329,7 +5329,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:SentinelValueDomain
         cdi:SubstantiveValueDomain
         cdi:DescriptorValueDomain
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -5365,7 +5365,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DimensionGroup-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -5374,7 +5374,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 
@@ -5382,7 +5382,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DimensionGroup_has_DimensionComponent;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DimensionComponent
-      
+
     ) ]];
     sh:minCount 1;
 .
@@ -5431,7 +5431,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 
@@ -5439,7 +5439,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DimensionalDataSet_represents_ScopedMeasure;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ScopedMeasure
-      
+
     ) ]];
 .
 <#rev_DimensionalDataSet_represents_ScopedMeasure> a sh:PropertyShape ;
@@ -5503,7 +5503,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DimensionalDataStructure_uses_DimensionGroup;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DimensionGroup
-      
+
     ) ]];
 .
 <#rev_DimensionalDataStructure_uses_DimensionGroup> a sh:PropertyShape ;
@@ -5650,7 +5650,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DimensionalKeyDefinitionMember_isRepresentedBy_DimensionalKeyMember;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DimensionalKeyMember
-      
+
     ) ]];
     sh:minCount 1;
 .
@@ -5710,7 +5710,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DimensionalKeyMember_hasValueFrom_CodeList;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CodeList
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -5753,7 +5753,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:EnumerationDomain_identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -5762,7 +5762,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#EnumerationDomain-purpose> a sh:PropertyShape ;
@@ -5771,7 +5771,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -5792,7 +5792,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
 .
 <#rev_EnumerationDomain_isDefinedBy_Concept> a sh:PropertyShape ;
@@ -5802,7 +5802,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:EnumerationDomain_references_CategorySet;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CategorySet
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -5813,7 +5813,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:EnumerationDomain_uses_LevelStructure;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LevelStructure
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -5848,7 +5848,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ForeignKey-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -5857,7 +5857,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ForeignKey_isComposedOf_ForeignKeyComponent;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ForeignKeyComponent
-      
+
     ) ]];
     sh:minCount 1;
 .
@@ -5895,7 +5895,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ForeignKeyComponent-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -5918,7 +5918,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:SyntheticIdComponent
         cdi:VariableDescriptorComponent
         cdi:VariableValueComponent
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -5931,7 +5931,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ForeignKeyComponent_references_PrimaryKeyComponent;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:PrimaryKeyComponent
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -6029,7 +6029,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Individual-contactInformation;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ContactInformation
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6037,7 +6037,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Individual-individualName;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:IndividualName
-      
+
     ) ]];
 .
 
@@ -6070,7 +6070,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:InformationFlowDefinition-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6079,7 +6079,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:InformationFlowDefinition_from_Parameter;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Parameter
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6090,7 +6090,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:InformationFlowDefinition_to_Parameter;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Parameter
-      
+
     ) ]];
 .
 <#rev_InformationFlowDefinition_to_Parameter> a sh:PropertyShape ;
@@ -6145,7 +6145,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:MainKeyMember
         cdi:WideKeyMember
         cdi:ReferenceValue
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6156,7 +6156,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:InstanceKey_refersTo_ReferenceValue;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ReferenceValue
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -6204,7 +6204,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:InstanceValue-content;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:TypedString
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6212,7 +6212,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:InstanceValue-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6231,7 +6231,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:SentinelValueDomain
         cdi:SubstantiveValueDomain
         cdi:DescriptorValueDomain
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -6243,7 +6243,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:InstanceValue_isStoredIn_DataPoint;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DataPoint
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6257,7 +6257,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:ConceptualValue
         cdi:DimensionalKeyDefinitionMember
         cdi:KeyDefinitionMember
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6367,7 +6367,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:InstanceVariable-physicalDataType;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6375,7 +6375,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:InstanceVariable-platformType;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6383,7 +6383,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:InstanceVariable-source;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Reference
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6391,7 +6391,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:InstanceVariable-variableFunction;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
 .
 
@@ -6400,7 +6400,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:PhysicalSegmentLayout
         cdi:UnitSegmentLayout
-      
+
     ) ]];
 .
 <#rev_InstanceVariable_has_PhysicalSegmentLayout> a sh:PropertyShape ;
@@ -6410,7 +6410,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:InstanceVariable_has_ValueMapping;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ValueMapping
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6456,7 +6456,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:InstanceVariableMap-correspondence;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CorrespondenceDefinition
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -6465,7 +6465,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:InstanceVariableMap-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6482,7 +6482,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InstanceVariable
         cdi:DescriptorVariable
         cdi:ReferenceVariable
-      
+
     ) ]];
     sh:minCount 1;
 .
@@ -6495,7 +6495,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InstanceVariable
         cdi:DescriptorVariable
         cdi:ReferenceVariable
-      
+
     ) ]];
 .
 <#rev_InstanceVariableMap_hasTarget_InstanceVariable> a sh:PropertyShape ;
@@ -6537,7 +6537,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Key-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6546,7 +6546,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Key_correspondsTo_Unit;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Unit
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6558,7 +6558,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6574,7 +6574,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:LongMainKeyMember
         cdi:MainKeyMember
         cdi:WideKeyMember
-      
+
     ) ]];
 .
 <#rev_Key_has_KeyMember> a sh:PropertyShape ;
@@ -6585,7 +6585,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Key_identifies_DataPoint;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DataPoint
-      
+
     ) ]];
     sh:minCount 1;
 .
@@ -6598,7 +6598,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:KeyDefinition
         cdi:DimensionalKeyDefinition
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6637,7 +6637,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:KeyDefinition-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6646,7 +6646,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:KeyDefinition_correspondsTo_Unit;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Unit
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6658,7 +6658,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6669,7 +6669,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:KeyDefinition_has_KeyDefinitionMember;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:KeyDefinitionMember
-      
+
     ) ]];
 .
 <#rev_KeyDefinition_has_KeyDefinitionMember> a sh:PropertyShape ;
@@ -6804,7 +6804,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:SyntheticIdComponent
         cdi:VariableDescriptorComponent
         cdi:VariableValueComponent
-      
+
     ) ]];
 .
 <#rev_KeyMember_isBasedOn_DataStructureComponent> a sh:PropertyShape ;
@@ -6932,14 +6932,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Level-displayLabel;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#Level-identifier> a sh:PropertyShape ;
     sh:path cdi:Level-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6966,7 +6966,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -6977,7 +6977,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Level_groups_ClassificationItem;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ClassificationItem
-      
+
     ) ]];
 .
 <#rev_Level_groups_ClassificationItem> a sh:PropertyShape ;
@@ -7016,7 +7016,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LevelStructure-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7024,7 +7024,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LevelStructure-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7033,7 +7033,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#LevelStructure-usage> a sh:PropertyShape ;
@@ -7042,7 +7042,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7050,7 +7050,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LevelStructure-validDateRange;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7059,7 +7059,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LevelStructure_has_Level;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Level
-      
+
     ) ]];
 .
 <#rev_LevelStructure_has_Level> a sh:PropertyShape ;
@@ -7101,7 +7101,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LogicalRecord_identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7112,7 +7112,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InstanceVariable
         cdi:DescriptorVariable
         cdi:ReferenceVariable
-      
+
     ) ]];
 .
 <#rev_LogicalRecord_has_InstanceVariable> a sh:PropertyShape ;
@@ -7134,7 +7134,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
 .
 <#rev_LogicalRecord_isDefinedBy_Concept> a sh:PropertyShape ;
@@ -7148,7 +7148,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:KeyValueDataStore
         cdi:LongDataSet
         cdi:WideDataSet
-      
+
     ) ]];
 .
 <#rev_LogicalRecord_organizes_DataSet> a sh:PropertyShape ;
@@ -7183,7 +7183,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LogicalRecordPosition-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7198,7 +7198,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LogicalRecordPosition_indexes_LogicalRecord;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LogicalRecord
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -7240,7 +7240,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LogicalRecordRelationStructure-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7249,7 +7249,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#LogicalRecordRelationStructure-purpose> a sh:PropertyShape ;
@@ -7258,7 +7258,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7266,7 +7266,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LogicalRecordRelationStructure-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7274,7 +7274,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LogicalRecordRelationStructure-specification;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StructureSpecification
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7282,7 +7282,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LogicalRecordRelationStructure-topology;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7297,7 +7297,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LogicalRecordRelationStructure_has_LogicalRecordRelationship;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LogicalRecordRelationship
-      
+
     ) ]];
 .
 <#rev_LogicalRecordRelationStructure_has_LogicalRecordRelationship> a sh:PropertyShape ;
@@ -7309,7 +7309,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LogicalRecordRelationStructure_structures_DataStore;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DataStore
-      
+
     ) ]];
 .
 <#rev_LogicalRecordRelationStructure_structures_DataStore> a sh:PropertyShape ;
@@ -7345,7 +7345,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LogicalRecordRelationship-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7353,7 +7353,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LogicalRecordRelationship-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7362,7 +7362,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LogicalRecordRelationship_hasSource_LogicalRecord;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LogicalRecord
-      
+
     ) ]];
 .
 <#rev_LogicalRecordRelationship_hasSource_LogicalRecord> a sh:PropertyShape ;
@@ -7372,7 +7372,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LogicalRecordRelationship_hasTarget_LogicalRecord;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LogicalRecord
-      
+
     ) ]];
 .
 <#rev_LogicalRecordRelationship_hasTarget_LogicalRecord> a sh:PropertyShape ;
@@ -7603,7 +7603,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Machine-accessLocation;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:AccessLocation
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7611,14 +7611,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Machine-function;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
 .
 <#Machine-machineInterface> a sh:PropertyShape ;
     sh:path cdi:Machine-machineInterface;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
 .
 <#Machine-name> a sh:PropertyShape ;
@@ -7626,14 +7626,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#Machine-ownerOperatorContact> a sh:PropertyShape ;
     sh:path cdi:Machine-ownerOperatorContact;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ContactInformation
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7641,7 +7641,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Machine-typeOfMachine;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7698,7 +7698,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:SubstantiveValueDomain
         cdi:DescriptorValueDomain
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7752,7 +7752,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 
@@ -7832,7 +7832,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Notation_content;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:TypedString
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7840,7 +7840,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Notation_identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7855,7 +7855,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Notation_represents_Category;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Category
-      
+
     ) ]];
 .
 <#rev_Notation_represents_Category> a sh:PropertyShape ;
@@ -7913,7 +7913,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Organization-contactInformation;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ContactInformation
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7921,7 +7921,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Organization-organizationName;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:OrganizationName
-      
+
     ) ]];
     sh:minCount 1;
 .
@@ -7958,14 +7958,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Parameter-entityBound;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Reference
-      
+
     ) ]];
 .
 <#Parameter-identifier> a sh:PropertyShape ;
     sh:path cdi:Parameter-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -7974,7 +7974,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 
@@ -8024,7 +8024,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalDataSet-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8032,7 +8032,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalDataSet-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8041,7 +8041,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8056,7 +8056,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8071,7 +8071,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8082,7 +8082,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InstanceVariable
         cdi:DescriptorVariable
         cdi:ReferenceVariable
-      
+
     ) ]];
 .
 <#rev_PhysicalDataSet_has_InstanceVariable> a sh:PropertyShape ;
@@ -8104,7 +8104,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
 .
 <#rev_PhysicalDataSet_isDefinedBy_Concept> a sh:PropertyShape ;
@@ -8118,7 +8118,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:KeyValueDataStore
         cdi:LongDataSet
         cdi:WideDataSet
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8129,7 +8129,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalDataSet_formats_DataStore;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DataStore
-      
+
     ) ]];
 .
 <#rev_PhysicalDataSet_formats_DataStore> a sh:PropertyShape ;
@@ -8139,7 +8139,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalDataSet_has_PhysicalRecordSegment;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:PhysicalRecordSegment
-      
+
     ) ]];
 .
 <#rev_PhysicalDataSet_has_PhysicalRecordSegment> a sh:PropertyShape ;
@@ -8149,7 +8149,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalDataSet_has_PhysicalRecordSegmentPosition;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:PhysicalRecordSegmentPosition
-      
+
     ) ]];
 .
 <#rev_PhysicalDataSet_has_PhysicalRecordSegmentPosition> a sh:PropertyShape ;
@@ -8192,7 +8192,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalDataSetStructure-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8201,7 +8201,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8211,7 +8211,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8219,7 +8219,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalDataSetStructure-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8227,7 +8227,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalDataSetStructure-specification;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StructureSpecification
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8235,7 +8235,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalDataSetStructure-topology;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8254,7 +8254,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:KeyValueStructure
         cdi:LongDataStructure
         cdi:WideDataStructure
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8265,7 +8265,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalDataSetStructure_has_PhysicalRecordSegmentRelationship;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:PhysicalRecordSegmentRelationship
-      
+
     ) ]];
 .
 <#rev_PhysicalDataSetStructure_has_PhysicalRecordSegmentRelationship> a sh:PropertyShape ;
@@ -8277,7 +8277,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalDataSetStructure_structures_PhysicalDataSet;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:PhysicalDataSet
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8321,7 +8321,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8329,7 +8329,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalLayoutRelationStructure-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8338,7 +8338,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#PhysicalLayoutRelationStructure-purpose> a sh:PropertyShape ;
@@ -8347,7 +8347,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8355,7 +8355,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalLayoutRelationStructure-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8363,7 +8363,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalLayoutRelationStructure-specification;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StructureSpecification
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8371,7 +8371,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalLayoutRelationStructure-topology;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -8387,7 +8387,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalLayoutRelationStructure_has_ValueMappingRelationship;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ValueMappingRelationship
-      
+
     ) ]];
 .
 <#rev_PhysicalLayoutRelationStructure_has_ValueMappingRelationship> a sh:PropertyShape ;
@@ -8400,7 +8400,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:PhysicalSegmentLayout
         cdi:UnitSegmentLayout
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8448,7 +8448,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalRecordSegment-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8456,7 +8456,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalRecordSegment-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8465,7 +8465,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#PhysicalRecordSegment-physicalFileName> a sh:PropertyShape ;
@@ -8479,7 +8479,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8500,7 +8500,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
 .
 <#rev_PhysicalRecordSegment_isDefinedBy_Concept> a sh:PropertyShape ;
@@ -8510,7 +8510,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalRecordSegment_represents_Population;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Population
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8521,7 +8521,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalRecordSegment_has_DataPoint;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DataPoint
-      
+
     ) ]];
 .
 <#rev_PhysicalRecordSegment_has_DataPoint> a sh:PropertyShape ;
@@ -8531,7 +8531,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalRecordSegment_has_DataPointPosition;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DataPointPosition
-      
+
     ) ]];
 .
 <#rev_PhysicalRecordSegment_has_DataPointPosition> a sh:PropertyShape ;
@@ -8544,7 +8544,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:PhysicalSegmentLayout
         cdi:UnitSegmentLayout
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8555,7 +8555,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalRecordSegment_mapsTo_LogicalRecord;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LogicalRecord
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8591,7 +8591,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalRecordSegmentPosition-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8606,7 +8606,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalRecordSegmentPosition_indexes_PhysicalRecordSegment;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:PhysicalRecordSegment
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -8644,7 +8644,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalRecordSegmentRelationship-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8652,7 +8652,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalRecordSegmentRelationship-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8661,7 +8661,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalRecordSegmentRelationship_hasSource_PhysicalRecordSegment;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:PhysicalRecordSegment
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8672,7 +8672,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalRecordSegmentRelationship_hasTarget_PhysicalRecordSegment;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:PhysicalRecordSegment
-      
+
     ) ]];
 .
 <#rev_PhysicalRecordSegmentRelationship_hasTarget_PhysicalRecordSegment> a sh:PropertyShape ;
@@ -8712,7 +8712,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalRecordSegmentStructure-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8721,7 +8721,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8731,7 +8731,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8739,7 +8739,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalRecordSegmentStructure-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8747,7 +8747,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalRecordSegmentStructure-specification;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StructureSpecification
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8755,7 +8755,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalRecordSegmentStructure-topology;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8770,7 +8770,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalRecordSegmentStructure_has_DataPointRelationship;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DataPointRelationship
-      
+
     ) ]];
 .
 <#rev_PhysicalRecordSegmentStructure_has_DataPointRelationship> a sh:PropertyShape ;
@@ -8782,7 +8782,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalRecordSegmentStructure_structures_PhysicalRecordSegment;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:PhysicalRecordSegment
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8860,7 +8860,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalSegmentLayout-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8878,7 +8878,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalSegmentLayout-encoding;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8906,7 +8906,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalSegmentLayout-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8931,7 +8931,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#PhysicalSegmentLayout-nullSequence> a sh:PropertyShape ;
@@ -8945,7 +8945,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -8955,7 +8955,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -9024,7 +9024,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
 .
 <#rev_PhysicalSegmentLayout_isDefinedBy_Concept> a sh:PropertyShape ;
@@ -9034,7 +9034,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalSegmentLayout_formats_LogicalRecord;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LogicalRecord
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -9045,7 +9045,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalSegmentLayout_has_ValueMapping;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ValueMapping
-      
+
     ) ]];
 .
 <#rev_PhysicalSegmentLayout_has_ValueMapping> a sh:PropertyShape ;
@@ -9055,7 +9055,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalSegmentLayout_has_ValueMappingPosition;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ValueMappingPosition
-      
+
     ) ]];
 .
 <#rev_PhysicalSegmentLayout_has_ValueMappingPosition> a sh:PropertyShape ;
@@ -9092,7 +9092,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalSegmentLocation-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -9100,7 +9100,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PhysicalSegmentLocation-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -9186,7 +9186,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Population-timePeriodOfPopulation;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
 .
 
@@ -9194,7 +9194,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Population_isComposedOf_Unit;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Unit
-      
+
     ) ]];
 .
 <#rev_Population_isComposedOf_Unit> a sh:PropertyShape ;
@@ -9228,7 +9228,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PrimaryKey-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -9237,7 +9237,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PrimaryKey_isComposedOf_PrimaryKeyComponent;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:PrimaryKeyComponent
-      
+
     ) ]];
     sh:minCount 1;
 .
@@ -9275,7 +9275,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PrimaryKeyComponent-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -9298,7 +9298,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:SyntheticIdComponent
         cdi:VariableDescriptorComponent
         cdi:VariableValueComponent
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -9361,7 +9361,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ProcessingAgent_operatesOn_ProductionEnvironment;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ProductionEnvironment
-      
+
     ) ]];
 .
 <#rev_ProcessingAgent_operatesOn_ProductionEnvironment> a sh:PropertyShape ;
@@ -9372,7 +9372,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Activity
         cdi:Step
-      
+
     ) ]];
 .
 <#rev_ProcessingAgent_performs_Activity> a sh:PropertyShape ;
@@ -9413,14 +9413,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ProductionEnvironment-displayLabel;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#ProductionEnvironment-identifier> a sh:PropertyShape ;
     sh:path cdi:ProductionEnvironment-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -9429,7 +9429,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 
@@ -9489,7 +9489,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:MeasureComponent
         cdi:QualifiedMeasure
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -9529,7 +9529,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:RecordRelation-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -9537,14 +9537,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:RecordRelation-displayLabel;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#RecordRelation-identifier> a sh:PropertyShape ;
     sh:path cdi:RecordRelation-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -9554,7 +9554,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -9564,7 +9564,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -9573,7 +9573,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:RecordRelation_has_InstanceVariableMap;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:InstanceVariableMap
-      
+
     ) ]];
 .
 <#rev_RecordRelation_has_InstanceVariableMap> a sh:PropertyShape ;
@@ -9584,7 +9584,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:RecordRelation_maps_LogicalRecord;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LogicalRecord
-      
+
     ) ]];
     sh:minCount 2;
 .
@@ -9636,7 +9636,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ReferenceValue_correspondsTo_VariableValueComponent;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:VariableValueComponent
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -9648,7 +9648,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ReferenceValue_hasValueFrom_ReferenceValueDomain;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ReferenceValueDomain
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -9803,7 +9803,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ReferenceVariable_takesValuesFrom_ReferenceValueDomain;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ReferenceValueDomain
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -9893,7 +9893,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:RepresentedVariable-describedUnitOfMeasure;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -9901,7 +9901,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:RepresentedVariable-hasIntendedDataType;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -9915,7 +9915,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:RepresentedVariable_takesSentinelValuesFrom_SentinelValueDomain;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:SentinelValueDomain
-      
+
     ) ]];
 .
 <#rev_RepresentedVariable_takesSentinelValuesFrom_SentinelValueDomain> a sh:PropertyShape ;
@@ -9926,7 +9926,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:SubstantiveValueDomain
         cdi:DescriptorValueDomain
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -9981,7 +9981,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:RevisableDatum_correspondsTo_Revision;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Revision
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10022,7 +10022,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Revision-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10032,7 +10032,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10065,7 +10065,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Rule-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10074,7 +10074,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Rule_hasPrecondition_ConditionalControlLogic;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ConditionalControlLogic
-      
+
     ) ]];
 .
 <#rev_Rule_hasPrecondition_ConditionalControlLogic> a sh:PropertyShape ;
@@ -10141,7 +10141,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:RuleBasedScheduling_has_Curator;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Curator
-      
+
     ) ]];
 .
 <#rev_RuleBasedScheduling_has_Curator> a sh:PropertyShape ;
@@ -10152,7 +10152,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:RuleBasedScheduling_has_RuleSet;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:RuleSet
-      
+
     ) ]];
 .
 <#rev_RuleBasedScheduling_has_RuleSet> a sh:PropertyShape ;
@@ -10187,7 +10187,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:RuleSet-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10196,7 +10196,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:RuleSet_has_Rule;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Rule
-      
+
     ) ]];
 .
 <#rev_RuleSet_has_Rule> a sh:PropertyShape ;
@@ -10236,7 +10236,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10244,7 +10244,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ScopedMeasure-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10253,7 +10253,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ScopedMeasure_circumscribes_DimensionalKeyDefinition;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DimensionalKeyDefinition
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10264,7 +10264,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ScopedMeasure_generates_RevisableDatum;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:RevisableDatum
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -10278,7 +10278,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ScopedMeasure_restricts_QualifiedMeasure;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:QualifiedMeasure
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10427,7 +10427,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:SentinelValueDomain-platformType;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10436,7 +10436,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:SentinelValueDomain_takesConceptsFrom_SentinelConceptualDomain;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:SentinelConceptualDomain
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10447,7 +10447,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:SentinelValueDomain_isDescribedBy_ValueAndConceptDescription;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ValueAndConceptDescription
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10460,7 +10460,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:EnumerationDomain
         cdi:CodeList
         cdi:StatisticalClassification
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10519,7 +10519,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Sequence_has_SequencePosition;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:SequencePosition
-      
+
     ) ]];
 .
 <#rev_Sequence_has_SequencePosition> a sh:PropertyShape ;
@@ -10556,7 +10556,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:SequencePosition-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10572,7 +10572,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Activity
         cdi:Step
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -10716,7 +10716,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:StatisticalClassification-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10726,7 +10726,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10736,14 +10736,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#StatisticalClassification-displayLabel> a sh:PropertyShape ;
     sh:path cdi:StatisticalClassification-displayLabel;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#StatisticalClassification-isCurrent> a sh:PropertyShape ;
@@ -10762,7 +10762,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10772,7 +10772,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10780,7 +10780,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:StatisticalClassification-releaseDate;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CombinedDate
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10790,7 +10790,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#StatisticalClassification-usage> a sh:PropertyShape ;
@@ -10799,7 +10799,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10807,7 +10807,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:StatisticalClassification-validDates;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10816,7 +10816,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:StatisticalClassification_isMaintainedBy_Organization;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Organization
-      
+
     ) ]];
 .
 <#rev_StatisticalClassification_isMaintainedBy_Organization> a sh:PropertyShape ;
@@ -10826,7 +10826,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:StatisticalClassification_has_ClassificationItem;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ClassificationItem
-      
+
     ) ]];
 .
 <#rev_StatisticalClassification_has_ClassificationItem> a sh:PropertyShape ;
@@ -10836,7 +10836,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:StatisticalClassification_has_ClassificationItemPosition;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ClassificationItemPosition
-      
+
     ) ]];
 .
 <#rev_StatisticalClassification_has_ClassificationItemPosition> a sh:PropertyShape ;
@@ -10847,7 +10847,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:StatisticalClassification_has_LevelStructure;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LevelStructure
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10858,7 +10858,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:StatisticalClassification_isIndexedBy_ClassificationIndex;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ClassificationIndex
-      
+
     ) ]];
 .
 <#rev_StatisticalClassification_isIndexedBy_ClassificationIndex> a sh:PropertyShape ;
@@ -10868,7 +10868,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:StatisticalClassification_isPredecessorOf_StatisticalClassification;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StatisticalClassification
-      
+
     ) ]];
 .
 <#rev_StatisticalClassification_isPredecessorOf_StatisticalClassification> a sh:PropertyShape ;
@@ -10878,7 +10878,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:StatisticalClassification_isSuccessorOf_StatisticalClassification;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StatisticalClassification
-      
+
     ) ]];
 .
 <#rev_StatisticalClassification_isSuccessorOf_StatisticalClassification> a sh:PropertyShape ;
@@ -10888,7 +10888,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:StatisticalClassification_isVariantOf_StatisticalClassification;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StatisticalClassification
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10925,7 +10925,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:StatisticalClassificationRelationship-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10933,7 +10933,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:StatisticalClassificationRelationship-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -10942,7 +10942,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:StatisticalClassificationRelationship_hasSource_StatisticalClassification;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StatisticalClassification
-      
+
     ) ]];
 .
 <#rev_StatisticalClassificationRelationship_hasSource_StatisticalClassification> a sh:PropertyShape ;
@@ -10952,7 +10952,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:StatisticalClassificationRelationship_hasTarget_StatisticalClassification;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StatisticalClassification
-      
+
     ) ]];
 .
 <#rev_StatisticalClassificationRelationship_hasTarget_StatisticalClassification> a sh:PropertyShape ;
@@ -11012,7 +11012,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Step-script;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CommandCode
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11020,7 +11020,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Step-scriptingLanguage;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11029,7 +11029,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Step_hasSubStep_Step;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Step
-      
+
     ) ]];
 .
 <#rev_Step_hasSubStep_Step> a sh:PropertyShape ;
@@ -11039,7 +11039,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Step_produces_Parameter;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Parameter
-      
+
     ) ]];
 .
 <#rev_Step_produces_Parameter> a sh:PropertyShape ;
@@ -11049,7 +11049,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Step_receives_Parameter;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Parameter
-      
+
     ) ]];
 .
 <#rev_Step_receives_Parameter> a sh:PropertyShape ;
@@ -11137,7 +11137,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:SubstantiveValueDomain_takesConceptsFrom_SubstantiveConceptualDomain;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:SubstantiveConceptualDomain
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11148,7 +11148,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:SubstantiveValueDomain_isDescribedBy_ValueAndConceptDescription;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ValueAndConceptDescription
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11161,7 +11161,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:EnumerationDomain
         cdi:CodeList
         cdi:StatisticalClassification
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11353,7 +11353,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Unit-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11363,7 +11363,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11371,14 +11371,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Unit-displayLabel;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#Unit-identifier> a sh:PropertyShape ;
     sh:path cdi:Unit-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11387,7 +11387,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 
@@ -11397,7 +11397,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
 .
 <#rev_Unit_has_UnitType> a sh:PropertyShape ;
@@ -11531,7 +11531,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11656,7 +11656,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11664,7 +11664,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ValueAndConceptDescription-formatPattern;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11672,7 +11672,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ValueAndConceptDescription-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11680,7 +11680,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ValueAndConceptDescription-logicalExpression;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11708,7 +11708,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ValueAndConceptDescription-regularExpression;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:TypedString
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11748,7 +11748,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ValueDomain-catalogDetails;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CatalogDetails
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11756,14 +11756,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ValueDomain-displayLabel;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#ValueDomain_identifier> a sh:PropertyShape ;
     sh:path cdi:ValueDomain_identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11771,7 +11771,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ValueDomain-recommendedDataType;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
 .
 
@@ -11842,7 +11842,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ValueMapping-format;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11850,7 +11850,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ValueMapping-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11888,7 +11888,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ValueMapping-physicalDataType;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11902,7 +11902,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ValueMapping_formats_DataPoint;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DataPoint
-      
+
     ) ]];
 .
 <#rev_ValueMapping_formats_DataPoint> a sh:PropertyShape ;
@@ -11915,7 +11915,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:PhysicalSegmentLocation
         cdi:SegmentByText
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11951,7 +11951,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ValueMappingPosition-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -11966,7 +11966,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ValueMappingPosition_indexes_ValueMapping;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ValueMapping
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -12004,7 +12004,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ValueMappingRelationship-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12012,7 +12012,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ValueMappingRelationship-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12021,7 +12021,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ValueMappingRelationship_hasSource_ValueMapping;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ValueMapping
-      
+
     ) ]];
 .
 <#rev_ValueMappingRelationship_hasSource_ValueMapping> a sh:PropertyShape ;
@@ -12031,7 +12031,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ValueMappingRelationship_hasTarget_ValueMapping;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ValueMapping
-      
+
     ) ]];
 .
 <#rev_ValueMappingRelationship_hasTarget_ValueMapping> a sh:PropertyShape ;
@@ -12079,14 +12079,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:VariableCollection-displayLabel;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#VariableCollection-groupingSemantic> a sh:PropertyShape ;
     sh:path cdi:VariableCollection-groupingSemantic;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12094,7 +12094,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:VariableCollection-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12103,7 +12103,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#VariableCollection-purpose> a sh:PropertyShape ;
@@ -12112,7 +12112,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12122,7 +12122,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12135,7 +12135,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InstanceVariable
         cdi:DescriptorVariable
         cdi:ReferenceVariable
-      
+
     ) ]];
 .
 <#rev_VariableCollection_has_ConceptualVariable> a sh:PropertyShape ;
@@ -12145,7 +12145,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:VariableCollection_has_VariablePosition;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:VariablePosition
-      
+
     ) ]];
 .
 <#rev_VariableCollection_has_VariablePosition> a sh:PropertyShape ;
@@ -12169,7 +12169,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:UnitType
         cdi:Universe
         cdi:Population
-      
+
     ) ]];
 .
 <#rev_VariableCollection_isDefinedBy_Concept> a sh:PropertyShape ;
@@ -12221,7 +12221,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:VariableDescriptorComponent_isDefinedBy_DescriptorVariable;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DescriptorVariable
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12232,7 +12232,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:VariableDescriptorComponent_refersTo_VariableValueComponent;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:VariableValueComponent
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -12271,7 +12271,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:VariablePosition-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12290,7 +12290,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InstanceVariable
         cdi:DescriptorVariable
         cdi:ReferenceVariable
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -12328,7 +12328,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:VariableRelationship-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12336,7 +12336,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:VariableRelationship-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12349,7 +12349,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InstanceVariable
         cdi:DescriptorVariable
         cdi:ReferenceVariable
-      
+
     ) ]];
 .
 <#rev_VariableRelationship_hasSource_ConceptualVariable> a sh:PropertyShape ;
@@ -12363,7 +12363,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InstanceVariable
         cdi:DescriptorVariable
         cdi:ReferenceVariable
-      
+
     ) ]];
 .
 <#rev_VariableRelationship_hasTarget_ConceptualVariable> a sh:PropertyShape ;
@@ -12403,7 +12403,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:VariableStructure-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Identifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12411,7 +12411,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:VariableStructure-name;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:OrganizationName
-      
+
     ) ]];
 .
 <#VariableStructure-purpose> a sh:PropertyShape ;
@@ -12420,7 +12420,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12428,7 +12428,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:VariableStructure-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12436,7 +12436,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:VariableStructure-specification;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:StructureSpecification
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12444,7 +12444,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:VariableStructure-topology;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12459,7 +12459,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:VariableStructure_has_VariableRelationship;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:VariableRelationship
-      
+
     ) ]];
 .
 <#rev_VariableStructure_has_VariableRelationship> a sh:PropertyShape ;
@@ -12471,7 +12471,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:VariableStructure_structures_VariableCollection;
 	sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:VariableCollection
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12720,21 +12720,21 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#AccessInformation-embargo> a sh:PropertyShape ;
     sh:path cdi:AccessInformation-embargo;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:EmbargoInformation
-      
+
     ) ]];
 .
 <#AccessInformation-license> a sh:PropertyShape ;
     sh:path cdi:AccessInformation-license;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LicenseInformation
-      
+
     ) ]];
 .
 <#AccessInformation-rights> a sh:PropertyShape ;
@@ -12743,7 +12743,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 
@@ -12772,7 +12772,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AccessLocation-mimeType;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12782,7 +12782,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#AccessLocation-uri> a sh:PropertyShape ;
@@ -12831,7 +12831,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Address-countryCode;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12839,7 +12839,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Address-effectiveDates;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12847,7 +12847,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Address-geographicPoint;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:SpatialPoint
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12865,7 +12865,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectName
         cdi:OrganizationName
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12878,7 +12878,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Address-privacy;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12886,7 +12886,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Address-regionalCoverage;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12899,7 +12899,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Address-timeZone;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12907,7 +12907,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Address-typeOfAddress;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12915,7 +12915,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Address-typeOfLocation;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12945,7 +12945,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AgentInRole-agentName;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:BibliographicName
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12953,7 +12953,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AgentInRole-reference;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Reference
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -12961,7 +12961,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:AgentInRole-role;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:PairedControlledVocabularyEntry
-      
+
     ) ]];
 .
 
@@ -13033,7 +13033,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CatalogDetails-access;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:AccessInformation
-      
+
     ) ]];
 .
 <#CatalogDetails-alternativeTitle> a sh:PropertyShape ;
@@ -13042,35 +13042,35 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#CatalogDetails-contributor> a sh:PropertyShape ;
     sh:path cdi:CatalogDetails-contributor;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:AgentInRole
-      
+
     ) ]];
 .
 <#CatalogDetails-creator> a sh:PropertyShape ;
     sh:path cdi:CatalogDetails-creator;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:AgentInRole
-      
+
     ) ]];
 .
 <#CatalogDetails-date> a sh:PropertyShape ;
     sh:path cdi:CatalogDetails-date;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CombinedDate
-      
+
     ) ]];
 .
 <#CatalogDetails-identifier> a sh:PropertyShape ;
     sh:path cdi:CatalogDetails-identifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:InternationalIdentifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13080,7 +13080,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#CatalogDetails-languageOfObject> a sh:PropertyShape ;
@@ -13091,7 +13091,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CatalogDetails-provenance;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ProvenanceInformation
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13099,14 +13099,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CatalogDetails-publisher;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:AgentInRole
-      
+
     ) ]];
 .
 <#CatalogDetails-relatedResource> a sh:PropertyShape ;
     sh:path cdi:CatalogDetails-relatedResource;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Reference
-      
+
     ) ]];
 .
 <#CatalogDetails-subTitle> a sh:PropertyShape ;
@@ -13115,7 +13115,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#CatalogDetails-summary> a sh:PropertyShape ;
@@ -13124,7 +13124,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13134,7 +13134,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13142,7 +13142,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CatalogDetails-typeOfResource;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
 .
 
@@ -13187,14 +13187,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CombinedDate-nonIsoDate;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:NonIsoDate
-      
+
     ) ]];
 .
 <#CombinedDate-semantics> a sh:PropertyShape ;
     sh:path cdi:CombinedDate-semantics;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13223,7 +13223,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Command-commandContent;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:TypedString
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13231,7 +13231,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Command-programLanguage;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13261,14 +13261,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CommandCode-command;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Command
-      
+
     ) ]];
 .
 <#CommandCode-commandFile> a sh:PropertyShape ;
     sh:path cdi:CommandCode-commandFile;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CommandFile
-      
+
     ) ]];
 .
 <#CommandCode-description> a sh:PropertyShape ;
@@ -13277,7 +13277,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13308,7 +13308,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13367,35 +13367,35 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ContactInformation-address;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Address
-      
+
     ) ]];
 .
 <#ContactInformation-email> a sh:PropertyShape ;
     sh:path cdi:ContactInformation-email;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Email
-      
+
     ) ]];
 .
 <#ContactInformation-emessaging> a sh:PropertyShape ;
     sh:path cdi:ContactInformation-emessaging;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ElectronicMessageSystem
-      
+
     ) ]];
 .
 <#ContactInformation-telephone> a sh:PropertyShape ;
     sh:path cdi:ContactInformation-telephone;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Telephone
-      
+
     ) ]];
 .
 <#ContactInformation-website> a sh:PropertyShape ;
     sh:path cdi:ContactInformation-website;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:WebLink
-      
+
     ) ]];
 .
 
@@ -13437,7 +13437,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ControlledVocabularyEntry-entryReference;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Reference
-      
+
     ) ]];
 .
 <#ControlledVocabularyEntry-entryValue> a sh:PropertyShape ;
@@ -13458,7 +13458,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ControlledVocabularyEntry-vocabulary;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Reference
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13491,7 +13491,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13499,7 +13499,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:CorrespondenceDefinition-commonalityCode;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
 .
 <#CorrespondenceDefinition-difference> a sh:PropertyShape ;
@@ -13508,7 +13508,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13543,7 +13543,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DateRange-endDate;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CombinedDate
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13551,7 +13551,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:DateRange-startDate;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:CombinedDate
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13588,7 +13588,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ElectronicMessageSystem-effectiveDates;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13601,7 +13601,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ElectronicMessageSystem-privacy;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13609,7 +13609,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ElectronicMessageSystem-typeOfService;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13641,7 +13641,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Email-effectiveDates;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13659,7 +13659,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Email-privacy;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13667,7 +13667,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Email-typeOfEmail;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13698,7 +13698,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13706,7 +13706,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:EmbargoInformation-period;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
 .
 
@@ -13734,7 +13734,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:FundingInformation-fundingAgent;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:AgentInRole
-      
+
     ) ]];
 .
 <#FundingInformation-grantNumber> a sh:PropertyShape ;
@@ -13771,7 +13771,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:GeoRole-geography;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13806,7 +13806,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Identifier_ddiIdentifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:InternationalRegistrationDataIdentifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13824,7 +13824,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Identifier_nonDdiIdentifier;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:NonDdiIdentifier
-      
+
     ) ]];
 .
 <#Identifier_uri> a sh:PropertyShape ;
@@ -13841,7 +13841,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Identifier-versionRationale;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:RationaleDefinition
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13849,7 +13849,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Identifier-versionResponsibility;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:AgentInRole
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13891,7 +13891,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13899,7 +13899,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:IndividualName-context;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13907,7 +13907,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:IndividualName-effectiveDates;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13922,7 +13922,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -13965,7 +13965,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:IndividualName-typeOfIndividualName;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14005,7 +14005,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:InternationalIdentifier-managingAgency;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14075,7 +14075,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:InternationalString_languageSpecificString;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:LanguageString
-      
+
     ) ]];
 .
 
@@ -14110,7 +14110,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LabelForDisplay-locationVariant;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14123,7 +14123,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LabelForDisplay-validDates;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14184,7 +14184,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LanguageString-structureUsed;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14224,7 +14224,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:LicenseInformation-contact;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ContactInformation
-      
+
     ) ]];
 .
 <#LicenseInformation-description> a sh:PropertyShape ;
@@ -14233,21 +14233,21 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#LicenseInformation-licenseAgent> a sh:PropertyShape ;
     sh:path cdi:LicenseInformation-licenseAgent;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:AgentInRole
-      
+
     ) ]];
 .
 <#LicenseInformation-licenseReference> a sh:PropertyShape ;
     sh:path cdi:LicenseInformation-licenseReference;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:Reference
-      
+
     ) ]];
 .
 
@@ -14411,7 +14411,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:NonIsoDate-calendar;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14425,7 +14425,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:NonIsoDate-nonIsoDateFormat;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14460,7 +14460,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ObjectAttributeSelector-refinedBy;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ObjectAttributeSelector
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14500,7 +14500,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ObjectName-context;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14545,7 +14545,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14553,7 +14553,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:OrganizationName-effectiveDates;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14566,7 +14566,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:OrganizationName-typeOfOrganizationName;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14595,7 +14595,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PairedControlledVocabularyEntry-extent;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14603,7 +14603,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PairedControlledVocabularyEntry-term;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:minCount 1;
     sh:maxCount 1;
@@ -14644,7 +14644,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PrivateImage-effectiveDates;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14652,7 +14652,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:PrivateImage-privacy;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14683,7 +14683,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:ProvenanceInformation-funding;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:FundingInformation
-      
+
     ) ]];
 .
 <#ProvenanceInformation-provenanceStatement> a sh:PropertyShape ;
@@ -14692,7 +14692,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
 .
 <#ProvenanceInformation-recordCreationDate> a sh:PropertyShape ;
@@ -14730,7 +14730,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:RationaleDefinition-rationaleCode;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14740,7 +14740,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14775,7 +14775,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Reference-ddiReference;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:InternationalRegistrationDataIdentifier
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14785,7 +14785,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:Selector
         cdi:ObjectAttributeSelector
         cdi:TextPositionSelector
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14800,7 +14800,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
         cdi:InternationalString
         cdi:BibliographicName
         cdi:LabelForDisplay
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14808,14 +14808,14 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Reference-nonDdiReference;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:NonDdiIdentifier
-      
+
     ) ]];
 .
 <#Reference-semantic> a sh:PropertyShape ;
     sh:path cdi:Reference-semantic;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14928,7 +14928,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:SpatialPoint-xCoordinate;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:SpatialCoordinate
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -14936,7 +14936,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:SpatialPoint-yCoordinate;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:SpatialCoordinate
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -15095,7 +15095,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Telephone-effectiveDates;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -15108,7 +15108,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Telephone-privacy;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -15121,7 +15121,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:Telephone-typeOfTelephone;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -15225,7 +15225,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:TimeRole-time;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -15271,7 +15271,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:TypedString-typeOfContent;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -15303,7 +15303,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:WebLink-effectiveDates;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:DateRange
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -15316,7 +15316,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:WebLink-privacy;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -15324,7 +15324,7 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
     sh:path cdi:WebLink-typeOfWebsite;
     sh:node [ sh:property [ sh:path rdf:type; sh:minCount 1; sh:in (
         cdi:ControlledVocabularyEntry
-      
+
     ) ]];
     sh:maxCount 1;
 .
@@ -15343,5 +15343,3 @@ PREFIX sh: <http://www.w3.org/ns/shacl#>
 
 
 .
-
-

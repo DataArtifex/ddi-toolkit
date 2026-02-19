@@ -3,41 +3,56 @@
 """
 Utility to convert DDI Codebook 2.5 to CDI
 """
+
 import argparse
 import logging
 import os
-import xml.etree.ElementTree as ET
-from dartfx.ddi import ddicodebook
 
-NS= {'ddi25'}
+from dartfx.ddi import ddicodebook as codebook
+
+NS = {"ddi25"}
+
 
 def ddicdump(args):
     logging.info("ddi2cdi")
-    codebook = codebook.loadxml(args.ddifile)
-    codebook.dump()
+    cb = codebook.loadxml(args.ddifile)
+    cb.dump()
+
 
 def ddicdd(args):
     logging.info("ddicdd")
-    codebook = codebook.loadxml(args.ddifile)
-    print(codebook.get_data_dictionary(args.file, name_regex=args.name, label_regex=args.label, categories=args.categories, questions=args.questions, stats=args.stats))
+    cb = codebook.loadxml(args.ddifile)
+    print(
+        cb.get_data_dictionary(
+            args.file,
+            name_regex=args.name,
+            label_regex=args.label,
+            categories=args.categories,
+            questions=args.questions,
+            stats=args.stats,
+        )
+    )
 
-def ddic2cdi(args):
+
+def ddic2cdi(_args):
     logging.info("ddi2cdi")
     logging.error("ddic2cdi not implemented")
 
-def ddic2sql(args):
+
+def ddic2sql(_args):
     logging.info("ddi2sql")
     logging.error("ddic2sql not implemented")
     pass
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     """Main"""
     script_dir = os.path.dirname(os.path.realpath(__file__))
 
     # main parser
     parser = argparse.ArgumentParser(prog="dditoolkit")
-    parser.add_argument("-ll","--loglevel", default='INFO', help="Log Level")
-    
+    parser.add_argument("-ll", "--loglevel", default="INFO", help="Log Level")
+
     subparsers = parser.add_subparsers(help="subparsers help")
 
     # ddic2cdi
@@ -72,10 +87,10 @@ if __name__ == '__main__':
 
     # setup logging
     loglevel = getattr(logging, args.loglevel.upper(), None)
-    logging.basicConfig(format='%(asctime)s %(levelname)s: %(message)s', level=loglevel)
-    
+    logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=loglevel)
+
     # run command
-    if hasattr(args, 'func'):
+    if hasattr(args, "func"):
         args.func(args)
     else:
         parser.print_help()

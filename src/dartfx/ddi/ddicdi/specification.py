@@ -90,7 +90,7 @@ class DdiCdiModel(BaseModel):
         for prefix, uri in NAMESPACES.items():
             self._graph.bind(prefix, Namespace(uri))
 
-    @computed_field
+    @computed_field  # type: ignore
     @property
     def build_dir(self) -> str:
         """
@@ -98,7 +98,7 @@ class DdiCdiModel(BaseModel):
         """
         return os.path.join(self.root_dir, "build")
 
-    @computed_field
+    @computed_field  # type: ignore
     @property
     def encoding_dir(self) -> str:
         """
@@ -116,7 +116,7 @@ class DdiCdiModel(BaseModel):
             raise ValueError("Graph has not been initialized. Call model_post_init first.")
         return self._graph
 
-    @computed_field
+    @computed_field  # type: ignore
     @property
     def jsonld_dir(self) -> str:
         """
@@ -124,7 +124,7 @@ class DdiCdiModel(BaseModel):
         """
         return os.path.join(self.encoding_dir, "jsonld")
 
-    @computed_field
+    @computed_field  # type: ignore
     @property
     def ontology_dir(self) -> str:
         """
@@ -132,7 +132,7 @@ class DdiCdiModel(BaseModel):
         """
         return os.path.join(self.encoding_dir, "ontology")
 
-    @computed_field
+    @computed_field  # type: ignore
     @property
     def source_dir(self) -> str:
         """
@@ -149,7 +149,7 @@ class DdiCdiModel(BaseModel):
             raise ValueError("XML has not been initialized. Call model_post_init first.")
         return self._xml
 
-    @computed_field
+    @computed_field  # type: ignore
     @property
     def xmlschema_dir(self) -> str:
         """
@@ -234,7 +234,7 @@ class DdiCdiModel(BaseModel):
             xpath = f".//{{{XMLNS['xs']}}}element[@{{{XMLNS['xml']}}}id='{association_name}-validType']"
             to_element = from_element.find(xpath)
             if to_element:
-                cardinality_to = {}
+                cardinality_to: dict[str, Any] = {}
                 cardinality_to["minOccurs"] = to_element.get("minOccurs")
                 cardinality_to["maxOccurs"] = to_element.get("maxOccurs")
                 # Convert to a string representation
@@ -262,7 +262,7 @@ class DdiCdiModel(BaseModel):
         }}
         """
         results = self.graph.query(query)
-        count = int(next(iter(results))[0])
+        count = int(next(iter(results))[0])  # type: ignore
         return count
 
     def get_classes(self) -> list[str]:
@@ -277,7 +277,7 @@ class DdiCdiModel(BaseModel):
                 }
             order by ?c        """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        return [self.prefixed_uri(str(row[0])) for row in results]  # type: ignore
 
     def get_enumeration(self, enumeration_uri: str) -> dict[str, Any]:
         """
@@ -286,8 +286,8 @@ class DdiCdiModel(BaseModel):
         enumeration = {}
         properties = self.get_resource_properties(enumeration_uri)
         enumeration["uri"] = enumeration_uri
-        enumeration["label"] = properties.get("rdfs:label")
-        enumeration["description"] = properties.get("rdfs:comment")
+        enumeration["label"] = properties.get("rdfs:label")  # type: ignore
+        enumeration["description"] = properties.get("rdfs:comment")  # type: ignore
         # get members
         members = {}
         query = f"""
@@ -298,7 +298,7 @@ class DdiCdiModel(BaseModel):
         """
         results = self.graph.query(query)
         for row in results:
-            member_uri = self.prefixed_uri(row[0])
+            member_uri = self.prefixed_uri(row[0])  # type: ignore
             member_properties = self.get_resource_properties(member_uri)
             label = member_properties.get("rdfs:label")
             description = member_properties.get("rdfs:comment")
@@ -307,7 +307,7 @@ class DdiCdiModel(BaseModel):
             if description:
                 description = description.replace("\n", " ").strip()
             members[label] = {"uri": member_uri, "label": label, "description": description}
-        enumeration["members"] = members
+        enumeration["members"]: dict[str, Any] = members  # type: ignore
         return enumeration
 
     def get_resource_attribute_cardinality(self, _resource_uri: str, attribute_uri) -> dict[str, Any]:
@@ -457,7 +457,7 @@ class DdiCdiModel(BaseModel):
         # to
         if include_to:
             for association_uri in self.get_resource_ucmis_associations_to(resource_uri):
-                association: dict[str, Any] = {"uri": association_uri, "direction": "to"}
+                association = {"uri": association_uri, "direction": "to"}
                 if inherited:
                     association["inherited"] = False
                 if cardinalities:
@@ -510,11 +510,11 @@ class DdiCdiModel(BaseModel):
         }}
         """
         results = self.graph.query(query)
-        properties = {}
+        properties: dict[str, Any] = {}
         # Process results into a dictionary
         for row in results:
-            prop = self.prefixed_uri(str(row[0]))
-            value = str(row[1])
+            prop = self.prefixed_uri(str(row[0]))  # type: ignore
+            value = str(row[1])  # type: ignore
             if prop not in properties:
                 properties[prop] = []
             properties[prop].append(value)
@@ -537,7 +537,7 @@ class DdiCdiModel(BaseModel):
             }}
             """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        return [self.prefixed_uri(str(row[0])) for row in results]  # type: ignore
 
     def get_resource_ucmis_associations_to(self, resource_uri: str) -> list[str]:
         """
@@ -552,7 +552,7 @@ class DdiCdiModel(BaseModel):
             }}
             """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        return [self.prefixed_uri(str(row[0])) for row in results]  # type: ignore
 
     def get_resource_ucmis_domain_attributes(self, resource_uri: str) -> list[str]:
         """
@@ -567,7 +567,7 @@ class DdiCdiModel(BaseModel):
         }}
         """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        return [self.prefixed_uri(str(row[0])) for row in results]  # type: ignore
 
     def get_resource_ucmis_range_attributes(self, resource_uri: str) -> list[str]:
         """
@@ -582,7 +582,7 @@ class DdiCdiModel(BaseModel):
         }}
         """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        return [self.prefixed_uri(str(row[0])) for row in results]  # type: ignore
 
     def get_resource_superclasses(self, resource_uri: str) -> list[str]:
         """
@@ -598,7 +598,7 @@ class DdiCdiModel(BaseModel):
         """
         results = self.graph.query(query)
         if results:
-            return [self.prefixed_uri(str(row[0])) for row in results]
+            return [self.prefixed_uri(str(row[0])) for row in results]  # type: ignore
         else:
             return []
 
@@ -616,7 +616,7 @@ class DdiCdiModel(BaseModel):
         """
         results = self.graph.query(query)
         if results:
-            return [self.prefixed_uri(str(row[0])) for row in results]
+            return [self.prefixed_uri(str(row[0])) for row in results]  # type: ignore
         else:
             return []
 
@@ -633,7 +633,7 @@ class DdiCdiModel(BaseModel):
         order by ?attribute
         """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        return [self.prefixed_uri(str(row[0])) for row in results]  # type: ignore
 
     def get_ucmis_associations(self) -> list[str]:
         """
@@ -648,7 +648,7 @@ class DdiCdiModel(BaseModel):
         order by ?association
         """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        return [self.prefixed_uri(str(row[0])) for row in results]  # type: ignore
 
     def get_ucmis_classes(self) -> list[str]:
         """
@@ -663,7 +663,7 @@ class DdiCdiModel(BaseModel):
         order by ?class
         """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        return [self.prefixed_uri(str(row[0])) for row in results]  # type: ignore
 
     def get_ucmis_enumerations(self) -> list[str]:
         """
@@ -678,7 +678,7 @@ class DdiCdiModel(BaseModel):
         order by ?enumeration
         """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        return [self.prefixed_uri(str(row[0])) for row in results]  # type: ignore
 
     def get_ucmis_structureddatatypes(self) -> list[str]:
         """
@@ -693,7 +693,7 @@ class DdiCdiModel(BaseModel):
         order by ?datatype
         """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        return [self.prefixed_uri(str(row[0])) for row in results]  # type: ignore
 
     def get_subclassof(self) -> dict[str, str]:
         """
@@ -711,8 +711,8 @@ class DdiCdiModel(BaseModel):
         results = self.graph.query(query)
         subclass_of = {}
         for row in results:
-            child_uri = self.prefixed_uri(str(row[0]))
-            parent_uri = self.prefixed_uri(str(row[1]))
+            child_uri = self.prefixed_uri(str(row[0]))  # type: ignore
+            parent_uri = self.prefixed_uri(str(row[1]))  # type: ignore
             subclass_of[child_uri] = parent_uri
         return subclass_of
 
@@ -748,4 +748,4 @@ class DdiCdiModel(BaseModel):
         }}
         """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        return [self.prefixed_uri(str(row[0])) for row in results]  # type: ignore

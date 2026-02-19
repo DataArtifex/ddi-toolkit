@@ -1,8 +1,9 @@
 import os
 
 import pytest
-from ddicdi.specification import DdiCdiModel
 from rdflib import Graph
+
+from dartfx.ddi.ddicdi.specification import DdiCdiModel
 
 
 @pytest.fixture

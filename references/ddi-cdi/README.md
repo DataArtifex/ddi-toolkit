@@ -1,7 +1,7 @@
 # DDI References
 
-This directory contains reference materials (documentation, guides, papers, presentations) around DDI. 
-These can be use for AI training or for configuring expert knowledge tools. 
+This directory contains reference materials (documentation, guides, papers, presentations) around DDI.
+These can be use for AI training or for configuring expert knowledge tools.
 When relevant, original file have been converted to AI friendly formats such as PDF and markdown.
 
 

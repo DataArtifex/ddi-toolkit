@@ -77,10 +77,10 @@ Mapping from DDI-Codebook
 Advanced: Specification Loading::
 
    from dartfx.ddi.ddicdi.specification import DdiCdiModel
-   
+
    # Load DDI-CDI specification files
    model = DdiCdiModel(root_dir='specifications/ddi-cdi-1.0')
-   
+
    # Query the spec for class subhierarchies
    subclasses = model.get_resource_subclasses('cdi:InstanceVariable')
 
@@ -88,12 +88,12 @@ Deprecated Modules
 ------------------
 
 .. warning::
-   The following modules are deprecated and should no longer be used for new development:
+   The following legacy modules have been removed and replaced by the definitive ``model_1_0_0.py`` and the Assistant framework:
 
-   - ``sempyro_model.py``: Replaced by the definitive ``model_1_0_0.py``.
-   - ``dataclass_model.py``: Original prototype, replaced by Pydantic models.
+   - ``sempyro_model.py`` (Removed)
+   - ``dataclass_model.py`` (Removed)
+   - ``sempyro_deserializer.py`` (Removed)
    - ``ddicdi/utils.py``: Legacy resource manager, replaced by the Assistant framework.
-   - ``sempyro_deserializer.py``: Legacy implementation.
 
 API Reference Notes
 -------------------

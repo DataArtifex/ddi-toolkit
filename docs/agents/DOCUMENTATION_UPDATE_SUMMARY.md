@@ -112,7 +112,7 @@ The Sphinx-based documentation under `/docs` has been comprehensively reviewed, 
 - Realistic variable and file processing code
 - Proper error handling for malformed documents
 
-### DDI-CDI  
+### DDI-CDI
 - Accurate specification loading examples
 - Correct SemPyRO model usage patterns
 - Realistic SPARQL query examples
@@ -129,7 +129,7 @@ The Sphinx-based documentation under `/docs` has been comprehensively reviewed, 
 ### Updated Files:
 - `docs/source/conf.py` - Configuration improvements
 - `docs/source/index.rst` - Main landing page
-- `docs/source/installation.rst` - Installation instructions  
+- `docs/source/installation.rst` - Installation instructions
 - `docs/source/quickstart.rst` - Quick start guide
 - `docs/source/ddicodebook.rst` - DDI-Codebook documentation
 - `docs/source/ddicdi.rst` - DDI-CDI documentation

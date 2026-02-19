@@ -25,12 +25,12 @@ def test_create_instance_variable():
     assert assistant.identifier.ddiIdentifier is not None
 
     # Method proxy check: get_ddi_identifier_value should be available on assistant
-    ddi_id = assistant.get_ddi_identifier_value()
+    ddi_id = assistant.get_ddi_identifier_value()  # type: ignore
     assert ddi_id is not None
     assert "_InstanceVariable" in ddi_id
 
     # Check URI via proxy
-    uri = assistant.get_uri()
+    uri = assistant.get_uri()  # type: ignore
     assert uri is not None
     assert uri.startswith("urn:ddi-cdi:")
 
@@ -41,10 +41,10 @@ def test_factory_with_custom_ids():
     assistant = CdiClassAssistant.factory(model.InstanceVariable, id_prefix=id_prefix, id_suffix=id_suffix)
 
     assert isinstance(assistant, CdiClassAssistant)
-    ddi_id = assistant.get_ddi_identifier_value()
+    ddi_id = assistant.get_ddi_identifier_value()  # type: ignore
     assert ddi_id == f"{id_prefix}_InstanceVariable_{id_suffix}"
 
-    uri = assistant.get_uri()
+    uri = assistant.get_uri()  # type: ignore
     assert str(uri) == f"urn:ddi-cdi:{ddi_id}"
 
 
@@ -54,7 +54,7 @@ def test_create_instance_variable_with_kwargs():
     )
 
     assert assistant.name[0].name == "VAR1"
-    ddi_id = assistant.get_ddi_identifier_value()
+    ddi_id = assistant.get_ddi_identifier_value()  # type: ignore
     assert ddi_id == "p_InstanceVariable_s"
 
     # Check non-ddi identifier proxy
@@ -67,12 +67,12 @@ def test_automated_instance_binding():
     assistant = CdiClassAssistant.create(model.InstanceVariable, name="TEST_VAR")
 
     # This calls ResourceAssistant.set_ddi_identifier(assistant.resource, "NEW_ID")
-    assistant.set_ddi_identifier("NEW_ID")
+    assistant.set_ddi_identifier("NEW_ID")  # type: ignore
 
-    assert assistant.get_ddi_identifier_value() == "NEW_ID"
-    assert assistant.resource.get_ddi_identifier_value() == "NEW_ID"
+    assert assistant.get_ddi_identifier_value() == "NEW_ID"  # type: ignore
+    assert assistant.resource.get_ddi_identifier_value() == "NEW_ID"  # type: ignore
 
-    assistant.set_simple_name("UPDATED_NAME")
+    assistant.set_simple_name("UPDATED_NAME")  # type: ignore
     assert assistant.name[0].name == "UPDATED_NAME"
 
 
@@ -113,7 +113,7 @@ def test_classmethod_selective_exposure():
     assistant = SelectiveAssistant(resource=res)
 
     # OtherAssistant bound 'resource_helper' to CDIResource
-    assert res.resource_helper() == "bound"
+    assert res.resource_helper() == "bound"  # type: ignore
 
     # SelectiveAssistant proxies to res, which has the method!
     # This works because SelectiveAssistant doesn't have its own 'resource_helper'.
@@ -149,4 +149,4 @@ def test_generic_create():
 
     assert isinstance(assistant.resource, model.Category)
     assert assistant.name[0].name == name
-    assert assistant.get_ddi_identifier_value() is not None
+    assert assistant.get_ddi_identifier_value() is not None  # type: ignore

@@ -26,7 +26,7 @@ Features
 - SPARQL query support
 - **Assistant Framework**: High-level wrapper for simplified object creation and association management
 - **RDF Toolkit Migration**: Transitioned to the DataArtifex RDF Toolkit for definitive Pydantic models
-- Resource property and relationship exploration  
+- Resource property and relationship exploration
 - Support for DDI-CDI 1.0 specification
 - SHACL validation support for DDI-CDI graphs
 

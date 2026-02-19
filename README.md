@@ -114,7 +114,7 @@ ddi-toolkit/
 │       ├── model_1_0_0.py      # Definitive generated Pydantic models
 │       ├── assistants.py       # High-level Assistant framework
 │       ├── specification.py    # DDI-CDI spec introspection tools
-│       └── ...                 # Legacy/Deprecated model files
+│       └── ...                 # Additional CDI utilities
 ├── tests/                     # Test suite
 └── docs/                      # Documentation
 ```
@@ -134,9 +134,9 @@ ddi-toolkit/
 - SQL schema generators and DCAT integration
 - Enhanced DDI-Codebook to DDI-CDI conversion mappings
 - Integration with LLMs for metadata enrichment
- 
+
 ## Contributing
- 
+
 1. Fork it!
 2. Create your feature branch: `git checkout -b my-new-feature`
 3. Commit your changes: `git commit -am 'Add some feature'`

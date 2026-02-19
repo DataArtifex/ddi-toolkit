@@ -49,6 +49,7 @@ import logging
 import os
 import re
 import xml.etree.ElementTree as ET
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -66,7 +67,7 @@ def loadxml(file) -> codeBookType:
     """Loads a DDI codebook from an XML file."""
     tree = ET.parse(file)
     root = tree.getroot()
-    ddicodebook = codeBookType()
+    ddicodebook = codeBookType()  # type: ignore
     ddicodebook.from_xml_element(root)
     return ddicodebook
 
@@ -74,7 +75,7 @@ def loadxml(file) -> codeBookType:
 def loadxmlstring(xmlstring) -> codeBookType:
     """Loads a DDI codebook from an XML string."""
     root = ET.fromstring(xmlstring)
-    ddicodebook = codeBookType()
+    ddicodebook = codeBookType()  # type: ignore
     ddicodebook.from_xml_element(root)
     return ddicodebook
 
@@ -244,13 +245,15 @@ class baseElementType(BaseModel):
                             setattr(self, base_name, instance)
                     else:
                         # annotated but does not appear to have an associated class
-                        logging.warn(f"No DDI class found for element {base_name} in {self.__class__.__name__}")
+                        logging.warning(f"No DDI class found for element {base_name} in {self.__class__.__name__}")
                 else:
                     # this element in not annotated (likely a bug)
-                    logging.warn(f"No type annotation found for child element {base_name} in {self.__class__.__name__}")
+                    logging.warning(
+                        f"No type annotation found for child element {base_name} in {self.__class__.__name__}"
+                    )
             else:
                 # don't know this element
-                logging.warn(f"Child element {base_name} ignored on {self.__class__.__name__}")
+                logging.warning(f"Child element {base_name} ignored on {self.__class__.__name__}")
 
         # Parse text content - special handling for abstractTextType etc
         # Rely on subclasses overriding mixed content logic or default here
@@ -272,9 +275,14 @@ class baseElementType(BaseModel):
                 continue
 
             annotation_str = str(annotation)
+            # Handle Union types like 'Type | None' or 'Optional[Type]'
+            annotation_str = re.sub(r"\s*\|\s*None", "", annotation_str)
+            annotation_str = re.sub(r"Optional\[(.*?)\]", r"\1", annotation_str)
+            if "Union[" in annotation_str:
+                annotation_str = annotation_str.replace("Union[", "").rstrip("]").split(",")[0].strip()
 
             # detect if this is a List (repeatable property)
-            is_list = "List" in annotation_str or "list" in annotation_str
+            is_list = "List[" in annotation_str or "list[" in annotation_str
 
             # extract inner type
             # This determines the target class
@@ -282,7 +290,8 @@ class baseElementType(BaseModel):
                 inner = annotation_str.split("[", 1)[1].rsplit("]", 1)[0]
                 # handle forward refs string
                 if "ForwardRef" in inner:
-                    property_type = re.search(r"ForwardRef\(\'(.*?)\'\)", inner).group(1)
+                    match = re.search(r"ForwardRef\(\'(.*?)\'\)", inner)
+                    property_type = match.group(1) if match else inner
                 elif "'" in inner:
                     property_type = inner.replace("'", "").replace('"', "")
                 else:
@@ -528,7 +537,7 @@ class codeBookType(baseElementType):
                 if stdyInfo.abstract:
                     abstract = stdyInfo.abstract[0]
                     value = str(abstract.content)
-        return value
+        return value  # type: ignore
 
     def get_alternate_title(self) -> str:
         """Returns the alternate title from the study description if it exists."""
@@ -542,13 +551,13 @@ class codeBookType(baseElementType):
                     if titlStmt.altTitl:
                         altTitle = titlStmt.altTitl[0]
                         value = str(altTitle.content)
-        return value
+        return value  # type: ignore
 
     def get_data_dictionary(
         self,
-        file_id: str = None,
-        name_regex: str = None,
-        label_regex: str = None,
+        file_id: str | None = None,
+        name_regex: str | None = None,
+        label_regex: str | None = None,
         categories: bool = False,
         questions: bool = False,
     ) -> dict[str, dict]:
@@ -567,11 +576,11 @@ class codeBookType(baseElementType):
         for dataDscr in self.dataDscr:
             for var in dataDscr.var:
                 if not file_id or (var.files and file_id in var.files):
-                    var_info = {"id": var.id}
+                    var_info: dict[str, Any] = {"id": var.id}
                     # name
                     if var.name:
                         var_name = var.name
-                        if name_regex and not re.match(name_regex, var_name, re.IGNORECASE):
+                        if name_regex and not re.match(name_regex, str(var_name), re.IGNORECASE):
                             continue
                         var_info["name"] = var_name
                     elif name_regex:
@@ -579,7 +588,7 @@ class codeBookType(baseElementType):
                     # label
                     if var.labl:
                         var_label = var.labl[0].content
-                        if label_regex and not re.match(label_regex, var_label, re.IGNORECASE):
+                        if label_regex and not re.match(label_regex, str(var_label), re.IGNORECASE):
                             continue
                         var_info["label"] = var_label
                     elif label_regex:
@@ -620,7 +629,7 @@ class codeBookType(baseElementType):
                         var_info["question"] = qstn_info
                     # add to dictionary
                     value[var.id] = var_info
-        return value
+        return value  # type: ignore
 
     def get_files(self) -> dict[str, dict]:
         """Returns the files and their documented infornation."""
@@ -633,7 +642,7 @@ class codeBookType(baseElementType):
                 if fileTxt.fileName:
                     fileName = fileTxt.fileName[0]
                     file["name"] = str(fileName.content)
-                    file["basename"] = os.path.splitext(file["name"])[0]
+                    file["basename"] = os.path.splitext(str(file.get("name", "")))[0]
                 if hasattr(fileTxt, "fileCont") and fileTxt.fileCont:
                     file["content"] = str(fileTxt.fileCont.content)
                 if hasattr(fileTxt, "dimensns") and fileTxt.dimensns:
@@ -642,7 +651,7 @@ class codeBookType(baseElementType):
                     if fileTxt.dimensns.varQnty:
                         file["n_variables"] = fileTxt.dimensns.varQnty[0].content
             value[file["id"]] = file
-        return value
+        return value  # type: ignore
 
     def get_title(self) -> str:
         """Returns the title of the study."""
@@ -656,7 +665,7 @@ class codeBookType(baseElementType):
                     if hasattr(titlStmt, "titl") and titlStmt.titl:
                         titl = titlStmt.titl
                         value = str(titl.content)
-        return value
+        return value  # type: ignore
 
     def get_subtitle(self) -> str:
         """Returns the subtitle of the study."""
@@ -670,15 +679,15 @@ class codeBookType(baseElementType):
                     if titlStmt.subTitl:
                         subtitl = titlStmt.subTitl[0]
                         value = str(subtitl.content)
-        return value
+        return value  # type: ignore
 
     def search_variables(
         self,
-        _file_id: str = None,
-        _name: str = None,
-        _label: str = None,
-        _has_catgry: bool = None,
-        _has_qstn: bool = None,
+        _file_id: str | None = None,
+        _name: str | None = None,
+        _label: str | None = None,
+        _has_catgry: bool | None = None,
+        _has_qstn: bool | None = None,
     ):
         """
         Search variables in the codebook
@@ -1561,9 +1570,11 @@ class varType(baseElementType):
     def n_non_missing_catgry(self) -> int:
         return self.n_catgry - self.n_missing_catgry
 
-    def get_catgry_checksum(self, include_code: bool = True, include_label: bool = True, method=None) -> str:
+    def get_catgry_checksum(
+        self, _include_code: bool = True, _include_label: bool = True, _method: Any | None = None
+    ) -> str:
         # TODO: compute checksum for catgry
-        pass
+        return ""
 
     def get_label(self):
         value = None

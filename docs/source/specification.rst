@@ -34,10 +34,10 @@ Basic Usage
 Loading the Specification::
 
    from dartfx.ddi.ddicdi.specification import DdiCdiModel
-   
+
    # Load from directory containing DDI-CDI sources
    model = DdiCdiModel(root_dir='specifications/ddi-cdi-1.0')
-   
+
    # Access the underlying rdflib Graph
    graph = model.graph
 
@@ -45,7 +45,7 @@ Querying Model Structure::
 
    # Get all classes defined in the specification
    classes = model.get_ucmis_classes()
-   
+
    # Search for specific class names
    variable_results = model.search_classes('Variable')
 
@@ -53,7 +53,7 @@ Introspecting a Class::
 
    # Get superclasses of InstanceVariable
    supers = model.get_resource_superclasses('cdi:InstanceVariable')
-   
+
    # Get associations for a class, including inherited ones
    associations = model.get_resource_associations('cdi:InstanceVariable', inherited=True)
 

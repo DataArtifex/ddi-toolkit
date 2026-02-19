@@ -179,8 +179,8 @@ class CdiResourceAssistant(CdiAssistant):
     @classmethod
     def get_uri(cls, resource: model.CDIResource) -> str | None:
         if getattr(resource, "identifier", None) is not None:
-            if getattr(resource.identifier, "uri", None) is not None:
-                return resource.identifier.uri
+            if getattr(resource.identifier, "uri", None) is not None:  # type: ignore
+                return resource.identifier.uri  # type: ignore
         elif getattr(resource, "id", None) is not None:
             return str(resource.id)
         return None
@@ -188,7 +188,7 @@ class CdiResourceAssistant(CdiAssistant):
     @classmethod
     def set_uri(cls, resource: model.CDIResource, value: str):
         if hasattr(resource, "identifier"):
-            if resource.identifier is None:
+            if getattr(resource, "identifier", None) is None:
                 resource.identifier = model.Identifier()
             resource.identifier.uri = value
 
@@ -310,50 +310,62 @@ class CdiClassAssistant(CdiResourceAssistant):
     @classmethod
     def get_ddi_identifier_value(cls, resource: model.CDIClass) -> str | None:
         if getattr(resource, "identifier", None) is not None:
-            if getattr(resource.identifier, "ddiIdentifier", None) is not None:
-                return resource.identifier.ddiIdentifier.dataIdentifier
+            if getattr(resource.identifier, "ddiIdentifier", None) is not None:  # type: ignore
+                return resource.identifier.ddiIdentifier.dataIdentifier  # type: ignore
         return None
 
     @classmethod
-    def set_identifiers(cls, resource: model.CDIClass, ddi: str = None, nonddi: str = None, uri: str = None):
-        if resource.identifier is None:
+    def set_identifiers(
+        cls,
+        resource: model.CDIClass,
+        ddi: str | None = None,
+        nonddi: str | None = None,
+        uri: str | None = None,
+    ):
+        if getattr(resource, "identifier", None) is None:
             resource.identifier = model.Identifier()
 
         if ddi:
-            if resource.identifier.ddiIdentifier is None:
-                resource.identifier.ddiIdentifier = model.InternationalRegistrationDataIdentifier(
+            if resource.identifier.ddiIdentifier is None:  # type: ignore
+                resource.identifier.ddiIdentifier = model.InternationalRegistrationDataIdentifier(  # type: ignore
                     dataIdentifier=ddi, registrationAuthorityIdentifier="int.dataartifex", versionIdentifier="1"
                 )
             else:
-                resource.identifier.ddiIdentifier.dataIdentifier = ddi
+                resource.identifier.ddiIdentifier.dataIdentifier = ddi  # type: ignore
 
         if nonddi:
-            if resource.identifier.nonDdiIdentifier is None:
-                resource.identifier.nonDdiIdentifier = []
-            resource.identifier.nonDdiIdentifier.append(model.NonDdiIdentifier(value=nonddi, type="generic"))
+            if resource.identifier.nonDdiIdentifier is None:  # type: ignore
+                resource.identifier.nonDdiIdentifier = []  # type: ignore
+            resource.identifier.nonDdiIdentifier.append(model.NonDdiIdentifier(value=nonddi, type="generic"))  # type: ignore
 
         if uri:
             cls.set_uri(resource, uri)
 
-        return resource.identifier
+        return resource.identifier  # type: ignore
 
     @classmethod
-    def set_ddi_identifier(cls, resource: model.CDIClass, value: str, authority: str = None, version: str = None):
+    def set_ddi_identifier(
+        cls,
+        resource: model.CDIClass,
+        value: str,
+        authority: str | None = None,
+        version: str | None = None,
+    ):
         if cls.set_identifiers(resource, ddi=value):
             if authority:
-                resource.identifier.ddiIdentifier.registrationAuthorityIdentifier = authority
+                resource.identifier.ddiIdentifier.registrationAuthorityIdentifier = authority  # type: ignore
             if version:
-                resource.identifier.ddiIdentifier.versionIdentifier = version
-            return resource.identifier.ddiIdentifier
+                resource.identifier.ddiIdentifier.versionIdentifier = version  # type: ignore
+            return resource.identifier.ddiIdentifier  # type: ignore
 
     @classmethod
-    def add_nonddi_identifier(cls, resource: model.CDIClass, value: str, type=None, clear=False):
+    def add_nonddi_identifier(cls, resource: model.CDIClass, value: str, type: str | None = None, clear: bool = False):
         if clear:
-            resource.identifier.nonDdiIdentifier = None
+            resource.identifier.nonDdiIdentifier = None  # type: ignore
         if cls.set_identifiers(resource, nonddi=value):
             if type:
-                resource.identifier.nonDdiIdentifier[-1].type = type
-            return resource.identifier.nonDdiIdentifier[-1]
+                resource.identifier.nonDdiIdentifier[-1].type = type  # type: ignore
+            return resource.identifier.nonDdiIdentifier[-1]  # type: ignore
 
     @classmethod
     def set_simple_name(cls, resource: model.CDIClass, value: str):
@@ -432,10 +444,10 @@ class CdiClassAssistant(CdiResourceAssistant):
         return cls(resource=cdi_resource)
 
     @classmethod
-    def create(cls, target_cls: type[model.CDIClass], name: str = None, **kwargs) -> "CdiClassAssistant":
+    def create(cls, target_cls: type[model.CDIClass], name: str | None = None, **kwargs) -> "CdiClassAssistant":
         assistant = cls.factory(target_cls, **kwargs)
         if name:
-            assistant.set_simple_name(name)
+            assistant.set_simple_name(name)  # type: ignore
         return assistant
 
 

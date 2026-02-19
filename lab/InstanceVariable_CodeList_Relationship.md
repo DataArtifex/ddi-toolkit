@@ -8,53 +8,53 @@ graph TD
     IV[InstanceVariable]:::instanceVar
     RV[RepresentedVariable]:::repVar
     CV[ConceptualVariable]:::conceptVar
-    
+
     %% Value Domain classes
     SVD[SubstantiveValueDomain]:::valueDomain
     VD[ValueDomain]:::valueDomain
-    
+
     %% Enumeration Domain hierarchy
     ED[EnumerationDomain]:::enumDomain
     CL[CodeList]:::codeList
-    
+
     %% Code and Category
     CODE[Code]:::code
     CAT[Category]:::category
-    
+
     %% Additional supporting classes
     VM[ValueMapping]:::valueMapping
     VCD[ValueAndConceptDescription]:::description
-    
+
     %% Inheritance relationships
     IV -.->|inherits from| RV
     RV -.->|inherits from| CV
     CL -.->|inherits from| ED
     SVD -.->|inherits from| VD
-    
+
     %% Key relationships
     IV -->|has_ValueMapping| VM
     RV -->|takesSubstantiveValuesFrom| SVD
     SVD -->|takesValuesFrom| ED
     SVD -->|isDescribedBy| VCD
-    
+
     %% CodeList structure
     CL -->|has_Code| CODE
     CODE -->|denotes| CAT
-    
+
     %% Alternative path through EnumerationDomain
     ED -.->|can be| CL
-    
+
     %% Annotations
     note1["`**Key Relationship Path:**
-    InstanceVariable → RepresentedVariable 
-    → SubstantiveValueDomain → EnumerationDomain 
+    InstanceVariable → RepresentedVariable
+    → SubstantiveValueDomain → EnumerationDomain
     → CodeList → Code → Category`"]:::note
-    
+
     note2["`**Alternative Description:**
     SubstantiveValueDomain can also use
     ValueAndConceptDescription for
     described (non-enumerated) values`"]:::note
-    
+
     %% Styling
     classDef instanceVar fill:#e1f5fe,stroke:#01579b,stroke-width:3px
     classDef repVar fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
@@ -120,4 +120,3 @@ For a Gender variable:
 - **Categories**: "Male", "Female", "Other"
 
 This structure enables the standardized representation of categorical data, with a precise mapping between the codes used in datasets and their corresponding semantic meaning.
-

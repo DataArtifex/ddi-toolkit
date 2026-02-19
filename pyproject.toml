@@ -106,6 +106,7 @@ log_cli_date_format = "%Y-%m-%d %H:%M:%S"
 line-length = 120
 target-version = "py312"
 src = ["src"]
+exclude = ["specifications"]
 
 [tool.ruff.lint]
 select = [
@@ -143,3 +144,12 @@ quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
+
+[tool.mypy]
+python_version = "3.12"
+check_untyped_defs = true
+ignore_missing_imports = true
+warn_unused_ignores = true
+show_error_codes = true
+mypy_path = "src"
+explicit_package_bases = true

@@ -21,7 +21,7 @@ Development Setup
    # Fork and clone the repository
    git clone https://github.com/yourusername/ddi-toolkit.git
    cd ddi-toolkit
-   
+
    # Option 1: Using uv (recommended)
    uv venv
    source .venv/bin/activate
@@ -31,7 +31,7 @@ Development Setup
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    pip install -e .[dev]
-   
+
    # Verify installation
    pytest
 
@@ -42,13 +42,13 @@ Running Tests
 
    # Run all tests
    pytest
-   
+
    # Run tests with verbose output
    pytest -v
-   
+
    # Run specific test file
    pytest tests/test_ddicodebook.py
-   
+
    # Run tests for specific module
    pytest tests/test_ddicdi_specification.py
 
@@ -63,11 +63,11 @@ Follow PEP 8 guidelines and use meaningful names:
    def load_ddi_codebook(file_path: str) -> codeBookType:
        """Load a DDI-Codebook from XML file."""
        return ddicodebook.loadxml(file_path)
-   
+
    # Use type hints
    from typing import Optional, List, Dict
-   
-   def extract_variables(codebook: codeBookType, 
+
+   def extract_variables(codebook: codeBookType,
                         var_type: Optional[str] = None) -> List[Dict]:
        """Extract variable information from codebook."""
        # Implementation here
@@ -83,7 +83,7 @@ Documentation is built with Sphinx:
    # Build documentation
    cd docs
    make html
-   
+
    # View documentation
    open build/html/index.html
 
@@ -103,7 +103,7 @@ Types of Contributions
 **High Priority:**
 
 - DDI-CDI specification coverage improvements
-- Test coverage enhancements  
+- Test coverage enhancements
 - Documentation updates and examples
 - Bug fixes in DDI-Codebook processing
 

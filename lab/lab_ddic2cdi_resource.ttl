@@ -24,4 +24,3 @@
     cdi:_uri "urn:uuid:ff52579c-e528-42cb-b7c1-70ed4231fccd"^^xsd:string ;
     cdi:ddiIdentifier <urn:uuid:ea86e8fa-4aa7-4d1e-a216-ad8cfc5b6a3d> ;
     cdi:uri <urn:dartfx:bbabd31a-a5ef-4be4-baa5-59e9f8682f67_InstanceVariable> .
-

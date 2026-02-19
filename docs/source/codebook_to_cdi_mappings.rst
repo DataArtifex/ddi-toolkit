@@ -537,10 +537,10 @@ Standard Mode Conversion
 
    # Find all InstanceVariables
    from dartfx.ddi.ddicdi.model_1_0_0 import InstanceVariable
-   
-   variables = [r for r in resources.values() 
+
+   variables = [r for r in resources.values()
                 if isinstance(r, InstanceVariable)]
-   
+
    print(f"Found {len(variables)} variables")
 
 Converting to RDF Graph

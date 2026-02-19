@@ -36,10 +36,10 @@ While the :doc:`ddicdi` (Assistant framework) is the recommended way to build DD
 
    # Create a resource instance
    var = model.InstanceVariable()
-   
+
    # Setting an ID is crucial to avoid blank nodes during serialization
-   var.id = "http://example.org/variables/age_1" 
-   
+   var.id = "http://example.org/variables/age_1"
+
    # Populate properties
    var.set_simple_name("AGE")
 
@@ -56,4 +56,4 @@ Legacy: SemPyRO
 ---------------
 
 .. note::
-   The initial implementation of RDF support was based on the **SemPyRO** (Semantic Python RDF Objects) library. While legacy modules like ``sempyro_model.py`` are preserved for reverse compatibility, all new development should use the definitive ``model_1_0_0.py`` based on the newer RDF Toolkit.
+   The initial implementation of RDF support was based on the **SemPyRO** (Semantic Python RDF Objects) library. Legacy modules like ``sempyro_model.py`` have been removed as the project has migrated to the definitive ``model_1_0_0.py`` based on the newer RDF Toolkit.

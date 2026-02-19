@@ -3,8 +3,13 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+import builtins
 import os
 import sys
+from typing import Any
+
+# Add Any to builtins to fix Sphinx 9.1.0 napoleon bug where Any is not defined in skip_member
+builtins.Any = Any
 
 sys.path.insert(0, os.path.abspath("../../src"))
 
@@ -46,7 +51,6 @@ autodoc_mock_imports = [
     "rdflib",
     "lxml",
     "dartfx.ddi.ddicdi.specification",
-    "dartfx.ddi.ddicdi.sempyro_model",
 ]
 
 # Skip autodoc errors for modules that can't be imported

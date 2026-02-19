@@ -157,4 +157,3 @@
     ns1:name <urn:uuid:bc1f39ea-9253-4118-a630-9f517027ac55> ;
     ns1:takesSentinelValues <urn:ddi-cdi:b38f58c0-9267-4de3-83e1-645af3f9a393_SentinelValueDomain_V1> ;
     ns1:takesSubstantiveValues <urn:ddi-cdi:b38f58c0-9267-4de3-83e1-645af3f9a393_SubstantiveValueDomain_V1> .
-

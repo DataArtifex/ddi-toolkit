@@ -1,0 +1,31 @@
+ARG002 Unused method argument: `include_code`
+    --> src/dartfx/ddi/ddicodebook.py:1574:15
+     |
+1573 |     def get_catgry_checksum(
+1574 |         self, include_code: bool = True, include_label: bool = True, method: Any | None = None
+     |               ^^^^^^^^^^^^
+1575 |     ) -> str:
+1576 |         # TODO: compute checksum for catgry
+     |
+
+ARG002 Unused method argument: `include_label`
+    --> src/dartfx/ddi/ddicodebook.py:1574:42
+     |
+1573 |     def get_catgry_checksum(
+1574 |         self, include_code: bool = True, include_label: bool = True, method: Any | None = None
+     |                                          ^^^^^^^^^^^^^
+1575 |     ) -> str:
+1576 |         # TODO: compute checksum for catgry
+     |
+
+ARG002 Unused method argument: `method`
+    --> src/dartfx/ddi/ddicodebook.py:1574:70
+     |
+1573 |     def get_catgry_checksum(
+1574 |         self, include_code: bool = True, include_label: bool = True, method: Any | None = None
+     |                                                                      ^^^^^^
+1575 |     ) -> str:
+1576 |         # TODO: compute checksum for catgry
+     |
+
+Found 3 errors.

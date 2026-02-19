@@ -1,11 +1,11 @@
-@base <http://example.org/ddi-cdi/gd63ygd8/> . 
+@base <http://example.org/ddi-cdi/gd63ygd8/> .
 @prefix cdi: <http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/> .
 
 #
 # Person Unit Type
 #
 <PersonType> a cdi:UnitType;
-    cdi:name "Person". 
+    cdi:name "Person".
 
 #
 # Marital Status Classification
@@ -115,4 +115,3 @@
 
 <MaritalStatus2018> a cdi:InstanceVariable;
     cdi:isBasedOn <MaritalStatus2> .
-

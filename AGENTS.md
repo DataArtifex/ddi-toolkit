@@ -3,7 +3,7 @@
 This document provides instructions and context for AI agents working on the `ddi-toolkit` (dartfx-ddi) codebase.
 
 ## Project Overview
-The **DDI Toolkit** is a Python library for processing metadata based on the **Data Documentation Initiative (DDI)** standards. 
+The **DDI Toolkit** is a Python library for processing metadata based on the **Data Documentation Initiative (DDI)** standards.
 
 ## Components
 
@@ -59,7 +59,7 @@ When working with DDI-CDI resources, always prioritize using `CdiClassAssistant`
 - **Proxying**: Assistants proxy all attribute access to the underlying `resource`.
 
 ### 2. RDF Serialization
-The toolkit uses `dartfx-rdf` and `sempyro`. 
+The toolkit uses `dartfx-rdf` and `sempyro`.
 - **Subject URIs**: Ensure `resource.id` is set to the URI to avoid blank nodes in the RDF output.
 - **Relationships**: Use the `add_resources` helper in assistants to handle the difference between singular and multi-valued predicates correctly.
 
@@ -72,6 +72,6 @@ DDI-CDI models are strictly Pydantic-based. Avoid bypassing validation unless ab
 - **Assertions**: Always verify the presence of `Identifier` and `uri` properties on generated resources.
 
 ## Security Considerations
-- **XML External Entities (XXE)**: The project uses `xml.etree.ElementTree`. While currently used for trusted metadata, be cautious with untrusted DDI XML sources. 
+- **XML External Entities (XXE)**: The project uses `xml.etree.ElementTree`. While currently used for trusted metadata, be cautious with untrusted DDI XML sources.
 - **URI Generation**: URIs are generated using `uuid4` by default. Ensure that any manual URI overrides follow the `urn:ddi-cdi:...` or `urn:uuid:...` conventions.
 - **Dependency Management**: Monitor `dartfx-rdf` and `sempyro` for updates as they handle the core RDF serialization security.

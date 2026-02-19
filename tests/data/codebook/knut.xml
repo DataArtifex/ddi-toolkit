@@ -29,53 +29,53 @@
 			<txt>tab2dtaLabel</txt>
 		</varGrp>
 		<var ID="f1var1ID" name="tab1varA" files="File1name">
-			<location fileid="File1name"/> 
-			<labl>VariableLabeltab1varA</labl> 
-			<qstn>QuestionTexttab1varA</qstn> 
-			<txt>VariableDescriptiontab1varA</txt> 
+			<location fileid="File1name"/>
+			<labl>VariableLabeltab1varA</labl>
+			<qstn>QuestionTexttab1varA</qstn>
+			<txt>VariableDescriptiontab1varA</txt>
 			<catgry missing="N">
-				<catValu>1</catValu> 
-				<labl>Value1Labeltab1varA</labl> 
-			</catgry> 
+				<catValu>1</catValu>
+				<labl>Value1Labeltab1varA</labl>
+			</catgry>
 			<catgry missing="N">
-				<catValu>2</catValu> 
-				<labl>Value2Labeltab1varA</labl> 
-			</catgry> 
+				<catValu>2</catValu>
+				<labl>Value2Labeltab1varA</labl>
+			</catgry>
 			<catgry missing="Y">
-				<catValu>-9</catValu> 
-				<labl>Value-9Labeltab1varA</labl> 
-			</catgry> 
-			<concept>ConceptLabeltab1varA</concept> 
+				<catValu>-9</catValu>
+				<labl>Value-9Labeltab1varA</labl>
+			</catgry>
+			<concept>ConceptLabeltab1varA</concept>
 		</var>
 		<var ID="f1var2ID" name="tab1varB" files="File1name">
-			<location fileid="File1name"/> 
-			<labl>VariableLabeltab1varB</labl> 
-			<qstn>QuestionTexttab1varB</qstn> 
-			<txt>VariableDescriptiontab1varB</txt> 
+			<location fileid="File1name"/>
+			<labl>VariableLabeltab1varB</labl>
+			<qstn>QuestionTexttab1varB</qstn>
+			<txt>VariableDescriptiontab1varB</txt>
 			<catgry missing="N">
-				<catValu>1</catValu> 
-				<labl>Value1Labeltab1varB</labl> 
-			</catgry> 
+				<catValu>1</catValu>
+				<labl>Value1Labeltab1varB</labl>
+			</catgry>
 		</var>
 		<var ID="f2var1ID" name="tab2varC" files="File2name">
-			<location fileid="File2name"/> 
-			<labl>VariableLabeltab2varC</labl> 
-			<qstn>QuestionTexttab2varC</qstn> 
-			<txt>VariableDescriptiontab2varC</txt> 
+			<location fileid="File2name"/>
+			<labl>VariableLabeltab2varC</labl>
+			<qstn>QuestionTexttab2varC</qstn>
+			<txt>VariableDescriptiontab2varC</txt>
 			<catgry missing="N">
-				<catValu>1</catValu> 
-				<labl>Value1Labeltab2varC</labl> 
-			</catgry> 
+				<catValu>1</catValu>
+				<labl>Value1Labeltab2varC</labl>
+			</catgry>
 		</var>
 		<var ID="f2var2ID" name="tab2varD" files="File1name">
-			<location fileid="File2name"/> 
-			<labl>VariableLabeltab2varD</labl> 
-			<qstn>QuestionTexttab2varD</qstn> 
-			<txt>VariableDescriptiontab2varD</txt> 
+			<location fileid="File2name"/>
+			<labl>VariableLabeltab2varD</labl>
+			<qstn>QuestionTexttab2varD</qstn>
+			<txt>VariableDescriptiontab2varD</txt>
 			<catgry missing="N">
-				<catValu>1</catValu> 
-				<labl>Value1Labeltab2varD</labl> 
-			</catgry> 
+				<catValu>1</catValu>
+				<labl>Value1Labeltab2varD</labl>
+			</catgry>
 		</var>
 	</dataDscr>
 </codeBook>

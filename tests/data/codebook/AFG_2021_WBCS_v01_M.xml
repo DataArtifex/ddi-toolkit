@@ -66,12 +66,12 @@
       <dataKind>Sample survey data [ssd]</dataKind>
     </sumDscr>
     <!-- qualityStatement - ddi2.5 - complex type
-     
-     This structure consists of two parts, standardsCompliance and otherQualityStatements. 
-     In standardsCompliance list all specific standards complied with during the execution of this 
-     study. Note the standard name and producer and how the study complied with the standard. 
+
+     This structure consists of two parts, standardsCompliance and otherQualityStatements.
+     In standardsCompliance list all specific standards complied with during the execution of this
+     study. Note the standard name and producer and how the study complied with the standard.
      Enter any additional quality statements in otherQualityStatements.
-     
+
      -->
     <qualityStatement>
       <standardsCompliance>
@@ -83,22 +83,22 @@
       </standardsCompliance>
       <otherQualityStatement/>
     </qualityStatement>
-    <notes>The scope of the study includes: 
-- Overall Context 
-- Overall Attitudes toward the World Bank Group  
-- World Bank Group’s Work and Engagement on the Ground 
-- World Bank Group’s Support in Development Areas 
-- World Bank Group’s Knowledge Work and Activities 
-- The Future Role of the World Bank Group in Afghanistan 
-- Communication and Information Sharing 
+    <notes>The scope of the study includes:
+- Overall Context
+- Overall Attitudes toward the World Bank Group
+- World Bank Group’s Work and Engagement on the Ground
+- World Bank Group’s Support in Development Areas
+- World Bank Group’s Knowledge Work and Activities
+- The Future Role of the World Bank Group in Afghanistan
+- Communication and Information Sharing
 - Background Information</notes>
     <!-- exPostEvaluation ddi2.5
-      Use this section to describe evaluation procedures not address in data evaluation processes. 
-      These may include issues such as timing of the study, sequencing issues, cost/budget issues, 
-      relevance, instituional or legal arrangments etc. of the study. 
-      
-      The completionDate attribute holds the date the evaluation was completed. 
-      The type attribute is an optional type to identify the type of evaluation with or without 
+      Use this section to describe evaluation procedures not address in data evaluation processes.
+      These may include issues such as timing of the study, sequencing issues, cost/budget issues,
+      relevance, instituional or legal arrangments etc. of the study.
+
+      The completionDate attribute holds the date the evaluation was completed.
+      The type attribute is an optional type to identify the type of evaluation with or without
       the use of a controlled vocabulary.
     -->
     <exPostEvaluation completionDate="" type="">
@@ -111,13 +111,13 @@
       <timeMeth/>
       <dataCollector abbr="" affiliation="">Pajhwok Afghan News</dataCollector>
       <!-- collectorTraining - DDI2.5
-        
+
         Collector Training
 
-        Describes the training provided to data collectors including internviewer training, process testing, 
-        compliance with standards etc. This is repeatable for language and to capture different aspects of the 
+        Describes the training provided to data collectors including internviewer training, process testing,
+        compliance with standards etc. This is repeatable for language and to capture different aspects of the
         training process. The type attribute allows specification of the type of training being described.
-        
+
         -->
       <collectorTraining type=""/>
       <frequenc/>
@@ -135,16 +135,16 @@
       <collMode>Other [oth]</collMode>
       <resInstru>The questionnaire used to collect the survey data consisted of the following 8 sections:
 A. Overall Context
-B. Overall Attitudes toward the World Bank Group 
-C. World Bank Group’s Work and Engagement on the Ground 
-D. World Bank Group’s Support in Development Areas 
-E. World Bank Group’s Knowledge Work and Activities 
-F. The Future Role of the World Bank Group in Afghanistan 
-G. Communication and Information Sharing 
+B. Overall Attitudes toward the World Bank Group
+C. World Bank Group’s Work and Engagement on the Ground
+D. World Bank Group’s Support in Development Areas
+E. World Bank Group’s Knowledge Work and Activities
+F. The Future Role of the World Bank Group in Afghanistan
+G. Communication and Information Sharing
 H. Background Information
 
 The questionnaire was prepared in English, Pashto, and Dari.</resInstru>
-      <!-- instrumentDevelopment - DDI2.5             
+      <!-- instrumentDevelopment - DDI2.5
         Describe any development work on the data collection instrument. Type attribute allows for the optional use of a defined development type with or without use of a controlled vocabulary.
         -->
       <instrumentDevelopment type=""/>
@@ -198,12 +198,12 @@ The questionnaire was prepared in English, Pashto, and Dari.</resInstru>
     <fileName>afghanistan_cos_fy21_datafile_final_.sav</fileName>
     <fileCont>Data collected using the 2021 Afghanistan World Bank Group Country Survey questionnaire (FY21).
 - Overall context
-- Overall Attitudes toward the World Bank Group  
-- World Bank Group’s Work and Engagement on the Ground 
-- World Bank Group’s Support in Development Areas 
-- World Bank Group’s Knowledge Work and Activities 
-- The Future Role of the World Bank Group in Afghanistan 
-- Communication and Information Sharing 
+- Overall Attitudes toward the World Bank Group
+- World Bank Group’s Work and Engagement on the Ground
+- World Bank Group’s Support in Development Areas
+- World Bank Group’s Knowledge Work and Activities
+- The Future Role of the World Bank Group in Afghanistan
+- Communication and Information Sharing
 - Background Information</fileCont>
     <dimensns>
       <caseQnty>475</caseQnty>
