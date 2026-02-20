@@ -2,6 +2,7 @@
 # PROJECT
 temp
 tests/outputs
+tests/data/cdi/
 
 #
 # Python
@@ -372,3 +373,8 @@ node_modules/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+
+# Never ignore the specifications directory build output.
+# This must be at the END of the file because gitignore uses last-match-wins,
+# and the generic 'build/' rule above would otherwise override these negations.
+!specifications/**/build/
