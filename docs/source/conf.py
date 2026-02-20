@@ -8,8 +8,31 @@ import os
 import sys
 from typing import Any
 
-# Add Any to builtins to fix Sphinx 9.1.0 napoleon bug where Any is not defined in skip_member
+# Add Any to builtins to fix Sphinx napoleon bug where Any is not defined
 builtins.Any = Any
+
+# Patch Napoleon's _skip_member BEFORE Napoleon's setup() registers it.
+# Sphinx calls all autodoc-skip-member handlers regardless of what previous
+# ones return, so Napoleon's handler still runs even when ours returns True.
+# In Sphinx 9.1.0, Napoleon's _skip_member crashes when introspecting
+# Pydantic v2 internal attributes like __pydantic_extra__.
+try:
+    import sphinx.ext.napoleon as _napoleon_ext
+
+    _original_napoleon_skip = _napoleon_ext._skip_member  # type: ignore[attr-defined]
+
+    def _safe_napoleon_skip(app, what, name, obj, skip, options):  # type: ignore[misc]
+        """Safe wrapper around Napoleon's _skip_member that handles Pydantic internals."""
+        if name.startswith("__pydantic_"):
+            return True
+        try:
+            return _original_napoleon_skip(app, what, name, obj, skip, options)
+        except Exception:
+            return True
+
+    _napoleon_ext._skip_member = _safe_napoleon_skip  # type: ignore[attr-defined]
+except Exception:
+    pass  # If Napoleon isn't available, nothing to patch
 
 sys.path.insert(0, os.path.abspath("../../src"))
 
