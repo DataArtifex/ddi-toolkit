@@ -323,7 +323,7 @@ class CdiClassAssistant(CdiResourceAssistant):
         uri: str | None = None,
     ):
         if getattr(resource, "identifier", None) is None:
-            resource.identifier = model.Identifier()
+            resource.identifier = model.Identifier()  # type: ignore[attr-defined]
 
         if ddi:
             if resource.identifier.ddiIdentifier is None:  # type: ignore
