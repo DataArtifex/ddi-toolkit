@@ -9,6 +9,10 @@ def data_dir():
     return os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
 
 
+def outputs_dir():
+    return os.path.join(os.path.dirname(os.path.realpath(__file__)), "outputs")
+
+
 def test_nes1948_to_cdif_skos():
     cb_path = os.path.join(data_dir(), "codebook/NES1948.xml")
     cb = ddicodebook.loadxml(cb_path)
@@ -65,16 +69,17 @@ def test_nes1948_to_cdif_skos():
     # Validate - generate report regardless of conformance (SHACL work in progress)
     conforms, results_graph, _results_text = utils.validate_ddi_cdi(g)
     report = utils.shacl_report_to_markdown(results_graph)
-    report_path = os.path.join(data_dir(), "cdi/NES1948.cdif.skos.validation.md")
+    os.makedirs(os.path.join(outputs_dir(), "cdi"), exist_ok=True)
+    report_path = os.path.join(outputs_dir(), "cdi/NES1948.cdif.skos.validation.md")
     with open(report_path, "w") as f:
         f.write(report)
     if not conforms:
         print(f"SHACL Validation Report (SKOS) saved to: {report_path}")
 
     # Serialize to Turtle
-    g.serialize(destination=os.path.join(data_dir(), "cdi/NES1948.cdif.ttl"), format="turtle")
-    g.serialize(destination=os.path.join(data_dir(), "cdi/NES1948.cdif.jsonld"), format="json-ld")
-    g.serialize(destination=os.path.join(data_dir(), "cdi/NES1948.cdif.xml"), format="xml")
+    g.serialize(destination=os.path.join(outputs_dir(), "cdi/NES1948.cdif.ttl"), format="turtle")
+    g.serialize(destination=os.path.join(outputs_dir(), "cdi/NES1948.cdif.jsonld"), format="json-ld")
+    g.serialize(destination=os.path.join(outputs_dir(), "cdi/NES1948.cdif.xml"), format="xml")
 
 
 def test_nes1948_to_cdif_native():
@@ -141,7 +146,8 @@ def test_nes1948_to_cdif_native():
     # Validate - generate report regardless of conformance (SHACL work in progress)
     conforms, results_graph, _results_text = utils.validate_ddi_cdi(g)
     report = utils.shacl_report_to_markdown(results_graph)
-    report_path = os.path.join(data_dir(), "cdi/NES1948.cdif.native.validation.md")
+    os.makedirs(os.path.join(outputs_dir(), "cdi"), exist_ok=True)
+    report_path = os.path.join(outputs_dir(), "cdi/NES1948.cdif.native.validation.md")
     with open(report_path, "w") as f:
         f.write(report)
     if not conforms:
