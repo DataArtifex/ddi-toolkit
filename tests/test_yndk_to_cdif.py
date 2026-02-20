@@ -66,7 +66,7 @@ def test_simple_to_cdi_skos():
     conforms, results_graph, _results_text = utils.validate_ddi_cdi(g)
     report = utils.shacl_report_to_markdown(results_graph)
     report_path = os.path.join(outputs_dir(), "cdi/simple_yndk.cdif.skos.validation.md")
-    with open(report_path, "w") as f:
+    with open(report_path, "w", encoding="utf-8") as f:
         f.write(report)
     if not conforms:
         print(f"SHACL Validation Report (SKOS) saved to: {report_path}")
@@ -124,7 +124,7 @@ def test_simple_to_cdi_native():
     conforms, results_graph, _results_text = utils.validate_ddi_cdi(g)
     report = utils.shacl_report_to_markdown(results_graph)
     report_path = os.path.join(outputs_dir(), "cdi/simple_yndk.cdif.native.validation.md")
-    with open(report_path, "w") as f:
+    with open(report_path, "w", encoding="utf-8") as f:
         f.write(report)
     if not conforms:
         print(f"SHACL Validation Report (Native) saved to: {report_path}")

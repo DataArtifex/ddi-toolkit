@@ -71,7 +71,7 @@ def test_nes1948_to_cdif_skos():
     report = utils.shacl_report_to_markdown(results_graph)
     os.makedirs(os.path.join(outputs_dir(), "cdi"), exist_ok=True)
     report_path = os.path.join(outputs_dir(), "cdi/NES1948.cdif.skos.validation.md")
-    with open(report_path, "w") as f:
+    with open(report_path, "w", encoding="utf-8") as f:
         f.write(report)
     if not conforms:
         print(f"SHACL Validation Report (SKOS) saved to: {report_path}")
@@ -148,7 +148,7 @@ def test_nes1948_to_cdif_native():
     report = utils.shacl_report_to_markdown(results_graph)
     os.makedirs(os.path.join(outputs_dir(), "cdi"), exist_ok=True)
     report_path = os.path.join(outputs_dir(), "cdi/NES1948.cdif.native.validation.md")
-    with open(report_path, "w") as f:
+    with open(report_path, "w", encoding="utf-8") as f:
         f.write(report)
     if not conforms:
         print(f"SHACL Validation Report (Native) saved to: {report_path}")
