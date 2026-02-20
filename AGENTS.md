@@ -1,77 +1,99 @@
-# Agent Guide: DDI Toolkit (dartfx-ddi)
+# AI Agent Instructions
 
-This document provides instructions and context for AI agents working on the `ddi-toolkit` (dartfx-ddi) codebase.
+Welcome, fellow AI. This file provides context and instructions for working on this repository effectively.
 
 ## Project Overview
-The **DDI Toolkit** is a Python library for processing metadata based on the **Data Documentation Initiative (DDI)** standards.
 
-## Components
+The **Data Artifex DDI Toolkit** is a specialized Python framework for managing metadata using the **Data Documentation Initiative (DDI)** standards. It specifically focuses on:
+- **DDI-Codebook 2.5**: Parsing and manipulating XML-based documentation for surveys and observational data.
+- **DDI-CDI 1.0.0 (Cross-Domain Integration)**: A next-generation standard for data integration across domains.
 
-- **DDI-Codebook**: Handled via `src/dartfx/ddi/ddicodebook.py` (standard XML parsing).
-- **DDI-CDI**: Handled via generated Pydantic models in `src/dartfx/ddi/ddicdi/model_1_0_0.py` (the primary reference based on DDI-CDI 1.0 specifications).
-- **Assistant Framework**: A high-level API in `src/dartfx/ddi/ddicdi/assistants.py` to simplify resource creation and manipulation.
-- **Model Specification**: `src/dartfx/ddi/ddicdi/specification.py` provides tools for loading and querying the DDI-CDI specification (Ontology/XML) to make the model machine-actionable.
+### Key Architecture & Implementation Details
 
-### Deprecated Modules
-The following legacy/experimental modules are deprecated and should not be used for new development:
-- `src/dartfx/ddi/ddicdi/dataclass_model.py` (Early prototype)
-- `src/dartfx/ddi/ddicdi/sempyro_model.py` (Legacy SemPyRO-specific generation)
-- `src/dartfx/ddi/ddicdi/utils.py` (Legacy resource manager)
-- `src/dartfx/ddi/ddicdi/sempyro_deserializer.py` (Legacy deserializer)
+1. **Definitive Pydantic Models**: DDI-CDI support is built on Pydantic models (`model_1_0_0.py`) generated directly from the official DDI-CDI UML specifications. The DDI-Codebook support is built on Pydantic models (`model.py`) manually coded from the official specification.
+2. **Assistant Framework**: To manage the complexity of the CDI model, the toolkit uses an **Assistant Framework** (`CdiClassAssistant`).
+   - **Resource Lifecycle**: Assistants handle the creation of resources, including automated DDI Identifier and URI generation.
+   - **Method Proxying**: Relationships are managed via methods (like `add_variable`) that are dynamically bound to model instances through assistants.
+3. **RDF & Semantic Web**: The toolkit provides native RDF serialization for CDI models and includes SHACL-based validation to ensure conformance with the DDI-CDI specification.
+4. **CDIF Profile Conversion**: A core utility (`utils.py`) enables the transformation of legacy DDI-Codebook metadata into DDI-CDI resources following the CDIF (Cross-Domain Integration Framework) profile.
 
-## Build and Test Commands
+### Instructions for AI Agents
 
-### Environment Setup
-The project uses `hatch` as the build backend. For faster package management and virtual environment handling, **`uv` is the preferred tool**.
+- **Resource Creation**: Always prefer `CdiClassAssistant.create(model.ClassName, ...)` for DDI-CDI resources. This ensures proper identifier and URI management.
+- **Relationship Management**: Use the bound assistant methods for linking resources (e.g., `dataset.add_variable(var)`) rather than manual list manipulation where possible.
+- **Validation**: After significant CDI model manipulations, use `utils.validate_ddi_cdi()` to verify SHACL compliance.
+- **Package Namespace**: The primary code lives under `dartfx.ddi`.
+- **DDI Specifics**: Be mindful that `CDIClass` and `CDIDataType` are treated differently in the assistant framework; assistants primarily operate on `CDIClass` resources.
 
-```bash
-# Install dependencies using uv
-uv pip install -e .[dev]
 
-# Alternatively, using standard pip
-pip install -e .[dev]
-```
+## Project Stack
 
-### Running Tests
-Tests are located in the `tests/` directory.
+- **Language**: Python 3.12+ (Strictly required)
+- **Dependency Management & Workflow**: [uv](https://github.com/astral-sh/uv) (Recommended) and [Hatch](https://hatch.pypa.io/).
+- **Linting & Formatting**: [Ruff](https://beta.astral.sh/ruff/) (extremely fast linter/formatter).
+- **Git Hooks**: [pre-commit](https://pre-commit.com/) (ensures code quality before commits).
+- **Testing**: [pytest](https://docs.pytest.org/) with [coverage](https://coverage.readthedocs.io/).
+- **Documentation**: [Sphinx](https://www.sphinx-doc.org/) with [MyST-Parser](https://myst-parser.readthedocs.io/) (Markdown support) and [Read the Docs theme](https://sphinx-rtd-theme.readthedocs.io/).
+- **Version Control**: Git.
 
-```bash
-# Run all tests using uv
-uv run pytest
+## Bootstrapping a New Project
 
-# Run with coverage (via hatch)
-hatch run cov
-```
+To rename the project and package from the template defaults:
+1. Run `./rename.sh "new-project-name" "new_package_name"`
+2. Run `uv sync` to refresh the environment.
+3. **DeepWiki**: Register the new project at [DeepWiki.com](https://deepwiki.com/) to enable AI-optimized documentation indexing.
 
-### Type Checking
-```bash
-# Run mypy
-hatch run types:check
-```
+## Environment Management
 
-## Code Style Guidelines
+This project uses `hatch` for environment management, but `uv` is preferred for speed.
 
-### 1. The Assistant Pattern (DDI-CDI)
-When working with DDI-CDI resources, always prioritize using `CdiClassAssistant` (or its specialized subclasses like `VariableAssistant`) rather than instantiating models directly.
+- To run tests: `uv run pytest` or `hatch run test`
+- To check types: `hatch run types:check`
+- To build docs: `hatch run docs:build`
 
-- **Creation**: Use `CdiClassAssistant.create(model.ClassName, name="...")`.
-- **Manipulation**: Methods defined as `@classmethod` in an assistant with a `resource` parameter are automatically bound to the underlying CDI model instances.
-- **Proxying**: Assistants proxy all attribute access to the underlying `resource`.
+## Coding Standards
 
-### 2. RDF Serialization
-The toolkit uses `dartfx-rdf` and `sempyro`.
-- **Subject URIs**: Ensure `resource.id` is set to the URI to avoid blank nodes in the RDF output.
-- **Relationships**: Use the `add_resources` helper in assistants to handle the difference between singular and multi-valued predicates correctly.
+- Follow PEP 8.
+- Use type hints for all public APIs.
+- Docstrings should be in Google style or NumPy style (Sphinx compatible).
+- Prefer `pathlib` over `os.path`.
 
-### 3. Pydantic Models
-DDI-CDI models are strictly Pydantic-based. Avoid bypassing validation unless absolutely necessary for performance.
+## Testing Policy
 
-## Testing Instructions
-- **Data Locality**: Test data is stored in `tests/data/`.
-- **Round-tripping**: A major goal is verifying that Codebook -> CDI -> RDF conversions are consistent.
-- **Assertions**: Always verify the presence of `Identifier` and `uri` properties on generated resources.
+- All new features must be accompanied by tests.
+- Maintain or improve test coverage.
+- Use `pytest` fixtures for setup/teardown.
+- Tests are located in the `tests/` directory.
 
-## Security Considerations
-- **XML External Entities (XXE)**: The project uses `xml.etree.ElementTree`. While currently used for trusted metadata, be cautious with untrusted DDI XML sources.
-- **URI Generation**: URIs are generated using `uuid4` by default. Ensure that any manual URI overrides follow the `urn:ddi-cdi:...` or `urn:uuid:...` conventions.
-- **Dependency Management**: Monitor `dartfx-rdf` and `sempyro` for updates as they handle the core RDF serialization security.
+## Documentation Policy
+
+- Documentation is located in the `docs/source` directory.
+- Main documentation is in `.rst` or `.md` (via MyST).
+- Keep `README.md` up to date with core installation and usage instructions.
+
+## Version Management
+
+- This project uses **dynamic versioning** via Hatch.
+- The source of truth for the version is located in: `src/dartfx/ddi/__about__.py`.
+- To bump versions, modify that file manually or use `hatch version <segment>` (e.g., `hatch version minor`).
+- Follow [Semantic Versioning (SemVer)](https://semver.org/).
+
+## Secret Management
+
+- **Local Development**: Use a `.env` file in the project root for local environment variables and secrets.
+- **Loading**: Secrets are automatically loaded in tests via `tests/conftest.py` using `python-dotenv`.
+- **Git Hygiene**: Never commit `.env` files. Ensure they are covered by `.gitignore`.
+- **CI/CD**: Add secrets to GitHub Repository Secrets for use in GitHub Actions. Reference them in workflows as `${{ secrets.SECRET_NAME }}`.
+
+## GitHub Actions CI/CD
+
+- **CI**: Located in `.github/workflows/test.yml`. Runs tests and linting on push/PR to `main` across Ubuntu, macOS, and Windows.
+- **Docs**: Located in `.github/workflows/sphinx.yaml`. Builds and deploys documentation to GitHub Pages on push to `main`.
+- All workflows use `astral-sh/setup-uv` for fast execution and caching.
+
+## Working with this Repo
+
+1. **Analysis**: Always start by reviewing `pyproject.toml` and `src/` structure.
+2. **Context**: Check `KIs` (Knowledge Items) if available for specific domain logic.
+3. **Execution**: Use `uv` or `hatch` for running scripts and tests.
+4. **Validation**: Always run `pytest` before finalizing changes.

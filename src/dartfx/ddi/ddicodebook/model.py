@@ -32,7 +32,8 @@ Roadmap:
 
 Pending DDI 2.5 issues/bugs:
      - dataCollType/sources is not repeatable which seems to be a bug
-     - dataFingerprintType (used in filedscr) does not derive from baseElementType and uses xs:string instead of stringType
+     - dataFingerprintType (used in filedscr) does not derive from baseElementType
+       and uses xs:string instead of stringType
      - codeListSchemeURN in controlledVocabUsedType has no type (should be stringType)
      - usageType does not derive from baseElementType, and neither do the underlying elements.
 

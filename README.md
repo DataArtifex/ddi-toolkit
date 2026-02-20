@@ -114,7 +114,9 @@ classes = cdi_spec.get_ucmis_classes()
 ```
 ddi-toolkit/
 ├── src/dartfx/ddi/
-│   ├── ddicodebook.py          # DDI-Codebook XML processing
+│   ├── ddicodebook/            # DDI-Codebook subpackage
+│   │   ├── __init__.py
+│   │   └── model.py            # DDI-Codebook 2.5 models
 │   ├── utils.py                # Conversion utilities (Codebook -> CDI)
 │   └── ddicdi/                 # DDI-CDI support
 │       ├── model_1_0_0.py      # Definitive generated Pydantic models
