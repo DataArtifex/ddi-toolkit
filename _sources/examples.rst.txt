@@ -12,10 +12,10 @@ Basic Metadata Extraction
 .. code-block:: python
 
    from dartfx.ddi import ddicodebook
-   
+
    # Load codebook
    cb = ddicodebook.loadxml('survey_data.xml')
-   
+
    # Access study metadata
    if cb.studyDscr:
        title = cb.studyDscr.citation.titlStmt.titl.content
@@ -38,7 +38,7 @@ Creating a DataSet with Variables
    dataset = CdiClassAssistant.create(model.DataSet, name="MyDataset")
 
    # Create variables and relate them
-   # Note how 'add_variable' is available because InstanceVariable 
+   # Note how 'add_variable' is available because InstanceVariable
    # is a valid property/association in the DataSet context
    var1 = CdiClassAssistant.create(model.InstanceVariable, name="AGE")
    dataset.add_variable(var1)
@@ -97,7 +97,7 @@ Convenience utilities exist to transform legacy metadata into the modern CDI for
    from dartfx.ddi import ddicodebook
 
    cb = ddicodebook.loadxml('survey.xml')
-   
+
    # Maps the whole codebook to a dict of Assistants
    resources = codebook_to_cdif(cb, baseuri="http://my-archive.org/data/")
 

@@ -7,13 +7,13 @@ DDI-Codebook
 Loading and processing a DDI-Codebook document::
 
    from dartfx.ddi import ddicodebook
-   
+
    # Load from file
    my_codebook = ddicodebook.loadxml('path/to/codebook.xml')
-   
+
    # Access study metadata
    study = my_codebook.studyDscr
-   
+
    # Access variables
    if my_codebook.dataDscr:
        for var in my_codebook.dataDscr.var:
@@ -46,10 +46,10 @@ Conversion from DDI-Codebook
 Transform DDI-Codebook metadata into a stack of DDI-CDI resources aligned with the CDIF profile::
 
    from dartfx.ddi.utils import codebook_to_cdif
-   
+
    # cb is a loaded codeBookType instance
    cdi_resources = codebook_to_cdif(cb)
-   
+
    # The result is a dictionary mapping URIs to Assistants
    for uri, assistant in cdi_resources.items():
        print(f"Generated CDI Resource: {uri}")
@@ -60,10 +60,10 @@ Specification Loader
 For introspecting the DDI-CDI specification itself::
 
    from dartfx.ddi.ddicdi.specification import DdiCdiModel
-   
+
    # Initialize model from local spec files
    cdi_spec = DdiCdiModel(root_dir='specifications/ddi-cdi-1.0')
-   
+
    # Search for classes
    variable_classes = cdi_spec.search_classes("variable")
 

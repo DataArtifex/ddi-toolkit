@@ -41,7 +41,7 @@ Dependencies
 The toolkit has several key dependencies:
 
 * **dartfx-rdf**: DataArtifex RDF Toolkit for RDF-aware Pydantic models
-* **rdflib**: For RDF graph operations and SPARQL queries  
+* **rdflib**: For RDF graph operations and SPARQL queries
 * **sempyro**: Legacy support for semantic Python RDF objects
 * **pyshacl**: For SHACL validation of DDI-CDI graphs
 
