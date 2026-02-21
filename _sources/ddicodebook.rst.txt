@@ -1,9 +1,9 @@
 DDI-Codebook Processing
 =======================
 
-The DDI-Codebook module provides functionality for reading and processing DDI-Codebook 2.5 XML documents in Python.
+The ``ddicodebook`` subpackage provides functionality for reading and processing DDI-Codebook 2.5 XML documents in Python.
 
-The module is designed to be flexible and accommodate various versions of DDI-Codebook, including slightly invalid DDI documents that are sometimes found in practice. The package is primarily intended for reading and processing existing DDI documents, not for creating new DDI-XML or validation.
+The subpackage is designed to be flexible and accommodate various versions of DDI-Codebook, including slightly invalid DDI documents that are sometimes found in practice. The package is primarily intended for reading and processing existing DDI documents, not for creating new DDI-XML or validation.
 
 Overview
 --------
@@ -98,11 +98,12 @@ Implementation Notes
 --------------------
 
 - Based on DDI-Codebook version 2.5 schema
+- Models are located in the ``ddicodebook.model`` subpackage
 - Class names match the complex types defined in DDI-Codebook
 - Property names match the DDI-Codebook element names
 - Type annotations are used to determine DDI property types
 - All classes inherit from a base ``baseElementType`` class
-- The module handles XML namespace issues automatically
+- The subpackage handles XML namespace issues automatically
 
 Performance Considerations
 --------------------------

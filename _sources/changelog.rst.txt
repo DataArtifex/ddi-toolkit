@@ -3,10 +3,16 @@ Changelog
 
 All notable changes to this project will be documented in this file.
 
-Version 0.0.2 (Current)
+Version 0.1.0 (Current)
 -----------------------
 
 Current development release of the DDI Toolkit.
+
+Refactors
+~~~~~~~~~
+
+- Refactored ``ddicodebook`` module into a subpackage structure for better extensibility.
+- Moved DDI-Codebook models to ``dartfx.ddi.ddicodebook.model``.
 
 Features
 ~~~~~~~~
