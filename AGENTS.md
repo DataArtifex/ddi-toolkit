@@ -51,16 +51,14 @@ This project uses `hatch` for environment management, but `uv` is preferred for 
 - To build docs: `hatch run docs:build`
 
 
-## Python Packages
-- Use Pydantic over Python dataclass or other modeling frameworks
-- Use Polars for data management over Pandas or other similar package
-
 ## Coding Standards
 
 - Follow PEP 8.
 - Use type hints for all public APIs.
 - Docstrings should be in Google style or NumPy style (Sphinx compatible).
 - Prefer `pathlib` over `os.path`.
+- Prefer Pydantic for modeling over Python data classs or other similar package
+- Prefer Polars package for data management over Pandas or other similar package
 - Strictly follow the project's Ruff configuration. Run `uv run ruff check .` and `uv run ruff format .` to ensure compliance before submitting changes.
 
 ## Testing Policy
