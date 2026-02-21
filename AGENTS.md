@@ -25,7 +25,6 @@ The **Data Artifex DDI Toolkit** is a specialized Python framework for managing 
 - **Package Namespace**: The primary code lives under `dartfx.ddi`.
 - **DDI Specifics**: Be mindful that `CDIClass` and `CDIDataType` are treated differently in the assistant framework; assistants primarily operate on `CDIClass` resources.
 
-
 ## Project Stack
 
 - **Language**: Python 3.12+ (Strictly required)
@@ -51,12 +50,18 @@ This project uses `hatch` for environment management, but `uv` is preferred for 
 - To check types: `hatch run types:check`
 - To build docs: `hatch run docs:build`
 
+
+## Python Packages
+- Use Pydantic over Python dataclass or other modeling frameworks
+- Use Polars for data management over Pandas or other similar package
+
 ## Coding Standards
 
 - Follow PEP 8.
 - Use type hints for all public APIs.
 - Docstrings should be in Google style or NumPy style (Sphinx compatible).
 - Prefer `pathlib` over `os.path`.
+- Strictly follow the project's Ruff configuration. Run `uv run ruff check .` and `uv run ruff format .` to ensure compliance before submitting changes.
 
 ## Testing Policy
 
@@ -96,4 +101,4 @@ This project uses `hatch` for environment management, but `uv` is preferred for 
 1. **Analysis**: Always start by reviewing `pyproject.toml` and `src/` structure.
 2. **Context**: Check `KIs` (Knowledge Items) if available for specific domain logic.
 3. **Execution**: Use `uv` or `hatch` for running scripts and tests.
-4. **Validation**: Always run `pytest` before finalizing changes.
+4. **Validation**: Always run `pytest` and `ruff check .` before finalizing changes.
