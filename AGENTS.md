@@ -5,7 +5,7 @@ Welcome, fellow AI. This file provides context and instructions for working on t
 ## Project Overview
 
 The **Data Artifex DDI Toolkit** is a specialized Python framework for managing metadata using the **Data Documentation Initiative (DDI)** standards. It specifically focuses on:
-- **DDI-Codebook 2.5**: Parsing and manipulating XML-based documentation for surveys and observational data.
+- **DDI-Codebook 2.6**: Parsing and manipulating XML-based documentation for surveys and observational data.
 - **DDI-CDI 1.0.0 (Cross-Domain Integration)**: A next-generation standard for data integration across domains.
 
 ### Key Architecture & Implementation Details

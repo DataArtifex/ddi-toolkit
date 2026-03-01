@@ -19,7 +19,7 @@ How to use::
      my_codebook = codebook.loadxml(filename)
 
 Implementation notes:
-     - Based on the version 2.5 of the schema
+     - Based on the version 2.6 of the schema
      - The name of the classes match the complex types defined in DDI-C
      - The name of the classes properties must match the DDI-C element names
      - Type annotations are used to determine the type of the DDI properties
@@ -30,7 +30,7 @@ Roadmap:
      - Extensive testing
      - Add element specific helper methods to facilite processing
 
-Pending DDI 2.5 issues/bugs:
+Pending DDI 2.6 issues/bugs:
      - dataCollType/sources is not repeatable which seems to be a bug
      - dataFingerprintType (used in filedscr) does not derive from baseElementType
        and uses xs:string instead of stringType
@@ -330,6 +330,12 @@ class baseElementType(BaseModel):
 
 
 class abstractTextType(baseElementType):
+    # DDI 2.6: Translation attributes
+    isTranslatable: str | None = None
+    isTranslated: str | None = None
+    translationDate: str | None = None
+    translationSourceLanguage: str | None = None
+
     def from_xml_element(self, element: ET.Element):
         """Override method to stop driling down and capture underlying mixed content as text"""
         super().from_xml_element(element)  # process attributes
@@ -376,6 +382,14 @@ class txtType(tableAndTextType):
 class conceptType(simpleTextType):
     vocab: str | None = None
     vocabUri: str | None = None
+    # DDI 2.6: Controlled vocabulary attributes
+    otherValue: str | None = None
+    vocabAgencyName: str | None = None
+    vocabID: str | None = None
+    vocabInstanceCodeTerm: str | None = None
+    vocabInstanceURI: str | None = None
+    vocabSchemeURN: str | None = None
+    vocabVersionID: str | None = None
 
 
 class conceptualTextType(abstractTextType):
@@ -390,6 +404,52 @@ class conceptualTextType(abstractTextType):
 
 class abstractType(simpleTextAndDateType):
     contentType: str | None = None
+
+
+# DDI 2.6: New complex types
+
+
+class fileDerivationVarsType(baseElementType):
+    """Tracks which variables were kept, dropped, or added during file derivation."""
+
+    keep: str | None = None
+    drop: str | None = None
+    add: str | None = None
+
+
+class languageType(simpleTextType):
+    """Documents the language(s) of a study product."""
+
+    typeOfLanguageCode: str | None = None
+    languageCode: str | None = None
+
+
+class licenseType(simpleTextType):
+    """Documents the license under which data or metadata is distributed."""
+
+    URI: str | None = None
+    type: str | None = None
+    scope: str | None = None
+
+
+class origArchType(simpleTextType):
+    """Documents the originating archive for a dataset."""
+
+    affiliation: str | None = None
+    abbr: str | None = None
+    URI: str | None = None
+    # Agent identification
+    agentIdentifier: str | None = None
+    typeOfAgentIdentifier: str | None = None
+    isPersistentIdentifier: str | None = None
+    agentType: str | None = None
+
+
+class varRangeType(baseElementType):
+    """Identifies a range of variables by referencing the first and last variable IDs."""
+
+    start: str | None = None
+    end: str | None = None
 
 
 class accsPlacType(simpleTextType):
@@ -413,11 +473,22 @@ class attributeType(stringType):
 
 class AuthEntyType(simpleTextType):
     affiliation: str | None = None
+    # DDI 2.6
+    abbr: str | None = None
+    agentIdentifier: str | None = None
+    typeOfAgentIdentifier: str | None = None
+    isPersistentIdentifier: str | None = None
+    agentType: str | None = None
 
 
 class authorizingAgencyType(stringType):
     affiliation: str | None = None
     abbr: str | None = None
+    # DDI 2.6
+    agentIdentifier: str | None = None
+    typeOfAgentIdentifier: str | None = None
+    isPersistentIdentifier: str | None = None
+    agentType: str | None = None
 
 
 class backwardType(simpleTextType):
@@ -461,6 +532,7 @@ class catgryType(baseElementType):
     excls: str | None = None
     catgry: str | None = None
     level: str | None = None
+    access: str | None = None  # DDI 2.6
 
     @property
     def is_missing(self):
@@ -481,6 +553,7 @@ class catStatType(simpleTextType):
     wgt_var: str | None = Field(None, alias="wgt-var")
     weight: str | None = None
     sdatrefs: str | None = None
+    access: str | None = None  # DDI 2.6
 
 
 class citationType(baseElementType):
@@ -515,6 +588,11 @@ class contactType(simpleTextType):
     affiliation: str | None = None
     URI: str | None = None
     email: str | None = None
+    # DDI 2.6
+    agentIdentifier: str | None = None
+    typeOfAgentIdentifier: str | None = None
+    isPersistentIdentifier: str | None = None
+    agentType: str | None = None
 
 
 class codeBookType(baseElementType):
@@ -526,6 +604,7 @@ class codeBookType(baseElementType):
 
     version: str | None = None
     codeBookAgency: str | None = None
+    access: str | None = None  # DDI 2.6
 
     # HELPERS
     def get_abstract(self) -> str:
@@ -645,7 +724,7 @@ class codeBookType(baseElementType):
                     file["name"] = str(fileName.content)
                     file["basename"] = os.path.splitext(str(file.get("name", "")))[0]
                 if hasattr(fileTxt, "fileCont") and fileTxt.fileCont:
-                    file["content"] = str(fileTxt.fileCont.content)
+                    file["content"] = str(fileTxt.fileCont[0].content)
                 if hasattr(fileTxt, "dimensns") and fileTxt.dimensns:
                     if fileTxt.dimensns.caseQnty:
                         file["n_records"] = fileTxt.dimensns.caseQnty[0].content
@@ -703,6 +782,7 @@ class codeBookType(baseElementType):
 class codingInstructionsType(baseElementType):
     txt: list[txtType] = Field(default_factory=list)
     command: list[commandType] = Field(default_factory=list)
+    typeOfCodingInstruction: list[conceptType] = Field(default_factory=list)  # DDI 2.6
 
     type: str | None = None
     relatedProcesses: str | None = None
@@ -720,7 +800,7 @@ class collDateType(simpleTextAndDateType):
     cycle: str | None = None
 
 
-class collectorTrainingType(simpleTextType):
+class collectorTrainingType(conceptualTextType):  # DDI 2.6: was simpleTextType
     type: str | None = None
 
 
@@ -747,15 +827,24 @@ class CubeCoordType(baseElementType):
 class custodianType(stringType):
     affiliation: str | None = None
     abbr: str | None = None
+    # DDI 2.6
+    role: str | None = None
+    agentIdentifier: str | None = None
+    typeOfAgentIdentifier: str | None = None
+    isPersistentIdentifier: str | None = None
+    agentType: str | None = None
 
 
 class dataAccsType(baseElementType):
     setAvail: list[setAvailType] = Field(default_factory=list)
     useStmt: list[useStmtType] = Field(default_factory=list)
     notes: list[notesType] = Field(default_factory=list)
+    # DDI 2.6
+    license: list[licenseType] = Field(default_factory=list)
+    typeOfAccess: list[conceptType] = Field(default_factory=list)
 
 
-class dataApprType(simpleTextType):
+class dataApprType(conceptualTextType):  # DDI 2.6: was simpleTextType
     type: str | None = None
 
 
@@ -763,6 +852,11 @@ class dataCollectorType(conceptualTextType):
     abbr: str | None = None
     affiliation: str | None = None
     role: str | None = None
+    # DDI 2.6
+    agentIdentifier: str | None = None
+    typeOfAgentIdentifier: str | None = None
+    isPersistentIdentifier: str | None = None
+    agentType: str | None = None
 
 
 class dataDscrType(baseElementType):
@@ -772,24 +866,36 @@ class dataDscrType(baseElementType):
     nCube: list[nCubeType] = Field(default_factory=list)
     notes: list[notesType] = Field(default_factory=list)
 
+    access: str | None = None  # DDI 2.6
+
 
 class dataKindType(conceptualTextType):
     type: str | None = None
 
 
-class dataProcessingType(simpleTextType):
+class dataProcessingType(conceptualTextType):  # DDI 2.6: was simpleTextType
     type: str | None = None
 
 
 class depositrType(simpleTextType):
     abbr: str | None = None
     affiliation: str | None = None
+    # DDI 2.6
+    agentIdentifier: str | None = None
+    typeOfAgentIdentifier: str | None = None
+    isPersistentIdentifier: str | None = None
+    agentType: str | None = None
 
 
 class distrbtrType(simpleTextType):
     abbr: str | None = None
     affiliation: str | None = None
     URI: str | None = None
+    # DDI 2.6
+    agentIdentifier: str | None = None
+    typeOfAgentIdentifier: str | None = None
+    isPersistentIdentifier: str | None = None
+    agentType: str | None = None
 
 
 class distStmtType(baseElementType):
@@ -834,11 +940,13 @@ class dataItemType(baseElementType):
 
     varRef: str | None = None
     nCubeRef: str | None = None
+    access: str | None = None  # DDI 2.6
 
 
 class derivationType(baseElementType):
     drvdesc: list[simpleTextType] = Field(default_factory=list)
     drvcmd: list[drvcmdType] = Field(default_factory=list)
+    varRange: list[varRangeType] = Field(default_factory=list)  # DDI 2.6
 
     var: str | None = None
 
@@ -848,6 +956,7 @@ class developmentActivityType(baseElementType):
     participant: list[participantType] = Field(default_factory=list)
     resource: list[resourceType] = Field(default_factory=list)
     outcome: list[simpleTextType] = Field(default_factory=list)
+    typeOfDevelopmentActivity: list[conceptType] = Field(default_factory=list)  # DDI 2.6
 
     type: str | None = None
 
@@ -874,6 +983,8 @@ class docDscrType(baseElementType):
     docSrc: list[docSrcType] = Field(default_factory=list)
     controlledVocabUsed: list[controlledVocabUsedType] = Field(default_factory=list)
     notes: list[notesType] = Field(default_factory=list)
+
+    access: str | None = None  # DDI 2.6
 
 
 class docSrcType(baseElementType):
@@ -903,6 +1014,11 @@ class evaluatorType(stringType):
     affiliation: str | None = None
     abbr: str | None = None
     role: str | None = None
+    # DDI 2.6
+    agentIdentifier: str | None = None
+    typeOfAgentIdentifier: str | None = None
+    isPersistentIdentifier: str | None = None
+    agentType: str | None = None
 
 
 class eventDateType(dateType):
@@ -913,15 +1029,35 @@ class exPostEvaluationType(baseElementType):
     evaluator: list[evaluatorType] = Field(default_factory=list)
     evaluationProcess: list[simpleTextType] = Field(default_factory=list)
     outcomes: list[simpleTextType] = Field(default_factory=list)
+    typeOfExPostEvaluation: list[conceptType] = Field(default_factory=list)  # DDI 2.6
 
     completionDate: str | None = None
     type: str | None = None
+
+
+class fileCommandType(baseElementType):
+    """Documents a command used to derive a file from source files."""
+
+    drvdesc: list[simpleTextType] = Field(default_factory=list)
+    drvcmd: list[drvcmdType] = Field(default_factory=list)
+    fileDerivationVars: fileDerivationVarsType | None = None
+
+    fileDerivationCasesAction: str | None = None
+
+
+class fileDerivationType(baseElementType):
+    """Groups file-level derivation commands, linking a derived file to its sources."""
+
+    fileCommand: list[fileCommandType] = Field(default_factory=list)
+
+    sourceFiles: str | None = None
 
 
 class fileDscrType(baseElementType):
     fileTxt: list[fileTxtType] = Field(default_factory=list)
     locMap: locMapType | None = None
     notes: list[notesType] = Field(default_factory=list)
+    fileDerivation: fileDerivationType | None = None  # DDI 2.6
 
     URI: str | None = None
     sdatrefs: str | None = None
@@ -943,7 +1079,7 @@ class fileTxtType(baseElementType):
     fileName: list[simpleTextType] = Field(default_factory=list)
     fileCitation: citationType | None = None
     dataFingerprint: list[dataFingerprintType] = Field(default_factory=list)
-    fileCont: simpleTextType | None = None
+    fileCont: list[simpleTextType] = Field(default_factory=list)  # DDI 2.6: was singular
     fileStr: fileStrcType | None = None
     dimensns: dimensnsType | None = None
     fileType: list[fileTypeType] = Field(default_factory=list)
@@ -955,12 +1091,14 @@ class fileTxtType(baseElementType):
     software: list[softwareType] = Field(default_factory=list)
     verStmt: list[verStmtType] = Field(default_factory=list)
 
+    mimeType: str | None = None  # DDI 2.6
+
 
 class fileTypeType(simpleTextType):
     charset: str | None = None
 
 
-class frequencType(simpleTextType):
+class frequencType(conceptualTextType):  # DDI 2.6: was simpleTextType
     freq: str | None = None
 
 
@@ -978,6 +1116,12 @@ class frameUnitType(baseElementType):
 class fundAgType(simpleTextType):
     abbr: str | None = None
     role: str | None = None
+    # DDI 2.6
+    affiliation: str | None = None
+    agentIdentifier: str | None = None
+    typeOfAgentIdentifier: str | None = None
+    isPersistentIdentifier: str | None = None
+    agentType: str | None = None
 
 
 class geoBndBoxType(baseElementType):
@@ -996,6 +1140,10 @@ class geoMapType(baseElementType):
 class grantNoType(simpleTextType):
     agency: str | None = None
     role: str | None = None
+    # DDI 2.6
+    URI: str | None = None
+    fundingProgram: str | None = None
+    grantName: str | None = None
 
 
 class holdingsType(simpleTextType):
@@ -1008,9 +1156,10 @@ class holdingsType(simpleTextType):
 class IDNoType(simpleTextType):
     agency: str | None = None
     level: str | None = None
+    isPersistentIdentifier: str | None = None  # DDI 2.6
 
 
-class instrumentDevelopmentType(simpleTextType):
+class instrumentDevelopmentType(conceptualTextType):  # DDI 2.6: was simpleTextType
     type: str | None = None
 
 
@@ -1020,15 +1169,16 @@ class invalrngType(baseElementType):
     key: list[tableAndTextType] = Field(default_factory=list)
     notes: list[notesType] = Field(default_factory=list)
 
+    access: str | None = None  # DDI 2.6
+
 
 class itemType(baseElementType):
     UNITS: str | None = None
     VALUE: str | None = None
 
 
-class keywordType(simpleTextType):
-    vocab: str | None = None
-    vocabURI: str | None = None
+class keywordType(conceptType):  # DDI 2.6: was simpleTextType, now uses conceptType
+    pass  # vocab/vocabURI inherited from conceptType
 
 
 class lablType(simpleTextType):
@@ -1087,6 +1237,16 @@ class mrowType(baseElementType):
 
 class nationType(conceptualTextType):
     abbr: str | None = None
+    # DDI 2.6: Controlled vocabulary attributes
+    vocab: str | None = None
+    vocabURI: str | None = None
+    otherValue: str | None = None
+    vocabAgencyName: str | None = None
+    vocabID: str | None = None
+    vocabInstanceCodeTerm: str | None = None
+    vocabInstanceURI: str | None = None
+    vocabSchemeURN: str | None = None
+    vocabVersionID: str | None = None
 
 
 class nCubeType(baseElementType):
@@ -1150,6 +1310,7 @@ class otherMatType(baseElementType):
     table: list[tableType] = Field(default_factory=list)
     citation: citationType | None = None
     otherMat: list[otherMatType] = Field(default_factory=list)
+    typeOfOtherMaterial: list[conceptType] = Field(default_factory=list)  # DDI 2.6
 
     type: str | None = None
     level: str | None = None
@@ -1169,12 +1330,23 @@ class othIdType(simpleTextType):
     type: str | None = None
     role: str | None = None
     affiliation: str | None = None
+    # DDI 2.6
+    abbr: str | None = None
+    agentIdentifier: str | None = None
+    typeOfAgentIdentifier: str | None = None
+    isPersistentIdentifier: str | None = None
+    agentType: str | None = None
 
 
 class participantType(stringType):
     affiliation: str | None = None
     abbr: str | None = None
     role: str | None = None
+    # DDI 2.6
+    agentIdentifier: str | None = None
+    typeOfAgentIdentifier: str | None = None
+    isPersistentIdentifier: str | None = None
+    agentType: str | None = None
 
 
 class physLocType(baseElementType):
@@ -1202,12 +1374,20 @@ class prodStmtType(baseElementType):
     software: list[softwareType] = Field(default_factory=list)
     fundAg: list[fundAgType] = Field(default_factory=list)
     grantNo: list[grantNoType] = Field(default_factory=list)
+    # DDI 2.6
+    language: list[languageType] = Field(default_factory=list)
+    license: list[licenseType] = Field(default_factory=list)
 
 
 class producerType(simpleTextType):
     abbr: str | None = None
     affiliation: str | None = None
     role: str | None = None
+    # DDI 2.6
+    agentIdentifier: str | None = None
+    typeOfAgentIdentifier: str | None = None
+    isPersistentIdentifier: str | None = None
+    agentType: str | None = None
 
 
 class purposeType(simpleTextType):
@@ -1236,6 +1416,7 @@ class qstnType(baseElementType):
     sdatrefs: str | None = None
     responseDomainType: str | None = None
     otherResponseDomainType: str | None = None
+    access: str | None = None  # DDI 2.6
 
 
 class qstnLitType(simpleTextType):
@@ -1285,6 +1466,7 @@ class resourceType(baseElementType):
     srgOrig: list[conceptualTextType] = Field(default_factory=list)
     srcChar: list[simpleTextType] = Field(default_factory=list)
     srcDocu: list[simpleTextType] = Field(default_factory=list)
+    typeOfDataSrc: list[conceptType] = Field(default_factory=list)  # DDI 2.6
 
 
 class rspStmtType(baseElementType):
@@ -1323,15 +1505,17 @@ class serStmtType(baseElementType):
 
 class setAvailType(baseElementType):
     accsPlac: list[accsPlacType] = Field(default_factory=list)
-    origArch: list[simpleTextType] = Field(default_factory=list)
+    origArch: list[origArchType] = Field(default_factory=list)  # DDI 2.6: was simpleTextType
     avlStatus: list[simpleTextType] = Field(default_factory=list)
     collSize: list[simpleTextType] = Field(default_factory=list)
     complete: list[simpleTextType] = Field(default_factory=list)
     fileQnty: list[simpleTextType] = Field(default_factory=list)
     notes: list[notesType] = Field(default_factory=list)
+    typeOfSetAvailability: list[conceptType] = Field(default_factory=list)  # DDI 2.6
 
 
-class softwareType(simpleTextAndDateType):
+class softwareType(conceptType):  # DDI 2.6: was simpleTextAndDateType
+    date: str | None = None
     version: str | None = None
 
 
@@ -1342,6 +1526,7 @@ class sourcesType(baseElementType):
     srcChar: list[simpleTextType] = Field(default_factory=list)
     srcDocu: list[simpleTextType] = Field(default_factory=list)
     sources: list[sourcesType] = Field(default_factory=list)
+    typeOfDataSrc: list[conceptType] = Field(default_factory=list)  # DDI 2.6
 
 
 class specificElementType(stringType):
@@ -1373,9 +1558,10 @@ class standardNameType(stringType):
 
 class stdCatgryType(simpleTextAndDateType):
     URI: str | None = None
+    access: str | None = None  # DDI 2.6
 
 
-class stdyClasType(simpleTextType):
+class stdyClasType(conceptualTextType):  # DDI 2.6: was simpleTextType
     type: str | None = None
 
 
@@ -1388,6 +1574,7 @@ class stdyDscrType(baseElementType):
     dataAccs: list[dataAccsType] = Field(default_factory=list)
     othrStdyMat: list[othrStdyMatType] = Field(default_factory=list)
     notes: list[notesType] = Field(default_factory=list)
+    metadataAccs: list[metadataAccsType] = Field(default_factory=list)  # DDI 2.6
 
     access: str | None = None
 
@@ -1429,6 +1616,7 @@ class sumDscrType(baseElementType):
     anlyUnit: list[anlyUnitType] = Field(default_factory=list)
     universe: list[universeType] = Field(default_factory=list)
     dataKind: list[dataKindType] = Field(default_factory=list)
+    generalDataFormat: list[conceptType] = Field(default_factory=list)  # DDI 2.6
 
 
 class sumStatType(simpleTextType):
@@ -1437,6 +1625,7 @@ class sumStatType(simpleTextType):
     weight: str | None = None
     type: str | None = None
     otherType: str | None = None
+    access: str | None = None  # DDI 2.6
 
 
 class titlStmtType(baseElementType):
@@ -1456,9 +1645,8 @@ class timePrdType(simpleTextAndDateType):
     cycle: str | None = None
 
 
-class topcClasType(simpleTextType):
-    vocab: str | None = None
-    vocabURI: str | None = None
+class topcClasType(conceptType):  # DDI 2.6: was simpleTextType, now uses conceptType
+    pass  # vocab/vocabURI inherited from conceptType
 
 
 class universeType(conceptualTextType):
@@ -1466,7 +1654,7 @@ class universeType(conceptualTextType):
     clusion: str | None = None
 
 
-class unitTypeType(stringType):
+class unitTypeType(conceptualTextType):  # DDI 2.6: was stringType
     numberOfUnits: str | None = None
 
 
@@ -1493,6 +1681,8 @@ class valrngType(baseElementType):
     range: list[rangeType] = Field(default_factory=list)
     key: list[tableAndTextType] = Field(default_factory=list)
     notes: list[notesType] = Field(default_factory=list)
+
+    access: str | None = None  # DDI 2.6
 
 
 class varType(baseElementType):
@@ -1550,6 +1740,7 @@ class varType(baseElementType):
     catQnty: str | None = None
     representationType: str | None = None
     otherRepresentationType: str | None = None
+    otherNature: str | None = None  # DDI 2.6
 
     @property
     def n_catgry(self) -> int:
@@ -1627,3 +1818,18 @@ class versionType(simpleTextAndDateType):
 
 class verRespType(simpleTextType):
     affiliation: str | None = None
+    # DDI 2.6
+    agentIdentifier: str | None = None
+    typeOfAgentIdentifier: str | None = None
+    isPersistentIdentifier: str | None = None
+    agentType: str | None = None
+
+
+# DDI 2.6: metadataAccsType (placed here due to forward reference to useStmtType)
+class metadataAccsType(baseElementType):
+    """Documents access conditions specific to the metadata."""
+
+    typeOfAccess: list[conceptType] = Field(default_factory=list)
+    license: list[licenseType] = Field(default_factory=list)
+    useStmt: list[useStmtType] = Field(default_factory=list)
+    notes: list[notesType] = Field(default_factory=list)
