@@ -32,7 +32,12 @@ CDI = Namespace("http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/")
 
 
 class CDIResource(RdfBaseModel):
+    """Base class for DDI-CDI resources."""
+
+    rdf_namespace = CDI
+    rdf_prefixes = {"cdi": CDI}
     id: Any | None = None
+    rdf_auto_uuid: bool = False
 
 
 class CDIClass(CDIResource):
@@ -41,11 +46,6 @@ class CDIClass(CDIResource):
 
 class CDIDataType(CDIResource):
     pass
-
-    rdf_namespace = CDI
-    rdf_prefixes = {"cdi": CDI}
-    id: Any | None = None
-    rdf_auto_uuid: bool = False
 
 
 #
