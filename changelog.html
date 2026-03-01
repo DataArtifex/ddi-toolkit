@@ -203,6 +203,7 @@
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#version-0-1-0-current">Version 0.1.0 (Current)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ddi-codebook-2-6-upgrade">DDI-Codebook 2.6 Upgrade</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#refactors">Refactors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#features">Features</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#known-issues">Known Issues</a></li>
@@ -244,6 +245,22 @@
 <section id="version-0-1-0-current">
 <h2>Version 0.1.0 (Current)<a class="headerlink" href="#version-0-1-0-current" title="Link to this heading"></a></h2>
 <p>Current development release of the DDI Toolkit.</p>
+<section id="ddi-codebook-2-6-upgrade">
+<h3>DDI-Codebook 2.6 Upgrade<a class="headerlink" href="#ddi-codebook-2-6-upgrade" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Upgraded DDI-Codebook models from version 2.5 to 2.6 schema.</p></li>
+<li><p>Added 8 new complex types: <code class="docutils literal notranslate"><span class="pre">fileCommandType</span></code>, <code class="docutils literal notranslate"><span class="pre">fileDerivationType</span></code>, <code class="docutils literal notranslate"><span class="pre">fileDerivationVarsType</span></code>, <code class="docutils literal notranslate"><span class="pre">languageType</span></code>, <code class="docutils literal notranslate"><span class="pre">licenseType</span></code>, <code class="docutils literal notranslate"><span class="pre">metadataAccsType</span></code>, <code class="docutils literal notranslate"><span class="pre">origArchType</span></code>, <code class="docutils literal notranslate"><span class="pre">varRangeType</span></code>.</p></li>
+<li><p>Migrated <code class="docutils literal notranslate"><span class="pre">keywordType</span></code> and <code class="docutils literal notranslate"><span class="pre">topcClasType</span></code> to subclass <code class="docutils literal notranslate"><span class="pre">conceptType</span></code> (matching 2.6 schema).</p></li>
+<li><p>Updated base types for 8 classes (e.g., <code class="docutils literal notranslate"><span class="pre">softwareType</span></code> now extends <code class="docutils literal notranslate"><span class="pre">conceptType</span></code>).</p></li>
+<li><p>Added agent identification attributes to 13 agent-related types.</p></li>
+<li><p>Added controlled vocabulary attributes to <code class="docutils literal notranslate"><span class="pre">conceptType</span></code> and <code class="docutils literal notranslate"><span class="pre">nationType</span></code>.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">access</span></code> attribute to 11 types for fine-grained access control.</p></li>
+<li><p>Added translation attributes (<code class="docutils literal notranslate"><span class="pre">isTranslatable</span></code>, <code class="docutils literal notranslate"><span class="pre">isTranslated</span></code>, etc.) to <code class="docutils literal notranslate"><span class="pre">abstractTextType</span></code>.</p></li>
+<li><p>Added new child elements to 13 existing types (licensing, file derivation, type-of classifications).</p></li>
+<li><p>Changed <code class="docutils literal notranslate"><span class="pre">fileTxtType.fileCont</span></code> cardinality from singular to list.</p></li>
+<li><p>All changes are backward compatible with DDI-Codebook 2.5 documents.</p></li>
+</ul>
+</section>
 <section id="refactors">
 <h3>Refactors<a class="headerlink" href="#refactors" title="Link to this heading"></a></h3>
 <ul class="simple">

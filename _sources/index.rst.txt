@@ -11,7 +11,7 @@ Overview
 
 There are three major flavors of DDI. This package currently supports:
 
-* **DDI-Codebook 2.5**: The lightweight version of the standard, intended primarily to document simple survey data. This specification has been widely adopted around the globe by statistical agencies, data producers, archives, research centers, and international organizations.
+* **DDI-Codebook 2.6**: The lightweight version of the standard, intended primarily to document simple survey data. This specification has been widely adopted around the globe by statistical agencies, data producers, archives, research centers, and international organizations.
 
 * **DDI-CDI 1.0** *(Experimental)*: The new Cross Domain Integration specification that provides a unified model for describing data across different domains and methodologies.
 
