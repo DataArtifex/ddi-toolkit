@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the mappings implemented in the `codebook_to_cdif` method that converts DDI-Codebook (version 2.5) metadata into DDI-CDI (version 1.0) CDIF profile resources.
+This document describes the mappings implemented in the `codebook_to_cdif` method that converts DDI-Codebook (version 2.5/2.6) metadata into DDI-CDI (version 1.0) CDIF profile resources.
 
 The conversion process transforms DDI-Codebook elements into a dictionary of DDI-CDI resources that can be serialized to RDF or other formats. The mapping follows the Cross Domain Integration Framework (CDIF) profile specifications.
 
@@ -330,13 +330,13 @@ def ddi_cdi_resources_to_graph(
 
 ## Version Information
 
-- **DDI-Codebook Version**: 2.5
+- **DDI-Codebook Version**: 2.6 (backward compatible with 2.5)
 - **DDI-CDI Version**: 1.0
 - **Profile**: CDIF (Cross Domain Integration Framework)
 
 ## References
 
-- DDI-Codebook 2.5 Specification
+- DDI-Codebook 2.6 Specification
 - DDI-CDI 1.0 Specification
 - CDIF Profile Documentation
 - W3C SKOS (Simple Knowledge Organization System)

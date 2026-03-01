@@ -23,7 +23,7 @@ This package provides Python classes and utilities for working with metadata bas
 
 There are three major flavors of DDI. This package currently supports:
 
-- **[DDI-Codebook 2.5](https://ddialliance.org/Specification/DDI-Codebook/2.5/)**: The lightweight version of the standard, intended primarily to document simple survey data.
+- **[DDI-Codebook 2.6](https://ddialliance.org/Specification/DDI-Codebook/2.6/)**: The lightweight version of the standard, intended primarily to document simple survey data.
 - **[DDI-CDI 1.0](https://ddialliance.org/Specification/DDI-CDI/)**: The new Cross Domain Integration specification. This package uses **generated Pydantic models** directly aligned with the official DDI-CDI 1.0 specifications.
 
 ## Key Features
@@ -116,7 +116,7 @@ ddi-toolkit/
 ├── src/dartfx/ddi/
 │   ├── ddicodebook/            # DDI-Codebook subpackage
 │   │   ├── __init__.py
-│   │   └── model.py            # DDI-Codebook 2.5 models
+│   │   └── model.py            # DDI-Codebook 2.6 models
 │   ├── utils.py                # Conversion utilities (Codebook -> CDI)
 │   └── ddicdi/                 # DDI-CDI support
 │       ├── model_1_0_0.py      # Definitive generated Pydantic models

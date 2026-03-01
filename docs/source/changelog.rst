@@ -8,6 +8,21 @@ Version 0.1.0 (Current)
 
 Current development release of the DDI Toolkit.
 
+DDI-Codebook 2.6 Upgrade
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Upgraded DDI-Codebook models from version 2.5 to 2.6 schema.
+- Added 8 new complex types: ``fileCommandType``, ``fileDerivationType``, ``fileDerivationVarsType``, ``languageType``, ``licenseType``, ``metadataAccsType``, ``origArchType``, ``varRangeType``.
+- Migrated ``keywordType`` and ``topcClasType`` to subclass ``conceptType`` (matching 2.6 schema).
+- Updated base types for 8 classes (e.g., ``softwareType`` now extends ``conceptType``).
+- Added agent identification attributes to 13 agent-related types.
+- Added controlled vocabulary attributes to ``conceptType`` and ``nationType``.
+- Added ``access`` attribute to 11 types for fine-grained access control.
+- Added translation attributes (``isTranslatable``, ``isTranslated``, etc.) to ``abstractTextType``.
+- Added new child elements to 13 existing types (licensing, file derivation, type-of classifications).
+- Changed ``fileTxtType.fileCont`` cardinality from singular to list.
+- All changes are backward compatible with DDI-Codebook 2.5 documents.
+
 Refactors
 ~~~~~~~~~
 
