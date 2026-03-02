@@ -24,12 +24,16 @@ dependencies = [
   "rdflib>=7",
   "sempyro>=2.0.0",
   "pyshacl",
+  "typer",
 ]
 
 [project.urls]
 Documentation = "https://github.com/DataArtifex/dartfx-ddi#readme"
 Issues = "https://github.com/DataArtifex/dartfx-ddi/issues"
 Source = "https://github.com/DataArtifex/dartfx-ddi"
+
+[project.scripts]
+dartfx-ddi = "dartfx.ddi.cli:main"
 
 
 [tool.hatch.build.targets.sdist]

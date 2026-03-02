@@ -17,7 +17,7 @@
 
 This package provides Python classes and utilities for working with metadata based on the [Data Documentation Initiative (DDI)](https://ddialliance.org/), an international standard for describing the data produced by surveys and other observational methods in the social, behavioral, economic, and health sciences.
 
-**Detailed documentation is available at [https://dataartifex.org/docs/dartfx-dditoolkit/](https://dataartifex.org/docs/dartfx-dditoolkit/)**
+**Detailed documentation is available at [https://dataartifex.org/docs/dartfx-ddi/](https://dataartifex.org/docs/dartfx-ddi/)**
 
 ## DDI Specifications Supported
 
@@ -93,6 +93,38 @@ dataset.add_variable(variable)
 # 3. Serialize to RDF
 graph = dataset.to_rdf_graph()
 print(graph.serialize(format="turtle"))
+```
+
+### Converting DDI-Codebook to DDI-CDI
+
+You can transform legacy DDI-Codebook 2.6 metadata into DDI-CDI 1.0 resources following the CDIF (Cross-Domain Integration Framework) profile.
+
+#### Python Example
+
+```python
+from dartfx.ddi import ddicodebook
+from dartfx.ddi import utils
+
+# 1. Load the DDI-Codebook XML
+cb = ddicodebook.loadxml('my_codebook.xml')
+
+# 2. Convert to DDI-CDI Graph
+graph = utils.codebook_to_cdif_graph(cb)
+
+# 3. Output as Turtle
+print(graph.serialize(format="turtle"))
+```
+
+#### Command Line Interface
+
+The toolkit provides a CLI utility `dartfx-ddi` to perform conversions and other operations directly from the terminal.
+
+```bash
+# Convert DDI-Codebook to CDI (default: Turtle output)
+dartfx-ddi ddic2cdi my_codebook.xml
+
+# Convert DDI-Codebook to CDI in XML format
+dartfx-ddi ddic2cdi my_codebook.xml --format xml
 ```
 
 ### Specification Loading
