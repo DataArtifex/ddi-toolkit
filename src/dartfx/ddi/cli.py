@@ -40,7 +40,13 @@ def setup_logging(level: LogLevel):
 @app.command()
 def ddic2cdi(
     ddifile: Annotated[Path, typer.Argument(help="DDI Codebook 2.6 XML file", exists=True, dir_okay=False)],
+    output: Annotated[
+        Path | None, typer.Option("--output", "-o", help="Output file path (prints to console if not specified)")
+    ] = None,
     format: Annotated[OutputFormat, typer.Option(help="Output format")] = OutputFormat.turtle,
+    use_skos: Annotated[
+        bool, typer.Option("--use-skos/--use-codelists", help="Use SKOS or DDI-CDI CodeLists for categories and codes")
+    ] = True,
     loglevel: Annotated[LogLevel, typer.Option(help="Log level")] = LogLevel.info,
 ):
     """
@@ -49,8 +55,14 @@ def ddic2cdi(
     setup_logging(loglevel)
     logging.info(f"Converting {ddifile} to CDI")
     cb = codebook.loadxml(str(ddifile))
-    graph = utils.codebook_to_cdif_graph(cb)
-    print(graph.serialize(format=format.value))
+    graph = utils.codebook_to_cdif_graph(cb, use_skos=use_skos)
+    serialized = graph.serialize(format=format.value)
+
+    if output:
+        logging.info(f"Writing output to {output}")
+        output.write_text(serialized, encoding="utf-8")
+    else:
+        print(serialized)
 
 
 @app.command()
