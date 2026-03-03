@@ -19,7 +19,7 @@ from .ddicodebook import codeBookType
 
 def codebook_to_cdif(
     codebook: codeBookType,
-    _baseuri: str | None = None,
+    base_uri: str | None = None,
     files: list[str] | None = None,
     use_skos: bool = True,
 ) -> dict[str, CdiAssistant]:
@@ -33,7 +33,8 @@ def codebook_to_cdif(
         raise NotImplementedError("Files subset not yet implemented")
 
     cdi_resources: dict[str, Any] = {}
-    base_uuid = str(uuid.uuid4())
+    if not base_uri:
+        str(uuid.uuid4())
     # variables
     cb_cdi_vars = {}  # to lookup CDI instance variable by DDI ID
     logging.debug("Processing variables")
@@ -41,7 +42,7 @@ def codebook_to_cdif(
         # instance variable
         cdi_instance_var = CdiClassAssistant.factory(
             model.InstanceVariable,
-            id_prefix=base_uuid,
+            id_prefix=base_uri,
             id_suffix=cb_var.id,
             non_ddi_id=cb_var.id,
             non_ddi_id_type="ddi-codebook",
@@ -59,7 +60,7 @@ def codebook_to_cdif(
                 # substantive value domain
                 cdi_substantive_value_domain = CdiClassAssistant.factory(
                     model.SubstantiveValueDomain,
-                    id_prefix=base_uuid,
+                    id_prefix=base_uri,
                     id_suffix=cb_var.id,
                     non_ddi_id=cb_var.id,
                     non_ddi_id_type="ddi-codebook",
@@ -69,7 +70,7 @@ def codebook_to_cdif(
                 cdi_instance_var.add_resources(cdi_substantive_value_domain, "takesSubstantiveValues")  # type: ignore
                 if use_skos:
                     # SKOS substantive concept scheme
-                    uri = f"urn:ddi-cdi:{base_uuid}_ConceptScheme_{cb_var.id}"
+                    uri = f"urn:ddi-cdi:{base_uri}_ConceptScheme_{cb_var.id}"
                     cdi_substantive_concept_scheme = skos.ConceptScheme(id=uri)
                     cdi_resources[str(uri)] = cdi_substantive_concept_scheme
                     cdi_substantive_value_domain.add_resources(  # type: ignore
@@ -81,7 +82,7 @@ def codebook_to_cdif(
                     # substantive code list
                     cdi_substantive_code_list = CdiClassAssistant.factory(
                         model.CodeList,
-                        id_prefix=base_uuid,
+                        id_prefix=base_uri,
                         id_suffix=cb_var.id,
                         non_ddi_id=cb_var.id,
                         non_ddi_id_type="ddi-codebook",
@@ -97,7 +98,7 @@ def codebook_to_cdif(
                     # substantive category set
                     cdi_substantive_category_set = CdiClassAssistant.factory(
                         model.CategorySet,
-                        id_prefix=base_uuid,
+                        id_prefix=base_uri,
                         id_suffix=cb_var.id,
                         non_ddi_id=cb_var.id,
                         non_ddi_id_type="ddi-codebook",
@@ -113,7 +114,7 @@ def codebook_to_cdif(
                 # sentinel value domain
                 cdi_sentinel_value_domain = CdiClassAssistant.factory(
                     model.SentinelValueDomain,
-                    id_prefix=base_uuid,
+                    id_prefix=base_uri,
                     id_suffix=cb_var.id,
                     non_ddi_id=cb_var.id,
                     non_ddi_id_type="ddi-codebook",
@@ -123,7 +124,7 @@ def codebook_to_cdif(
                 cdi_instance_var.add_resources(cdi_sentinel_value_domain, "takesSentinelValues")  # type: ignore
                 if use_skos:
                     # SKOS sentinel concept scheme
-                    uri = f"urn:ddi-cdi:{base_uuid}_SentinelConceptScheme_{cb_var.id}"
+                    uri = f"urn:ddi-cdi:{base_uri}_SentinelConceptScheme_{cb_var.id}"
                     cdi_sentinel_concept_scheme = skos.ConceptScheme(id=uri)
                     cdi_resources[str(uri)] = cdi_sentinel_concept_scheme
                     cdi_sentinel_value_domain.add_resources(  # type: ignore
@@ -135,7 +136,7 @@ def codebook_to_cdif(
                     # substantive code list
                     cdi_sentinel_code_list = CdiClassAssistant.factory(
                         model.CodeList,
-                        id_prefix=base_uuid,
+                        id_prefix=base_uri,
                         id_suffix=f"{cb_var.id}_sentinel",
                         non_ddi_id=cb_var.id,
                         non_ddi_id_type="ddi-codebook",
@@ -152,7 +153,7 @@ def codebook_to_cdif(
                     # substantive category set
                     cdi_sentinel_category_set = CdiClassAssistant.factory(
                         model.CategorySet,
-                        id_prefix=base_uuid,
+                        id_prefix=base_uri,
                         id_suffix=f"{cb_var.id}_sentinel",
                         non_ddi_id=cb_var.id,
                         non_ddi_id_type="ddi-codebook",
@@ -179,7 +180,7 @@ def codebook_to_cdif(
                 code_value_uid = urllib.parse.quote_plus(code_value.replace(" ", "_"))  # sanitize
                 if use_skos:
                     # SKOS concept
-                    uri = f"urn:ddi-cdi:{base_uuid}_Concept_{cb_var.id}_{code_value_uid}"
+                    uri = f"urn:ddi-cdi:{base_uri}_Concept_{cb_var.id}_{code_value_uid}"
                     cdi_skos_concept = skos.Concept(id=uri)
                     if cdi_skos_concept.pref_label is None:
                         cdi_skos_concept.pref_label = []
@@ -201,7 +202,7 @@ def codebook_to_cdif(
                     # category
                     cdi_category = CdiClassAssistant.factory(
                         model.Category,
-                        id_prefix=base_uuid,
+                        id_prefix=base_uri,
                         id_suffix=f"{cb_var.id}_{code_value_uid}",
                         non_ddi_id=catgry.id or code_value,
                         non_ddi_id_type="ddi-codebook" if catgry.id else "code-value",
@@ -212,7 +213,7 @@ def codebook_to_cdif(
                     # code notation
                     cdi_code_notation = CdiClassAssistant.factory(
                         model.Notation,
-                        id_prefix=base_uuid,
+                        id_prefix=base_uri,
                         id_suffix=f"{cb_var.id}_{code_value_uid}",
                         non_ddi_id=code_value,
                         non_ddi_id_type="code-value",
@@ -225,7 +226,7 @@ def codebook_to_cdif(
                     # code
                     cdi_code = CdiClassAssistant.factory(
                         model.Code,
-                        id_prefix=base_uuid,
+                        id_prefix=base_uri,
                         id_suffix=f"{cb_var.id}_{code_value_uid}",
                         denotes=URIRef(cdi_category.get_uri()),  # type: ignore
                         uses_Notation=URIRef(cdi_code_notation.get_uri()),  # type: ignore
@@ -244,7 +245,7 @@ def codebook_to_cdif(
     # dataset
     cdi_dataset = CdiClassAssistant.factory(
         model.DataSet,
-        id_prefix=base_uuid,
+        id_prefix=base_uri,
         id_suffix=codebook.id or "1",
         non_ddi_id=codebook.id,
         non_ddi_id_type="ddi-codebook",
@@ -255,7 +256,7 @@ def codebook_to_cdif(
     # logical record
     cdi_logical_record = CdiClassAssistant.factory(
         model.LogicalRecord,
-        id_prefix=base_uuid,
+        id_prefix=base_uri,
         id_suffix=codebook.id or "1",
         non_ddi_id=codebook.id,
         non_ddi_id_type="ddi-codebook",
@@ -266,7 +267,7 @@ def codebook_to_cdif(
     # data structure
     cdi_data_structure = CdiClassAssistant.factory(
         model.DataStructure,
-        id_prefix=base_uuid,
+        id_prefix=base_uri,
         id_suffix=codebook.id or "1",
         non_ddi_id=codebook.id,
         non_ddi_id_type="ddi-codebook",
@@ -281,6 +282,7 @@ def codebook_to_cdif(
         cdi_logical_record.add_variable(cdi_var)  # type: ignore
         # variable position
         component_position = CdiClassAssistant.factory(model.ComponentPosition, value=pos)
+        component_position.indexes = cdi_var.get_uri()
         cdi_data_structure.add_resources(component_position, "has_ComponentPosition", exact_match=False)  # type: ignore
         cdi_resources[component_position.get_uri()] = component_position  # type: ignore
         pos += 1
@@ -296,14 +298,14 @@ def codebook_to_cdif(
 
 def codebook_to_cdif_graph(
     codebook: codeBookType,
-    baseuri: str | None = None,
+    base_uri: str | None = None,
     files: list[str] | None = None,
     use_skos: bool = True,
 ) -> Graph:
     """
     Helper to convert a stack of DdiCdiResources to a RDF Graph
     """
-    resources = codebook_to_cdif(codebook, baseuri, files, use_skos)
+    resources = codebook_to_cdif(codebook, base_uri, files, use_skos)
     return ddi_cdi_resources_to_graph(resources)
 
 
