@@ -34,7 +34,7 @@ def codebook_to_cdif(
 
     cdi_resources: dict[str, Any] = {}
     if not base_uri:
-        str(uuid.uuid4())
+        base_uri = str(uuid.uuid4())
     # variables
     cb_cdi_vars = {}  # to lookup CDI instance variable by DDI ID
     logging.debug("Processing variables")
@@ -282,7 +282,7 @@ def codebook_to_cdif(
         cdi_logical_record.add_variable(cdi_var)  # type: ignore
         # variable position
         component_position = CdiClassAssistant.factory(model.ComponentPosition, value=pos)
-        component_position.indexes = cdi_var.get_uri()
+        component_position.indexes = cdi_var.get_uri()  # type: ignore[call-arg]
         cdi_data_structure.add_resources(component_position, "has_ComponentPosition", exact_match=False)  # type: ignore
         cdi_resources[component_position.get_uri()] = component_position  # type: ignore
         pos += 1
