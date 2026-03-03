@@ -69,10 +69,8 @@ def codebook_to_cdif(
                 cdi_instance_var.add_resources(cdi_substantive_value_domain, "takesSubstantiveValues")  # type: ignore
                 if use_skos:
                     # SKOS substantive concept scheme
-                    concept_scheme_id = f"{cb_var.id}_SubstantiveConceptScheme"
-                    cdi_substantive_concept_scheme = skos.ConceptScheme(id=concept_scheme_id)
-                    uri = URIRef(f"{base_uuid}_ConceptScheme_{cb_var.id}")
-                    cdi_substantive_concept_scheme.rdf_uri_generator = lambda _, u=uri: u  # type: ignore
+                    uri = f"urn:ddi-cdi:{base_uuid}_ConceptScheme_{cb_var.id}"
+                    cdi_substantive_concept_scheme = skos.ConceptScheme(id=uri)
                     cdi_resources[str(uri)] = cdi_substantive_concept_scheme
                     cdi_substantive_value_domain.add_resources(  # type: ignore
                         cdi_substantive_concept_scheme,  # type: ignore[arg-type]
@@ -125,10 +123,8 @@ def codebook_to_cdif(
                 cdi_instance_var.add_resources(cdi_sentinel_value_domain, "takesSentinelValues")  # type: ignore
                 if use_skos:
                     # SKOS sentinel concept scheme
-                    concept_scheme_id = f"{cb_var.id}_SentinelConceptScheme"
-                    cdi_sentinel_concept_scheme = skos.ConceptScheme(id=concept_scheme_id)
-                    uri = URIRef(f"{base_uuid}_SentinelConceptScheme_{cb_var.id}")
-                    cdi_sentinel_concept_scheme.rdf_uri_generator = lambda _, u=uri: u  # type: ignore
+                    uri = f"urn:ddi-cdi:{base_uuid}_SentinelConceptScheme_{cb_var.id}"
+                    cdi_sentinel_concept_scheme = skos.ConceptScheme(id=uri)
                     cdi_resources[str(uri)] = cdi_sentinel_concept_scheme
                     cdi_sentinel_value_domain.add_resources(  # type: ignore
                         cdi_sentinel_concept_scheme,  # type: ignore[arg-type]
@@ -183,9 +179,8 @@ def codebook_to_cdif(
                 code_value_uid = urllib.parse.quote_plus(code_value.replace(" ", "_"))  # sanitize
                 if use_skos:
                     # SKOS concept
-                    cdi_skos_concept = skos.Concept(id=code_value_uid)
-                    uri = URIRef(f"{base_uuid}_Concept_{cb_var.id}_{code_value_uid}")
-                    cdi_skos_concept.rdf_uri_generator = lambda _, u=uri: u  # type: ignore
+                    uri = f"urn:ddi-cdi:{base_uuid}_Concept_{cb_var.id}_{code_value_uid}"
+                    cdi_skos_concept = skos.Concept(id=uri)
                     if cdi_skos_concept.pref_label is None:
                         cdi_skos_concept.pref_label = []
                     cdi_skos_concept.pref_label.append(code_label)
