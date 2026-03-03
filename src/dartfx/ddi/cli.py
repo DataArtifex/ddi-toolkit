@@ -47,6 +47,7 @@ def ddic2cdi(
     use_skos: Annotated[
         bool, typer.Option("--use-skos/--use-codelists", help="Use SKOS or DDI-CDI CodeLists for categories and codes")
     ] = True,
+    base_uri: Annotated[str | None, typer.Option("--base-uri", "-b", help="Base URI for generated resources")] = None,
     loglevel: Annotated[LogLevel, typer.Option(help="Log level")] = LogLevel.info,
 ):
     """
@@ -55,7 +56,7 @@ def ddic2cdi(
     setup_logging(loglevel)
     logging.info(f"Converting {ddifile} to CDI")
     cb = codebook.loadxml(str(ddifile))
-    graph = utils.codebook_to_cdif_graph(cb, use_skos=use_skos)
+    graph = utils.codebook_to_cdif_graph(cb, base_uri=base_uri, use_skos=use_skos)
     serialized = graph.serialize(format=format.value)
 
     if output:
