@@ -29,14 +29,72 @@ def codebook_to_cdif(
     Note that this assumes the codebook files and variables have their @ID attribute set
 
     """
+    # pre-checks
     if files:  # not implemented
         raise NotImplementedError("Files subset not yet implemented")
 
+    if not codebook.id:
+        raise ValueError("Codebook has no @ID attribute")
+    if not codebook.fileDscr or len(codebook.fileDscr) == 0:
+        raise ValueError("Codebook has no FileDscr element")
+    for cb_filedscr in codebook.fileDscr:
+        if not cb_filedscr.id:
+            raise ValueError("FileDscr element has no @ID attribute")
+
+    # Initialize
     cdi_resources: dict[str, Any] = {}
     if not base_uri:
         base_uri = str(uuid.uuid4())
-    # variables
+
+    # FILES
+    datasets = {}
+    logical_records = {}
+    data_structures = {}
+    for cb_filedscr in codebook.fileDscr:
+        # fileDscr maps into a dataset, a logical record and a data structure
+        cb_filedscr_cdi_id = f"{codebook.id}_{cb_filedscr.id}"
+        # dataset
+        cdi_dataset = CdiClassAssistant.factory(
+            model.DataSet,
+            id_prefix=base_uri,
+            id_suffix=cb_filedscr_cdi_id,
+            non_ddi_id=cb_filedscr_cdi_id,
+            non_ddi_id_type="ddi-codebook",
+        )
+        datasets[cb_filedscr.id] = cdi_dataset
+        cdi_dataset.set_simple_name("DDI-CDI DataSet")  # type: ignore
+        cdi_resources[cdi_dataset.get_uri()] = cdi_dataset  # type: ignore
+
+        # logical record
+        cdi_logical_record = CdiClassAssistant.factory(
+            model.LogicalRecord,
+            id_prefix=base_uri,
+            id_suffix=cb_filedscr_cdi_id,
+            non_ddi_id=cb_filedscr_cdi_id,
+            non_ddi_id_type="ddi-codebook",
+        )
+        logical_records[cb_filedscr.id] = cdi_logical_record
+        cdi_resources[cdi_logical_record.get_uri()] = cdi_logical_record  # type: ignore
+        cdi_dataset.add_resources(cdi_logical_record, "has_LogicalRecord", exact_match=False)  # type: ignore
+
+        # data structure
+        cdi_data_structure = CdiClassAssistant.factory(
+            model.DataStructure,
+            id_prefix=base_uri,
+            id_suffix=cb_filedscr_cdi_id,
+            non_ddi_id=cb_filedscr_cdi_id,
+            non_ddi_id_type="ddi-codebook",
+        )
+        data_structures[cb_filedscr.id] = cdi_data_structure
+        cdi_resources[cdi_data_structure.get_uri()] = cdi_data_structure  # type: ignore
+        cdi_dataset.add_data_structure(cdi_data_structure)  # type: ignore
+
+    # VARIABLES
     cb_cdi_vars = {}  # to lookup CDI instance variable by DDI ID
+    positions = {}  # to track varaible positions in data structures
+    for file_id in datasets.keys():
+        positions[file_id] = 0  # zero based index per CDi specification
+
     logging.debug("Processing variables")
     for cb_var in codebook.search_variables():
         # instance variable
@@ -51,6 +109,7 @@ def codebook_to_cdif(
         cdi_instance_var.set_simple_display_label(cb_var.get_label())  # type: ignore
         cdi_resources[cdi_instance_var.get_uri()] = cdi_instance_var  # type: ignore
         cb_cdi_vars[cb_var.id] = cdi_instance_var
+
         # categories and codes
         if cb_var.n_catgry:
             #
@@ -242,56 +301,40 @@ def codebook_to_cdif(
                         cdi_sentinel_code_list.add_code(cdi_code)  # type: ignore
                         cdi_sentinel_category_set.add_categories(cdi_category)  # type: ignore
 
-    # dataset
-    cdi_dataset = CdiClassAssistant.factory(
-        model.DataSet,
-        id_prefix=base_uri,
-        id_suffix=codebook.id or "1",
-        non_ddi_id=codebook.id,
-        non_ddi_id_type="ddi-codebook",
-    )
-    cdi_dataset.set_simple_name("DDI-CDI DataSet")  # type: ignore
-    cdi_resources[cdi_dataset.get_uri()] = cdi_dataset  # type: ignore
+        # associate the variable with logical records and data structures
+        var_file_ids = cb_var.files.split() if cb_var.files else []
 
-    # logical record
-    cdi_logical_record = CdiClassAssistant.factory(
-        model.LogicalRecord,
-        id_prefix=base_uri,
-        id_suffix=codebook.id or "1",
-        non_ddi_id=codebook.id,
-        non_ddi_id_type="ddi-codebook",
-    )
-    cdi_resources[cdi_logical_record.get_uri()] = cdi_logical_record  # type: ignore
-    cdi_dataset.add_resources(cdi_logical_record, "has_LogicalRecord", exact_match=False)  # type: ignore
+        # If no files associated, but only one file exists, default to it
+        if not var_file_ids and len(datasets) == 1:
+            var_file_ids = [list(datasets.keys())[0]]
 
-    # data structure
-    cdi_data_structure = CdiClassAssistant.factory(
-        model.DataStructure,
-        id_prefix=base_uri,
-        id_suffix=codebook.id or "1",
-        non_ddi_id=codebook.id,
-        non_ddi_id_type="ddi-codebook",
-    )
-    cdi_resources[cdi_data_structure.get_uri()] = cdi_data_structure  # type: ignore
-    cdi_dataset.add_data_structure(cdi_data_structure)  # type: ignore
+        if var_file_ids:
+            for cb_file_id in var_file_ids:
+                # logical record
+                cdi_logical_record = logical_records.get(cb_file_id)
+                if not cdi_logical_record:
+                    logging.warning(f"Logical record {cb_file_id} not found for variable {cb_var.id}")
+                    continue
+                cdi_logical_record.add_variable(cdi_instance_var)  # type: ignore
 
-    # variable relationships
-    pos = 0
-    print(f"DEBUG: cb_cdi_vars has {len(cb_cdi_vars)} items")
-    for _cb_var_id, cdi_var in cb_cdi_vars.items():
-        cdi_logical_record.add_variable(cdi_var)  # type: ignore
-        # variable position
-        component_position = CdiClassAssistant.factory(model.ComponentPosition, value=pos)
-        component_position.indexes = cdi_var.get_uri()  # type: ignore[call-arg]
-        cdi_data_structure.add_resources(component_position, "has_ComponentPosition", exact_match=False)  # type: ignore
-        cdi_resources[component_position.get_uri()] = component_position  # type: ignore
-        pos += 1
+                # variable position in data structure
+                cdi_data_structure = data_structures.get(cb_file_id)
+                if not cdi_data_structure:
+                    logging.warning(f"Data structure {cb_file_id} not found for variable {cb_var.id}")
+                    continue
 
-    print(
-        f"DEBUG: cdi_logical_record has {len(cdi_logical_record.has_InstanceVariable) if cdi_logical_record.has_InstanceVariable else 0} instance variables"
-    )
-    if cdi_logical_record.has_InstanceVariable:
-        print(f"DEBUG: cdi_logical_record vars: {[str(x) for x in cdi_logical_record.has_InstanceVariable]}")
+                component_position = CdiClassAssistant.factory(
+                    model.ComponentPosition,
+                    id_prefix=base_uri,
+                    id_suffix=f"{cb_file_id}_{cb_var.id}",
+                    value=positions[cb_file_id],
+                )
+                component_position.indexes = cdi_instance_var.get_uri()  # type: ignore[call-arg]
+                cdi_data_structure.add_resources(component_position, "has_ComponentPosition", exact_match=False)  # type: ignore
+                cdi_resources[component_position.get_uri()] = component_position  # type: ignore
+                positions[cb_file_id] += 1
+        else:
+            logging.warning(f"Variable {cb_var.id} is not associated with any files")
 
     return cdi_resources
 
