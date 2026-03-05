@@ -237,23 +237,22 @@ def codebook_to_cdif(
                 if use_skos:
                     # SKOS concept
                     uri = f"urn:ddi-cdi:{base_uri}_Concept_{cb_var.id}_{code_value_uid}"
-                    cdi_skos_concept = skos.Concept(id=uri)
-                    if cdi_skos_concept.pref_label is None:
-                        cdi_skos_concept.pref_label = []
-                    cdi_skos_concept.pref_label.append(code_label)
-
-                    if cdi_skos_concept.notation is None:
-                        cdi_skos_concept.notation = []
-                    cdi_skos_concept.notation.append(code_value)
+                    cdi_skos_concept = skos.Concept(
+                        id=uri,
+                        pref_label=[code_label],
+                        notation=[code_value],
+                    )
                     cdi_resources[str(uri)] = cdi_skos_concept
                     if not catgry.is_missing:
                         if cdi_substantive_concept_scheme.has_top_concept is None:
-                            cdi_substantive_concept_scheme.has_top_concept = []
-                        cdi_substantive_concept_scheme.has_top_concept.append(cdi_skos_concept)
+                            cdi_substantive_concept_scheme.has_top_concept = [cdi_skos_concept]
+                        elif isinstance(cdi_substantive_concept_scheme.has_top_concept, list):
+                            cdi_substantive_concept_scheme.has_top_concept.append(cdi_skos_concept)
                     else:
                         if cdi_sentinel_concept_scheme.has_top_concept is None:
-                            cdi_sentinel_concept_scheme.has_top_concept = []
-                        cdi_sentinel_concept_scheme.has_top_concept.append(cdi_skos_concept)
+                            cdi_sentinel_concept_scheme.has_top_concept = [cdi_skos_concept]
+                        elif isinstance(cdi_sentinel_concept_scheme.has_top_concept, list):
+                            cdi_sentinel_concept_scheme.has_top_concept.append(cdi_skos_concept)
                 else:
                     # category
                     cdi_category = CdiClassAssistant.factory(
