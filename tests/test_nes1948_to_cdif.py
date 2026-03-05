@@ -1,7 +1,10 @@
 import os
 
-from dartfx.ddi import ddicodebook, utils
+from dartfx.ddi import ddicodebook
 from dartfx.ddi.ddicdi import model_1_0_0 as model
+from dartfx.ddi.ddicdi import utils as cdi_utils
+from dartfx.ddi.ddicodebook import utils as cb_utils
+from dartfx.rdf import utils as rdf_utils
 from dartfx.rdf.pydantic import skos
 
 
@@ -21,7 +24,7 @@ def test_nes1948_to_cdif_skos():
     vars = cb.search_variables()
     assert len(vars) == 67
 
-    resources = utils.codebook_to_cdif(cb, use_skos=True)
+    resources = cb_utils.codebook_to_cdif(cb, use_skos=True)
 
     assert isinstance(resources, dict)
 
@@ -63,12 +66,18 @@ def test_nes1948_to_cdif_skos():
     assert len(ds.has_ComponentPosition) == 67
 
     # Convert to graph
-    g = utils.ddi_cdi_resources_to_graph(resources)
+    g = cdi_utils.ddi_cdi_resources_to_graph(resources)
     assert len(g) > 0
 
     # Validate - generate report regardless of conformance (SHACL work in progress)
-    conforms, results_graph, _results_text = utils.validate_ddi_cdi(g)
-    report = utils.shacl_report_to_markdown(results_graph)
+    conforms, results_graph, _results_text = cdi_utils.shacl_validate_ddi_cdi(g)
+    prefixes = {
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/": "cdi:",
+        "http://www.w3.org/2004/02/skos/core#": "skos:",
+    }
+    report = rdf_utils.shacl_validation_to_markdown(
+        results_graph, prefixes=prefixes, title="DDI-CDI Validation Report (SKOS)"
+    )
     os.makedirs(os.path.join(outputs_dir(), "cdi"), exist_ok=True)
     report_path = os.path.join(outputs_dir(), "cdi/NES1948.cdif.skos.validation.md")
     with open(report_path, "w", encoding="utf-8") as f:
@@ -86,7 +95,7 @@ def test_nes1948_to_cdif_native():
     cb_path = os.path.join(data_dir(), "codebook/NES1948.xml")
     cb = ddicodebook.loadxml(cb_path)
 
-    resources = utils.codebook_to_cdif(cb, use_skos=False)
+    resources = cb_utils.codebook_to_cdif(cb, use_skos=False)
 
     assert isinstance(resources, dict)
 
@@ -140,12 +149,18 @@ def test_nes1948_to_cdif_native():
     assert len(ds.has_ComponentPosition) == 67
 
     # Convert to graph
-    g = utils.ddi_cdi_resources_to_graph(resources)
+    g = cdi_utils.ddi_cdi_resources_to_graph(resources)
     assert len(g) > 0
 
     # Validate - generate report regardless of conformance (SHACL work in progress)
-    conforms, results_graph, _results_text = utils.validate_ddi_cdi(g)
-    report = utils.shacl_report_to_markdown(results_graph)
+    conforms, results_graph, _results_text = cdi_utils.shacl_validate_ddi_cdi(g)
+    prefixes = {
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/": "cdi:",
+        "http://www.w3.org/2004/02/skos/core#": "skos:",
+    }
+    report = rdf_utils.shacl_validation_to_markdown(
+        results_graph, prefixes=prefixes, title="DDI-CDI Validation Report (Native)"
+    )
     os.makedirs(os.path.join(outputs_dir(), "cdi"), exist_ok=True)
     report_path = os.path.join(outputs_dir(), "cdi/NES1948.cdif.native.validation.md")
     with open(report_path, "w", encoding="utf-8") as f:

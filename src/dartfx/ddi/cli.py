@@ -6,7 +6,7 @@ from typing import Annotated
 import typer
 
 from dartfx.ddi import ddicodebook as codebook
-from dartfx.ddi import utils
+from dartfx.ddi.ddicodebook import utils as cb_utils
 
 app = typer.Typer(
     name="dartfx-ddi",
@@ -68,7 +68,7 @@ def ddic2cdi(
     setup_logging(loglevel)
     logging.info(f"Converting {ddifile} to CDI")
     cb = codebook.loadxml(str(ddifile))
-    graph = utils.codebook_to_cdif_graph(cb, base_uri=base_uri, use_skos=use_skos)
+    graph = cb_utils.codebook_to_cdif_graph(cb, base_uri=base_uri, use_skos=use_skos)
     serialized = graph.serialize(format=format.value)
 
     if output is None:

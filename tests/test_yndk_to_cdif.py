@@ -1,7 +1,10 @@
 import os
 
-from dartfx.ddi import ddicodebook, utils
+from dartfx.ddi import ddicodebook
 from dartfx.ddi.ddicdi import model_1_0_0 as model
+from dartfx.ddi.ddicdi import utils as cdi_utils
+from dartfx.ddi.ddicodebook import utils as cb_utils
+from dartfx.rdf import utils as rdf_utils
 from dartfx.rdf.pydantic import skos
 
 
@@ -15,7 +18,7 @@ def outputs_dir():
 
 def test_simple_to_cdi_skos():
     cb = ddicodebook.loadxml(os.path.join(data_dir(), "codebook/simple_yndk.xml"))
-    resources = utils.codebook_to_cdif(cb, use_skos=True)
+    resources = cb_utils.codebook_to_cdif(cb, use_skos=True)
 
     # Check basic structure
     assert isinstance(resources, dict)
@@ -58,13 +61,19 @@ def test_simple_to_cdi_skos():
     ds = data_structures[0]
     assert len(ds.has_ComponentPosition) == 1
 
-    g = utils.ddi_cdi_resources_to_graph(resources)
+    g = cdi_utils.ddi_cdi_resources_to_graph(resources)
     g.serialize(os.path.join(outputs_dir(), "cdi/simple_yndk.cdif.skos.ttl"), format="turtle")
     assert len(g) > 0
 
     # Validate - generate report regardless of conformance (SHACL work in progress)
-    conforms, results_graph, _results_text = utils.validate_ddi_cdi(g)
-    report = utils.shacl_report_to_markdown(results_graph)
+    conforms, results_graph, _results_text = cdi_utils.shacl_validate_ddi_cdi(g)
+    prefixes = {
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/": "cdi:",
+        "http://www.w3.org/2004/02/skos/core#": "skos:",
+    }
+    report = rdf_utils.shacl_validation_to_markdown(
+        results_graph, prefixes=prefixes, title="DDI-CDI Validation Report (SKOS)"
+    )
     report_path = os.path.join(outputs_dir(), "cdi/simple_yndk.cdif.skos.validation.md")
     with open(report_path, "w", encoding="utf-8") as f:
         f.write(report)
@@ -74,7 +83,7 @@ def test_simple_to_cdi_skos():
 
 def test_simple_to_cdi_native():
     cb = ddicodebook.loadxml(os.path.join(data_dir(), "codebook/simple_yndk.xml"))
-    resources = utils.codebook_to_cdif(cb, use_skos=False)
+    resources = cb_utils.codebook_to_cdif(cb, use_skos=False)
 
     # Check basic structure
     assert isinstance(resources, dict)
@@ -116,13 +125,19 @@ def test_simple_to_cdi_native():
     assert code.denotes is not None
     assert code.uses_Notation is not None
 
-    g = utils.ddi_cdi_resources_to_graph(resources)
+    g = cdi_utils.ddi_cdi_resources_to_graph(resources)
     g.serialize(os.path.join(outputs_dir(), "cdi/simple_yndk.cdif.native.ttl"), format="turtle")
     assert len(g) > 0
 
     # Validate - generate report regardless of conformance (SHACL work in progress)
-    conforms, results_graph, _results_text = utils.validate_ddi_cdi(g)
-    report = utils.shacl_report_to_markdown(results_graph)
+    conforms, results_graph, _results_text = cdi_utils.shacl_validate_ddi_cdi(g)
+    prefixes = {
+        "http://ddialliance.org/Specification/DDI-CDI/1.0/RDF/": "cdi:",
+        "http://www.w3.org/2004/02/skos/core#": "skos:",
+    }
+    report = rdf_utils.shacl_validation_to_markdown(
+        results_graph, prefixes=prefixes, title="DDI-CDI Validation Report (Native)"
+    )
     report_path = os.path.join(outputs_dir(), "cdi/simple_yndk.cdif.native.validation.md")
     with open(report_path, "w", encoding="utf-8") as f:
         f.write(report)
