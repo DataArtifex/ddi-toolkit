@@ -45,10 +45,10 @@ Conversion from DDI-Codebook
 
 Transform DDI-Codebook metadata into a stack of DDI-CDI resources aligned with the CDIF profile::
 
-   from dartfx.ddi.utils import codebook_to_cdif
+   from dartfx.ddi.ddicodebook import utils as cb_utils
 
    # cb is a loaded codeBookType instance
-   cdi_resources = codebook_to_cdif(cb)
+   cdi_resources = cb_utils.codebook_to_cdif(cb)
 
    # The result is a dictionary mapping URIs to Assistants
    for uri, assistant in cdi_resources.items():

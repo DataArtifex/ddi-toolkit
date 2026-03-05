@@ -103,13 +103,13 @@ You can transform legacy DDI-Codebook 2.6 metadata into DDI-CDI 1.0 resources fo
 
 ```python
 from dartfx.ddi import ddicodebook
-from dartfx.ddi import utils
+from dartfx.ddi.ddicodebook import utils as cb_utils
 
 # 1. Load the DDI-Codebook XML
 cb = ddicodebook.loadxml('my_codebook.xml')
 
 # 2. Convert to DDI-CDI Graph
-graph = utils.codebook_to_cdif_graph(cb)
+graph = cb_utils.codebook_to_cdif_graph(cb)
 
 # 3. Output as Turtle
 print(graph.serialize(format="turtle"))
@@ -147,16 +147,16 @@ classes = cdi_spec.get_ucmis_classes()
 ddi-toolkit/
 ├── src/dartfx/ddi/
 │   ├── ddicodebook/            # DDI-Codebook subpackage
-│   │   ├── __init__.py
-│   │   └── model.py            # DDI-Codebook 2.6 models
-│   ├── utils.py                # Conversion utilities (Codebook -> CDI)
-│   └── ddicdi/                 # DDI-CDI support
-│       ├── model_1_0_0.py      # Definitive generated Pydantic models
-│       ├── assistants.py       # High-level Assistant framework
-│       ├── specification.py    # DDI-CDI spec introspection tools
-│       └── ...                 # Additional CDI utilities
-├── tests/                     # Test suite
-└── docs/                      # Documentation
+│   │   ├── model.py            # DDI-Codebook 2.6 models
+│   │   └── utils.py            # Codebook-specific utilities (e.g., conversion)
+│   ├── ddicdi/                 # DDI-CDI subpackage
+│   │   ├── model_1_0_0.py      # Definitive generated Pydantic models
+│   │   ├── assistants.py       # High-level Assistant framework
+│   │   ├── specification.py    # DDI-CDI spec introspection tools
+│   │   └── utils.py            # CDI-specific utilities (e.g., validation)
+│   └── utils.py                # Experimental simplified data models
+├── tests/                      # Test suite
+└── docs/                       # Documentation
 ```
 
 ## Roadmap

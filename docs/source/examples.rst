@@ -93,13 +93,13 @@ DDI-Codebook to DDI-CDI Mapping
 
 Convenience utilities exist to transform legacy metadata into the modern CDI format::
 
-   from dartfx.ddi.utils import codebook_to_cdif
+   from dartfx.ddi.ddicodebook import utils as cb_utils
    from dartfx.ddi import ddicodebook
 
    cb = ddicodebook.loadxml('survey.xml')
 
    # Maps the whole codebook to a dict of Assistants
-   resources = codebook_to_cdif(cb, baseuri="http://my-archive.org/data/")
+   resources = cb_utils.codebook_to_cdif(cb, base_uri="http://my-archive.org/data/")
 
    for uri, assistant in resources.items():
        if isinstance(assistant.resource, model.InstanceVariable):

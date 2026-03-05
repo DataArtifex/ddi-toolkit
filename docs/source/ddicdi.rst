@@ -68,11 +68,11 @@ Mapping from DDI-Codebook
 -------------------------
 
    from dartfx.ddi import ddicodebook
-   from dartfx.ddi.utils import codebook_to_cdif
+   from dartfx.ddi.ddicodebook import utils as cb_utils
 
    # Convert an existing Codebook to a CDI resource dictionary
    cb = ddicodebook.loadxml("survey.xml")
-   cdi_resources = codebook_to_cdif(cb)
+   cdi_resources = cb_utils.codebook_to_cdif(cb)
 
 Advanced: Specification Loading::
 
@@ -93,7 +93,7 @@ Deprecated Modules
    - ``sempyro_model.py`` (Removed)
    - ``dataclass_model.py`` (Removed)
    - ``sempyro_deserializer.py`` (Removed)
-   - ``ddicdi/utils.py``: Legacy resource manager, replaced by the Assistant framework.
+   - ``ddicdi/utils.py``: Realigned to support technical CDI operations such as Graph creation and SHACL validation.
 
 API Reference Notes
 -------------------

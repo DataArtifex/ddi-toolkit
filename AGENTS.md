@@ -15,13 +15,13 @@ The **Data Artifex DDI Toolkit** is a specialized Python framework for managing 
    - **Resource Lifecycle**: Assistants handle the creation of resources, including automated DDI Identifier and URI generation.
    - **Method Proxying**: Relationships are managed via methods (like `add_variable`) that are dynamically bound to model instances through assistants.
 3. **RDF & Semantic Web**: The toolkit provides native RDF serialization for CDI models and includes SHACL-based validation to ensure conformance with the DDI-CDI specification.
-4. **CDIF Profile Conversion**: A core utility (`utils.py`) enables the transformation of legacy DDI-Codebook metadata into DDI-CDI resources following the CDIF (Cross-Domain Integration Framework) profile.
+18. **Modularized Utilities**: The toolkit uses specification-specific utility modules (`ddicdi/utils.py` and `ddicodebook/utils.py`) for specialized tasks like conversion and validation. The root `utils.py` is reserved for generic, cross-specification helpers, or generic models.
 
 ### Instructions for AI Agents
 
 - **Resource Creation**: Always prefer `CdiClassAssistant.create(model.ClassName, ...)` for DDI-CDI resources. This ensures proper identifier and URI management.
 - **Relationship Management**: Use the bound assistant methods for linking resources (e.g., `dataset.add_variable(var)`) rather than manual list manipulation where possible.
-- **Validation**: After significant CDI model manipulations, use `utils.validate_ddi_cdi()` to verify SHACL compliance.
+- **Validation**: After significant CDI model manipulations, use `cdi_utils.shacl_validate_ddi_cdi()` (from `dartfx.ddi.ddicdi.utils`) to verify SHACL compliance.
 - **Package Namespace**: The primary code lives under `dartfx.ddi`.
 - **DDI Specifics**: Be mindful that `CDIClass` and `CDIDataType` are treated differently in the assistant framework; assistants primarily operate on `CDIClass` resources.
 
