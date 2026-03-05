@@ -1,11 +1,11 @@
 import os
 
-from dartfx.rdf.pydantic import skos  # isort: skip
-import dartfx.rdf.utils as rdf_utils  # isort: skip
 from dartfx.ddi import ddicodebook
 from dartfx.ddi.ddicdi import model_1_0_0 as model
 from dartfx.ddi.ddicdi import utils as cdi_utils
 from dartfx.ddi.ddicodebook import utils as cb_utils
+from dartfx.rdf import utils as rdf_utils
+from dartfx.rdf.pydantic import skos
 
 
 def data_dir():

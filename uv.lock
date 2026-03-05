@@ -272,10 +272,11 @@ docs = [
 
 [[package]]
 name = "dartfx-rdf"
-version = "0.0.1"
-source = { git = "https://github.com/DataArtifex/rdf-toolkit.git?rev=main#ff05b2c01e150b7e697a797ebcdecc5b3b1583c8" }
+version = "0.1.2"
+source = { git = "https://github.com/DataArtifex/rdf-toolkit.git?rev=main#f09b2686ff217ef34e6bc89b09d3237df6578aad" }
 dependencies = [
     { name = "pydantic" },
+    { name = "pyshacl" },
     { name = "rdflib" },
 ]
 
