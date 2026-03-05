@@ -29,6 +29,17 @@ class OutputFormat(StrEnum):
     jsonld = "json-ld"
     nt = "nt"
 
+    @property
+    def extension(self) -> str:
+        """Returns the common file extension for the format."""
+        mapping = {
+            OutputFormat.turtle: ".ttl",
+            OutputFormat.xml: ".xml",
+            OutputFormat.jsonld: ".jsonld",
+            OutputFormat.nt: ".nt",
+        }
+        return mapping[self]
+
 
 def setup_logging(level: LogLevel):
     logging.basicConfig(
@@ -41,7 +52,8 @@ def setup_logging(level: LogLevel):
 def ddic2cdi(
     ddifile: Annotated[Path, typer.Argument(help="DDI Codebook 2.6 XML file", exists=True, dir_okay=False)],
     output: Annotated[
-        Path | None, typer.Option("--output", "-o", help="Output file path (prints to console if not specified)")
+        Path | None,
+        typer.Option("--output", "-o", help="Output file path (defaults to <ddifile>.<ext> if not specified)"),
     ] = None,
     format: Annotated[OutputFormat, typer.Option(help="Output format")] = OutputFormat.turtle,
     use_skos: Annotated[
@@ -59,11 +71,11 @@ def ddic2cdi(
     graph = utils.codebook_to_cdif_graph(cb, base_uri=base_uri, use_skos=use_skos)
     serialized = graph.serialize(format=format.value)
 
-    if output:
-        logging.info(f"Writing output to {output}")
-        output.write_text(serialized, encoding="utf-8")
-    else:
-        print(serialized)
+    if output is None:
+        output = ddifile.with_suffix(f".cdi{format.extension}")
+
+    logging.info(f"Writing output to {output}")
+    output.write_text(serialized, encoding="utf-8")
 
 
 @app.command()
