@@ -140,6 +140,9 @@ ignore = []
 [tool.hatch.metadata]
 allow-direct-references = true
 
+[tool.uv.sources]
+dartfx-rdf = { workspace = true }
+
 [tool.ruff.lint.isort]
 known-first-party = ["dartfx"]
 
