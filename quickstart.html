@@ -283,10 +283,10 @@
 <section id="conversion-from-ddi-codebook">
 <h2>Conversion from DDI-Codebook<a class="headerlink" href="#conversion-from-ddi-codebook" title="Link to this heading"></a></h2>
 <p>Transform DDI-Codebook metadata into a stack of DDI-CDI resources aligned with the CDIF profile:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">codebook_to_cdif</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicodebook</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span> <span class="k">as</span> <span class="n">cb_utils</span>
 
 <span class="c1"># cb is a loaded codeBookType instance</span>
-<span class="n">cdi_resources</span> <span class="o">=</span> <span class="n">codebook_to_cdif</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span>
+<span class="n">cdi_resources</span> <span class="o">=</span> <span class="n">cb_utils</span><span class="o">.</span><span class="n">codebook_to_cdif</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span>
 
 <span class="c1"># The result is a dictionary mapping URIs to Assistants</span>
 <span class="k">for</span> <span class="n">uri</span><span class="p">,</span> <span class="n">assistant</span> <span class="ow">in</span> <span class="n">cdi_resources</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>

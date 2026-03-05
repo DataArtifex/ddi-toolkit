@@ -327,13 +327,13 @@
 <section id="ddi-codebook-to-ddi-cdi-mapping">
 <h2>DDI-Codebook to DDI-CDI Mapping<a class="headerlink" href="#ddi-codebook-to-ddi-cdi-mapping" title="Link to this heading"></a></h2>
 <p>Convenience utilities exist to transform legacy metadata into the modern CDI format:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">codebook_to_cdif</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicodebook</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span> <span class="k">as</span> <span class="n">cb_utils</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi</span><span class="w"> </span><span class="kn">import</span> <span class="n">ddicodebook</span>
 
 <span class="n">cb</span> <span class="o">=</span> <span class="n">ddicodebook</span><span class="o">.</span><span class="n">loadxml</span><span class="p">(</span><span class="s1">&#39;survey.xml&#39;</span><span class="p">)</span>
 
 <span class="c1"># Maps the whole codebook to a dict of Assistants</span>
-<span class="n">resources</span> <span class="o">=</span> <span class="n">codebook_to_cdif</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="n">baseuri</span><span class="o">=</span><span class="s2">&quot;http://my-archive.org/data/&quot;</span><span class="p">)</span>
+<span class="n">resources</span> <span class="o">=</span> <span class="n">cb_utils</span><span class="o">.</span><span class="n">codebook_to_cdif</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="n">base_uri</span><span class="o">=</span><span class="s2">&quot;http://my-archive.org/data/&quot;</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">uri</span><span class="p">,</span> <span class="n">assistant</span> <span class="ow">in</span> <span class="n">resources</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">assistant</span><span class="o">.</span><span class="n">resource</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">InstanceVariable</span><span class="p">):</span>

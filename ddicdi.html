@@ -307,10 +307,10 @@
 <h2>Mapping from DDI-Codebook<a class="headerlink" href="#mapping-from-ddi-codebook" title="Link to this heading"></a></h2>
 <blockquote>
 <div><p>from dartfx.ddi import ddicodebook
-from dartfx.ddi.utils import codebook_to_cdif</p>
+from dartfx.ddi.ddicodebook import utils as cb_utils</p>
 <p># Convert an existing Codebook to a CDI resource dictionary
 cb = ddicodebook.loadxml(“survey.xml”)
-cdi_resources = codebook_to_cdif(cb)</p>
+cdi_resources = cb_utils.codebook_to_cdif(cb)</p>
 </div></blockquote>
 <p>Advanced: Specification Loading:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dartfx.ddi.ddicdi.specification</span><span class="w"> </span><span class="kn">import</span> <span class="n">DdiCdiModel</span>
@@ -332,7 +332,7 @@ cdi_resources = codebook_to_cdif(cb)</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">sempyro_model.py</span></code> (Removed)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">dataclass_model.py</span></code> (Removed)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">sempyro_deserializer.py</span></code> (Removed)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ddicdi/utils.py</span></code>: Legacy resource manager, replaced by the Assistant framework.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ddicdi/utils.py</span></code>: Realigned to support technical CDI operations such as Graph creation and SHACL validation.</p></li>
 </ul>
 </div>
 </section>

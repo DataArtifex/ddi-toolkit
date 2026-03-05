@@ -266,6 +266,9 @@
 <ul class="simple">
 <li><p>Refactored <code class="docutils literal notranslate"><span class="pre">ddicodebook</span></code> module into a subpackage structure for better extensibility.</p></li>
 <li><p>Moved DDI-Codebook models to <code class="docutils literal notranslate"><span class="pre">dartfx.ddi.ddicodebook.model</span></code>.</p></li>
+<li><p><strong>Modularized Utility Functions</strong>: Moved spec-specific logic from root <code class="docutils literal notranslate"><span class="pre">utils.py</span></code> into <code class="docutils literal notranslate"><span class="pre">ddicdi.utils</span></code> and <code class="docutils literal notranslate"><span class="pre">ddicodebook.utils</span></code>.</p></li>
+<li><p><strong>Generic SHACL Reporting</strong>: Updated toolkit to use <code class="docutils literal notranslate"><span class="pre">dartfx.rdf.utils.shacl_validation_to_markdown</span></code> for standardized validation reports across the ecosystem.</p></li>
+<li><p>Cleaned up root <code class="docutils literal notranslate"><span class="pre">utils.py</span></code> to focus on experimental simplified data models.</p></li>
 </ul>
 </section>
 <section id="features">

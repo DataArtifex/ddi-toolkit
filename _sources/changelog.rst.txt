@@ -28,6 +28,9 @@ Refactors
 
 - Refactored ``ddicodebook`` module into a subpackage structure for better extensibility.
 - Moved DDI-Codebook models to ``dartfx.ddi.ddicodebook.model``.
+- **Modularized Utility Functions**: Moved spec-specific logic from root ``utils.py`` into ``ddicdi.utils`` and ``ddicodebook.utils``.
+- **Generic SHACL Reporting**: Updated toolkit to use ``dartfx.rdf.utils.shacl_validation_to_markdown`` for standardized validation reports across the ecosystem.
+- Cleaned up root ``utils.py`` to focus on experimental simplified data models.
 
 Features
 ~~~~~~~~
