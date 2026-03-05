@@ -311,15 +311,15 @@ def codebook_to_cdif(
         if var_file_ids:
             for cb_file_id in var_file_ids:
                 # logical record
-                cdi_logical_record = logical_records.get(cb_file_id)
-                if not cdi_logical_record:
+                var_logical_record = logical_records.get(cb_file_id)
+                if not var_logical_record:
                     logging.warning(f"Logical record {cb_file_id} not found for variable {cb_var.id}")
                     continue
-                cdi_logical_record.add_variable(cdi_instance_var)  # type: ignore
+                var_logical_record.add_variable(cdi_instance_var)  # type: ignore
 
                 # variable position in data structure
-                cdi_data_structure = data_structures.get(cb_file_id)
-                if not cdi_data_structure:
+                var_data_structure = data_structures.get(cb_file_id)
+                if not var_data_structure:
                     logging.warning(f"Data structure {cb_file_id} not found for variable {cb_var.id}")
                     continue
 
@@ -330,7 +330,7 @@ def codebook_to_cdif(
                     value=positions[cb_file_id],
                 )
                 component_position.indexes = cdi_instance_var.get_uri()  # type: ignore[call-arg]
-                cdi_data_structure.add_resources(component_position, "has_ComponentPosition", exact_match=False)  # type: ignore
+                var_data_structure.add_resources(component_position, "has_ComponentPosition", exact_match=False)  # type: ignore
                 cdi_resources[component_position.get_uri()] = component_position  # type: ignore
                 positions[cb_file_id] += 1
         else:
