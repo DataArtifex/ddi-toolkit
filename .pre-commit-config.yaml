@@ -19,3 +19,10 @@ repos:
       - id: check-added-large-files
       - id: check-toml
       - id: check-merge-conflict
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.15.0
+    hooks:
+      - id: mypy
+        additional_dependencies: [pydantic, requests, types-requests]
+        args: [--strict, --ignore-missing-imports]
