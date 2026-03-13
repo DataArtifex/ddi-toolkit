@@ -1,0 +1,8 @@
+src/dartfx/ddi/ddicdi/assistants.py:53: error: Missing type parameters for generic type "Callable"  [type-arg]
+src/dartfx/ddi/ddicdi/assistants.py:59: error: Missing type parameters for generic type "Callable"  [type-arg]
+src/dartfx/ddi/ddicdi/assistants.py:76: error: Missing type parameters for generic type "Callable"  [type-arg]
+src/dartfx/ddi/ddicdi/assistants.py:184: error: Returning Any from function declared to return "str | None"  [no-any-return]
+src/dartfx/ddi/ddicdi/assistants.py:184: note: Error code "no-any-return" not covered by "type: ignore" comment
+src/dartfx/ddi/ddicdi/assistants.py:315: error: Returning Any from function declared to return "str | None"  [no-any-return]
+src/dartfx/ddi/ddicdi/assistants.py:315: note: Error code "no-any-return" not covered by "type: ignore" comment
+Found 5 errors in 1 file (checked 2 source files)
