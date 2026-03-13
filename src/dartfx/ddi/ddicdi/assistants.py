@@ -332,7 +332,8 @@ class CdiClassAssistant(CdiResourceAssistant):
         identifier = getattr(resource, "identifier", None)
         if identifier is None:
             identifier = model.Identifier()
-            resource.identifier = identifier
+            if hasattr(resource, "identifier"):
+                resource.identifier = identifier
 
         if ddi:
             ddi_id = getattr(identifier, "ddiIdentifier", None)
