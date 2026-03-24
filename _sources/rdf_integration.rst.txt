@@ -52,8 +52,8 @@ SHACL Validation
 
 The toolkit includes support for validating generated RDF graphs against the official DDI-CDI SHACL (Shapes Constraint Language) rules. This ensures that the generated metadata conforms to the specification's structural and cardinality requirements.
 
-Legacy: SemPyRO
----------------
+Legacy RDF Implementation
+-------------------------
 
 .. note::
-   The initial implementation of RDF support was based on the **SemPyRO** (Semantic Python RDF Objects) library. Legacy modules like ``sempyro_model.py`` have been removed as the project has migrated to the definitive ``model_1_0_0.py`` based on the newer RDF Toolkit.
+   The initial implementation of RDF support used an earlier RDF object layer. Those legacy modules have been removed as the project migrated to the definitive ``model_1_0_0.py`` based on the newer RDF Toolkit.

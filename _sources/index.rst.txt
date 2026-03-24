@@ -89,7 +89,7 @@ DDI-CDI & Assistant Framework usage::
    changelog
 
 .. note::
-   Legacy modules like ``dataclass_model.py``, ``sempyro_model.py``, and ``utils.py`` have been removed or deprecated in favor of the Assistant framework and the definitive ``model_1_0_0.py``. The project has migrated from the initial **SemPyRO** implementation to a more robust **RDF Toolkit** integration.
+   Legacy modules like ``dataclass_model.py`` and ``utils.py`` have been removed or deprecated in favor of the Assistant framework and the definitive ``model_1_0_0.py``. The project has migrated to a more robust **RDF Toolkit** integration.
 
 Indices and tables
 ==================

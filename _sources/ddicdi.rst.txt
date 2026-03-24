@@ -90,9 +90,8 @@ Deprecated Modules
 .. warning::
    The following legacy modules have been removed and replaced by the definitive ``model_1_0_0.py`` and the Assistant framework:
 
-   - ``sempyro_model.py`` (Removed)
    - ``dataclass_model.py`` (Removed)
-   - ``sempyro_deserializer.py`` (Removed)
+   - Legacy RDF deserializer modules (Removed)
    - ``ddicdi/utils.py``: Realigned to support technical CDI operations such as Graph creation and SHACL validation.
 
 API Reference Notes
