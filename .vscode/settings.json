@@ -2,11 +2,12 @@
     "python.analysis.extraPaths": [
         "./src/dartfx/ddi"
     ],
+    "python.defaultInterpreterPath": "../.venv/bin/python",
+    "python.terminal.activateEnvironment": true,
     "cSpell.words": [
         "ddicdi",
         "ddicodebook",
         "nonddi",
-        "sempyro",
         "ucmis"
     ]
 }

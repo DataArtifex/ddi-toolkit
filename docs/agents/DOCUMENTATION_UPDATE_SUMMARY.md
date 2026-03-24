@@ -22,14 +22,14 @@ The Sphinx-based documentation under `/docs` has been comprehensively reviewed, 
 
 ### 3. **Installation Guide** (`docs/source/installation.rst`)
 - Updated Python version requirement (3.12+)
-- Corrected dependencies list (pydantic_rdf, sempyro >= 2.0.0, rdflib >= 7.0)
+- Corrected dependencies list (pydantic_rdf, rdflib >= 7.0)
 - Updated installation verification examples
 - Improved development setup instructions
 
 ### 4. **Quick Start Guide** (`docs/source/quickstart.rst`)
 - Fixed module import names (`ddicodebook` instead of `codebook`)
 - Updated DDI-Codebook examples with realistic code
-- Added DDI-CDI SemPyRO examples
+- Added DDI-CDI RDF examples
 - Enhanced common use cases with practical examples
 - Updated all code samples to match current API
 
@@ -51,7 +51,7 @@ The Sphinx-based documentation under `/docs` has been comprehensively reviewed, 
 ### 7. **Specification Module Documentation** (`docs/source/specification.rst`)
 - Complete rewrite with detailed coverage of the specification module
 - Added comprehensive usage examples and SPARQL queries
-- Explained integration with SemPyRO models
+- Explained integration with RDF-aware models
 - Added error handling and performance considerations
 - Included file structure requirements
 
@@ -62,8 +62,8 @@ The Sphinx-based documentation under `/docs` has been comprehensively reviewed, 
 - Added advanced usage patterns and error handling
 - Included best practices and performance tips
 
-### 9. **SemPyRO Integration** (`docs/source/sempyro.rst`)
-- Comprehensive documentation of SemPyRO integration
+### 9. **RDF Integration** (`docs/source/rdf_integration.rst`)
+- Comprehensive documentation of RDF integration
 - Added detailed usage examples and model creation
 - Explained RDF serialization capabilities
 - Added validation and type safety examples
@@ -114,7 +114,7 @@ The Sphinx-based documentation under `/docs` has been comprehensively reviewed, 
 
 ### DDI-CDI
 - Accurate specification loading examples
-- Correct SemPyRO model usage patterns
+- Correct RDF model usage patterns
 - Realistic SPARQL query examples
 - Proper handling of experimental features
 
@@ -135,7 +135,7 @@ The Sphinx-based documentation under `/docs` has been comprehensively reviewed, 
 - `docs/source/ddicdi.rst` - DDI-CDI documentation
 - `docs/source/specification.rst` - Specification module docs
 - `docs/source/examples.rst` - Usage examples
-- `docs/source/sempyro.rst` - SemPyRO integration docs
+- `docs/source/rdf_integration.rst` - RDF integration docs
 - `docs/source/contributing.rst` - Contributing guide
 - `docs/source/changelog.rst` - Project changelog
 

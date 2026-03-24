@@ -6,10 +6,11 @@
 import builtins
 import os
 import sys
-from typing import Any
+from collections.abc import Callable
+from typing import Any, cast
 
 # Add Any to builtins to fix Sphinx napoleon bug where Any is not defined
-builtins.Any = Any
+builtins.__dict__["Any"] = Any
 
 # Patch Napoleon's _skip_member BEFORE Napoleon's setup() registers it.
 # Sphinx calls all autodoc-skip-member handlers regardless of what previous
@@ -19,18 +20,30 @@ builtins.Any = Any
 try:
     import sphinx.ext.napoleon as _napoleon_ext
 
-    _original_napoleon_skip = _napoleon_ext._skip_member  # type: ignore[attr-defined]
+    _original_napoleon_skip = cast(
+        Callable[[Any, str, str, Any, bool, Any], bool] | None,
+        getattr(_napoleon_ext, "_skip_member", None),
+    )
 
-    def _safe_napoleon_skip(app, what, name, obj, skip, options):  # type: ignore[misc]
+    def _safe_napoleon_skip(
+        app: Any,
+        what: str,
+        name: str,
+        obj: Any,
+        skip: bool,
+        options: Any,
+    ) -> bool:
         """Safe wrapper around Napoleon's _skip_member that handles Pydantic internals."""
         if name.startswith("__pydantic_"):
             return True
+        if _original_napoleon_skip is None:
+            return skip
         try:
             return _original_napoleon_skip(app, what, name, obj, skip, options)
         except Exception:
             return True
 
-    _napoleon_ext._skip_member = _safe_napoleon_skip  # type: ignore[attr-defined]
+    _napoleon_ext._skip_member = _safe_napoleon_skip
 except Exception:
     pass  # If Napoleon isn't available, nothing to patch
 
@@ -70,7 +83,6 @@ autodoc_default_options = {
 # Mock imports for problematic modules
 autodoc_mock_imports = [
     "dartfx.rdf",
-    "sempyro",
     "rdflib",
     "lxml",
     "dartfx.ddi.ddicdi.specification",
@@ -100,7 +112,7 @@ intersphinx_mapping = {
 todo_include_todos = True
 
 templates_path = ["_templates"]
-exclude_patterns = []
+exclude_patterns: list[str] = []
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -123,12 +135,19 @@ html_css_files = [
 # -- Custom Setup -----------------------------------------------------------
 
 
-def setup(app):
+def setup(app: Any) -> None:
     """
     Custom Sphinx setup to handle Pydantic internal attributes and other issues.
     """
 
-    def skip_pydantic_members(_app, _what, name, _obj, skip, _options):
+    def skip_pydantic_members(
+        _app: Any,
+        _what: str,
+        name: str,
+        _obj: Any,
+        skip: bool,
+        _options: Any,
+    ) -> bool:
         # Skip Pydantic internal attributes that cause issues with Sphinx inspection
         # particularly when using mock imports or advanced type hints
         if name.startswith("__pydantic_"):

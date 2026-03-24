@@ -22,7 +22,6 @@ classifiers = [
 dependencies = [
   "dartfx-rdf @ git+https://github.com/DataArtifex/rdf-toolkit.git@main",
   "rdflib>=7",
-  "sempyro>=2.0.0",
   "pyshacl",
   "typer",
 ]
@@ -128,9 +127,7 @@ ignore = []
 
 [tool.ruff.lint.per-file-ignores]
 "src/dartfx/ddi/ddicdi/model_1_0_0.py" = ["E501", "F821"]
-"src/dartfx/ddi/ddicdi/sempyro_model.py" = ["E501", "E402", "F404"]
 "src/dartfx/ddi/ddicdi/dataclass_model.py" = ["E501", "E402", "F821", "B008"]
-"src/dartfx/ddi/ddicdi/sempyro_deserializer.py" = ["E402"]
 "src/dartfx/ddi/ddicdi/specification.py" = ["E501"]
 "src/dartfx/ddi/ddicodebook.py" = ["E501"]
 "src/dartfx/ddi/utils.py" = ["E501"]

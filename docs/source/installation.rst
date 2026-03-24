@@ -8,7 +8,6 @@ Requirements
 * pydantic
 * rdflib >= 7.0
 * dartfx-rdf (RDF Toolkit)
-* sempyro >= 2.0.0 (legacy support)
 * pyshacl
 
 Installation from PyPI
@@ -42,7 +41,6 @@ The toolkit has several key dependencies:
 
 * **dartfx-rdf**: DataArtifex RDF Toolkit for RDF-aware Pydantic models
 * **rdflib**: For RDF graph operations and SPARQL queries
-* **sempyro**: Legacy support for semantic Python RDF objects
 * **pyshacl**: For SHACL validation of DDI-CDI graphs
 
 Development Dependencies
