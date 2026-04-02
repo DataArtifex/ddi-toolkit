@@ -21,7 +21,7 @@ classifiers = [
 ]
 dependencies = [
   "dartfx-rdf @ git+https://github.com/DataArtifex/rdf-toolkit.git@main",
-  "rdflib>=7",
+  "rdflib>=7.1.0",
   "pyshacl",
   "typer",
 ]
@@ -46,18 +46,18 @@ path = "src/dartfx/ddi/__about__.py"
 
 [dependency-groups]
 dev = [
-  "coverage[toml]>=6.5",
+  "coverage[toml]>=7.0.0",
   "pytest>=9",
   "mypy>=1.0.0",
   "python-dotenv>=1.0.0",
   "ruff>=0.3.0",
-  "pre-commit>=3.0.0",
+  "pre-commit>=4.0.0",
 ]
 docs = [
-  "sphinx>=7.0.0",
-  "sphinx-rtd-theme>=1.2.0",
+  "sphinx>=9.0.0",
+  "sphinx-rtd-theme>=3.0.0",
   "myst-parser>=5.0.0",
-  "sphinx-copybutton>=0.5.0",
+  "sphinx-copybutton>=0.5.2",
 ]
 
 [tool.hatch.envs.default]
