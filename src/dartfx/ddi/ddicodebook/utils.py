@@ -130,7 +130,7 @@ def codebook_to_cdif(
                     cdi_substantive_concept_scheme = skos.ConceptScheme(id=uri)
                     cdi_resources[str(uri)] = cdi_substantive_concept_scheme
                     cdi_substantive_value_domain.add_resources(  # type: ignore
-                        cdi_substantive_concept_scheme,  # type: ignore[arg-type]
+                        cdi_substantive_concept_scheme,
                         "takesValuesFrom",
                         exact_match=False,
                     )
@@ -184,7 +184,7 @@ def codebook_to_cdif(
                     cdi_sentinel_concept_scheme = skos.ConceptScheme(id=uri)
                     cdi_resources[str(uri)] = cdi_sentinel_concept_scheme
                     cdi_sentinel_value_domain.add_resources(  # type: ignore
-                        cdi_sentinel_concept_scheme,  # type: ignore[arg-type]
+                        cdi_sentinel_concept_scheme,
                         "takesValuesFrom",
                         exact_match=False,
                     )

@@ -2,9 +2,12 @@ import os
 import sys
 import time
 import uuid
+from typing import cast
 
 # Setup path
 sys.path.append(os.path.join(os.getcwd(), "src"))
+
+from pydantic import AnyUrl
 
 from dartfx.ddi.ddicdi import model_1_0_0 as model
 from dartfx.ddi.ddicdi.assistants import CdiAssistant, CdiClassAssistant
@@ -53,7 +56,7 @@ def benchmark_full_creation(n=10000):
         res.identifier.ddiIdentifier = model.InternationalRegistrationDataIdentifier(
             dataIdentifier=uid, registrationAuthorityIdentifier="int.dataartifex", versionIdentifier="1"
         )
-        res.identifier.uri = f"urn:ddi-cdi:{uid}"
+        res.identifier.uri = cast(AnyUrl, f"urn:ddi-cdi:{uid}")
     end = time.time()
     manual_time = end - start
     print(f"Manual Full Setup: {manual_time:.4f}s ({n / manual_time:.0f} ops/s)")
