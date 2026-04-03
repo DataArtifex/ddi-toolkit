@@ -113,7 +113,9 @@ def test_classmethod_selective_exposure():
     assistant = SelectiveAssistant(resource=res)
 
     # OtherAssistant bound 'resource_helper' to CDIResource
-    assert res.resource_helper() == "bound"
+    resource_helper = getattr(res, "resource_helper", None)
+    assert callable(resource_helper)
+    assert resource_helper() == "bound"
 
     # SelectiveAssistant proxies to res, which has the method!
     # This works because SelectiveAssistant doesn't have its own 'resource_helper'.

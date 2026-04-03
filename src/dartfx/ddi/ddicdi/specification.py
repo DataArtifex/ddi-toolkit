@@ -46,6 +46,8 @@ from typing import Any
 
 from pydantic import BaseModel, computed_field
 from rdflib import Graph, Namespace
+from rdflib.query import ResultRow
+from rdflib.term import Node
 
 NAMESPACES = {
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
@@ -178,6 +180,13 @@ class DdiCdiModel(BaseModel):
         tree = ET.parse(file_path)
         return tree.getroot()
 
+    @staticmethod
+    def _row_value(row: tuple[Node, Node, Node] | bool | ResultRow, index: int) -> str | None:
+        """Return the stringified value from a SPARQL row, skipping ASK-style bool rows."""
+        if isinstance(row, bool):
+            return None
+        return str(row[index])
+
     def get_association_cardinalities(self, association_uri: str) -> dict[str, dict[str, Any]]:
         """
         Retrieves the from and to cardinalities of an association for a given association URI.
@@ -262,8 +271,11 @@ class DdiCdiModel(BaseModel):
         }}
         """
         results = self.graph.query(query)
-        count = int(next(iter(results))[0])
-        return count
+        for row in results:
+            value = self._row_value(row, 0)
+            if value is not None:
+                return int(value)
+        return 0
 
     def get_classes(self) -> list[str]:
         """
@@ -277,7 +289,12 @@ class DdiCdiModel(BaseModel):
                 }
             order by ?c        """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        classes: list[str] = []
+        for row in results:
+            value = self._row_value(row, 0)
+            if value is not None:
+                classes.append(self.prefixed_uri(value))
+        return classes
 
     def get_enumeration(self, enumeration_uri: str) -> dict[str, Any]:
         """
@@ -298,7 +315,10 @@ class DdiCdiModel(BaseModel):
         """
         results = self.graph.query(query)
         for row in results:
-            member_uri = self.prefixed_uri(row[0])
+            member_value = self._row_value(row, 0)
+            if member_value is None:
+                continue
+            member_uri = self.prefixed_uri(member_value)
             member_properties = self.get_resource_properties(member_uri)
             label = member_properties.get("rdfs:label")
             description = member_properties.get("rdfs:comment")
@@ -513,8 +533,11 @@ class DdiCdiModel(BaseModel):
         properties: dict[str, Any] = {}
         # Process results into a dictionary
         for row in results:
-            prop = self.prefixed_uri(str(row[0]))
-            value = str(row[1])
+            prop_value = self._row_value(row, 0)
+            value = self._row_value(row, 1)
+            if prop_value is None or value is None:
+                continue
+            prop = self.prefixed_uri(prop_value)
             if prop not in properties:
                 properties[prop] = []
             properties[prop].append(value)
@@ -537,7 +560,12 @@ class DdiCdiModel(BaseModel):
             }}
             """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        associations: list[str] = []
+        for row in results:
+            value = self._row_value(row, 0)
+            if value is not None:
+                associations.append(self.prefixed_uri(value))
+        return associations
 
     def get_resource_ucmis_associations_to(self, resource_uri: str) -> list[str]:
         """
@@ -552,7 +580,12 @@ class DdiCdiModel(BaseModel):
             }}
             """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        associations: list[str] = []
+        for row in results:
+            value = self._row_value(row, 0)
+            if value is not None:
+                associations.append(self.prefixed_uri(value))
+        return associations
 
     def get_resource_ucmis_domain_attributes(self, resource_uri: str) -> list[str]:
         """
@@ -567,7 +600,12 @@ class DdiCdiModel(BaseModel):
         }}
         """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        attributes: list[str] = []
+        for row in results:
+            value = self._row_value(row, 0)
+            if value is not None:
+                attributes.append(self.prefixed_uri(value))
+        return attributes
 
     def get_resource_ucmis_range_attributes(self, resource_uri: str) -> list[str]:
         """
@@ -582,7 +620,12 @@ class DdiCdiModel(BaseModel):
         }}
         """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        attributes: list[str] = []
+        for row in results:
+            value = self._row_value(row, 0)
+            if value is not None:
+                attributes.append(self.prefixed_uri(value))
+        return attributes
 
     def get_resource_superclasses(self, resource_uri: str) -> list[str]:
         """
@@ -598,7 +641,12 @@ class DdiCdiModel(BaseModel):
         """
         results = self.graph.query(query)
         if results:
-            return [self.prefixed_uri(str(row[0])) for row in results]
+            superclasses: list[str] = []
+            for row in results:
+                value = self._row_value(row, 0)
+                if value is not None:
+                    superclasses.append(self.prefixed_uri(value))
+            return superclasses
         else:
             return []
 
@@ -616,7 +664,12 @@ class DdiCdiModel(BaseModel):
         """
         results = self.graph.query(query)
         if results:
-            return [self.prefixed_uri(str(row[0])) for row in results]
+            subclasses: list[str] = []
+            for row in results:
+                value = self._row_value(row, 0)
+                if value is not None:
+                    subclasses.append(self.prefixed_uri(value))
+            return subclasses
         else:
             return []
 
@@ -633,7 +686,12 @@ class DdiCdiModel(BaseModel):
         order by ?attribute
         """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        attributes: list[str] = []
+        for row in results:
+            value = self._row_value(row, 0)
+            if value is not None:
+                attributes.append(self.prefixed_uri(value))
+        return attributes
 
     def get_ucmis_associations(self) -> list[str]:
         """
@@ -648,7 +706,12 @@ class DdiCdiModel(BaseModel):
         order by ?association
         """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        associations: list[str] = []
+        for row in results:
+            value = self._row_value(row, 0)
+            if value is not None:
+                associations.append(self.prefixed_uri(value))
+        return associations
 
     def get_ucmis_classes(self) -> list[str]:
         """
@@ -663,7 +726,12 @@ class DdiCdiModel(BaseModel):
         order by ?class
         """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        classes: list[str] = []
+        for row in results:
+            value = self._row_value(row, 0)
+            if value is not None:
+                classes.append(self.prefixed_uri(value))
+        return classes
 
     def get_ucmis_enumerations(self) -> list[str]:
         """
@@ -678,7 +746,12 @@ class DdiCdiModel(BaseModel):
         order by ?enumeration
         """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        enumerations: list[str] = []
+        for row in results:
+            value = self._row_value(row, 0)
+            if value is not None:
+                enumerations.append(self.prefixed_uri(value))
+        return enumerations
 
     def get_ucmis_structureddatatypes(self) -> list[str]:
         """
@@ -693,7 +766,12 @@ class DdiCdiModel(BaseModel):
         order by ?datatype
         """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        datatypes: list[str] = []
+        for row in results:
+            value = self._row_value(row, 0)
+            if value is not None:
+                datatypes.append(self.prefixed_uri(value))
+        return datatypes
 
     def get_subclassof(self) -> dict[str, str]:
         """
@@ -711,8 +789,12 @@ class DdiCdiModel(BaseModel):
         results = self.graph.query(query)
         subclass_of = {}
         for row in results:
-            child_uri = self.prefixed_uri(str(row[0]))
-            parent_uri = self.prefixed_uri(str(row[1]))
+            child_value = self._row_value(row, 0)
+            parent_value = self._row_value(row, 1)
+            if child_value is None or parent_value is None:
+                continue
+            child_uri = self.prefixed_uri(child_value)
+            parent_uri = self.prefixed_uri(parent_value)
             subclass_of[child_uri] = parent_uri
         return subclass_of
 
@@ -748,4 +830,9 @@ class DdiCdiModel(BaseModel):
         }}
         """
         results = self.graph.query(query)
-        return [self.prefixed_uri(str(row[0])) for row in results]
+        classes: list[str] = []
+        for row in results:
+            value = self._row_value(row, 0)
+            if value is not None:
+                classes.append(self.prefixed_uri(value))
+        return classes
