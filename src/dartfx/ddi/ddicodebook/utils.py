@@ -1,6 +1,9 @@
 import logging
 import urllib.parse
 import uuid
+import xml.etree.ElementTree as ET
+from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any, cast
 
 from rdflib import Graph, URIRef
@@ -11,7 +14,222 @@ from ..ddicdi import model_1_0_0 as model
 from ..ddicdi.assistants import CdiAssistant, CdiClassAssistant
 from ..ddicdi.model_1_0_0 import TypedString
 from ..ddicdi.utils import ddi_cdi_resources_to_graph
-from .model import codeBookType
+from .model import codeBookType, loadxml, loadxmlstring
+
+
+def _build_issue(code: str, message: str, location: str | None = None) -> dict[str, str]:
+    issue = {"code": code, "message": message}
+    if location:
+        issue["location"] = location
+    return issue
+
+
+def _load_codebook_from_path(path: Path) -> tuple[codeBookType | None, list[dict[str, str]]]:
+    if not path.exists():
+        return (
+            None,
+            [
+                _build_issue(
+                    "input.path_not_found",
+                    f"Input path does not exist: {path}",
+                    "path",
+                )
+            ],
+        )
+    return loadxml(str(path)), []
+
+
+def _parse_codebook_input(
+    data: codeBookType | Path | str,
+) -> tuple[codeBookType | None, dict[str, Any], list[dict[str, str]]]:
+    metadata: dict[str, Any] = {
+        "input_type": "unknown",
+        "generated_at": datetime.now(tz=UTC).isoformat(),
+    }
+
+    if isinstance(data, codeBookType):
+        metadata["input_type"] = "model"
+        return data, metadata, []
+
+    if isinstance(data, Path):
+        metadata["input_type"] = "path"
+        metadata["source"] = str(data)
+        codebook, errors = _load_codebook_from_path(data)
+        return codebook, metadata, errors
+
+    if isinstance(data, str):
+        stripped = data.lstrip()
+        if stripped.startswith("<"):
+            metadata["input_type"] = "xml_string"
+            return loadxmlstring(data), metadata, []
+
+        path = Path(data)
+        metadata["input_type"] = "path"
+        metadata["source"] = str(path)
+        codebook, errors = _load_codebook_from_path(path)
+        return codebook, metadata, errors
+
+    return (
+        None,
+        metadata,
+        [
+            _build_issue(
+                "input.unsupported_type",
+                f"Unsupported input type: {type(data).__name__}",
+                "input",
+            )
+        ],
+    )
+
+
+def _validate_codebook_business_rules(codebook: codeBookType) -> tuple[list[dict[str, str]], list[dict[str, str]], int]:
+    errors: list[dict[str, str]] = []
+    warnings: list[dict[str, str]] = []
+
+    if not codebook.id:
+        errors.append(
+            _build_issue(
+                "codebook.missing_id",
+                "Codebook has no @ID attribute",
+                "codeBook/@ID",
+            )
+        )
+
+    if not codebook.fileDscr:
+        errors.append(
+            _build_issue(
+                "codebook.missing_filedscr",
+                "Codebook has no FileDscr element",
+                "codeBook/fileDscr",
+            )
+        )
+    else:
+        for index, file_dscr in enumerate(codebook.fileDscr, start=1):
+            if not file_dscr.id:
+                errors.append(
+                    _build_issue(
+                        "codebook.filedscr.missing_id",
+                        "FileDscr element has no @ID attribute",
+                        f"codeBook/fileDscr[{index}]/@ID",
+                    )
+                )
+
+    variable_count = len(codebook.search_variables())
+    if variable_count == 0:
+        warnings.append(
+            _build_issue(
+                "codebook.no_variables",
+                "Codebook has no variables",
+                "codeBook/dataDscr",
+            )
+        )
+
+    return errors, warnings, variable_count
+
+
+def _render_issue_section(title: str, issues: list[dict[str, Any]]) -> list[str]:
+    lines = ["", title, ""]
+    if not issues:
+        lines.append("- None")
+        return lines
+
+    for issue in issues:
+        location = issue.get("location")
+        location_text = f" ({location})" if location else ""
+        lines.append(f"- [{issue.get('code', 'unknown')}] {issue.get('message', '')}{location_text}")
+    return lines
+
+
+def validate_codebook_xml(data: codeBookType | Path | str) -> tuple[bool, dict[str, Any]]:
+    """Validates a DDI-Codebook document and returns a JSON-serializable report.
+
+    The validator reuses the existing XML-to-Pydantic parsing and applies
+    additional business-rule checks expected by conversion utilities.
+    """
+    errors: list[dict[str, str]] = []
+    warnings: list[dict[str, str]] = []
+    checked_rules = [
+        "xml.parseable",
+        "codebook.id.present",
+        "codebook.fileDscr.present",
+        "codebook.fileDscr.id.present",
+    ]
+
+    codebook: codeBookType | None = None
+    try:
+        codebook, metadata, errors = _parse_codebook_input(data)
+    except ET.ParseError as exc:
+        metadata = {
+            "input_type": "unknown",
+            "generated_at": datetime.now(tz=UTC).isoformat(),
+        }
+        errors.append(_build_issue("xml.parse_error", str(exc), "xml"))
+    except Exception as exc:  # pragma: no cover - defensive fallback
+        metadata = {
+            "input_type": "unknown",
+            "generated_at": datetime.now(tz=UTC).isoformat(),
+        }
+        errors.append(_build_issue("validation.exception", str(exc), "runtime"))
+
+    if codebook is not None:
+        business_errors, warnings, variable_count = _validate_codebook_business_rules(codebook)
+        errors.extend(business_errors)
+        metadata["variable_count"] = variable_count
+
+    is_valid = len(errors) == 0
+    report = {
+        "schema_version": "1.0",
+        "valid": is_valid,
+        "summary": {
+            "error_count": len(errors),
+            "warning_count": len(warnings),
+            "checked_rule_count": len(checked_rules),
+        },
+        "checked_rules": checked_rules,
+        "errors": errors,
+        "warnings": warnings,
+        "metadata": metadata,
+    }
+    return is_valid, report
+
+
+def validation_report_to_markdown(report: dict[str, Any]) -> str:
+    """Renders a markdown report from a JSON validation payload."""
+    summary = report.get("summary", {})
+    errors = report.get("errors", [])
+    warnings = report.get("warnings", [])
+    metadata = report.get("metadata", {})
+    checked_rules = report.get("checked_rules", [])
+
+    status = "VALID" if report.get("valid", False) else "INVALID"
+
+    lines = [
+        "# DDI-Codebook Validation Report",
+        "",
+        f"- Status: **{status}**",
+        f"- Errors: {summary.get('error_count', 0)}",
+        f"- Warnings: {summary.get('warning_count', 0)}",
+        f"- Checked rules: {summary.get('checked_rule_count', 0)}",
+        "",
+        "## Metadata",
+        "",
+        f"- Input type: {metadata.get('input_type', 'unknown')}",
+        f"- Generated at: {metadata.get('generated_at', 'n/a')}",
+    ]
+
+    if metadata.get("source"):
+        lines.append(f"- Source: {metadata['source']}")
+    if metadata.get("variable_count") is not None:
+        lines.append(f"- Variable count: {metadata['variable_count']}")
+
+    lines.extend(["", "## Checked Rules", ""])
+    for rule in checked_rules:
+        lines.append(f"- {rule}")
+
+    lines.extend(_render_issue_section("## Errors", errors))
+    lines.extend(_render_issue_section("## Warnings", warnings))
+
+    return "\n".join(lines)
 
 
 def codebook_to_cdif(
@@ -302,7 +520,7 @@ def codebook_to_cdif(
 
         # If no files associated, but only one file exists, default to it
         if not var_file_ids and len(datasets) == 1:
-            var_file_ids = [list(datasets.keys())[0]]
+            var_file_ids = [next(iter(datasets))]
 
         if var_file_ids:
             for cb_file_id in var_file_ids:

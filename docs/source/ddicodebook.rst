@@ -3,7 +3,9 @@ DDI-Codebook Processing
 
 The ``ddicodebook`` subpackage provides functionality for reading and processing DDI-Codebook 2.6 XML documents in Python. It is backward compatible with DDI-Codebook 2.5 and earlier versions.
 
-The subpackage is designed to be flexible and accommodate various versions of DDI-Codebook, including slightly invalid DDI documents that are sometimes found in practice. The package is primarily intended for reading and processing existing DDI documents, not for creating new DDI-XML or validation.
+The subpackage is designed to be flexible and accommodate various versions of DDI-Codebook, including slightly invalid DDI documents that are sometimes found in practice. The package is primarily intended for reading and processing existing DDI documents, not for creating new DDI-XML.
+
+It also provides lightweight validation utilities that combine XML parsing and business-rule checks, with report output in JSON or Markdown.
 
 Overview
 --------
@@ -93,6 +95,23 @@ The module is designed to be robust when dealing with incomplete or slightly mal
 
    except Exception as e:
        print(f"Error loading codebook: {e}")
+
+Validation Utility
+------------------
+
+Validate a codebook document and inspect the JSON report::
+
+    from dartfx.ddi.ddicodebook import utils as cb_utils
+
+    is_valid, report = cb_utils.validate_codebook_xml('mycodebook.xml')
+    print(report['summary'])
+
+Generate a Markdown validation report from the same payload::
+
+    markdown_report = cb_utils.validation_report_to_markdown(report)
+    print(markdown_report)
+
+The validator currently focuses on parseability and key DDI-Codebook business rules used by conversion utilities.
 
 Implementation Notes
 --------------------

@@ -20,20 +20,23 @@ This package provides Python classes and utilities for working with metadata bas
 
 **Detailed documentation is available at [https://dataartifex.org/docs/dartfx-ddi/](https://dataartifex.org/docs/dartfx-ddi/)**
 
+**Release notes are available in [CHANGELOG.md](CHANGELOG.md).**
+
 ## DDI Specifications Supported
 
 There are three major flavors of DDI. This package currently supports:
 
 - **[DDI-Codebook 2.6](https://ddialliance.org/Specification/DDI-Codebook/2.6/)**: The lightweight version of the standard, intended primarily to document simple survey data.
-- **[DDI-CDI 1.0](https://ddialliance.org/Specification/DDI-CDI/)**: The new Cross Domain Integration specification. This package uses **generated Pydantic models** directly aligned with the official DDI-CDI 1.0 specifications.
+- **[DDI-CDI](https://ddialliance.org/Specification/DDI-CDI/)**: The new Cross Domain Integration specification. This package uses **generated Pydantic models** and now defaults to the DDI-CDI 1.1.0 model layer.
 
 ## Key Features
 
 - **DDI-Codebook XML Processing**: Load, parse, and extract structured metadata from DDI-Codebook documents.
-- **DDI-CDI Model (v1.0.0)**: Use definitive, spec-generated Pydantic classes for the full DDI-CDI implementation.
+- **DDI-CDI Model (v1.1.0)**: Use definitive, spec-generated Pydantic classes for the full DDI-CDI implementation.
 - **Assistant Framework**: A high-level API (`CdiClassAssistant`) that simplifies CDI resource creation, automated identifier generation, and method proxying.
 - **RDF Serialization**: Built-in support for serializing CDI models to RDF graphs.
 - **Cross-Format Conversion**: Transform DDI-Codebook metadata into DDI-CDI resources via the CDIF profile.
+- **Validation Reporting**: Validate DDI-Codebook XML documents and generate machine-friendly JSON or human-readable Markdown reports.
 
 ## Installation
 
@@ -81,7 +84,7 @@ if my_codebook.dataDscr:
 The Assistant framework provides a streamlined way to work with DDI-CDI without manually managing complex relationships or identifiers.
 
 ```python
-from dartfx.ddi.ddicdi import model_1_0_0 as model
+from dartfx.ddi.ddicdi import model_1_1_0 as model
 from dartfx.ddi.ddicdi.assistants import CdiClassAssistant
 
 # 1. Create a resource (Handles DDI Identification automatically)
@@ -98,7 +101,7 @@ print(graph.serialize(format="turtle"))
 
 ### Converting DDI-Codebook to DDI-CDI
 
-You can transform legacy DDI-Codebook 2.6 metadata into DDI-CDI 1.0 resources following the CDIF (Cross-Domain Integration Framework) profile.
+You can transform legacy DDI-Codebook 2.6 metadata into DDI-CDI resources following the CDIF (Cross-Domain Integration Framework) profile.
 
 #### Python Example
 
@@ -126,6 +129,32 @@ dartfx-ddi ddic2cdi my_codebook.xml
 
 # Convert DDI-Codebook to CDI in XML format
 dartfx-ddi ddic2cdi my_codebook.xml --format xml
+
+# Validate a DDI-Codebook document (Markdown report to stdout by default)
+dartfx-ddi ddicvalidate my_codebook.xml
+
+# Validate and emit a Markdown report
+dartfx-ddi ddicvalidate my_codebook.xml --report-format md
+
+# Write validation report to a file
+dartfx-ddi ddicvalidate my_codebook.xml --report-format md --output validation_report.md
+
+# Emit JSON report explicitly
+dartfx-ddi ddicvalidate my_codebook.xml --report-format json
+```
+
+### Validating DDI-Codebook Documents in Python
+
+```python
+from dartfx.ddi.ddicodebook import utils as cb_utils
+
+is_valid, report = cb_utils.validate_codebook_xml("my_codebook.xml")
+
+print(is_valid)
+print(report["summary"])
+
+markdown_report = cb_utils.validation_report_to_markdown(report)
+print(markdown_report)
 ```
 
 ### Specification Loading
@@ -151,7 +180,7 @@ ddi-toolkit/
 │   │   ├── model.py            # DDI-Codebook 2.6 models
 │   │   └── utils.py            # Codebook-specific utilities (e.g., conversion)
 │   ├── ddicdi/                 # DDI-CDI subpackage
-│   │   ├── model_1_0_0.py      # Definitive generated Pydantic models
+│   │   ├── model_1_1_0.py      # Definitive generated Pydantic models (latest)
 │   │   ├── assistants.py       # High-level Assistant framework
 │   │   ├── specification.py    # DDI-CDI spec introspection tools
 │   │   └── utils.py            # CDI-specific utilities (e.g., validation)
@@ -163,7 +192,7 @@ ddi-toolkit/
 ## Roadmap
 
 ### Current Status
-- [x] Migrate to Pydantic-based models (`model_1_0_0.py`)
+- [x] Migrate to Pydantic-based models (`model_1_1_0.py`)
 - [x] Implement robust Assistant Framework for resource management
 - [x] Automated DDI Identifier and URI management
 - [x] CDIF Profile conversion (Codebook to CDI)

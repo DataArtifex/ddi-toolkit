@@ -21,6 +21,21 @@ Basic Metadata Extraction
        title = cb.studyDscr.citation.titlStmt.titl.content
        print(f"Title: {title}")
 
+   Validation with JSON and Markdown Reports
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   .. code-block:: python
+
+      from dartfx.ddi.ddicodebook import utils as cb_utils
+
+      is_valid, report = cb_utils.validate_codebook_xml('survey_data.xml')
+
+      print(f"Valid: {is_valid}")
+      print(report['summary'])
+
+      markdown_report = cb_utils.validation_report_to_markdown(report)
+      print(markdown_report)
+
 DDI-CDI Assistant Framework
 ---------------------------
 
@@ -31,7 +46,7 @@ Creating a DataSet with Variables
 
 .. code-block:: python
 
-   from dartfx.ddi.ddicdi import model_1_0_0 as model
+   from dartfx.ddi.ddicdi import model_1_1_0 as model
    from dartfx.ddi.ddicdi.assistants import CdiClassAssistant
 
    # Create a dataset (automates identifier generation)
@@ -75,7 +90,7 @@ Direct Model Usage
 
 For power users who need to avoid the Assistant wrapper and work directly with the Pydantic models::
 
-   from dartfx.ddi.ddicdi import model_1_0_0 as model
+   from dartfx.ddi.ddicdi import model_1_1_0 as model
 
    # Create instance directly
    irdi = model.InternationalRegistrationDataIdentifier(

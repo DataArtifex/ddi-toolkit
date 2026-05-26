@@ -19,6 +19,43 @@ Loading and processing a DDI-Codebook document::
        for var in my_codebook.dataDscr.var:
            print(f"Variable: {var.name}")
 
+DDI-Codebook Validation
+-----------------------
+
+Validate a codebook and obtain a JSON-serializable report payload:
+
+.. code-block:: python
+
+   from dartfx.ddi.ddicodebook import utils as cb_utils
+
+   is_valid, report = cb_utils.validate_codebook_xml('path/to/codebook.xml')
+
+   print(is_valid)
+   print(report['summary'])
+
+Render a Markdown report from the same validation payload:
+
+.. code-block:: python
+
+   markdown_report = cb_utils.validation_report_to_markdown(report)
+   print(markdown_report)
+
+CLI usage:
+
+.. code-block:: bash
+
+   # Markdown report (default)
+   dartfx-ddi ddicvalidate path/to/codebook.xml
+
+   # Markdown report (explicit)
+   dartfx-ddi ddicvalidate path/to/codebook.xml --report-format md
+
+   # Save report to file
+   dartfx-ddi ddicvalidate path/to/codebook.xml --report-format md --output validation_report.md
+
+   # JSON report
+   dartfx-ddi ddicvalidate path/to/codebook.xml --report-format json
+
 DDI-CDI & Assistant Framework
 -----------------------------
 
@@ -26,7 +63,7 @@ Working with DDI-CDI is easiest using the Assistant framework, which manages ide
 
 Basic Lifecycle::
 
-   from dartfx.ddi.ddicdi import model_1_0_0 as model
+   from dartfx.ddi.ddicdi import model_1_1_0 as model
    from dartfx.ddi.ddicdi.assistants import CdiClassAssistant
 
    # 1. Create resources

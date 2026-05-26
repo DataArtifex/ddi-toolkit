@@ -13,7 +13,7 @@ There are three major flavors of DDI. This package currently supports:
 
 * **DDI-Codebook 2.6**: The lightweight version of the standard, intended primarily to document simple survey data. This specification has been widely adopted around the globe by statistical agencies, data producers, archives, research centers, and international organizations.
 
-* **DDI-CDI 1.0** *(Experimental)*: The new Cross Domain Integration specification that provides a unified model for describing data across different domains and methodologies.
+* **DDI-CDI 1.1** *(Experimental)*: The new Cross Domain Integration specification that provides a unified model for describing data across different domains and methodologies.
 
 We do not currently support DDI-Lifecycle.
 
@@ -50,7 +50,7 @@ Basic DDI-Codebook usage::
 
 DDI-CDI & Assistant Framework usage::
 
-   from dartfx.ddi.ddicdi import model_1_0_0 as model
+   from dartfx.ddi.ddicdi import model_1_1_0 as model
    from dartfx.ddi.ddicdi.assistants import CdiClassAssistant
 
    # Create a resource (Handles DDI Identification/URI automatically)
@@ -89,7 +89,7 @@ DDI-CDI & Assistant Framework usage::
    changelog
 
 .. note::
-   Legacy modules like ``dataclass_model.py`` and ``utils.py`` have been removed or deprecated in favor of the Assistant framework and the definitive ``model_1_0_0.py``. The project has migrated to a more robust **RDF Toolkit** integration.
+   Legacy modules like ``dataclass_model.py`` and ``utils.py`` have been removed or deprecated in favor of the Assistant framework and the definitive ``model_1_1_0.py``. The project has migrated to a more robust **RDF Toolkit** integration.
 
 Indices and tables
 ==================

@@ -1,3 +1,4 @@
+import json
 import logging
 from enum import StrEnum
 from pathlib import Path
@@ -39,6 +40,11 @@ class OutputFormat(StrEnum):
             OutputFormat.nt: ".nt",
         }
         return mapping[self]
+
+
+class ValidationReportFormat(StrEnum):
+    json = "json"
+    md = "md"
 
 
 def setup_logging(level: LogLevel):
@@ -131,6 +137,41 @@ def ddic2sql(
     """
     setup_logging(loglevel)
     logging.error("ddic2sql not implemented")
+
+
+@app.command()
+def ddicvalidate(
+    ddifile: Annotated[Path, typer.Argument(help="DDI Codebook 2.6 XML file", exists=True, dir_okay=False)],
+    report_format: Annotated[
+        ValidationReportFormat,
+        typer.Option("--report-format", "-f", help="Validation report format"),
+    ] = ValidationReportFormat.md,
+    output: Annotated[
+        Path | None,
+        typer.Option("--output", "-o", help="Write validation report to file (default: stdout)"),
+    ] = None,
+    loglevel: Annotated[LogLevel, typer.Option(help="Log level")] = LogLevel.info,
+):
+    """
+    Validates a DDI-Codebook XML file and emits a JSON or Markdown report.
+    """
+    setup_logging(loglevel)
+
+    is_valid, report = cb_utils.validate_codebook_xml(ddifile)
+
+    if report_format == ValidationReportFormat.md:
+        rendered = cb_utils.validation_report_to_markdown(report)
+    else:
+        rendered = json.dumps(report, indent=2, ensure_ascii=False)
+
+    if output is None:
+        typer.echo(rendered)
+    else:
+        output.write_text(rendered, encoding="utf-8")
+        logging.info(f"Validation report written to {output}")
+
+    if not is_valid:
+        raise typer.Exit(code=1)
 
 
 def main():

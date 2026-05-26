@@ -3,8 +3,22 @@ Changelog
 
 All notable changes to this project will be documented in this file.
 
-Version 0.1.0 (Current)
+Version 0.2.0 (Current)
 -----------------------
+
+DDI-Codebook Validation and Reporting
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Added ``validate_codebook_xml`` utility for DDI-Codebook validation with JSON-serializable output.
+- Added ``validation_report_to_markdown`` utility for human-readable Markdown validation reports.
+- Added CLI command ``dartfx-ddi ddicvalidate`` with report formats ``md`` and ``json``.
+- Added tests for valid, malformed, and business-rule validation scenarios.
+- Updated documentation with Python and CLI examples for validation and reporting.
+- Updated the DDI-CDI Assistant framework to default to ``model_1_1_0``.
+- Preserved backward compatibility for ``model_1_0_0`` resources and assistant method bindings.
+
+Version 0.1.0
+-------------
 
 Current development release of the DDI Toolkit.
 
@@ -42,6 +56,9 @@ Features
 - Access data dictionary with variable information
 - File information extraction
 - Support for filtering variables by type
+- Validate DDI-Codebook XML with JSON report output
+- Generate Markdown validation reports from JSON payloads
+- CLI validation command: ``dartfx-ddi ddicvalidate`` with ``md`` and ``json`` report formats
 
 **DDI-CDI Support (Experimental):**
 
