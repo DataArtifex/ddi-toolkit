@@ -43,6 +43,10 @@ from rdflib import Graph, URIRef
 from . import model_1_0_0 as legacy_model
 from . import model_1_1_0 as model
 
+CDIResourceType = model.CDIResource | legacy_model.CDIResource
+CDIClassType = model.CDIClass | legacy_model.CDIClass
+CDIDataTypeType = model.CDIDataType | legacy_model.CDIDataType
+
 
 def _model_namespace_for(resource_or_class: Any) -> Any:
     """Resolve which CDI model namespace should be used for a resource or class."""
@@ -191,7 +195,7 @@ class CdiResourceAssistant(CdiAssistant):
         cls._bind_to_model(legacy_model.CDIResource)
 
     @classmethod
-    def get_uri(cls, resource: model.CDIResource) -> str | None:
+    def get_uri(cls, resource: CDIResourceType) -> str | None:
         identifier = getattr(resource, "identifier", None)
         if identifier is not None:
             uri = getattr(identifier, "uri", None)
@@ -202,7 +206,7 @@ class CdiResourceAssistant(CdiAssistant):
         return None
 
     @classmethod
-    def set_uri(cls, resource: model.CDIResource, value: str) -> str:
+    def set_uri(cls, resource: CDIResourceType, value: str) -> str:
         model_ns = _model_namespace_for(resource)
         if hasattr(resource, "identifier"):
             identifier = getattr(resource, "identifier", None)
@@ -221,7 +225,7 @@ class CdiResourceAssistant(CdiAssistant):
     @classmethod
     def add_resources(
         cls,
-        resource: model.CDIResource,
+        resource: CDIResourceType,
         target_resources: Any,
         property_name: str,
         clear: bool = False,
@@ -307,7 +311,7 @@ class CdiResourceAssistant(CdiAssistant):
         return True
 
     @classmethod
-    def add_to_rdf_graph(cls, resource: model.CDIResource, graph: Graph) -> Any:
+    def add_to_rdf_graph(cls, resource: CDIResourceType, graph: Graph) -> Any:
         """Helper to add the resource to an RDF graph."""
         return resource.to_rdf_graph(graph=graph)
 
@@ -328,7 +332,7 @@ class CdiClassAssistant(CdiResourceAssistant):
         cls._bind_to_model(legacy_model.CDIClass)
 
     @classmethod
-    def get_ddi_identifier_value(cls, resource: model.CDIClass) -> str | None:
+    def get_ddi_identifier_value(cls, resource: CDIClassType) -> str | None:
         identifier = getattr(resource, "identifier", None)
         if identifier is not None:
             ddi_id = getattr(identifier, "ddiIdentifier", None)
@@ -339,7 +343,7 @@ class CdiClassAssistant(CdiResourceAssistant):
     @classmethod
     def set_identifiers(
         cls,
-        resource: model.CDIClass,
+        resource: CDIClassType,
         ddi: str | None = None,
         nonddi: str | None = None,
         uri: str | None = None,
@@ -376,7 +380,7 @@ class CdiClassAssistant(CdiResourceAssistant):
     @classmethod
     def set_ddi_identifier(
         cls,
-        resource: model.CDIClass,
+        resource: CDIClassType,
         value: str,
         authority: str | None = None,
         version: str | None = None,
@@ -394,7 +398,7 @@ class CdiClassAssistant(CdiResourceAssistant):
 
     @classmethod
     def add_nonddi_identifier(
-        cls, resource: model.CDIClass, value: str, type: str | None = None, clear: bool = False
+        cls, resource: CDIClassType, value: str, type: str | None = None, clear: bool = False
     ) -> Any:
         identifier = getattr(resource, "identifier", None)
         if clear and identifier:
@@ -409,7 +413,7 @@ class CdiClassAssistant(CdiResourceAssistant):
         return None
 
     @classmethod
-    def set_simple_name(cls, resource: model.CDIClass, value: str) -> Any:
+    def set_simple_name(cls, resource: CDIClassType, value: str) -> Any:
         if hasattr(resource, "name"):
             model_ns = _model_namespace_for(resource)
             instance = model_ns.ObjectName(name=value)
@@ -418,7 +422,7 @@ class CdiClassAssistant(CdiResourceAssistant):
         return None
 
     @classmethod
-    def set_simple_display_label(cls, resource: model.CDIClass, value: str, language: str = "en") -> Any:
+    def set_simple_display_label(cls, resource: CDIClassType, value: str, language: str = "en") -> Any:
         if hasattr(resource, "displayLabel") and value:
             model_ns = _model_namespace_for(resource)
             lang_string = model_ns.LanguageString(content=value, language=language)
@@ -428,37 +432,37 @@ class CdiClassAssistant(CdiResourceAssistant):
         return None
 
     @classmethod
-    def add_data_structure(cls, resource: model.CDIClass, data_structure: Any) -> Any:
+    def add_data_structure(cls, resource: CDIClassType, data_structure: Any) -> Any:
         return cls.add_resources(resource, data_structure, "has_DataStructure", exact_match=False)
 
     @classmethod
-    def add_categories(cls, resource: model.CDIClass, category: Any) -> Any:
+    def add_categories(cls, resource: CDIClassType, category: Any) -> Any:
         return cls.add_resources(resource, category, "has_Category", exact_match=False)
 
     @classmethod
-    def set_category(cls, resource: model.CDIClass, category: Any) -> Any:
+    def set_category(cls, resource: CDIClassType, category: Any) -> Any:
         return cls.add_resources(resource, category, "denotes", exact_match=False)
 
     @classmethod
-    def set_category_set(cls, resource: model.CDIClass, category_set: Any) -> Any:
+    def set_category_set(cls, resource: CDIClassType, category_set: Any) -> Any:
         return cls.add_resources(resource, category_set, "has_CategorySet", exact_match=False)
 
     @classmethod
-    def add_code(cls, resource: model.CDIClass, code: Any) -> Any:
+    def add_code(cls, resource: CDIClassType, code: Any) -> Any:
         return cls.add_resources(resource, code, "has_Code", exact_match=False)
 
     @classmethod
-    def add_dataset(cls, resource: model.CDIClass, dataset: Any) -> Any:
+    def add_dataset(cls, resource: CDIClassType, dataset: Any) -> Any:
         return cls.add_resources(resource, dataset, "has_DataSet", exact_match=False)
 
     @classmethod
-    def add_variable(cls, resource: model.CDIClass, variable: Any) -> Any:
+    def add_variable(cls, resource: CDIClassType, variable: Any) -> Any:
         return cls.add_resources(resource, variable, "has_InstanceVariable", exact_match=False)
 
     @classmethod
     def factory(
         cls,
-        target_cls: type[model.CDIClass],
+        target_cls: type[CDIClassType],
         id_prefix: str | None = None,
         id_suffix: str | None = None,
         base_uri: str = "urn:ddi-cdi:",
@@ -487,7 +491,7 @@ class CdiClassAssistant(CdiResourceAssistant):
         return cls(resource=cdi_resource)
 
     @classmethod
-    def create(cls, target_cls: type[model.CDIClass], name: str | None = None, **kwargs: Any) -> "CdiClassAssistant":
+    def create(cls, target_cls: type[CDIClassType], name: str | None = None, **kwargs: Any) -> "CdiClassAssistant":
         assistant = cls.factory(target_cls, **kwargs)
         if name and assistant.resource:
             cls.set_simple_name(assistant.resource, name)
@@ -512,7 +516,7 @@ class CdiDataTypeAssistant(CdiResourceAssistant):
     @classmethod
     def factory(
         cls,
-        target_cls: type[model.CDIDataType],
+        target_cls: type[CDIDataTypeType],
         id_prefix: str | None = None,
         id_suffix: str | None = None,
         base_uri: str = "urn:ddi-cdi:",
@@ -531,7 +535,7 @@ class CdiDataTypeAssistant(CdiResourceAssistant):
         return cls(resource=cdi_datatype)
 
     @classmethod
-    def create(cls, target_cls: type[model.CDIDataType], **kwargs: Any) -> "CdiDataTypeAssistant":
+    def create(cls, target_cls: type[CDIDataTypeType], **kwargs: Any) -> "CdiDataTypeAssistant":
         return cls.factory(target_cls, **kwargs)
 
 
