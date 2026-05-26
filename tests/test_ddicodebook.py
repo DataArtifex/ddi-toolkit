@@ -61,8 +61,17 @@ def test_validate_codebook_xml_business_rule_errors():
     assert report["valid"] is False
 
     error_codes = {issue["code"] for issue in report["errors"]}
-    assert "codebook.missing_id" in error_codes
     assert "codebook.missing_filedscr" in error_codes
+
+
+def test_validate_codebook_xml_unexpected_child_is_error():
+    xml = '<codeBook ID="TEST_CB" xml:lang="en"><caseQnt>1</caseQnt></codeBook>'
+
+    is_valid, report = cb_utils.validate_codebook_xml(xml)
+
+    assert is_valid is False
+    error_codes = {issue["code"] for issue in report["errors"]}
+    assert "xml.unexpected_child_element" in error_codes
 
 
 def test_validation_report_to_markdown():

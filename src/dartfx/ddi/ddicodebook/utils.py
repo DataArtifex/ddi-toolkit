@@ -24,6 +24,30 @@ def _build_issue(code: str, message: str, location: str | None = None) -> dict[s
     return issue
 
 
+class _ParserWarningCapture(logging.Handler):
+    """Capture warning log records emitted during DDI XML parsing."""
+
+    def __init__(self) -> None:
+        super().__init__(level=logging.WARNING)
+        self.messages: list[str] = []
+
+    def emit(self, record: logging.LogRecord) -> None:
+        self.messages.append(record.getMessage())
+
+
+def _parser_warnings_to_errors(messages: list[str]) -> list[dict[str, str]]:
+    """Convert parser structural warnings into validation errors."""
+    errors: list[dict[str, str]] = []
+    for message in messages:
+        if message.startswith("Child element ") and " ignored on " in message:
+            errors.append(_build_issue("xml.unexpected_child_element", message, "xml"))
+        elif message.startswith("No DDI class found for element "):
+            errors.append(_build_issue("xml.unmapped_element", message, "xml"))
+        elif message.startswith("No type annotation found for child element "):
+            errors.append(_build_issue("xml.untyped_child_element", message, "xml"))
+    return errors
+
+
 def _load_codebook_from_path(path: Path) -> tuple[codeBookType | None, list[dict[str, str]]]:
     if not path.exists():
         return (
@@ -150,12 +174,16 @@ def validate_codebook_xml(data: codeBookType | Path | str) -> tuple[bool, dict[s
     warnings: list[dict[str, str]] = []
     checked_rules = [
         "xml.parseable",
+        "xml.structure.valid",
         "codebook.id.present",
         "codebook.fileDscr.present",
         "codebook.fileDscr.id.present",
     ]
 
     codebook: codeBookType | None = None
+    parser_warning_handler = _ParserWarningCapture()
+    root_logger = logging.getLogger()
+    root_logger.addHandler(parser_warning_handler)
     try:
         codebook, metadata, errors = _parse_codebook_input(data)
     except ET.ParseError as exc:
@@ -170,6 +198,10 @@ def validate_codebook_xml(data: codeBookType | Path | str) -> tuple[bool, dict[s
             "generated_at": datetime.now(tz=UTC).isoformat(),
         }
         errors.append(_build_issue("validation.exception", str(exc), "runtime"))
+    finally:
+        root_logger.removeHandler(parser_warning_handler)
+
+    errors.extend(_parser_warnings_to_errors(parser_warning_handler.messages))
 
     if codebook is not None:
         business_errors, warnings, variable_count = _validate_codebook_business_rules(codebook)
