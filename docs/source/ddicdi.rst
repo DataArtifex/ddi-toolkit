@@ -8,8 +8,8 @@ Architecture
 
 The DDI-CDI implementation is centered around three pillars:
 
-**Generated Definitive Model (model_1_0_0)**
-   The core Pydantic classes in ``dartfx.ddi.ddicdi.model_1_0_0`` are generated directly from the DDI-CDI 1.0 specifications. These handle validation and RDF serialization metadata.
+**Generated Definitive Model (model_1_1_0)**
+   The core Pydantic classes in ``dartfx.ddi.ddicdi.model_1_1_0`` are generated directly from the DDI-CDI specifications. These handle validation and RDF serialization metadata.
 
 **Assistant Framework (assistants)**
    The high-level API in ``dartfx.ddi.ddicdi.assistants`` (specifically ``CdiClassAssistant``) provides a developer-friendly interface for creating resources, managing identifiers (IRDI/URI), and performing common manipulations without manual orchestration.
@@ -22,7 +22,7 @@ Key Features
 
 - **Streamlined Resource Creation**: Use ``CdiClassAssistant.create()`` to automate identifier and URI generation.
 - **Automated Binding**: Methods in assistants are automatically bound to CDI model instances, allowing for a natural ``dataset.add_variable(var)`` syntax.
-- **Definitive v1.0.0 Model**: Directly aligned with the official DDI specification.
+- **Definitive v1.1.0 Model**: Directly aligned with the official DDI specification.
 - **RDF Serialization**: Built-in support for generating RDF graphs from model instances.
 - **Type Safety**: Pydantic-based validation ensures model integrity.
 
@@ -31,7 +31,7 @@ Basic Usage
 
 Working with the Assistant Framework::
 
-   from dartfx.ddi.ddicdi import model_1_0_0 as model
+   from dartfx.ddi.ddicdi import model_1_1_0 as model
    from dartfx.ddi.ddicdi.assistants import CdiClassAssistant
 
    # 1. Create a dataset resource
@@ -88,7 +88,7 @@ Deprecated Modules
 ------------------
 
 .. warning::
-   The following legacy modules have been removed and replaced by the definitive ``model_1_0_0.py`` and the Assistant framework:
+   The following legacy modules have been removed and replaced by the definitive ``model_1_1_0.py`` and the Assistant framework:
 
    - ``dataclass_model.py`` (Removed)
    - Legacy RDF deserializer modules (Removed)
@@ -101,6 +101,11 @@ The DDI-CDI classes maintain their original specification names (camelCase) to p
 
 For detailed API usage, refer to the following modules:
 
-- ``dartfx.ddi.ddicdi.model_1_0_0`` - Core Pydantic models.
+- ``dartfx.ddi.ddicdi.model_1_1_0`` - Core Pydantic models.
+
+Compatibility Note
+------------------
+
+The assistant layer defaults to ``model_1_1_0`` and remains backward compatible with ``model_1_0_0`` resources.
 - ``dartfx.ddi.ddicdi.assistants`` - High-level Assistant framework.
 - ``dartfx.ddi.ddicdi.specification`` - Specification introspection tools.

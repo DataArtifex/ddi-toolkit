@@ -40,7 +40,19 @@ from typing import Annotated, Any, Union, get_args, get_origin
 from pydantic import BaseModel
 from rdflib import Graph, URIRef
 
-from . import model_1_0_0 as model
+from . import model_1_0_0 as legacy_model
+from . import model_1_1_0 as model
+
+
+def _model_namespace_for(resource_or_class: Any) -> Any:
+    """Resolve which CDI model namespace should be used for a resource or class."""
+    module_name = getattr(resource_or_class, "__module__", "")
+    if not module_name and hasattr(resource_or_class, "__class__"):
+        module_name = getattr(resource_or_class.__class__, "__module__", "")
+
+    if module_name.endswith("model_1_0_0"):
+        return legacy_model
+    return model
 
 
 class AssistantMethodDescriptor:
@@ -170,12 +182,13 @@ class CdiResourceAssistant(CdiAssistant):
     Methods defined here are available on all objects inheriting from CDIResource.
     """
 
-    resource: model.CDIResource | None = None
+    resource: Any | None = None
 
     def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)
         # Automatically bind methods of the new subclass to CDIResource
         cls._bind_to_model(model.CDIResource)
+        cls._bind_to_model(legacy_model.CDIResource)
 
     @classmethod
     def get_uri(cls, resource: model.CDIResource) -> str | None:
@@ -190,10 +203,11 @@ class CdiResourceAssistant(CdiAssistant):
 
     @classmethod
     def set_uri(cls, resource: model.CDIResource, value: str) -> str:
+        model_ns = _model_namespace_for(resource)
         if hasattr(resource, "identifier"):
             identifier = getattr(resource, "identifier", None)
             if identifier is None:
-                identifier = model.Identifier()
+                identifier = model_ns.Identifier()
                 resource.identifier = identifier
             identifier.uri = value
 
@@ -305,12 +319,13 @@ class CdiClassAssistant(CdiResourceAssistant):
     Methods defined here are available on all objects inheriting from CDIClass.
     """
 
-    resource: model.CDIClass | None = None
+    resource: Any | None = None
 
     def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)
         # Automatically bind methods of the new subclass to CDIClass
         cls._bind_to_model(model.CDIClass)
+        cls._bind_to_model(legacy_model.CDIClass)
 
     @classmethod
     def get_ddi_identifier_value(cls, resource: model.CDIClass) -> str | None:
@@ -329,16 +344,17 @@ class CdiClassAssistant(CdiResourceAssistant):
         nonddi: str | None = None,
         uri: str | None = None,
     ) -> Any:
+        model_ns = _model_namespace_for(resource)
         identifier = getattr(resource, "identifier", None)
         if identifier is None:
-            identifier = model.Identifier()
+            identifier = model_ns.Identifier()
             if hasattr(resource, "identifier"):
                 resource.identifier = identifier
 
         if ddi:
             ddi_id = getattr(identifier, "ddiIdentifier", None)
             if ddi_id is None:
-                ddi_id = model.InternationalRegistrationDataIdentifier(
+                ddi_id = model_ns.InternationalRegistrationDataIdentifier(
                     dataIdentifier=ddi, registrationAuthorityIdentifier="int.dataartifex", versionIdentifier="1"
                 )
                 identifier.ddiIdentifier = ddi_id
@@ -350,7 +366,7 @@ class CdiClassAssistant(CdiResourceAssistant):
             if nonddi_list is None:
                 nonddi_list = []
                 identifier.nonDdiIdentifier = nonddi_list
-            nonddi_list.append(model.NonDdiIdentifier(value=nonddi, type="generic"))
+            nonddi_list.append(model_ns.NonDdiIdentifier(value=nonddi, type="generic"))
 
         if uri:
             cls.set_uri(resource, uri)
@@ -395,7 +411,8 @@ class CdiClassAssistant(CdiResourceAssistant):
     @classmethod
     def set_simple_name(cls, resource: model.CDIClass, value: str) -> Any:
         if hasattr(resource, "name"):
-            instance = model.ObjectName(name=value)
+            model_ns = _model_namespace_for(resource)
+            instance = model_ns.ObjectName(name=value)
             resource.name = [instance]
             return instance
         return None
@@ -403,8 +420,9 @@ class CdiClassAssistant(CdiResourceAssistant):
     @classmethod
     def set_simple_display_label(cls, resource: model.CDIClass, value: str, language: str = "en") -> Any:
         if hasattr(resource, "displayLabel") and value:
-            lang_string = model.LanguageString(content=value, language=language)
-            display_label = model.LabelForDisplay(languageSpecificString=[lang_string])
+            model_ns = _model_namespace_for(resource)
+            lang_string = model_ns.LanguageString(content=value, language=language)
+            display_label = model_ns.LabelForDisplay(languageSpecificString=[lang_string])
             resource.displayLabel = [display_label]
             return display_label
         return None
@@ -483,12 +501,13 @@ class CdiDataTypeAssistant(CdiResourceAssistant):
     Methods defined here are available on all objects inheriting from CDIDataType.
     """
 
-    resource: model.CDIDataType | None = None
+    resource: Any | None = None
 
     def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)
         # Automatically bind methods of the new subclass to CDIDataType
         cls._bind_to_model(model.CDIDataType)
+        cls._bind_to_model(legacy_model.CDIDataType)
 
     @classmethod
     def factory(
@@ -519,3 +538,9 @@ class CdiDataTypeAssistant(CdiResourceAssistant):
 # For backward compatibility
 CdiResourceAssistantAlias = CdiClassAssistant  # If needed for extremely old code
 # Note: CdiResourceAssistant is now a real class for CDIResource-level methods.
+
+
+# Bind assistant methods to legacy model classes to keep 1.0.0 call sites working.
+CdiResourceAssistant._bind_to_model(legacy_model.CDIResource)
+CdiClassAssistant._bind_to_model(legacy_model.CDIClass)
+CdiDataTypeAssistant._bind_to_model(legacy_model.CDIDataType)

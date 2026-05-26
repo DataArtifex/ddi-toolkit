@@ -1,6 +1,4 @@
 """
-ddicdi_model.py
-
 This module defines the DdiCdiModel class, which provides an interface for loading, querying,
 and interacting with DDI-CDI specification using rdflib and Pydantic.
 

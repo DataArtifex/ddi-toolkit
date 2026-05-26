@@ -13,10 +13,10 @@ The toolkit uses Pydantic models that are annotated with RDF property mappings. 
 - **Seamless Serialization**: Built-in functionality to generate ``rdflib`` graphs for export to Turtle, JSON-LD, or other RDF formats.
 - **Identifier Management**: Automated handling of IRDI (International Registration Data Identifier) and URI generation.
 
-The Definitive Model (v1.0.0)
+The Definitive Model (v1.1.0)
 -----------------------------
 
-The module ``dartfx.ddi.ddicdi.model_1_0_0`` contains the definitive set of DDI-CDI 1.0 resources. These classes inherit from ``CDIResource``, which provides the core RDF integration.
+The module ``dartfx.ddi.ddicdi.model_1_1_0`` contains the definitive set of DDI-CDI resources. These classes inherit from ``CDIResource``, which provides the core RDF integration.
 
 **Core Resource Classes:**
 
@@ -31,7 +31,7 @@ Direct Model Usage
 
 While the :doc:`ddicdi` (Assistant framework) is the recommended way to build DDI-CDI objects, you can work with the models directly::
 
-   from dartfx.ddi.ddicdi import model_1_0_0 as model
+   from dartfx.ddi.ddicdi import model_1_1_0 as model
    from rdflib import URIRef
 
    # Create a resource instance
@@ -56,4 +56,4 @@ Legacy RDF Implementation
 -------------------------
 
 .. note::
-   The initial implementation of RDF support used an earlier RDF object layer. Those legacy modules have been removed as the project migrated to the definitive ``model_1_0_0.py`` based on the newer RDF Toolkit.
+   The initial implementation of RDF support used an earlier RDF object layer. Those legacy modules have been removed as the project migrated to the definitive ``model_1_1_0.py`` based on the newer RDF Toolkit.

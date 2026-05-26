@@ -536,7 +536,7 @@ Standard Mode Conversion
    resources = codebook_to_cdif(cb, use_skos=False)
 
    # Find all InstanceVariables
-   from dartfx.ddi.ddicdi.model_1_0_0 import InstanceVariable
+  from dartfx.ddi.ddicdi.model_1_1_0 import InstanceVariable
 
    variables = [r for r in resources.values()
                 if isinstance(r, InstanceVariable)]
@@ -565,7 +565,7 @@ Exploring Resources
 
 .. code-block:: python
 
-   from dartfx.ddi.ddicdi.model_1_0_0 import (
+  from dartfx.ddi.ddicdi.model_1_1_0 import (
        InstanceVariable,
        SubstantiveValueDomain,
        CodeList,
@@ -616,14 +616,14 @@ Version Information
 -------------------
 
 - **DDI-Codebook Version**: 2.6 (backward compatible with 2.5)
-- **DDI-CDI Version**: 1.0
+- **DDI-CDI Version**: 1.1.0
 - **Profile**: CDIF (Cross Domain Integration Framework)
 
 References
 ----------
 
 - `DDI-Codebook 2.6 Specification <https://ddialliance.org/Specification/DDI-Codebook/2.6/>`_
-- `DDI-CDI 1.0 Specification <https://ddialliance.org/Specification/DDI-CDI/1.0/>`_
+- `DDI-CDI Specification <https://ddialliance.org/Specification/DDI-CDI/>`_
 - CDIF Profile Documentation
 - `W3C SKOS (Simple Knowledge Organization System) <https://www.w3.org/2004/02/skos/>`_
 

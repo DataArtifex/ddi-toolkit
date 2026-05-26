@@ -1,4 +1,5 @@
 from dartfx.ddi.ddicdi import model_1_0_0 as model
+from dartfx.ddi.ddicdi import model_1_1_0 as model_latest
 from dartfx.ddi.ddicdi.assistants import (
     CdiAssistant,
     CdiClassAssistant,
@@ -152,3 +153,14 @@ def test_generic_create():
     assert isinstance(assistant.resource, model.Category)
     assert assistant.name[0].name == name
     assert assistant.get_ddi_identifier_value() is not None  # type: ignore
+
+
+def test_create_instance_variable_latest_model():
+    assistant = CdiClassAssistant.create(model_latest.InstanceVariable, name="LATEST_VAR")
+
+    assert isinstance(assistant.resource, model_latest.InstanceVariable)
+    assert assistant.name[0].name == "LATEST_VAR"
+    assert assistant.get_ddi_identifier_value() is not None  # type: ignore
+    get_ddi_identifier_value = getattr(assistant.resource, "get_ddi_identifier_value", None)
+    assert callable(get_ddi_identifier_value)
+    assert get_ddi_identifier_value() is not None
