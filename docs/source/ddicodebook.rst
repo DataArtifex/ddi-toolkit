@@ -106,12 +106,18 @@ Validate a codebook document and inspect the JSON report::
     is_valid, report = cb_utils.validate_codebook_xml('mycodebook.xml')
     print(report['summary'])
 
+Enable strict validation when you want structural warnings (including invalid ``@ID`` / ``xs:ID`` NCName violations) to fail validation::
+
+    strict_valid, strict_report = cb_utils.validate_codebook_xml('mycodebook.xml', strict=True)
+    print(strict_report['summary'])
+
 Generate a Markdown validation report from the same payload::
 
     markdown_report = cb_utils.validation_report_to_markdown(report)
     print(markdown_report)
 
 The validator currently focuses on parseability and key DDI-Codebook business rules used by conversion utilities.
+Invalid ``@ID`` values are warnings by default and become errors in strict mode.
 
 Implementation Notes
 --------------------

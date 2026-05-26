@@ -12,10 +12,12 @@ DDI-Codebook Validation and Reporting
 - Added ``validate_codebook_xml`` utility for DDI-Codebook validation with JSON-serializable output.
 - Added ``validation_report_to_markdown`` utility for human-readable Markdown validation reports.
 - Added CLI command ``dartfx-ddi ddicvalidate`` with report formats ``md`` and ``json``.
+- Added CLI option ``--strict`` for ``dartfx-ddi ddicvalidate`` to escalate structural warnings to validation errors.
 - Added tests for valid, malformed, and business-rule validation scenarios.
 - Updated documentation with Python and CLI examples for validation and reporting.
 - Updated the DDI-CDI Assistant framework to default to ``model_1_1_0``.
 - Preserved backward compatibility for ``model_1_0_0`` resources and assistant method bindings.
+- Invalid ``@ID`` values (non-NCName / non-``xs:ID``) are now reported as warnings by default and as errors in strict mode.
 
 Version 0.1.0
 -------------

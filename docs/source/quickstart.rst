@@ -56,6 +56,12 @@ CLI usage:
    # JSON report
    dartfx-ddi ddicvalidate path/to/codebook.xml --report-format json
 
+   # Strict mode: structural warnings (including invalid xs:ID/NCName) become errors
+   dartfx-ddi ddicvalidate path/to/codebook.xml --strict
+
+By default, invalid ``@ID`` values (not valid NCName / ``xs:ID``) are reported as warnings.
+Use ``--strict`` to escalate these warnings into validation errors.
+
 DDI-CDI & Assistant Framework
 -----------------------------
 

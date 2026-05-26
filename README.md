@@ -141,7 +141,13 @@ dartfx-ddi ddicvalidate my_codebook.xml --report-format md --output validation_r
 
 # Emit JSON report explicitly
 dartfx-ddi ddicvalidate my_codebook.xml --report-format json
+
+# Strict mode: escalate structural warnings (including invalid xs:ID/NCName) to errors
+dartfx-ddi ddicvalidate my_codebook.xml --strict
 ```
+
+By default, `ddicvalidate` records invalid `@ID` values (non-NCName / non-`xs:ID`) as warnings.
+Use `--strict` to treat those warnings as validation errors.
 
 ### Validating DDI-Codebook Documents in Python
 
@@ -149,6 +155,9 @@ dartfx-ddi ddicvalidate my_codebook.xml --report-format json
 from dartfx.ddi.ddicodebook import utils as cb_utils
 
 is_valid, report = cb_utils.validate_codebook_xml("my_codebook.xml")
+
+# Optional strict mode to escalate warnings to errors
+strict_valid, strict_report = cb_utils.validate_codebook_xml("my_codebook.xml", strict=True)
 
 print(is_valid)
 print(report["summary"])

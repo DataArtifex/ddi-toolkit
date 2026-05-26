@@ -153,8 +153,7 @@ def ddicvalidate(
     strict: Annotated[
         bool,
         typer.Option(
-            "--strict",
-            is_flag=True,
+            "--strict/--no-strict",
             help="Treat schema-structure warnings (including invalid xs:ID/NCName values) as validation errors",
         ),
     ] = False,
