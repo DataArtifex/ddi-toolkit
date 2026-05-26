@@ -1,4 +1,5 @@
 import logging
+import re
 import urllib.parse
 import uuid
 import xml.etree.ElementTree as ET
@@ -15,6 +16,8 @@ from ..ddicdi.assistants import CdiAssistant, CdiClassAssistant
 from ..ddicdi.model_1_0_0 import TypedString
 from ..ddicdi.utils import ddi_cdi_resources_to_graph
 from .model import codeBookType, loadxml, loadxmlstring
+
+_NCNAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_.-]*$")
 
 
 def _build_issue(code: str, message: str, location: str | None = None) -> dict[str, str]:
@@ -46,6 +49,44 @@ def _parser_warnings_to_errors(messages: list[str]) -> list[dict[str, str]]:
         elif message.startswith("No type annotation found for child element "):
             errors.append(_build_issue("xml.untyped_child_element", message, "xml"))
     return errors
+
+
+def _is_valid_ncname(value: str) -> bool:
+    """Validate a practical NCName subset used for DDI @ID values."""
+    return bool(_NCNAME_RE.fullmatch(value)) and ":" not in value
+
+
+def _validate_ncname_ids(codebook: codeBookType) -> list[dict[str, str]]:
+    """Return warnings for elements whose @ID is not a valid NCName."""
+    warnings: list[dict[str, str]] = []
+
+    def walk(node: Any, path: str) -> None:
+        if isinstance(node, list):
+            for index, item in enumerate(node, start=1):
+                walk(item, f"{path}[{index}]")
+            return
+
+        model_fields = getattr(node.__class__, "model_fields", None)
+        if model_fields is None:
+            return
+
+        node_id = getattr(node, "id", None)
+        if isinstance(node_id, str) and node_id and not _is_valid_ncname(node_id):
+            warnings.append(
+                _build_issue(
+                    "codebook.id.invalid_ncname",
+                    (f"@ID value '{node_id}' is not a valid NCName (xs:ID) on {node.__class__.__name__}"),
+                    f"{path}/@ID",
+                )
+            )
+
+        for field_name in model_fields:
+            child = getattr(node, field_name, None)
+            if child is not None:
+                walk(child, f"{path}/{field_name}")
+
+    walk(codebook, "codeBook")
+    return warnings
 
 
 def _load_codebook_from_path(path: Path) -> tuple[codeBookType | None, list[dict[str, str]]]:
@@ -164,7 +205,7 @@ def _render_issue_section(title: str, issues: list[dict[str, Any]]) -> list[str]
     return lines
 
 
-def validate_codebook_xml(data: codeBookType | Path | str) -> tuple[bool, dict[str, Any]]:
+def validate_codebook_xml(data: codeBookType | Path | str, strict: bool = False) -> tuple[bool, dict[str, Any]]:
     """Validates a DDI-Codebook document and returns a JSON-serializable report.
 
     The validator reuses the existing XML-to-Pydantic parsing and applies
@@ -176,6 +217,7 @@ def validate_codebook_xml(data: codeBookType | Path | str) -> tuple[bool, dict[s
         "xml.parseable",
         "xml.structure.valid",
         "codebook.id.present",
+        "codebook.id.ncname",
         "codebook.fileDscr.present",
         "codebook.fileDscr.id.present",
     ]
@@ -204,9 +246,17 @@ def validate_codebook_xml(data: codeBookType | Path | str) -> tuple[bool, dict[s
     errors.extend(_parser_warnings_to_errors(parser_warning_handler.messages))
 
     if codebook is not None:
-        business_errors, warnings, variable_count = _validate_codebook_business_rules(codebook)
+        ncname_warnings = _validate_ncname_ids(codebook)
+        if strict:
+            errors.extend(ncname_warnings)
+        else:
+            warnings.extend(ncname_warnings)
+
+        business_errors, business_warnings, variable_count = _validate_codebook_business_rules(codebook)
         errors.extend(business_errors)
+        warnings.extend(business_warnings)
         metadata["variable_count"] = variable_count
+        metadata["strict"] = strict
 
     is_valid = len(errors) == 0
     report = {

@@ -150,6 +150,14 @@ def ddicvalidate(
         Path | None,
         typer.Option("--output", "-o", help="Write validation report to file (default: stdout)"),
     ] = None,
+    strict: Annotated[
+        bool,
+        typer.Option(
+            "--strict",
+            is_flag=True,
+            help="Treat schema-structure warnings (including invalid xs:ID/NCName values) as validation errors",
+        ),
+    ] = False,
     loglevel: Annotated[LogLevel, typer.Option(help="Log level")] = LogLevel.info,
 ):
     """
@@ -157,7 +165,7 @@ def ddicvalidate(
     """
     setup_logging(loglevel)
 
-    is_valid, report = cb_utils.validate_codebook_xml(ddifile)
+    is_valid, report = cb_utils.validate_codebook_xml(ddifile, strict=strict)
 
     if report_format == ValidationReportFormat.md:
         rendered = cb_utils.validation_report_to_markdown(report)

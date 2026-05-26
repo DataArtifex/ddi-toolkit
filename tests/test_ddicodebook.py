@@ -74,6 +74,26 @@ def test_validate_codebook_xml_unexpected_child_is_error():
     assert "xml.unexpected_child_element" in error_codes
 
 
+def test_validate_codebook_xml_invalid_id_ncname_warns_by_default():
+    xml = '<codeBook ID="1BAD" xml:lang="en"><fileDscr ID="F1"/></codeBook>'
+
+    is_valid, report = cb_utils.validate_codebook_xml(xml)
+
+    assert is_valid is True
+    warning_codes = {issue["code"] for issue in report["warnings"]}
+    assert "codebook.id.invalid_ncname" in warning_codes
+
+
+def test_validate_codebook_xml_invalid_id_ncname_errors_in_strict_mode():
+    xml = '<codeBook ID="1BAD" xml:lang="en"><fileDscr ID="F1"/></codeBook>'
+
+    is_valid, report = cb_utils.validate_codebook_xml(xml, strict=True)
+
+    assert is_valid is False
+    error_codes = {issue["code"] for issue in report["errors"]}
+    assert "codebook.id.invalid_ncname" in error_codes
+
+
 def test_validation_report_to_markdown():
     cb_path = os.path.join(data_dir(), "codebook/NES1948.xml")
     _, report = cb_utils.validate_codebook_xml(cb_path)
