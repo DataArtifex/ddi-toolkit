@@ -1,14 +1,24 @@
 exclude: ^specifications/
 repos:
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    # Ruff version.
-    rev: v0.15.1
+  - repo: local
     hooks:
-      # Run the linter.
       - id: ruff
-        args: [ --fix ]
-      # Run the formatter.
+        name: ruff
+        entry: scripts/precommit_uv_run.sh ruff check --fix
+        language: system
+        types: [python]
+
       - id: ruff-format
+        name: ruff-format
+        entry: scripts/precommit_uv_run.sh ruff format
+        language: system
+        types: [python]
+
+      - id: pyrefly
+        name: pyrefly
+        entry: scripts/precommit_uv_run.sh pyrefly check src tests
+        language: system
+        pass_filenames: false
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -19,10 +29,3 @@ repos:
       - id: check-added-large-files
       - id: check-toml
       - id: check-merge-conflict
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.15.0
-    hooks:
-      - id: mypy
-        additional_dependencies: [pydantic]
-        args: []

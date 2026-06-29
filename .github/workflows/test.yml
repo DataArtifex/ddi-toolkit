@@ -76,8 +76,8 @@ jobs:
       - name: Install dependencies (dev)
         run: uv sync --group dev
 
-      - name: Type check (mypy)
-        run: uv run mypy --install-types --non-interactive src tests
+      - name: Type check (pyrefly)
+        run: uv run pyrefly check src tests
 
       - name: Lint (ruff)
         run: uv run ruff check src tests

@@ -98,6 +98,6 @@ This project uses `hatch` for environment management, but `uv` is preferred for 
 
 1. **Analysis**: Always start by reviewing `pyproject.toml` and `src/` structure.
 2. **Context**: Check `KIs` (Knowledge Items) if available for specific domain logic.
-3. **Troubleshooting**: See [DEPENDENCY_SYNC_MYPY.md](docs/agents/DEPENDENCY_SYNC_MYPY.md) for help with MyPy errors and UV lockfile synchronization.
+3. **Troubleshooting**: See [DEPENDENCY_SYNC_PYREFLY.md](docs/agents/DEPENDENCY_SYNC_PYREFLY.md) for help with Pyrefly errors and UV lockfile synchronization.
 4. **Execution**: Use `uv` or `hatch` for running scripts and tests.
 4. **Validation**: Always run `pytest` and `ruff check .` before finalizing changes.

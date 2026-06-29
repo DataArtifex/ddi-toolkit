@@ -47,11 +47,11 @@ path = "src/dartfx/ddi/__about__.py"
 [dependency-groups]
 dev = [
   "coverage[toml]>=7.0.0",
+  "pre-commit>=4.0.0",
+  "pyrefly>=1.0.0",
   "pytest>=9",
-  "mypy>=1.0.0",
   "python-dotenv>=1.0.0",
   "ruff>=0.3.0",
-  "pre-commit>=4.0.0",
 ]
 docs = [
   "sphinx>=9.0.0",
@@ -75,7 +75,7 @@ python = ["3.12", "3.13"]
 dependencies = ["dev"]
 
 [tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/dartfx/ddi tests}"
+check = "pyrefly check {args:src tests}"
 
 [tool.hatch.envs.docs]
 dependencies = ["docs"]
@@ -129,6 +129,7 @@ ignore = []
 "src/dartfx/ddi/ddicdi/model_1_0_0.py" = ["E501", "F821"]
 "src/dartfx/ddi/ddicdi/dataclass_model.py" = ["E501", "E402", "F821", "B008"]
 "src/dartfx/ddi/ddicdi/specification.py" = ["E501"]
+"src/dartfx/ddi/ddicdi/assistants.py" = ["B010"]
 "src/dartfx/ddi/ddicodebook.py" = ["E501"]
 "src/dartfx/ddi/utils.py" = ["E501"]
 "src/dartfx/ddi/ddicdi/utils.py" = ["E501"]
@@ -147,11 +148,8 @@ indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
 
-[tool.mypy]
-python_version = "3.12"
-check_untyped_defs = true
-ignore_missing_imports = true
-warn_unused_ignores = true
-show_error_codes = true
-mypy_path = "src"
-explicit_package_bases = true
+[tool.pyrefly]
+search-path = ["src"]
+python-version = "3.12.0"
+preset = "legacy"
+ignore-missing-imports = ["*"]

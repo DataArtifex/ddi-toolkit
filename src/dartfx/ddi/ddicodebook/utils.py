@@ -223,22 +223,18 @@ def validate_codebook_xml(data: codeBookType | Path | str, strict: bool = False)
     ]
 
     codebook: codeBookType | None = None
+    metadata: dict[str, Any] = {
+        "input_type": "unknown",
+        "generated_at": datetime.now(tz=UTC).isoformat(),
+    }
     parser_warning_handler = _ParserWarningCapture()
     root_logger = logging.getLogger()
     root_logger.addHandler(parser_warning_handler)
     try:
         codebook, metadata, errors = _parse_codebook_input(data)
     except ET.ParseError as exc:
-        metadata = {
-            "input_type": "unknown",
-            "generated_at": datetime.now(tz=UTC).isoformat(),
-        }
         errors.append(_build_issue("xml.parse_error", str(exc), "xml"))
     except Exception as exc:  # pragma: no cover - defensive fallback
-        metadata = {
-            "input_type": "unknown",
-            "generated_at": datetime.now(tz=UTC).isoformat(),
-        }
         errors.append(_build_issue("validation.exception", str(exc), "runtime"))
     finally:
         root_logger.removeHandler(parser_warning_handler)

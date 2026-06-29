@@ -212,7 +212,7 @@ class CdiResourceAssistant(CdiAssistant):
             identifier = getattr(resource, "identifier", None)
             if identifier is None:
                 identifier = model_ns.Identifier()
-                resource.identifier = identifier
+                setattr(resource, "identifier", identifier)
             identifier.uri = value
 
         # Crucial: Sync with resource.id field.
@@ -270,7 +270,7 @@ class CdiResourceAssistant(CdiAssistant):
                 uri = str(r)
 
             if uri:
-                uris.append(URIRef(uri))
+                uris.append(URIRef(str(uri)))
 
         field = resource.model_fields.get(target_property)
         is_list = False
@@ -353,7 +353,7 @@ class CdiClassAssistant(CdiResourceAssistant):
         if identifier is None:
             identifier = model_ns.Identifier()
             if hasattr(resource, "identifier"):
-                resource.identifier = identifier
+                setattr(resource, "identifier", identifier)
 
         if ddi:
             ddi_id = getattr(identifier, "ddiIdentifier", None)
@@ -417,7 +417,7 @@ class CdiClassAssistant(CdiResourceAssistant):
         if hasattr(resource, "name"):
             model_ns = _model_namespace_for(resource)
             instance = model_ns.ObjectName(name=value)
-            resource.name = [instance]
+            setattr(resource, "name", [instance])
             return instance
         return None
 
@@ -427,7 +427,7 @@ class CdiClassAssistant(CdiResourceAssistant):
             model_ns = _model_namespace_for(resource)
             lang_string = model_ns.LanguageString(content=value, language=language)
             display_label = model_ns.LabelForDisplay(languageSpecificString=[lang_string])
-            resource.displayLabel = [display_label]
+            setattr(resource, "displayLabel", [display_label])
             return display_label
         return None
 
