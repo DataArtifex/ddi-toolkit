@@ -109,7 +109,7 @@ log_cli_date_format = "%Y-%m-%d %H:%M:%S"
 line-length = 120
 target-version = "py312"
 src = ["src"]
-exclude = ["specifications"]
+exclude = ["specifications", "graphify-out"]
 
 [tool.ruff.lint]
 select = [
