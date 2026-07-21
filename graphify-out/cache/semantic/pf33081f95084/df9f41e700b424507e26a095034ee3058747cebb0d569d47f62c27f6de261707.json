@@ -1,0 +1,1 @@
+{"nodes": [{"id": "docs_source_ddicodebook", "label": "DDI-Codebook Processing", "file_type": "document", "source_file": "docs/source/ddicodebook.rst"}, {"id": "dartfx_ddi_ddicodebook_utils_validate_codebook_xml", "label": "validate_codebook_xml", "file_type": "code", "source_file": "docs/source/ddicodebook.rst"}], "edges": [], "hyperedges": []}

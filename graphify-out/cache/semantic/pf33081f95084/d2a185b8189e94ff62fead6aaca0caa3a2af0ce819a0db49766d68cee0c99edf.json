@@ -1,0 +1,1 @@
+{"nodes": [{"id": "ucmis_class", "label": "UCMIS Class", "file_type": "concept", "source_file": "tests/ddicdi_sparql.md"}], "edges": [{"source": "tests_ddicdi_sparql", "target": "ucmis_class", "relation": "references", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "tests/ddicdi_sparql.md"}], "hyperedges": []}

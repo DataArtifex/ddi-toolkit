@@ -1,0 +1,1 @@
+{"nodes": [{"id": "changelog", "label": "Changelog", "file_type": "document", "source_file": "CHANGELOG.md"}, {"id": "changelog_0_2_0", "label": "Version 0.2.0", "file_type": "concept", "source_file": "CHANGELOG.md"}, {"id": "changelog_0_1_0", "label": "Version 0.1.0", "file_type": "concept", "source_file": "CHANGELOG.md"}], "edges": [], "hyperedges": []}
