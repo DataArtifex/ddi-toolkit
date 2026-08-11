@@ -112,7 +112,6 @@ src = ["src"]
 force-exclude = true
 exclude = [
   "specifications",
-  "graphify-out",
   "tests/data",
   "src/**/model_*.py",
   "src/**/dataclass_model.py",
@@ -157,7 +156,6 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 exclude = [
   "specifications",
-  "graphify-out",
   "tests/data",
   "src/**/model_*.py",
   "src/**/dataclass_model.py",

@@ -1,4 +1,4 @@
-exclude: ^(specifications|graphify-out|tests/data)/
+exclude: ^(specifications|tests/data)/
 repos:
   - repo: local
     hooks:
