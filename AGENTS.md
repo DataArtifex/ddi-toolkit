@@ -24,6 +24,7 @@ The **Data Artifex DDI Toolkit** is a specialized Python framework for managing 
 - **Validation**: After significant CDI model manipulations, use `cdi_utils.shacl_validate_ddi_cdi()` (from `dartfx.ddi.ddicdi.utils`) to verify SHACL compliance.
 - **Package Namespace**: The primary code lives under `dartfx.ddi`.
 - **DDI Specifics**: Be mindful that `CDIClass` and `CDIDataType` are treated differently in the assistant framework; assistants primarily operate on `CDIClass` resources.
+- **Primitive Value Wrapping**: When populating COGS-generated Pydantic models that enable `validate_assignment=True`, simple primitives (like `Decimal`) must be wrapped in their corresponding custom dataclass types (`CogsDecimal`) before being assigned via `setattr`. In specification utilities (`ddilifecycle/utils.py`), intercept or wrap `_deserialize_simple_xml` outputs to ensure assignment validation succeeds cleanly.
 
 ## Project Stack
 
@@ -60,6 +61,7 @@ This project uses `hatch` for environment management, but `uv` is preferred for 
 - Prefer Pydantic for modeling over Python data classs or other similar package
 - Prefer Polars package for data management over Pandas or other similar package
 - Strictly follow the project's Ruff configuration. Run `uv run ruff check .` and `uv run ruff format .` to ensure compliance before submitting changes.
+- **Auto-Generated Models**: Auto-generated specification model files (e.g. `model_4_0_rc1.py`, `model_1_0_0.py`, `dataclass_model.py`) are excluded from Ruff linting & formatting via `exclude` in `[tool.ruff]` and `[tool.ruff.format]` in `pyproject.toml`, and `.pre-commit-config.yaml` is configured with `tests/data/` excluded and `--maxkb=10000` for large model/data files.
 
 ## Testing Policy
 
