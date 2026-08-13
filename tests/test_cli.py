@@ -62,17 +62,6 @@ def test_cli_stream_format_xml(tmp_path):
     assert ">" in content
 
 
-def test_cli_stream_format_summary(tmp_path):
-    xml_path = sample_xml_path()
-    out_file = tmp_path / "output.txt"
-    result = runner.invoke(
-        app, ["ddil-stream", xml_path, "--output", str(out_file), "--limit", "2", "--format", "summary"]
-    )
-    assert result.exit_code == 0
-    content = out_file.read_text(encoding="utf-8")
-    assert "(id=" in content
-
-
 def test_cli_stream_stats(tmp_path):
     xml_path = sample_xml_path()
     out_file = tmp_path / "output.json"

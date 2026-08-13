@@ -6,7 +6,7 @@ All notable changes to this project are documented in this file.
 
 ### Added
 - **DDI-Lifecycle 3.3 Subpackage (`ddilifecycle`)**: Stream and parse DDI-Lifecycle 3.3 XML documents fragment-by-fragment into DDI 4.0 RC1 Pydantic models.
-- **CLI Subcommand `ddil-stream`**: Stream DDI-Lifecycle XML fragments directly to output files (JSON/XML/Summary/Text) with automatic output filename mapping (e.g. `.ddi33.xml` $\rightarrow$ `.ddi40.json`), pretty-printing (`--pretty` / `-p`), resource type filtering (`--filter`), performance statistics (`--stats`/`--no-stats`), and default unlimited fragment streaming.
+- **CLI Subcommand `ddil-stream`**: Stream DDI-Lifecycle XML fragments directly to output files (JSON/XML) with automatic output filename mapping (e.g. `.ddi33.xml` $\rightarrow$ `.ddi40.json`), pretty-printing (`--pretty` / `-p`), resource type filtering (`--filter`), performance statistics (`--stats`/`--no-stats`), and default unlimited fragment streaming.
 - **Error Handling & Callback**: `stream_ddil_fragments` supports an `on_error` callback parameter and concise 1-line error logging for parsing errors.
 - **Pydantic Polymorphic Field Support (`SerializeAsAny`)**: Updated Cogs PythonPydantic publisher and generated models (`model_4_0_rc1.py`) to annotate polymorphic substitution fields with `SerializeAsAny`, preserving subclass properties (`LiteralTextType.text`, `CodeDomainType.code_list_reference`, etc.) when serializing to JSON via Pydantic's `model_dump_json()`.
 

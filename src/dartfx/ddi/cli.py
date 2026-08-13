@@ -55,8 +55,6 @@ class ValidationReportFormat(StrEnum):
 class StreamOutputFormat(StrEnum):
     json = "json"
     xml = "xml"
-    summary = "summary"
-    text = "text"
 
 
 def setup_logging(level: LogLevel):
@@ -252,8 +250,6 @@ def ddil_stream(
         ext_mapping = {
             StreamOutputFormat.json: ".json",
             StreamOutputFormat.xml: ".xml",
-            StreamOutputFormat.summary: ".txt",
-            StreamOutputFormat.text: ".txt",
         }
         target_ext = ext_mapping[format]
         name = xmlfile.name
@@ -310,13 +306,6 @@ def ddil_stream(
                         out_f.write(indented + "\n")
                     else:
                         out_f.write(ET.tostring(frag_elem, encoding="unicode") + "\n")
-                elif format in (StreamOutputFormat.summary, StreamOutputFormat.text):
-                    frag_id = getattr(fragment, "id", None) or "N/A"
-                    frag_urn = getattr(fragment, "urn", None)
-                    if frag_urn:
-                        out_f.write(f"{resource_type}(id={frag_id}, urn={frag_urn})\n")
-                    else:
-                        out_f.write(f"{resource_type}(id={frag_id})\n")
 
             if limit > 0 and processed_count >= limit and not stats:
                 break
