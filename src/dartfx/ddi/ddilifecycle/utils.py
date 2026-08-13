@@ -47,7 +47,7 @@ from __future__ import annotations
 import logging
 import os
 import xml.etree.ElementTree as ET
-from collections.abc import Generator
+from collections.abc import Callable, Generator
 from decimal import Decimal
 from pathlib import Path
 from typing import IO, Any
@@ -261,7 +261,18 @@ def _convert_attributes_to_elements(element: ET.Element, cls: type[CogsValue], c
         element.append(child_el)
 
     # Convert text to Value element if the class supports it and text is present
-    value_fields = ["StringValue", "DecimalValue", "IntegerValue", "DateTimeValue", "MultilingualStringValue"]
+    value_fields = [
+        "StringValue",
+        "DecimalValue",
+        "DoubleValue",
+        "FloatValue",
+        "IntegerValue",
+        "DateTimeValue",
+        "MultilingualStringValue",
+        "AnyURIValue",
+        "BooleanValue",
+    ]
+
     found_value_field = None
     for vf in value_fields:
         if vf in by_wire:
@@ -356,6 +367,7 @@ def _prepare_element_for_model(element: ET.Element, cls: type[CogsValue]) -> Non
 def stream_ddil_fragments(
     source: str | os.PathLike[str] | IO[bytes],
     resource_types: list[str] | set[str] | None = None,
+    on_error: Callable[[str, Exception], None] | None = None,
 ) -> Generator[Any, None, None]:
     """Streams a DDI-L XML file holding FragmentInstance -> Fragment elements,
 
@@ -365,11 +377,12 @@ def stream_ddil_fragments(
         source: Path to the XML file, or a binary file-like object.
         resource_types: Optional list or set of resource types (e.g. ['Concept', 'Category'])
                         to parse and yield. If None, all supported resource types are yielded.
+        on_error: Optional callback `(resource_type, exception)` invoked when a fragment fails to parse.
 
     Yields:
         Parsed Pydantic instances from model_4_0_rc1.
     """
-    filter_set = set(resource_types) if resource_types is not None else None
+    filter_set = {rt.lower() for rt in resource_types} if resource_types is not None else None
 
     # Handle file path opening in binary mode to ensure correct encoding parsing
     file_obj: Any
@@ -390,7 +403,7 @@ def stream_ddil_fragments(
                     child = children[0]
                     local_tag = child.tag.rsplit("}", 1)[-1]
 
-                    if filter_set is None or local_tag in filter_set:
+                    if filter_set is None or local_tag.lower() in filter_set:
                         cls = TYPE_REGISTRY.get(local_tag)
                         if cls:
                             _prepare_element_for_model(child, cls)
@@ -398,17 +411,27 @@ def stream_ddil_fragments(
                                 instance = cls.from_element(child)
                                 yield instance
                             except Exception as e:
-                                logger.error(
-                                    "Error parsing fragment of type %s: %s",
-                                    local_tag,
-                                    e,
-                                    exc_info=True,
-                                )
+                                if on_error:
+                                    on_error(local_tag, e)
+                                if logger.isEnabledFor(logging.DEBUG):
+                                    logger.error(
+                                        "Error parsing fragment of type %s: %s",
+                                        local_tag,
+                                        e,
+                                        exc_info=True,
+                                    )
+                                else:
+                                    logger.error("Error parsing fragment of type %s: %s", local_tag, e)
 
+    except ET.ParseError as pe:
+        logger.error("XML parse error in %s: %s", source, pe)
+        if on_error:
+            on_error("XML_Syntax_Error", pe)
     finally:
         if isinstance(source, (str, Path)) and hasattr(file_obj, "close"):
             file_obj.close()
 
 
-# Alias for explicit DDI 3.3 -> 4.0 crosswalk fragment streaming
+# Aliases for explicit DDI 3.3 -> 4.0 crosswalk fragment streaming
 stream_ddil33_fragments = stream_ddil_fragments
+ddistream_ddil33_fragments = stream_ddil_fragments
