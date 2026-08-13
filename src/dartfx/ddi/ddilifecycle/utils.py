@@ -369,7 +369,17 @@ def stream_ddil_fragments(
     Yields:
         Parsed Pydantic instances from model_4_0_rc1.
     """
-    filter_set = {rt.lower() for rt in resource_types} if resource_types is not None else None
+    filter_set: set[str] | None = None
+    if resource_types is not None:
+        if isinstance(resource_types, str):
+            filter_set = {item.strip().lower() for item in resource_types.split(",") if item.strip()}
+        else:
+            filter_set = set()
+            for rt in resource_types:
+                if isinstance(rt, str):
+                    for item in rt.split(","):
+                        if item.strip():
+                            filter_set.add(item.strip().lower())
 
     # Handle file path opening in binary mode to ensure correct encoding parsing
     file_obj: Any

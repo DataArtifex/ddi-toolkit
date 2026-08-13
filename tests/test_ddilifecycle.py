@@ -54,6 +54,12 @@ def test_stream_ddil_fragments_filter():
     for f in fragments:
         assert isinstance(f, model.Concept)
 
+    # Filter with comma-separated string
+    fragments_csv = list(ddilifecycle.stream_ddil_fragments(xml_path, resource_types="Concept, Category"))
+    assert len(fragments_csv) > len(fragments)
+    types_found = {type(f).__name__ for f in fragments_csv}
+    assert types_found == {"Concept", "Category"}
+
 
 def test_stream_ddil_fragments_on_error():
     xml_path = os.path.join(

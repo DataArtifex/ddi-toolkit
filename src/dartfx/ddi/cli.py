@@ -218,7 +218,7 @@ def ddil_stream(
             "-fl",
             "--resource-type",
             "-r",
-            help="Filter by resource type (e.g. Concept, Category). Repeatable, case-insensitive.",
+            help="Filter by resource type (e.g. Concept, Category). Repeatable or comma-separated, case-insensitive.",
         ),
     ] = None,
     limit: Annotated[

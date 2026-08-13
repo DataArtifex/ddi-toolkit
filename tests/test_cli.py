@@ -40,6 +40,18 @@ def test_cli_stream_filter(tmp_path):
     assert "Concept" in content
 
 
+def test_cli_stream_filter_comma_separated(tmp_path):
+    xml_path = sample_xml_path()
+    out_file = tmp_path / "output.json"
+    result = runner.invoke(
+        app, ["ddil-stream", xml_path, "--output", str(out_file), "--filter", "concept, StatementItem", "--limit", "10"]
+    )
+    assert result.exit_code == 0
+    content = out_file.read_text(encoding="utf-8")
+    assert "Concept" in content
+    assert "StatementItem" in content
+
+
 def test_cli_stream_format_xml(tmp_path):
     xml_path = sample_xml_path()
     out_file = tmp_path / "output.xml"
