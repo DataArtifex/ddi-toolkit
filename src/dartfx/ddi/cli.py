@@ -275,7 +275,13 @@ def ddil_stream(
     def handle_error(resource_type: str, _exc: Exception) -> None:
         errors[resource_type] += 1
 
+    DDI_NS = "https://ddialliance.org/ddi"
+
     with open(output, "w", encoding="utf-8") as out_f:
+        if format == StreamOutputFormat.xml:
+            out_f.write('<?xml version="1.0" encoding="utf-8"?>\n')
+            out_f.write(f'<FragmentInstance xmlns="{DDI_NS}">\n')
+
         for fragment in lc_utils.ddistream_ddil33_fragments(xmlfile, resource_types=filter, on_error=handle_error):
             resource_type = type(fragment).__name__
             counts[resource_type] += 1
@@ -283,20 +289,27 @@ def ddil_stream(
 
             if limit <= 0 or processed_count <= limit:
                 if format == StreamOutputFormat.json:
+                    data = {"$type": resource_type}
+                    data.update(fragment.model_dump(mode="json", exclude_none=True, exclude_defaults=True))
                     if pretty:
-                        out_f.write(fragment.model_dump_json(indent=2, exclude_none=True, exclude_defaults=True) + "\n")
+                        out_f.write(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
                     else:
-                        out_f.write(fragment.model_dump_json(exclude_none=True, exclude_defaults=True) + "\n")
+                        out_f.write(json.dumps(data, ensure_ascii=False) + "\n")
                 elif format == StreamOutputFormat.xml:
                     if hasattr(fragment, "to_element"):
                         elem = fragment.to_element()
-                        if pretty:
-                            ET.indent(elem, space="  ")
-                        out_f.write(ET.tostring(elem, encoding="unicode", short_empty_elements=True) + "\n")
-                    elif hasattr(fragment, "to_xml"):
-                        out_f.write(fragment.to_xml() + "\n")
                     else:
-                        out_f.write(f"<{resource_type} />\n")
+                        elem = ET.Element(f"{{{DDI_NS}}}{resource_type}")
+
+                    frag_elem = ET.Element(f"{{{DDI_NS}}}Fragment")
+                    frag_elem.append(elem)
+                    if pretty:
+                        ET.indent(frag_elem, space="  ", level=1)
+                        xml_str = ET.tostring(frag_elem, encoding="unicode")
+                        indented = "\n".join("  " + line if line.strip() else line for line in xml_str.split("\n"))
+                        out_f.write(indented + "\n")
+                    else:
+                        out_f.write(ET.tostring(frag_elem, encoding="unicode") + "\n")
                 elif format in (StreamOutputFormat.summary, StreamOutputFormat.text):
                     frag_id = getattr(fragment, "id", None) or "N/A"
                     frag_urn = getattr(fragment, "urn", None)
@@ -307,6 +320,9 @@ def ddil_stream(
 
             if limit > 0 and processed_count >= limit and not stats:
                 break
+
+        if format == StreamOutputFormat.xml:
+            out_f.write("</FragmentInstance>\n")
 
     elapsed_sec = time.perf_counter() - start_time
 
