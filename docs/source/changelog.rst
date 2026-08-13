@@ -3,8 +3,20 @@ Changelog
 
 All notable changes to this project will be documented in this file.
 
-Version 0.2.0 (Current)
+Version 0.3.0 (Current)
 -----------------------
+
+DDI-Lifecycle Fragment Streaming & Polymorphic Serialization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Added ``ddilifecycle`` subpackage for streaming and parsing DDI-Lifecycle 3.3 XML documents fragment-by-fragment into DDI 4.0 RC1 Pydantic models.
+- Added CLI subcommand ``dartfx-ddi ddil-stream`` supporting automatic output filename mapping (e.g. ``.ddi33.xml`` -> ``.ddi40.json``), pretty-printing (``--pretty`` / ``-p``), resource filtering (``--filter``), performance statistics (``--stats`` / ``--no-stats``), and default unlimited streaming.
+- Added ``on_error`` callback hook to ``stream_ddil_fragments`` for concise single-line error logging.
+- Annotated polymorphic substitution fields in COGS PythonPydantic publisher and generated models (``model_4_0_rc1.py``) with ``SerializeAsAny`` to preserve subclass properties (``LiteralTextType.text``, ``CodeDomainType.code_list_reference``, etc.) in JSON output.
+- Fixed XML text wrapping for numeric and statistic elements (``StatisticDoubleType``).
+
+Version 0.2.0
+-------------
 
 DDI-Codebook Validation and Reporting
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

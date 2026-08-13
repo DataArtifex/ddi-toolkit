@@ -3,43 +3,30 @@
 This module provides support for streaming DDI-Lifecycle XML documents and parsing
 individual fragments into Pydantic models.
 
-### DDI 3.3 to DDI 4.0 RC1 XML Crosswalk and Differences Handling:
-1. **Namespaces**:
-   - DDI 3.3 uses multiple namespaces like `ddi:instance:3_3`, `ddi:reusable:3_3`,
-     `ddi:conceptualcomponent:3_3`, `ddi:datacollection:3_3`, etc.
-   - The generated DDI 4.0 RC1 models (`model_4_0_rc1.py`) expect all elements to
-     be in the single target namespace `https://ddialliance.org/ddi`.
-   - **Handling**: We recursively rewrite all element tags to use the target namespace.
+DDI 3.3 to DDI 4.0 RC1 XML Crosswalk:
 
-2. **Substitution Groups**:
-   - DDI 3.3 uses substitution groups extensively for representations and domains (e.g. `<NumericRepresentation>`,
-     `<NumericDomain>`).
-   - DDI 4.0 RC1 models represent these as abstract base fields (e.g. `<ValueRepresentation>`, `<ResponseDomain>`)
-     with explicit `xsi:type` attributes to identify concrete subclasses.
-   - **Handling**: We dynamically map substitution tags to their abstract names and inject the correct `xsi:type`.
+1. Namespaces:
+   DDI 3.3 uses multiple namespaces (e.g. ``ddi:instance:3_3``, ``ddi:reusable:3_3``).
+   The generated DDI 4.0 RC1 models (``model_4_0_rc1.py``) expect elements in ``https://ddialliance.org/ddi``.
+   Tags are recursively rewritten to the target namespace.
 
-3. **Reference URN Generation**:
-   - DDI 3.3 references contain `Agency`, `ID`, and `Version` but often lack a `URN` child element.
-   - DDI 4.0 RC1 reference models strictly require a `URN` child.
-   - **Handling**: We automatically construct and inject `<URN>` child elements for reference objects.
+2. Substitution Groups:
+   DDI 3.3 substitution heads (e.g. ``<NumericRepresentation>``) are mapped to abstract DDI 4.0 base elements
+   (e.g. ``<ValueRepresentation>``) with explicit ``xsi:type`` attributes identifying concrete subclasses.
 
-4. **Attribute to Child Element Promotion**:
-   - In DDI 3.3, metadata properties like `isCharacteristic` or `isMissing` are represented
-     as XML attributes on parent elements.
-   - In DDI 4.0 RC1, these are represented as child elements (e.g., `<IsCharacteristic>`, `<IsMissing>`).
-   - **Handling**: We dynamically match attribute names (case-insensitively) against the target
-     class fields. Matching attributes are converted to XML child elements in the target namespace.
+3. Reference URN Generation:
+   DDI 3.3 references lacking ``<URN>`` children have URNs automatically generated from ``Agency``,
+   ``ID``, and ``Version``.
 
-5. **StringValue Text Wrapping**:
-   - In DDI 3.3, elements like `UserID` or `TypeOfUserID` have text values directly (e.g. `<UserID>value</UserID>`).
-   - In DDI 4.0 RC1, these are complex types expecting a child element `<StringValue>value</StringValue>`.
-   - **Handling**: If the model class has a `StringValue` field, we move any text value of the element
-     into a `<StringValue>` child element.
+4. Attribute to Child Element Promotion:
+   Attributes (e.g. ``isCharacteristic``) are matched against DDI 4.0 class fields and converted to child elements.
 
-6. **Strict XML Attribute Validation**:
-   - DDI 4.0 RC1 Pydantic parser raises errors on unknown XML attributes (only `xsi:type` is allowed).
-   - **Handling**: All XML attributes that aren't mapped/converted to child elements (and aren't `xsi:type`
-     or in the `xml:` namespace like `xml:lang`) are stripped from the element before passing to the parser.
+5. StringValue Text Wrapping:
+   Simple text inside elements expecting complex types (e.g. ``UserID``, ``StatisticDouble``) is automatically wrapped
+   into child elements like ``<StringValue>`` or ``<DoubleValue>``.
+
+6. Strict XML Attribute Validation:
+   Unknown attributes not mapped to child elements are cleaned before model deserialization.
 """
 
 from __future__ import annotations

@@ -15,12 +15,13 @@ There are three major flavors of DDI. This package currently supports:
 
 * **DDI-CDI 1.1** *(Experimental)*: The new Cross Domain Integration specification that provides a unified model for describing data across different domains and methodologies.
 
-We do not currently support DDI-Lifecycle.
+* **DDI-Lifecycle 3.3 / DDI 4.0 RC1**: Fragment-by-fragment XML streaming parser that crosswalks DDI 3.3 documents into DDI 4.0 RC1 Pydantic models.
 
 Key Features
 ------------
 
 * **DDI-Codebook XML Processing**: Load, parse, and extract structured metadata from DDI-Codebook documents
+* **DDI-Lifecycle Fragment Streaming**: Stream and parse DDI 3.3 XML documents fragment-by-fragment into DDI 4.0 RC1 models via Python or CLI
 * **DDI-CDI Model Classes**: Work with Pydantic-based classes representing the full DDI-CDI specification
 * **RDF Integration**: Generate RDF representations using the `DataArtifex RDF Toolkit <https://github.com/DataArtifex/rdf-toolkit>`_
 * **Data Dictionary Extraction**: Convert DDI metadata into usable data dictionaries
@@ -47,6 +48,13 @@ Basic DDI-Codebook usage::
    if my_codebook.dataDscr:
        for var in my_codebook.dataDscr.var:
            print(f"Variable: {var.name}, Label: {var.labl.content if var.labl else 'No label'}")
+
+DDI-Lifecycle streaming usage::
+
+   from dartfx.ddi import ddilifecycle
+
+   for fragment in ddilifecycle.stream_ddil_fragments("my_study.ddi33.xml", resource_types=["QuestionItem"]):
+       print(f"Fragment: {type(fragment).__name__}, URN: {fragment.urn}")
 
 DDI-CDI & Assistant Framework usage::
 
@@ -77,6 +85,7 @@ DDI-CDI & Assistant Framework usage::
    :caption: API Reference:
 
    ddicodebook
+   ddilifecycle
    ddicdi
    specification
    rdf_integration
