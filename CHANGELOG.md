@@ -2,6 +2,25 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.3.0] - 2026-08-14
+
+### Added
+- **DDI-Lifecycle 3.3 Subpackage (`ddilifecycle`)**: Stream and parse DDI-Lifecycle 3.3 XML documents fragment-by-fragment into DDI 4.0 RC1 Pydantic models.
+- **Python Utility Method `ddilifecycle.ddil324(...)`**: Programmatic document-level transformation from DDI-Lifecycle 3.x FragmentInstance XML to DDI 4.0 JSON or XML with statistics collection.
+- **CLI Subcommand `ddil324`**: Transform DDI-Lifecycle 3.x FragmentInstance XML documents directly to DDI 4.0 output files (JSON/XML) with automatic output filename mapping (e.g. `.ddi33.xml` $\rightarrow$ `.ddi40.json`), live progress bar (`--progress`/`--no-progress`), pretty-printing (`--pretty` / `-p`), resource type filtering (`--filter`), performance statistics (`--stats`/`--no-stats`), error statistics grouped by error type and resource type, and default unlimited fragment streaming.
+- **Error & Progress Callbacks**: `stream_ddil_fragments` supports `on_error` and `on_progress` callback hooks for progress reporting and non-spammy error tracking.
+- **Pydantic Polymorphic Field Support (`SerializeAsAny`)**: Updated Cogs PythonPydantic publisher and generated models (`model_4_0_rc1.py`) to annotate polymorphic substitution fields with `SerializeAsAny`, preserving subclass properties (`LiteralTextType.text`, `CodeDomainType.code_list_reference`, etc.) when serializing to JSON via Pydantic's `model_dump_json()`.
+
+### Fixed
+- Fixed `StatisticDoubleType` `ValueError` when parsing `VariableStatistics` fragments containing element text (e.g., `<StatisticDouble>794</StatisticDouble>` $\rightarrow$ `<DoubleValue>794</DoubleValue>`).
+- Resolved Pydantic v2 type-slicing on substitution groups so empty property suppression (`exclude_defaults=True`) omits empty default lists without stripping populated subclass attributes.
+- Fixed `BibliographicNameType` child `<String>` elements in `CreatorName`, `ContributorName`, and `PublisherName` by automatically mapping them to `<Name>`.
+- Fixed `InterviewerInstructionReference` parsing on `QuestionItem`, `QuestionGrid`, `QuestionBlock`, and `QuestionConstruct` by automatically wrapping them inside `InterviewerInstructionAttachment`.
+
+### Documentation
+- Added `ddilifecycle` section to Sphinx API reference, User Guide, Quickstart, and README.
+- Documented `ddil324` CLI options, Python transformation utility, and streaming API usage.
+
 ## [0.2.0] - 2026-05-26
 
 ### Added

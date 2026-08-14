@@ -2,6 +2,7 @@
 # PROJECT
 temp
 tests/outputs
+graphify-out/
 
 #
 # Python

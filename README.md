@@ -28,10 +28,12 @@ There are three major flavors of DDI. This package currently supports:
 
 - **[DDI-Codebook 2.6](https://ddialliance.org/Specification/DDI-Codebook/2.6/)**: The lightweight version of the standard, intended primarily to document simple survey data.
 - **[DDI-CDI](https://ddialliance.org/Specification/DDI-CDI/)**: The new Cross Domain Integration specification. This package uses **generated Pydantic models** and now defaults to the DDI-CDI 1.1.0 model layer.
+- **DDI-Lifecycle 3.3 / DDI 4.0 RC1**: Fragment-by-fragment XML streaming parser that crosswalks DDI 3.3 documents into DDI 4.0 RC1 Pydantic models.
 
 ## Key Features
 
 - **DDI-Codebook XML Processing**: Load, parse, and extract structured metadata from DDI-Codebook documents.
+- **DDI-Lifecycle XML Streaming**: Stream and parse DDI 3.3 XML documents fragment-by-fragment into DDI 4.0 RC1 models via Python or CLI.
 - **DDI-CDI Model (v1.1.0)**: Use definitive, spec-generated Pydantic classes for the full DDI-CDI implementation.
 - **Assistant Framework**: A high-level API (`CdiClassAssistant`) that simplifies CDI resource creation, automated identifier generation, and method proxying.
 - **RDF Serialization**: Built-in support for serializing CDI models to RDF graphs.
@@ -144,10 +146,36 @@ dartfx-ddi ddicvalidate my_codebook.xml --report-format json
 
 # Strict mode: escalate structural warnings (including invalid xs:ID/NCName) to errors
 dartfx-ddi ddicvalidate my_codebook.xml --strict
+
+# Convert DDI-Lifecycle 3.x FragmentInstance XML to DDI 4.0 JSON (automatically names output my_study.ddi40.json)
+dartfx-ddi ddil324 my_study.ddi33.xml
+
+# Filter output fragments by resource type (repeatable or comma-separated, case-insensitive)
+dartfx-ddi ddil324 my_study.ddi33.xml --filter "QuestionItem, Variable"
+
+# Convert to formatted DDI 4.0 XML (wrapped in FragmentInstance and Fragment elements)
+dartfx-ddi ddil324 my_study.ddi33.xml --format xml --pretty
+
+# Cap fragment output count (default: 0 / unlimited)
+dartfx-ddi ddil324 my_study.ddi33.xml --limit 100
 ```
 
 By default, `ddicvalidate` records invalid `@ID` values (non-NCName / non-`xs:ID`) as warnings.
 Use `--strict` to treat those warnings as validation errors.
+
+### DDI-Lifecycle Processing & Streaming in Python
+
+```python
+from dartfx.ddi import ddilifecycle
+
+# Transform an entire DDI 3.x document to DDI 4.0 JSON or XML
+stats = ddilifecycle.ddil324("my_study.ddi33.xml", format="json", pretty=True)
+print(f"Processed {stats['total_resources']} resources in {stats['elapsed_seconds']:.2f}s")
+
+# Stream DDI 3.3 fragments crosswalked to DDI 4.0 RC1 Pydantic models
+for fragment in ddilifecycle.stream_ddil_fragments("my_study.ddi33.xml", resource_types=["QuestionItem"]):
+    print(f"Type: {type(fragment).__name__}, ID: {fragment.id}, Agency: {fragment.agency}")
+```
 
 ### Validating DDI-Codebook Documents in Python
 

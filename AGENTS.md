@@ -7,6 +7,7 @@ Welcome, fellow AI. This file provides context and instructions for working on t
 The **Data Artifex DDI Toolkit** is a specialized Python framework for managing metadata using the **Data Documentation Initiative (DDI)** standards. It specifically focuses on:
 - **DDI-Codebook 2.6**: Parsing and manipulating XML-based documentation for surveys and observational data.
 - **DDI-CDI 1.0.0 (Cross-Domain Integration)**: A next-generation standard for data integration across domains.
+- **DDI-Lifecycle 3.3 / DDI 4.0 RC1**: Fragment-by-fragment XML streaming and conversion from DDI 3.3 into DDI 4.0 RC1 Pydantic models.
 
 ### Key Architecture & Implementation Details
 
@@ -15,6 +16,7 @@ The **Data Artifex DDI Toolkit** is a specialized Python framework for managing 
    - **Resource Lifecycle**: Assistants handle the creation of resources, including automated DDI Identifier and URI generation.
    - **Method Proxying**: Relationships are managed via methods (like `add_variable`) that are dynamically bound to model instances through assistants.
 3. **RDF & Semantic Web**: The toolkit provides native RDF serialization for CDI models and includes SHACL-based validation to ensure conformance with the DDI-CDI specification.
+4. **DDI-Lifecycle Streaming & Crosswalks**: `ddilifecycle.stream_ddil_fragments` provides low-memory XML streaming (`iterparse`) with automated XML schema crosswalks (namespace unification, substitution group mapping, instruction wrapping, bibliographic name remapping, and URN synthesis).
 18. **Modularized Utilities**: The toolkit uses specification-specific utility modules (`ddicdi/utils.py` and `ddicodebook/utils.py`) for specialized tasks like conversion and validation. The root `utils.py` is reserved for generic, cross-specification helpers, or generic models.
 
 ### Instructions for AI Agents
@@ -24,6 +26,10 @@ The **Data Artifex DDI Toolkit** is a specialized Python framework for managing 
 - **Validation**: After significant CDI model manipulations, use `cdi_utils.shacl_validate_ddi_cdi()` (from `dartfx.ddi.ddicdi.utils`) to verify SHACL compliance.
 - **Package Namespace**: The primary code lives under `dartfx.ddi`.
 - **DDI Specifics**: Be mindful that `CDIClass` and `CDIDataType` are treated differently in the assistant framework; assistants primarily operate on `CDIClass` resources.
+- **Primitive Value Wrapping**: When populating COGS-generated Pydantic models that enable `validate_assignment=True`, simple primitives (like `Decimal`) must be wrapped in their corresponding custom dataclass types (`CogsDecimal`) before being assigned via `setattr`. In specification utilities (`ddilifecycle/utils.py`), intercept or wrap `_deserialize_simple_xml` outputs to ensure assignment validation succeeds cleanly.
+- **Polymorphic Field Serialization**: Always use `pydantic.SerializeAsAny` when declaring polymorphic base types in generated or custom models to prevent Pydantic v2 from slicing subclass properties during `model_dump_json()`.
+- **PathLike & Stream Handling**: When accepting `str | os.PathLike[str] | IO[...]`, explicitly guard with `isinstance(target, (str, os.PathLike))` before opening files to satisfy Pyrefly / Pyright static type checking without missing-attribute errors.
+- **Under-the-Hood Normalization**: Keep schema crosswalks and XML adjustments encapsulated within `_prepare_element_for_model` inside `stream_ddil_fragments` so model consumers receive clean, strongly-typed DDI 4.0 instances.
 
 ## Project Stack
 
@@ -60,6 +66,7 @@ This project uses `hatch` for environment management, but `uv` is preferred for 
 - Prefer Pydantic for modeling over Python data classs or other similar package
 - Prefer Polars package for data management over Pandas or other similar package
 - Strictly follow the project's Ruff configuration. Run `uv run ruff check .` and `uv run ruff format .` to ensure compliance before submitting changes.
+- **Auto-Generated Models**: Auto-generated specification model files (e.g. `model_4_0_rc1.py`, `model_1_0_0.py`, `dataclass_model.py`) are excluded from Ruff linting & formatting via `exclude` in `[tool.ruff]` and `[tool.ruff.format]` in `pyproject.toml`, and `.pre-commit-config.yaml` is configured with `tests/data/` excluded and `--maxkb=10000` for large model/data files.
 
 ## Testing Policy
 

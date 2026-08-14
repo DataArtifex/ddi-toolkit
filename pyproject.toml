@@ -92,7 +92,7 @@ omit = ["src/dartfx/ddi/__about__.py"]
 
 [tool.coverage.paths]
 ddi = ["src/dartfx/ddi", "*/dartfx-ddi/src/dartfx/ddi"]
-tests = ["tests", "*/dartfx/dartfx-ddi/tests"]
+tests = ["tests"]
 
 [tool.coverage.report]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
@@ -109,7 +109,13 @@ log_cli_date_format = "%Y-%m-%d %H:%M:%S"
 line-length = 120
 target-version = "py312"
 src = ["src"]
-exclude = ["specifications", "graphify-out"]
+force-exclude = true
+exclude = [
+  "specifications",
+  "tests/data",
+  "src/**/model_*.py",
+  "src/**/dataclass_model.py",
+]
 
 [tool.ruff.lint]
 select = [
@@ -127,6 +133,7 @@ ignore = []
 
 [tool.ruff.lint.per-file-ignores]
 "src/dartfx/ddi/ddicdi/model_1_0_0.py" = ["E501", "F821"]
+"src/dartfx/ddi/ddilifecycle/model_4_0_rc1.py" = ["E501", "F821", "ARG002"]
 "src/dartfx/ddi/ddicdi/dataclass_model.py" = ["E501", "E402", "F821", "B008"]
 "src/dartfx/ddi/ddicdi/specification.py" = ["E501"]
 "src/dartfx/ddi/ddicdi/assistants.py" = ["B010"]
@@ -147,6 +154,12 @@ quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
+exclude = [
+  "specifications",
+  "tests/data",
+  "src/**/model_*.py",
+  "src/**/dataclass_model.py",
+]
 
 [tool.pyrefly]
 search-path = ["src"]
