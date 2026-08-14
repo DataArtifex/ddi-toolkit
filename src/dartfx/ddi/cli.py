@@ -301,8 +301,7 @@ def ddil324(
             on_progress=handle_progress if progress else None,
         )
 
-        total_frags = result["total_resources"] + result["total_errors"]
-        progress_bar.update(prog_task, completed=file_size_bytes, fragments=total_frags)
+        progress_bar.update(prog_task, completed=file_size_bytes, errors=result["total_errors"])
 
     if stats:
         typer.echo("\nResource Type Statistics:")
