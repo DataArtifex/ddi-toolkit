@@ -1,3 +1,4 @@
+import json
 import os
 
 from typer.testing import CliRunner
@@ -24,8 +25,9 @@ def test_cli_stream_default(tmp_path):
     result = runner.invoke(app, ["ddil324", xml_path, "--output", str(out_file), "--limit", "5"])
     assert result.exit_code == 0
     content = out_file.read_text(encoding="utf-8").strip()
-    lines = content.split("\n")
-    assert len(lines) == 5
+    data = json.loads(content)
+    assert isinstance(data, list)
+    assert len(data) == 5
     assert '"id":' in content
 
 
@@ -168,6 +170,7 @@ def test_cli_stream_unlimited_by_default(tmp_path):
     result = runner.invoke(app, ["ddil324", xml_path, "--output", str(out_file)])
     assert result.exit_code == 0
     content = out_file.read_text(encoding="utf-8").strip()
-    lines = content.split("\n")
+    data = json.loads(content)
+    assert isinstance(data, list)
     # File has 1833 fragments total
-    assert len(lines) > 100
+    assert len(data) > 100

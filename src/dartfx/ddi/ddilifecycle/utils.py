@@ -565,9 +565,12 @@ def ddil324(
         out_f = output_target
 
     try:
+        first_json = True
         if format_lower == "xml":
             out_f.write('<?xml version="1.0" encoding="utf-8"?>\n')
             out_f.write(f'<FragmentInstance xmlns="{TARGET_NAMESPACE}">\n')
+        elif format_lower == "json":
+            out_f.write("[\n" if pretty else "[")
 
         for fragment in stream_ddil_fragments(
             input_file,
@@ -583,10 +586,17 @@ def ddil324(
                 if format_lower == "json":
                     data = {"$type": r_type}
                     data.update(fragment.model_dump(mode="json", exclude_none=True, exclude_defaults=True))
-                    if pretty:
-                        out_f.write(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
+                    if not first_json:
+                        out_f.write(",\n" if pretty else ",")
                     else:
-                        out_f.write(json.dumps(data, ensure_ascii=False) + "\n")
+                        first_json = False
+
+                    if pretty:
+                        formatted = json.dumps(data, indent=2, ensure_ascii=False)
+                        indented = "\n".join("  " + line for line in formatted.splitlines())
+                        out_f.write(indented)
+                    else:
+                        out_f.write(json.dumps(data, ensure_ascii=False))
                 elif format_lower == "xml":
                     if hasattr(fragment, "to_element"):
                         elem = fragment.to_element()
@@ -608,6 +618,11 @@ def ddil324(
 
         if format_lower == "xml":
             out_f.write("</FragmentInstance>\n")
+        elif format_lower == "json":
+            if first_json:
+                out_f.write("]\n")
+            else:
+                out_f.write("\n]\n" if pretty else "]\n")
     finally:
         if should_close:
             out_f.close()

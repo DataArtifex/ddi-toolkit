@@ -1,3 +1,4 @@
+import json
 import os
 
 from dartfx.ddi import ddilifecycle
@@ -108,7 +109,10 @@ def test_ddil324_utility_json(tmp_path):
     assert stats["elapsed_seconds"] > 0
     assert out_file.exists()
     content = out_file.read_text(encoding="utf-8")
-    assert '"$type":' in content
+    data = json.loads(content)
+    assert isinstance(data, list)
+    assert len(data) == 5
+    assert all("$type" in item for item in data)
 
 
 def test_ddil324_utility_xml(tmp_path):
