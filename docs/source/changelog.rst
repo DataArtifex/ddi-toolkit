@@ -14,6 +14,8 @@ DDI-Lifecycle Fragment Streaming & Polymorphic Serialization
 - Added ``on_error`` and ``on_progress`` callback hooks to ``stream_ddil_fragments`` for real-time progress and non-spammy error tracking.
 - Annotated polymorphic substitution fields in COGS PythonPydantic publisher and generated models (``model_4_0_rc1.py``) with ``SerializeAsAny`` to preserve subclass properties (``LiteralTextType.text``, ``CodeDomainType.code_list_reference``, etc.) in JSON output.
 - Fixed XML text wrapping for numeric and statistic elements (``StatisticDoubleType``).
+- Fixed ``BibliographicNameType`` child ``<String>`` elements in ``CreatorName``, ``ContributorName``, and ``PublisherName`` by automatically mapping them to ``<Name>``.
+- Fixed ``InterviewerInstructionReference`` on ``QuestionItem``, ``QuestionGrid``, ``QuestionBlock``, and ``QuestionConstruct`` by automatically wrapping them in ``InterviewerInstructionAttachment``.
 
 Version 0.2.0
 -------------

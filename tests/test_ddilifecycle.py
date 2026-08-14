@@ -185,3 +185,58 @@ def test_stream_ddil_fragments_bibliographic_name(tmp_path):
     assert publisher.publisher_name is not None
     assert len(publisher.publisher_name.name) == 1
     assert publisher.publisher_name.name[0].value == "University Press"
+
+
+def test_stream_ddil_fragments_interviewer_instruction_reference(tmp_path):
+    input_xml = tmp_path / "question_instruction.ddi33.xml"
+    input_xml.write_text(
+        '<FragmentInstance xmlns="ddi:instance:3_3">'
+        '<Fragment xmlns="ddi:instance:3_3">'
+        '<QuestionItem xmlns="ddi:datacollection:3_3">'
+        '<URN xmlns="ddi:reusable:3_3">urn:ddi:ex:qi1:1</URN>'
+        '<Agency xmlns="ddi:reusable:3_3">ex</Agency>'
+        '<ID xmlns="ddi:reusable:3_3">qi1</ID>'
+        '<Version xmlns="ddi:reusable:3_3">1</Version>'
+        '<QuestionItemName><String xmlns="ddi:reusable:3_3" xml:lang="en">Q1</String></QuestionItemName>'
+        '<InterviewerInstructionReference xmlns="ddi:datacollection:3_3">'
+        '<Agency xmlns="ddi:reusable:3_3">ex</Agency>'
+        '<ID xmlns="ddi:reusable:3_3">ins1</ID>'
+        '<Version xmlns="ddi:reusable:3_3">1</Version>'
+        '<TypeOfObject xmlns="ddi:reusable:3_3">Instruction</TypeOfObject>'
+        "</InterviewerInstructionReference>"
+        "</QuestionItem>"
+        "</Fragment>"
+        '<Fragment xmlns="ddi:instance:3_3">'
+        '<QuestionGrid xmlns="ddi:datacollection:3_3">'
+        '<URN xmlns="ddi:reusable:3_3">urn:ddi:ex:qg1:1</URN>'
+        '<Agency xmlns="ddi:reusable:3_3">ex</Agency>'
+        '<ID xmlns="ddi:reusable:3_3">qg1</ID>'
+        '<Version xmlns="ddi:reusable:3_3">1</Version>'
+        '<QuestionGridName><String xmlns="ddi:reusable:3_3" xml:lang="en">QG1</String></QuestionGridName>'
+        '<InterviewerInstructionReference xmlns="ddi:datacollection:3_3">'
+        '<Agency xmlns="ddi:reusable:3_3">ex</Agency>'
+        '<ID xmlns="ddi:reusable:3_3">ins2</ID>'
+        '<Version xmlns="ddi:reusable:3_3">1</Version>'
+        '<TypeOfObject xmlns="ddi:reusable:3_3">Instruction</TypeOfObject>'
+        "</InterviewerInstructionReference>"
+        "</QuestionGrid>"
+        "</Fragment>"
+        "</FragmentInstance>",
+        encoding="utf-8",
+    )
+
+    fragments = list(ddilifecycle.stream_ddil_fragments(input_xml))
+    assert len(fragments) == 2
+    qi, qg = fragments
+
+    assert isinstance(qi, model.QuestionItem)
+    assert len(qi.interviewer_instruction_attachment) == 1
+    att_qi = qi.interviewer_instruction_attachment[0]
+    assert att_qi.interviewer_instruction_reference is not None
+    assert att_qi.interviewer_instruction_reference.id == "ins1"
+
+    assert isinstance(qg, model.QuestionGrid)
+    assert len(qg.interviewer_instruction_attachment) == 1
+    att_qg = qg.interviewer_instruction_attachment[0]
+    assert att_qg.interviewer_instruction_reference is not None
+    assert att_qg.interviewer_instruction_reference.id == "ins2"

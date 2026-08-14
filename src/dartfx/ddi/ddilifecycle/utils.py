@@ -195,8 +195,21 @@ def _convert_attributes_to_elements(element: ET.Element, cls: type[CogsValue], c
     wire_map = {name.lower(): name for name in by_wire}
 
     # Remap substitution elements in child tags context-awarely (e.g. CodeDomain -> ResponseDomain)
-    for child in element:
+    for child in list(element):
         child_local = child.tag.rsplit("}", 1)[-1]
+
+        # Wrap InterviewerInstructionReference inside InterviewerInstructionAttachment if needed
+        if (
+            child_local == "InterviewerInstructionReference"
+            and "InterviewerInstructionReference" not in by_wire
+            and "InterviewerInstructionAttachment" in by_wire
+        ):
+            wrapper = ET.Element(f"{{{TARGET_NAMESPACE}}}InterviewerInstructionAttachment")
+            idx = list(element).index(child)
+            element.remove(child)
+            wrapper.append(child)
+            element.insert(idx, wrapper)
+            continue
 
         # 1. Remap String to MultilingualStringValue or Name if appropriate
         if child_local == "String" and "String" not in by_wire and "MultilingualStringValue" in by_wire:

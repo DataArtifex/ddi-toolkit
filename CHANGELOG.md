@@ -13,6 +13,8 @@ All notable changes to this project are documented in this file.
 ### Fixed
 - Fixed `StatisticDoubleType` `ValueError` when parsing `VariableStatistics` fragments containing element text (e.g., `<StatisticDouble>794</StatisticDouble>` $\rightarrow$ `<DoubleValue>794</DoubleValue>`).
 - Resolved Pydantic v2 type-slicing on substitution groups so empty property suppression (`exclude_defaults=True`) omits empty default lists without stripping populated subclass attributes.
+- Fixed `BibliographicNameType` child `<String>` elements in `CreatorName`, `ContributorName`, and `PublisherName` by automatically mapping them to `<Name>`.
+- Fixed `InterviewerInstructionReference` parsing on `QuestionItem`, `QuestionGrid`, `QuestionBlock`, and `QuestionConstruct` by automatically wrapping them inside `InterviewerInstructionAttachment`.
 
 ### Documentation
 - Added `ddilifecycle` section to Sphinx API reference, User Guide, Quickstart, and README.
