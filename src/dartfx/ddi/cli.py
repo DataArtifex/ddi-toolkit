@@ -1,9 +1,5 @@
 import json
 import logging
-import re
-import time
-import xml.etree.ElementTree as ET
-from collections import Counter
 from enum import StrEnum
 from pathlib import Path
 from typing import Annotated
@@ -265,35 +261,13 @@ def ddil324(
     """
     setup_logging(loglevel)
 
-    if output is None:
-        ext_mapping = {
-            StreamOutputFormat.json: ".json",
-            StreamOutputFormat.xml: ".xml",
-        }
-        target_ext = ext_mapping[format]
-        name = xmlfile.name
+    if output is not None:
+        logging.info(f"Streaming fragments from {xmlfile} to {output}")
+    else:
+        logging.info(f"Streaming fragments from {xmlfile}")
 
-        if re.search(r"\.ddi3\d*(?:\.\d+)?\.xml$", name, re.IGNORECASE):
-            out_name = re.sub(r"\.ddi3\d*(?:\.\d+)?\.xml$", f".ddi40{target_ext}", name, flags=re.IGNORECASE)
-        else:
-            out_name = xmlfile.with_suffix(target_ext).name
-
-        output = xmlfile.parent / out_name
-
-    logging.info(f"Streaming fragments from {xmlfile} to {output}")
-
-    counts: Counter[str] = Counter()
-    resource_errors: Counter[str] = Counter()
-    error_messages: Counter[str] = Counter()
-    processed_count = 0
-    start_time = time.perf_counter()
     file_size_bytes = xmlfile.stat().st_size
-
-    def handle_error(resource_type: str, exc: Exception) -> None:
-        resource_errors[resource_type] += 1
-        error_messages[f"{resource_type}: {exc}"] += 1
-
-    DDI_NS = "https://ddialliance.org/ddi"
+    fragment_counter = [0]
 
     with Progress(
         SpinnerColumn(),
@@ -310,77 +284,43 @@ def ddil324(
         prog_task = progress_bar.add_task("Streaming", total=file_size_bytes, fragments=0)
 
         def handle_progress(bytes_read: int, _total: int | None) -> None:
-            progress_bar.update(prog_task, completed=bytes_read, fragments=processed_count)
+            progress_bar.update(prog_task, completed=bytes_read, fragments=fragment_counter[0])
 
-        with open(output, "w", encoding="utf-8") as out_f:
-            if format == StreamOutputFormat.xml:
-                out_f.write('<?xml version="1.0" encoding="utf-8"?>\n')
-                out_f.write(f'<FragmentInstance xmlns="{DDI_NS}">\n')
+        def handle_error(_r_type: str, _exc: Exception) -> None:
+            fragment_counter[0] += 1
+            progress_bar.update(prog_task, fragments=fragment_counter[0])
 
-            for fragment in lc_utils.ddistream_ddil33_fragments(
-                xmlfile,
-                resource_types=filter,
-                on_error=handle_error,
-                on_progress=handle_progress if progress else None,
-            ):
-                resource_type = type(fragment).__name__
-                counts[resource_type] += 1
-                processed_count += 1
-                progress_bar.update(prog_task, fragments=processed_count)
+        result = lc_utils.ddil324(
+            input_file=xmlfile,
+            output_file=output,
+            format=format.value,
+            resource_types=filter,
+            limit=limit,
+            pretty=pretty,
+            on_error=handle_error,
+            on_progress=handle_progress if progress else None,
+        )
 
-                if limit <= 0 or processed_count <= limit:
-                    if format == StreamOutputFormat.json:
-                        data = {"$type": resource_type}
-                        data.update(fragment.model_dump(mode="json", exclude_none=True, exclude_defaults=True))
-                        if pretty:
-                            out_f.write(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
-                        else:
-                            out_f.write(json.dumps(data, ensure_ascii=False) + "\n")
-                    elif format == StreamOutputFormat.xml:
-                        if hasattr(fragment, "to_element"):
-                            elem = fragment.to_element()
-                        else:
-                            elem = ET.Element(f"{{{DDI_NS}}}{resource_type}")
-
-                        frag_elem = ET.Element(f"{{{DDI_NS}}}Fragment")
-                        frag_elem.append(elem)
-                        if pretty:
-                            ET.indent(frag_elem, space="  ", level=1)
-                            xml_str = ET.tostring(frag_elem, encoding="unicode")
-                            indented = "\n".join("  " + line if line.strip() else line for line in xml_str.split("\n"))
-                            out_f.write(indented + "\n")
-                        else:
-                            out_f.write(ET.tostring(frag_elem, encoding="unicode") + "\n")
-
-                if limit > 0 and processed_count >= limit and not stats:
-                    break
-
-            if format == StreamOutputFormat.xml:
-                out_f.write("</FragmentInstance>\n")
-
-        progress_bar.update(prog_task, completed=file_size_bytes, fragments=processed_count)
-
-    elapsed_sec = time.perf_counter() - start_time
+        total_frags = result["total_resources"] + result["total_errors"]
+        progress_bar.update(prog_task, completed=file_size_bytes, fragments=total_frags)
 
     if stats:
-        total_resources = sum(counts.values())
-        total_errors = sum(resource_errors.values())
         typer.echo("\nResource Type Statistics:")
-        for r_type, count in sorted(counts.items()):
+        for r_type, count in sorted(result["counts"].items()):
             typer.echo(f"  {r_type}: {count}")
-        typer.echo(f"  Total: {total_resources}")
+        typer.echo(f"  Total: {result['total_resources']}")
 
-        if resource_errors or error_messages:
+        if result["resource_errors"] or result["error_messages"]:
             typer.echo("\nParsing Error Statistics:")
             typer.echo("  By Error Message:")
-            for msg, err_count in sorted(error_messages.items(), key=lambda x: (-x[1], x[0])):
+            for msg, err_count in sorted(result["error_messages"].items(), key=lambda x: (-x[1], x[0])):
                 typer.echo(f"    {msg}: {err_count}")
             typer.echo("  By Resource Type:")
-            for r_type, err_count in sorted(resource_errors.items()):
+            for r_type, err_count in sorted(result["resource_errors"].items()):
                 typer.echo(f"    {r_type}: {err_count}")
-            typer.echo(f"  Total Errors: {total_errors}")
+            typer.echo(f"  Total Errors: {result['total_errors']}")
 
-        file_size_bytes = xmlfile.stat().st_size
+        file_size_bytes = result["file_size_bytes"]
         if file_size_bytes < 1024:
             size_str = f"{file_size_bytes} B"
         elif file_size_bytes < 1024 * 1024:
@@ -388,17 +328,18 @@ def ddil324(
         else:
             size_str = f"{file_size_bytes / (1024 * 1024):.2f} MB ({file_size_bytes:,} bytes)"
 
-        res_per_sec = total_resources / elapsed_sec if elapsed_sec > 0 else 0
-        mb_per_sec = (file_size_bytes / (1024 * 1024)) / elapsed_sec if elapsed_sec > 0 else 0
+        elapsed_sec = result["elapsed_seconds"]
+        res_per_sec = result["processing_speed_resources_per_sec"]
+        mb_per_sec = result["processing_speed_mb_per_sec"]
+        total_attempted = result["total_resources"] + result["total_errors"]
+        success_pct = result["success_rate_percent"]
 
         typer.echo("\nPerformance Statistics:")
         typer.echo(f"  File size: {size_str}")
         typer.echo(f"  Elapsed time: {elapsed_sec:.3f} seconds")
         typer.echo(f"  Processing speed: {res_per_sec:,.1f} resources/sec ({mb_per_sec:.2f} MB/sec)")
-        if total_errors > 0 or total_resources > 0:
-            total_attempted = total_resources + total_errors
-            success_pct = (total_resources / total_attempted * 100) if total_attempted > 0 else 0
-            typer.echo(f"  Success rate: {total_resources:,} / {total_attempted:,} ({success_pct:.1f}%)")
+        if total_attempted > 0 or result["total_resources"] > 0:
+            typer.echo(f"  Success rate: {result['total_resources']:,} / {total_attempted:,} ({success_pct:.1f}%)")
 
 
 def main():

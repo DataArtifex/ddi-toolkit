@@ -21,11 +21,19 @@ Key Features & Crosswalk Differences Handled:
 Python API Usage
 ----------------
 
-Stream fragments from a DDI 3.3 XML file::
+Transform an entire DDI-Lifecycle 3.x document to DDI 4.0 (JSON or XML) programmatically::
 
    from dartfx.ddi import ddilifecycle
 
-   # Stream all fragments
+   # Transform to DDI 4.0 JSON with pretty-printing
+   stats = ddilifecycle.ddil324("my_study.ddi33.xml", format="json", pretty=True)
+   print(f"Transformed {stats['total_resources']} resources in {stats['elapsed_seconds']:.2f}s")
+
+   # Transform to DDI 4.0 XML (wrapped in FragmentInstance and Fragment)
+   stats_xml = ddilifecycle.ddil324("my_study.ddi33.xml", "my_study.ddi40.xml", format="xml", pretty=True)
+
+Stream fragments in memory from a DDI 3.3 XML file::
+
    for fragment in ddilifecycle.stream_ddil_fragments("my_study.ddi33.xml"):
        print(f"Fragment type: {type(fragment).__name__}, ID: {fragment.id}")
 

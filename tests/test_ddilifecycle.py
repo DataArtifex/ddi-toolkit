@@ -92,3 +92,37 @@ def test_stream_ddil_fragments_on_progress():
     assert total is not None
     assert total > 0
     assert last_bytes <= total
+
+
+def test_ddil324_utility_json(tmp_path):
+    xml_path = os.path.join(
+        data_dir(),
+        "lifecycle/metadataddi.cso.ie/cso.ie_f39bf88a-e677-48c9-9c94-0e4bd654aecb_33.ddi33.xml",
+    )
+    out_file = tmp_path / "output.json"
+    stats = ddilifecycle.ddil324(xml_path, out_file, format="json", limit=5, pretty=True)
+
+    assert stats["total_resources"] == 5
+    assert stats["format"] == "json"
+    assert stats["file_size_bytes"] > 0
+    assert stats["elapsed_seconds"] > 0
+    assert out_file.exists()
+    content = out_file.read_text(encoding="utf-8")
+    assert '"$type":' in content
+
+
+def test_ddil324_utility_xml(tmp_path):
+    xml_path = os.path.join(
+        data_dir(),
+        "lifecycle/metadataddi.cso.ie/cso.ie_f39bf88a-e677-48c9-9c94-0e4bd654aecb_33.ddi33.xml",
+    )
+    out_file = tmp_path / "output.xml"
+    stats = ddilifecycle.ddil324(xml_path, out_file, format="xml", limit=3, pretty=True)
+
+    assert stats["total_resources"] == 3
+    assert stats["format"] == "xml"
+    assert out_file.exists()
+    content = out_file.read_text(encoding="utf-8")
+    assert "<FragmentInstance" in content
+    assert "<Fragment" in content
+    assert "</Fragment>" in content

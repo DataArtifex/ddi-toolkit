@@ -29,12 +29,14 @@ DDI 3.3 to DDI 4.0 RC1 XML Crosswalk:
    Unknown attributes not mapped to child elements are cleaned before model deserialization.
 """
 
-from __future__ import annotations
-
+import json
 import logging
 import os
+import re
+import time
 import xml.etree.ElementTree as ET
-from collections.abc import Callable, Generator
+from collections import Counter
+from collections.abc import Callable, Generator, Iterable
 from decimal import Decimal
 from pathlib import Path
 from typing import IO, Any
@@ -384,7 +386,7 @@ class _ProgressFileReader:
 
 def stream_ddil_fragments(
     source: str | os.PathLike[str] | IO[bytes],
-    resource_types: list[str] | set[str] | None = None,
+    resource_types: Iterable[str] | str | None = None,
     on_error: Callable[[str, Exception], None] | None = None,
     on_progress: Callable[[int, int | None], None] | None = None,
 ) -> Generator[Any, None, None]:
@@ -471,3 +473,148 @@ def stream_ddil_fragments(
 # Aliases for explicit DDI 3.3 -> 4.0 crosswalk fragment streaming
 stream_ddil33_fragments = stream_ddil_fragments
 ddistream_ddil33_fragments = stream_ddil_fragments
+
+
+def ddil324(
+    input_file: str | os.PathLike[str] | IO[bytes],
+    output_file: str | os.PathLike[str] | IO[str] | None = None,
+    *,
+    format: str = "json",
+    resource_types: Iterable[str] | str | None = None,
+    limit: int = 0,
+    pretty: bool = False,
+    on_error: Callable[[str, Exception], None] | None = None,
+    on_progress: Callable[[int, int | None], None] | None = None,
+) -> dict[str, Any]:
+    """Transforms DDI-Lifecycle 3.x FragmentInstance XML documents into DDI 4.0 RC1 (JSON or XML).
+
+    Args:
+        input_file: Path to the DDI-Lifecycle 3.x XML file, or binary file-like object.
+        output_file: Path to output file, text file-like object, or None (auto-generates filename based on input_file).
+        format: Output format ('json' or 'xml'). Defaults to 'json'.
+        resource_types: Optional resource types to filter (repeatable or comma-separated string/iterable).
+        limit: Maximum number of fragments to write (default: 0 / unlimited).
+        pretty: Pretty-print formatted JSON or XML. Defaults to False.
+        on_error: Optional callback `(resource_type, exception)` invoked on parsing errors.
+        on_progress: Optional callback `(bytes_read, total_bytes)` invoked during streaming.
+
+    Returns:
+        Dictionary containing execution statistics (counts, errors, elapsed_seconds, speed, success rate).
+    """
+    format_lower = str(format).lower()
+    if format_lower not in ("json", "xml"):
+        raise ValueError(f"Unsupported format: '{format}'. Expected 'json' or 'xml'.")
+
+    output_target: str | os.PathLike[str] | IO[str]
+    if output_file is None:
+        if isinstance(input_file, (str, os.PathLike)):
+            input_path = Path(input_file)
+            target_ext = ".json" if format_lower == "json" else ".xml"
+            name = input_path.name
+
+            if re.search(r"\.ddi3\d*(?:\.\d+)?\.xml$", name, re.IGNORECASE):
+                out_name = re.sub(r"\.ddi3\d*(?:\.\d+)?\.xml$", f".ddi40{target_ext}", name, flags=re.IGNORECASE)
+            else:
+                out_name = input_path.with_suffix(target_ext).name
+
+            output_target = input_path.parent / out_name
+        else:
+            raise ValueError("output_file cannot be None when input_file is a file-like object")
+    else:
+        output_target = output_file
+
+    counts: Counter[str] = Counter()
+    resource_errors: Counter[str] = Counter()
+    error_messages: Counter[str] = Counter()
+    processed_count = 0
+    start_time = time.perf_counter()
+
+    file_size_bytes = (
+        os.path.getsize(input_file) if isinstance(input_file, (str, os.PathLike)) and os.path.exists(input_file) else 0
+    )
+
+    def _handle_error(r_type: str, exc: Exception) -> None:
+        resource_errors[r_type] += 1
+        error_messages[f"{r_type}: {exc}"] += 1
+        if on_error:
+            on_error(r_type, exc)
+
+    should_close = False
+    out_f: IO[str]
+    if isinstance(output_target, (str, os.PathLike)):
+        out_f = open(output_target, "w", encoding="utf-8")
+        should_close = True
+    else:
+        out_f = output_target
+
+    try:
+        if format_lower == "xml":
+            out_f.write('<?xml version="1.0" encoding="utf-8"?>\n')
+            out_f.write(f'<FragmentInstance xmlns="{TARGET_NAMESPACE}">\n')
+
+        for fragment in stream_ddil_fragments(
+            input_file,
+            resource_types=resource_types,
+            on_error=_handle_error,
+            on_progress=on_progress,
+        ):
+            r_type = type(fragment).__name__
+            counts[r_type] += 1
+            processed_count += 1
+
+            if limit <= 0 or processed_count <= limit:
+                if format_lower == "json":
+                    data = {"$type": r_type}
+                    data.update(fragment.model_dump(mode="json", exclude_none=True, exclude_defaults=True))
+                    if pretty:
+                        out_f.write(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
+                    else:
+                        out_f.write(json.dumps(data, ensure_ascii=False) + "\n")
+                elif format_lower == "xml":
+                    if hasattr(fragment, "to_element"):
+                        elem = fragment.to_element()
+                    else:
+                        elem = ET.Element(f"{{{TARGET_NAMESPACE}}}{r_type}")
+
+                    frag_elem = ET.Element(f"{{{TARGET_NAMESPACE}}}Fragment")
+                    frag_elem.append(elem)
+                    if pretty:
+                        ET.indent(frag_elem, space="  ", level=1)
+                        xml_str = ET.tostring(frag_elem, encoding="unicode")
+                        indented = "\n".join("  " + line if line.strip() else line for line in xml_str.split("\n"))
+                        out_f.write(indented + "\n")
+                    else:
+                        out_f.write(ET.tostring(frag_elem, encoding="unicode") + "\n")
+
+            if limit > 0 and processed_count >= limit:
+                break
+
+        if format_lower == "xml":
+            out_f.write("</FragmentInstance>\n")
+    finally:
+        if should_close:
+            out_f.close()
+
+    elapsed_sec = time.perf_counter() - start_time
+    total_resources = sum(counts.values())
+    total_errors = sum(resource_errors.values())
+    total_attempted = total_resources + total_errors
+    res_per_sec = total_resources / elapsed_sec if elapsed_sec > 0 else 0
+    mb_per_sec = (file_size_bytes / (1024 * 1024)) / elapsed_sec if elapsed_sec > 0 and file_size_bytes > 0 else 0
+    success_pct = (total_resources / total_attempted * 100) if total_attempted > 0 else 0
+
+    return {
+        "input_file": str(input_file) if isinstance(input_file, (str, os.PathLike)) else None,
+        "output_file": str(output_target) if isinstance(output_target, (str, os.PathLike)) else None,
+        "format": format_lower,
+        "counts": dict(counts),
+        "total_resources": total_resources,
+        "resource_errors": dict(resource_errors),
+        "error_messages": dict(error_messages),
+        "total_errors": total_errors,
+        "file_size_bytes": file_size_bytes,
+        "elapsed_seconds": elapsed_sec,
+        "processing_speed_resources_per_sec": res_per_sec,
+        "processing_speed_mb_per_sec": mb_per_sec,
+        "success_rate_percent": success_pct,
+    }
