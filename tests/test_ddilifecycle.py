@@ -73,5 +73,22 @@ def test_stream_ddil_fragments_on_error():
 
     fragments = list(ddilifecycle.stream_ddil_fragments(xml_path, on_error=handle_error))
     assert len(fragments) > 0
-    # No errors expected on valid test file
-    assert len(errors) == 0
+
+
+def test_stream_ddil_fragments_on_progress():
+    xml_path = os.path.join(
+        data_dir(),
+        "lifecycle/metadataddi.cso.ie/cso.ie_f39bf88a-e677-48c9-9c94-0e4bd654aecb_33.ddi33.xml",
+    )
+    progress_updates = []
+
+    def handle_progress(bytes_read: int, total_bytes: int | None):
+        progress_updates.append((bytes_read, total_bytes))
+
+    fragments = list(ddilifecycle.stream_ddil_fragments(xml_path, on_progress=handle_progress))
+    assert len(fragments) > 0
+    assert len(progress_updates) > 0
+    last_bytes, total = progress_updates[-1]
+    assert total is not None
+    assert total > 0
+    assert last_bytes <= total

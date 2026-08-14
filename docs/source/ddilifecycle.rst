@@ -48,22 +48,26 @@ Handle parsing errors cleanly with a custom error callback::
    ):
        pass
 
-CLI Usage (`dartfx-ddi ddil-stream`)
-------------------------------------
+CLI Usage (`dartfx-ddi ddil324`)
+--------------------------------
 
-The toolkit provides the ``ddil-stream`` command to convert DDI 3.3 XML documents to DDI 4.0 JSON or XML output directly from the terminal.
+The toolkit provides the ``ddil324`` command to convert DDI-Lifecycle 3.x FragmentInstance XML documents to DDI 4.0 JSON or XML output directly from the terminal (acting as a DDI 3.x to 4.0 upgrade).
 
-Stream to a default `.ddi40.json` file in the same directory::
+Convert to a default `.ddi40.json` file in the same directory::
 
-   dartfx-ddi ddil-stream my_study.ddi33.xml
+   dartfx-ddi ddil324 my_study.ddi33.xml
 
 Filter by resource type and pretty-print JSON::
 
-   dartfx-ddi ddil-stream my_study.ddi33.xml --filter QuestionItem --pretty
+   dartfx-ddi ddil324 my_study.ddi33.xml --filter "QuestionItem, Variable" --pretty
+
+Convert to formatted DDI 4.0 XML (wrapped in FragmentInstance and Fragment)::
+
+   dartfx-ddi ddil324 my_study.ddi33.xml --format xml --pretty
 
 Limit fragment count for quick inspection (default: 0 / unlimited)::
 
-   dartfx-ddi ddil-stream my_study.ddi33.xml --limit 10
+   dartfx-ddi ddil324 my_study.ddi33.xml --limit 10
 
 API Reference
 -------------

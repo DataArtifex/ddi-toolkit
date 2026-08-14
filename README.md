@@ -147,17 +147,17 @@ dartfx-ddi ddicvalidate my_codebook.xml --report-format json
 # Strict mode: escalate structural warnings (including invalid xs:ID/NCName) to errors
 dartfx-ddi ddicvalidate my_codebook.xml --strict
 
-# Stream DDI-Lifecycle 3.3 XML fragments to DDI 4.0 JSON (automatically names output my_study.ddi40.json)
-dartfx-ddi ddil-stream my_study.ddi33.xml
+# Convert DDI-Lifecycle 3.x FragmentInstance XML to DDI 4.0 JSON (automatically names output my_study.ddi40.json)
+dartfx-ddi ddil324 my_study.ddi33.xml
 
-# Filter output fragments by resource type (repeatable, case-insensitive)
-dartfx-ddi ddil-stream my_study.ddi33.xml --filter QuestionItem --filter Variable
+# Filter output fragments by resource type (repeatable or comma-separated, case-insensitive)
+dartfx-ddi ddil324 my_study.ddi33.xml --filter "QuestionItem, Variable"
 
-# Stream to pretty-printed indented JSON
-dartfx-ddi ddil-stream my_study.ddi33.xml --pretty
+# Convert to formatted DDI 4.0 XML (wrapped in FragmentInstance and Fragment elements)
+dartfx-ddi ddil324 my_study.ddi33.xml --format xml --pretty
 
 # Cap fragment output count (default: 0 / unlimited)
-dartfx-ddi ddil-stream my_study.ddi33.xml --limit 100
+dartfx-ddi ddil324 my_study.ddi33.xml --limit 100
 ```
 
 By default, `ddicvalidate` records invalid `@ID` values (non-NCName / non-`xs:ID`) as warnings.

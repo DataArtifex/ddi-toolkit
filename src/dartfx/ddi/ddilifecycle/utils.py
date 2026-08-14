@@ -351,10 +351,42 @@ def _prepare_element_for_model(element: ET.Element, cls: type[CogsValue]) -> Non
     _convert_attributes_to_elements(element, cls, root_lang)
 
 
+class _ProgressFileReader:
+    """Wrapper around a binary file object to report read progress in bytes."""
+
+    def __init__(self, file_obj: Any, total_bytes: int | None, on_progress: Callable[[int, int | None], None]):
+        self._file = file_obj
+        self._total_bytes = total_bytes
+        self._on_progress = on_progress
+        self._bytes_read = 0
+
+    def read(self, size: int = -1) -> bytes:
+        chunk = self._file.read(size)
+        if chunk:
+            self._bytes_read += len(chunk)
+            self._on_progress(self._bytes_read, self._total_bytes)
+        return chunk
+
+    def readinto(self, b: bytearray | memoryview) -> int:
+        n = self._file.readinto(b)
+        if n:
+            self._bytes_read += n
+            self._on_progress(self._bytes_read, self._total_bytes)
+        return n
+
+    def close(self) -> None:
+        if hasattr(self._file, "close"):
+            self._file.close()
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._file, name)
+
+
 def stream_ddil_fragments(
     source: str | os.PathLike[str] | IO[bytes],
     resource_types: list[str] | set[str] | None = None,
     on_error: Callable[[str, Exception], None] | None = None,
+    on_progress: Callable[[int, int | None], None] | None = None,
 ) -> Generator[Any, None, None]:
     """Streams a DDI-L XML file holding FragmentInstance -> Fragment elements,
 
@@ -365,6 +397,7 @@ def stream_ddil_fragments(
         resource_types: Optional list or set of resource types (e.g. ['Concept', 'Category'])
                         to parse and yield. If None, all supported resource types are yielded.
         on_error: Optional callback `(resource_type, exception)` invoked when a fragment fails to parse.
+        on_progress: Optional callback `(bytes_read, total_bytes)` invoked during streaming.
 
     Yields:
         Parsed Pydantic instances from model_4_0_rc1.
@@ -382,11 +415,17 @@ def stream_ddil_fragments(
                             filter_set.add(item.strip().lower())
 
     # Handle file path opening in binary mode to ensure correct encoding parsing
-    file_obj: Any
+    raw_file_obj: Any
+    total_bytes: int | None = None
     if isinstance(source, (str, Path)):
-        file_obj = open(source, "rb")
+        total_bytes = os.path.getsize(source)
+        raw_file_obj = open(source, "rb")
     else:
-        file_obj = source
+        raw_file_obj = source
+
+    file_obj: Any = (
+        _ProgressFileReader(raw_file_obj, total_bytes, on_progress) if on_progress is not None else raw_file_obj
+    )
 
     try:
         context = ET.iterparse(file_obj, events=("start", "end"))
@@ -411,13 +450,13 @@ def stream_ddil_fragments(
                                 if on_error:
                                     on_error(local_tag, e)
                                 if logger.isEnabledFor(logging.DEBUG):
-                                    logger.error(
+                                    logger.debug(
                                         "Error parsing fragment of type %s: %s",
                                         local_tag,
                                         e,
                                         exc_info=True,
                                     )
-                                else:
+                                elif not on_error:
                                     logger.error("Error parsing fragment of type %s: %s", local_tag, e)
 
     except ET.ParseError as pe:
