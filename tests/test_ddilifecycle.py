@@ -126,3 +126,62 @@ def test_ddil324_utility_xml(tmp_path):
     assert "<FragmentInstance" in content
     assert "<Fragment" in content
     assert "</Fragment>" in content
+
+
+def test_stream_ddil_fragments_bibliographic_name(tmp_path):
+    input_xml = tmp_path / "study_creator.ddi33.xml"
+    input_xml.write_text(
+        '<FragmentInstance xmlns="ddi:instance:3_3">'
+        '<Fragment xmlns="ddi:instance:3_3">'
+        '<StudyUnit xmlns="ddi:studyunit:3_3">'
+        '<URN xmlns="ddi:reusable:3_3">urn:ddi:ex:su1:1</URN>'
+        '<Agency xmlns="ddi:reusable:3_3">ex</Agency>'
+        '<ID xmlns="ddi:reusable:3_3">su1</ID>'
+        '<Version xmlns="ddi:reusable:3_3">1</Version>'
+        '<Citation xmlns="ddi:reusable:3_3">'
+        '<Title><String xmlns="ddi:reusable:3_3" xml:lang="en">Sample Study</String></Title>'
+        "<Creator>"
+        "<CreatorName>"
+        '<String xmlns="ddi:reusable:3_3" xml:lang="en-GB">Professor Elaine Dennison</String>'
+        "</CreatorName>"
+        "</Creator>"
+        "<Contributor>"
+        "<ContributorName>"
+        '<String xmlns="ddi:reusable:3_3" xml:lang="en-GB">Dr. Jane Doe</String>'
+        "</ContributorName>"
+        "</Contributor>"
+        "<Publisher>"
+        "<PublisherName>"
+        '<String xmlns="ddi:reusable:3_3" xml:lang="en">University Press</String>'
+        "</PublisherName>"
+        "</Publisher>"
+        "</Citation>"
+        "</StudyUnit>"
+        "</Fragment>"
+        "</FragmentInstance>",
+        encoding="utf-8",
+    )
+
+    fragments = list(ddilifecycle.stream_ddil_fragments(input_xml))
+    assert len(fragments) == 1
+    su = fragments[0]
+    assert isinstance(su, model.StudyUnit)
+    assert su.citation is not None
+    assert len(su.citation.creator) == 1
+    creator = su.citation.creator[0]
+    assert creator.creator_name is not None
+    assert len(creator.creator_name.name) == 1
+    assert creator.creator_name.name[0].value == "Professor Elaine Dennison"
+    assert creator.creator_name.name[0].language == "en-GB"
+
+    assert len(su.citation.contributor) == 1
+    contributor = su.citation.contributor[0]
+    assert contributor.contributor_name is not None
+    assert len(contributor.contributor_name.name) == 1
+    assert contributor.contributor_name.name[0].value == "Dr. Jane Doe"
+
+    assert len(su.citation.publisher) == 1
+    publisher = su.citation.publisher[0]
+    assert publisher.publisher_name is not None
+    assert len(publisher.publisher_name.name) == 1
+    assert publisher.publisher_name.name[0].value == "University Press"

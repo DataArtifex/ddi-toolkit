@@ -198,11 +198,15 @@ def _convert_attributes_to_elements(element: ET.Element, cls: type[CogsValue], c
     for child in element:
         child_local = child.tag.rsplit("}", 1)[-1]
 
-        # 1. Remap String to MultilingualStringValue if appropriate
+        # 1. Remap String to MultilingualStringValue or Name if appropriate
         if child_local == "String" and "String" not in by_wire and "MultilingualStringValue" in by_wire:
             ns = child.tag.rsplit("}", 1)[0] + "}" if "}" in child.tag else ""
             child.tag = f"{ns}MultilingualStringValue"
             child_local = "MultilingualStringValue"
+        elif child_local == "String" and "String" not in by_wire and "Name" in by_wire:
+            ns = child.tag.rsplit("}", 1)[0] + "}" if "}" in child.tag else ""
+            child.tag = f"{ns}Name"
+            child_local = "Name"
 
         if child_local not in by_wire and child_local in XML_SUBSTITUTIONS:
             mapped_local, xsi_type = XML_SUBSTITUTIONS[child_local]
