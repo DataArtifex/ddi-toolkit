@@ -20,11 +20,7 @@ def test_stream_ddil_fragments_all():
     question_construct = None
 
     for frag in ddilifecycle.stream_ddil_fragments(xml_path):
-        if (
-            concept is None
-            and isinstance(frag, model.Concept)
-            and frag.id == "70e54c52-883c-44dc-afe6-0224db77c592"
-        ):
+        if concept is None and isinstance(frag, model.Concept) and frag.id == "70e54c52-883c-44dc-afe6-0224db77c592":
             concept = frag
         elif category is None and isinstance(frag, model.Category):
             category = frag
