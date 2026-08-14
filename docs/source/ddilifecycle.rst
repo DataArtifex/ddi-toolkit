@@ -8,15 +8,47 @@ Overview
 
 DDI-Lifecycle documents are often large XML instances containing structured metadata fragments (such as ``QuestionItem``, ``Variable``, ``Category``, ``CodeList``, etc.).
 
-The ``ddilifecycle`` subpackage uses XML element-by-element streaming to convert fragments without loading an entire multi-gigabyte XML tree into memory.
+The ``ddilifecycle`` subpackage uses XML element-by-element streaming (via ``xml.etree.ElementTree.iterparse``) to convert fragments on-the-fly without loading an entire multi-gigabyte XML tree into memory.
 
-Key Features & Crosswalk Differences Handled:
+DDI 3.3 to 4.0 Crosswalk & Adjustment Reference
+-----------------------------------------------
 
-1. **Namespace Mapping**: DDI 3.3 XML documents use multiple versioned namespaces (``ddi:instance:3_3``, ``ddi:reusable:3_3``, ``ddi:datacollection:3_3``). The parser recursively rewrites element tags to the target namespace ``https://ddialliance.org/ddi``.
-2. **Substitution Group Mapping**: DDI 3.3 substitution heads (such as ``<NumericRepresentation>`` or ``<LiteralText>``) are mapped to abstract DDI 4.0 base elements (e.g. ``<ValueRepresentation>`` or ``<TextContent>``) with explicit ``xsi:type`` attributes.
-3. **URN Injection**: DDI 3.3 reference objects lacking ``<URN>`` children have URNs automatically generated from their ``Agency``, ``ID``, and ``Version``.
-4. **Attribute-to-Element Promotion**: Attributes on DDI 3.3 elements (e.g. ``isCharacteristic``) are matched against DDI 4.0 class fields and converted to child elements.
-5. **StringValue & Type Wrapping**: Text inside numeric/statistic elements (e.g. ``StatisticDouble``) is automatically wrapped into ``<DoubleValue>`` or ``<DecimalValue>``.
+Under the hood, ``stream_ddil_fragments`` normalizes differences between DDI-Lifecycle 3.3 and DDI 4.0 RC1 / COGS models before deserializing into Pydantic model instances. The adjustments include:
+
+.. list-table::
+   :widths: 22 28 50
+   :header-rows: 1
+
+   * - Category
+     - DDI 3.3 Pattern
+     - DDI 4.0 / Toolkit Adjustment
+   * - **Namespace Unification**
+     - Modular versioned namespaces (``ddi:instance:3_3``, ``ddi:reusable:3_3``, ``ddi:datacollection:3_3``, etc.)
+     - Recursively mapped to the unified DDI 4.0 namespace: ``https://ddialliance.org/ddi``.
+   * - **Interviewer Instructions**
+     - ``<InterviewerInstructionReference>`` placed directly inside ``<QuestionItem>``, ``<QuestionGrid>``, ``<QuestionBlock>``, or ``<QuestionConstruct>``
+     - Automatically wrapped inside a parent ``<InterviewerInstructionAttachment>`` element with child ``interviewer_instruction_reference``.
+   * - **Bibliographic Names**
+     - ``<CreatorName>``, ``<ContributorName>``, ``<PublisherName>`` containing ``<r:String xml:lang="...">``
+     - Child ``<String>`` is remapped to ``<Name>`` on ``BibliographicNameType`` models (populating ``name: list[LangString]``).
+   * - **Substitution Groups**
+     - Explicit substitution heads (e.g. ``<CodeDomain>``, ``<NumericRepresentation>``, ``<LiteralText>``)
+     - Remapped to the abstract base element (e.g. ``<ResponseDomain>``, ``<ValueRepresentation>``, ``<TextContent>``) annotated with ``xsi:type="ddi:TypeName"``.
+   * - **Multilingual & Dynamic Text**
+     - Nested ``<r:String>`` or ``<d:Content>`` wrappers with ``xml:lang``
+     - Converted directly to ``LangString`` or ``MultilingualStringValue`` models, preserving and propagating language tags.
+   * - **Primitive Value Wrapping**
+     - Simple text directly inside complex types (e.g. ``<StatisticDouble>794</StatisticDouble>``, ``<UserID>...``)
+     - Element text wrapped into the corresponding typed sub-element (e.g. ``<DoubleValue>794</DoubleValue>`` or ``<StringValue>``).
+   * - **Attribute-to-Element Promotion**
+     - Schema flags expressed as XML attributes (e.g. ``@isCharacteristic``, ``@isOrdered``, ``@isUniversallyUnique``)
+     - Matching attributes are converted to child XML elements matching Pydantic class fields.
+   * - **Reference URN Synthesis**
+     - References containing ``<Agency>``, ``<ID>``, and ``<Version>`` without an explicit ``<URN>``
+     - Synthesizes a canonical URN (``urn:ddi:<Agency>:<ID>:<Version>``) to ensure reference resolution succeeds.
+   * - **Strict Attribute Cleanup**
+     - Non-schema XML attributes (e.g. schemaLocations, unused prefixes)
+     - Stripped during element normalization to prevent Pydantic extra-attribute errors.
 
 Python API Usage
 ----------------

@@ -110,9 +110,30 @@ For introspecting the DDI-CDI specification itself::
    # Search for classes
    variable_classes = cdi_spec.search_classes("variable")
 
+DDI-Lifecycle & DDI 4.0 Streaming
+---------------------------------
+
+Stream DDI-Lifecycle 3.3 fragments crosswalked directly into DDI 4.0 RC1 Pydantic models::
+
+   from dartfx.ddi import ddilifecycle
+
+   # 1. Transform whole document to DDI 4.0 JSON
+   stats = ddilifecycle.ddil324("my_study.ddi33.xml", format="json", pretty=True)
+
+   # 2. Stream individual fragments
+   for fragment in ddilifecycle.stream_ddil_fragments("my_study.ddi33.xml", resource_types=["QuestionItem"]):
+       print(f"Question ID: {fragment.id}")
+
+CLI transformation:
+
+.. code-block:: bash
+
+   dartfx-ddi ddil324 my_study.ddi33.xml --filter "QuestionItem, Variable" --pretty
+
 Next Steps
 ----------
 
 * Learn about the core :doc:`ddicdi` implementation.
 * Explore the :doc:`ddicodebook` API reference.
+* Learn about :doc:`ddilifecycle` fragment streaming and DDI 4.0 models.
 * See :doc:`examples` for more detailed use cases.

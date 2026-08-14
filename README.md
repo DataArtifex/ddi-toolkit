@@ -163,12 +163,16 @@ dartfx-ddi ddil324 my_study.ddi33.xml --limit 100
 By default, `ddicvalidate` records invalid `@ID` values (non-NCName / non-`xs:ID`) as warnings.
 Use `--strict` to treat those warnings as validation errors.
 
-### DDI-Lifecycle Fragment Streaming in Python
+### DDI-Lifecycle Processing & Streaming in Python
 
 ```python
 from dartfx.ddi import ddilifecycle
 
-# Stream all DDI 3.3 fragments crosswalked to DDI 4.0 RC1 Pydantic models
+# Transform an entire DDI 3.x document to DDI 4.0 JSON or XML
+stats = ddilifecycle.ddil324("my_study.ddi33.xml", format="json", pretty=True)
+print(f"Processed {stats['total_resources']} resources in {stats['elapsed_seconds']:.2f}s")
+
+# Stream DDI 3.3 fragments crosswalked to DDI 4.0 RC1 Pydantic models
 for fragment in ddilifecycle.stream_ddil_fragments("my_study.ddi33.xml", resource_types=["QuestionItem"]):
     print(f"Type: {type(fragment).__name__}, ID: {fragment.id}, Agency: {fragment.agency}")
 ```

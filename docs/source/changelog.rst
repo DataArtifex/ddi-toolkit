@@ -10,6 +10,7 @@ DDI-Lifecycle Fragment Streaming & Polymorphic Serialization
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Added ``ddilifecycle`` subpackage for streaming and parsing DDI-Lifecycle 3.3 XML documents fragment-by-fragment into DDI 4.0 RC1 Pydantic models.
+- Added Python utility function ``ddilifecycle.ddil324(...)`` for programmatic document-level transformation from DDI-Lifecycle 3.x FragmentInstance XML to DDI 4.0 JSON or XML with statistics collection.
 - Added CLI subcommand ``dartfx-ddi ddil324`` to transform DDI-Lifecycle 3.x FragmentInstance XML documents to DDI 4.0 (JSON/XML) with automatic output filename mapping (e.g. ``.ddi33.xml`` -> ``.ddi40.json``), live progress bar (``--progress`` / ``--no-progress``), pretty-printing (``--pretty`` / ``-p``), resource filtering (``--filter``), performance statistics (``--stats`` / ``--no-stats``), error statistics grouped by error type and resource type, and default unlimited streaming.
 - Added ``on_error`` and ``on_progress`` callback hooks to ``stream_ddil_fragments`` for real-time progress and non-spammy error tracking.
 - Annotated polymorphic substitution fields in COGS PythonPydantic publisher and generated models (``model_4_0_rc1.py``) with ``SerializeAsAny`` to preserve subclass properties (``LiteralTextType.text``, ``CodeDomainType.code_list_reference``, etc.) in JSON output.
