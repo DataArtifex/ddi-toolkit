@@ -276,19 +276,19 @@ def ddil324(
         TaskProgressColumn(),
         DownloadColumn(),
         TransferSpeedColumn(),
-        TextColumn("• [green]{task.fields[fragments]:,} frags"),
+        TextColumn("• [red]{task.fields[errors]:,} errors"),
         TimeRemainingColumn(),
         TimeElapsedColumn(),
         disable=not progress,
     ) as progress_bar:
-        prog_task = progress_bar.add_task("Streaming", total=file_size_bytes, fragments=0)
+        prog_task = progress_bar.add_task("Streaming", total=file_size_bytes, errors=0)
 
         def handle_progress(bytes_read: int, _total: int | None) -> None:
-            progress_bar.update(prog_task, completed=bytes_read, fragments=fragment_counter[0])
+            progress_bar.update(prog_task, completed=bytes_read, errors=fragment_counter[0])
 
         def handle_error(_r_type: str, _exc: Exception) -> None:
             fragment_counter[0] += 1
-            progress_bar.update(prog_task, fragments=fragment_counter[0])
+            progress_bar.update(prog_task, errors=fragment_counter[0])
 
         result = lc_utils.ddil324(
             input_file=xmlfile,
