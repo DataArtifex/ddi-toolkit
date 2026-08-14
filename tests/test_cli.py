@@ -26,9 +26,10 @@ def test_cli_stream_default(tmp_path):
     assert result.exit_code == 0
     content = out_file.read_text(encoding="utf-8").strip()
     data = json.loads(content)
-    assert isinstance(data, list)
-    assert len(data) == 5
-    assert '"id":' in content
+    assert "items" in data
+    assert isinstance(data["items"], list)
+    assert len(data["items"]) == 5
+    assert '"ID":' in content
 
 
 def test_cli_stream_filter(tmp_path):
@@ -60,8 +61,8 @@ def test_cli_stream_format_xml(tmp_path):
     result = runner.invoke(app, ["ddil324", xml_path, "--output", str(out_file), "--limit", "2", "--format", "xml"])
     assert result.exit_code == 0
     content = out_file.read_text(encoding="utf-8")
-    assert "<" in content
-    assert ">" in content
+    assert "<ItemContainer" in content
+    assert "</ItemContainer>" in content
 
 
 def test_cli_stream_stats(tmp_path):
@@ -171,6 +172,7 @@ def test_cli_stream_unlimited_by_default(tmp_path):
     assert result.exit_code == 0
     content = out_file.read_text(encoding="utf-8").strip()
     data = json.loads(content)
-    assert isinstance(data, list)
+    assert "items" in data
+    assert isinstance(data["items"], list)
     # File has 1833 fragments total
-    assert len(data) > 100
+    assert len(data["items"]) > 100

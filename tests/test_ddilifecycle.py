@@ -1,5 +1,6 @@
 import json
 import os
+import xml.etree.ElementTree as ET
 
 from dartfx.ddi import ddilifecycle
 from dartfx.ddi.ddilifecycle import model
@@ -115,9 +116,13 @@ def test_ddil324_utility_json(tmp_path):
     assert out_file.exists()
     content = out_file.read_text(encoding="utf-8")
     data = json.loads(content)
-    assert isinstance(data, list)
-    assert len(data) == 5
-    assert all("$type" in item for item in data)
+    assert "items" in data
+    assert isinstance(data["items"], list)
+    assert len(data["items"]) == 5
+    assert all("$type" in item for item in data["items"])
+
+    container = model.ItemContainer.load_json(out_file)
+    assert len(container.items) == 5
 
 
 def test_ddil324_utility_xml(tmp_path):
@@ -132,9 +137,12 @@ def test_ddil324_utility_xml(tmp_path):
     assert stats["format"] == "xml"
     assert out_file.exists()
     content = out_file.read_text(encoding="utf-8")
-    assert "<FragmentInstance" in content
-    assert "<Fragment" in content
-    assert "</Fragment>" in content
+    assert "<ItemContainer" in content
+    assert "</ItemContainer>" in content
+
+    tree = ET.parse(out_file)
+    container = model.ItemContainer.from_element(tree.getroot())
+    assert len(container.items) == 3
 
 
 def test_stream_ddil_fragments_bibliographic_name(tmp_path):

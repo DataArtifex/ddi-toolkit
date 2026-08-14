@@ -29,7 +29,6 @@ DDI 3.3 to DDI 4.0 RC1 XML Crosswalk:
    Unknown attributes not mapped to child elements are cleaned before model deserialization.
 """
 
-import json
 import logging
 import os
 import re
@@ -49,8 +48,14 @@ from .model_4_0_rc1 import (
     XML_NAMESPACE,
     XSI_NAMESPACE,
     CogsValue,
+    _Context,
     _field_by_wire_name,
+    _json_dump_value,
 )
+
+ET.register_namespace("", TARGET_NAMESPACE)
+ET.register_namespace("xsi", XSI_NAMESPACE)
+ET.register_namespace("xml", XML_NAMESPACE)
 
 # Monkeypatch _deserialize_simple_xml to wrap Decimal values in CogsDecimal.
 # The auto-generated model's validate_assignment expects CogsDecimal instances for decimal fields.
@@ -565,12 +570,13 @@ def ddil324(
         out_f = output_target
 
     try:
+        context = _Context()
         first_json = True
         if format_lower == "xml":
             out_f.write('<?xml version="1.0" encoding="utf-8"?>\n')
-            out_f.write(f'<FragmentInstance xmlns="{TARGET_NAMESPACE}">\n')
+            out_f.write(f'<ItemContainer xmlns="{TARGET_NAMESPACE}">\n')
         elif format_lower == "json":
-            out_f.write("[\n" if pretty else "[")
+            out_f.write('{\n  "items": [\n' if pretty else '{"items":[')
 
         for fragment in stream_ddil_fragments(
             input_file,
@@ -584,45 +590,50 @@ def ddil324(
 
             if limit <= 0 or processed_count <= limit:
                 if format_lower == "json":
-                    data = {"$type": r_type}
-                    data.update(fragment.model_dump(mode="json", exclude_none=True, exclude_defaults=True))
+                    if hasattr(fragment, "_to_dict_with_context"):
+                        data = fragment._to_dict_with_context(context)
+                    else:
+                        data = {"$type": r_type}
+                        data.update(
+                            fragment.model_dump(mode="json", by_alias=True, exclude_none=True, exclude_defaults=True)
+                        )
                     if not first_json:
                         out_f.write(",\n" if pretty else ",")
                     else:
                         first_json = False
 
                     if pretty:
-                        formatted = json.dumps(data, indent=2, ensure_ascii=False)
-                        indented = "\n".join("  " + line for line in formatted.splitlines())
+                        formatted = _json_dump_value(data, indent=2)
+                        indented = "\n".join("    " + line for line in formatted.splitlines())
                         out_f.write(indented)
                     else:
-                        out_f.write(json.dumps(data, ensure_ascii=False))
+                        out_f.write(_json_dump_value(data))
                 elif format_lower == "xml":
-                    if hasattr(fragment, "to_element"):
+                    if hasattr(fragment, "_to_element_with_context"):
+                        elem = fragment._to_element_with_context(r_type, context)
+                    elif hasattr(fragment, "to_element"):
                         elem = fragment.to_element()
                     else:
                         elem = ET.Element(f"{{{TARGET_NAMESPACE}}}{r_type}")
 
-                    frag_elem = ET.Element(f"{{{TARGET_NAMESPACE}}}Fragment")
-                    frag_elem.append(elem)
                     if pretty:
-                        ET.indent(frag_elem, space="  ", level=1)
-                        xml_str = ET.tostring(frag_elem, encoding="unicode")
+                        ET.indent(elem, space="  ", level=1)
+                        xml_str = ET.tostring(elem, encoding="unicode")
                         indented = "\n".join("  " + line if line.strip() else line for line in xml_str.split("\n"))
                         out_f.write(indented + "\n")
                     else:
-                        out_f.write(ET.tostring(frag_elem, encoding="unicode") + "\n")
+                        out_f.write(ET.tostring(elem, encoding="unicode") + "\n")
 
             if limit > 0 and processed_count >= limit:
                 break
 
         if format_lower == "xml":
-            out_f.write("</FragmentInstance>\n")
+            out_f.write("</ItemContainer>\n")
         elif format_lower == "json":
             if first_json:
-                out_f.write("]\n")
+                out_f.write("  ]\n}\n" if pretty else "]}\n")
             else:
-                out_f.write("\n]\n" if pretty else "]\n")
+                out_f.write("\n  ]\n}\n" if pretty else "]}\n")
     finally:
         if should_close:
             out_f.close()

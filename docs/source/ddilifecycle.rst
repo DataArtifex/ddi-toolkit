@@ -61,7 +61,7 @@ Transform an entire DDI-Lifecycle 3.x document to DDI 4.0 (JSON or XML) programm
    stats = ddilifecycle.ddil324("my_study.ddi33.xml", format="json", pretty=True)
    print(f"Transformed {stats['total_resources']} resources in {stats['elapsed_seconds']:.2f}s")
 
-   # Transform to DDI 4.0 XML (wrapped in FragmentInstance and Fragment)
+   # Transform to DDI 4.0 XML (wrapped in ItemContainer)
    stats_xml = ddilifecycle.ddil324("my_study.ddi33.xml", "my_study.ddi40.xml", format="xml", pretty=True)
 
 Stream fragments in memory from a DDI 3.3 XML file::
@@ -101,7 +101,7 @@ Filter by resource type and pretty-print JSON::
 
    dartfx-ddi ddil324 my_study.ddi33.xml --filter "QuestionItem, Variable" --pretty
 
-Convert to formatted DDI 4.0 XML (wrapped in FragmentInstance and Fragment)::
+Convert to formatted DDI 4.0 XML (wrapped in ItemContainer)::
 
    dartfx-ddi ddil324 my_study.ddi33.xml --format xml --pretty
 

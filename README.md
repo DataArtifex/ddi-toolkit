@@ -153,7 +153,7 @@ dartfx-ddi ddil324 my_study.ddi33.xml
 # Filter output fragments by resource type (repeatable or comma-separated, case-insensitive)
 dartfx-ddi ddil324 my_study.ddi33.xml --filter "QuestionItem, Variable"
 
-# Convert to formatted DDI 4.0 XML (wrapped in FragmentInstance and Fragment elements)
+# Convert to formatted DDI 4.0 XML (wrapped in ItemContainer)
 dartfx-ddi ddil324 my_study.ddi33.xml --format xml --pretty
 
 # Cap fragment output count (default: 0 / unlimited)
