@@ -15,20 +15,30 @@ def test_stream_ddil_fragments_all():
         "lifecycle/metadataddi.cso.ie/cso.ie_f39bf88a-e677-48c9-9c94-0e4bd654aecb_33.ddi33.xml",
     )
 
-    fragments = list(ddilifecycle.stream_ddil_fragments(xml_path))
+    concept = None
+    category = None
+    question_construct = None
 
-    assert len(fragments) > 0
-    # Let's check that we have instances of expected types
-    concepts = [f for f in fragments if isinstance(f, model.Concept)]
-    categories = [f for f in fragments if isinstance(f, model.Category)]
-    question_constructs = [f for f in fragments if isinstance(f, model.QuestionConstruct)]
+    for frag in ddilifecycle.stream_ddil_fragments(xml_path):
+        if (
+            concept is None
+            and isinstance(frag, model.Concept)
+            and frag.id == "70e54c52-883c-44dc-afe6-0224db77c592"
+        ):
+            concept = frag
+        elif category is None and isinstance(frag, model.Category):
+            category = frag
+        elif question_construct is None and isinstance(frag, model.QuestionConstruct):
+            question_construct = frag
 
-    assert len(concepts) > 0
-    assert len(categories) > 0
-    assert len(question_constructs) > 0
+        if concept is not None and category is not None and question_construct is not None:
+            break
+
+    assert concept is not None
+    assert category is not None
+    assert question_construct is not None
 
     # Verify Concept properties
-    concept = concepts[0]
     assert concept.id is not None
     assert concept.agency is not None
     assert concept.version is not None
@@ -37,7 +47,6 @@ def test_stream_ddil_fragments_all():
     assert concept.is_characteristic is False
 
     # Verify Category properties
-    category = categories[0]
     assert category.id is not None
     assert category.urn is not None
 
