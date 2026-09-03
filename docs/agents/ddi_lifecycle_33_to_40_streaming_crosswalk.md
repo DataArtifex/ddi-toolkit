@@ -29,6 +29,7 @@ The streaming reader `stream_ddil_fragments` (and `stream_ddil33_fragments`) uti
 | **Scalar Text Wrapping** | Primitive text inside complex value containers (e.g. `<Low>1</Low>`, `<Keyword>Text</Keyword>`) | Explicit child value wrapper elements (`<DecimalValue>`, `<StringValue>`, `<MultilingualStringValue>`) | Automatically wraps element text in `<DecimalValue>`, `<StringValue>`, `<MultilingualStringValue>`, etc. if present in the target class `by_wire` definition. |
 | **Reference Type Renames** | Legacy `<TypeOfObject>` values (e.g. `DataCollectionMethodology`) | Renamed model classes (e.g. `Methodology`, or `ClassNameType`) | `_ensure_urn_on_reference` maps legacy item type names (`DataCollectionMethodology` -> `Methodology`) and handles missing `Type` suffixes. |
 | **Assignability Mismatches** | `CreatorReference` or `ContributorReference` referencing `Organization` | `CreatorReference` typed strictly as `Individual` | Rewrites `<TypeOfObject>` from `Organization` to `Individual` (or vice-versa) when required by strict model field types. |
+| **Dublin Core Citations** | Dublin Core 1.1 / DCMI Terms elements (`<dc:coverage>`, `<dc:relation>`, `<dcterms:abstract>`) in `r:CitationType` | Renamed model properties (`DublinCoreCoverage`, `DublinCoreRelation`, `DublinCoreAbstract`, etc.) | `_map_namespaces` recognizes `http://purl.org/dc/` namespaces and maps local names to `DublinCore*` wire names. |
 
 ---
 

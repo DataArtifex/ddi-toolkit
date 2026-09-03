@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ddi:FragmentInstance xmlns:r="ddi:reusable:3_3" xmlns:s="ddi:studyunit:3_3" xmlns:pi="ddi:physicalinstance:3_3" xmlns:ddi="ddi:instance:3_3" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+  <ddi:TopLevelReference>
+    <r:Agency>example.org</r:Agency>
+    <r:ID>study_unit_001</r:ID>
+    <r:Version>1</r:Version>
+    <r:TypeOfObject>StudyUnit</r:TypeOfObject>
+  </ddi:TopLevelReference>
+
+  <!-- Fragment 1: StudyUnit with Dublin Core Citation elements -->
+  <Fragment xmlns="ddi:instance:3_3">
+    <s:StudyUnit isUniversallyUnique="true" versionDate="2026-01-15T00:00:00Z">
+      <r:URN>urn:ddi:example.org:study_unit_001:1</r:URN>
+      <r:Agency>example.org</r:Agency>
+      <r:ID>study_unit_001</r:ID>
+      <r:Version>1</r:Version>
+      <r:Citation>
+        <r:Title>
+          <r:String xml:lang="en">Sample Longitudinal Social Survey</r:String>
+        </r:Title>
+        <r:AlternateTitle>
+          <r:String xml:lang="en">SLSS Wave 1</r:String>
+        </r:AlternateTitle>
+        <r:Creator>
+          <r:CreatorName>
+            <r:String xml:lang="en">Principal Investigator One</r:String>
+          </r:CreatorName>
+        </r:Creator>
+        <r:Publisher>
+          <r:PublisherName>
+            <r:String xml:lang="en">Open Research Data Archive</r:String>
+          </r:PublisherName>
+        </r:Publisher>
+        <r:PublicationDate>
+          <r:SimpleDate>2026-01-15T00:00:00Z</r:SimpleDate>
+        </r:PublicationDate>
+        <r:InternationalIdentifier>
+          <r:IdentifierContent>https://doi.org/10.5555/slss-w1</r:IdentifierContent>
+          <r:ManagingAgency>DOI</r:ManagingAgency>
+        </r:InternationalIdentifier>
+        <relation xml:lang="en" xmlns="http://purl.org/dc/elements/1.1/">https://www.example.org/surveys/slss</relation>
+        <abstract xml:lang="en" xmlns="http://purl.org/dc/terms/">A cross-national comparative survey investigating public attitudes.</abstract>
+      </r:Citation>
+      <r:Abstract>
+        <r:Content xml:lang="en">Comprehensive metadata and survey methodology documentation for the sample study.</r:Content>
+      </r:Abstract>
+      <r:UniverseReference>
+        <r:Agency>example.org</r:Agency>
+        <r:ID>universe_adult_population</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>Universe</r:TypeOfObject>
+      </r:UniverseReference>
+    </s:StudyUnit>
+  </Fragment>
+
+  <!-- Fragment 2: PhysicalInstance with Dublin Core Citation elements -->
+  <Fragment xmlns="ddi:instance:3_3">
+    <pi:PhysicalInstance isUniversallyUnique="true" versionDate="2026-01-20T00:00:00Z">
+      <r:URN>urn:ddi:example.org:physical_instance_001:1</r:URN>
+      <r:Agency>example.org</r:Agency>
+      <r:ID>physical_instance_001</r:ID>
+      <r:Version>1</r:Version>
+      <r:Citation>
+        <r:Title>
+          <r:String xml:lang="en">SLSS_W1_Datafile</r:String>
+        </r:Title>
+        <r:AlternateTitle>
+          <r:String xml:lang="en">Sample Longitudinal Social Survey Wave 1 Dataset edition 1.0</r:String>
+        </r:AlternateTitle>
+        <r:InternationalIdentifier>
+          <r:IdentifierContent>https://doi.org/10.5555/slss-w1-data</r:IdentifierContent>
+          <r:ManagingAgency>DOI</r:ManagingAgency>
+        </r:InternationalIdentifier>
+        <coverage xml:lang="en" xmlns="http://purl.org/dc/elements/1.1/">Wave 1</coverage>
+        <spatial xml:lang="en" xmlns="http://purl.org/dc/terms/">Europe</spatial>
+        <license xml:lang="en" xmlns="http://purl.org/dc/terms/">CC-BY-4.0</license>
+      </r:Citation>
+      <r:DataRelationshipReference>
+        <r:Agency>example.org</r:Agency>
+        <r:ID>dr_sample_001</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>DataRelationship</r:TypeOfObject>
+      </r:DataRelationshipReference>
+    </pi:PhysicalInstance>
+  </Fragment>
+</ddi:FragmentInstance>

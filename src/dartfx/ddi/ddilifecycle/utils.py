@@ -195,10 +195,94 @@ XML_SUBSTITUTIONS = {
 }
 
 
+# Dublin Core namespaces used in DDI 3.x instances
+DUBLIN_CORE_NAMESPACES = {
+    "http://purl.org/dc/elements/1.1/",
+    "http://purl.org/dc/elements/1.1",
+    "http://purl.org/dc/terms/",
+    "http://purl.org/dc/terms",
+    "http://purl.org/dc/dcmitype/",
+    "http://purl.org/dc/dcmitype",
+}
+
+# Mapping from Dublin Core element / term local names (lowercased) to DDI 4.0 CitationType wire names
+DUBLIN_CORE_ELEMENT_MAP = {
+    "abstract": "DublinCoreAbstract",
+    "accessrights": "DublinCoreAccessRights",
+    "accrualmethod": "DublinCoreAccrualMethod",
+    "accrualperiodicity": "DublinCoreAccrualPeriodicity",
+    "accrualpolicy": "DublinCoreAccrualPolicy",
+    "alternative": "DublinCoreAlternative",
+    "audience": "DublinCoreAudience",
+    "available": "DublinCoreAvailable",
+    "bibliographiccitation": "DublinCoreBibliographicCitation",
+    "conformsto": "DublinCoreConformsTo",
+    "contributor": "DublinCoreContributor",
+    "coverage": "DublinCoreCoverage",
+    "created": "DublinCoreCreated",
+    "creator": "DublinCoreCreator",
+    "date": "DublinCoreDate",
+    "dateaccepted": "DublinCoreDateAccepted",
+    "datecopyrighted": "DublinCoreDateCopyrighted",
+    "datesubmitted": "DublinCoreDateSubmitted",
+    "description": "DublinCoreDescription",
+    "educationlevel": "DublinCoreEducationLevel",
+    "extent": "DublinCoreExtent",
+    "format": "DublinCoreFormat",
+    "hasformat": "DublinCoreHasFormat",
+    "haspart": "DublinCoreHasPart",
+    "hasversion": "DublinCoreHasVersion",
+    "identifier": "DublinCoreIdentifier",
+    "instructionalmethod": "DublinCoreInstructionalMethod",
+    "isformatof": "DublinCoreIsFormatOf",
+    "ispartof": "DublinCoreIsPartOf",
+    "isreferencedby": "DublinCoreIsReferencedBy",
+    "isreplacedby": "DublinCoreIsReplacedBy",
+    "isrequiredby": "DublinCoreIsRequiredBy",
+    "isversionof": "DublinCoreIsVersionOf",
+    "issued": "DublinCoreIssued",
+    "language": "DublinCoreLanguage",
+    "license": "DublinCoreLicense",
+    "mediator": "DublinCoreMediator",
+    "medium": "DublinCoreMedium",
+    "modified": "DublinCoreModified",
+    "provenance": "DublinCoreProvenance",
+    "publisher": "DublinCorePublisher",
+    "references": "DublinCoreReferences",
+    "relation": "DublinCoreRelation",
+    "replaces": "DublinCoreReplaces",
+    "requires": "DublinCoreRequires",
+    "rights": "DublinCoreRights",
+    "rightsholder": "DublinCoreRightsHolder",
+    "source": "DublinCoreSource",
+    "spatial": "DublinCoreSpatial",
+    "subject": "DublinCoreSubject",
+    "tableofcontents": "DublinCoreTableOfContents",
+    "temporal": "DublinCoreTemporal",
+    "title": "DublinCoreTitle",
+    "type": "DublinCoreType",
+    "valid": "DublinCoreValid",
+}
+
+
 def _map_namespaces(element: ET.Element, target_ns: str) -> None:
-    """Recursively rewrite element tags to use the target namespace."""
-    local_name = element.tag.rsplit("}", 1)[-1]
-    element.tag = f"{{{target_ns}}}{local_name}"
+    """Recursively rewrite element tags to use the target namespace, mapping Dublin Core elements to DublinCore*."""
+    tag = element.tag
+    if "}" in tag:
+        ns, local_name = tag[1:].split("}", 1)
+        if ns in DUBLIN_CORE_NAMESPACES or ns.startswith("http://purl.org/dc/"):
+            dc_name = DUBLIN_CORE_ELEMENT_MAP.get(
+                local_name.lower(),
+                f"DublinCore{local_name[:1].upper()}{local_name[1:]}"
+                if not local_name.startswith("DublinCore")
+                else local_name,
+            )
+            element.tag = f"{{{target_ns}}}{dc_name}"
+        else:
+            element.tag = f"{{{target_ns}}}{local_name}"
+    else:
+        element.tag = f"{{{target_ns}}}{tag}"
+
     for child in element:
         _map_namespaces(child, target_ns)
 
@@ -328,6 +412,14 @@ def _convert_attributes_to_elements(element: ET.Element, cls: type[CogsValue], c
                 ns = child.tag.rsplit("}", 1)[0] + "}" if "}" in child.tag else ""
                 child.tag = f"{ns}{mapped_local}"
                 child.set(f"{{{XSI_NAMESPACE}}}type", f"{NAMESPACE_PREFIX}:{xsi_type}")
+
+        # Dublin Core element name fallback mapping
+        if child_local not in by_wire and child_local.lower() in DUBLIN_CORE_ELEMENT_MAP:
+            mapped_dc = DUBLIN_CORE_ELEMENT_MAP[child_local.lower()]
+            if mapped_dc in by_wire:
+                ns = child.tag.rsplit("}", 1)[0] + "}" if "}" in child.tag else ""
+                child.tag = f"{ns}{mapped_dc}"
+                child_local = mapped_dc
 
     # Strip TypeOfObject if it is not in by_wire of the class (occurs when reference is parsed as inline object)
     if "TypeOfObject" not in by_wire:
@@ -562,22 +654,33 @@ def stream_ddil_fragments(
                     if filter_set is None or local_tag.lower() in filter_set:
                         cls = TYPE_REGISTRY.get(local_tag)
                         if cls:
+                            frag_urn = None
+                            for sub in child:
+                                sub_tag = sub.tag.rsplit("}", 1)[-1]
+                                if sub_tag in ("URN", "urn") and sub.text:
+                                    frag_urn = sub.text.strip()
+                                    break
+                                elif sub_tag in ("ID", "id") and sub.text and frag_urn is None:
+                                    frag_urn = sub.text.strip()
+
                             _prepare_element_for_model(child, cls)
                             try:
                                 instance = cls.from_element(child)
                                 yield instance
                             except Exception as e:
+                                urn_info = f" (URN: {frag_urn})" if frag_urn else ""
                                 if on_error:
                                     on_error(local_tag, e)
                                 if logger.isEnabledFor(logging.DEBUG):
                                     logger.debug(
-                                        "Error parsing fragment of type %s: %s",
+                                        "Error parsing fragment of type %s%s: %s",
                                         local_tag,
+                                        urn_info,
                                         e,
                                         exc_info=True,
                                     )
                                 elif not on_error:
-                                    logger.error("Error parsing fragment of type %s: %s", local_tag, e)
+                                    logger.error("Error parsing fragment of type %s%s: %s", local_tag, urn_info, e)
 
     except ET.ParseError as pe:
         logger.error("XML parse error in %s: %s", source, pe)

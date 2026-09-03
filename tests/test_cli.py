@@ -121,6 +121,31 @@ def test_cli_stream_error_stats(tmp_path):
     assert "Success rate: 1 / 2 (50.0%)" in result.stdout
 
 
+def test_cli_stream_near_100_percent_error_stats(tmp_path):
+    input_xml = tmp_path / "near_100_errors.ddi33.xml"
+    # Create 2000 valid concepts and 1 invalid concept
+    valid_frags = "".join(
+        f'<Fragment xmlns="ddi:instance:3_3"><Concept xmlns="ddi:conceptualcomponent:3_3">'
+        f'<URN xmlns="ddi:reusable:3_3">urn:ddi:ex:c{i}:1</URN>'
+        f'<Agency xmlns="ddi:reusable:3_3">ex</Agency><ID xmlns="ddi:reusable:3_3">c{i}</ID>'
+        f'<Version xmlns="ddi:reusable:3_3">1</Version></Concept></Fragment>'
+        for i in range(2000)
+    )
+    invalid_frag = (
+        '<Fragment xmlns="ddi:instance:3_3"><Concept xmlns="ddi:conceptualcomponent:3_3">'
+        "<IsCharacteristic>NOT_A_BOOLEAN</IsCharacteristic></Concept></Fragment>"
+    )
+    input_xml.write_text(
+        f'<FragmentInstance xmlns="ddi:instance:3_3">{valid_frags}{invalid_frag}</FragmentInstance>',
+        encoding="utf-8",
+    )
+    out_file = tmp_path / "output.json"
+    result = runner.invoke(app, ["ddil324", str(input_xml), "--output", str(out_file)])
+    assert result.exit_code == 0
+    assert "Total Errors: 1" in result.stdout
+    assert "Success rate: 2,000 / 2,001 (< 100.0%)" in result.stdout
+
+
 def test_cli_stream_pretty(tmp_path):
     xml_path = sample_xml_path()
     out_file_json = tmp_path / "output_pretty.json"

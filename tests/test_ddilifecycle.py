@@ -368,3 +368,119 @@ def test_stream_ddil_fragments_sample_special_values():
     assert "NaN" in xml_str
     assert "INF" in xml_str
     assert "-INF" in xml_str
+
+
+def test_stream_ddil_fragments_dublin_core_sample():
+    import io
+
+    xml_path = os.path.join(
+        data_dir(),
+        "lifecycle/samples/dublin_core_citations.ddi33.xml",
+    )
+
+    errors = []
+
+    def handle_error(rtype, exc):
+        errors.append((rtype, str(exc)))
+
+    fragments = list(ddilifecycle.stream_ddil_fragments(xml_path, on_error=handle_error))
+    assert len(errors) == 0, f"Encountered unexpected parsing errors: {errors}"
+    assert len(fragments) == 2
+
+    study_unit, physical_instance = fragments
+    assert isinstance(study_unit, model.StudyUnit)
+    assert study_unit.id == "study_unit_001"
+    assert study_unit.citation is not None
+    assert len(study_unit.citation.title) == 1
+    assert study_unit.citation.title[0].value == "Sample Longitudinal Social Survey"
+    assert len(study_unit.citation.dublin_core_relation) == 1
+    assert study_unit.citation.dublin_core_relation[0].value == "https://www.example.org/surveys/slss"
+    assert study_unit.citation.dublin_core_relation[0].language == "en"
+    assert len(study_unit.citation.dublin_core_abstract) == 1
+    assert (
+        study_unit.citation.dublin_core_abstract[0].value
+        == "A cross-national comparative survey investigating public attitudes."
+    )
+
+    assert isinstance(physical_instance, model.PhysicalInstance)
+    assert physical_instance.id == "physical_instance_001"
+    assert physical_instance.citation is not None
+    assert len(physical_instance.citation.dublin_core_coverage) == 1
+    assert physical_instance.citation.dublin_core_coverage[0].value == "Wave 1"
+    assert physical_instance.citation.dublin_core_coverage[0].language == "en"
+    assert len(physical_instance.citation.dublin_core_spatial) == 1
+    assert physical_instance.citation.dublin_core_spatial[0].value == "Europe"
+    assert len(physical_instance.citation.dublin_core_license) == 1
+    assert physical_instance.citation.dublin_core_license[0].value == "CC-BY-4.0"
+
+    # Test conversion to JSON output via ddil324
+    out_json = io.StringIO()
+    res_json = ddilifecycle.ddil324(xml_path, out_json, format="json", pretty=True)
+    assert res_json["total_resources"] == 2
+    assert res_json["total_errors"] == 0
+    assert res_json["success_rate_percent"] == 100.0
+    json_str = out_json.getvalue()
+    data = json.loads(json_str)
+    assert len(data["items"]) == 2
+    assert data["items"][0]["$type"] == "StudyUnit"
+    assert "DublinCoreRelation" in data["items"][0]["Citation"]
+    assert data["items"][1]["$type"] == "PhysicalInstance"
+    assert "DublinCoreCoverage" in data["items"][1]["Citation"]
+
+    # Test conversion to XML output via ddil324
+    out_xml = io.StringIO()
+    res_xml = ddilifecycle.ddil324(xml_path, out_xml, format="xml", pretty=True)
+    assert res_xml["total_resources"] == 2
+    assert res_xml["total_errors"] == 0
+    assert res_xml["success_rate_percent"] == 100.0
+    xml_str = out_xml.getvalue()
+    assert "<DublinCoreRelation" in xml_str
+    assert "<DublinCoreCoverage" in xml_str
+
+
+def test_stream_ddil_fragments_dublin_core_prefixed_elements():
+    import io
+
+    xml_content = """<?xml version="1.0" encoding="utf-8"?>
+<ddi:FragmentInstance xmlns:r="ddi:reusable:3_3"
+                      xmlns:s="ddi:studyunit:3_3"
+                      xmlns:ddi="ddi:instance:3_3"
+                      xmlns:dc="http://purl.org/dc/elements/1.1/"
+                      xmlns:dcterms="http://purl.org/dc/terms/">
+  <Fragment xmlns="ddi:instance:3_3">
+    <s:StudyUnit isUniversallyUnique="true">
+      <r:URN>urn:ddi:example.org:study_dc_prefixed:1</r:URN>
+      <r:Agency>example.org</r:Agency>
+      <r:ID>study_dc_prefixed</r:ID>
+      <r:Version>1</r:Version>
+      <r:Citation>
+        <r:Title>
+          <r:String xml:lang="en">Native DDI Title</r:String>
+        </r:Title>
+        <dc:title xml:lang="en">Dublin Core Title</dc:title>
+        <dc:creator xml:lang="en">DC Creator</dc:creator>
+        <dc:coverage xml:lang="en">Global Coverage</dc:coverage>
+        <dcterms:spatial xml:lang="en">World</dcterms:spatial>
+        <dcterms:modified xml:lang="en">2026-09-01</dcterms:modified>
+      </r:Citation>
+    </s:StudyUnit>
+  </Fragment>
+</ddi:FragmentInstance>
+"""
+    errors = []
+    fragments = list(
+        ddilifecycle.stream_ddil_fragments(
+            io.BytesIO(xml_content.encode("utf-8")),
+            on_error=lambda r, e: errors.append((r, e)),
+        )
+    )
+    assert len(errors) == 0
+    assert len(fragments) == 1
+    study = fragments[0]
+    assert isinstance(study, model.StudyUnit)
+    assert study.citation.title[0].value == "Native DDI Title"
+    assert study.citation.dublin_core_title[0].value == "Dublin Core Title"
+    assert study.citation.dublin_core_creator[0].value == "DC Creator"
+    assert study.citation.dublin_core_coverage[0].value == "Global Coverage"
+    assert study.citation.dublin_core_spatial[0].value == "World"
+    assert study.citation.dublin_core_modified[0].value == "2026-09-01"

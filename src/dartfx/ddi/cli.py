@@ -338,7 +338,11 @@ def ddil324(
         typer.echo(f"  Elapsed time: {elapsed_sec:.3f} seconds")
         typer.echo(f"  Processing speed: {res_per_sec:,.1f} resources/sec ({mb_per_sec:.2f} MB/sec)")
         if total_attempted > 0 or result["total_resources"] > 0:
-            typer.echo(f"  Success rate: {result['total_resources']:,} / {total_attempted:,} ({success_pct:.1f}%)")
+            if result.get("total_errors", 0) > 0 and success_pct >= 99.95:
+                pct_str = "< 100.0%"
+            else:
+                pct_str = f"{success_pct:.1f}%"
+            typer.echo(f"  Success rate: {result['total_resources']:,} / {total_attempted:,} ({pct_str})")
 
 
 def main():

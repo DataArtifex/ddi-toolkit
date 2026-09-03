@@ -1,0 +1,149 @@
+{
+  "items": [
+    {
+      "$type": "StudyUnit",
+      "URN": "urn:ddi:example.org:study_unit_001:1",
+      "Agency": "example.org",
+      "ID": "study_unit_001",
+      "Version": "1",
+      "VersionDate": {
+        "DateTime": "2026-01-15T00:00:00+00:00"
+      },
+      "Citation": {
+        "Title": [
+          {
+            "@language": "en",
+            "@value": "Sample Longitudinal Social Survey"
+          }
+        ],
+        "AlternateTitle": [
+          {
+            "@language": "en",
+            "@value": "SLSS Wave 1"
+          }
+        ],
+        "Creator": [
+          {
+            "CreatorName": {
+              "Name": [
+                {
+                  "@language": "en",
+                  "@value": "Principal Investigator One"
+                }
+              ]
+            }
+          }
+        ],
+        "Publisher": [
+          {
+            "PublisherName": {
+              "Name": [
+                {
+                  "@language": "en",
+                  "@value": "Open Research Data Archive"
+                }
+              ]
+            }
+          }
+        ],
+        "PublicationDate": {
+          "SimpleDate": {
+            "DateTime": "2026-01-15T00:00:00+00:00"
+          }
+        },
+        "InternationalIdentifier": [
+          {
+            "IdentifierContent": "https://doi.org/10.5555/slss-w1",
+            "ManagingAgency": {
+              "StringValue": "DOI"
+            }
+          }
+        ],
+        "DublinCoreAbstract": [
+          {
+            "@language": "en",
+            "@value": "A cross-national comparative survey investigating public attitudes."
+          }
+        ],
+        "DublinCoreRelation": [
+          {
+            "@language": "en",
+            "@value": "https://www.example.org/surveys/slss"
+          }
+        ]
+      },
+      "Abstract": [
+        {
+          "@language": "en",
+          "@value": "Comprehensive metadata and survey methodology documentation for the sample study."
+        }
+      ],
+      "UniverseReference": {
+        "$type": "Universe",
+        "URN": "urn:ddi:example.org:universe_adult_population:1",
+        "Agency": "example.org",
+        "ID": "universe_adult_population",
+        "Version": "1"
+      }
+    },
+    {
+      "$type": "PhysicalInstance",
+      "URN": "urn:ddi:example.org:physical_instance_001:1",
+      "Agency": "example.org",
+      "ID": "physical_instance_001",
+      "Version": "1",
+      "VersionDate": {
+        "DateTime": "2026-01-20T00:00:00+00:00"
+      },
+      "Citation": {
+        "Title": [
+          {
+            "@language": "en",
+            "@value": "SLSS_W1_Datafile"
+          }
+        ],
+        "AlternateTitle": [
+          {
+            "@language": "en",
+            "@value": "Sample Longitudinal Social Survey Wave 1 Dataset edition 1.0"
+          }
+        ],
+        "InternationalIdentifier": [
+          {
+            "IdentifierContent": "https://doi.org/10.5555/slss-w1-data",
+            "ManagingAgency": {
+              "StringValue": "DOI"
+            }
+          }
+        ],
+        "DublinCoreCoverage": [
+          {
+            "@language": "en",
+            "@value": "Wave 1"
+          }
+        ],
+        "DublinCoreLicense": [
+          {
+            "@language": "en",
+            "@value": "CC-BY-4.0"
+          }
+        ],
+        "DublinCoreSpatial": [
+          {
+            "@language": "en",
+            "@value": "Europe"
+          }
+        ]
+      },
+      "DataRelationshipReference": [
+        {
+          "$type": "DataRelationship",
+          "URN": "urn:ddi:example.org:dr_sample_001:1",
+          "Agency": "example.org",
+          "ID": "dr_sample_001",
+          "Version": "1"
+        }
+      ]
+    }
+  ]
+}
