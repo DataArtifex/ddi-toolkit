@@ -1,0 +1,166 @@
+{
+  "items": [
+    {
+      "$type": "Variable",
+      "URN": "urn:ddi:example.org:var_income_outlier:1",
+      "Agency": "example.org",
+      "ID": "var_income_outlier",
+      "Version": "1",
+      "VersionDate": {
+        "DateTime": "2021-11-23T21:30:26+00:00"
+      },
+      "VariableName": [
+        {
+          "@language": "en",
+          "@value": "INCOME_OUTLIER"
+        }
+      ],
+      "Label": [
+        {
+          "@language": "en",
+          "@value": "Income Outlier Indicator"
+        }
+      ],
+      "Description": [
+        {
+          "@language": "en",
+          "@value": "Demonstration variable with non-finite statistical values (NaN, INF, -INF)."
+        }
+      ]
+    },
+    {
+      "$type": "VariableStatistics",
+      "URN": "urn:ddi:example.org:vs_income_outlier:1",
+      "Agency": "example.org",
+      "ID": "vs_income_outlier",
+      "Version": "1",
+      "VersionResponsibility": "metadata@example.org",
+      "VersionRationale": {
+        "RationaleDescription": [
+          {
+            "@language": "en",
+            "@value": "Initial computation with single valid case yielding undefined moments (NaN)."
+          }
+        ]
+      },
+      "VersionDate": {
+        "DateTime": "2021-11-23T21:30:26+00:00"
+      },
+      "VariableReference": {
+        "$type": "Variable",
+        "URN": "urn:ddi:example.org:var_income_outlier:1",
+        "Agency": "example.org",
+        "ID": "var_income_outlier",
+        "Version": "1"
+      },
+      "TotalResponses": 1000,
+      "SummaryStatistic": [
+        {
+          "TypeOfSummaryStatistic": {
+            "StringValue": "ValidCases"
+          },
+          "StatisticDouble": {
+            "DoubleValue": 1.0,
+            "IsWeighted": false
+          }
+        },
+        {
+          "TypeOfSummaryStatistic": {
+            "StringValue": "InvalidCases"
+          },
+          "StatisticDouble": {
+            "DoubleValue": 999.0,
+            "IsWeighted": false
+          }
+        },
+        {
+          "TypeOfSummaryStatistic": {
+            "StringValue": "Mean"
+          },
+          "StatisticDouble": {
+            "DoubleValue": 42.0,
+            "IsWeighted": false
+          }
+        },
+        {
+          "TypeOfSummaryStatistic": {
+            "StringValue": "StandardDeviation"
+          },
+          "StatisticDouble": {
+            "DoubleValue": NaN,
+            "IsWeighted": false
+          }
+        },
+        {
+          "TypeOfSummaryStatistic": {
+            "StringValue": "Variance"
+          },
+          "StatisticDouble": {
+            "DoubleValue": NaN,
+            "IsWeighted": false
+          }
+        },
+        {
+          "TypeOfSummaryStatistic": {
+            "StringValue": "Skewness"
+          },
+          "StatisticDouble": {
+            "DoubleValue": NaN,
+            "IsWeighted": false
+          }
+        },
+        {
+          "TypeOfSummaryStatistic": {
+            "StringValue": "Kurtosis"
+          },
+          "StatisticDouble": {
+            "DoubleValue": NaN,
+            "IsWeighted": false
+          }
+        },
+        {
+          "TypeOfSummaryStatistic": {
+            "StringValue": "Maximum"
+          },
+          "StatisticDouble": {
+            "DoubleValue": Infinity,
+            "IsWeighted": false
+          }
+        },
+        {
+          "TypeOfSummaryStatistic": {
+            "StringValue": "Minimum"
+          },
+          "StatisticDouble": {
+            "DoubleValue": -Infinity,
+            "IsWeighted": false
+          }
+        }
+      ],
+      "UnfilteredCategoryStatistics": [
+        {
+          "VariableCategory": [
+            {
+              "CategoryValue": {
+                "Value": {
+                  "StringValue": "99"
+                }
+              },
+              "CategoryStatistic": [
+                {
+                  "TypeOfCategoryStatistic": {
+                    "StringValue": "Frequency"
+                  },
+                  "StatisticDouble": {
+                    "DoubleValue": 999.0,
+                    "IsWeighted": false
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

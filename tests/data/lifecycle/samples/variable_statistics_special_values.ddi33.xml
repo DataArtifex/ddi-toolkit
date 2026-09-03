@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FragmentInstance xmlns="ddi:instance:3_3"
+                  xmlns:r="ddi:reusable:3_3"
+                  xmlns:l="ddi:logicalproduct:3_3"
+                  xmlns:pi="ddi:physicalinstance:3_3"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- Fragment 1: Variable Definition -->
+  <Fragment>
+    <l:Variable isUniversallyUnique="true" versionDate="2021-11-23T21:30:26Z">
+      <r:URN>urn:ddi:example.org:var_income_outlier:1</r:URN>
+      <r:Agency>example.org</r:Agency>
+      <r:ID>var_income_outlier</r:ID>
+      <r:Version>1</r:Version>
+      <l:VariableName>
+        <r:String xml:lang="en">INCOME_OUTLIER</r:String>
+      </l:VariableName>
+      <r:Label>
+        <r:Content xml:lang="en">Income Outlier Indicator</r:Content>
+      </r:Label>
+      <r:Description>
+        <r:Content xml:lang="en">Demonstration variable with non-finite statistical values (NaN, INF, -INF).</r:Content>
+      </r:Description>
+    </l:Variable>
+  </Fragment>
+
+  <!-- Fragment 2: Variable Statistics exhibiting NaN, INF, and -INF values -->
+  <Fragment>
+    <pi:VariableStatistics isUniversallyUnique="true" versionDate="2021-11-23T21:30:26Z">
+      <r:URN>urn:ddi:example.org:vs_income_outlier:1</r:URN>
+      <r:Agency>example.org</r:Agency>
+      <r:ID>vs_income_outlier</r:ID>
+      <r:Version>1</r:Version>
+      <r:VersionResponsibility>metadata@example.org</r:VersionResponsibility>
+      <r:VersionRationale>
+        <r:RationaleDescription>
+          <r:String xml:lang="en">Initial computation with single valid case yielding undefined moments (NaN).</r:String>
+        </r:RationaleDescription>
+      </r:VersionRationale>
+      <r:VariableReference>
+        <r:Agency>example.org</r:Agency>
+        <r:ID>var_income_outlier</r:ID>
+        <r:Version>1</r:Version>
+        <r:TypeOfObject>Variable</r:TypeOfObject>
+      </r:VariableReference>
+      <pi:TotalResponses>1000</pi:TotalResponses>
+
+      <!-- Finite Summary Statistics -->
+      <pi:SummaryStatistic>
+        <r:TypeOfSummaryStatistic>ValidCases</r:TypeOfSummaryStatistic>
+        <pi:StatisticDouble isWeighted="false">1.0</pi:StatisticDouble>
+      </pi:SummaryStatistic>
+      <pi:SummaryStatistic>
+        <r:TypeOfSummaryStatistic>InvalidCases</r:TypeOfSummaryStatistic>
+        <pi:StatisticDouble isWeighted="false">999.0</pi:StatisticDouble>
+      </pi:SummaryStatistic>
+      <pi:SummaryStatistic>
+        <r:TypeOfSummaryStatistic>Mean</r:TypeOfSummaryStatistic>
+        <pi:StatisticDouble isWeighted="false">42.0</pi:StatisticDouble>
+      </pi:SummaryStatistic>
+
+      <!-- Non-Finite Summary Statistics (NaN: Undefined when N=1) -->
+      <pi:SummaryStatistic>
+        <r:TypeOfSummaryStatistic>StandardDeviation</r:TypeOfSummaryStatistic>
+        <pi:StatisticDouble isWeighted="false">NaN</pi:StatisticDouble>
+      </pi:SummaryStatistic>
+      <pi:SummaryStatistic>
+        <r:TypeOfSummaryStatistic>Variance</r:TypeOfSummaryStatistic>
+        <pi:StatisticDouble isWeighted="false">NaN</pi:StatisticDouble>
+      </pi:SummaryStatistic>
+      <pi:SummaryStatistic>
+        <r:TypeOfSummaryStatistic>Skewness</r:TypeOfSummaryStatistic>
+        <pi:StatisticDouble isWeighted="false">NaN</pi:StatisticDouble>
+      </pi:SummaryStatistic>
+      <pi:SummaryStatistic>
+        <r:TypeOfSummaryStatistic>Kurtosis</r:TypeOfSummaryStatistic>
+        <pi:StatisticDouble isWeighted="false">NaN</pi:StatisticDouble>
+      </pi:SummaryStatistic>
+
+      <!-- Non-Finite Extreme Values (Infinity / -Infinity) -->
+      <pi:SummaryStatistic>
+        <r:TypeOfSummaryStatistic>Maximum</r:TypeOfSummaryStatistic>
+        <pi:StatisticDouble isWeighted="false">INF</pi:StatisticDouble>
+      </pi:SummaryStatistic>
+      <pi:SummaryStatistic>
+        <r:TypeOfSummaryStatistic>Minimum</r:TypeOfSummaryStatistic>
+        <pi:StatisticDouble isWeighted="false">-INF</pi:StatisticDouble>
+      </pi:SummaryStatistic>
+
+      <!-- Category Statistics -->
+      <pi:UnfilteredCategoryStatistics>
+        <pi:VariableCategory>
+          <pi:CategoryValue>
+            <r:Value>99</r:Value>
+          </pi:CategoryValue>
+          <pi:CategoryStatistic>
+            <pi:TypeOfCategoryStatistic>Frequency</pi:TypeOfCategoryStatistic>
+            <pi:StatisticDouble isWeighted="false">999.0</pi:StatisticDouble>
+          </pi:CategoryStatistic>
+        </pi:VariableCategory>
+      </pi:UnfilteredCategoryStatistics>
+    </pi:VariableStatistics>
+  </Fragment>
+</FragmentInstance>

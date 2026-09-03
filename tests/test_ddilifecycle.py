@@ -257,3 +257,114 @@ def test_stream_ddil_fragments_interviewer_instruction_reference(tmp_path):
     att_qg = qg.interviewer_instruction_attachment[0]
     assert att_qg.interviewer_instruction_reference is not None
     assert att_qg.interviewer_instruction_reference.id == "ins2"
+
+
+def test_stream_ddil_fragments_nan_statistics(tmp_path):
+    import io
+    import math
+
+    input_xml = tmp_path / "variable_statistics_nan.ddi33.xml"
+    input_xml.write_text(
+        '<FragmentInstance xmlns="ddi:instance:3_3">'
+        '<Fragment xmlns="ddi:instance:3_3">'
+        '<VariableStatistics xmlns="ddi:physicalinstance:3_3" xmlns:r="ddi:reusable:3_3">'
+        "<r:URN>urn:ddi:ex:vs1:1</r:URN>"
+        "<r:Agency>ex</r:Agency>"
+        "<r:ID>vs1</r:ID>"
+        "<r:Version>1</r:Version>"
+        "<VariableReference>"
+        "<r:Agency>ex</r:Agency>"
+        "<r:ID>var1</r:ID>"
+        "<r:Version>1</r:Version>"
+        "<r:TypeOfObject>Variable</r:TypeOfObject>"
+        "</VariableReference>"
+        "<TotalResponses>100</TotalResponses>"
+        "<SummaryStatistic>"
+        "<r:TypeOfSummaryStatistic>StandardDeviation</r:TypeOfSummaryStatistic>"
+        '<StatisticDouble isWeighted="false">NaN</StatisticDouble>'
+        "</SummaryStatistic>"
+        "<SummaryStatistic>"
+        "<r:TypeOfSummaryStatistic>Maximum</r:TypeOfSummaryStatistic>"
+        '<StatisticDouble isWeighted="false">INF</StatisticDouble>'
+        "</SummaryStatistic>"
+        "<SummaryStatistic>"
+        "<r:TypeOfSummaryStatistic>Minimum</r:TypeOfSummaryStatistic>"
+        '<StatisticDouble isWeighted="false">-INF</StatisticDouble>'
+        "</SummaryStatistic>"
+        "</VariableStatistics>"
+        "</Fragment>"
+        "</FragmentInstance>",
+        encoding="utf-8",
+    )
+
+    fragments = list(ddilifecycle.stream_ddil_fragments(input_xml))
+    assert len(fragments) == 1
+    vs = fragments[0]
+    assert isinstance(vs, model.VariableStatistics)
+    assert len(vs.summary_statistic) == 3
+
+    stat_nan = vs.summary_statistic[0].statistic_double.double_value
+    stat_inf = vs.summary_statistic[1].statistic_double.double_value
+    stat_neginf = vs.summary_statistic[2].statistic_double.double_value
+
+    assert math.isnan(stat_nan)
+    assert math.isinf(stat_inf)
+    assert stat_inf > 0
+    assert math.isinf(stat_neginf)
+    assert stat_neginf < 0
+
+    # Test conversion to JSON output via ddil324 utility
+    out_json = io.StringIO()
+    res_json = ddilifecycle.ddil324(input_xml, out_json, format="json", pretty=True)
+    assert res_json["total_resources"] == 1
+    assert res_json["total_errors"] == 0
+    json_str = out_json.getvalue()
+    assert "NaN" in json_str
+    assert "Infinity" in json_str
+    assert "-Infinity" in json_str
+
+    # Test conversion to XML output via ddil324 utility
+    out_xml = io.StringIO()
+    res_xml = ddilifecycle.ddil324(input_xml, out_xml, format="xml", pretty=True)
+    assert res_xml["total_resources"] == 1
+    assert res_xml["total_errors"] == 0
+    xml_str = out_xml.getvalue()
+    assert "NaN" in xml_str
+    assert "INF" in xml_str
+    assert "-INF" in xml_str
+
+
+def test_stream_ddil_fragments_sample_special_values():
+    import io
+
+    xml_path = os.path.join(
+        data_dir(),
+        "lifecycle/samples/variable_statistics_special_values.ddi33.xml",
+    )
+
+    fragments = list(ddilifecycle.stream_ddil_fragments(xml_path))
+    assert len(fragments) == 2
+    var, vs = fragments
+    assert isinstance(var, model.Variable)
+    assert isinstance(vs, model.VariableStatistics)
+    assert vs.id == "vs_income_outlier"
+
+    # Test JSON output
+    out_json = io.StringIO()
+    res_json = ddilifecycle.ddil324(xml_path, out_json, format="json", pretty=True)
+    assert res_json["total_resources"] == 2
+    assert res_json["total_errors"] == 0
+    json_str = out_json.getvalue()
+    assert "NaN" in json_str
+    assert "Infinity" in json_str
+    assert "-Infinity" in json_str
+
+    # Test XML output
+    out_xml = io.StringIO()
+    res_xml = ddilifecycle.ddil324(xml_path, out_xml, format="xml", pretty=True)
+    assert res_xml["total_resources"] == 2
+    assert res_xml["total_errors"] == 0
+    xml_str = out_xml.getvalue()
+    assert "NaN" in xml_str
+    assert "INF" in xml_str
+    assert "-INF" in xml_str

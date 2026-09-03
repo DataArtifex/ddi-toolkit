@@ -77,6 +77,8 @@ model_4_0_rc1._deserialize_simple_xml = _custom_deserialize_simple_xml
 ```
 This ensures that any parsed `decimal` primitive is returned as a `CogsDecimal` instance, satisfying Pydantic's `validate_assignment` check without modifying `model_4_0_rc1.py` directly.
 
+Similarly, `_json_dump_value` in `model_4_0_rc1.py` strictly raises `ValueError` on non-finite floats (`NaN`, `INF`, `-INF`). In `utils.py`, we monkeypatch `_json_dump_value` to format non-finite values as standard JSON tokens (`NaN`, `Infinity`, `-Infinity`) for statistical summary outputs (such as `VariableStatistics`), preserving the pristine generated model file.
+
 ---
 
 ## 4. Evaluation of Function Naming: `stream_ddil_fragments` vs `stream_ddil33_fragments`
@@ -102,7 +104,49 @@ if lowered == "decimal":
 ```
 Alternatively, add a Pydantic `BeforeValidator` or custom serializer/validator annotation to `CogsDecimal` so Pydantic automatically converts `Decimal` or `str` to `CogsDecimal`.
 
-### 2. Generalize `CreatorReference` and `ContributorReference` Target Types
+### 2. Support Non-Finite Floats in `_json_dump_value`
+In the COGS Python publisher template for `_json_dump_value`, format non-finite floats (`NaN`, `Infinity`, `-Infinity`) rather than raising a strict `ValueError("JSON numbers must be finite.")`:
+```python
+if isinstance(value, Decimal):
+    return str(value)
+if isinstance(value, float):
+    if math.isnan(value):
+        return "NaN"
+    if value == math.inf:
+        return "Infinity"
+    if value == -math.inf:
+        return "-Infinity"
+    return json.dumps(value)
+```
+
+### 3. Support Extended Float Tokens in `_parse_float` & `_deserialize_simple_json`
+In `_parse_float`, allow standard XML Schema and JSON token variants (`+INF`, `Infinity`, `-Infinity`, `nan`):
+```python
+def _parse_float(value: str) -> float:
+    if value in ("INF", "+INF", "Infinity", "+Infinity"):
+        return math.inf
+    if value in ("-INF", "-Infinity"):
+        return -math.inf
+    if value in ("NaN", "nan", "NAN"):
+        return math.nan
+    return float(value)
+```
+In `_deserialize_simple_json`, allow string forms of special floats:
+```python
+if lowered in _FLOAT_TYPES:
+    if isinstance(raw, str):
+        if raw in ("NaN", "nan", "NAN"):
+            return math.nan
+        if raw in ("INF", "+INF", "Infinity", "+Infinity"):
+            return math.inf
+        if raw in ("-INF", "-Infinity"):
+            return -math.inf
+    if isinstance(raw, bool) or not isinstance(raw, (int, float, Decimal)):
+        raise TypeError(f"{type_name} must be a number.")
+    return float(raw)
+```
+
+### 4. Generalize `CreatorReference` and `ContributorReference` Target Types
 In `model_4_0_rc1.py`, `CreatorReference` and `ContributorReference` are typed strictly as `Individual`:
 ```python
 creator_reference: Individual | None = Field(default=None, alias="CreatorReference", json_schema_extra={"type_name": "Individual", "allow_subtypes": False})
@@ -110,7 +154,7 @@ creator_reference: Individual | None = Field(default=None, alias="CreatorReferen
 In DDI specifications and real-world metadata (such as Colectica exports), creators and contributors are frequently `Organization` instances or generic `Agent` instances.
 **Adjustment**: Update the UML/COGS model so `CreatorReference` and `ContributorReference` reference `Agent` with `allow_subtypes: True`.
 
-### 3. Alias Support in `ITEM_TYPE_REGISTRY`
+### 5. Alias Support in `ITEM_TYPE_REGISTRY`
 `ITEM_TYPE_REGISTRY` maps class names like `"DataCollectionMethodologyType": DataCollectionMethodologyType`.
 **Adjustment**: Include legacy XML element names without the `Type` suffix (e.g. `"DataCollectionMethodology": DataCollectionMethodologyType`) directly in `ITEM_TYPE_REGISTRY` during generation to simplify cross-version deserialization.
 

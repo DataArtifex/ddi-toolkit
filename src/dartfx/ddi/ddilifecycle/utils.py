@@ -29,7 +29,9 @@ DDI 3.3 to DDI 4.0 RC1 XML Crosswalk:
    Unknown attributes not mapped to child elements are cleaned before model deserialization.
 """
 
+import json
 import logging
+import math
 import os
 import re
 import time
@@ -50,7 +52,6 @@ from .model_4_0_rc1 import (
     CogsValue,
     _Context,
     _field_by_wire_name,
-    _json_dump_value,
 )
 
 ET.register_namespace("", TARGET_NAMESPACE)
@@ -70,6 +71,101 @@ def _custom_deserialize_simple_xml(type_name: str, element: ET.Element) -> Any:
 
 
 model_4_0_rc1._deserialize_simple_xml = _custom_deserialize_simple_xml
+
+# Monkeypatch _parse_float to support additional string forms (+INF, Infinity, etc.)
+_original_parse_float = model_4_0_rc1._parse_float
+
+
+def _custom_parse_float(value: str) -> float:
+    if value in ("INF", "+INF", "Infinity", "+Infinity"):
+        return math.inf
+    if value in ("-INF", "-Infinity"):
+        return -math.inf
+    if value in ("NaN", "nan", "NAN"):
+        return math.nan
+    return float(value)
+
+
+model_4_0_rc1._parse_float = _custom_parse_float
+
+# Monkeypatch _deserialize_simple_json to support string representations of non-finite floats
+_original_deserialize_simple_json = model_4_0_rc1._deserialize_simple_json
+
+
+def _custom_deserialize_simple_json(type_name: str, raw: Any) -> Any:
+    lowered = type_name.lower()
+    if lowered in model_4_0_rc1._FLOAT_TYPES and isinstance(raw, str):
+        if raw in ("NaN", "nan", "NAN"):
+            return math.nan
+        if raw in ("INF", "+INF", "Infinity", "+Infinity"):
+            return math.inf
+        if raw in ("-INF", "-Infinity"):
+            return -math.inf
+    return _original_deserialize_simple_json(type_name, raw)
+
+
+model_4_0_rc1._deserialize_simple_json = _custom_deserialize_simple_json
+
+
+# Monkeypatch _json_dump_value to serialize non-finite numbers (NaN, Infinity, -Infinity)
+def _custom_json_dump_value(value: Any, indent: int | None = None, level: int = 0) -> str:
+    if value is None:
+        return "null"
+    if value is True:
+        return "true"
+    if value is False:
+        return "false"
+    if isinstance(value, str):
+        return json.dumps(value, ensure_ascii=False)
+    if isinstance(value, int):
+        return str(value)
+    if isinstance(value, Decimal):
+        return str(value)
+    if isinstance(value, float):
+        if math.isnan(value):
+            return "NaN"
+        if value == math.inf:
+            return "Infinity"
+        if value == -math.inf:
+            return "-Infinity"
+        return json.dumps(value)
+    if isinstance(value, list):
+        if not value:
+            return "[]"
+        if indent is None:
+            return "[" + ",".join(_custom_json_dump_value(item) for item in value) + "]"
+        child = level + 1
+        padding = " " * (indent * child)
+        closing = " " * (indent * level)
+        return (
+            "[\n"
+            + padding
+            + (",\n" + padding).join(_custom_json_dump_value(item, indent, child) for item in value)
+            + "\n"
+            + closing
+            + "]"
+        )
+    if isinstance(value, dict):
+        if not value:
+            return "{}"
+        pairs: list[str] = []
+        for key, item in value.items():
+            if not isinstance(key, str):
+                raise TypeError("JSON object keys must be strings.")
+            separator = ": " if indent is not None else ":"
+            dumped_item = _custom_json_dump_value(item, indent, level + 1)
+            pairs.append(json.dumps(key, ensure_ascii=False) + separator + dumped_item)
+        if indent is None:
+            return "{" + ",".join(pairs) + "}"
+        child = level + 1
+        padding = " " * (indent * child)
+        closing = " " * (indent * level)
+        return "{\n" + padding + (",\n" + padding).join(pairs) + "\n" + closing + "}"
+    raise TypeError(f"Object of type {type(value).__name__} is not JSON serializable.")
+
+
+model_4_0_rc1._json_dump_value = _custom_json_dump_value
+_json_dump_value = _custom_json_dump_value
 
 logger = logging.getLogger(__name__)
 
