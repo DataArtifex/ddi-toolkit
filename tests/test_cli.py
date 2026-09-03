@@ -201,3 +201,27 @@ def test_cli_stream_unlimited_by_default(tmp_path):
     assert isinstance(data["items"], list)
     # File has 1833 fragments total
     assert len(data["items"]) > 100
+
+
+def test_cli_stream_json_style_substitutions(tmp_path):
+    sample_xml = os.path.join(
+        data_dir(),
+        "lifecycle/samples/question_item_code_domain.ddi33.xml",
+    )
+    out_file = tmp_path / "output_subst.json"
+    result = runner.invoke(
+        app,
+        [
+            "ddil324",
+            sample_xml,
+            "--output",
+            str(out_file),
+            "--json-style",
+            "substitutions",
+            "--pretty",
+        ],
+    )
+    assert result.exit_code == 0
+    content = out_file.read_text(encoding="utf-8")
+    assert '"CodeDomain": {' in content
+    assert '"ResponseDomain"' not in content

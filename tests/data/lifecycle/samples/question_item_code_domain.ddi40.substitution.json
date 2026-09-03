@@ -1,0 +1,63 @@
+{
+  "items": [
+    {
+      "$type": "QuestionItem",
+      "URN": "urn:ddi:org.example:qi_health_status_01:1",
+      "Agency": "org.example",
+      "ID": "qi_health_status_01",
+      "Version": "1",
+      "VersionResponsibility": "metadata.analyst@example.org",
+      "VersionRationale": {
+        "RationaleDescription": [
+          {
+            "@language": "en-US",
+            "@value": "Anonymized question item sample"
+          }
+        ]
+      },
+      "VersionDate": {
+        "DateTime": "2024-01-15T10:30:00+00:00"
+      },
+      "QuestionItemName": [
+        {
+          "@language": "en-US",
+          "@value": "Q_HEALTH_STATUS"
+        }
+      ],
+      "QuestionText": [
+        {
+          "LiteralText": [
+            {
+              "Text": [
+                {
+                  "@language": "en-US",
+                  "@value": "Compared to a year ago, how would you rate your overall general health?"
+                }
+              ]
+            }
+          ],
+          "AudienceLanguage": "en-US"
+        }
+      ],
+      "CodeDomain": {
+        "MissingValue": "7 8 9 -1",
+        "BlankIsMissingValue": true,
+        "CodeListReference": {
+          "$type": "CodeList",
+          "URN": "urn:ddi:org.example:cl_health_status_scale:1",
+          "Agency": "org.example",
+          "ID": "cl_health_status_scale",
+          "Version": "1"
+        },
+        "ResponseCardinality": {
+          "MinimumResponses": 1,
+          "MaximumResponses": 1
+        }
+      },
+      "ResponseCardinality": {
+        "MinimumResponses": 1,
+        "MaximumResponses": 1
+      }
+    }
+  ]
+}

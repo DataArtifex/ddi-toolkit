@@ -194,6 +194,100 @@ XML_SUBSTITUTIONS = {
     "ConditionalText": ("TextContent", "ConditionalTextType"),
 }
 
+# Reverse mapping: (abstract_element_head, xsi_type) -> concrete_element_name
+REVERSE_XML_SUBSTITUTIONS = {(head, xsi): concrete for concrete, (head, xsi) in XML_SUBSTITUTIONS.items()}
+
+
+def transform_to_substitution_json(data: Any) -> Any:
+    """Transforms standard DDI 4.0 JSON data into substitution-keyed (concrete-element-keyed) JSON format.
+
+    Replaces abstract substitution head keys (such as ResponseDomain, ValueRepresentation,
+    TextContent) with their concrete substitution element tag names (e.g. CodeDomain,
+    NumericRepresentation, LiteralText) and removes redundant $type discriminators.
+
+    Args:
+        data: Arbitrary JSON data structure (dict, list, or primitive).
+
+    Returns:
+        Transformed JSON data structure.
+    """
+    if isinstance(data, dict):
+        result: dict[str, Any] = {}
+        for k, v in data.items():
+            trans_v = transform_to_substitution_json(v)
+            if isinstance(trans_v, dict) and "$type" in trans_v and (k, trans_v["$type"]) in REVERSE_XML_SUBSTITUTIONS:
+                new_key = REVERSE_XML_SUBSTITUTIONS[(k, trans_v["$type"])]
+                cleaned = dict(trans_v)
+                cleaned.pop("$type", None)
+                result[new_key] = cleaned
+            elif (
+                isinstance(trans_v, list)
+                and trans_v
+                and all(
+                    isinstance(item, dict) and "$type" in item and (k, item["$type"]) in REVERSE_XML_SUBSTITUTIONS
+                    for item in trans_v
+                )
+            ):
+                new_key = REVERSE_XML_SUBSTITUTIONS[(k, trans_v[0]["$type"])]
+                cleaned_list = []
+                for item in trans_v:
+                    cleaned = dict(item)
+                    cleaned.pop("$type", None)
+                    cleaned_list.append(cleaned)
+                result[new_key] = cleaned_list
+            else:
+                result[k] = trans_v
+        return result
+    elif isinstance(data, list):
+        return [transform_to_substitution_json(item) for item in data]
+    return data
+
+
+def to_dict(fragment: Any, *, style: str = "ddi40") -> dict[str, Any]:
+    """Serializes a DDI 4.0 model instance to a dictionary with the specified JSON style.
+
+    Args:
+        fragment: DDI 4.0 model instance.
+        style: JSON style ('ddi40' for standard DDI 4.0 RC1 format, or 'substitutions' for
+            concrete substitution element keyed format). Defaults to 'ddi40'.
+
+    Returns:
+        Dictionary representation of the fragment.
+    """
+    style_lower = style.lower()
+    if hasattr(fragment, "to_dict"):
+        data = fragment.to_dict()
+    elif hasattr(fragment, "model_dump"):
+        data = {"$type": type(fragment).__name__}
+        data.update(fragment.model_dump(mode="json", by_alias=True, exclude_none=True, exclude_defaults=True))
+    else:
+        raise TypeError(f"Object of type {type(fragment).__name__} cannot be converted to dict.")
+
+    if style_lower in ("substitutions", "substitution", "elements", "element"):
+        return transform_to_substitution_json(data)
+    elif style_lower in ("ddi40", "ddi4", "standard", "default"):
+        return data
+    else:
+        raise ValueError(
+            f"Unsupported style: '{style}'. Expected 'ddi40' (standard) or 'substitutions' (element-keyed)."
+        )
+
+
+def to_json(fragment: Any, *, style: str = "ddi40", indent: int | None = None) -> str:
+    """Serializes a DDI 4.0 model instance to a JSON string with the specified JSON style.
+
+    Args:
+        fragment: DDI 4.0 model instance.
+        style: JSON style ('ddi40' for standard DDI 4.0 RC1 format, or 'substitutions' for
+            concrete substitution element keyed format). Defaults to 'ddi40'.
+        indent: Optional indentation level for pretty-printing.
+
+    Returns:
+        JSON string.
+    """
+    data = to_dict(fragment, style=style)
+    return _json_dump_value(data, indent=indent)
+
 
 # Dublin Core namespaces used in DDI 3.x instances
 DUBLIN_CORE_NAMESPACES = {
@@ -701,6 +795,7 @@ def ddil324(
     output_file: str | os.PathLike[str] | IO[str] | None = None,
     *,
     format: str = "json",
+    json_style: str = "ddi40",
     resource_types: Iterable[str] | str | None = None,
     limit: int = 0,
     pretty: bool = False,
@@ -713,6 +808,8 @@ def ddil324(
         input_file: Path to the DDI-Lifecycle 3.x XML file, or binary file-like object.
         output_file: Path to output file, text file-like object, or None (auto-generates filename based on input_file).
         format: Output format ('json' or 'xml'). Defaults to 'json'.
+        json_style: JSON format style ('ddi40' for standard DDI 4.0 RC1 format, or 'substitutions' for
+            concrete substitution element keyed format). Defaults to 'ddi40'.
         resource_types: Optional resource types to filter (repeatable or comma-separated string/iterable).
         limit: Maximum number of fragments to write (default: 0 / unlimited).
         pretty: Pretty-print formatted JSON or XML. Defaults to False.
@@ -725,6 +822,21 @@ def ddil324(
     format_lower = str(format).lower()
     if format_lower not in ("json", "xml"):
         raise ValueError(f"Unsupported format: '{format}'. Expected 'json' or 'xml'.")
+
+    json_style_lower = str(json_style).lower()
+    if json_style_lower not in (
+        "ddi40",
+        "ddi4",
+        "standard",
+        "default",
+        "substitutions",
+        "substitution",
+        "elements",
+        "element",
+    ):
+        raise ValueError(
+            f"Unsupported json_style: '{json_style}'. Expected 'ddi40' (standard) or 'substitutions' (element-keyed)."
+        )
 
     output_target: str | os.PathLike[str] | IO[str]
     if output_file is None:
@@ -796,6 +908,9 @@ def ddil324(
                         data.update(
                             fragment.model_dump(mode="json", by_alias=True, exclude_none=True, exclude_defaults=True)
                         )
+                    if json_style_lower in ("substitutions", "substitution", "elements", "element"):
+                        data = transform_to_substitution_json(data)
+
                     if not first_json:
                         out_f.write(",\n" if pretty else ",")
                     else:
@@ -849,6 +964,7 @@ def ddil324(
         "input_file": str(input_file) if isinstance(input_file, (str, os.PathLike)) else None,
         "output_file": str(output_target) if isinstance(output_target, (str, os.PathLike)) else None,
         "format": format_lower,
+        "json_style": json_style_lower if format_lower == "json" else None,
         "counts": dict(counts),
         "total_resources": total_resources,
         "resource_errors": dict(resource_errors),

@@ -64,6 +64,11 @@ class StreamOutputFormat(StrEnum):
     xml = "xml"
 
 
+class JsonStyle(StrEnum):
+    ddi40 = "ddi40"
+    substitutions = "substitutions"
+
+
 def setup_logging(level: LogLevel):
     root = logging.getLogger()
     root.setLevel(getattr(logging, level.value))
@@ -234,6 +239,14 @@ def ddil324(
         StreamOutputFormat,
         typer.Option("--format", "-fmt", help="Output format for parsed fragments (json or xml)"),
     ] = StreamOutputFormat.json,
+    json_style: Annotated[
+        JsonStyle,
+        typer.Option(
+            "--json-style",
+            "-js",
+            help="JSON style: 'ddi40' (standard format) or 'substitutions' (concrete element-keyed R&D format)",
+        ),
+    ] = JsonStyle.ddi40,
     pretty: Annotated[
         bool,
         typer.Option("--pretty", "-p", help="Pretty-print output (indented JSON or formatted XML)"),
@@ -294,6 +307,7 @@ def ddil324(
             input_file=xmlfile,
             output_file=output,
             format=format.value,
+            json_style=json_style.value,
             resource_types=filter,
             limit=limit,
             pretty=pretty,

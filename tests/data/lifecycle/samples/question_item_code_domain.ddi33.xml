@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FragmentInstance xmlns="ddi:instance:3_3">
+  <Fragment xmlns:r="ddi:reusable:3_3" xmlns="ddi:instance:3_3">
+    <QuestionItem isUniversallyUnique="true" versionDate="2024-01-15T10:30:00Z" xmlns="ddi:datacollection:3_3">
+      <r:URN>urn:ddi:org.example:qi_health_status_01:1</r:URN>
+      <r:Agency>org.example</r:Agency>
+      <r:ID>qi_health_status_01</r:ID>
+      <r:Version>1</r:Version>
+      <r:VersionResponsibility>metadata.analyst@example.org</r:VersionResponsibility>
+      <r:VersionRationale>
+        <r:RationaleDescription>
+          <r:String xml:lang="en-US">Anonymized question item sample</r:String>
+        </r:RationaleDescription>
+      </r:VersionRationale>
+      <QuestionItemName>
+        <r:String xml:lang="en-US">Q_HEALTH_STATUS</r:String>
+      </QuestionItemName>
+      <QuestionText audienceLanguage="en-US">
+        <LiteralText>
+          <Text>Compared to a year ago, how would you rate your overall general health?</Text>
+        </LiteralText>
+      </QuestionText>
+      <CodeDomain missingValue="7 8 9 -1" blankIsMissingValue="true">
+        <r:CodeListReference>
+          <r:Agency>org.example</r:Agency>
+          <r:ID>cl_health_status_scale</r:ID>
+          <r:Version>1</r:Version>
+          <r:TypeOfObject>CodeList</r:TypeOfObject>
+        </r:CodeListReference>
+        <r:ResponseCardinality minimumResponses="1" maximumResponses="1" />
+      </CodeDomain>
+      <r:ResponseCardinality minimumResponses="1" maximumResponses="1" />
+    </QuestionItem>
+  </Fragment>
+</FragmentInstance>

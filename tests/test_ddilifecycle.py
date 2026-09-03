@@ -1,6 +1,7 @@
 import json
 import os
 import xml.etree.ElementTree as ET
+from pathlib import Path
 
 from dartfx.ddi import ddilifecycle
 from dartfx.ddi.ddilifecycle import model
@@ -484,3 +485,127 @@ def test_stream_ddil_fragments_dublin_core_prefixed_elements():
     assert study.citation.dublin_core_coverage[0].value == "Global Coverage"
     assert study.citation.dublin_core_spatial[0].value == "World"
     assert study.citation.dublin_core_modified[0].value == "2026-09-01"
+
+
+def test_stream_ddil_fragments_question_item_code_domain():
+    import io
+    import json
+
+    xml_path = os.path.join(
+        data_dir(),
+        "lifecycle/samples/question_item_code_domain.ddi33.xml",
+    )
+
+    errors = []
+
+    def handle_error(rtype, exc):
+        errors.append((rtype, str(exc)))
+
+    fragments = list(ddilifecycle.stream_ddil_fragments(xml_path, on_error=handle_error))
+    assert len(errors) == 0, f"Encountered unexpected parsing errors: {errors}"
+    assert len(fragments) == 1
+    qi = fragments[0]
+    assert isinstance(qi, model.QuestionItem)
+    assert qi.id == "qi_health_status_01"
+    assert qi.urn == "urn:ddi:org.example:qi_health_status_01:1"
+    assert qi.agency == "org.example"
+    assert qi.version_responsibility == "metadata.analyst@example.org"
+    assert qi.question_item_name[0].value == "Q_HEALTH_STATUS"
+    assert (
+        qi.question_text[0].text_content[0].text[0].value
+        == "Compared to a year ago, how would you rate your overall general health?"
+    )
+    assert isinstance(qi.response_domain, model.CodeDomainType)
+    assert qi.response_domain.missing_value == "7 8 9 -1"
+    assert qi.response_domain.blank_is_missing_value is True
+    assert qi.response_domain.code_list_reference.id == "cl_health_status_scale"
+    assert qi.response_domain.code_list_reference.urn == "urn:ddi:org.example:cl_health_status_scale:1"
+    assert qi.response_domain.response_cardinality.minimum_responses == 1
+    assert qi.response_domain.response_cardinality.maximum_responses == 1
+    assert qi.response_cardinality.minimum_responses == 1
+    assert qi.response_cardinality.maximum_responses == 1
+
+    # 1. Default / Standard DDI 4.0 JSON serialization & round-trip verification
+    json_str_default = ddilifecycle.to_json(qi, style="ddi40", indent=2)
+    data_default = json.loads(json_str_default)
+    assert data_default["$type"] == "QuestionItem"
+    assert "ResponseDomain" in data_default
+    assert data_default["ResponseDomain"]["$type"] == "CodeDomainType"
+    assert data_default["ResponseDomain"]["MissingValue"] == "7 8 9 -1"
+    assert data_default["ResponseDomain"]["BlankIsMissingValue"] is True
+    assert data_default["ResponseDomain"]["CodeListReference"]["ID"] == "cl_health_status_scale"
+    assert "LiteralTextType" in json_str_default
+
+    qi_from_json = model.QuestionItem.from_json(json_str_default)
+    assert isinstance(qi_from_json.response_domain, model.CodeDomainType)
+    assert qi_from_json.response_domain.missing_value == "7 8 9 -1"
+    assert qi_from_json.response_domain.blank_is_missing_value is True
+
+    # 2. R&D / Substitution-aware (concrete-element-keyed) JSON serialization
+    dict_subst = ddilifecycle.to_dict(qi, style="substitutions")
+    assert "CodeDomain" in dict_subst
+    assert "ResponseDomain" not in dict_subst
+    assert "$type" not in dict_subst["CodeDomain"]
+    assert dict_subst["CodeDomain"]["MissingValue"] == "7 8 9 -1"
+    assert dict_subst["CodeDomain"]["BlankIsMissingValue"] is True
+    assert dict_subst["CodeDomain"]["CodeListReference"]["ID"] == "cl_health_status_scale"
+    assert "LiteralText" in dict_subst["QuestionText"][0]
+    assert "TextContent" not in dict_subst["QuestionText"][0]
+
+    json_str_subst = ddilifecycle.to_json(qi, style="substitutions", indent=2)
+    assert '"CodeDomain": {' in json_str_subst
+    assert '"ResponseDomain"' not in json_str_subst
+    assert '"LiteralText": [' in json_str_subst
+
+    # 3. Test conversion via ddil324 utility (Default JSON, Substitutions JSON, and XML)
+    out_json_default = io.StringIO()
+    res_json_default = ddilifecycle.ddil324(xml_path, out_json_default, format="json", json_style="ddi40", pretty=True)
+    assert res_json_default["total_resources"] == 1
+    assert res_json_default["total_errors"] == 0
+    assert res_json_default["json_style"] == "ddi40"
+    assert '"ResponseDomain": {' in out_json_default.getvalue()
+    assert '"$type": "CodeDomainType"' in out_json_default.getvalue()
+
+    out_json_subst = io.StringIO()
+    res_json_subst = ddilifecycle.ddil324(
+        xml_path, out_json_subst, format="json", json_style="substitutions", pretty=True
+    )
+    assert res_json_subst["total_resources"] == 1
+    assert res_json_subst["total_errors"] == 0
+    assert res_json_subst["json_style"] == "substitutions"
+    assert '"CodeDomain": {' in out_json_subst.getvalue()
+    assert '"ResponseDomain"' not in out_json_subst.getvalue()
+
+    out_xml = io.StringIO()
+    res_xml = ddilifecycle.ddil324(xml_path, out_xml, format="xml", pretty=True)
+    assert res_xml["total_resources"] == 1
+    assert res_xml["total_errors"] == 0
+    assert 'xsi:type="ddi:CodeDomainType"' in out_xml.getvalue()
+
+    # 4. DDI 4.0 XML serialization & verification
+    xml_out = qi.to_xml()
+    assert "ResponseDomain" in xml_out
+    assert 'xsi:type="ddi:CodeDomainType"' in xml_out
+
+    # 5. Save sample outputs to disk if missing or outdated
+    sample_dir = Path(xml_path).parent
+    target_ddi40_json = sample_dir / "question_item_code_domain.ddi40.json"
+    target_ddi40_subst_json = sample_dir / "question_item_code_domain.ddi40.substitution.json"
+    target_ddi40_xml = sample_dir / "question_item_code_domain.ddi40.xml"
+    xml_mtime = Path(xml_path).stat().st_mtime
+
+    def is_outdated(target: Path) -> bool:
+        return not target.exists() or target.stat().st_mtime < xml_mtime
+
+    if is_outdated(target_ddi40_json):
+        ddilifecycle.ddil324(xml_path, target_ddi40_json, format="json", json_style="ddi40", pretty=True)
+
+    if is_outdated(target_ddi40_subst_json):
+        ddilifecycle.ddil324(xml_path, target_ddi40_subst_json, format="json", json_style="substitutions", pretty=True)
+
+    if is_outdated(target_ddi40_xml):
+        ddilifecycle.ddil324(xml_path, target_ddi40_xml, format="xml", pretty=True)
+
+    assert target_ddi40_json.exists()
+    assert target_ddi40_subst_json.exists()
+    assert target_ddi40_xml.exists()

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ItemContainer xmlns="https://ddialliance.org/ddi">
+  <QuestionItem xmlns="https://ddialliance.org/ddi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <URN>urn:ddi:org.example:qi_health_status_01:1</URN>
+      <Agency>org.example</Agency>
+      <ID>qi_health_status_01</ID>
+      <Version>1</Version>
+      <VersionResponsibility>metadata.analyst@example.org</VersionResponsibility>
+      <VersionRationale>
+        <RationaleDescription xml:lang="en-US">Anonymized question item sample</RationaleDescription>
+      </VersionRationale>
+      <VersionDate>2024-01-15T10:30:00+00:00</VersionDate>
+      <QuestionItemName xml:lang="en-US">Q_HEALTH_STATUS</QuestionItemName>
+      <QuestionText>
+        <TextContent xsi:type="ddi:LiteralTextType">
+          <Text xml:lang="en-US">Compared to a year ago, how would you rate your overall general health?</Text>
+        </TextContent>
+        <AudienceLanguage>en-US</AudienceLanguage>
+      </QuestionText>
+      <ResponseDomain xsi:type="ddi:CodeDomainType">
+        <MissingValue>7 8 9 -1</MissingValue>
+        <BlankIsMissingValue>true</BlankIsMissingValue>
+        <CodeListReference>
+          <URN>urn:ddi:org.example:cl_health_status_scale:1</URN>
+          <Agency>org.example</Agency>
+          <ID>cl_health_status_scale</ID>
+          <Version>1</Version>
+          <TypeOfObject>CodeList</TypeOfObject>
+        </CodeListReference>
+        <ResponseCardinality>
+          <MinimumResponses>1</MinimumResponses>
+          <MaximumResponses>1</MaximumResponses>
+        </ResponseCardinality>
+      </ResponseDomain>
+      <ResponseCardinality>
+        <MinimumResponses>1</MinimumResponses>
+        <MaximumResponses>1</MaximumResponses>
+      </ResponseCardinality>
+    </QuestionItem>
+</ItemContainer>
