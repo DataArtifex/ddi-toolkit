@@ -9,7 +9,7 @@ sys.path.append(os.path.join(os.getcwd(), "src"))
 
 from pydantic import AnyUrl
 
-from dartfx.ddi.ddicdi import model_1_0_0 as model
+from dartfx.ddi.ddicdi import model_1_1_0 as model
 from dartfx.ddi.ddicdi.assistants import CdiAssistant, CdiClassAssistant
 
 

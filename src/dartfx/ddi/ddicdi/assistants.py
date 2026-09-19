@@ -40,22 +40,15 @@ from typing import Annotated, Any, Union, get_args, get_origin
 from pydantic import BaseModel
 from rdflib import Graph, URIRef
 
-from . import model_1_0_0 as legacy_model
 from . import model_1_1_0 as model
 
-CDIResourceType = model.CDIResource | legacy_model.CDIResource
-CDIClassType = model.CDIClass | legacy_model.CDIClass
-CDIDataTypeType = model.CDIDataType | legacy_model.CDIDataType
+CDIResourceType = model.CDIResource
+CDIClassType = model.CDIClass
+CDIDataTypeType = model.CDIDataType
 
 
-def _model_namespace_for(resource_or_class: Any) -> Any:
+def _model_namespace_for(_resource_or_class: Any) -> Any:
     """Resolve which CDI model namespace should be used for a resource or class."""
-    module_name = getattr(resource_or_class, "__module__", "")
-    if not module_name and hasattr(resource_or_class, "__class__"):
-        module_name = getattr(resource_or_class.__class__, "__module__", "")
-
-    if module_name.endswith("model_1_0_0"):
-        return legacy_model
     return model
 
 
@@ -192,7 +185,6 @@ class CdiResourceAssistant(CdiAssistant):
         super().__init_subclass__(**kwargs)
         # Automatically bind methods of the new subclass to CDIResource
         cls._bind_to_model(model.CDIResource)
-        cls._bind_to_model(legacy_model.CDIResource)
 
     @classmethod
     def get_uri(cls, resource: CDIResourceType) -> str | None:
@@ -329,7 +321,6 @@ class CdiClassAssistant(CdiResourceAssistant):
         super().__init_subclass__(**kwargs)
         # Automatically bind methods of the new subclass to CDIClass
         cls._bind_to_model(model.CDIClass)
-        cls._bind_to_model(legacy_model.CDIClass)
 
     @classmethod
     def get_ddi_identifier_value(cls, resource: CDIClassType) -> str | None:
@@ -511,7 +502,6 @@ class CdiDataTypeAssistant(CdiResourceAssistant):
         super().__init_subclass__(**kwargs)
         # Automatically bind methods of the new subclass to CDIDataType
         cls._bind_to_model(model.CDIDataType)
-        cls._bind_to_model(legacy_model.CDIDataType)
 
     @classmethod
     def factory(
@@ -542,9 +532,3 @@ class CdiDataTypeAssistant(CdiResourceAssistant):
 # For backward compatibility
 CdiResourceAssistantAlias = CdiClassAssistant  # If needed for extremely old code
 # Note: CdiResourceAssistant is now a real class for CDIResource-level methods.
-
-
-# Bind assistant methods to legacy model classes to keep 1.0.0 call sites working.
-CdiResourceAssistant._bind_to_model(legacy_model.CDIResource)
-CdiClassAssistant._bind_to_model(legacy_model.CDIClass)
-CdiDataTypeAssistant._bind_to_model(legacy_model.CDIDataType)

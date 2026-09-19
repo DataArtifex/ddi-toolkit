@@ -4,7 +4,7 @@ import sys
 # Setup path
 sys.path.append(os.path.join(os.getcwd(), "src"))
 
-from dartfx.ddi.ddicdi import model_1_0_0 as model
+from dartfx.ddi.ddicdi import model_1_1_0 as model
 
 classes_to_check = [
     model.InstanceVariable,

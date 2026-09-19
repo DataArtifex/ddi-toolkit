@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 import re
 import urllib.parse
@@ -5,17 +7,14 @@ import uuid
 import xml.etree.ElementTree as ET
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any, cast
 
-from rdflib import Graph, URIRef
-
-from dartfx.rdf.pydantic import skos
-
-from ..ddicdi import model_1_0_0 as model
-from ..ddicdi.assistants import CdiAssistant, CdiClassAssistant
-from ..ddicdi.model_1_0_0 import TypedString
-from ..ddicdi.utils import ddi_cdi_resources_to_graph
 from .model import codeBookType, loadxml, loadxmlstring
+
+if TYPE_CHECKING:
+    from rdflib import Graph
+
+    from ..ddicdi.assistants import CdiAssistant
 
 _NCNAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_.-]*$")
 
@@ -334,6 +333,14 @@ def codebook_to_cdif(
         if not cb_filedscr.id:
             raise ValueError("FileDscr element has no @ID attribute")
 
+    from rdflib import URIRef
+
+    from dartfx.rdf.pydantic import skos
+
+    from ..ddicdi import model_1_1_0 as model
+    from ..ddicdi.assistants import CdiClassAssistant
+    from ..ddicdi.model_1_1_0 import TypedString
+
     # Initialize
     cdi_resources: dict[str, Any] = {}
     if not base_uri:
@@ -640,5 +647,7 @@ def codebook_to_cdif_graph(
     """
     Helper to convert a stack of DdiCdiResources to a RDF Graph
     """
+    from ..ddicdi.utils import ddi_cdi_resources_to_graph
+
     resources = codebook_to_cdif(codebook, base_uri, files, use_skos)
     return ddi_cdi_resources_to_graph(resources)

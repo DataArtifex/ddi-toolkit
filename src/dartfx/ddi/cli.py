@@ -18,10 +18,7 @@ from rich.progress import (
     TransferSpeedColumn,
 )
 
-from dartfx.ddi import ddicodebook as codebook
 from dartfx.ddi.basex.cli import basex_cli
-from dartfx.ddi.ddicodebook import utils as cb_utils
-from dartfx.ddi.ddilifecycle import utils as lc_utils
 
 app = typer.Typer(
     name="dartfx-ddi",
@@ -111,6 +108,9 @@ def ddic2cdi(
     Converts DDI-Codebook 2.6 XML file to DDI-CDI RDF graph.
     """
     setup_logging(loglevel)
+    from dartfx.ddi import ddicodebook as codebook
+    from dartfx.ddi.ddicodebook import utils as cb_utils
+
     logging.info(f"Converting {ddifile} to CDI")
     cb = codebook.loadxml(str(ddifile))
     graph = cb_utils.codebook_to_cdif_graph(cb, base_uri=base_uri, use_skos=use_skos)
@@ -132,6 +132,8 @@ def ddic_dump(
     Dumps the content of a DDI-Codebook to the console.
     """
     setup_logging(loglevel)
+    from dartfx.ddi import ddicodebook as codebook
+
     cb = codebook.loadxml(str(ddifile))
     cb.dump()
 
@@ -154,6 +156,8 @@ def ddic_dd(
     """
 
     setup_logging(loglevel)
+    from dartfx.ddi import ddicodebook as codebook
+
     cb = codebook.loadxml(str(ddifile))
     # Note: cb.get_data_dictionary signature doesn't take 'stats' yet in model.py,
     # but the previous argparse CLI had it, so we keep the option for future implementation.
@@ -203,6 +207,7 @@ def ddicvalidate(
     Validates a DDI-Codebook XML file and emits a JSON or Markdown report.
     """
     setup_logging(loglevel)
+    from dartfx.ddi.ddicodebook import utils as cb_utils
 
     is_valid, report = cb_utils.validate_codebook_xml(ddifile, strict=strict)
 
@@ -287,6 +292,7 @@ def ddil324(
     Transforms DDI-Lifecycle 3.x FragmentInstance XML files into DDI 4.0 RC1 (JSON or XML).
     """
     setup_logging(loglevel)
+    from dartfx.ddi.ddilifecycle import utils as lc_utils
 
     if output is not None:
         logging.info(f"Streaming fragments from {xmlfile} to {output}")
@@ -498,6 +504,7 @@ def ddil_profile(
     Supports generating multiple output formats (md, json, mermaid, html, dot, ttl) in a single parsing pass.
     """
     setup_logging(loglevel)
+    from dartfx.ddi.ddilifecycle import utils as lc_utils
 
     requested_formats: list[str] = []
     if format is None or len(format) == 0:

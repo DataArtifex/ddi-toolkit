@@ -11,7 +11,7 @@ The **Data Artifex DDI Toolkit** is a specialized Python framework for managing 
 
 ### Key Architecture & Implementation Details
 
-1. **Definitive Pydantic Models**: DDI-CDI support is built on Pydantic models (`model_1_0_0.py`) generated directly from the official DDI-CDI UML specifications. The DDI-Codebook support is built on Pydantic models (`model.py`) manually coded from the official specification.
+1. **Definitive Pydantic Models**: DDI-CDI support is built on Pydantic models (`model_1_1_0.py`) generated directly from the official DDI-CDI UML specifications. The DDI-Codebook support is built on Pydantic models (`model.py`) manually coded from the official specification.
 2. **Assistant Framework**: To manage the complexity of the CDI model, the toolkit uses an **Assistant Framework** (`CdiClassAssistant`).
    - **Resource Lifecycle**: Assistants handle the creation of resources, including automated DDI Identifier and URI generation.
    - **Method Proxying**: Relationships are managed via methods (like `add_variable`) that are dynamically bound to model instances through assistants.
