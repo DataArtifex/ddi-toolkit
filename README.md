@@ -30,15 +30,21 @@ There are three major flavors of DDI. This package currently supports:
 - **[DDI-CDI](https://ddialliance.org/Specification/DDI-CDI/)**: The new Cross Domain Integration specification. This package uses **generated Pydantic models** and now defaults to the DDI-CDI 1.1.0 model layer.
 - **DDI-Lifecycle 3.3 / DDI 4.0 RC1**: Fragment-by-fragment XML streaming parser that crosswalks DDI 3.3 documents into DDI 4.0 RC1 Pydantic models.
 
+### Optional & Experimental Extensions
+
+- **BaseX XML Database & Reporting** *(Experimental, Optional)*: Standalone integration for native XML database storage, server-side XQuery processing, and automated report generation across large DDI collections.
+
 ## Key Features
 
-- **DDI-Codebook XML Processing**: Load, parse, and extract structured metadata from DDI-Codebook documents.
+- **DDI-Codebook XML Processing**: Load, parse, extract structured metadata, and validate DDI-Codebook documents with JSON and Markdown reports.
 - **DDI-Lifecycle XML Streaming**: Stream and parse DDI 3.3 XML documents fragment-by-fragment into DDI 4.0 RC1 models via Python or CLI.
+- **DDI-Lifecycle Reference Graph & Path Analysis**: Dual-pass streaming reference analyzer, multi-hop pathfinding, multiplicity metrics (cardinality, target reuse, node roles), and export to interactive Vis.js HTML, Markdown, JSON, Mermaid, Graphviz DOT, Turtle RDF, and NetworkX.
 - **DDI-CDI Model (v1.1.0)**: Use definitive, spec-generated Pydantic classes for the full DDI-CDI implementation.
 - **Assistant Framework**: A high-level API (`CdiClassAssistant`) that simplifies CDI resource creation, automated identifier generation, and method proxying.
 - **RDF Serialization**: Built-in support for serializing CDI models to RDF graphs.
 - **Cross-Format Conversion**: Transform DDI-Codebook metadata into DDI-CDI resources via the CDIF profile.
 - **Validation Reporting**: Validate DDI-Codebook XML documents and generate machine-friendly JSON or human-readable Markdown reports.
+- **BaseX XML Database & Reporting** *(Experimental, Optional)*: Connect to BaseX servers over REST, load and query DDI-C/DDI-L collections, and generate publication-ready reports (Markdown, HTML, JSON, CSV, Polars DataFrames).
 
 ## Installation
 
@@ -52,11 +58,11 @@ The project uses `hatch` as the build backend. For faster package management and
 git clone https://github.com/DataArtifex/ddi-toolkit.git
 cd ddi-toolkit
 
-# Install dependencies using uv
+# Install core dependencies using uv
 uv pip install -e .
 
-# Or using standard pip
-pip install -e .
+# Or install with the optional experimental BaseX extension
+uv pip install -e ".[basex]"
 ```
 
 ### Development Installation
@@ -158,23 +164,49 @@ dartfx-ddi ddil324 my_study.ddi33.xml --format xml --pretty
 
 # Cap fragment output count (default: 0 / unlimited)
 dartfx-ddi ddil324 my_study.ddi33.xml --limit 100
+
+# Analyze resource class references and export Markdown, HTML, JSON, Mermaid, DOT, Turtle
+dartfx-ddi ddil-references my_study.ddi33.xml --format all --output-dir ./reports/
+
+# Generate interactive Vis.js HTML network explorer
+dartfx-ddi ddil-references my_study.ddi33.xml --format html -o network.html
+
+# Find multi-hop paths between classes (e.g., QuestionItem to OutParameter)
+dartfx-ddi ddil-references my_study.ddi33.xml --between QuestionItem,OutParameter --format md,html
+
+# Force re-parsing XML and refresh canonical JSON cache
+dartfx-ddi ddil-references my_study.ddi33.xml --refresh --format html
 ```
 
 By default, `ddicvalidate` records invalid `@ID` values (non-NCName / non-`xs:ID`) as warnings.
 Use `--strict` to treat those warnings as validation errors.
 
-### DDI-Lifecycle Processing & Streaming in Python
+### DDI-Lifecycle Processing & Reference Graph Analysis in Python
 
 ```python
 from dartfx.ddi import ddilifecycle
 
-# Transform an entire DDI 3.x document to DDI 4.0 JSON or XML
+# 1. Transform an entire DDI 3.x document to DDI 4.0 JSON or XML
 stats = ddilifecycle.ddil324("my_study.ddi33.xml", format="json", pretty=True)
 print(f"Processed {stats['total_resources']} resources in {stats['elapsed_seconds']:.2f}s")
 
-# Stream DDI 3.3 fragments crosswalked to DDI 4.0 RC1 Pydantic models
+# 2. Stream DDI 3.3 fragments crosswalked to DDI 4.0 RC1 Pydantic models
 for fragment in ddilifecycle.stream_ddil_fragments("my_study.ddi33.xml", resource_types=["QuestionItem"]):
     print(f"Type: {type(fragment).__name__}, ID: {fragment.id}, Agency: {fragment.agency}")
+
+# 3. Analyze resource reference graph & compute topology metrics
+graph = ddilifecycle.analyze_resource_references("my_study.ddi33.xml", title="Survey Reference Graph")
+print(f"Classes: {graph.summary.total_classes}, References: {graph.summary.total_reference_instances}")
+print(f"Graph density: {graph.summary.graph_density:.4f}, Resolution rate: {graph.summary.resolution_rate:.1f}%")
+
+# 4. Discover multi-hop connecting paths between classes
+paths = graph.find_paths_between("QuestionItem", "OutParameter", max_hops=5)
+for p in paths:
+    print(f"{p.hops} hops: {p.path_description}")
+
+# 5. Export to interactive Vis.js HTML explorer or NetworkX DiGraph
+html = graph.to_html(title="Interactive Network Explorer")
+nx_graph = graph.to_networkx()
 ```
 
 ### Validating DDI-Codebook Documents in Python
@@ -192,6 +224,45 @@ print(report["summary"])
 
 markdown_report = cb_utils.validation_report_to_markdown(report)
 print(markdown_report)
+```
+
+### BaseX XML Database & Reporting (Experimental, Optional)
+
+> **Note:** The BaseX integration is an optional, experimental extension requiring `pip install "dartfx-ddi[basex]"`.
+
+Interact with a BaseX server over REST, query DDI-C/DDI-L collections, and generate formatted reports:
+
+```python
+from dartfx.ddi.basex import (
+    BaseXClient,
+    DdiCodebookQueryManager,
+    BaseXReporter,
+    ReportFormat,
+)
+
+# Connect (automatically picks up .env or environment variables)
+with BaseXClient() as client:
+    client.create_db("codebooks")
+    client.load_file("codebooks", "my_codebook.xml")
+
+    # Extract structured DDI-C metadata
+    qm = DdiCodebookQueryManager(client)
+    variables = qm.get_data_dictionary("codebooks")
+
+    # Render a rich Markdown report or convert to a Polars DataFrame
+    markdown = BaseXReporter.render_ddic_dictionary_report(variables, format=ReportFormat.MARKDOWN)
+    df = BaseXReporter.to_polars(variables)
+```
+
+You can also use the CLI:
+
+```bash
+# Verify connection
+dartfx-ddi basex ping
+
+# Ingest DDI XML files and generate reports
+dartfx-ddi basex create-db surveys --input ./xml_files/
+dartfx-ddi basex report surveys --type ddic-dictionary --format html -o dictionary.html
 ```
 
 ### Specification Loading
@@ -213,17 +284,26 @@ classes = cdi_spec.get_ucmis_classes()
 ```
 ddi-toolkit/
 ├── src/dartfx/ddi/
-│   ├── ddicodebook/            # DDI-Codebook subpackage
+│   ├── ddicodebook/            # DDI-Codebook subpackage (models & validation)
 │   │   ├── model.py            # DDI-Codebook 2.6 models
-│   │   └── utils.py            # Codebook-specific utilities (e.g., conversion)
+│   │   └── utils.py            # Codebook utilities (validation, CDIF mapping)
+│   ├── ddilifecycle/           # DDI-Lifecycle & DDI 4.0 subpackage
+│   │   ├── model_4_0_rc1.py    # DDI 4.0 RC1 Pydantic models
+│   │   └── utils.py            # Streaming XML crosswalks & Reference Graph engine
 │   ├── ddicdi/                 # DDI-CDI subpackage
 │   │   ├── model_1_1_0.py      # Definitive generated Pydantic models (latest)
 │   │   ├── assistants.py       # High-level Assistant framework
 │   │   ├── specification.py    # DDI-CDI spec introspection tools
-│   │   └── utils.py            # CDI-specific utilities (e.g., validation)
-│   └── utils.py                # Experimental simplified data models
-├── tests/                      # Test suite
-└── docs/                       # Documentation
+│   │   └── utils.py            # CDI utilities (validation, RDF serialization)
+│   ├── basex/                  # BaseX client, query managers & reporters (experimental extension)
+│   │   ├── client.py           # REST client with database management
+│   │   ├── query.py            # DDI-Codebook & DDI-Lifecycle query managers
+│   │   ├── reporter.py         # Multi-format report renderer & Polars export
+│   │   └── cli.py              # BaseX CLI subcommands
+│   ├── cli.py                  # Main CLI entrypoint (dartfx-ddi)
+│   └── utils.py                # Generic models and cross-specification helpers
+├── tests/                      # Comprehensive test suite
+└── docs/                       # Sphinx documentation (Sphinx, MyST, ReadTheDocs)
 ```
 
 ## Roadmap

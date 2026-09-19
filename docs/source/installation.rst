@@ -18,8 +18,11 @@ Installation from PyPI
 
 .. code-block:: bash
 
-   # Coming soon
+   # Core installation (DDI-Codebook, DDI-Lifecycle, DDI-CDI)
    pip install dartfx-ddi
+
+   # Optional experimental BaseX XML database extension
+   pip install "dartfx-ddi[basex]"
 
 Development Installation
 ------------------------
@@ -37,14 +40,22 @@ Using standard `pip`::
 Dependencies
 ------------
 
-The toolkit has several key dependencies:
+Core Dependencies
+~~~~~~~~~~~~~~~~~
+
+The toolkit has several core dependencies:
 
 * **dartfx-rdf**: DataArtifex RDF Toolkit for RDF-aware Pydantic models
 * **rdflib**: For RDF graph operations and SPARQL queries
 * **pyshacl**: For SHACL validation of DDI-CDI graphs
 
+Optional Extension Dependencies
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* **dartfx-ddi[basex]**: Installs `httpx` (connection-pooled HTTP client) and `polars` (high-performance DataFrame engine) for the experimental BaseX XML database integration.
+
 Development Dependencies
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 For development and testing:
 

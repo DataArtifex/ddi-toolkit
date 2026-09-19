@@ -225,3 +225,25 @@ def test_cli_stream_json_style_substitutions(tmp_path):
     content = out_file.read_text(encoding="utf-8")
     assert '"CodeDomain": {' in content
     assert '"ResponseDomain"' not in content
+
+
+def test_cli_no_args_displays_help():
+    # Root app without arguments
+    res_root = runner.invoke(app, [])
+    assert res_root.exit_code == 2
+    assert "Usage: " in res_root.stdout
+    assert "Commands" in res_root.stdout
+    assert "basex" in res_root.stdout
+
+    # Subcommand group without arguments
+    res_sub = runner.invoke(app, ["basex"])
+    assert res_sub.exit_code == 2
+    assert "Usage: " in res_sub.stdout
+    assert "report" in res_sub.stdout
+    assert "ping" in res_sub.stdout
+
+    # Command with required args without arguments
+    res_cmd = runner.invoke(app, ["ddicvalidate"])
+    assert res_cmd.exit_code == 2
+    assert "Usage: " in res_cmd.stdout
+    assert "Arguments" in res_cmd.stdout

@@ -6,8 +6,19 @@ All notable changes to this project will be documented in this file.
 Version 0.3.0 (Current)
 -----------------------
 
+DDI-Lifecycle Resource Class Reference Graph & Path Analysis
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Added dual-pass streaming reference analyzer ``analyze_resource_references`` for memory-efficient resource cataloging (Pass 1 ID/URN index) and reference resolution (Pass 2 reference scanning) across gigabyte-scale DDI-L XML files.
+- Added comprehensive graph topology and multiplicity metrics: cardinality classification (``1:1``, ``1:N``, ``N:1``, ``N:N``), target reuse multiplier, average references per source, node roles (``root``, ``bridge``, ``leaf``, ``isolated``), automated functional domain classification, graph density, internal resolution rate, max dependency depth, connected components, central hubs, and domain distribution.
+- Added multi-hop pathfinding (``find_paths_between``), subgraph extraction (``connecting_subgraph``), and path filtering across arbitrary class pairs (``--between`` / ``-b``) or single source/target anchors (``--from``, ``--to``).
+- Added standalone interactive Vis.js HTML Network Explorer (``graph.to_html()``) featuring a modern dark theme, graph summary landing state with topology insights and clickable dependency chain pills, metric tooltips, dynamic physics, hierarchical tree layouts (Left $\rightarrow$ Right horizontal ``LR`` and Top $\rightarrow$ Down vertical ``UD``), real-time search, labels toggle, isolated nodes toggle, and dark-themed high-contrast offscreen PNG export.
+- Added multi-format export methods: Markdown (``to_markdown``), Canonical Cached JSON (``to_json``), Mermaid Diagram (``to_mermaid``), Standalone HTML (``to_html``), Graphviz DOT (``to_dot``), RDF Turtle (``to_turtle``), and NetworkX DiGraph (``to_networkx``).
+- Added canonical JSON caching (``<stem>.references.json``) with automatic reuse and instant loading for repeated queries.
+- Added CLI subcommands ``dartfx-ddi ddil-references`` and alias ``dartfx-ddi ddil-graph`` with full argument suite (``--format``, ``--between``, ``--from``, ``--to``, ``--max-hops``, ``--directed``, ``--include``, ``--exclude``, ``--min-count``, ``--output``, ``--output-dir``, ``--title``, ``--refresh``, ``--mermaid``, ``--progress``).
+
 DDI-Lifecycle Fragment Streaming & Polymorphic Serialization
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - Added ``ddilifecycle`` subpackage for streaming and parsing DDI-Lifecycle 3.3 XML documents fragment-by-fragment into DDI 4.0 RC1 Pydantic models.
 - Added Python utility function ``ddilifecycle.ddil324(...)`` for programmatic document-level transformation from DDI-Lifecycle 3.x FragmentInstance XML to DDI 4.0 ``ItemContainer`` JSON (``{"items": [...]}``) or XML (``<ItemContainer>...``) with statistics collection.
@@ -17,6 +28,12 @@ DDI-Lifecycle Fragment Streaming & Polymorphic Serialization
 - Fixed XML text wrapping for numeric and statistic elements (``StatisticDoubleType``).
 - Fixed ``BibliographicNameType`` child ``<String>`` elements in ``CreatorName``, ``ContributorName``, and ``PublisherName`` by automatically mapping them to ``<Name>``.
 - Fixed ``InterviewerInstructionReference`` on ``QuestionItem``, ``QuestionGrid``, ``QuestionBlock``, and ``QuestionConstruct`` by automatically wrapping them in ``InterviewerInstructionAttachment``.
+
+BaseX XML Database & Reporting (Experimental, Optional)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Added ``dartfx.ddi.basex`` subpackage as an optional, experimental extension (via ``[basex]`` extra) with ``BaseXClient``, ``DdiCodebookQueryManager``, ``DdiLifecycle3QueryManager``, ``DdiLifecycle4QueryManager``, and ``BaseXReporter`` for connecting to BaseX servers, loading DDI collections, and generating publication-ready reports (Markdown, HTML, JSON, CSV, Polars DataFrames).
+- Added CLI command ``dartfx-ddi basex`` with ``ping``, ``list``, ``create-db``, ``drop-db``, ``load``, ``query``, ``command``, and ``report`` subcommands.
 
 Version 0.2.0
 -------------

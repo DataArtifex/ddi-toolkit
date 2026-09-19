@@ -1,0 +1,24 @@
+# {{ title }}
+**Total Variables:** {{ variables|length }}
+
+---
+
+{% for v in variables %}
+### `{{ v.name or v.id or 'UNNAMED' }}`: {{ v.label or '' }}
+{% set meta = [] %}
+{% if v.id %}{% set _ = meta.append('**ID:** `' ~ v.id ~ '`') %}{% endif %}
+{% if v.type %}{% set _ = meta.append('**Type:** `' ~ v.type ~ '`') %}{% endif %}
+{% if meta %}{{ meta|join(' | ') }}  {% endif %}
+
+{% if v.question %}> **Question:** {{ v.question }}
+
+{% endif %}
+{% if v.categories %}
+| Value | Label | Frequency / Stat | Missing |
+| :--- | :--- | :--- | :--- |
+{% for cat in v.categories %}| `{{ cat.value }}` | {{ cat.label }} | {{ cat.stat }} | {% if cat.missing in ['Y', 'true', 'yes'] %}Yes{% endif %} |
+{% endfor %}
+{% endif %}
+---
+
+{% endfor %}

@@ -15,27 +15,37 @@ There are three major flavors of DDI. This package currently supports:
 
 * **DDI-CDI 1.1** *(Experimental)*: The new Cross Domain Integration specification that provides a unified model for describing data across different domains and methodologies.
 
-* **DDI-Lifecycle 3.3 / DDI 4.0 RC1**: Fragment-by-fragment XML streaming parser that crosswalks DDI 3.3 documents into DDI 4.0 RC1 Pydantic models.
+* **DDI-Lifecycle 3.3 / DDI 4.0 RC1**: Fragment-by-fragment XML streaming parser that crosswalks DDI 3.3 documents into DDI 4.0 RC1 Pydantic models, plus an advanced Class Reference Graph & Path Analysis engine.
+
+Optional Extensions
+-------------------
+
+* **BaseX XML Database & Reporting** *(Experimental, Optional)*: Standalone client and reporting engine for high-volume XML database querying, XQuery execution, and automated report generation across DDI-Codebook and DDI-Lifecycle collections.
 
 Key Features
 ------------
 
-* **DDI-Codebook XML Processing**: Load, parse, and extract structured metadata from DDI-Codebook documents
-* **DDI-Lifecycle Fragment Streaming**: Stream and parse DDI 3.3 XML documents fragment-by-fragment into DDI 4.0 RC1 models via Python or CLI
-* **DDI-CDI Model Classes**: Work with Pydantic-based classes representing the full DDI-CDI specification
-* **RDF Integration**: Generate RDF representations using the `DataArtifex RDF Toolkit <https://github.com/DataArtifex/rdf-toolkit>`_
-* **Data Dictionary Extraction**: Convert DDI metadata into usable data dictionaries
-* **Cross-Format Conversion**: Transform between DDI-Codebook and DDI-CDI formats (experimental)
+* **DDI-Codebook XML Processing**: Load, parse, extract structured metadata, and validate DDI-Codebook documents with JSON and Markdown reports.
+* **DDI-Lifecycle Fragment Streaming**: Stream and parse DDI 3.3 XML documents fragment-by-fragment into DDI 4.0 RC1 models via Python or CLI.
+* **DDI-Lifecycle Reference Graph & Path Analysis**: Dual-pass streaming reference analyzer, multi-hop pathfinding, multiplicity metrics, and export to interactive Vis.js HTML, Markdown, JSON, Mermaid, Graphviz DOT, Turtle RDF, and NetworkX.
+* **DDI-CDI Model Classes**: Work with definitive Pydantic-based classes representing the full DDI-CDI specification.
+* **Assistant Framework**: Streamlined resource creation, automated DDI identifier management, and method proxying for DDI-CDI.
+* **RDF Integration**: Generate and validate RDF representations using the `DataArtifex RDF Toolkit <https://github.com/DataArtifex/rdf-toolkit>`_.
+* **Cross-Format Conversion**: Transform between DDI-Codebook and DDI-CDI formats aligned with the CDIF profile.
+* **BaseX XML Database & Reporting** *(Experimental, Optional)*: Connect to BaseX servers over REST, query collections, and generate publication-ready reports (Markdown, HTML, JSON, CSV, Polars DataFrames).
 
 Quick Start
 -----------
 
 Installation (using `uv` is recommended)::
 
-   # Local installation
+   # Local installation (Core)
    git clone https://github.com/DataArtifex/ddi-toolkit.git
    cd ddi-toolkit
    uv pip install -e .
+
+   # Optional BaseX database extension
+   uv pip install -e ".[basex]"
 
 Basic DDI-Codebook usage::
 
@@ -49,12 +59,17 @@ Basic DDI-Codebook usage::
        for var in my_codebook.dataDscr.var:
            print(f"Variable: {var.name}, Label: {var.labl.content if var.labl else 'No label'}")
 
-DDI-Lifecycle streaming usage::
+DDI-Lifecycle streaming and reference graph analysis::
 
    from dartfx.ddi import ddilifecycle
 
+   # Stream fragments
    for fragment in ddilifecycle.stream_ddil_fragments("my_study.ddi33.xml", resource_types=["QuestionItem"]):
        print(f"Fragment: {type(fragment).__name__}, URN: {fragment.urn}")
+
+   # Analyze reference graph & export to interactive HTML explorer
+   graph = ddilifecycle.analyze_resource_references("my_study.ddi33.xml")
+   html = graph.to_html(title="Survey Network")
 
 DDI-CDI & Assistant Framework usage::
 
@@ -89,6 +104,12 @@ DDI-CDI & Assistant Framework usage::
    ddicdi
    specification
    rdf_integration
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Optional Extensions:
+
+   basex
 
 .. toctree::
    :maxdepth: 1

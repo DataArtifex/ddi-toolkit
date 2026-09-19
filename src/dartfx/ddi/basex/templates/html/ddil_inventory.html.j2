@@ -1,0 +1,48 @@
+{% extends "html/base.html.j2" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="header-card">
+  {% if agency %}
+    <span class="badge badge-accent">{{ agency }}</span>
+  {% endif %}
+  <h1>{{ title }}</h1>
+  {% if study_id %}
+    <p class="subtitle">URN: {{ study_id }}</p>
+  {% endif %}
+</div>
+
+<div class="grid">
+  <div class="stat-card">
+    <div class="stat-value">{{ total_fragments }}</div>
+    <div class="stat-label">Total Fragments</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{ inventory|length }}</div>
+    <div class="stat-label">Resource Types</div>
+  </div>
+</div>
+
+<div class="var-block">
+  <h2>Resource Type Inventory</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Resource / Fragment Type</th>
+        <th>Count</th>
+        <th>Share</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in inventory %}
+      <tr>
+        <td><code>{{ item.type }}</code></td>
+        <td>{{ item.count }}</td>
+        <td>{{ item.share }}%</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

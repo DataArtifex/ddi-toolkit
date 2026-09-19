@@ -130,10 +130,79 @@ CLI transformation:
 
    dartfx-ddi ddil324 my_study.ddi33.xml --filter "QuestionItem, Variable" --pretty
 
+DDI-Lifecycle Reference Graph & Path Analysis
+---------------------------------------------
+
+Analyze resource references across entire DDI-L XML files and generate interactive visual reports:
+
+.. code-block:: python
+
+   from dartfx.ddi.ddilifecycle import analyze_resource_references
+
+   # Analyze references
+   graph = analyze_resource_references("my_study.ddi33.xml")
+
+   # Find connecting paths between classes
+   paths = graph.find_paths_between("QuestionItem", "OutParameter")
+   for p in paths:
+       print(f"Path: {p.path_description}")
+
+   # Generate interactive Vis.js HTML explorer
+   html = graph.to_html(title="Survey Architecture")
+   with open("network.html", "w", encoding="utf-8") as f:
+       f.write(html)
+
+CLI reference graph and multi-format exports:
+
+.. code-block:: bash
+
+   # Generate interactive HTML explorer and Markdown report
+   dartfx-ddi ddil-references my_study.ddi33.xml --format html,md --output-dir ./reports/
+
+   # Find multi-hop paths between classes
+   dartfx-ddi ddil-references my_study.ddi33.xml --between QuestionItem,OutParameter
+
+BaseX XML Database & Reporting (Experimental)
+---------------------------------------------
+
+.. note::
+   BaseX support is an **experimental, optional extension**. To use it, install with ``pip install "dartfx-ddi[basex]"``.
+
+Connect to a BaseX XML database server, execute queries, and generate reports:
+
+.. code-block:: python
+
+   from dartfx.ddi.basex import (
+       BaseXClient,
+       DdiCodebookQueryManager,
+       BaseXReporter,
+       ReportFormat,
+   )
+
+   with BaseXClient() as client:
+       qm = DdiCodebookQueryManager(client)
+       summary = qm.get_study_summary("codebooks")
+       report = BaseXReporter.render_ddic_study_report(summary, format=ReportFormat.MARKDOWN)
+       print(report)
+
+CLI usage:
+
+.. code-block:: bash
+
+   # Verify connection
+   dartfx-ddi basex ping
+
+   # Ingest XML files and create a database
+   dartfx-ddi basex create-db surveys --input ./surveys/
+
+   # Generate study summary report
+   dartfx-ddi basex report surveys --type ddic-summary --format md
+
 Next Steps
 ----------
 
 * Learn about the core :doc:`ddicdi` implementation.
 * Explore the :doc:`ddicodebook` API reference.
-* Learn about :doc:`ddilifecycle` fragment streaming and DDI 4.0 models.
+* Learn about :doc:`ddilifecycle` fragment streaming, DDI 4.0 models, and reference graph analysis.
+* Explore the optional :doc:`basex` XML database and reporting extension.
 * See :doc:`examples` for more detailed use cases.

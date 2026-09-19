@@ -1,0 +1,64 @@
+{% extends "html/base.html.j2" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="header-card">
+  <h1>{{ title }}</h1>
+  <p class="subtitle">Total Variables: {{ variables|length }}</p>
+</div>
+
+{% for v in variables %}
+<div class="var-block">
+  <div class="var-header">
+    <div>
+      <span class="var-name">{{ v.name or v.id or 'UNNAMED' }}</span>
+      {% if v.label %}
+        <span style="margin-left: 0.5rem; font-weight: 600;">{{ v.label }}</span>
+      {% endif %}
+    </div>
+    <div>
+      {% if v.type %}
+        <span class="badge badge-accent">{{ v.type }}</span>
+      {% endif %}
+      {% if v.id %}
+        <span class="badge">{{ v.id }}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if v.question %}
+    <div style="margin: 0.5rem 0; color: var(--text-muted);">
+      <strong>Question:</strong> {{ v.question }}
+    </div>
+  {% endif %}
+
+  {% if v.categories %}
+  <table>
+    <thead>
+      <tr>
+        <th>Value</th>
+        <th>Label</th>
+        <th>Frequency</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cat in v.categories %}
+      <tr>
+        <td><code>{{ cat.value }}</code></td>
+        <td>{{ cat.label }}</td>
+        <td>{{ cat.stat }}</td>
+        <td>
+          {% if cat.missing in ['Y', 'true', 'yes'] %}
+            <span class="badge badge-danger">Missing</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+{% endfor %}
+{% endblock %}

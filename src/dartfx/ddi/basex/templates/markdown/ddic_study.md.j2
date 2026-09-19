@@ -1,0 +1,20 @@
+# {{ title }}
+**Study ID:** `{{ study_id }}`
+
+## Overview
+- **Total Variables:** {{ total_variables }}
+- **Total Data Files:** {{ total_files }}
+- **Universe:** {{ universe }}
+{% if authors %}- **Authors:** {{ authors|join(', ') }}{% endif %}
+{% if producers %}- **Producers:** {{ producers|join(', ') }}{% endif %}
+
+## Abstract
+{{ abstract }}
+
+{% if files %}
+## Data Files
+| ID | File Name | Cases | Variables |
+| :--- | :--- | :--- | :--- |
+{% for f in files %}| `{{ f.id }}` | {{ f.name or 'N/A' }} | {{ f.cases or 'N/A' }} | {{ f.variables or 'N/A' }} |
+{% endfor %}
+{% endif %}

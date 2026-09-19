@@ -1,7 +1,31 @@
 from . import model_4_0_rc1 as model
-from .utils import ddil324, stream_ddil33_fragments, stream_ddil_fragments, to_dict, to_json
+from .utils import (
+    ClassNode,
+    ClassReferenceEdge,
+    ConnectingPath,
+    ConnectingPathStep,
+    DdiClassReferenceGraph,
+    DdiReferenceGraph,
+    ReferenceGraphSummary,
+    analyze_resource_references,
+    build_reference_graph,
+    ddil324,
+    stream_ddil33_fragments,
+    stream_ddil_fragments,
+    to_dict,
+    to_json,
+)
 
 __all__ = [
+    "ClassNode",
+    "ClassReferenceEdge",
+    "ConnectingPath",
+    "ConnectingPathStep",
+    "DdiClassReferenceGraph",
+    "DdiReferenceGraph",
+    "ReferenceGraphSummary",
+    "analyze_resource_references",
+    "build_reference_graph",
     "ddil324",
     "model",
     "stream_ddil33_fragments",

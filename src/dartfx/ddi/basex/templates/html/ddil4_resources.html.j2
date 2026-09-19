@@ -1,0 +1,70 @@
+{% extends "html/base.html.j2" %}
+
+{% block title %}DDI 4.0 {{ resource_type }} Report{% endblock %}
+
+{% block content %}
+<div class="header-card">
+  <span class="badge badge-accent">{{ resource_type }}</span>
+  <span class="badge">DDI 4.0 RC1</span>
+  <h1>DDI 4.0 {{ resource_type }} Report</h1>
+  <p class="subtitle">Showing {{ count }} of {{ total }} matches (Start: {{ start }}, Limit: {{ limit }})</p>
+</div>
+
+<div class="grid">
+  <div class="stat-card">
+    <div class="stat-value">{{ total }}</div>
+    <div class="stat-label">Total Found</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{ count }}</div>
+    <div class="stat-label">Displayed</div>
+  </div>
+</div>
+
+{% for item in items %}
+<div class="var-block">
+  <div class="var-header">
+    <div>
+      <span class="var-name">{{ item.name or item.id or 'UNNAMED' }}</span>
+      {% if item.label %}
+        <span style="margin-left: 0.5rem; font-weight: 600;">{{ item.label }}</span>
+      {% endif %}
+    </div>
+    <div>
+      <span class="badge badge-accent">{{ item.type }}</span>
+      {% if item.agency %}
+        <span class="badge">{{ item.agency }}</span>
+      {% endif %}
+      {% if item.id %}
+        <span class="badge">{{ item.id }}</span>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if item.question_text %}
+    <div style="margin: 0.75rem 0; padding: 0.75rem; background: var(--badge-bg); border-radius: 6px;">
+      <span class="meta-label">Question Text:</span>
+      <div style="margin-top: 0.25rem;">{{ item.question_text }}</div>
+    </div>
+  {% endif %}
+
+  {% if item.description %}
+    <div style="margin: 0.5rem 0; color: var(--text-muted);">
+      <span class="meta-label">Description:</span> {{ item.description }}
+    </div>
+  {% endif %}
+
+  <div style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-muted);">
+    {% if item.concept_ref %}
+      <span style="margin-right: 1rem;"><span class="meta-label">Concept Ref:</span> <code>{{ item.concept_ref }}</code></span>
+    {% endif %}
+    {% if item.universe_ref %}
+      <span style="margin-right: 1rem;"><span class="meta-label">Universe Ref:</span> <code>{{ item.universe_ref }}</code></span>
+    {% endif %}
+    {% if item.response_domain %}
+      <span><span class="meta-label">Response Domain:</span> <code>{{ item.response_domain }}</code></span>
+    {% endif %}
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

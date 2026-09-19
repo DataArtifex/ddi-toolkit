@@ -1,0 +1,9 @@
+# {{ title }}
+**Study ID / URN:** `{{ study_id }}` | **Agency:** `{{ agency }}`
+**Total Indexed Resources/Fragments:** {{ total_fragments }}
+
+## Resource Breakdown by Type
+| Resource / Fragment Type | Count | Share |
+| :--- | :--- | :--- |
+{% for item in inventory %}| `{{ item.type }}` | {{ item.count }} | {{ item.share }}% |
+{% endfor %}

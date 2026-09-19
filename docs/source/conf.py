@@ -53,10 +53,10 @@ sys.path.insert(0, os.path.abspath("../../src"))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "Data Artifex DDI Toolkit"
-copyright = "2024-2025, Pascal L.G.A. Heus"
+copyright = "2024-2026, Pascal L.G.A. Heus"
 author = "Pascal Heus"
-release = "0.1.0"
-version = "0.1.0"
+release = "0.3.0"
+version = "0.3.0"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -92,8 +92,8 @@ autodoc_mock_imports = [
 autodoc_typehints = "description"
 autodoc_typehints_description_target = "documented"
 
-# Suppress warnings for missing modules
-suppress_warnings = ["autodoc.import_error"]
+# Suppress warnings for missing or mocked modules
+suppress_warnings = ["autodoc.import_error", "autodoc.mocked_object"]
 
 # Napoleon configuration
 napoleon_google_docstring = True

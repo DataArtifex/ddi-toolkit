@@ -1,0 +1,59 @@
+{% extends "html/base.html.j2" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="header-card">
+  <span class="badge badge-accent">{{ study_id }}</span>
+  <h1>{{ title }}</h1>
+  <div>
+    {% for author in authors %}
+      <span class="badge">{{ author }}</span>
+    {% endfor %}
+    {% for producer in producers %}
+      <span class="badge badge-accent">{{ producer }}</span>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="grid">
+  <div class="stat-card">
+    <div class="stat-value">{{ total_variables }}</div>
+    <div class="stat-label">Variables</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{ total_files }}</div>
+    <div class="stat-label">Data Files</div>
+  </div>
+</div>
+
+<div class="var-block">
+  <h2>Abstract</h2>
+  <p>{{ abstract }}</p>
+  <p><span class="meta-label">Universe:</span> {{ universe }}</p>
+</div>
+
+{% if files %}
+<h2>Data Files</h2>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>File Name</th>
+      <th>Cases</th>
+      <th>Variables</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for f in files %}
+    <tr>
+      <td><code>{{ f.id }}</code></td>
+      <td>{{ f.name or 'N/A' }}</td>
+      <td>{{ f.cases or 'N/A' }}</td>
+      <td>{{ f.variables or 'N/A' }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endblock %}

@@ -26,6 +26,12 @@ dependencies = [
   "typer",
 ]
 
+[project.optional-dependencies]
+basex = [
+  "httpx>=0.27.0",
+  "jinja2>=3.1.0",
+]
+
 [project.urls]
 Documentation = "https://github.com/DataArtifex/dartfx-ddi#readme"
 Issues = "https://github.com/DataArtifex/dartfx-ddi/issues"
@@ -62,6 +68,7 @@ docs = [
 
 [tool.hatch.envs.default]
 dependencies = ["dev"]
+features = ["basex"]
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
 test-cov = "coverage run -m pytest {args:tests}"

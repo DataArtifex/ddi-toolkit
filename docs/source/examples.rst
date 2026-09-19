@@ -133,3 +133,85 @@ Introspect the DDI-CDI structure::
    assoc = cdi_spec.get_resource_associations('cdi:InstanceVariable', cardinalities=True)
    for uri, info in assoc.items():
        print(f"Association: {uri} (To: {info['to']['display']})")
+
+DDI-Lifecycle & Reference Graph Examples
+----------------------------------------
+
+Streaming and Converting Fragments to DDI 4.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from dartfx.ddi import ddilifecycle
+
+   # Transform whole study to DDI 4.0 JSON
+   stats = ddilifecycle.ddil324("survey.ddi33.xml", format="json", pretty=True)
+   print(f"Converted {stats['total_resources']} resources in {stats['elapsed_seconds']:.2f}s")
+
+   # Stream only QuestionItem and Variable fragments
+   for fragment in ddilifecycle.stream_ddil_fragments("survey.ddi33.xml", resource_types=["QuestionItem", "Variable"]):
+       print(f"{type(fragment).__name__}: {fragment.id}")
+
+Reference Graph Analysis & Interactive HTML Explorer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from dartfx.ddi.ddilifecycle import analyze_resource_references
+
+   # 1. Analyze resource reference network
+   graph = analyze_resource_references("survey.ddi33.xml", title="Survey 2024 Architecture")
+
+   # 2. Discover multi-hop connecting paths
+   paths = graph.find_paths_between("QuestionItem", "OutParameter", max_hops=4)
+   for p in paths:
+       print(f"{p.hops} hops: {p.path_description}")
+
+   # 3. Export to interactive Vis.js HTML explorer
+   html = graph.to_html(title="Survey Reference Explorer")
+   with open("network_explorer.html", "w", encoding="utf-8") as f:
+       f.write(html)
+
+   # 4. Export to NetworkX DiGraph for graph algorithms
+   nx_graph = graph.to_networkx()
+   print(f"NetworkX graph has {nx_graph.number_of_nodes()} nodes and {nx_graph.number_of_edges()} edges")
+
+BaseX XML Database & Reporting (Experimental)
+---------------------------------------------
+
+.. note::
+   The BaseX integration is an **experimental, optional extension**. Install the optional dependencies via ``pip install "dartfx-ddi[basex]"``.
+
+Connecting, Querying, and Multi-Format Reporting
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from dartfx.ddi.basex import (
+       BaseXClient,
+       DdiCodebookQueryManager,
+       DdiLifecycle3QueryManager,
+       BaseXReporter,
+       ReportFormat,
+   )
+
+   with BaseXClient() as client:
+       # 1. Create database and ingest XML files
+       client.create_db("surveys")
+       client.load_file("surveys", "survey_data.xml")
+
+       # 2. Extract DDI-Codebook data dictionary
+       cb_qm = DdiCodebookQueryManager(client)
+       variables = cb_qm.get_data_dictionary("surveys")
+
+       # 3. Render reports in Markdown, HTML, and Polars DataFrame
+       md_report = BaseXReporter.render_ddic_dictionary_report(variables, format=ReportFormat.MARKDOWN)
+       html_report = BaseXReporter.render_ddic_dictionary_report(variables, format=ReportFormat.HTML)
+       df = BaseXReporter.to_polars(variables)
+       print(df.select(["name", "label", "category_count"]))
+
+       # 4. Query DDI-Lifecycle fragment inventory
+       l3_qm = DdiLifecycle3QueryManager(client)
+       inventory = l3_qm.get_fragment_inventory("surveys")
+       for item in inventory:
+           print(f"{item['type']}: {item['count']} fragments")

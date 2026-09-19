@@ -1,0 +1,9 @@
+# {{ title }} (DDI 4.0)
+**Study ID / URN:** `{{ study_id }}` | **Agency:** `{{ agency }}`
+**Total Indexed Items:** {{ total_fragments }}
+
+## Item Breakdown by Type
+| Item Type | Count | Share |
+| :--- | :--- | :--- |
+{% for item in inventory %}| `{{ item.type }}` | {{ item.count }} | {{ item.share }}% |
+{% endfor %}

@@ -1,0 +1,25 @@
+# DDI-Lifecycle {{ resource_type }} Report
+**Matches Found:** {{ total }} | **Displayed:** {{ count }} (Offset: {{ start }}, Limit: {{ limit }})
+
+---
+
+{% for item in items %}
+### `{{ item.name or item.id or 'UNNAMED' }}`: {{ item.label or '' }}
+{% set meta = [] %}
+{% if item.id %}{% set _ = meta.append('**ID/URN:** `' ~ item.id ~ '`') %}{% endif %}
+{% if item.agency %}{% set _ = meta.append('**Agency:** `' ~ item.agency ~ '`') %}{% endif %}
+{% if item.type %}{% set _ = meta.append('**Type:** `' ~ item.type ~ '`') %}{% endif %}
+{% if meta %}{{ meta|join(' | ') }}  {% endif %}
+
+{% if item.question_text %}> **Question Text:** {{ item.question_text }}
+
+{% endif %}
+{% if item.description %}*Description:* {{ item.description }}
+{% endif %}
+{% if item.concept_ref %}- **Concept Reference:** `{{ item.concept_ref }}`  {% endif %}
+{% if item.universe_ref %}- **Universe Reference:** `{{ item.universe_ref }}`  {% endif %}
+{% if item.response_domain %}- **Response Domain:** `{{ item.response_domain }}`  {% endif %}
+
+---
+
+{% endfor %}
