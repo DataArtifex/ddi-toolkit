@@ -38,7 +38,7 @@ There are three major flavors of DDI. This package currently supports:
 
 - **DDI-Codebook XML Processing**: Load, parse, extract structured metadata, and validate DDI-Codebook documents with JSON and Markdown reports.
 - **DDI-Lifecycle XML Streaming**: Stream and parse DDI 3.3 XML documents fragment-by-fragment into DDI 4.0 RC1 models via Python or CLI.
-- **DDI-Lifecycle Reference Graph & Path Analysis**: Dual-pass streaming reference analyzer, multi-hop pathfinding, multiplicity metrics (cardinality, target reuse, node roles), and export to interactive Vis.js HTML, Markdown, JSON, Mermaid, Graphviz DOT, Turtle RDF, and NetworkX.
+- **DDI-Lifecycle Resource Profile & Topology Analysis**: Dual-pass streaming profile analyzer, referencing mechanism intelligence, multi-hop pathfinding, multiplicity metrics (cardinality, target reuse, node roles), and export to interactive Vis.js HTML, Markdown, JSON, Mermaid, Graphviz DOT, Turtle RDF, and NetworkX.
 - **DDI-CDI Model (v1.1.0)**: Use definitive, spec-generated Pydantic classes for the full DDI-CDI implementation.
 - **Assistant Framework**: A high-level API (`CdiClassAssistant`) that simplifies CDI resource creation, automated identifier generation, and method proxying.
 - **RDF Serialization**: Built-in support for serializing CDI models to RDF graphs.
@@ -165,23 +165,23 @@ dartfx-ddi ddil324 my_study.ddi33.xml --format xml --pretty
 # Cap fragment output count (default: 0 / unlimited)
 dartfx-ddi ddil324 my_study.ddi33.xml --limit 100
 
-# Analyze resource class references and export Markdown, HTML, JSON, Mermaid, DOT, Turtle
-dartfx-ddi ddil-references my_study.ddi33.xml --format all --output-dir ./reports/
+# Analyze resource profile and export Markdown, HTML, JSON, Mermaid, DOT, Turtle
+dartfx-ddi ddil-profile my_study.ddi33.xml --format all --output-dir ./reports/
 
-# Generate interactive Vis.js HTML network explorer
-dartfx-ddi ddil-references my_study.ddi33.xml --format html -o network.html
+# Generate interactive Vis.js HTML profile explorer
+dartfx-ddi ddil-profile my_study.ddi33.xml --format html -o profile.html
 
 # Find multi-hop paths between classes (e.g., QuestionItem to OutParameter)
-dartfx-ddi ddil-references my_study.ddi33.xml --between QuestionItem,OutParameter --format md,html
+dartfx-ddi ddil-profile my_study.ddi33.xml --between QuestionItem,OutParameter --format md,html
 
 # Force re-parsing XML and refresh canonical JSON cache
-dartfx-ddi ddil-references my_study.ddi33.xml --refresh --format html
+dartfx-ddi ddil-profile my_study.ddi33.xml --refresh --format html
 ```
 
 By default, `ddicvalidate` records invalid `@ID` values (non-NCName / non-`xs:ID`) as warnings.
 Use `--strict` to treat those warnings as validation errors.
 
-### DDI-Lifecycle Processing & Reference Graph Analysis in Python
+### DDI-Lifecycle Processing & Resource Profiling in Python
 
 ```python
 from dartfx.ddi import ddilifecycle
@@ -194,19 +194,21 @@ print(f"Processed {stats['total_resources']} resources in {stats['elapsed_second
 for fragment in ddilifecycle.stream_ddil_fragments("my_study.ddi33.xml", resource_types=["QuestionItem"]):
     print(f"Type: {type(fragment).__name__}, ID: {fragment.id}, Agency: {fragment.agency}")
 
-# 3. Analyze resource reference graph & compute topology metrics
-graph = ddilifecycle.analyze_resource_references("my_study.ddi33.xml", title="Survey Reference Graph")
-print(f"Classes: {graph.summary.total_classes}, References: {graph.summary.total_reference_instances}")
-print(f"Graph density: {graph.summary.graph_density:.4f}, Resolution rate: {graph.summary.resolution_rate:.1f}%")
+# 3. Analyze resource profile, referencing mechanisms & compute topology metrics
+profile = ddilifecycle.analyze_ddil_profile("my_study.ddi33.xml", title="Survey Resource Profile")
+print(f"Standard: {profile.summary.ddi_standard} {profile.summary.standard_version}")
+print(f"Classes: {profile.summary.total_classes}, References: {profile.summary.total_reference_instances}")
+print(f"Graph density: {profile.summary.graph_density:.4f}, Resolution rate: {profile.summary.resolution_rate:.1f}%")
+print(f"Referencing mechanisms: {profile.summary.referencing_mechanisms}")
 
 # 4. Discover multi-hop connecting paths between classes
-paths = graph.find_paths_between("QuestionItem", "OutParameter", max_hops=5)
+paths = profile.find_paths_between("QuestionItem", "OutParameter", max_hops=5)
 for p in paths:
     print(f"{p.hops} hops: {p.path_description}")
 
 # 5. Export to interactive Vis.js HTML explorer or NetworkX DiGraph
-html = graph.to_html(title="Interactive Network Explorer")
-nx_graph = graph.to_networkx()
+html = profile.to_html(title="Interactive Profile Explorer")
+nx_graph = profile.to_networkx()
 ```
 
 ### Validating DDI-Codebook Documents in Python

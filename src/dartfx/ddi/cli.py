@@ -74,11 +74,13 @@ class JsonStyle(StrEnum):
     substitutions = "substitutions"
 
 
-class ReferenceOutputFormat(StrEnum):
+class ProfileOutputFormat(StrEnum):
     md = "md"
     json = "json"
     mermaid = "mermaid"
-    xml = "xml"
+    html = "html"
+    dot = "dot"
+    ttl = "ttl"
 
 
 def setup_logging(level: LogLevel):
@@ -371,8 +373,8 @@ def ddil324(
             typer.echo(f"  Success rate: {result['total_resources']:,} / {total_attempted:,} ({pct_str})")
 
 
-@app.command(name="ddil-references", no_args_is_help=True)
-def ddil_references(
+@app.command(name="ddil-profile", no_args_is_help=True)
+def ddil_profile(
     xmlfile: Annotated[
         Path,
         typer.Argument(help="DDI-Lifecycle 3.x FragmentInstance or XML file", exists=True, dir_okay=False),
@@ -462,7 +464,7 @@ def ddil_references(
         typer.Option(
             "--output-dir",
             "-od",
-            help="Directory where reports will be saved (e.g. <stem>.references.md, .json, .mmd, .html, .dot, .ttl)",
+            help="Directory where reports will be saved (e.g. <stem>.profile.md, .json, .mmd, .html, .dot, .ttl)",
         ),
     ] = None,
     mermaid: Annotated[
@@ -478,7 +480,7 @@ def ddil_references(
         typer.Option(
             "--refresh",
             "-r",
-            help="Force re-parsing XML and refresh cached JSON graph (default: False)",
+            help="Force re-parsing XML and refresh cached JSON profile (default: False)",
         ),
     ] = False,
     progress: Annotated[
@@ -492,7 +494,7 @@ def ddil_references(
     loglevel: Annotated[LogLevel, typer.Option(help="Log level")] = LogLevel.info,
 ):
     """
-    Analyzes all resources in a DDI-L file and determines how resource classes reference each other.
+    Profiles all resource classes and reference topologies in a DDI-Lifecycle document.
     Supports generating multiple output formats (md, json, mermaid, html, dot, ttl) in a single parsing pass.
     """
     setup_logging(loglevel)
@@ -525,18 +527,18 @@ def ddil_references(
 
     # Determine canonical JSON cache location
     if output_dir is not None:
-        cache_path = output_dir / f"{xmlfile.stem}.references.json"
+        cache_path = output_dir / f"{xmlfile.stem}.profile.json"
     elif output is not None:
         if output.is_dir():
-            cache_path = output / f"{xmlfile.stem}.references.json"
+            cache_path = output / f"{xmlfile.stem}.profile.json"
         elif output.suffix.lower() == ".json":
             cache_path = output
         else:
-            cache_path = output.parent / f"{xmlfile.stem}.references.json"
+            cache_path = output.parent / f"{xmlfile.stem}.profile.json"
     else:
-        cache_path = xmlfile.parent / f"{xmlfile.stem}.references.json"
+        cache_path = xmlfile.parent / f"{xmlfile.stem}.profile.json"
 
-    sibling_cache_path = xmlfile.parent / f"{xmlfile.stem}.references.json"
+    sibling_cache_path = xmlfile.parent / f"{xmlfile.stem}.profile.json"
 
     existing_cache: Path | None = None
     if not refresh:
@@ -546,22 +548,22 @@ def ddil_references(
             existing_cache = sibling_cache_path
 
     if existing_cache is not None:
-        logging.info(f"Loading full reference graph from cache: {existing_cache}")
-        full_graph = lc_utils.DdiReferenceGraph.from_json(existing_cache)
+        logging.info(f"Loading full profile from cache: {existing_cache}")
+        full_profile = lc_utils.DdiLifecycleProfile.from_json(existing_cache)
         if title:
-            full_graph.title = title
-        if not full_graph.source_file:
-            full_graph.source_file = xmlfile.name
+            full_profile.title = title
+        if not full_profile.source_file:
+            full_profile.source_file = xmlfile.name
         # If loaded from sibling but output_dir / output was specified, save to target cache location
         if cache_path != existing_cache and not cache_path.exists():
             try:
                 cache_path.parent.mkdir(parents=True, exist_ok=True)
-                cache_path.write_text(full_graph.to_json(indent=2), encoding="utf-8")
-                logging.info(f"[JSON] Cached reference graph saved to {cache_path}")
+                cache_path.write_text(full_profile.to_json(indent=2), encoding="utf-8")
+                logging.info(f"[JSON] Cached profile saved to {cache_path}")
             except OSError as err:
                 logging.debug(f"Could not save JSON cache to {cache_path}: {err}")
     else:
-        # Single parsing pass with 2-phase streaming progress to build FULL graph
+        # Single parsing pass with 2-phase streaming progress to build FULL profile
         file_size_bytes = xmlfile.stat().st_size if xmlfile.exists() else None
         console = Console(stderr=True)
 
@@ -582,7 +584,7 @@ def ddil_references(
                 total=file_size_bytes,
             )
             p2_task = progress_bar.add_task(
-                "Pass 2/2: Resolving references",
+                "Pass 2/2: Profiling class topologies & mechanisms",
                 total=file_size_bytes,
                 visible=False,
             )
@@ -598,7 +600,7 @@ def ddil_references(
                         p2_task, visible=True, completed=bytes_read, total=total_bytes or file_size_bytes
                     )
 
-            full_graph = lc_utils.analyze_resource_references(
+            full_profile = lc_utils.analyze_ddil_profile(
                 xmlfile,
                 source_file=xmlfile.name,
                 title=title,
@@ -608,11 +610,11 @@ def ddil_references(
                 progress_bar.update(p1_task, completed=file_size_bytes)
                 progress_bar.update(p2_task, visible=True, completed=file_size_bytes)
 
-        # Always save the full reference graph to JSON cache
+        # Always save the full profile to JSON cache
         try:
             cache_path.parent.mkdir(parents=True, exist_ok=True)
-            cache_path.write_text(full_graph.to_json(indent=2), encoding="utf-8")
-            logging.info(f"[JSON] Full reference graph cached to {cache_path}")
+            cache_path.write_text(full_profile.to_json(indent=2), encoding="utf-8")
+            logging.info(f"[JSON] Full profile cached to {cache_path}")
         except OSError as err:
             logging.debug(f"Could not save JSON cache to {cache_path}: {err}")
 
@@ -629,7 +631,7 @@ def ddil_references(
     )
 
     if has_filters:
-        active_graph = full_graph.filter(
+        active_profile = full_profile.filter(
             target_class=target_class,
             source_class=source_class,
             include_classes=include,
@@ -642,49 +644,49 @@ def ddil_references(
             min_count=min_count,
         )
     else:
-        active_graph = full_graph
+        active_profile = full_profile
 
     def _render_format(fmt: str) -> tuple[str, str]:
         if fmt == "md":
             return (
-                active_graph.to_markdown(
+                active_profile.to_markdown(
                     include_mermaid=mermaid,
                     title=title,
                 ),
                 ".md",
             )
         elif fmt == "json":
-            return full_graph.to_json(indent=2), ".json"
+            return full_profile.to_json(indent=2), ".json"
         elif fmt == "mermaid":
             return (
-                active_graph.to_mermaid(
+                active_profile.to_mermaid(
                     title=title,
                 ),
                 ".mmd",
             )
         elif fmt == "html":
             return (
-                active_graph.to_html(
+                active_profile.to_html(
                     title=title,
                 ),
                 ".html",
             )
         elif fmt == "dot":
             return (
-                active_graph.to_dot(
+                active_profile.to_dot(
                     title=title,
                 ),
                 ".dot",
             )
         elif fmt == "ttl":
             return (
-                active_graph.to_turtle(
+                active_profile.to_turtle(
                     title=title,
                 ),
                 ".ttl",
             )
         return (
-            active_graph.to_markdown(
+            active_profile.to_markdown(
                 include_mermaid=mermaid,
                 title=title,
             ),
@@ -696,7 +698,7 @@ def ddil_references(
     if output_dir is not None:
         output_dir.mkdir(parents=True, exist_ok=True)
         for fmt, (content, ext) in rendered_map.items():
-            dest = output_dir / f"{xmlfile.stem}.references{ext}"
+            dest = output_dir / f"{xmlfile.stem}.profile{ext}"
             dest.write_text(content, encoding="utf-8")
             logging.info(f"[{fmt.upper()}] Written to {dest}")
     elif output is not None:
@@ -706,7 +708,7 @@ def ddil_references(
             logging.info(f"Written to {output}")
         elif output.is_dir():
             for fmt, (content, ext) in rendered_map.items():
-                dest = output / f"{xmlfile.stem}.references{ext}"
+                dest = output / f"{xmlfile.stem}.profile{ext}"
                 dest.write_text(content, encoding="utf-8")
                 logging.info(f"[{fmt.upper()}] Written to {dest}")
         else:
@@ -728,152 +730,6 @@ def ddil_references(
                 else:
                     sep = f"/* Format: {fmt.upper()} ({ext}) */\n"
                 typer.echo(sep + content + "\n\n" + ("=" * 60) + "\n")
-
-
-@app.command(name="ddil-graph", no_args_is_help=True)
-def ddil_graph(
-    xmlfile: Annotated[
-        Path,
-        typer.Argument(help="DDI-Lifecycle 3.x FragmentInstance or XML file", exists=True, dir_okay=False),
-    ],
-    format: Annotated[
-        list[str] | None,
-        typer.Option(
-            "--format",
-            "-f",
-            help=(
-                "Output format: 'md', 'json', 'mermaid', 'html', 'dot', 'ttl', or 'all'. Repeatable / comma-separated."
-            ),
-        ),
-    ] = None,
-    target_class: Annotated[
-        str | None,
-        typer.Option("--target-class", "-t", help="Filter by target class (e.g. QuestionItem, Variable, Concept)"),
-    ] = None,
-    source_class: Annotated[
-        str | None,
-        typer.Option("--source-class", "-s", help="Filter by source class (e.g. QuestionConstruct, Sequence)"),
-    ] = None,
-    include: Annotated[
-        list[str] | None,
-        typer.Option(
-            "--include",
-            "-inc",
-            "--include-class",
-            help="Include specific resource classes (e.g. QuestionItem, Variable). Repeatable / comma-separated.",
-        ),
-    ] = None,
-    exclude: Annotated[
-        list[str] | None,
-        typer.Option(
-            "--exclude",
-            "-exc",
-            "--exclude-class",
-            help="Exclude specific resource classes (e.g. OutParameter, InParameter). Repeatable / comma-separated.",
-        ),
-    ] = None,
-    between: Annotated[
-        list[str] | None,
-        typer.Option(
-            "--between",
-            "-b",
-            "--between-classes",
-            help="Find multi-hop connecting paths between class pairs (e.g. -b QuestionItem,OutParameter). Repeatable.",
-        ),
-    ] = None,
-    from_class: Annotated[
-        list[str] | None,
-        typer.Option(
-            "--from",
-            "--from-class",
-            help="Discover all multi-hop paths originating from class(es) (e.g. --from QuestionItem). Repeatable.",
-        ),
-    ] = None,
-    to_class: Annotated[
-        list[str] | None,
-        typer.Option(
-            "--to",
-            "--to-class",
-            help="Discover all multi-hop paths leading into class(es) (e.g. --to Category). Repeatable.",
-        ),
-    ] = None,
-    max_hops: Annotated[
-        int,
-        typer.Option("--max-hops", help="Maximum path length/hops when finding connecting paths between classes"),
-    ] = 5,
-    directed: Annotated[
-        bool | None,
-        typer.Option(
-            "--directed/--undirected",
-            help="Enforce directed or undirected reference traversal (default: auto)",
-        ),
-    ] = None,
-    min_count: Annotated[
-        int,
-        typer.Option("--min-count", "-m", help="Minimum reference count threshold to include"),
-    ] = 0,
-    output: Annotated[
-        Path | None,
-        typer.Option("--output", "-o", help="Write report to output file path (or base prefix for multi-format)"),
-    ] = None,
-    output_dir: Annotated[
-        Path | None,
-        typer.Option(
-            "--output-dir",
-            "-od",
-            help="Directory where reports will be saved (e.g. <stem>.references.md, .json, .mmd, .html, .dot, .ttl)",
-        ),
-    ] = None,
-    mermaid: Annotated[
-        bool,
-        typer.Option("--mermaid/--no-mermaid", help="Include Mermaid diagram in Markdown report (default: disabled)"),
-    ] = False,
-    title: Annotated[
-        str | None,
-        typer.Option("--title", help="Custom title for the output report and visualizations"),
-    ] = None,
-    refresh: Annotated[
-        bool,
-        typer.Option(
-            "--refresh",
-            "-r",
-            help="Force re-parsing XML and refresh cached JSON graph (default: False)",
-        ),
-    ] = False,
-    progress: Annotated[
-        bool,
-        typer.Option(
-            "--progress/--no-progress",
-            "-pgr/-npgr",
-            help="Display live progress bar while streaming (default: enabled)",
-        ),
-    ] = True,
-    loglevel: Annotated[LogLevel, typer.Option(help="Log level")] = LogLevel.info,
-):
-    """
-    Alias for ddil-references: generates a resource class reference graph.
-    """
-    ddil_references(
-        xmlfile=xmlfile,
-        format=format,
-        target_class=target_class,
-        source_class=source_class,
-        include=include,
-        exclude=exclude,
-        between=between,
-        from_class=from_class,
-        to_class=to_class,
-        max_hops=max_hops,
-        directed=directed,
-        min_count=min_count,
-        output=output,
-        output_dir=output_dir,
-        mermaid=mermaid,
-        title=title,
-        refresh=refresh,
-        progress=progress,
-        loglevel=loglevel,
-    )
 
 
 def main():

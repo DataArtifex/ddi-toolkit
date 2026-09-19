@@ -130,37 +130,37 @@ CLI transformation:
 
    dartfx-ddi ddil324 my_study.ddi33.xml --filter "QuestionItem, Variable" --pretty
 
-DDI-Lifecycle Reference Graph & Path Analysis
----------------------------------------------
+DDI-Lifecycle Resource Profile & Topology Analysis
+---------------------------------------------------
 
-Analyze resource references across entire DDI-L XML files and generate interactive visual reports:
+Analyze resource profiles, referencing mechanisms, and structural topologies across entire DDI-L XML files:
 
 .. code-block:: python
 
-   from dartfx.ddi.ddilifecycle import analyze_resource_references
+   from dartfx.ddi.ddilifecycle import analyze_ddil_profile
 
-   # Analyze references
-   graph = analyze_resource_references("my_study.ddi33.xml")
+   # Analyze resource profile
+   profile = analyze_ddil_profile("my_study.ddi33.xml")
 
    # Find connecting paths between classes
-   paths = graph.find_paths_between("QuestionItem", "OutParameter")
+   paths = profile.find_paths_between("QuestionItem", "OutParameter")
    for p in paths:
        print(f"Path: {p.path_description}")
 
    # Generate interactive Vis.js HTML explorer
-   html = graph.to_html(title="Survey Architecture")
+   html = profile.to_html(title="Survey Architecture")
    with open("network.html", "w", encoding="utf-8") as f:
        f.write(html)
 
-CLI reference graph and multi-format exports:
+CLI resource profiling and multi-format exports:
 
 .. code-block:: bash
 
    # Generate interactive HTML explorer and Markdown report
-   dartfx-ddi ddil-references my_study.ddi33.xml --format html,md --output-dir ./reports/
+   dartfx-ddi ddil-profile my_study.ddi33.xml --format html,md --output-dir ./reports/
 
    # Find multi-hop paths between classes
-   dartfx-ddi ddil-references my_study.ddi33.xml --between QuestionItem,OutParameter
+   dartfx-ddi ddil-profile my_study.ddi33.xml --between QuestionItem,OutParameter
 
 BaseX XML Database & Reporting (Experimental)
 ---------------------------------------------
@@ -203,6 +203,6 @@ Next Steps
 
 * Learn about the core :doc:`ddicdi` implementation.
 * Explore the :doc:`ddicodebook` API reference.
-* Learn about :doc:`ddilifecycle` fragment streaming, DDI 4.0 models, and reference graph analysis.
+* Learn about :doc:`ddilifecycle` fragment streaming, DDI 4.0 models, and resource profile analysis.
 * Explore the optional :doc:`basex` XML database and reporting extension.
 * See :doc:`examples` for more detailed use cases.

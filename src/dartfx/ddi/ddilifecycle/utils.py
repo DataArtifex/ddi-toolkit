@@ -987,7 +987,7 @@ def ddil324(
 
 
 #
-# DDI-L CLASS / RESOURCE TYPE REFERENCE GRAPH & PATH ANALYSIS
+# DDI-L RESOURCE CLASS PROFILE & REFERENCE TOPOLOGY GRAPH
 #
 
 
@@ -1006,7 +1006,7 @@ def _classify_cardinality(count: int, distinct_sources: int, distinct_targets: i
     return "N:M"
 
 
-class ClassReferenceEdge(BaseModel):
+class ClassProfileEdge(BaseModel):
     """Represents a directed reference relationship between two resource classes."""
 
     source_class: str
@@ -1019,9 +1019,12 @@ class ClassReferenceEdge(BaseModel):
     cardinality: str = ""  # "1:1", "1:N", "N:1", "N:M"
     target_reuse_factor: float = 0.0  # count / distinct_targets
     avg_refs_per_source: float = 0.0  # count / distinct_sources
+    referencing_mechanisms: dict[str, int] = Field(default_factory=dict)
+    referencing_mechanisms_pct: dict[str, float] = Field(default_factory=dict)
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
     @model_validator(mode="after")
-    def _populate_derived_fields(self) -> "ClassReferenceEdge":
+    def _populate_derived_fields(self) -> "ClassProfileEdge":
         if not self.cardinality:
             self.cardinality = _classify_cardinality(self.count, self.distinct_sources, self.distinct_targets)
         if self.target_reuse_factor <= 0.0:
@@ -1186,7 +1189,7 @@ def _classify_functional_domain(class_name: str) -> str:
 
 def _compute_graph_topology(
     nodes: dict[str, "ClassNode"],
-    edges: list[ClassReferenceEdge],
+    edges: list[ClassProfileEdge],
 ) -> tuple[float, int, int, list[str], list[str], dict[str, float]]:
     """Calculates density, connected components, longest path, central hubs, and domain distribution.
 
@@ -1344,7 +1347,7 @@ def _parse_between_specs(
 
 
 class ClassNode(BaseModel):
-    """Represents a resource class in the reference graph with instance and reference metrics."""
+    """Represents a resource class in the profile graph with instance and reference metrics."""
 
     class_name: str
     resource_count: int = 0
@@ -1357,6 +1360,7 @@ class ClassNode(BaseModel):
     unreferenced_instances: int = 0
     unreferenced_rate: float = 0.0
     functional_domain: str = ""
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def _populate_derived_fields(self) -> "ClassNode":
@@ -1371,9 +1375,11 @@ class ClassNode(BaseModel):
         return self
 
 
-class ReferenceGraphSummary(BaseModel):
-    """Summary metrics of the class-level reference graph."""
+class DdiLifecycleProfileSummary(BaseModel):
+    """Summary metrics of the DDI-Lifecycle resource profile graph."""
 
+    ddi_standard: str = "DDI-Lifecycle"
+    standard_version: str = "3.3"
     total_resources: int = 0
     total_classes: int = 0
     total_reference_instances: int = 0
@@ -1389,6 +1395,9 @@ class ReferenceGraphSummary(BaseModel):
     longest_path: list[str] = Field(default_factory=list)
     central_hubs: list[str] = Field(default_factory=list)
     domain_distribution: dict[str, float] = Field(default_factory=dict)
+    referencing_mechanisms: dict[str, int] = Field(default_factory=dict)
+    referencing_mechanisms_pct: dict[str, float] = Field(default_factory=dict)
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 def _normalize_class_set(classes: Iterable[str] | str | None) -> set[str] | None:
@@ -1406,18 +1415,22 @@ def _normalize_class_set(classes: Iterable[str] | str | None) -> set[str] | None
     return res if res else None
 
 
-class DdiReferenceGraph(BaseModel):
-    """Class-level resource reference graph for DDI-Lifecycle metadata."""
+class DdiLifecycleProfile(BaseModel):
+    """Class-level resource profile graph for DDI-Lifecycle metadata."""
 
-    nodes: dict[str, ClassNode] = Field(default_factory=dict)
-    edges: list[ClassReferenceEdge] = Field(default_factory=list)
-    summary: ReferenceGraphSummary = Field(default_factory=ReferenceGraphSummary)
-    connecting_paths: list[ConnectingPath] = Field(default_factory=list)
-    source_file: str | None = None
+    schema_version: str = "1.0.0"
+    ddi_standard: str = "DDI-Lifecycle"
+    standard_version: str = "3.3"
     title: str | None = None
+    source_file: str | None = None
+    nodes: dict[str, ClassNode] = Field(default_factory=dict)
+    edges: list[ClassProfileEdge] = Field(default_factory=list)
+    summary: DdiLifecycleProfileSummary = Field(default_factory=DdiLifecycleProfileSummary)
+    connecting_paths: list[ConnectingPath] = Field(default_factory=list)
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
     @model_validator(mode="after")
-    def _populate_summary_topology(self) -> "DdiReferenceGraph":
+    def _populate_summary_topology(self) -> "DdiLifecycleProfile":
         if (
             (self.summary.graph_density == 0.0 or self.summary.max_dependency_depth == 0)
             and len(self.nodes) > 0
@@ -1441,23 +1454,23 @@ class DdiReferenceGraph(BaseModel):
         return self
 
     def to_dict(self) -> dict[str, Any]:
-        """Converts the graph to a Python dictionary."""
+        """Converts the profile graph to a Python dictionary."""
         return self.model_dump(mode="json", exclude_none=True)
 
     def to_json(self, indent: int | None = 2) -> str:
-        """Serializes the graph to JSON format."""
+        """Serializes the profile graph to JSON format."""
         if indent is not None:
             return json.dumps(self.to_dict(), indent=indent, ensure_ascii=False)
         return json.dumps(self.to_dict(), ensure_ascii=False)
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "DdiReferenceGraph":
-        """Reconstructs a DdiReferenceGraph from a dictionary."""
+    def from_dict(cls, data: dict[str, Any]) -> "DdiLifecycleProfile":
+        """Reconstructs a DdiLifecycleProfile from a dictionary."""
         return cls.model_validate(data)
 
     @classmethod
-    def from_json(cls, data: str | os.PathLike[str] | Path) -> "DdiReferenceGraph":
-        """Reconstructs a DdiReferenceGraph from a JSON string or file path."""
+    def from_json(cls, data: str | os.PathLike[str] | Path) -> "DdiLifecycleProfile":
+        """Reconstructs a DdiLifecycleProfile from a JSON string or file path."""
         if isinstance(data, (os.PathLike, Path)):
             p = Path(data)
             return cls.model_validate_json(p.read_text(encoding="utf-8"))
@@ -1473,7 +1486,7 @@ class DdiReferenceGraph(BaseModel):
             return cls.model_validate_json(data)
         raise ValueError(f"Invalid JSON source: {data}")
 
-    def get_paths_between(self, source_class: str, target_class: str) -> list[ClassReferenceEdge]:
+    def get_paths_between(self, source_class: str, target_class: str) -> list[ClassProfileEdge]:
         """Returns all reference paths connecting source_class to target_class."""
         return [
             e
@@ -1585,7 +1598,7 @@ class DdiReferenceGraph(BaseModel):
         to_class: Iterable[str] | str | None = None,
         max_hops: int = 5,
         directed: bool | None = None,
-    ) -> "DdiReferenceGraph":
+    ) -> "DdiLifecycleProfile":
         """Extracts the subgraph of nodes and edges that form connecting paths between specified class pairs."""
         pairs = _parse_between_specs(between=between, from_class=from_class, to_class=to_class)
         if not pairs:
@@ -1683,22 +1696,42 @@ class DdiReferenceGraph(BaseModel):
         total_ref_instances = sum(e.count for e in filtered_edges)
         path_counts = {f"{e.source_class} -[{e.reference_element}]-> {e.target_class}": e.count for e in filtered_edges}
 
-        summary = ReferenceGraphSummary(
+        # Calculate referencing mechanisms on subgraph
+        sub_mechs: Counter[str] = Counter()
+        for e in filtered_edges:
+            for m, cnt in e.referencing_mechanisms.items():
+                sub_mechs[m] += cnt
+        sub_mechs_dict = dict(sub_mechs)
+        sub_mechs_pct = (
+            {m: round((cnt / total_ref_instances) * 100, 1) for m, cnt in sub_mechs_dict.items()}
+            if total_ref_instances > 0
+            else {}
+        )
+
+        summary = DdiLifecycleProfileSummary(
+            ddi_standard=self.summary.ddi_standard,
+            standard_version=self.summary.standard_version,
             total_resources=sum(n.resource_count for n in filtered_nodes.values()),
             total_classes=len(filtered_nodes),
             total_reference_instances=total_ref_instances,
             total_unique_paths=len(filtered_edges),
             class_counts={k: v.resource_count for k, v in filtered_nodes.items()},
             path_counts=path_counts,
+            referencing_mechanisms=sub_mechs_dict,
+            referencing_mechanisms_pct=sub_mechs_pct,
         )
 
-        return DdiReferenceGraph(
+        return DdiLifecycleProfile(
+            schema_version=self.schema_version,
+            ddi_standard=self.ddi_standard,
+            standard_version=self.standard_version,
             nodes=filtered_nodes,
             edges=filtered_edges,
             summary=summary,
             connecting_paths=all_paths,
             source_file=self.source_file,
             title=self.title,
+            metadata=self.metadata.copy(),
         )
 
     def filter(
@@ -1713,7 +1746,7 @@ class DdiReferenceGraph(BaseModel):
         max_hops: int = 5,
         directed: bool | None = None,
         min_count: int = 0,
-    ) -> "DdiReferenceGraph":
+    ) -> "DdiLifecycleProfile":
         """Returns a filtered subgraph based on between paths, class filters, and minimum count."""
         if between is not None or from_class is not None or to_class is not None:
             base = self.connecting_subgraph(
@@ -1784,7 +1817,20 @@ class DdiReferenceGraph(BaseModel):
             filtered_nodes, recalculated_edges
         )
 
-        summary = ReferenceGraphSummary(
+        sub_mechs: Counter[str] = Counter()
+        for e in recalculated_edges:
+            for m, cnt in e.referencing_mechanisms.items():
+                sub_mechs[m] += cnt
+        sub_mechs_dict = dict(sub_mechs)
+        sub_mechs_pct = (
+            {m: round((cnt / total_ref_instances) * 100, 1) for m, cnt in sub_mechs_dict.items()}
+            if total_ref_instances > 0
+            else {}
+        )
+
+        summary = DdiLifecycleProfileSummary(
+            ddi_standard=base.summary.ddi_standard,
+            standard_version=base.summary.standard_version,
             total_resources=sum(n.resource_count for n in filtered_nodes.values()),
             total_classes=len(filtered_nodes),
             total_reference_instances=total_ref_instances,
@@ -1800,15 +1846,21 @@ class DdiReferenceGraph(BaseModel):
             longest_path=longest_path,
             central_hubs=central_hubs,
             domain_distribution=domain_dist,
+            referencing_mechanisms=sub_mechs_dict,
+            referencing_mechanisms_pct=sub_mechs_pct,
         )
 
-        return DdiReferenceGraph(
+        return DdiLifecycleProfile(
+            schema_version=self.schema_version,
+            ddi_standard=self.ddi_standard,
+            standard_version=self.standard_version,
             nodes=filtered_nodes,
             edges=recalculated_edges,
             summary=summary,
             connecting_paths=base.connecting_paths,
             source_file=self.source_file,
             title=self.title,
+            metadata=self.metadata.copy(),
         )
 
     def to_markdown(
@@ -1826,7 +1878,7 @@ class DdiReferenceGraph(BaseModel):
         include_mermaid: bool = False,
         title: str | None = None,
     ) -> str:
-        """Renders a comprehensive Markdown report of the class reference graph."""
+        """Renders a comprehensive Markdown report of the class profile graph."""
         g = (
             self.filter(
                 target_class=target_class,
@@ -1857,15 +1909,16 @@ class DdiReferenceGraph(BaseModel):
             title
             or g.title
             or (
-                f"DDI-Lifecycle Class Reference Graph: {g.source_file}"
+                f"DDI-Lifecycle Resource Profile: {g.source_file}"
                 if g.source_file
-                else "DDI-Lifecycle Class Reference Graph Report"
+                else "DDI-Lifecycle Resource Profile Report"
             )
         )
         lines = [
             f"# {doc_title}",
             "",
             "## Summary",
+            f"- **DDI Standard:** `{g.summary.ddi_standard}` (Version `{g.summary.standard_version}`)",
         ]
         if g.source_file:
             lines.append(f"- **Source File:** `{g.source_file}`")
@@ -1885,6 +1938,18 @@ class DdiReferenceGraph(BaseModel):
                 f"- **Max Dependency Depth:** {g.summary.max_dependency_depth} hops",
             ]
         )
+        if g.summary.referencing_mechanisms:
+            mech_labels = {
+                "canonical_id": "Agency/ID/Version",
+                "urn": "URN",
+                "both": "Both URN & Canonical ID",
+                "typeofobject_only": "TypeOfObject Only",
+            }
+            mech_parts = [
+                f"{mech_labels.get(k, k)}: {v:,} ({g.summary.referencing_mechanisms_pct.get(k, 0):.1f}%)"
+                for k, v in g.summary.referencing_mechanisms.items()
+            ]
+            lines.append(f"- **Referencing Mechanisms:** {', '.join(mech_parts)}")
         if g.summary.longest_path:
             chain_str = " → ".join(f"`{c}`" for c in g.summary.longest_path)
             lines.append(f"- **Longest Dependency Chain:** {chain_str}")
@@ -2047,7 +2112,7 @@ class DdiReferenceGraph(BaseModel):
             else self
         )
 
-        doc_title = title or g.title or (f"DDI Reference Graph: {g.source_file}" if g.source_file else None)
+        doc_title = title or g.title or (f"DDI-Lifecycle Profile: {g.source_file}" if g.source_file else None)
         lines = []
         if doc_title:
             lines.extend(["---", f"title: {doc_title}", "---"])
@@ -2078,7 +2143,7 @@ class DdiReferenceGraph(BaseModel):
         rankdir: str = "LR",
         title: str | None = None,
     ) -> str:
-        """Renders the reference graph as Graphviz DOT markup."""
+        """Renders the profile graph as Graphviz DOT markup."""
         g = (
             self.filter(
                 target_class=target_class,
@@ -2105,9 +2170,9 @@ class DdiReferenceGraph(BaseModel):
             else self
         )
 
-        doc_title = title or g.title or (f"DDI-Lifecycle Reference Graph: {g.source_file}" if g.source_file else None)
+        doc_title = title or g.title or (f"DDI-Lifecycle Profile: {g.source_file}" if g.source_file else None)
         lines = [
-            "digraph DdiReferenceGraph {",
+            "digraph DdiLifecycleProfile {",
             f'    rankdir="{rankdir}";',
         ]
         if doc_title:
@@ -2157,7 +2222,7 @@ class DdiReferenceGraph(BaseModel):
         min_count: int = 0,
         title: str | None = None,
     ) -> str:
-        """Serializes the reference graph to W3C RDF Turtle (.ttl) format."""
+        """Serializes the profile graph to W3C RDF Turtle (.ttl) format."""
         g = (
             self.filter(
                 target_class=target_class,
@@ -2188,62 +2253,64 @@ class DdiReferenceGraph(BaseModel):
 
         graph = Graph()
         DDI = Namespace("http://ddialliance.org/ddi-lifecycle/3.3/")
-        DDIR = Namespace("http://dartfx.org/ddi/references/")
+        DDIP = Namespace("http://dartfx.org/ddi/profile/")
 
         graph.bind("ddi", DDI)
-        graph.bind("ddir", DDIR)
+        graph.bind("ddip", DDIP)
         graph.bind("rdfs", RDFS)
         graph.bind("dcterms", DCTERMS)
 
         summary_node = BNode()
-        graph.add((summary_node, RDF.type, DDIR.ReferenceGraphSummary))
+        graph.add((summary_node, RDF.type, DDIP.ProfileSummary))
+        graph.add((summary_node, DDIP.ddiStandard, Literal(g.summary.ddi_standard)))
+        graph.add((summary_node, DDIP.standardVersion, Literal(g.summary.standard_version)))
         if g.source_file:
-            graph.add((summary_node, DDIR.sourceFile, Literal(g.source_file)))
+            graph.add((summary_node, DDIP.sourceFile, Literal(g.source_file)))
             graph.add((summary_node, DCTERMS.source, Literal(g.source_file)))
-        doc_title = title or g.title or (f"DDI Reference Graph for {g.source_file}" if g.source_file else None)
+        doc_title = title or g.title or (f"DDI Profile Graph for {g.source_file}" if g.source_file else None)
         if doc_title:
             graph.add((summary_node, RDFS.label, Literal(doc_title)))
             graph.add((summary_node, DCTERMS.title, Literal(doc_title)))
-        graph.add((summary_node, DDIR.totalResources, Literal(g.summary.total_resources, datatype=XSD.integer)))
-        graph.add((summary_node, DDIR.totalClasses, Literal(g.summary.total_classes, datatype=XSD.integer)))
+        graph.add((summary_node, DDIP.totalResources, Literal(g.summary.total_resources, datatype=XSD.integer)))
+        graph.add((summary_node, DDIP.totalClasses, Literal(g.summary.total_classes, datatype=XSD.integer)))
         graph.add(
             (
                 summary_node,
-                DDIR.totalReferenceInstances,
+                DDIP.totalReferenceInstances,
                 Literal(g.summary.total_reference_instances, datatype=XSD.integer),
             )
         )
-        graph.add((summary_node, DDIR.totalUniquePaths, Literal(g.summary.total_unique_paths, datatype=XSD.integer)))
+        graph.add((summary_node, DDIP.totalUniquePaths, Literal(g.summary.total_unique_paths, datatype=XSD.integer)))
 
         for c_name, node in sorted(g.nodes.items(), key=lambda x: x[0].lower()):
             cls_uri = DDI[c_name]
             graph.add((cls_uri, RDF.type, RDFS.Class))
             graph.add((cls_uri, RDFS.label, Literal(c_name)))
-            graph.add((cls_uri, DDIR.resourceCount, Literal(node.resource_count, datatype=XSD.integer)))
-            graph.add((cls_uri, DDIR.inCount, Literal(node.in_count, datatype=XSD.integer)))
-            graph.add((cls_uri, DDIR.outCount, Literal(node.out_count, datatype=XSD.integer)))
+            graph.add((cls_uri, DDIP.resourceCount, Literal(node.resource_count, datatype=XSD.integer)))
+            graph.add((cls_uri, DDIP.inCount, Literal(node.in_count, datatype=XSD.integer)))
+            graph.add((cls_uri, DDIP.outCount, Literal(node.out_count, datatype=XSD.integer)))
 
         for e in sorted(
             g.edges, key=lambda x: (x.reference_path.lower(), x.target_class.lower(), x.source_class.lower())
         ):
             edge_node = BNode()
-            graph.add((edge_node, RDF.type, DDIR.ReferencePath))
-            graph.add((edge_node, DDIR.sourceClass, DDI[e.source_class]))
-            graph.add((edge_node, DDIR.targetClass, DDI[e.target_class]))
-            graph.add((edge_node, DDIR.referenceElement, Literal(e.reference_element)))
-            graph.add((edge_node, DDIR.referencePath, Literal(e.reference_path)))
-            graph.add((edge_node, DDIR["count"], Literal(e.count, datatype=XSD.integer)))
-            graph.add((edge_node, DDIR.distinctSources, Literal(e.distinct_sources, datatype=XSD.integer)))
-            graph.add((edge_node, DDIR.distinctTargets, Literal(e.distinct_targets, datatype=XSD.integer)))
+            graph.add((edge_node, RDF.type, DDIP.ProfileEdge))
+            graph.add((edge_node, DDIP.sourceClass, DDI[e.source_class]))
+            graph.add((edge_node, DDIP.targetClass, DDI[e.target_class]))
+            graph.add((edge_node, DDIP.referenceElement, Literal(e.reference_element)))
+            graph.add((edge_node, DDIP.referencePath, Literal(e.reference_path)))
+            graph.add((edge_node, DDIP["count"], Literal(e.count, datatype=XSD.integer)))
+            graph.add((edge_node, DDIP.distinctSources, Literal(e.distinct_sources, datatype=XSD.integer)))
+            graph.add((edge_node, DDIP.distinctTargets, Literal(e.distinct_targets, datatype=XSD.integer)))
 
         for p in g.connecting_paths:
             path_node = BNode()
-            graph.add((path_node, RDF.type, DDIR.ConnectingPath))
-            graph.add((path_node, DDIR.sourceClass, DDI[p.source_class]))
-            graph.add((path_node, DDIR.targetClass, DDI[p.target_class]))
-            graph.add((path_node, DDIR.hops, Literal(p.hops, datatype=XSD.integer)))
-            graph.add((path_node, DDIR.minBottleneckCount, Literal(p.min_bottleneck_count, datatype=XSD.integer)))
-            graph.add((path_node, DDIR.pathDescription, Literal(p.path_description)))
+            graph.add((path_node, RDF.type, DDIP.ConnectingPath))
+            graph.add((path_node, DDIP.sourceClass, DDI[p.source_class]))
+            graph.add((path_node, DDIP.targetClass, DDI[p.target_class]))
+            graph.add((path_node, DDIP.hops, Literal(p.hops, datatype=XSD.integer)))
+            graph.add((path_node, DDIP.minBottleneckCount, Literal(p.min_bottleneck_count, datatype=XSD.integer)))
+            graph.add((path_node, DDIP.pathDescription, Literal(p.path_description)))
 
         return graph.serialize(format="turtle")
 
@@ -2292,9 +2359,9 @@ class DdiReferenceGraph(BaseModel):
             title
             or g.title
             or (
-                f"DDI Reference Explorer - {g.source_file}"
+                f"DDI-Lifecycle Profile Explorer - {g.source_file}"
                 if g.source_file
-                else "DDI-Lifecycle Reference Graph Explorer"
+                else "DDI-Lifecycle Profile Explorer"
             )
         )
 
@@ -2370,7 +2437,7 @@ class DdiReferenceGraph(BaseModel):
 
         # Group edges by (source_class, target_class) to prevent overlapping visual lines
         # while preserving all distinct outbound reference paths and their individual metrics
-        edge_groups: dict[tuple[str, str], list[ClassReferenceEdge]] = defaultdict(list)
+        edge_groups: dict[tuple[str, str], list[ClassProfileEdge]] = defaultdict(list)
         for e in g.edges:
             edge_groups[(e.source_class, e.target_class)].append(e)
 
@@ -2400,6 +2467,8 @@ class DdiReferenceGraph(BaseModel):
                     "cardinality": item.cardinality,
                     "targetReuseFactor": item.target_reuse_factor,
                     "avgRefsPerSource": item.avg_refs_per_source,
+                    "referencingMechanisms": item.referencing_mechanisms,
+                    "referencingMechanismsPct": item.referencing_mechanisms_pct,
                 }
                 for item in sorted(edge_list, key=lambda x: -x.count)
             ]
@@ -2442,7 +2511,7 @@ class DdiReferenceGraph(BaseModel):
                 f'title="Source: {g.source_file}">📄 {g.source_file}</p>'
             )
         else:
-            subtitle_html = "<p>Interactive Class Dependency & Path Graph</p>"
+            subtitle_html = "<p>Interactive DDI-Lifecycle Class Topology & Resource Profile</p>"
 
         res_title = (
             f"Resolution: {g.summary.resolution_rate:.1%} resolved locally "
@@ -2909,7 +2978,7 @@ class DdiReferenceGraph(BaseModel):
 <body>
   <div id="sidebar">
     <div class="header">
-      <h1>DDI Reference Explorer</h1>
+      <h1>DDI-Lifecycle Profile Explorer</h1>
       {subtitle_html}
     </div>
     <div class="metrics">
@@ -3760,6 +3829,47 @@ class DdiReferenceGraph(BaseModel):
 
       html += `</div>`;
 
+      // Referencing Mechanisms Breakdown
+      if (s.referencing_mechanisms && Object.keys(s.referencing_mechanisms).length > 0) {{
+        html += `<div class="detail-card" style="margin-top:10px;" `
+          + `title="Breakdown of reference addressing mechanisms used across this document">`;
+        html += `<h4>Referencing Mechanisms</h4>`;
+        html += `<div class="domain-list">`;
+        const mechLabels = {{
+          "canonical_id": "Agency / ID / Version",
+          "urn": "URN",
+          "both": "Both URN & Canonical ID",
+          "typeofobject_only": "TypeOfObject Only"
+        }};
+        const mechColors = {{
+          "canonical_id": "#38bdf8",
+          "urn": "#8b5cf6",
+          "both": "#10b981",
+          "typeofobject_only": "#f59e0b"
+        }};
+        const sortedMechs = Object.entries(s.referencing_mechanisms).sort((a, b) => b[1] - a[1]);
+        sortedMechs.forEach(([mKey, count]) => {{
+          const pct = s.referencing_mechanisms_pct && s.referencing_mechanisms_pct[mKey] !== undefined
+            ? s.referencing_mechanisms_pct[mKey]
+            : (totalRefs > 0 ? ((count / totalRefs) * 100) : 0);
+          const pctStr = pct.toFixed(1);
+          const label = mechLabels[mKey] || mKey;
+          const barCol = mechColors[mKey] || "#64748b";
+          html += `<div class="domain-row">`;
+          html += `<div class="domain-label-row">`;
+          html += `<span><span style="display:inline-block; width:8px; height:8px; border-radius:2px; `
+            + `background:${{barCol}}; margin-right:5px;"></span>${{label}}</span>`;
+          html += `<b style="color:var(--text);">${{count.toLocaleString()}} (${{pctStr}}%)</b>`;
+          html += `</div>`;
+          html += `<div class="domain-bar-track">`;
+          html += `<div class="domain-bar-fill" style="width:${{pctStr}}%; background:${{barCol}};"></div>`;
+          html += `</div>`;
+          html += `</div>`;
+        }});
+        html += `</div>`;
+        html += `</div>`;
+      }}
+
       // 2. Longest Dependency Chain (if available)
       if (s.longest_path && s.longest_path.length > 1) {{
         html += `<div class="detail-card" style="margin-top:10px;" `
@@ -3866,7 +3976,7 @@ class DdiReferenceGraph(BaseModel):
       const a = document.createElement("a");
       a.href = imageURI;
       const fileStem = (rawData.sourceFile || "ddi").replace(/\\.[^/.]+$/, "");
-      a.download = `${{fileStem}}_reference_graph.png`;
+      a.download = `${{fileStem}}_profile_graph.png`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -3908,10 +4018,6 @@ class DdiReferenceGraph(BaseModel):
         return graph
 
 
-# Alias for class reference graph
-DdiClassReferenceGraph = DdiReferenceGraph
-
-
 def _extract_resource_identifiers(elem: ET.Element) -> tuple[str, str | None, str | None, str | None, str | None]:
     """Extracts (class_name, agency, id, version, urn) from a top-level resource element."""
     class_name = elem.tag.rsplit("}", 1)[-1]
@@ -3932,8 +4038,8 @@ def _extract_resource_identifiers(elem: ET.Element) -> tuple[str, str | None, st
 def _find_reference_elements(
     elem: ET.Element,
     path: str = "",
-) -> Generator[tuple[str, str, str | None, str | None, str | None, str | None, str | None], None, None]:
-    """Recursively traverses an XML element tree to find reference sub-elements."""
+) -> Generator[tuple[str, str, str | None, str | None, str | None, str | None, str | None, str], None, None]:
+    """Recursively traverses an XML element tree to find reference sub-elements and determine referencing mechanisms."""
     tag = elem.tag.rsplit("}", 1)[-1]
     curr_path = f"{path}/{tag}" if path else tag
 
@@ -3954,14 +4060,27 @@ def _find_reference_elements(
 
     is_ref = has_ref_tag or (typeofobject is not None and (agency or rid or urn))
     if is_ref and (agency or rid or urn or typeofobject):
-        yield (tag, curr_path, agency, rid, ver, urn, typeofobject)
+        has_urn = bool(urn)
+        has_canonical = bool(agency and rid)
+        if has_urn and has_canonical:
+            mechanism = "both"
+        elif has_urn:
+            mechanism = "urn"
+        elif has_canonical:
+            mechanism = "canonical_id"
+        elif typeofobject is not None:
+            mechanism = "typeofobject_only"
+        else:
+            mechanism = "urn" if urn else "canonical_id"
+
+        yield (tag, curr_path, agency, rid, ver, urn, typeofobject, mechanism)
         return  # Do not recurse into children of a reference element
 
     for c in elem:
         yield from _find_reference_elements(c, curr_path)
 
 
-def analyze_resource_references(
+def analyze_ddil_profile(
     source: str | os.PathLike[str] | IO[bytes] | ET.Element,
     target_class: str | None = None,
     source_class: str | None = None,
@@ -3975,13 +4094,14 @@ def analyze_resource_references(
     min_count: int = 0,
     source_file: str | None = None,
     title: str | None = None,
+    metadata: dict[str, Any] | None = None,
     on_progress: Callable[[int, int | None], None] | None = None,
     on_pass_progress: Callable[[int, int, int | None], None] | None = None,
-) -> DdiReferenceGraph:
-    """Analyzes a DDI-Lifecycle XML document and determines how resource classes reference each other.
+) -> DdiLifecycleProfile:
+    """Analyzes a DDI-Lifecycle XML document and profiles resource classes and reference topologies.
 
-    Uses the existing DDI 3 file streamer (stream_ddil_fragments) to traverse fragments
-    and construct a class-level reference graph.
+    Uses the streaming parser (`stream_ddil_fragments`) to traverse fragments
+    and construct a comprehensive class-level profile graph.
 
     Args:
         source: Path to DDI-L XML file, binary file-like object, or parsed XML Element.
@@ -3994,14 +4114,15 @@ def analyze_resource_references(
         to_class: Optional destination class(es) to find all connecting paths leading into.
         max_hops: Maximum path hops when finding paths between classes (default: 5).
         directed: Whether to enforce directed search (default: None for smart auto-directionality).
-        min_count: Minimum reference count threshold to include in the output graph.
+        min_count: Minimum reference count threshold to include in the output profile.
         source_file: Optional explicit source file name.
-        title: Optional custom graph/report title.
+        title: Optional custom profile/report title.
+        metadata: Optional custom metadata dictionary attached to the profile.
         on_progress: Optional callback `(bytes_read, total_bytes)` invoked during streaming.
         on_pass_progress: Optional callback `(pass_num, bytes_read, total_bytes)` invoked during streaming.
 
     Returns:
-        DdiReferenceGraph containing class nodes, reference paths, metrics, and export methods.
+        DdiLifecycleProfile containing class nodes, reference paths, metrics, and export methods.
     """
     source_file_name = source_file
     if source_file_name is None:
@@ -4042,7 +4163,7 @@ def analyze_resource_references(
 
     has_progress = on_progress is not None or on_pass_progress is not None
 
-    # Pass 1: Index all defined resources in document using existing DDI 3 file streamer
+    # Pass 1: Index all defined resources in document using streaming parser
     defined_instances: dict[str, set[str]] = defaultdict(set)
     all_defined_instance_keys: set[str] = set()
 
@@ -4065,18 +4186,21 @@ def analyze_resource_references(
             all_defined_instance_keys.add(urn)
             defined_instances[c_name].add(urn)
 
-    # Pass 2: Extract reference paths and compute counts using existing DDI 3 file streamer
+    # Pass 2: Extract reference paths and compute counts
     path_stats: dict[tuple[str, str, str, str], dict[str, Any]] = {}
     referenced_target_instances: dict[str, set[str]] = defaultdict(set)
     internal_ref_count = 0
     external_ref_count = 0
+    overall_mechanisms: Counter[str] = Counter()
 
     for res_elem in _get_stream(pass_progress=_pass2_progress if has_progress else None):
         src_class, s_agency, s_id, s_ver, s_urn = _extract_resource_identifiers(res_elem)
         src_key = s_urn or f"{s_agency}:{s_id}:{s_ver}"
 
         for sub in res_elem:
-            for ref_tag, ref_path, agency, rid, ver, urn, typeofobj in _find_reference_elements(sub, src_class):
+            for ref_tag, ref_path, agency, rid, ver, urn, typeofobj, mechanism in _find_reference_elements(
+                sub, src_class
+            ):
                 tgt_class = typeofobj
                 if not tgt_class and urn and urn in urn_map:
                     tgt_class = urn_map[urn]
@@ -4110,15 +4234,23 @@ def analyze_resource_references(
                 else:
                     external_ref_count += 1
 
+                overall_mechanisms[mechanism] += 1
+
                 edge_key = (src_class, tgt_class, ref_tag, ref_path)
                 if edge_key not in path_stats:
-                    path_stats[edge_key] = {"count": 0, "sources": set(), "targets": set()}
+                    path_stats[edge_key] = {
+                        "count": 0,
+                        "sources": set(),
+                        "targets": set(),
+                        "mechanisms": Counter(),
+                    }
                 path_stats[edge_key]["count"] += 1
                 path_stats[edge_key]["sources"].add(src_key)
                 path_stats[edge_key]["targets"].add(tgt_key)
+                path_stats[edge_key]["mechanisms"][mechanism] += 1
 
-    # Build graph edges
-    edges: list[ClassReferenceEdge] = []
+    # Build profile edges
+    edges: list[ClassProfileEdge] = []
     for (s_cls, t_cls, r_tag, r_path), stats in sorted(path_stats.items()):
         cnt = stats["count"]
         d_src = len(stats["sources"])
@@ -4126,9 +4258,11 @@ def analyze_resource_references(
         card = _classify_cardinality(cnt, d_src, d_tgt)
         reuse_fac = round(cnt / d_tgt, 2) if d_tgt > 0 else 1.0
         avg_src = round(cnt / d_src, 2) if d_src > 0 else 1.0
+        mech_counts = dict(stats["mechanisms"])
+        mech_pct = {m: round((c / cnt) * 100, 1) for m, c in mech_counts.items()} if cnt > 0 else {}
 
         edges.append(
-            ClassReferenceEdge(
+            ClassProfileEdge(
                 source_class=s_cls,
                 target_class=t_cls,
                 reference_element=r_tag,
@@ -4139,6 +4273,8 @@ def analyze_resource_references(
                 cardinality=card,
                 target_reuse_factor=reuse_fac,
                 avg_refs_per_source=avg_src,
+                referencing_mechanisms=mech_counts,
+                referencing_mechanisms_pct=mech_pct,
             )
         )
 
@@ -4190,7 +4326,16 @@ def analyze_resource_references(
 
     density, components, max_depth, longest_path, central_hubs, domain_dist = _compute_graph_topology(nodes, edges)
 
-    summary = ReferenceGraphSummary(
+    overall_mechs_dict = dict(overall_mechanisms)
+    overall_mechs_pct = (
+        {m: round((c / total_ref_instances) * 100, 1) for m, c in overall_mechs_dict.items()}
+        if total_ref_instances > 0
+        else {}
+    )
+
+    summary = DdiLifecycleProfileSummary(
+        ddi_standard="DDI-Lifecycle",
+        standard_version="3.3",
         total_resources=sum(class_counts.values()),
         total_classes=len(nodes),
         total_reference_instances=total_ref_instances,
@@ -4206,14 +4351,20 @@ def analyze_resource_references(
         longest_path=longest_path,
         central_hubs=central_hubs,
         domain_distribution=domain_dist,
+        referencing_mechanisms=overall_mechs_dict,
+        referencing_mechanisms_pct=overall_mechs_pct,
     )
 
-    graph = DdiReferenceGraph(
+    profile = DdiLifecycleProfile(
+        schema_version="1.0.0",
+        ddi_standard="DDI-Lifecycle",
+        standard_version="3.3",
         nodes=nodes,
         edges=edges,
         summary=summary,
         source_file=source_file_name,
         title=title,
+        metadata=metadata or {},
     )
 
     if (
@@ -4226,7 +4377,7 @@ def analyze_resource_references(
         or to_class
         or min_count > 0
     ):
-        return graph.filter(
+        return profile.filter(
             target_class=target_class,
             source_class=source_class,
             include_classes=include_classes,
@@ -4239,8 +4390,4 @@ def analyze_resource_references(
             min_count=min_count,
         )
 
-    return graph
-
-
-# Alias for analyze_resource_references
-build_reference_graph = analyze_resource_references
+    return profile

@@ -152,28 +152,28 @@ Streaming and Converting Fragments to DDI 4.0
    for fragment in ddilifecycle.stream_ddil_fragments("survey.ddi33.xml", resource_types=["QuestionItem", "Variable"]):
        print(f"{type(fragment).__name__}: {fragment.id}")
 
-Reference Graph Analysis & Interactive HTML Explorer
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Resource Profile Analysis & Interactive HTML Explorer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
-   from dartfx.ddi.ddilifecycle import analyze_resource_references
+   from dartfx.ddi.ddilifecycle import analyze_ddil_profile
 
-   # 1. Analyze resource reference network
-   graph = analyze_resource_references("survey.ddi33.xml", title="Survey 2024 Architecture")
+   # 1. Analyze resource profile and referencing mechanisms
+   profile = analyze_ddil_profile("survey.ddi33.xml", title="Survey 2024 Architecture")
 
    # 2. Discover multi-hop connecting paths
-   paths = graph.find_paths_between("QuestionItem", "OutParameter", max_hops=4)
+   paths = profile.find_paths_between("QuestionItem", "OutParameter", max_hops=4)
    for p in paths:
        print(f"{p.hops} hops: {p.path_description}")
 
    # 3. Export to interactive Vis.js HTML explorer
-   html = graph.to_html(title="Survey Reference Explorer")
-   with open("network_explorer.html", "w", encoding="utf-8") as f:
+   html = profile.to_html(title="Survey Profile Explorer")
+   with open("profile_explorer.html", "w", encoding="utf-8") as f:
        f.write(html)
 
    # 4. Export to NetworkX DiGraph for graph algorithms
-   nx_graph = graph.to_networkx()
+   nx_graph = profile.to_networkx()
    print(f"NetworkX graph has {nx_graph.number_of_nodes()} nodes and {nx_graph.number_of_edges()} edges")
 
 BaseX XML Database & Reporting (Experimental)

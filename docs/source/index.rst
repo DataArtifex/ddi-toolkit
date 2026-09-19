@@ -59,7 +59,7 @@ Basic DDI-Codebook usage::
        for var in my_codebook.dataDscr.var:
            print(f"Variable: {var.name}, Label: {var.labl.content if var.labl else 'No label'}")
 
-DDI-Lifecycle streaming and reference graph analysis::
+DDI-Lifecycle streaming and resource profile analysis::
 
    from dartfx.ddi import ddilifecycle
 
@@ -67,9 +67,9 @@ DDI-Lifecycle streaming and reference graph analysis::
    for fragment in ddilifecycle.stream_ddil_fragments("my_study.ddi33.xml", resource_types=["QuestionItem"]):
        print(f"Fragment: {type(fragment).__name__}, URN: {fragment.urn}")
 
-   # Analyze reference graph & export to interactive HTML explorer
-   graph = ddilifecycle.analyze_resource_references("my_study.ddi33.xml")
-   html = graph.to_html(title="Survey Network")
+   # Analyze resource profile & export to interactive HTML explorer
+   profile = ddilifecycle.analyze_ddil_profile("my_study.ddi33.xml")
+   html = profile.to_html(title="Survey Profile")
 
 DDI-CDI & Assistant Framework usage::
 

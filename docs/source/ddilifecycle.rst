@@ -1,12 +1,12 @@
 DDI-Lifecycle & DDI 4.0 Processing
 ====================================
 
-The ``ddilifecycle`` subpackage provides high-performance streaming XML parsing, schema crosswalks, and an advanced **Class Reference Graph & Path Analysis** engine for **DDI-Lifecycle 3.3** XML documents.
+The ``ddilifecycle`` subpackage provides high-performance streaming XML parsing, schema crosswalks, and an advanced **Resource Profile & Topology Analysis** engine for **DDI-Lifecycle 3.3** XML documents.
 
 It enables:
 
 1. **Fragment Streaming & Crosswalks**: Transforming DDI 3.3 XML fragments into definitive **DDI 4.0 RC1 Pydantic models** (``model_4_0_rc1.py``).
-2. **Class Reference Graph & Path Analysis**: Indexing all declared resources and references in a dual-pass streaming pipeline, classifying topology and multiplicity metrics, discovering multi-hop connecting paths, and exporting to interactive HTML, Markdown, JSON, Mermaid, Graphviz DOT, Turtle RDF, and NetworkX formats.
+2. **Resource Profile & Topology Analysis**: Indexing all declared resources and references in a dual-pass streaming pipeline, profiling referencing mechanisms, classifying topology and multiplicity metrics, discovering multi-hop connecting paths, and exporting to interactive HTML, Markdown, JSON, Mermaid, Graphviz DOT, Turtle RDF, and NetworkX formats.
 
 Overview & Architecture
 -----------------------
@@ -127,20 +127,42 @@ Limit fragment count for quick inspection (default: 0 / unlimited):
 
 -------------------------------------------------------------------------------
 
-Class Reference Graph & Path Analysis Engine
-============================================
+Resource Profile & Topology Analysis Engine
+===========================================
 
 DDI-Lifecycle datasets are rich relational networks where resources reference each other across logical domains (e.g., ``QuestionConstruct`` $\rightarrow$ ``QuestionItem`` $\rightarrow$ ``Concept``, ``Variable`` $\rightarrow$ ``CodeList`` $\rightarrow$ ``Category``).
 
-The **Class Reference Graph Engine** provides automated structural analysis, dependency mapping, multi-hop path discovery, multiplicity classification, and rich interactive visualizations across entire DDI-L XML files.
+The **Resource Profile Engine** provides automated structural analysis, dependency mapping, referencing mechanism profiling, multi-hop path discovery, multiplicity classification, and rich interactive visualizations across entire DDI-L XML files.
+
+Standard & Version Identification
+---------------------------------
+
+All profile models and summaries explicitly identify their target DDI specification family and version:
+
+* ``ddi_standard``: ``"DDI-Lifecycle"`` (ready for future extension to ``"DDI-CDI"`` and ``"DDI-Codebook"``).
+* ``standard_version``: ``"3.3"``.
+* ``schema_version``: ``"1.0.0"`` (profile output format version).
+* ``metadata``: Extensible key-value store (``dict[str, Any]``) available on ``DdiLifecycleProfile``, ``DdiLifecycleProfileSummary``, ``ClassNode``, and ``ClassProfileEdge`` for custom annotations.
+
+Referencing Mechanism Intelligence
+----------------------------------
+
+DDI-Lifecycle allows resources to be referenced through several distinct mechanisms in XML:
+
+* ``urn``: By direct URN (``<r:URN>``) without explicit agency/ID.
+* ``canonical_id``: By canonical identifier components (``<r:Agency>``, ``<r:ID>``, and optional ``<r:Version>``) without an explicit URN.
+* ``both``: By both explicit URN and canonical agency/ID components.
+* ``typeofobject_only``: By type annotation (``<r:TypeOfObject>``) without identifier payload.
+
+The profiling engine catalogs and calculates counts (``referencing_mechanisms``) and percentages (``referencing_mechanisms_pct``) overall across the entire study and on each individual class-to-class edge.
 
 Architecture: Dual-Pass Streaming
 ---------------------------------
 
-To analyze large files without exceeding memory limits, ``analyze_resource_references`` executes a two-pass streaming process:
+To analyze large files without exceeding memory limits, ``analyze_ddil_profile`` executes a two-pass streaming process:
 
 1. **Pass 1 (Resource Indexing)**: Fast SAX / ``iterparse`` pass that scans every element, catalogs all declared resources, and indexes their local ``<ID>``, ``<Agency>``, ``<Version>``, synthesizes canonical URNs, and records the resource's class name.
-2. **Pass 2 (Reference Resolution & Edge Synthesis)**: Streams all XML elements and examines all reference tags (e.g., ``<r:QuestionItemReference>``, ``<d:UniverseReference>``, ``<r:ConceptReference>``). It extracts target IDs or URNs, resolves them against the Pass 1 index, associates the source resource's class with the target's class, and records the exact XML element and containment path.
+2. **Pass 2 (Reference Resolution & Edge Synthesis)**: Streams all XML elements and examines all reference tags (e.g., ``<r:QuestionItemReference>``, ``<d:UniverseReference>``, ``<r:ConceptReference>``). It extracts target IDs or URNs, resolves them against the Pass 1 index, associates the source resource's class with the target's class, classifies the referencing mechanism, and records the exact XML element and containment path.
 
 This dual-pass architecture ensures 100% accurate edge counts and multiplicity metrics even when referencing elements appear earlier in the XML document than their target definitions.
 
@@ -192,21 +214,24 @@ Python API Usage
 Analyzing a DDI-L XML File
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Analyze a file and obtain a ``DdiReferenceGraph`` model instance:
+Analyze a file and obtain a ``DdiLifecycleProfile`` model instance:
 
 .. code-block:: python
 
-   from dartfx.ddi.ddilifecycle import analyze_resource_references
+   from dartfx.ddi.ddilifecycle import analyze_ddil_profile
 
-   # Analyze references
-   graph = analyze_resource_references("my_study.ddi33.xml", title="Survey Reference Graph")
+   # Analyze resource profile
+   profile = analyze_ddil_profile("my_study.ddi33.xml", title="Survey Profile Graph")
 
    # Inspect summary metrics
-   print(f"Classes: {graph.summary.total_classes}")
-   print(f"Reference instances: {graph.summary.total_reference_instances}")
-   print(f"Graph density: {graph.summary.graph_density:.4f}")
-   print(f"Resolution rate: {graph.summary.resolution_rate:.1f}%")
-   print(f"Longest dependency path: {' -> '.join(graph.summary.longest_path)}")
+   print(f"Standard: {profile.summary.ddi_standard} {profile.summary.standard_version}")
+   print(f"Classes: {profile.summary.total_classes}")
+   print(f"Reference instances: {profile.summary.total_reference_instances}")
+   print(f"Graph density: {profile.summary.graph_density:.4f}")
+   print(f"Resolution rate: {profile.summary.resolution_rate:.1f}%")
+   print(f"Longest dependency path: {' -> '.join(profile.summary.longest_path)}")
+   print(f"Referencing mechanisms: {profile.summary.referencing_mechanisms}")
+   print(f"Mechanisms (%): {profile.summary.referencing_mechanisms_pct}")
 
 Inspecting Nodes and Edges
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -214,17 +239,18 @@ Inspecting Nodes and Edges
 .. code-block:: python
 
    # Inspect specific node
-   if "QuestionItem" in graph.nodes:
-       node = graph.nodes["QuestionItem"]
+   if "QuestionItem" in profile.nodes:
+       node = profile.nodes["QuestionItem"]
        print(f"QuestionItem count: {node.resource_count}, Role: {node.role}, Domain: {node.functional_domain}")
        print(f"  Referenced by: {node.referrers}")
        print(f"  References to: {node.references}")
 
    # Inspect edges
-   for edge in graph.edges:
+   for edge in profile.edges:
        print(
            f"{edge.source_class} -[{edge.reference_element}]-> {edge.target_class} "
-           f"({edge.count} refs, {edge.cardinality}, reuse: {edge.target_reuse_factor}x)"
+           f"({edge.count} refs, {edge.cardinality}, reuse: {edge.target_reuse_factor}x, "
+           f"mechanisms: {edge.referencing_mechanisms})"
        )
 
 Multi-Hop Path Discovery & Subgraph Extraction
@@ -235,15 +261,15 @@ Find all connecting paths between two classes or extract a focused subgraph:
 .. code-block:: python
 
    # Find all paths between QuestionItem and OutParameter
-   paths = graph.find_paths_between("QuestionItem", "OutParameter", max_hops=5, directed=False)
+   paths = profile.find_paths_between("QuestionItem", "OutParameter", max_hops=5, directed=False)
    for p in paths:
        print(f"Path ({p.hops} hops): {p.path_description} (Bottleneck count: {p.min_bottleneck_count})")
 
    # Extract focused connecting subgraph
-   subgraph = graph.connecting_subgraph(between=["QuestionItem,OutParameter", "Variable,Category"])
+   subgraph = profile.connecting_subgraph(between=["QuestionItem,OutParameter", "Variable,Category"])
 
    # Filter by class inclusions, exclusions, or threshold
-   filtered = graph.filter(
+   filtered = profile.filter(
        include_classes=["QuestionItem", "QuestionConstruct", "Variable", "Category"],
        min_count=5
    )
@@ -255,19 +281,19 @@ The toolkit generates a standalone, self-contained interactive HTML explorer wit
 
 .. code-block:: python
 
-   html_content = graph.to_html(title="Interactive Network Explorer")
-   with open("reference_network.html", "w", encoding="utf-8") as f:
+   html_content = profile.to_html(title="Interactive Profile Explorer")
+   with open("survey_profile.html", "w", encoding="utf-8") as f:
        f.write(html_content)
 
 Interactive HTML Features
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* **Graph Summary Landing State**: When no node is selected, the sidebar displays an overview dashboard with key metrics (total resources, classes, density, resolution rate, max depth), clickable longest dependency chain pills, central hub pills, and functional domain distribution bars.
+* **Graph Summary Landing State**: When no node is selected, the sidebar displays an overview dashboard with key metrics (total resources, classes, density, resolution rate, max depth, referencing mechanisms breakdown), clickable longest dependency chain pills, central hub pills, and functional domain distribution bars.
 * **Metric Tooltips**: Hover over summary metrics (Resolution Rate, Density, Max Depth, References Ratio, Cardinality, Target Reuse) to view concise explanatory definitions and formulas.
 * **Dynamic Physics & Layout Controls**:
   * Toggle live force-directed physics on or off.
   * Switch to **Hierarchical Left $\rightarrow$ Right** (`LR`) horizontal tree or **Top $\rightarrow$ Down** (`UD`) vertical tree layouts.
-* **Node & Edge Inspection**: Click any node or edge to inspect instance counts, incoming referrers, outgoing references, containment XML paths, cardinality, and target reuse factors.
+* **Node & Edge Inspection**: Click any node or edge to inspect instance counts, incoming referrers, outgoing references, containment XML paths, cardinality, target reuse factors, and referencing mechanism distributions.
 * **Live Search & Filtering**: Real-time fuzzy search box to instantly zoom into matching classes.
 * **Display Toggles**:
   * **Labels Toggle**: Show/hide node labels to declutter large, dense networks.
@@ -278,7 +304,7 @@ Interactive HTML Features
 Multi-Format Serialization & Exports
 ------------------------------------
 
-The reference graph can be rendered into multiple formats directly via Python methods or CLI flags:
+The profile graph can be rendered into multiple formats directly via Python methods or CLI flags:
 
 .. list-table::
    :widths: 18 20 62
@@ -288,84 +314,84 @@ The reference graph can be rendered into multiple formats directly via Python me
      - Python Method
      - Description
    * - **Markdown**
-     - ``graph.to_markdown()``
-     - Structured Markdown report containing node summaries, edge cardinality tables, paths, and topology insights.
+     - ``profile.to_markdown()``
+     - Structured Markdown report containing node summaries, referencing mechanisms breakdown, edge cardinality tables, paths, and topology insights.
    * - **Canonical JSON**
-     - ``graph.to_json()``
-     - Full JSON serialization of nodes, edges, summary metrics, and connecting paths. Used for caching and API integration.
+     - ``profile.to_json()``
+     - Full JSON serialization of nodes, edges, summary metrics, referencing mechanisms, metadata, and connecting paths. Used for caching and API integration.
    * - **Mermaid**
-     - ``graph.to_mermaid()``
+     - ``profile.to_mermaid()``
      - Standalone Mermaid flowchart diagram code block with styled node classes and cardinality labels.
    * - **Interactive HTML**
-     - ``graph.to_html()``
+     - ``profile.to_html()``
      - Standalone interactive Vis.js web application with dark dashboard, search, controls, and PNG export.
    * - **Graphviz DOT**
-     - ``graph.to_dot()``
+     - ``profile.to_dot()``
      - Graphviz DOT language representation with node styling and edge weights suitable for ``dot`` / ``neato`` rendering.
    * - **Turtle RDF**
-     - ``graph.to_turtle()``
+     - ``profile.to_turtle()``
      - Semantic Web RDF graph serialized in Turtle format using W3C PROV-O, DCTERMS, and SKOS ontologies.
    * - **NetworkX**
-     - ``graph.to_networkx()``
+     - ``profile.to_networkx()``
      - Converts to a ``networkx.DiGraph`` with node and edge attributes for complex graph algorithms and centrality calculations.
 
 Canonical JSON Caching
 ----------------------
 
-To eliminate repetitive XML parsing overhead on large files, the toolkit automatically saves a canonical JSON cache file (``<stem>.references.json``) alongside the XML or in the specified output directory.
+To eliminate repetitive XML parsing overhead on large files, the toolkit automatically saves a canonical JSON cache file (``<stem>.profile.json``) alongside the XML or in the specified output directory.
 
 When running subsequent queries or format conversions:
 
-1. The graph engine checks for an existing ``<stem>.references.json``.
-2. If found, it loads the cached graph **instantly** without touching the XML.
-3. Use the ``--refresh`` / ``-r`` flag in CLI or parse directly with ``analyze_resource_references`` to force re-parsing.
+1. The profile engine checks for an existing ``<stem>.profile.json``.
+2. If found, it loads the cached profile **instantly** without touching the XML.
+3. Use the ``--refresh`` / ``-r`` flag in CLI or parse directly with ``analyze_ddil_profile`` to force re-parsing.
 
-CLI Usage (`dartfx-ddi ddil-references` / `ddil-graph`)
--------------------------------------------------------
+CLI Usage (`dartfx-ddi ddil-profile`)
+-------------------------------------
 
-The ``ddil-references`` command (and its alias ``ddil-graph``) provides terminal access to graph generation and filtering:
+The ``ddil-profile`` command provides terminal access to profile graph generation and filtering:
 
 Generate Markdown report to stdout:
 
 .. code-block:: bash
 
-   dartfx-ddi ddil-references my_study.ddi33.xml
+   dartfx-ddi ddil-profile my_study.ddi33.xml
 
 Generate all output formats (Markdown, JSON, Mermaid, HTML, DOT, Turtle) in one pass:
 
 .. code-block:: bash
 
-   dartfx-ddi ddil-references my_study.ddi33.xml --format all --output-dir ./reports/
+   dartfx-ddi ddil-profile my_study.ddi33.xml --format all --output-dir ./reports/
 
 Generate interactive HTML explorer and Turtle RDF:
 
 .. code-block:: bash
 
-   dartfx-ddi ddil-references my_study.ddi33.xml --format html,ttl --output-dir ./reports/
+   dartfx-ddi ddil-profile my_study.ddi33.xml --format html,ttl --output-dir ./reports/
 
 Find multi-hop connecting paths between class pairs:
 
 .. code-block:: bash
 
-   dartfx-ddi ddil-references my_study.ddi33.xml --between QuestionItem,OutParameter --format md,html
+   dartfx-ddi ddil-profile my_study.ddi33.xml --between QuestionItem,OutParameter --format md,html
 
 Discover paths originating from a specific class:
 
 .. code-block:: bash
 
-   dartfx-ddi ddil-references my_study.ddi33.xml --from QuestionItem --max-hops 4
+   dartfx-ddi ddil-profile my_study.ddi33.xml --from QuestionItem --max-hops 4
 
 Filter by minimum reference threshold and include specific classes:
 
 .. code-block:: bash
 
-   dartfx-ddi ddil-references my_study.ddi33.xml --include QuestionItem,Variable,Category --min-count 5
+   dartfx-ddi ddil-profile my_study.ddi33.xml --include QuestionItem,Variable,Category --min-count 5
 
 Force re-parsing XML and refresh cached JSON:
 
 .. code-block:: bash
 
-   dartfx-ddi ddil-references my_study.ddi33.xml --refresh --format html
+   dartfx-ddi ddil-profile my_study.ddi33.xml --refresh --format html
 
 CLI Options Reference
 ~~~~~~~~~~~~~~~~~~~~~
