@@ -2422,7 +2422,7 @@ class DdiLifecycleProfile(BaseModel):
                         "background": bg_col,
                         "border": border_col,
                         "highlight": {"background": highlight_col, "border": "#ffffff"},
-                        "hover": {"background": bg_col, "border": highlight_col},
+                        "hover": {"background": bg_col, "border": border_col},
                     },
                     "resourceCount": node.resource_count,
                     "inCount": node.in_count,
@@ -3264,18 +3264,6 @@ class DdiLifecycleProfile(BaseModel):
           isNodeDimmedSelection = false;
           resetHighlighting();
           renderGraphSummary();
-        }}
-      }});
-
-      network.on("hoverNode", function(params) {{
-        if (!selectedNodeId) {{
-          highlightNeighborhood(params.node, true);
-        }}
-      }});
-
-      network.on("blurNode", function(params) {{
-        if (!selectedNodeId) {{
-          resetHighlighting();
         }}
       }});
 
