@@ -6,8 +6,13 @@ import os
 from pathlib import Path
 from unittest.mock import patch
 
-import httpx
 import pytest
+
+# Skip this test module if optional BaseX dependencies are not installed
+pytest.importorskip("httpx")
+pytest.importorskip("jinja2")
+
+import httpx
 from typer.testing import CliRunner
 
 from dartfx.ddi.basex import (

@@ -44,8 +44,8 @@ jobs:
       - name: Install Python
         run: uv python install ${{ matrix.python-version }}
 
-      - name: Install dependencies (dev)
-        run: uv sync --group dev
+      - name: Install dependencies (dev + extras)
+        run: uv sync --group dev --all-extras
 
       - name: Run tests
         run: uv run pytest -q tests
@@ -73,8 +73,8 @@ jobs:
       - name: Install Python
         run: uv python install 3.12
 
-      - name: Install dependencies (dev)
-        run: uv sync --group dev
+      - name: Install dependencies (dev + extras)
+        run: uv sync --group dev --all-extras
 
       - name: Type check (pyrefly)
         run: uv run pyrefly check src tests
