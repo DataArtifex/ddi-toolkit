@@ -38,16 +38,69 @@
 
 /* Navigation improvements */
 .wy-nav-side {
-    background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+    background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
 }
 
-.wy-menu-vertical li.current {
-    background: #2980b9;
+.wy-side-nav-search {
+    background-color: #0f172a;
 }
 
-.wy-menu-vertical li.current a {
-    color: white;
+.wy-menu-vertical header,
+.wy-menu-vertical p.caption {
+    color: #94a3b8;
+}
+
+/* Inactive sidebar links */
+.wy-menu-vertical a {
+    color: #cbd5e1;
+}
+
+.wy-menu-vertical a:hover {
+    background-color: #334155;
+    color: #ffffff;
+}
+
+/* Active top-level page item */
+.wy-menu-vertical li.toctree-l1.current > a {
+    background-color: #2980b9;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* Nested section list inside active page */
+.wy-menu-vertical li.toctree-l1.current li {
+    background-color: #0f172a;
+}
+
+.wy-menu-vertical li.toctree-l1.current li a {
+    background-color: #0f172a;
+    color: #cbd5e1;
     border-right: none;
+}
+
+.wy-menu-vertical li.toctree-l1.current li a:hover {
+    background-color: #1e293b;
+    color: #38bdf8;
+}
+
+/* Selected active section / subsection */
+.wy-menu-vertical li.current > a.current,
+.wy-menu-vertical li.toctree-l2.current > a,
+.wy-menu-vertical li.toctree-l3.current > a,
+.wy-menu-vertical li.toctree-l4.current > a {
+    background-color: #1e3a8a !important;
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+.wy-menu-vertical li.toctree-l2.current li a {
+    background-color: #0b1329;
+    color: #94a3b8;
+}
+
+.wy-menu-vertical li.toctree-l2.current li a:hover {
+    background-color: #1e293b;
+    color: #ffffff;
 }
 
 /* Content area improvements */

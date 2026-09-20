@@ -128,14 +128,14 @@ Limit fragment count for quick inspection (default: 0 / unlimited):
 -------------------------------------------------------------------------------
 
 Resource Profile & Topology Analysis Engine
-===========================================
+-------------------------------------------
 
-DDI-Lifecycle datasets are rich relational networks where resources reference each other across logical domains (e.g., ``QuestionConstruct`` $\rightarrow$ ``QuestionItem`` $\rightarrow$ ``Concept``, ``Variable`` $\rightarrow$ ``CodeList`` $\rightarrow$ ``Category``).
+DDI-Lifecycle datasets are rich relational networks where resources reference each other across logical domains (e.g., ``QuestionConstruct`` → ``QuestionItem`` → ``Concept``, ``Variable`` → ``CodeList`` → ``Category``).
 
 The **Resource Profile Engine** provides automated structural analysis, dependency mapping, referencing mechanism profiling, multi-hop path discovery, multiplicity classification, and rich interactive visualizations across entire DDI-L XML files.
 
 Standard & Version Identification
----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 All profile models and summaries explicitly identify their target DDI specification family and version:
 
@@ -145,7 +145,7 @@ All profile models and summaries explicitly identify their target DDI specificat
 * ``metadata``: Extensible key-value store (``dict[str, Any]``) available on ``DdiLifecycleProfile``, ``DdiLifecycleProfileSummary``, ``ClassNode``, and ``ClassProfileEdge`` for custom annotations.
 
 Referencing Mechanism Intelligence
-----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 DDI-Lifecycle allows resources to be referenced through several distinct mechanisms in XML:
 
@@ -157,7 +157,7 @@ DDI-Lifecycle allows resources to be referenced through several distinct mechani
 The profiling engine catalogs and calculates counts (``referencing_mechanisms``) and percentages (``referencing_mechanisms_pct``) overall across the entire study and on each individual class-to-class edge.
 
 Architecture: Dual-Pass Streaming
----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To analyze large files without exceeding memory limits, ``analyze_ddil_profile`` executes a two-pass streaming process:
 
@@ -167,7 +167,7 @@ To analyze large files without exceeding memory limits, ``analyze_ddil_profile``
 This dual-pass architecture ensures 100% accurate edge counts and multiplicity metrics even when referencing elements appear earlier in the XML document than their target definitions.
 
 Topology & Multiplicity Metrics
--------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The graph engine computes comprehensive structural metrics for nodes, edges, and the whole graph:
 
@@ -209,10 +209,10 @@ The graph engine computes comprehensive structural metrics for nodes, edges, and
      - Top resource classes ranked by total degree (incoming + outgoing connections).
 
 Python API Usage
-----------------
+~~~~~~~~~~~~~~~~
 
 Analyzing a DDI-L XML File
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Analyze a file and obtain a ``DdiLifecycleProfile`` model instance:
 
@@ -234,7 +234,7 @@ Analyze a file and obtain a ``DdiLifecycleProfile`` model instance:
    print(f"Mechanisms (%): {profile.summary.referencing_mechanisms_pct}")
 
 Inspecting Nodes and Edges
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
@@ -254,7 +254,7 @@ Inspecting Nodes and Edges
        )
 
 Multi-Hop Path Discovery & Subgraph Extraction
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Find all connecting paths between two classes or extract a focused subgraph:
 
@@ -275,7 +275,7 @@ Find all connecting paths between two classes or extract a focused subgraph:
    )
 
 Interactive Vis.js HTML Network Explorer
-----------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The toolkit generates a standalone, self-contained interactive HTML explorer with rich dashboard controls:
 
@@ -286,23 +286,23 @@ The toolkit generates a standalone, self-contained interactive HTML explorer wit
        f.write(html_content)
 
 Interactive HTML Features
-~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * **Graph Summary Landing State**: When no node is selected, the sidebar displays an overview dashboard with key metrics (total resources, classes, density, resolution rate, max depth, referencing mechanisms breakdown), clickable longest dependency chain pills, central hub pills, and functional domain distribution bars.
 * **Metric Tooltips**: Hover over summary metrics (Resolution Rate, Density, Max Depth, References Ratio, Cardinality, Target Reuse) to view concise explanatory definitions and formulas.
 * **Dynamic Physics & Layout Controls**:
   * Toggle live force-directed physics on or off.
-  * Switch to **Hierarchical Left $\rightarrow$ Right** (`LR`) horizontal tree or **Top $\rightarrow$ Down** (`UD`) vertical tree layouts.
+  * Switch to **Hierarchical Left → Right** (``LR``) horizontal tree or **Top → Down** (``UD``) vertical tree layouts.
 * **Node & Edge Inspection**: Click any node or edge to inspect instance counts, incoming referrers, outgoing references, containment XML paths, cardinality, target reuse factors, and referencing mechanism distributions.
 * **Live Search & Filtering**: Real-time fuzzy search box to instantly zoom into matching classes.
 * **Display Toggles**:
   * **Labels Toggle**: Show/hide node labels to declutter large, dense networks.
   * **Isolated Nodes Toggle**: Show or hide unlinked resources.
-* **High-Contrast Dark-Themed PNG Export**: One-click PNG capture with offscreen canvas rendering over a rich dark radial gradient (`#111827` $\rightarrow$ `#090d16`), ensuring crisp contrast for white labels and colored nodes.
+* **High-Contrast Dark-Themed PNG Export**: One-click PNG capture with offscreen canvas rendering over a rich dark radial gradient (``#111827`` → ``#090d16``), ensuring crisp contrast for white labels and colored nodes.
 * **Fullscreen Support**: Expand the explorer to full viewport for presentations and analysis.
 
 Multi-Format Serialization & Exports
-------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The profile graph can be rendered into multiple formats directly via Python methods or CLI flags:
 
@@ -336,7 +336,7 @@ The profile graph can be rendered into multiple formats directly via Python meth
      - Converts to a ``networkx.DiGraph`` with node and edge attributes for complex graph algorithms and centrality calculations.
 
 Canonical JSON Caching
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 To eliminate repetitive XML parsing overhead on large files, the toolkit automatically saves a canonical JSON cache file (``<stem>.profile.json``) alongside the XML or in the specified output directory.
 
@@ -347,7 +347,7 @@ When running subsequent queries or format conversions:
 3. Use the ``--refresh`` / ``-r`` flag in CLI or parse directly with ``analyze_ddil_profile`` to force re-parsing.
 
 CLI Usage (`dartfx-ddi ddil-profile`)
--------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``ddil-profile`` command provides terminal access to profile graph generation and filtering:
 
@@ -394,7 +394,7 @@ Force re-parsing XML and refresh cached JSON:
    dartfx-ddi ddil-profile my_study.ddi33.xml --refresh --format html
 
 CLI Options Reference
-~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^
 
 .. list-table::
    :widths: 25 20 55
