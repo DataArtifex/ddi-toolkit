@@ -299,9 +299,20 @@ def test_ddic_query_manager():
         assert "V480001" in csv_out
         assert "V480002" in csv_out
 
-        df = BaseXReporter.to_polars(vars_data)
-        assert df.shape[0] == 2
-        assert "V480002" in df["name"].to_list()
+        try:
+            import polars as _pl  # noqa: F401
+
+            has_polars = True
+        except ImportError:
+            has_polars = False
+
+        if has_polars:
+            df = BaseXReporter.to_polars(vars_data)
+            assert df.shape[0] == 2
+            assert "V480002" in df["name"].to_list()
+        else:
+            with pytest.raises(ImportError, match="polars is required"):
+                BaseXReporter.to_polars(vars_data)
 
 
 def test_ddil_query_manager():
@@ -502,6 +513,11 @@ def test_optional_dependencies_error():
     with patch.object(reporter_mod, "jinja2", None):
         with pytest.raises(ImportError, match="requires the 'jinja2' library"):
             reporter_mod.BaseXReporter.render_custom_template({"a": 1}, "template {{ a }}")
+
+    # Test BaseXReporter.to_polars when polars is None
+    with patch.object(reporter_mod, "pl", None):
+        with pytest.raises(ImportError, match="polars is required"):
+            reporter_mod.BaseXReporter.to_polars([{"name": "test"}])
 
 
 def test_custom_template_directory(tmp_path: Path):
