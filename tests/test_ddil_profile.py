@@ -8,10 +8,13 @@ from typer.testing import CliRunner
 
 from dartfx.ddi.cli import app
 from dartfx.ddi.ddilifecycle import (
+    ChildElementProfile,
     ClassNode,
     ClassProfileEdge,
     DdiLifecycleProfile,
     DdiLifecycleProfileSummary,
+    UserAttributeKeyProfile,
+    UserAttributeProfile,
     analyze_ddil_profile,
 )
 
@@ -262,6 +265,8 @@ def test_to_markdown():
     md_mermaid = profile.to_markdown(include_mermaid=True)
     assert "```mermaid" in md_mermaid
     assert "## Reference Path Diagram" in md_mermaid
+    assert "[↑ Back to Table of Contents](#table-of-contents)" in md_default
+    assert "[↑ Back to Table of Contents](#table-of-contents)" in md_mermaid
 
 
 def test_to_mermaid():
@@ -979,3 +984,387 @@ def test_markdown_and_html_render_metrics_elements():
     assert "Functional Domain Breakdown" in html
     assert "Referencing Mechanisms" in html
     assert "btnOverview" in html
+    assert "Child Elements Usage" in html
+
+
+def test_child_element_statistics_basic():
+    xml_path = sample_xml_path()
+    profile = analyze_ddil_profile(xml_path)
+
+    # Summary checks
+    assert profile.summary.total_child_elements > 0
+    assert profile.summary.unique_child_element_types > 10
+
+    # Node child elements checks
+    qi_node = profile.nodes["QuestionItem"]
+    assert qi_node.child_elements
+    assert len(qi_node.child_elements) > 0
+
+    # Check specific expected child elements on QuestionItem
+    assert "QuestionText" in qi_node.child_elements
+    assert "URN" in qi_node.child_elements
+    assert "Agency" in qi_node.child_elements
+    assert "ID" in qi_node.child_elements
+    assert "Version" in qi_node.child_elements
+
+    qtext_stat = qi_node.child_elements["QuestionText"]
+    assert isinstance(qtext_stat, ChildElementProfile)
+    assert qtext_stat.element_name == "QuestionText"
+    assert qtext_stat.count == 228
+    assert qtext_stat.instance_count == 228
+    assert qtext_stat.usage_pct == 100.0
+    assert qtext_stat.min_per_instance == 1
+    assert qtext_stat.max_per_instance == 1
+    assert qtext_stat.avg_per_instance == 1.0
+
+    # Check all child element profiles for validity
+    for _c_name, node in profile.nodes.items():
+        if node.child_elements:
+            for el_name, cp in node.child_elements.items():
+                assert cp.element_name == el_name
+                assert cp.count >= cp.instance_count
+                assert 0.0 <= cp.usage_pct <= 100.0
+                assert cp.min_per_instance <= cp.max_per_instance
+                assert cp.avg_per_instance >= 1.0
+                expected_pct = round((cp.instance_count / node.resource_count) * 100.0, 1)
+                assert abs(cp.usage_pct - expected_pct) <= 0.1
+
+
+def test_child_element_in_memory_xml():
+    xml_content = """<?xml version="1.0" encoding="utf-8"?>
+    <ddi:FragmentInstance xmlns:r="ddi:reusable:3_3" xmlns:d="ddi:datacollection:3_3" xmlns:ddi="ddi:instance:3_3">
+      <Fragment xmlns="ddi:instance:3_3">
+        <d:QuestionItem>
+          <r:URN>urn:ddi:ex:qi1:1</r:URN>
+          <r:Agency>ex</r:Agency>
+          <r:ID>qi1</r:ID>
+          <r:Version>1</r:Version>
+          <d:QuestionItemName><r:String>Q1</r:String></d:QuestionItemName>
+          <d:QuestionText><d:LiteralText><d:Text>Question 1 text</d:Text></d:LiteralText></d:QuestionText>
+          <d:ConceptReference>
+            <r:Agency>ex</r:Agency>
+            <r:ID>c1</r:ID>
+          </d:ConceptReference>
+        </d:QuestionItem>
+      </Fragment>
+      <Fragment xmlns="ddi:instance:3_3">
+        <d:QuestionItem>
+          <r:URN>urn:ddi:ex:qi2:1</r:URN>
+          <r:Agency>ex</r:Agency>
+          <r:ID>qi2</r:ID>
+          <r:Version>1</r:Version>
+          <d:QuestionText><d:LiteralText><d:Text>Question 2 text</d:Text></d:LiteralText></d:QuestionText>
+          <d:ConceptReference>
+            <r:Agency>ex</r:Agency>
+            <r:ID>c1</r:ID>
+          </d:ConceptReference>
+          <d:ConceptReference>
+            <r:Agency>ex</r:Agency>
+            <r:ID>c2</r:ID>
+          </d:ConceptReference>
+        </d:QuestionItem>
+      </Fragment>
+    </ddi:FragmentInstance>
+    """
+    root = ET.fromstring(xml_content)
+    profile = analyze_ddil_profile(root)
+
+    assert "QuestionItem" in profile.nodes
+    qi_node = profile.nodes["QuestionItem"]
+    assert qi_node.resource_count == 2
+
+    # ConceptReference: 3 occurrences across 2 instances (1 in qi1, 2 in qi2)
+    assert "ConceptReference" in qi_node.child_elements
+    cr_stat = qi_node.child_elements["ConceptReference"]
+    assert cr_stat.count == 3
+    assert cr_stat.instance_count == 2
+    assert cr_stat.usage_pct == 100.0
+    assert cr_stat.min_per_instance == 1
+    assert cr_stat.max_per_instance == 2
+    assert cr_stat.avg_per_instance == 1.5
+
+    # QuestionItemName: 1 occurrence across 1 instance (qi1 only)
+    assert "QuestionItemName" in qi_node.child_elements
+    qn_stat = qi_node.child_elements["QuestionItemName"]
+    assert qn_stat.count == 1
+    assert qn_stat.instance_count == 1
+    assert qn_stat.usage_pct == 50.0
+    assert qn_stat.min_per_instance == 1
+    assert qn_stat.max_per_instance == 1
+    assert qn_stat.avg_per_instance == 1.0
+
+
+def test_child_element_serialization_and_reporting():
+    xml_path = sample_xml_path()
+    profile = analyze_ddil_profile(xml_path)
+
+    # JSON / dict export
+    d = profile.to_dict()
+    assert "QuestionItem" in d["nodes"]
+    assert "child_elements" in d["nodes"]["QuestionItem"]
+    assert "QuestionText" in d["nodes"]["QuestionItem"]["child_elements"]
+    assert d["nodes"]["QuestionItem"]["child_elements"]["QuestionText"]["count"] > 0
+    assert d["summary"]["total_child_elements"] > 0
+    assert d["summary"]["unique_child_element_types"] > 0
+
+    json_str = profile.to_json()
+    assert "child_elements" in json_str
+    assert "total_child_elements" in json_str
+
+    # Markdown export
+    md = profile.to_markdown()
+    assert "## Child Elements Usage by Resource Class" in md
+    assert "### `QuestionItem`" in md
+    assert "| `<QuestionText>` |" in md
+    assert "- **Total Child Elements:**" in md
+
+    # HTML export
+    html = profile.to_html()
+    assert "childElements" in html
+    assert "Child Elements Usage" in html
+    assert "&lt;${ce.elementName}&gt;" in html or "&lt;" in html
+
+
+def test_child_element_filtering_preservation():
+    xml_path = sample_xml_path()
+    profile = analyze_ddil_profile(xml_path)
+
+    filtered = profile.filter(include_classes=["QuestionItem", "QuestionConstruct"])
+    assert "QuestionItem" in filtered.nodes
+    qi_node = filtered.nodes["QuestionItem"]
+    assert qi_node.child_elements
+    assert "QuestionText" in qi_node.child_elements
+    assert qi_node.child_elements["QuestionText"].count == 228
+    assert filtered.summary.total_child_elements > 0
+    assert filtered.summary.unique_child_element_types > 0
+
+
+def test_user_attribute_profile_basic():
+    xml_path = sample_xml_path()
+    profile = analyze_ddil_profile(xml_path)
+
+    # Document-wide summary metrics
+    assert profile.summary.total_user_attributes > 0
+    assert profile.summary.unique_user_attribute_keys > 0
+    assert len(profile.summary.user_attributes) == profile.summary.unique_user_attribute_keys
+
+    # Helper method on DdiLifecycleProfile
+    uap_profile = profile.get_user_attribute_profile()
+    assert isinstance(uap_profile, UserAttributeProfile)
+    assert uap_profile.total_pairs == profile.summary.total_user_attributes
+    assert uap_profile.unique_keys == profile.summary.unique_user_attribute_keys
+    assert uap_profile.total_distinct_values > 0
+    assert "extension:StatementInstruction" in uap_profile.keys
+
+    # Inspect a known key across the document
+    key_prof = uap_profile.keys["extension:StatementInstruction"]
+    assert isinstance(key_prof, UserAttributeKeyProfile)
+    assert key_prof.attribute_key == "extension:StatementInstruction"
+    assert key_prof.count > 0
+    assert key_prof.instance_count > 0
+    assert key_prof.usage_pct > 0.0
+    assert key_prof.distinct_values_count > 0
+    assert len(key_prof.sample_values) > 0
+    assert key_prof.min_per_instance >= 1
+    assert key_prof.max_per_instance >= key_prof.min_per_instance
+    assert key_prof.avg_per_instance >= 1.0
+    assert "StatementItem" in key_prof.classes_used
+
+    # Per-class node profiling
+    st_node = profile.nodes["StatementItem"]
+    assert st_node.user_attributes
+    assert "extension:StatementInstruction" in st_node.user_attributes
+    st_uap = st_node.user_attributes["extension:StatementInstruction"]
+    assert st_uap.count > 0
+    assert st_uap.instance_count > 0
+    assert st_uap.distinct_values_count > 0
+    assert len(st_uap.sample_values) > 0
+
+    # Helper method on ClassNode
+    st_node_uap_prof = st_node.get_user_attribute_profile()
+    assert isinstance(st_node_uap_prof, UserAttributeProfile)
+    assert st_node_uap_prof.total_pairs > 0
+    assert "extension:StatementInstruction" in st_node_uap_prof.keys
+
+
+def test_user_attribute_in_memory_xml():
+    xml_content = """<?xml version="1.0" encoding="utf-8"?>
+    <ddi:FragmentInstance xmlns:r="ddi:reusable:3_3" xmlns:d="ddi:datacollection:3_3" xmlns:ddi="ddi:instance:3_3">
+      <Fragment xmlns="ddi:instance:3_3">
+        <d:QuestionItem>
+          <r:URN>urn:ddi:ex:qi1:1</r:URN>
+          <r:Agency>ex</r:Agency>
+          <r:ID>qi1</r:ID>
+          <r:Version>1</r:Version>
+          <r:UserAttributePair>
+            <r:AttributeKey>custom:Tag</r:AttributeKey>
+            <r:AttributeValue>Demographics</r:AttributeValue>
+          </r:UserAttributePair>
+          <r:UserAttributePair>
+            <r:AttributeKey>custom:Tag</r:AttributeKey>
+            <r:AttributeValue>Core</r:AttributeValue>
+          </r:UserAttributePair>
+          <r:UserAttributePair>
+            <r:AttributeKey>custom:Priority</r:AttributeKey>
+            <r:AttributeValue>High</r:AttributeValue>
+          </r:UserAttributePair>
+        </d:QuestionItem>
+      </Fragment>
+      <Fragment xmlns="ddi:instance:3_3">
+        <d:QuestionItem>
+          <r:URN>urn:ddi:ex:qi2:1</r:URN>
+          <r:Agency>ex</r:Agency>
+          <r:ID>qi2</r:ID>
+          <r:Version>1</r:Version>
+          <r:UserAttributePair>
+            <r:AttributeKey>custom:Tag</r:AttributeKey>
+            <r:AttributeValue>Demographics</r:AttributeValue>
+          </r:UserAttributePair>
+        </d:QuestionItem>
+      </Fragment>
+      <Fragment xmlns="ddi:instance:3_3">
+        <d:StatementItem>
+          <r:URN>urn:ddi:ex:si1:1</r:URN>
+          <r:Agency>ex</r:Agency>
+          <r:ID>si1</r:ID>
+          <r:Version>1</r:Version>
+          <r:UserAttributePair>
+            <r:AttributeKey>custom:Tag</r:AttributeKey>
+            <r:AttributeValue>Intro</r:AttributeValue>
+          </r:UserAttributePair>
+        </d:StatementItem>
+      </Fragment>
+    </ddi:FragmentInstance>
+    """
+    root = ET.fromstring(xml_content)
+    profile = analyze_ddil_profile(root)
+
+    assert profile.summary.total_resources == 3
+    assert profile.summary.total_user_attributes == 5
+    assert profile.summary.unique_user_attribute_keys == 2
+
+    # custom:Tag summary
+    tag_summary = profile.summary.user_attributes["custom:Tag"]
+    assert tag_summary.count == 4
+    assert tag_summary.instance_count == 3  # present in 2 QuestionItems and 1 StatementItem
+    assert tag_summary.distinct_values_count == 3  # Demographics, Core, Intro
+    assert set(tag_summary.sample_values) == {"Demographics", "Core", "Intro"}
+    assert tag_summary.classes_used == {"QuestionItem": 3, "StatementItem": 1}
+    assert tag_summary.min_per_instance == 1
+    assert tag_summary.max_per_instance == 2
+    assert tag_summary.avg_per_instance == round(4 / 3, 2)
+
+    # QuestionItem node tag
+    qi_tag = profile.nodes["QuestionItem"].user_attributes["custom:Tag"]
+    assert qi_tag.count == 3
+    assert qi_tag.instance_count == 2
+    assert qi_tag.usage_pct == 100.0  # 2 of 2 QuestionItems have it
+    assert qi_tag.distinct_values_count == 2  # Demographics, Core
+    assert qi_tag.min_per_instance == 1
+    assert qi_tag.max_per_instance == 2
+    assert qi_tag.avg_per_instance == 1.5
+
+    # QuestionItem priority
+    qi_prio = profile.nodes["QuestionItem"].user_attributes["custom:Priority"]
+    assert qi_prio.count == 1
+    assert qi_prio.instance_count == 1
+    assert qi_prio.usage_pct == 50.0  # 1 of 2 QuestionItems
+    assert qi_prio.distinct_values_count == 1
+    assert qi_prio.sample_values == ["High"]
+
+
+def test_user_attribute_serialization_and_reporting():
+    xml_path = sample_xml_path()
+    profile = analyze_ddil_profile(xml_path)
+
+    # JSON / dict export
+    d = profile.to_dict()
+    assert "summary" in d
+    assert "total_user_attributes" in d["summary"]
+    assert "unique_user_attribute_keys" in d["summary"]
+    assert "user_attributes" in d["summary"]
+    assert "StatementItem" in d["nodes"]
+    assert "user_attributes" in d["nodes"]["StatementItem"]
+
+    json_str = profile.to_json()
+    assert "total_user_attributes" in json_str
+    assert "unique_user_attribute_keys" in json_str
+    assert "user_attributes" in json_str
+
+    # Markdown export
+    md = profile.to_markdown()
+    assert "## User Attribute Keys Profile" in md
+    assert "## User Attributes Usage by Resource Class" in md
+    assert "- **User Attributes (`<UserAttributePair>`):**" in md
+    assert "[↑ Back to Table of Contents](#table-of-contents)" in md
+
+    # HTML export
+    html = profile.to_html()
+    assert "userAttributes" in html
+    assert "User Attribute Keys" in html
+    assert "distinct" in html
+
+
+def test_user_attribute_filtering_preservation():
+    xml_path = sample_xml_path()
+    profile = analyze_ddil_profile(xml_path)
+
+    filtered = profile.filter(include_classes=["StatementItem"])
+    assert "StatementItem" in filtered.nodes
+    st_node = filtered.nodes["StatementItem"]
+    assert st_node.user_attributes
+    assert "extension:StatementInstruction" in st_node.user_attributes
+    assert filtered.summary.total_user_attributes > 0
+    assert filtered.summary.unique_user_attribute_keys > 0
+
+
+def test_markdown_toc_and_user_attributes_ordering_and_skipping():
+    xml_path = sample_xml_path()
+    profile = analyze_ddil_profile(xml_path)
+
+    md = profile.to_markdown()
+
+    # 1. Check Table of Contents with active navigation links
+    assert "## Table of Contents" in md
+    assert "- [Summary](#summary)" in md
+    assert "- [Resource Classes Inventory & Connectivity](#resource-classes-inventory--connectivity)" in md
+    assert "- [Reference Paths (Structural Relationships)](#reference-paths-structural-relationships)" in md
+    assert "- [Referenced-By Breakdown (By Target Class)](#referenced-by-breakdown-by-target-class)" in md
+    assert "- [Child Elements Usage by Resource Class](#child-elements-usage-by-resource-class)" in md
+    assert "- [User Attribute Keys Profile](#user-attribute-keys-profile)" in md
+    assert "- [User Attributes Usage by Resource Class](#user-attributes-usage-by-resource-class)" in md
+    assert md.count("[↑ Back to Table of Contents](#table-of-contents)") >= 5
+
+    # 2. Check section order: Child Elements -> User Attribute Keys Profile -> User Attributes Usage by Resource Class
+    pos_toc = md.find("## Table of Contents")
+    pos_summary = md.find("## Summary")
+    pos_child = md.find("## Child Elements Usage by Resource Class")
+    pos_uap_keys = md.find("## User Attribute Keys Profile")
+    pos_uap_usage = md.find("## User Attributes Usage by Resource Class")
+
+    assert 0 <= pos_toc < pos_summary < pos_child < pos_uap_keys < pos_uap_usage
+
+    # 3. Check skipping when User Attributes are not used
+    xml_no_uap = """<?xml version="1.0" encoding="utf-8"?>
+    <ddi:FragmentInstance xmlns:r="ddi:reusable:3_3" xmlns:d="ddi:datacollection:3_3" xmlns:ddi="ddi:instance:3_3">
+      <Fragment xmlns="ddi:instance:3_3">
+        <d:QuestionItem>
+          <r:URN>urn:ddi:ex:qi1:1</r:URN>
+          <r:Agency>ex</r:Agency>
+          <r:ID>qi1</r:ID>
+          <r:Version>1</r:Version>
+          <d:QuestionText><d:LiteralText><d:Text>Sample Text</d:Text></d:LiteralText></d:QuestionText>
+        </d:QuestionItem>
+      </Fragment>
+    </ddi:FragmentInstance>
+    """
+    root = ET.fromstring(xml_no_uap)
+    prof_no_uap = analyze_ddil_profile(root)
+    assert prof_no_uap.summary.total_user_attributes == 0
+
+    md_no_uap = prof_no_uap.to_markdown()
+    assert "## Table of Contents" in md_no_uap
+    assert "- [Summary](#summary)" in md_no_uap
+    assert "User Attribute Keys Profile" not in md_no_uap
+    assert "User Attributes Usage by Resource Class" not in md_no_uap
+    assert "userattributepair" not in md_no_uap

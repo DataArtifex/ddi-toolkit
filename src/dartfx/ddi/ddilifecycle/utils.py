@@ -1346,6 +1346,59 @@ def _parse_between_specs(
     return pairs
 
 
+class ChildElementProfile(BaseModel):
+    """Statistics for a child element used by a resource class."""
+
+    element_name: str
+    count: int = 0
+    instance_count: int = 0
+    usage_pct: float = 0.0
+    min_per_instance: int = 0
+    max_per_instance: int = 0
+    avg_per_instance: float = 0.0
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class UserAttributeKeyProfile(BaseModel):
+    """Statistics for a specific UserAttributePair attribute key."""
+
+    attribute_key: str
+    count: int = 0
+    instance_count: int = 0
+    usage_pct: float = 0.0
+    distinct_values_count: int = 0
+    sample_values: list[str] = Field(default_factory=list)
+    min_per_instance: int = 0
+    max_per_instance: int = 0
+    avg_per_instance: float = 0.0
+    classes_used: dict[str, int] = Field(default_factory=dict)
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class UserAttributeProfile(BaseModel):
+    """Aggregated profile for UserAttributePair elements across a document or class."""
+
+    total_pairs: int = 0
+    unique_keys: int = 0
+    total_distinct_values: int = 0
+    keys: dict[str, UserAttributeKeyProfile] = Field(default_factory=dict)
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+def _format_sample_values(values: set[str] | list[str], max_samples: int = 5, max_length: int = 80) -> list[str]:
+    """Helper to format deterministic, clean sample values for attribute keys."""
+    non_empty = [v for v in values if v]
+    source = non_empty if non_empty else list(values)
+    sorted_vals = sorted(source, key=lambda s: (len(s), s))
+    samples: list[str] = []
+    for val in sorted_vals[:max_samples]:
+        clean_val = " ".join(val.split())
+        if len(clean_val) > max_length:
+            clean_val = f"{clean_val[: max_length - 3]}..."
+        samples.append(clean_val)
+    return samples
+
+
 class ClassNode(BaseModel):
     """Represents a resource class in the profile graph with instance and reference metrics."""
 
@@ -1360,7 +1413,19 @@ class ClassNode(BaseModel):
     unreferenced_instances: int = 0
     unreferenced_rate: float = 0.0
     functional_domain: str = ""
+    child_elements: dict[str, ChildElementProfile] = Field(default_factory=dict)
+    user_attributes: dict[str, UserAttributeKeyProfile] = Field(default_factory=dict)
     metadata: dict[str, Any] = Field(default_factory=dict)
+
+    def get_user_attribute_profile(self) -> UserAttributeProfile:
+        """Returns aggregated profile and statistics for UserAttributePair elements used by this class."""
+        distinct_vals = sum(k.distinct_values_count for k in self.user_attributes.values())
+        return UserAttributeProfile(
+            total_pairs=sum(k.count for k in self.user_attributes.values()),
+            unique_keys=len(self.user_attributes),
+            total_distinct_values=distinct_vals,
+            keys=self.user_attributes,
+        )
 
     @model_validator(mode="after")
     def _populate_derived_fields(self) -> "ClassNode":
@@ -1397,6 +1462,11 @@ class DdiLifecycleProfileSummary(BaseModel):
     domain_distribution: dict[str, float] = Field(default_factory=dict)
     referencing_mechanisms: dict[str, int] = Field(default_factory=dict)
     referencing_mechanisms_pct: dict[str, float] = Field(default_factory=dict)
+    total_child_elements: int = 0
+    unique_child_element_types: int = 0
+    total_user_attributes: int = 0
+    unique_user_attribute_keys: int = 0
+    user_attributes: dict[str, UserAttributeKeyProfile] = Field(default_factory=dict)
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
@@ -1413,6 +1483,47 @@ def _normalize_class_set(classes: Iterable[str] | str | None) -> set[str] | None
                 if piece.strip():
                     res.add(piece.strip().lower())
     return res if res else None
+
+
+def _aggregate_subgraph_user_attributes(
+    filtered_nodes: dict[str, ClassNode],
+) -> tuple[int, int, dict[str, UserAttributeKeyProfile]]:
+    """Aggregates user attribute statistics across a set of filtered ClassNode instances."""
+    total_uap = sum(sum(up.count for up in n.user_attributes.values()) for n in filtered_nodes.values())
+    unique_keys = len({k for n in filtered_nodes.values() for k in n.user_attributes})
+    sub_global_uaps: dict[str, UserAttributeKeyProfile] = {}
+    tot_filt_res = sum(n.resource_count for n in filtered_nodes.values())
+
+    for n in filtered_nodes.values():
+        for k, up in n.user_attributes.items():
+            if k not in sub_global_uaps:
+                sub_global_uaps[k] = UserAttributeKeyProfile(
+                    attribute_key=up.attribute_key,
+                    count=up.count,
+                    instance_count=up.instance_count,
+                    distinct_values_count=up.distinct_values_count,
+                    sample_values=list(up.sample_values),
+                    min_per_instance=up.min_per_instance,
+                    max_per_instance=up.max_per_instance,
+                    classes_used={n.class_name: up.count},
+                )
+            else:
+                target = sub_global_uaps[k]
+                target.count += up.count
+                target.instance_count += up.instance_count
+                target.distinct_values_count = max(target.distinct_values_count, up.distinct_values_count)
+                target.min_per_instance = min(target.min_per_instance, up.min_per_instance)
+                target.max_per_instance = max(target.max_per_instance, up.max_per_instance)
+                target.classes_used[n.class_name] = up.count
+                for sv in up.sample_values:
+                    if sv not in target.sample_values and len(target.sample_values) < 5:
+                        target.sample_values.append(sv)
+
+    for up in sub_global_uaps.values():
+        up.usage_pct = round((up.instance_count / tot_filt_res) * 100.0, 1) if tot_filt_res > 0 else 0.0
+        up.avg_per_instance = round(up.count / up.instance_count, 2) if up.instance_count > 0 else 0.0
+
+    return total_uap, unique_keys, sub_global_uaps
 
 
 class DdiLifecycleProfile(BaseModel):
@@ -1452,6 +1563,16 @@ class DdiLifecycleProfile(BaseModel):
             if not self.summary.domain_distribution:
                 self.summary.domain_distribution = domain_dist
         return self
+
+    def get_user_attribute_profile(self) -> UserAttributeProfile:
+        """Returns aggregated profile and statistics for all UserAttributePair elements in the graph."""
+        distinct_vals = sum(k.distinct_values_count for k in self.summary.user_attributes.values())
+        return UserAttributeProfile(
+            total_pairs=self.summary.total_user_attributes,
+            unique_keys=self.summary.unique_user_attribute_keys,
+            total_distinct_values=distinct_vals,
+            keys=self.summary.user_attributes,
+        )
 
     def to_dict(self) -> dict[str, Any]:
         """Converts the profile graph to a Python dictionary."""
@@ -1708,6 +1829,10 @@ class DdiLifecycleProfile(BaseModel):
             else {}
         )
 
+        total_child_elems = sum(sum(cp.count for cp in n.child_elements.values()) for n in filtered_nodes.values())
+        unique_child_types = len({cp.element_name for n in filtered_nodes.values() for cp in n.child_elements.values()})
+        total_uap, unique_uap_keys, sub_global_uaps = _aggregate_subgraph_user_attributes(filtered_nodes)
+
         summary = DdiLifecycleProfileSummary(
             ddi_standard=self.summary.ddi_standard,
             standard_version=self.summary.standard_version,
@@ -1719,6 +1844,11 @@ class DdiLifecycleProfile(BaseModel):
             path_counts=path_counts,
             referencing_mechanisms=sub_mechs_dict,
             referencing_mechanisms_pct=sub_mechs_pct,
+            total_child_elements=total_child_elems,
+            unique_child_element_types=unique_child_types,
+            total_user_attributes=total_uap,
+            unique_user_attribute_keys=unique_uap_keys,
+            user_attributes=sub_global_uaps,
         )
 
         return DdiLifecycleProfile(
@@ -1828,6 +1958,10 @@ class DdiLifecycleProfile(BaseModel):
             else {}
         )
 
+        total_child_elems = sum(sum(cp.count for cp in n.child_elements.values()) for n in filtered_nodes.values())
+        unique_child_types = len({cp.element_name for n in filtered_nodes.values() for cp in n.child_elements.values()})
+        total_uap, unique_uap_keys, sub_global_uaps = _aggregate_subgraph_user_attributes(filtered_nodes)
+
         summary = DdiLifecycleProfileSummary(
             ddi_standard=base.summary.ddi_standard,
             standard_version=base.summary.standard_version,
@@ -1848,6 +1982,11 @@ class DdiLifecycleProfile(BaseModel):
             domain_distribution=domain_dist,
             referencing_mechanisms=sub_mechs_dict,
             referencing_mechanisms_pct=sub_mechs_pct,
+            total_child_elements=total_child_elems,
+            unique_child_element_types=unique_child_types,
+            total_user_attributes=total_uap,
+            unique_user_attribute_keys=unique_uap_keys,
+            user_attributes=sub_global_uaps,
         )
 
         return DdiLifecycleProfile(
@@ -1914,12 +2053,55 @@ class DdiLifecycleProfile(BaseModel):
                 else "DDI-Lifecycle Resource Profile Report"
             )
         )
-        lines = [
+
+        nodes_with_children = [n for n in g.nodes.values() if n.child_elements]
+        has_user_attributes = bool(g.summary.user_attributes and g.summary.total_user_attributes > 0)
+        nodes_with_uap = [n for n in g.nodes.values() if n.user_attributes] if has_user_attributes else []
+
+        toc_sections: list[tuple[str, str]] = [("Summary", "summary")]
+        if g.connecting_paths:
+            toc_sections.append(
+                ("Connecting Reference Paths Between Classes", "connecting-reference-paths-between-classes")
+            )
+        if include_mermaid and g.edges:
+            toc_sections.append(("Reference Path Diagram", "reference-path-diagram"))
+        if g.nodes:
+            toc_sections.append(
+                ("Resource Classes Inventory & Connectivity", "resource-classes-inventory--connectivity")
+            )
+        if g.edges:
+            toc_sections.append(
+                ("Reference Paths (Structural Relationships)", "reference-paths-structural-relationships")
+            )
+            toc_sections.append(
+                ("Referenced-By Breakdown (By Target Class)", "referenced-by-breakdown-by-target-class")
+            )
+        if nodes_with_children:
+            toc_sections.append(("Child Elements Usage by Resource Class", "child-elements-usage-by-resource-class"))
+        if has_user_attributes:
+            toc_sections.append(("User Attribute Keys Profile", "user-attribute-keys-profile"))
+            if nodes_with_uap:
+                toc_sections.append(
+                    ("User Attributes Usage by Resource Class", "user-attributes-usage-by-resource-class")
+                )
+
+        lines: list[str] = [
             f"# {doc_title}",
             "",
-            "## Summary",
-            f"- **DDI Standard:** `{g.summary.ddi_standard}` (Version `{g.summary.standard_version}`)",
+            "## Table of Contents",
+            "",
         ]
+        for sec_title, sec_slug in toc_sections:
+            lines.append(f"- [{sec_title}](#{sec_slug})")
+        lines.append("")
+
+        # Summary Section
+        lines.extend(
+            [
+                "## Summary",
+                f"- **DDI Standard:** `{g.summary.ddi_standard}` (Version `{g.summary.standard_version}`)",
+            ]
+        )
         if g.source_file:
             lines.append(f"- **Source File:** `{g.source_file}`")
         lines.extend(
@@ -1933,6 +2115,20 @@ class DdiLifecycleProfile(BaseModel):
                     f"*(Internal: {g.summary.internal_reference_instances:,}, "
                     f"External: {g.summary.external_reference_instances:,})*"
                 ),
+            ]
+        )
+        if g.summary.total_child_elements > 0:
+            lines.append(
+                f"- **Total Child Elements:** {g.summary.total_child_elements:,} "
+                f"({g.summary.unique_child_element_types:,} distinct element types)"
+            )
+        if g.summary.total_user_attributes > 0:
+            lines.append(
+                f"- **User Attributes (`<UserAttributePair>`):** {g.summary.total_user_attributes:,} "
+                f"({g.summary.unique_user_attribute_keys:,} distinct attribute keys)"
+            )
+        lines.extend(
+            [
                 f"- **Graph Density:** {g.summary.graph_density:.4f}",
                 f"- **Connected Components:** {g.summary.connected_components:,}",
                 f"- **Max Dependency Depth:** {g.summary.max_dependency_depth} hops",
@@ -1960,6 +2156,8 @@ class DdiLifecycleProfile(BaseModel):
             dom_str = ", ".join(f"{k}: {v:.1%}" for k, v in g.summary.domain_distribution.items())
             lines.append(f"- **Domain Distribution:** {dom_str}")
         lines.append("")
+        lines.append("[↑ Back to Table of Contents](#table-of-contents)")
+        lines.append("")
 
         if g.connecting_paths:
             path_count_str = (
@@ -1980,6 +2178,8 @@ class DdiLifecycleProfile(BaseModel):
             for idx, p in enumerate(g.connecting_paths, start=1):
                 lines.append(f"| {idx} | {p.hops} | {p.path_description} | {p.min_bottleneck_count:,} |")
             lines.append("")
+            lines.append("[↑ Back to Table of Contents](#table-of-contents)")
+            lines.append("")
 
         if include_mermaid and g.edges:
             lines.extend(
@@ -1998,75 +2198,180 @@ class DdiLifecycleProfile(BaseModel):
                     ),
                     "```",
                     "",
+                    "[↑ Back to Table of Contents](#table-of-contents)",
+                    "",
                 ]
             )
 
-        lines.extend(
-            [
-                "## Resource Classes Inventory & Connectivity",
-                "",
-                "| Class | Domain | Role | Instances | Inbound | Outbound | Unreferenced |",
-                "| :--- | :--- | :--- | :--- | :--- | :--- | :--- |",
-            ]
-        )
-
-        for _c_name, node in sorted(g.nodes.items(), key=lambda x: x[0].lower()):
-            unref_str = (
-                f"{node.unreferenced_instances:,} ({node.unreferenced_rate:.1%})" if node.resource_count > 0 else "-"
-            )
-            lines.append(
-                f"| `{node.class_name}` | {node.functional_domain} | `{node.role}` | {node.resource_count:,} | "
-                f"{node.in_count:,} | {node.out_count:,} | {unref_str} |"
+        if g.nodes:
+            lines.extend(
+                [
+                    "## Resource Classes Inventory & Connectivity",
+                    "",
+                    "| Class | Domain | Role | Instances | Inbound | Outbound | Unreferenced |",
+                    "| :--- | :--- | :--- | :--- | :--- | :--- | :--- |",
+                ]
             )
 
-        header = "| Relative Path | Target | Count | Unique Src | Unique Tgt | Cardinality | Target Reuse |"
-        sep = "| :--- | :--- | :--- | :--- | :--- | :--- | :--- |"
-        lines.extend(
-            [
-                "",
-                "## Reference Paths (Structural Relationships)",
-                "",
-                header,
-                sep,
-            ]
-        )
-
-        for edge in sorted(g.edges, key=lambda x: (x.reference_path.lower(), x.target_class.lower())):
-            row = (
-                f"| `{edge.reference_path}` | `{edge.target_class}` | {edge.count:,} | "
-                f"{edge.distinct_sources:,} | {edge.distinct_targets:,} | `{edge.cardinality}` | "
-                f"{edge.target_reuse_factor:.1f}x |"
-            )
-            lines.append(row)
-
-        lines.extend(
-            [
-                "",
-                "## Referenced-By Breakdown (By Target Class)",
-                "",
-            ]
-        )
-
-        targets_seen = sorted({e.target_class for e in g.edges}, key=lambda x: x.lower())
-        for t_name in targets_seen:
-            t_node = g.nodes.get(t_name)
-            if t_node and t_node.resource_count > 0:
-                inst_word = "instance" if t_node.resource_count == 1 else "instances"
-                t_inst = f"{t_node.resource_count:,} {inst_word}"
-            else:
-                t_inst = "inline / external"
-            in_c = t_node.in_count if t_node else sum(e.count for e in g.edges if e.target_class == t_name)
-            lines.append(f"### `{t_name}` ({t_inst}, `in_count`: {in_c:,})")
-            t_edges = [e for e in g.edges if e.target_class == t_name]
-            for e in sorted(t_edges, key=lambda x: (x.source_class.lower(), x.reference_path.lower())):
-                time_str = "time" if e.count == 1 else "times"
-                src_str = "distinct source" if e.distinct_sources == 1 else "distinct sources"
-                tgt_str = "distinct target" if e.distinct_targets == 1 else "distinct targets"
+            for _c_name, node in sorted(g.nodes.items(), key=lambda x: x[0].lower()):
+                unref_str = (
+                    f"{node.unreferenced_instances:,} ({node.unreferenced_rate:.1%})"
+                    if node.resource_count > 0
+                    else "-"
+                )
                 lines.append(
-                    f"- Referenced by `{e.source_class}` via `{e.reference_path}`: **{e.count:,}** {time_str} "
-                    f"({e.distinct_sources:,} {src_str} -> {e.distinct_targets:,} {tgt_str})"
+                    f"| `{node.class_name}` | {node.functional_domain} | `{node.role}` | {node.resource_count:,} | "
+                    f"{node.in_count:,} | {node.out_count:,} | {unref_str} |"
                 )
             lines.append("")
+            lines.append("[↑ Back to Table of Contents](#table-of-contents)")
+            lines.append("")
+
+        if g.edges:
+            header = "| Relative Path | Target | Count | Unique Src | Unique Tgt | Cardinality | Target Reuse |"
+            sep = "| :--- | :--- | :--- | :--- | :--- | :--- | :--- |"
+            lines.extend(
+                [
+                    "## Reference Paths (Structural Relationships)",
+                    "",
+                    header,
+                    sep,
+                ]
+            )
+
+            for edge in sorted(g.edges, key=lambda x: (x.reference_path.lower(), x.target_class.lower())):
+                row = (
+                    f"| `{edge.reference_path}` | `{edge.target_class}` | {edge.count:,} | "
+                    f"{edge.distinct_sources:,} | {edge.distinct_targets:,} | `{edge.cardinality}` | "
+                    f"{edge.target_reuse_factor:.1f}x |"
+                )
+                lines.append(row)
+            lines.append("")
+            lines.append("[↑ Back to Table of Contents](#table-of-contents)")
+            lines.append("")
+
+            lines.extend(
+                [
+                    "## Referenced-By Breakdown (By Target Class)",
+                    "",
+                ]
+            )
+
+            targets_seen = sorted({e.target_class for e in g.edges}, key=lambda x: x.lower())
+            for t_name in targets_seen:
+                t_node = g.nodes.get(t_name)
+                if t_node and t_node.resource_count > 0:
+                    inst_word = "instance" if t_node.resource_count == 1 else "instances"
+                    t_inst = f"{t_node.resource_count:,} {inst_word}"
+                else:
+                    t_inst = "inline / external"
+                in_c = t_node.in_count if t_node else sum(e.count for e in g.edges if e.target_class == t_name)
+                lines.append(f"### `{t_name}` ({t_inst}, `in_count`: {in_c:,})")
+                t_edges = [e for e in g.edges if e.target_class == t_name]
+                for e in sorted(t_edges, key=lambda x: (x.source_class.lower(), x.reference_path.lower())):
+                    time_str = "time" if e.count == 1 else "times"
+                    src_str = "distinct source" if e.distinct_sources == 1 else "distinct sources"
+                    tgt_str = "distinct target" if e.distinct_targets == 1 else "distinct targets"
+                    lines.append(
+                        f"- Referenced by `{e.source_class}` via `{e.reference_path}`: **{e.count:,}** {time_str} "
+                        f"({e.distinct_sources:,} {src_str} -> {e.distinct_targets:,} {tgt_str})"
+                    )
+                lines.append("")
+            lines.append("[↑ Back to Table of Contents](#table-of-contents)")
+            lines.append("")
+
+        if nodes_with_children:
+            lines.extend(
+                [
+                    "## Child Elements Usage by Resource Class",
+                    "",
+                ]
+            )
+            for node in sorted(nodes_with_children, key=lambda x: x.class_name.lower()):
+                inst_word = "instance" if node.resource_count == 1 else "instances"
+                elem_word = "element" if len(node.child_elements) == 1 else "elements"
+                header_info = (
+                    f"{node.resource_count:,} {inst_word}, {len(node.child_elements):,} distinct child {elem_word}"
+                )
+                lines.append(f"### `{node.class_name}` ({header_info})")
+                lines.extend(
+                    [
+                        "",
+                        "| Child Element | Total Count | Instances Using | Usage % | Multiplicity (Min / Max / Avg) |",
+                        "| :--- | :--- | :--- | :--- | :--- |",
+                    ]
+                )
+                for cp in node.child_elements.values():
+                    mult_str = f"{cp.min_per_instance} / {cp.max_per_instance} / {cp.avg_per_instance:.1f}x"
+                    lines.append(
+                        f"| `<{cp.element_name}>` | {cp.count:,} | {cp.instance_count:,} | "
+                        f"{cp.usage_pct:.1f}% | {mult_str} |"
+                    )
+                lines.append("")
+            lines.append("[↑ Back to Table of Contents](#table-of-contents)")
+            lines.append("")
+
+        if has_user_attributes:
+            lines.extend(
+                [
+                    "## User Attribute Keys Profile",
+                    "",
+                    (
+                        "| Attribute Key | Total Count | Instances Using | Usage % | Distinct Values "
+                        "| Multiplicity (Min / Max / Avg) | Classes Using |"
+                    ),
+                    "| :--- | :--- | :--- | :--- | :--- | :--- | :--- |",
+                ]
+            )
+            for up in g.summary.user_attributes.values():
+                mult_str = f"{up.min_per_instance} / {up.max_per_instance} / {up.avg_per_instance:.1f}x"
+                classes_str = ", ".join(
+                    f"`{cls}` ({cnt:,})"
+                    for cls, cnt in sorted(up.classes_used.items(), key=lambda x: (-x[1], x[0].lower()))
+                )
+                lines.append(
+                    f"| `{up.attribute_key}` | {up.count:,} | {up.instance_count:,} | "
+                    f"{up.usage_pct:.1f}% | {up.distinct_values_count:,} | {mult_str} | {classes_str} |"
+                )
+            lines.append("")
+            lines.append("[↑ Back to Table of Contents](#table-of-contents)")
+            lines.append("")
+
+            if nodes_with_uap:
+                lines.extend(
+                    [
+                        "## User Attributes Usage by Resource Class",
+                        "",
+                    ]
+                )
+                for node in sorted(nodes_with_uap, key=lambda x: x.class_name.lower()):
+                    inst_word = "instance" if node.resource_count == 1 else "instances"
+                    attr_word = "key" if len(node.user_attributes) == 1 else "keys"
+                    header_info = (
+                        f"{node.resource_count:,} {inst_word}, "
+                        f"{len(node.user_attributes):,} distinct attribute {attr_word}"
+                    )
+                    lines.append(f"### `{node.class_name}` ({header_info})")
+                    lines.extend(
+                        [
+                            "",
+                            (
+                                "| Attribute Key | Total Count | Instances Using | Usage % | Distinct Values "
+                                "| Multiplicity (Min / Max / Avg) | Sample Values |"
+                            ),
+                            "| :--- | :--- | :--- | :--- | :--- | :--- | :--- |",
+                        ]
+                    )
+                    for up in node.user_attributes.values():
+                        mult_str = f"{up.min_per_instance} / {up.max_per_instance} / {up.avg_per_instance:.1f}x"
+                        samples_str = "<br>".join(f"`{s}`" for s in up.sample_values[:3]) if up.sample_values else "-"
+                        lines.append(
+                            f"| `{up.attribute_key}` | {up.count:,} | {up.instance_count:,} | "
+                            f"{up.usage_pct:.1f}% | {up.distinct_values_count:,} | {mult_str} | {samples_str} |"
+                        )
+                    lines.append("")
+                lines.append("[↑ Back to Table of Contents](#table-of-contents)")
+                lines.append("")
 
         return "\n".join(lines).strip()
 
@@ -2432,6 +2737,33 @@ class DdiLifecycleProfile(BaseModel):
                     "unreferencedInstances": node.unreferenced_instances,
                     "unreferencedRate": node.unreferenced_rate,
                     "domain": node.functional_domain,
+                    "childElements": [
+                        {
+                            "elementName": cp.element_name,
+                            "count": cp.count,
+                            "instanceCount": cp.instance_count,
+                            "usagePct": cp.usage_pct,
+                            "minPerInstance": cp.min_per_instance,
+                            "maxPerInstance": cp.max_per_instance,
+                            "avgPerInstance": cp.avg_per_instance,
+                        }
+                        for cp in node.child_elements.values()
+                    ],
+                    "userAttributes": [
+                        {
+                            "attributeKey": up.attribute_key,
+                            "count": up.count,
+                            "instanceCount": up.instance_count,
+                            "usagePct": up.usage_pct,
+                            "distinctValuesCount": up.distinct_values_count,
+                            "sampleValues": up.sample_values,
+                            "minPerInstance": up.min_per_instance,
+                            "maxPerInstance": up.max_per_instance,
+                            "avgPerInstance": up.avg_per_instance,
+                            "classesUsed": up.classes_used,
+                        }
+                        for up in node.user_attributes.values()
+                    ],
                 }
             )
 
@@ -3732,10 +4064,91 @@ class DdiLifecycleProfile(BaseModel):
       }}
       html += `</div>`;
 
+      if (n.childElements && n.childElements.length > 0) {{
+        html += `<div class="detail-card">`;
+        html += `<h4>Child Elements Usage <span>${{n.childElements.length}}</span></h4>`;
+        html += `<ul class="ref-list">`;
+        n.childElements.forEach(ce => {{
+          const multTitle = `Multiplicity: min ${{ce.minPerInstance}}, max ${{ce.maxPerInstance}}, `
+            + `avg ${{ce.avgPerInstance}}x per instance`;
+          const multTag = ce.maxPerInstance > 1
+            ? ` <span style="background:rgba(147,51,234,0.15); color:#c084fc; font-size:0.62rem; `
+              + `padding:1px 4px; border-radius:3px; cursor:help;" `
+              + `title="${{multTitle}}">avg ${{ce.avgPerInstance}}x</span>`
+            : "";
+          const barWidth = Math.min(100, Math.max(0, ce.usagePct));
+          html += `<li class="ref-item" style="border-left-color: #6366f1;">`;
+          html += `<div style="display:flex; justify-content:space-between; align-items:center;">`;
+          html += `<span class="ref-elem" style="color:#e2e8f0;">&lt;${{ce.elementName}}&gt;</span>${{multTag}}`;
+          html += `<span style="font-weight:600; color:#38bdf8; font-size:0.75rem;">`
+            + `${{ce.count.toLocaleString()}}</span>`;
+          html += `</div>`;
+          html += `<div style="display:flex; align-items:center; gap:6px; margin-top:3px;">`;
+          html += `<div style="flex:1; background:rgba(255,255,255,0.08); height:4px; `
+            + `border-radius:2px; overflow:hidden;">`;
+          html += `<div style="background:#6366f1; height:100%; width:${{barWidth}}%;"></div>`;
+          html += `</div>`;
+          html += `<span style="font-size:0.65rem; color:var(--text-muted);">`
+            + `${{ce.usagePct}}% (${{ce.instanceCount.toLocaleString()}}/${{n.resourceCount.toLocaleString()}})</span>`;
+          html += `</div>`;
+          html += `</li>`;
+        }});
+        html += `</ul>`;
+        html += `</div>`;
+      }}
+
+      if (n.userAttributes && n.userAttributes.length > 0) {{
+        html += `<div class="detail-card">`;
+        html += `<h4>User Attributes (&lt;UserAttributePair&gt;) <span>${{n.userAttributes.length}}</span></h4>`;
+        html += `<ul class="ref-list">`;
+        n.userAttributes.forEach(ua => {{
+          const multTitle = `Multiplicity: min ${{ua.minPerInstance}}, max ${{ua.maxPerInstance}}, `
+            + `avg ${{ua.avgPerInstance}}x per instance`;
+          const multTag = ua.maxPerInstance > 1
+            ? ` <span style="background:rgba(245,158,11,0.15); color:#fbbf24; font-size:0.62rem; `
+              + `padding:1px 4px; border-radius:3px; cursor:help;" `
+              + `title="${{multTitle}}">avg ${{ua.avgPerInstance}}x</span>`
+            : "";
+          const distinctTag = ` <span style="background:rgba(16,185,129,0.15); color:#34d399; font-size:0.62rem; `
+            + `padding:1px 4px; border-radius:3px; cursor:help;" `
+            + `title="${{ua.distinctValuesCount}} distinct attribute values">`
+            + `${{ua.distinctValuesCount}} distinct</span>`;
+          const barWidth = Math.min(100, Math.max(0, ua.usagePct));
+          html += `<li class="ref-item" style="border-left-color: #f59e0b;">`;
+          html += `<div style="display:flex; justify-content:space-between; align-items:center;">`;
+          html += `<span class="ref-elem" style="color:#e2e8f0; font-family:var(--font-mono);">${{ua.attributeKey}}`
+            + `</span><div>${{distinctTag}}${{multTag}}</div>`;
+          html += `</div>`;
+          html += `<div style="display:flex; align-items:center; gap:6px; margin-top:3px;">`;
+          html += `<div style="flex:1; background:rgba(255,255,255,0.08); height:4px; `
+            + `border-radius:2px; overflow:hidden;">`;
+          html += `<div style="background:#f59e0b; height:100%; width:${{barWidth}}%;"></div>`;
+          html += `</div>`;
+          html += `<span style="font-size:0.65rem; color:var(--text-muted);">`
+            + `${{ua.count.toLocaleString()}} (${{ua.usagePct}}% of instances)</span>`;
+          html += `</div>`;
+          if (ua.sampleValues && ua.sampleValues.length > 0) {{
+            const sampleHtml = ua.sampleValues.slice(0, 2).map(s => escapeHtml(s)).join(' • ');
+            html += `<div style="margin-top:4px; font-size:0.62rem; color:#94a3b8; font-family:var(--font-mono); `
+              + `word-break:break-all; background:rgba(0,0,0,0.25); padding:3px 6px; border-radius:3px;">`;
+            html += `Sample: ${{sampleHtml}}`;
+            html += `</div>`;
+          }}
+          html += `</li>`;
+        }});
+        html += `</ul>`;
+        html += `</div>`;
+      }}
+
       const btnOverview = document.getElementById("btnOverview");
       if (btnOverview) btnOverview.classList.remove("active");
 
       document.getElementById("inspectorPanel").innerHTML = html;
+    }}
+
+    function escapeHtml(str) {{
+      if (!str) return "";
+      return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     }}
 
     function showGraphSummary() {{
@@ -3815,6 +4228,17 @@ class DdiLifecycleProfile(BaseModel):
       html += `<div class="summary-stat-sub">${{totalRefs.toLocaleString()}} total refs</div>`;
       html += `</div>`;
 
+      if (s.total_user_attributes && s.total_user_attributes > 0) {{
+        const uapTooltip = `UserAttributePair: ${{s.total_user_attributes.toLocaleString()}} total user `
+          + `attributes across ${{s.unique_user_attribute_keys}} distinct attribute keys.`;
+        html += `<div class="summary-stat-box" title="${{uapTooltip}}">`;
+        html += `<div class="summary-stat-lbl">User Attributes ⓘ</div>`;
+        html += `<div class="summary-stat-val" style="color:#f59e0b;">`
+          + `${{s.total_user_attributes.toLocaleString()}}</div>`;
+        html += `<div class="summary-stat-sub">${{s.unique_user_attribute_keys}} distinct keys</div>`;
+        html += `</div>`;
+      }}
+
       html += `</div>`;
 
       // Referencing Mechanisms Breakdown
@@ -3852,6 +4276,44 @@ class DdiLifecycleProfile(BaseModel):
           html += `<div class="domain-bar-track">`;
           html += `<div class="domain-bar-fill" style="width:${{pctStr}}%; background:${{barCol}};"></div>`;
           html += `</div>`;
+          html += `</div>`;
+        }});
+        html += `</div>`;
+        html += `</div>`;
+      }}
+
+      // User Attributes Breakdown
+      if (s.user_attributes && Object.keys(s.user_attributes).length > 0) {{
+        const totalUap = s.total_user_attributes || 1;
+        const uapCount = s.unique_user_attribute_keys || Object.keys(s.user_attributes).length;
+        html += `<div class="detail-card" style="margin-top:10px;" `
+          + `title="UserAttributePair extension keys and distinct values statistics across this document">`;
+        html += `<h4>User Attribute Keys (&lt;UserAttributePair&gt;) <span>${{uapCount}}</span></h4>`;
+        html += `<div class="domain-list">`;
+        const sortedUaps = Object.values(s.user_attributes).sort((a, b) => b.count - a.count);
+        sortedUaps.forEach(ua => {{
+          const distinctLabel = `${{ua.distinct_values_count || ua.distinctValuesCount || 1}} distinct val`;
+          const countVal = ua.count || 0;
+          const kName = ua.attribute_key || ua.attributeKey;
+          const pctStr = (countVal > 0 ? ((countVal / totalUap) * 100) : 0).toFixed(1);
+          html += `<div class="domain-row">`;
+          html += `<div class="domain-label-row">`;
+          html += `<span><span style="display:inline-block; width:8px; height:8px; border-radius:2px; `
+            + `background:#f59e0b; margin-right:5px;"></span><code>${{kName}}</code></span>`;
+          html += `<b style="color:var(--text);">${{countVal.toLocaleString()}} `
+            + `<span style="font-size:0.65rem; color:#34d399; font-weight:normal;">(${{distinctLabel}})</span></b>`;
+          html += `</div>`;
+          html += `<div class="domain-bar-track">`;
+          html += `<div class="domain-bar-fill" style="width:${{pctStr}}%; background:#f59e0b;"></div>`;
+          html += `</div>`;
+          const clsMap = ua.classes_used || ua.classesUsed;
+          if (clsMap && Object.keys(clsMap).length > 0) {{
+            const clsChips = Object.entries(clsMap)
+              .map(([c, cnt]) => `${{c}}: ${{cnt.toLocaleString()}}`)
+              .join(", ");
+            html += `<div style="font-size:0.63rem; color:var(--text-muted); margin-top:2px;">`
+              + `Classes: ${{clsChips}}</div>`;
+          }}
           html += `</div>`;
         }});
         html += `</div>`;
@@ -4154,6 +4616,15 @@ def analyze_ddil_profile(
     # Pass 1: Index all defined resources in document using streaming parser
     defined_instances: dict[str, set[str]] = defaultdict(set)
     all_defined_instance_keys: set[str] = set()
+    class_child_stats: dict[str, dict[str, dict[str, int]]] = defaultdict(
+        lambda: defaultdict(lambda: {"count": 0, "instance_count": 0, "min": 0, "max": 0})
+    )
+    class_uap_stats: dict[str, dict[str, dict[str, Any]]] = defaultdict(
+        lambda: defaultdict(lambda: {"count": 0, "instance_count": 0, "min": 0, "max": 0, "values": set()})
+    )
+    global_uap_stats: dict[str, dict[str, Any]] = defaultdict(
+        lambda: {"count": 0, "instance_count": 0, "min": 0, "max": 0, "values": set(), "classes": Counter()}
+    )
 
     for res_elem in _get_stream(pass_progress=_pass1_progress if has_progress else None):
         c_name, agency, rid, ver, urn = _extract_resource_identifiers(res_elem)
@@ -4173,6 +4644,48 @@ def analyze_ddil_profile(
             urn_map[urn] = c_name
             all_defined_instance_keys.add(urn)
             defined_instances[c_name].add(urn)
+
+        # Collect child element statistics for this resource instance
+        inst_children: Counter[str] = Counter()
+        for child in res_elem:
+            child_tag = child.tag.rsplit("}", 1)[-1]
+            inst_children[child_tag] += 1
+
+        for c_tag, c_cnt in inst_children.items():
+            entry = class_child_stats[c_name][c_tag]
+            entry["count"] += c_cnt
+            entry["instance_count"] += 1
+            entry["max"] = max(entry["max"], c_cnt)
+            entry["min"] = min(entry["min"], c_cnt) if entry["min"] > 0 else c_cnt
+
+        # Collect UserAttributePair statistics for this resource instance
+        uaps = [c for c in res_elem.iter() if c.tag.rsplit("}", 1)[-1] == "UserAttributePair"]
+        if uaps:
+            inst_uap_keys: Counter[str] = Counter()
+            inst_uap_values: dict[str, set[str]] = defaultdict(set)
+            for u in uaps:
+                k_elem = next((c for c in u if c.tag.rsplit("}", 1)[-1] == "AttributeKey"), None)
+                v_elem = next((c for c in u if c.tag.rsplit("}", 1)[-1] == "AttributeValue"), None)
+                k_val = k_elem.text.strip() if (k_elem is not None and k_elem.text) else "(empty)"
+                v_val = v_elem.text.strip() if (v_elem is not None and v_elem.text) else ""
+                inst_uap_keys[k_val] += 1
+                inst_uap_values[k_val].add(v_val)
+
+            for k_val, k_cnt in inst_uap_keys.items():
+                c_entry = class_uap_stats[c_name][k_val]
+                c_entry["count"] += k_cnt
+                c_entry["instance_count"] += 1
+                c_entry["max"] = max(c_entry["max"], k_cnt)
+                c_entry["min"] = min(c_entry["min"], k_cnt) if c_entry["min"] > 0 else k_cnt
+                c_entry["values"].update(inst_uap_values[k_val])
+
+                g_entry = global_uap_stats[k_val]
+                g_entry["count"] += k_cnt
+                g_entry["instance_count"] += 1
+                g_entry["classes"][c_name] += k_cnt
+                g_entry["max"] = max(g_entry["max"], k_cnt)
+                g_entry["min"] = min(g_entry["min"], k_cnt) if g_entry["min"] > 0 else k_cnt
+                g_entry["values"].update(inst_uap_values[k_val])
 
     # Pass 2: Extract reference paths and compute counts
     path_stats: dict[tuple[str, str, str, str], dict[str, Any]] = {}
@@ -4294,6 +4807,46 @@ def analyze_ddil_profile(
         role = _classify_node_role(in_c, out_c, referrers, references, c_name)
         domain = _classify_functional_domain(c_name)
 
+        # Build child element profiles
+        raw_children = class_child_stats.get(c_name, {})
+        child_profiles: dict[str, ChildElementProfile] = {}
+        for c_tag, stats in sorted(raw_children.items(), key=lambda x: (-x[1]["count"], x[0].lower())):
+            cnt = stats["count"]
+            inst_cnt = stats["instance_count"]
+            pct = round((inst_cnt / res_cnt) * 100.0, 1) if res_cnt > 0 else 0.0
+            avg = round(cnt / inst_cnt, 2) if inst_cnt > 0 else 0.0
+            child_profiles[c_tag] = ChildElementProfile(
+                element_name=c_tag,
+                count=cnt,
+                instance_count=inst_cnt,
+                usage_pct=pct,
+                min_per_instance=stats["min"],
+                max_per_instance=stats["max"],
+                avg_per_instance=avg,
+            )
+
+        # Build user attribute profiles
+        raw_uaps = class_uap_stats.get(c_name, {})
+        user_attr_profiles: dict[str, UserAttributeKeyProfile] = {}
+        for k_val, stats in sorted(raw_uaps.items(), key=lambda x: (-x[1]["count"], x[0].lower())):
+            cnt = stats["count"]
+            inst_cnt = stats["instance_count"]
+            pct = round((inst_cnt / res_cnt) * 100.0, 1) if res_cnt > 0 else 0.0
+            avg = round(cnt / inst_cnt, 2) if inst_cnt > 0 else 0.0
+            samples = _format_sample_values(stats["values"], max_samples=5, max_length=80)
+            user_attr_profiles[k_val] = UserAttributeKeyProfile(
+                attribute_key=k_val,
+                count=cnt,
+                instance_count=inst_cnt,
+                usage_pct=pct,
+                distinct_values_count=len(stats["values"]),
+                sample_values=samples,
+                min_per_instance=stats["min"],
+                max_per_instance=stats["max"],
+                avg_per_instance=avg,
+                classes_used={c_name: cnt},
+            )
+
         nodes[c_name] = ClassNode(
             class_name=c_name,
             resource_count=res_cnt,
@@ -4306,6 +4859,8 @@ def analyze_ddil_profile(
             unreferenced_instances=unref_cnt,
             unreferenced_rate=unref_rate,
             functional_domain=domain,
+            child_elements=child_profiles,
+            user_attributes=user_attr_profiles,
         )
 
     total_ref_instances = sum(e.count for e in edges)
@@ -4320,6 +4875,33 @@ def analyze_ddil_profile(
         if total_ref_instances > 0
         else {}
     )
+
+    total_child_elems = sum(sum(cp.count for cp in n.child_elements.values()) for n in nodes.values())
+    unique_child_types = len({cp.element_name for n in nodes.values() for cp in n.child_elements.values()})
+
+    global_uap_profiles: dict[str, UserAttributeKeyProfile] = {}
+    tot_resources = sum(class_counts.values())
+    for k_val, stats in sorted(global_uap_stats.items(), key=lambda x: (-x[1]["count"], x[0].lower())):
+        cnt = stats["count"]
+        inst_cnt = stats["instance_count"]
+        pct = round((inst_cnt / tot_resources) * 100.0, 1) if tot_resources > 0 else 0.0
+        avg = round(cnt / inst_cnt, 2) if inst_cnt > 0 else 0.0
+        samples = _format_sample_values(stats["values"], max_samples=5, max_length=80)
+        global_uap_profiles[k_val] = UserAttributeKeyProfile(
+            attribute_key=k_val,
+            count=cnt,
+            instance_count=inst_cnt,
+            usage_pct=pct,
+            distinct_values_count=len(stats["values"]),
+            sample_values=samples,
+            min_per_instance=stats["min"],
+            max_per_instance=stats["max"],
+            avg_per_instance=avg,
+            classes_used=dict(stats["classes"]),
+        )
+
+    total_uap = sum(k.count for k in global_uap_profiles.values())
+    unique_uap_keys = len(global_uap_profiles)
 
     summary = DdiLifecycleProfileSummary(
         ddi_standard="DDI-Lifecycle",
@@ -4341,6 +4923,11 @@ def analyze_ddil_profile(
         domain_distribution=domain_dist,
         referencing_mechanisms=overall_mechs_dict,
         referencing_mechanisms_pct=overall_mechs_pct,
+        total_child_elements=total_child_elems,
+        unique_child_element_types=unique_child_types,
+        total_user_attributes=total_uap,
+        unique_user_attribute_keys=unique_uap_keys,
+        user_attributes=global_uap_profiles,
     )
 
     profile = DdiLifecycleProfile(

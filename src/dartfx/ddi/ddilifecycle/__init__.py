@@ -1,11 +1,14 @@
 from . import model_4_0_rc1 as model
 from .utils import (
+    ChildElementProfile,
     ClassNode,
     ClassProfileEdge,
     ConnectingPath,
     ConnectingPathStep,
     DdiLifecycleProfile,
     DdiLifecycleProfileSummary,
+    UserAttributeKeyProfile,
+    UserAttributeProfile,
     analyze_ddil_profile,
     ddil324,
     stream_ddil33_fragments,
@@ -15,12 +18,15 @@ from .utils import (
 )
 
 __all__ = [
+    "ChildElementProfile",
     "ClassNode",
     "ClassProfileEdge",
     "ConnectingPath",
     "ConnectingPathStep",
     "DdiLifecycleProfile",
     "DdiLifecycleProfileSummary",
+    "UserAttributeKeyProfile",
+    "UserAttributeProfile",
     "analyze_ddil_profile",
     "ddil324",
     "model",

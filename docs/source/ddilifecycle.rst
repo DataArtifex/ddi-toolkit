@@ -156,12 +156,26 @@ DDI-Lifecycle allows resources to be referenced through several distinct mechani
 
 The profiling engine catalogs and calculates counts (``referencing_mechanisms``) and percentages (``referencing_mechanisms_pct``) overall across the entire study and on each individual class-to-class edge.
 
+Child Element Usage Statistics
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For each resource type (class), the profiling engine inventories all child XML elements utilized across instances and computes granular usage metrics:
+
+* ``element_name``: Local XML tag name (e.g. ``QuestionText``, ``ConceptReference``, ``CodeDomain``).
+* ``count``: Total occurrences of the child element across all instances of the resource class.
+* ``instance_count``: Number of distinct resource instances containing at least one occurrence.
+* ``usage_pct``: Percentage of parent instances that contain this child element (``(instance_count / resource_count) * 100.0``).
+* ``min_per_instance`` / ``max_per_instance``: Minimum and maximum occurrences in a single instance.
+* ``avg_per_instance``: Average occurrences per instance containing this element.
+
+These metrics are available on ``ClassNode.child_elements`` (keyed by element tag name), summarized in Markdown and JSON exports, and rendered interactively with progress bars and multiplicity badges in the HTML explorer.
+
 Architecture: Dual-Pass Streaming
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To analyze large files without exceeding memory limits, ``analyze_ddil_profile`` executes a two-pass streaming process:
 
-1. **Pass 1 (Resource Indexing)**: Fast SAX / ``iterparse`` pass that scans every element, catalogs all declared resources, and indexes their local ``<ID>``, ``<Agency>``, ``<Version>``, synthesizes canonical URNs, and records the resource's class name.
+1. **Pass 1 (Resource Indexing & Child Element Statistics)**: Fast SAX / ``iterparse`` pass that scans every element, catalogs all declared resources, indexes their local ``<ID>``, ``<Agency>``, ``<Version>``, synthesizes canonical URNs, records the resource's class name, and computes per-instance child element frequencies.
 2. **Pass 2 (Reference Resolution & Edge Synthesis)**: Streams all XML elements and examines all reference tags (e.g., ``<r:QuestionItemReference>``, ``<d:UniverseReference>``, ``<r:ConceptReference>``). It extracts target IDs or URNs, resolves them against the Pass 1 index, associates the source resource's class with the target's class, classifies the referencing mechanism, and records the exact XML element and containment path.
 
 This dual-pass architecture ensures 100% accurate edge counts and multiplicity metrics even when referencing elements appear earlier in the XML document than their target definitions.
@@ -238,12 +252,14 @@ Inspecting Nodes and Edges
 
 .. code-block:: python
 
-   # Inspect specific node
+   # Inspect specific node and its child elements
    if "QuestionItem" in profile.nodes:
        node = profile.nodes["QuestionItem"]
        print(f"QuestionItem count: {node.resource_count}, Role: {node.role}, Domain: {node.functional_domain}")
        print(f"  Referenced by: {node.referrers}")
        print(f"  References to: {node.references}")
+       for el_tag, cp in node.child_elements.items():
+           print(f"  Child <{el_tag}>: {cp.count} total, {cp.instance_count} instances ({cp.usage_pct}%)")
 
    # Inspect edges
    for edge in profile.edges:
