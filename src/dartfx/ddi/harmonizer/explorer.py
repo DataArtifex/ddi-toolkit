@@ -1977,69 +1977,192 @@ ${{jsonDump}}
       // Render Merkle tree
       const merkle = document.getElementById('merkleViewer');
       const isUuid = (str) => new RegExp('^(?:urn:uuid:)?[0-9a-fA-F-]{{32,38}}$', 'i').test(str);
-      const getUrnLine = (urn) => {{
-        if (!urn) return '';
+      const getUrnLine = (label, urn) => {{
+        if (!urn) return `|     |-- ${{label}}: <span style="color:var(--text-muted); font-style:italic;">(None)</span><br>`;
         const kind = isUuid(urn) ? 'Random GUID' : (urn.toLowerCase().startsWith('urn:ddi:') ? 'Assigned DDI URN' : 'Assigned Identifier');
         const kindColor = isUuid(urn) ? 'var(--warning)' : 'var(--info)';
-        return `|-- Unique Identifier: <span style="color:var(--text-main); font-weight:600;">"${{escapeHtml(urn)}}"</span> <span style="color:${{kindColor}}; font-weight:700;">[${{kind}}]</span><br>`;
+        return `|     |-- ${{label}}: <span style="color:var(--text-main); font-weight:600;">"${{escapeHtml(urn)}}"</span> <span style="color:${{kindColor}}; font-weight:700;">[${{kind}}]</span><br>`;
+      }};
+
+      const formatDigestComp = (name, srcHash, candHash, extraSrc = '', extraCand = '') => {{
+        const isMatch = Boolean(srcHash && candHash && srcHash === candHash);
+        const matchBadge = isMatch
+          ? '<span style="color:var(--success); font-weight:700; background:rgba(16,185,129,0.15); padding:1px 5px; border-radius:3px;">[MATCH]</span>'
+          : '<span style="color:var(--warning); font-weight:700; background:rgba(245,158,11,0.15); padding:1px 5px; border-radius:3px;">[DIFFERS]</span>';
+        const exSrc = extraSrc ? ` (${{extraSrc}})` : '';
+        const exCand = extraCand ? ` (${{extraCand}})` : '';
+        return `|-- ${{name}}:<br>` +
+               `|     |-- Source:    <span style="color:var(--text-main); font-weight:600;">[${{srcHash}}]</span>${{exSrc}}<br>` +
+               `|     \\-- Candidate: <span style="color:var(--text-main); font-weight:600;">[${{candHash}}]</span>${{exCand}} ${{matchBadge}}<br>`;
       }};
 
       if (parsedSrc && parsedSrc.codes && Array.isArray(parsedSrc.codes)) {{
-        const codes = parsedSrc.codes;
-        const substCodes = codes.filter(c => !c.is_missing);
-        const sentinelCodes = codes.filter(c => c.is_missing);
+        const srcCodes = parsedSrc.codes;
+        const candCodes = (parsedCand && parsedCand.codes && Array.isArray(parsedCand.codes)) ? parsedCand.codes : [];
 
-        const codeSetHash = simpleHash(codes.map(c => `${{normalizeText(c.value || '')}}=${{normalizeText(c.label || c.category_label || '')}}`).sort().join(';'));
-        const codeSeqHash = srcDigest;
-        const substSetHash = simpleHash(substCodes.map(c => `${{normalizeText(c.value || '')}}=${{normalizeText(c.label || c.category_label || '')}}`).sort().join(';'));
-        const sentinelSetHash = simpleHash(sentinelCodes.map(c => `${{normalizeText(c.value || '')}}=${{normalizeText(c.label || c.category_label || '')}}`).sort().join(';'));
-        const catSetHash = simpleHash(codes.map(c => normalizeText(c.label || c.category_label || '')).sort().join(';'));
-        const valSetHash = simpleHash(codes.map(c => normalizeText(c.value || '')).sort().join(';'));
+        const srcSubstCodes = srcCodes.filter(c => !c.is_missing);
+        const srcSentinelCodes = srcCodes.filter(c => c.is_missing);
+        const candSubstCodes = candCodes.filter(c => !c.is_missing);
+        const candSentinelCodes = candCodes.filter(c => c.is_missing);
 
-        let itemsHtml = codes.map((c, i) => {{
+        const srcCodeSetHash = simpleHash(srcCodes.map(c => `${{normalizeText(c.value || '')}}=${{normalizeText(c.label || c.category_label || '')}}`).sort().join(';'));
+        const candCodeSetHash = candCodes.length ? simpleHash(candCodes.map(c => `${{normalizeText(c.value || '')}}=${{normalizeText(c.label || c.category_label || '')}}`).sort().join(';')) : '—';
+
+        const srcCodeSeqHash = srcDigest;
+        const candCodeSeqHash = candDigest;
+
+        const srcSubstSetHash = srcSubstCodes.length ? simpleHash(srcSubstCodes.map(c => `${{normalizeText(c.value || '')}}=${{normalizeText(c.label || c.category_label || '')}}`).sort().join(';')) : '0000000000000000';
+        const candSubstSetHash = candSubstCodes.length ? simpleHash(candSubstCodes.map(c => `${{normalizeText(c.value || '')}}=${{normalizeText(c.label || c.category_label || '')}}`).sort().join(';')) : '0000000000000000';
+
+        const srcSentinelSetHash = srcSentinelCodes.length ? simpleHash(srcSentinelCodes.map(c => `${{normalizeText(c.value || '')}}=${{normalizeText(c.label || c.category_label || '')}}`).sort().join(';')) : '0000000000000000';
+        const candSentinelSetHash = candSentinelCodes.length ? simpleHash(candSentinelCodes.map(c => `${{normalizeText(c.value || '')}}=${{normalizeText(c.label || c.category_label || '')}}`).sort().join(';')) : '0000000000000000';
+
+        const srcCatSetHash = simpleHash(srcCodes.map(c => normalizeText(c.label || c.category_label || '')).sort().join(';'));
+        const candCatSetHash = candCodes.length ? simpleHash(candCodes.map(c => normalizeText(c.label || c.category_label || '')).sort().join(';')) : '—';
+
+        const srcValSetHash = simpleHash(srcCodes.map(c => normalizeText(c.value || '')).sort().join(';'));
+        const candValSetHash = candCodes.length ? simpleHash(candCodes.map(c => normalizeText(c.value || '')).sort().join(';')) : '—';
+
+        const rootMatch = (srcDigest === candDigest)
+          ? '<span style="color:var(--success); font-weight:700; background:rgba(16,185,129,0.15); padding:1px 5px; border-radius:3px;">[MATCH]</span>'
+          : '<span style="color:var(--warning); font-weight:700; background:rgba(245,158,11,0.15); padding:1px 5px; border-radius:3px;">[DIFFERS]</span>';
+
+        let srcItemsHtml = srcCodes.map((c, i) => {{
           const valH = simpleHash(normalizeText(c.value || ''));
           const catH = simpleHash(normalizeText(c.label || c.category_label || ''));
           const itemH = simpleHash(`${{valH}}::${{catH}}::missing=${{Boolean(c.is_missing)}}`);
           const missTag = c.is_missing ? ` <span style="color:var(--warning); font-weight:700;">[SENTINEL${{c.sentinel_type ? ': ' + escapeHtml(c.sentinel_type) : ''}}]</span>` : ` <span style="color:var(--success); font-weight:600;">[SUBSTANTIVE]</span>`;
-          return `|-- Code Item [${{i + 1}}/${{codes.length}}]: "${{escapeHtml(c.value)}}" ↔ "${{escapeHtml(c.label || c.category_label || '')}}"${{missTag}} [${{itemH}}]<br>|     |-- Code Value Hash:    [${{valH}}] ("${{escapeHtml(c.value)}}")<br>|     \\-- Category Hash:      [${{catH}}] ("${{escapeHtml(c.label || c.category_label || '')}}")`;
+          return `|-- Code Item [${{i + 1}}/${{srcCodes.length}}]: "${{escapeHtml(c.value)}}" ↔ "${{escapeHtml(c.label || c.category_label || '')}}"${{missTag}} [${{itemH}}]<br>|     |-- Code Value Hash:    [${{valH}}] ("${{escapeHtml(c.value)}}")<br>|     \\-- Category Hash:      [${{catH}}] ("${{escapeHtml(c.label || c.category_label || '')}}")`;
+        }}).join('<br>');
+
+        let candItemsHtml = candCodes.map((c, i) => {{
+          const valH = simpleHash(normalizeText(c.value || ''));
+          const catH = simpleHash(normalizeText(c.label || c.category_label || ''));
+          const itemH = simpleHash(`${{valH}}::${{catH}}::missing=${{Boolean(c.is_missing)}}`);
+          const missTag = c.is_missing ? ` <span style="color:var(--warning); font-weight:700;">[SENTINEL${{c.sentinel_type ? ': ' + escapeHtml(c.sentinel_type) : ''}}]</span>` : ` <span style="color:var(--success); font-weight:600;">[SUBSTANTIVE]</span>`;
+          return `|-- Code Item [${{i + 1}}/${{candCodes.length}}]: "${{escapeHtml(c.value)}}" ↔ "${{escapeHtml(c.label || c.category_label || '')}}"${{missTag}} [${{itemH}}]<br>|     |-- Code Value Hash:    [${{valH}}] ("${{escapeHtml(c.value)}}")<br>|     \\-- Category Hash:      [${{catH}}] ("${{escapeHtml(c.label || c.category_label || '')}}")`;
         }}).join('<br>');
 
         merkle.innerHTML = `
-          <div style="color:var(--primary); font-weight:600;">CodeList Merkle Root: [${{srcDigest}}]</div>
+          <div style="color:var(--primary); font-weight:600;">CodeList Merkle Roots & Digest Comparison</div>
           <div style="padding-left:18px;">
-            ${{getUrnLine(srcUrn)}}
-            |-- Full Code Set Digest (All Items):       <span style="color:var(--text-main); font-weight:600;">[${{codeSetHash}}]</span><br>
-            |-- Substantive Code Set Digest:            <span style="color:var(--success); font-weight:700;">[${{substSetHash}}]</span> (${{substCodes.length}} items)<br>
-            |-- Sentinel / Missing Code Set Digest:     <span style="color:var(--warning); font-weight:700;">[${{sentinelSetHash}}]</span> (${{sentinelCodes.length}} items)<br>
-            |-- Code Sequence Digest (Ordered):         <span style="color:var(--text-main); font-weight:600;">[${{codeSeqHash}}]</span><br>
-            |-- Category Set Digest (Semantics):        <span style="color:var(--text-main); font-weight:600;">[${{catSetHash}}]</span><br>
-            |-- Value Set Digest (Code Notations):      <span style="color:var(--text-main); font-weight:600;">[${{valSetHash}}]</span><br>
-            |-- Classification:                         <span style="color:var(--text-main); font-weight:600;">${{verdict}}</span><br>
-            \\-- Member Code Items:<br>
+            |-- Merkle Root:<br>
+            |     |-- Source:    <span style="color:var(--text-main); font-weight:600;">[${{srcDigest}}]</span><br>
+            |     \\-- Candidate: <span style="color:var(--text-main); font-weight:600;">[${{candDigest}}]</span> ${{rootMatch}}<br>
+            |-- Unique Identifiers:<br>
+            ${{getUrnLine('Source   ', srcUrn)}}
+            ${{getUrnLine('Candidate', candUrn)}}
+            ${{formatDigestComp('Full Code Set Digest (All Items)', srcCodeSetHash, candCodeSetHash)}}
+            ${{formatDigestComp('Substantive Code Set Digest', srcSubstSetHash, candSubstSetHash, `${{srcSubstCodes.length}} items`, `${{candSubstCodes.length}} items`)}}
+            ${{formatDigestComp('Sentinel / Missing Code Set Digest', srcSentinelSetHash, candSentinelSetHash, `${{srcSentinelCodes.length}} items`, `${{candSentinelCodes.length}} items`)}}
+            ${{formatDigestComp('Code Sequence Digest (Ordered)', srcCodeSeqHash, candCodeSeqHash)}}
+            ${{formatDigestComp('Category Set Digest (Semantics)', srcCatSetHash, candCatSetHash)}}
+            ${{formatDigestComp('Value Set Digest (Code Notations)', srcValSetHash, candValSetHash)}}
+            |-- Classification Verdict: <span style="color:var(--text-main); font-weight:700;">${{verdict}}</span> (Score: ${{scorePct}}%)<br>
+            |-- Member Code Items:<br>
           </div>
-          <div style="padding-left:36px; font-size:0.78rem; color:var(--text-muted); line-height:1.5;">
-            ${{itemsHtml}}
+          <div style="padding-left:36px; margin-top:6px; font-size:0.78rem; line-height:1.5;">
+            <div style="color:var(--primary); font-weight:700; margin-bottom:4px;">[+] SOURCE CODES (${{srcCodes.length}} items):</div>
+            <div style="color:var(--text-muted);">${{srcItemsHtml}}</div>
+            ${{candCodes.length ? `
+              <div style="color:var(--info); font-weight:700; margin-top:10px; margin-bottom:4px;">[+] CANDIDATE CODES (${{candCodes.length}} items):</div>
+              <div style="color:var(--text-muted);">${{candItemsHtml}}</div>
+            ` : ''}}
           </div>
         `;
-      }} else if (parsedSrc && parsedSrc.question_text) {{
+      }} else if (parsedSrc && (parsedSrc.question_text || (parsedCand && parsedCand.question_text))) {{
+        const srcQ = parsedSrc.question_text || '';
+        const candQ = (parsedCand && parsedCand.question_text) || '';
+        const srcInst = parsedSrc.instructions || '';
+        const candInst = (parsedCand && parsedCand.instructions) || '';
+        const srcPre = parsedSrc.pre_question_text || '';
+        const candPre = (parsedCand && parsedCand.pre_question_text) || '';
+        const srcIntent = parsedSrc.intent || '';
+        const candIntent = (parsedCand && parsedCand.intent) || '';
+
+        const srcQHash = simpleHash(srcQ);
+        const candQHash = simpleHash(candQ);
+        const srcInstHash = simpleHash(srcInst);
+        const candInstHash = simpleHash(candInst);
+        const srcPreHash = simpleHash(srcPre);
+        const candPreHash = simpleHash(candPre);
+        const srcIntentHash = simpleHash(srcIntent);
+        const candIntentHash = simpleHash(candIntent);
+
+        const rootMatch = (srcDigest === candDigest)
+          ? '<span style="color:var(--success); font-weight:700; background:rgba(16,185,129,0.15); padding:1px 5px; border-radius:3px;">[MATCH]</span>'
+          : '<span style="color:var(--warning); font-weight:700; background:rgba(245,158,11,0.15); padding:1px 5px; border-radius:3px;">[DIFFERS]</span>';
+
         merkle.innerHTML = `
-          <div style="color:var(--primary); font-weight:600;">Question Merkle Root: [${{srcDigest}}]</div>
+          <div style="color:var(--primary); font-weight:600;">Question Merkle Roots & Digest Comparison</div>
           <div style="padding-left:18px;">
-            ${{getUrnLine(srcUrn)}}
-            |-- Prompt Literal Digest: [${{simpleHash(parsedSrc.question_text)}}]<br>
-            |-- Instructions Digest: [${{simpleHash(parsedSrc.instructions || '')}}]<br>
-            |-- Similarity Score: ${{scorePct}}% (${{method}})<br>
-            \\-- Classification: <span style="color:var(--text-main); font-weight:600;">${{verdict}}</span>
+            |-- Composite Merkle Root:<br>
+            |     |-- Source:    <span style="color:var(--text-main); font-weight:600;">[${{srcDigest}}]</span><br>
+            |     \\-- Candidate: <span style="color:var(--text-main); font-weight:600;">[${{candDigest}}]</span> ${{rootMatch}}<br>
+            |-- Unique Identifiers:<br>
+            ${{getUrnLine('Source   ', srcUrn)}}
+            ${{getUrnLine('Candidate', candUrn)}}
+            ${{formatDigestComp('Prompt Literal Digest (70% weight)', srcQHash, candQHash, `"${{escapeHtml(srcQ)}}"`, `"${{escapeHtml(candQ)}}"`)}}
+            ${{formatDigestComp('Instructions Digest (15% weight)', srcInstHash, candInstHash, `"${{escapeHtml(srcInst)}}"`, `"${{escapeHtml(candInst)}}"`)}}
+            ${{formatDigestComp('Pre-Question Text Digest (10% weight)', srcPreHash, candPreHash, `"${{escapeHtml(srcPre)}}"`, `"${{escapeHtml(candPre)}}"`)}}
+            ${{formatDigestComp('Research Intent Digest (5% weight)', srcIntentHash, candIntentHash, `"${{escapeHtml(srcIntent)}}"`, `"${{escapeHtml(candIntent)}}"`)}}
+            |-- Similarity Score: <span style="color:var(--text-main); font-weight:700;">${{scorePct}}%</span> (${{method}})<br>
+            \\-- Classification: <span style="color:var(--text-main); font-weight:700;">${{verdict}}</span>
+          </div>
+        `;
+      }} else if (parsedSrc && (parsedSrc.preferred_label || (parsedCand && parsedCand.preferred_label))) {{
+        const srcLbl = parsedSrc.preferred_label || '';
+        const candLbl = (parsedCand && parsedCand.preferred_label) || '';
+        const srcDef = parsedSrc.definition || '';
+        const candDef = (parsedCand && parsedCand.definition) || '';
+        const srcNot = parsedSrc.notation || '';
+        const candNot = (parsedCand && parsedCand.notation) || '';
+
+        const srcLblHash = simpleHash(srcLbl);
+        const candLblHash = simpleHash(candLbl);
+        const srcDefHash = simpleHash(srcDef);
+        const candDefHash = simpleHash(candDef);
+        const srcNotHash = simpleHash(srcNot);
+        const candNotHash = simpleHash(candNot);
+
+        const rootMatch = (srcDigest === candDigest)
+          ? '<span style="color:var(--success); font-weight:700; background:rgba(16,185,129,0.15); padding:1px 5px; border-radius:3px;">[MATCH]</span>'
+          : '<span style="color:var(--warning); font-weight:700; background:rgba(245,158,11,0.15); padding:1px 5px; border-radius:3px;">[DIFFERS]</span>';
+
+        merkle.innerHTML = `
+          <div style="color:var(--primary); font-weight:600;">Concept Merkle Roots & Digest Comparison</div>
+          <div style="padding-left:18px;">
+            |-- Composite Merkle Root:<br>
+            |     |-- Source:    <span style="color:var(--text-main); font-weight:600;">[${{srcDigest}}]</span><br>
+            |     \\-- Candidate: <span style="color:var(--text-main); font-weight:600;">[${{candDigest}}]</span> ${{rootMatch}}<br>
+            |-- Unique Identifiers / Notations:<br>
+            ${{getUrnLine('Source   ', srcUrn || srcNot)}}
+            ${{getUrnLine('Candidate', candUrn || candNot)}}
+            ${{formatDigestComp('Preferred Label Digest (50% weight)', srcLblHash, candLblHash, `"${{escapeHtml(srcLbl)}}"`, `"${{escapeHtml(candLbl)}}"`)}}
+            ${{formatDigestComp('Concept Definition Digest (30% weight)', srcDefHash, candDefHash, `"${{escapeHtml(srcDef)}}"`, `"${{escapeHtml(candDef)}}"`)}}
+            ${{formatDigestComp('Notation Code Digest (20% weight)', srcNotHash, candNotHash, `"${{escapeHtml(srcNot)}}"`, `"${{escapeHtml(candNot)}}"`)}}
+            |-- Similarity Score: <span style="color:var(--text-main); font-weight:700;">${{scorePct}}%</span> (${{method}})<br>
+            \\-- Classification: <span style="color:var(--text-main); font-weight:700;">${{verdict}}</span>
           </div>
         `;
       }} else {{
+        const rootMatch = (srcDigest === candDigest)
+          ? '<span style="color:var(--success); font-weight:700; background:rgba(16,185,129,0.15); padding:1px 5px; border-radius:3px;">[MATCH]</span>'
+          : '<span style="color:var(--warning); font-weight:700; background:rgba(245,158,11,0.15); padding:1px 5px; border-radius:3px;">[DIFFERS]</span>';
+
         merkle.innerHTML = `
-          <div style="color:var(--primary); font-weight:600;">Resource Merkle Root: [${{srcDigest}}]</div>
+          <div style="color:var(--primary); font-weight:600;">Category Merkle Roots & Digest Comparison</div>
           <div style="padding-left:18px;">
-            ${{getUrnLine(srcUrn)}}
-            |-- Normalized Content Digest: [${{srcDigest}}]<br>
-            |-- Similarity Score: ${{scorePct}}% (${{method}})<br>
-            \\-- Classification: <span style="color:var(--text-main); font-weight:600;">${{verdict}}</span>
+            |-- Normalized Content Digest:<br>
+            |     |-- Source:    <span style="color:var(--text-main); font-weight:600;">[${{srcDigest}}]</span> ("${{escapeHtml(textForMatching1.trim())}}")<br>
+            |     \\-- Candidate: <span style="color:var(--text-main); font-weight:600;">[${{candDigest}}]</span> ("${{escapeHtml(textForMatching2.trim())}}") ${{rootMatch}}<br>
+            ${{srcUrn || candUrn ? `
+              |-- Unique Identifiers:<br>
+              ${{getUrnLine('Source   ', srcUrn)}}
+              ${{getUrnLine('Candidate', candUrn)}}
+            ` : ''}}
+            |-- Similarity Score: <span style="color:var(--text-main); font-weight:700;">${{scorePct}}%</span> (${{method}})<br>
+            \\-- Classification: <span style="color:var(--text-main); font-weight:700;">${{verdict}}</span>
           </div>
         `;
       }}
