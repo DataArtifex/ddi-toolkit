@@ -218,6 +218,22 @@ def test_weighted_attribute_comparator():
     assert res.score >= 0.85
     assert res.sub_scores["text"] == 1.0
 
+    # 1. Attributes unpopulated (empty string or None) in both resources are ignored
+    s_sparse = {"text": "Total monthly household income before taxes", "instructions": "", "pre": None}
+    t_sparse = {"text": "Total monthly household income before taxes", "instructions": None, "pre": ""}
+    res_sparse = cmp.compare_attributes(s_sparse, t_sparse)
+    assert res_sparse.score == 1.0
+    assert "instructions" not in res_sparse.sub_scores
+    assert "pre" not in res_sparse.sub_scores
+
+    # 2. Attribute present in one but missing in other represents discrepancy and is penalized
+    s_mixed = {"text": "Do you own a car?", "instructions": "Mark one."}
+    t_mixed = {"text": "Do you own a car?", "instructions": ""}
+    res_mixed = cmp.compare_attributes(s_mixed, t_mixed)
+    assert res_mixed.sub_scores["text"] == 1.0
+    assert res_mixed.sub_scores["instructions"] == 0.0
+    assert res_mixed.score == 0.70
+
 
 # =============================================================================
 # 5. Domain Models Tests

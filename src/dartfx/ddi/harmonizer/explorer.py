@@ -1900,29 +1900,78 @@ ${{jsonDump}}
 
       // Question domain multi-attribute weighting
       if (parsedSrc && parsedCand && (parsedSrc.question_text !== undefined || (currentCase && currentCase.domain === 'question'))) {{
-        const q1 = parsedSrc.question_text || '';
-        const q2 = parsedCand.question_text || '';
-        const pre1 = parsedSrc.pre_question_text || '';
-        const pre2 = parsedCand.pre_question_text || '';
-        const inst1 = parsedSrc.instructions || '';
-        const inst2 = parsedCand.instructions || '';
+        const q1 = (parsedSrc.question_text || '').trim();
+        const q2 = (parsedCand.question_text || '').trim();
+        const pre1 = (parsedSrc.pre_question_text || '').trim();
+        const pre2 = (parsedCand.pre_question_text || '').trim();
+        const inst1 = (parsedSrc.instructions || '').trim();
+        const inst2 = (parsedCand.instructions || '').trim();
+        const intent1 = (parsedSrc.intent || '').trim();
+        const intent2 = (parsedCand.intent || '').trim();
 
-        if (pre1 || pre2 || inst1 || inst2) {{
-          const scoreQ = computeSimilarity(q1, q2, method);
-          const scorePre = (pre1 && pre2) ? computeSimilarity(pre1, pre2, method) : (pre1 === pre2 ? 1.0 : 0.6);
-          const scoreInst = (inst1 && inst2) ? computeSimilarity(inst1, inst2, method) : (inst1 === inst2 ? 1.0 : 0.5);
-          score = (scoreQ * 0.70) + (scorePre * 0.15) + (scoreInst * 0.15);
+        const attrMap = {{
+          literal: {{ w: 0.65, v1: q1, v2: q2 }},
+          instructions: {{ w: 0.15, v1: inst1, v2: inst2 }},
+          pre: {{ w: 0.10, v1: pre1, v2: pre2 }},
+          intent: {{ w: 0.10, v1: intent1, v2: intent2 }},
+        }};
+
+        let weightedSum = 0.0;
+        let totalWeight = 0.0;
+
+        for (const item of Object.values(attrMap)) {{
+          if (!item.v1 && !item.v2) {{
+            // Unpopulated in both -> ignore completely
+            continue;
+          }}
+          let attrScore = 0.0;
+          if (!item.v1 || !item.v2) {{
+            // Populated in one, absent in other -> discrepancy (0.0)
+            attrScore = 0.0;
+          }} else {{
+            attrScore = computeSimilarity(item.v1, item.v2, method);
+          }}
+          weightedSum += attrScore * item.w;
+          totalWeight += item.w;
         }}
+
+        score = totalWeight > 0 ? (weightedSum / totalWeight) : 0.0;
       }}
       // Conceptual domain multi-attribute weighting
       else if (parsedSrc && parsedCand && (parsedSrc.preferred_label !== undefined || (currentCase && currentCase.domain === 'conceptual'))) {{
-        const l1 = parsedSrc.preferred_label || '';
-        const l2 = parsedCand.preferred_label || '';
-        const d1 = parsedSrc.definition || '';
-        const d2 = parsedCand.definition || '';
-        const scoreLbl = computeSimilarity(l1, l2, method);
-        const scoreDef = (d1 && d2) ? computeSimilarity(d1, d2, method) : 1.0;
-        score = (d1 && d2) ? (scoreLbl * 0.6 + scoreDef * 0.4) : scoreLbl;
+        const l1 = (parsedSrc.preferred_label || '').trim();
+        const l2 = (parsedCand.preferred_label || '').trim();
+        const d1 = (parsedSrc.definition || '').trim();
+        const d2 = (parsedCand.definition || '').trim();
+        const n1 = (parsedSrc.notation || '').trim();
+        const n2 = (parsedCand.notation || '').trim();
+
+        const attrMap = {{
+          label: {{ w: 0.50, v1: l1, v2: l2 }},
+          definition: {{ w: 0.30, v1: d1, v2: d2 }},
+          notation: {{ w: 0.20, v1: n1, v2: n2 }},
+        }};
+
+        let weightedSum = 0.0;
+        let totalWeight = 0.0;
+
+        for (const item of Object.values(attrMap)) {{
+          if (!item.v1 && !item.v2) {{
+            // Unpopulated in both -> ignore completely
+            continue;
+          }}
+          let attrScore = 0.0;
+          if (!item.v1 || !item.v2) {{
+            // Populated in one, absent in other -> discrepancy (0.0)
+            attrScore = 0.0;
+          }} else {{
+            attrScore = computeSimilarity(item.v1, item.v2, method);
+          }}
+          weightedSum += attrScore * item.w;
+          totalWeight += item.w;
+        }}
+
+        score = totalWeight > 0 ? (weightedSum / totalWeight) : 0.0;
       }}
 
       const srcUrn = parsedSrc && parsedSrc.urn ? String(parsedSrc.urn).trim() : '';
@@ -2005,15 +2054,21 @@ ${{jsonDump}}
       }};
 
       const formatDigestComp = (name, srcHash, candHash, extraSrc = '', extraCand = '') => {{
-        const isMatch = Boolean(srcHash && candHash && srcHash === candHash);
+        const isMatch = Boolean(srcHash && candHash && srcHash !== '—' && candHash !== '—' && srcHash === candHash);
         const matchBadge = isMatch
           ? '<span style="color:var(--success); font-weight:700; background:rgba(16,185,129,0.15); padding:1px 5px; border-radius:3px;">[MATCH]</span>'
           : '<span style="color:var(--warning); font-weight:700; background:rgba(245,158,11,0.15); padding:1px 5px; border-radius:3px;">[DIFFERS]</span>';
         const exSrc = extraSrc ? ` (${{extraSrc}})` : '';
         const exCand = extraCand ? ` (${{extraCand}})` : '';
+        const srcLine = srcHash && srcHash !== '—'
+          ? `<span style="color:var(--text-main); font-weight:600;">[${{srcHash}}]</span>${{exSrc}}`
+          : `<span style="color:var(--text-muted); font-style:italic;">(None / Not populated)</span>`;
+        const candLine = candHash && candHash !== '—'
+          ? `<span style="color:var(--text-main); font-weight:600;">[${{candHash}}]</span>${{exCand}}`
+          : `<span style="color:var(--text-muted); font-style:italic;">(None / Not populated)</span>`;
         return `|-- ${{name}}:<br>` +
-               `|     |-- Source:    <span style="color:var(--text-main); font-weight:600;">[${{srcHash}}]</span>${{exSrc}}<br>` +
-               `|     \\-- Candidate: <span style="color:var(--text-main); font-weight:600;">[${{candHash}}]</span>${{exCand}} ${{matchBadge}}<br>`;
+               `|     |-- Source:    ${{srcLine}}<br>` +
+               `|     \\-- Candidate: ${{candLine}} ${{matchBadge}}<br>`;
       }};
 
       if (parsedSrc && parsedSrc.codes && Array.isArray(parsedSrc.codes)) {{
@@ -2091,23 +2146,52 @@ ${{jsonDump}}
           </div>
         `;
       }} else if (parsedSrc && (parsedSrc.question_text || (parsedCand && parsedCand.question_text))) {{
-        const srcQ = parsedSrc.question_text || '';
-        const candQ = (parsedCand && parsedCand.question_text) || '';
-        const srcInst = parsedSrc.instructions || '';
-        const candInst = (parsedCand && parsedCand.instructions) || '';
-        const srcPre = parsedSrc.pre_question_text || '';
-        const candPre = (parsedCand && parsedCand.pre_question_text) || '';
-        const srcIntent = parsedSrc.intent || '';
-        const candIntent = (parsedCand && parsedCand.intent) || '';
+        const q1 = (parsedSrc.question_text || '').trim();
+        const q2 = ((parsedCand && parsedCand.question_text) || '').trim();
+        const inst1 = (parsedSrc.instructions || '').trim();
+        const inst2 = ((parsedCand && parsedCand.instructions) || '').trim();
+        const pre1 = (parsedSrc.pre_question_text || '').trim();
+        const pre2 = ((parsedCand && parsedCand.pre_question_text) || '').trim();
+        const intent1 = (parsedSrc.intent || '').trim();
+        const intent2 = ((parsedCand && parsedCand.intent) || '').trim();
 
-        const srcQHash = simpleHash(srcQ);
-        const candQHash = simpleHash(candQ);
-        const srcInstHash = simpleHash(srcInst);
-        const candInstHash = simpleHash(candInst);
-        const srcPreHash = simpleHash(srcPre);
-        const candPreHash = simpleHash(candPre);
-        const srcIntentHash = simpleHash(srcIntent);
-        const candIntentHash = simpleHash(candIntent);
+        const rawWeights = [
+          {{ name: 'Prompt Literal Digest', w: 0.65, v1: q1, v2: q2 }},
+          {{ name: 'Instructions Digest', w: 0.15, v1: inst1, v2: inst2 }},
+          {{ name: 'Pre-Question Text Digest', w: 0.10, v1: pre1, v2: pre2 }},
+          {{ name: 'Research Intent Digest', w: 0.10, v1: intent1, v2: intent2 }},
+        ];
+
+        let totalActiveWeight = 0;
+        for (const item of rawWeights) {{
+          if (item.v1 || item.v2) {{
+            totalActiveWeight += item.w;
+          }}
+        }}
+
+        let attributeRowsHtml = '';
+        let unpopulatedList = [];
+
+        for (const item of rawWeights) {{
+          if (!item.v1 && !item.v2) {{
+            unpopulatedList.push(item.name.replace(' Digest', ''));
+            continue;
+          }}
+
+          const normWeightPct = totalActiveWeight > 0 ? Math.round((item.w / totalActiveWeight) * 100) : 0;
+          const labelWithWeight = `${{item.name}} (${{normWeightPct}}% weight)`;
+
+          const hash1 = item.v1 ? simpleHash(normalizeText(item.v1)) : '—';
+          const hash2 = item.v2 ? simpleHash(normalizeText(item.v2)) : '—';
+          const ex1 = item.v1 ? `"${{escapeHtml(item.v1)}}"` : '';
+          const ex2 = item.v2 ? `"${{escapeHtml(item.v2)}}"` : '';
+
+          attributeRowsHtml += formatDigestComp(labelWithWeight, hash1, hash2, ex1, ex2);
+        }}
+
+        const unpopulatedHtml = unpopulatedList.length > 0
+          ? `|-- Unpopulated Facets: <span style="color:var(--text-muted); font-style:italic;">${{escapeHtml(unpopulatedList.join(', '))}} (Excluded from comparison)</span><br>`
+          : '';
 
         const rootMatch = (srcDigest === candDigest)
           ? '<span style="color:var(--success); font-weight:700; background:rgba(16,185,129,0.15); padding:1px 5px; border-radius:3px;">[MATCH]</span>'
@@ -2122,28 +2206,56 @@ ${{jsonDump}}
             |-- Unique Identifiers:<br>
             ${{getUrnLine('Source   ', srcUrn)}}
             ${{getUrnLine('Candidate', candUrn)}}
-            ${{formatDigestComp('Prompt Literal Digest (70% weight)', srcQHash, candQHash, `"${{escapeHtml(srcQ)}}"`, `"${{escapeHtml(candQ)}}"`)}}
-            ${{formatDigestComp('Instructions Digest (15% weight)', srcInstHash, candInstHash, `"${{escapeHtml(srcInst)}}"`, `"${{escapeHtml(candInst)}}"`)}}
-            ${{formatDigestComp('Pre-Question Text Digest (10% weight)', srcPreHash, candPreHash, `"${{escapeHtml(srcPre)}}"`, `"${{escapeHtml(candPre)}}"`)}}
-            ${{formatDigestComp('Research Intent Digest (5% weight)', srcIntentHash, candIntentHash, `"${{escapeHtml(srcIntent)}}"`, `"${{escapeHtml(candIntent)}}"`)}}
+            ${{attributeRowsHtml}}
+            ${{unpopulatedHtml}}
             |-- Similarity Score: <span style="color:var(--text-main); font-weight:700;">${{scorePct}}%</span> (${{method}})<br>
             \\-- Classification: <span style="color:var(--text-main); font-weight:700;">${{verdict}}</span>
           </div>
         `;
       }} else if (parsedSrc && (parsedSrc.preferred_label || (parsedCand && parsedCand.preferred_label))) {{
-        const srcLbl = parsedSrc.preferred_label || '';
-        const candLbl = (parsedCand && parsedCand.preferred_label) || '';
-        const srcDef = parsedSrc.definition || '';
-        const candDef = (parsedCand && parsedCand.definition) || '';
-        const srcNot = parsedSrc.notation || '';
-        const candNot = (parsedCand && parsedCand.notation) || '';
+        const l1 = (parsedSrc.preferred_label || '').trim();
+        const l2 = ((parsedCand && parsedCand.preferred_label) || '').trim();
+        const d1 = (parsedSrc.definition || '').trim();
+        const d2 = ((parsedCand && parsedCand.definition) || '').trim();
+        const n1 = (parsedSrc.notation || '').trim();
+        const n2 = ((parsedCand && parsedCand.notation) || '').trim();
 
-        const srcLblHash = simpleHash(srcLbl);
-        const candLblHash = simpleHash(candLbl);
-        const srcDefHash = simpleHash(srcDef);
-        const candDefHash = simpleHash(candDef);
-        const srcNotHash = simpleHash(srcNot);
-        const candNotHash = simpleHash(candNot);
+        const rawWeights = [
+          {{ name: 'Preferred Label Digest', w: 0.50, v1: l1, v2: l2 }},
+          {{ name: 'Concept Definition Digest', w: 0.30, v1: d1, v2: d2 }},
+          {{ name: 'Notation Code Digest', w: 0.20, v1: n1, v2: n2 }},
+        ];
+
+        let totalActiveWeight = 0;
+        for (const item of rawWeights) {{
+          if (item.v1 || item.v2) {{
+            totalActiveWeight += item.w;
+          }}
+        }}
+
+        let attributeRowsHtml = '';
+        let unpopulatedList = [];
+
+        for (const item of rawWeights) {{
+          if (!item.v1 && !item.v2) {{
+            unpopulatedList.push(item.name.replace(' Digest', ''));
+            continue;
+          }}
+
+          const normWeightPct = totalActiveWeight > 0 ? Math.round((item.w / totalActiveWeight) * 100) : 0;
+          const labelWithWeight = `${{item.name}} (${{normWeightPct}}% weight)`;
+
+          const hash1 = item.v1 ? simpleHash(normalizeText(item.v1)) : '—';
+          const hash2 = item.v2 ? simpleHash(normalizeText(item.v2)) : '—';
+          const ex1 = item.v1 ? `"${{escapeHtml(item.v1)}}"` : '';
+          const ex2 = item.v2 ? `"${{escapeHtml(item.v2)}}"` : '';
+
+          attributeRowsHtml += formatDigestComp(labelWithWeight, hash1, hash2, ex1, ex2);
+        }}
+
+        const unpopulatedHtml = unpopulatedList.length > 0
+          ? `|-- Unpopulated Facets: <span style="color:var(--text-muted); font-style:italic;">${{escapeHtml(unpopulatedList.join(', '))}} (Excluded from comparison)</span><br>`
+          : '';
 
         const rootMatch = (srcDigest === candDigest)
           ? '<span style="color:var(--success); font-weight:700; background:rgba(16,185,129,0.15); padding:1px 5px; border-radius:3px;">[MATCH]</span>'
@@ -2156,11 +2268,10 @@ ${{jsonDump}}
             |     |-- Source:    <span style="color:var(--text-main); font-weight:600;">[${{srcDigest}}]</span><br>
             |     \\-- Candidate: <span style="color:var(--text-main); font-weight:600;">[${{candDigest}}]</span> ${{rootMatch}}<br>
             |-- Unique Identifiers / Notations:<br>
-            ${{getUrnLine('Source   ', srcUrn || srcNot)}}
-            ${{getUrnLine('Candidate', candUrn || candNot)}}
-            ${{formatDigestComp('Preferred Label Digest (50% weight)', srcLblHash, candLblHash, `"${{escapeHtml(srcLbl)}}"`, `"${{escapeHtml(candLbl)}}"`)}}
-            ${{formatDigestComp('Concept Definition Digest (30% weight)', srcDefHash, candDefHash, `"${{escapeHtml(srcDef)}}"`, `"${{escapeHtml(candDef)}}"`)}}
-            ${{formatDigestComp('Notation Code Digest (20% weight)', srcNotHash, candNotHash, `"${{escapeHtml(srcNot)}}"`, `"${{escapeHtml(candNot)}}"`)}}
+            ${{getUrnLine('Source   ', srcUrn || n1)}}
+            ${{getUrnLine('Candidate', candUrn || n2)}}
+            ${{attributeRowsHtml}}
+            ${{unpopulatedHtml}}
             |-- Similarity Score: <span style="color:var(--text-main); font-weight:700;">${{scorePct}}%</span> (${{method}})<br>
             \\-- Classification: <span style="color:var(--text-main); font-weight:700;">${{verdict}}</span>
           </div>

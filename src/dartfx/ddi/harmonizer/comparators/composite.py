@@ -38,7 +38,13 @@ class WeightedAttributeComparator:
         source_attrs: dict[str, Any],
         target_attrs: dict[str, Any],
     ) -> ComparisonResult:
-        """Compares two attribute dictionaries and returns a weighted composite score."""
+        """Compares two attribute dictionaries and returns a weighted composite score.
+
+        Empty strings or null values that are absent or empty in BOTH resources are ignored
+        (not taken into consideration) and weights are re-normalized across populated attributes.
+        If an attribute is populated in one resource and absent/empty in the other, it represents
+        a substantive discrepancy and is scored 0.0 against its allocated weight.
+        """
         sub_scores: dict[str, float] = {}
         weighted_sum = 0.0
         total_weight = 0.0
@@ -47,13 +53,18 @@ class WeightedAttributeComparator:
             s_val = source_attrs.get(attr)
             t_val = target_attrs.get(attr)
 
-            # If both are None or empty, perfect match on this attribute
-            if s_val is None and t_val is None:
-                sub_score = 1.0
-            elif s_val is None or t_val is None:
+            s_empty = s_val is None or (isinstance(s_val, str) and not s_val.strip())
+            t_empty = t_val is None or (isinstance(t_val, str) and not t_val.strip())
+
+            # If both are empty or None, do NOT take into consideration
+            if s_empty and t_empty:
+                continue
+
+            # If one is populated and the other is empty/None -> mismatch (0.0)
+            if s_empty or t_empty:
                 sub_score = 0.0
             elif isinstance(s_val, str) and isinstance(t_val, str):
-                res = self.base_comparator.compare(s_val, t_val)
+                res = self.base_comparator.compare(s_val.strip(), t_val.strip())
                 sub_score = res.score
             elif s_val == t_val:
                 sub_score = 1.0
@@ -79,7 +90,8 @@ class WeightedAttributeComparator:
             match_type=match_type,
             sub_scores=sub_scores,
             rationale=(
-                f"Weighted composite score: {composite_score:.4f} across {len(self.attribute_weights)} attributes"
+                f"Weighted composite score: {composite_score:.4f} across "
+                f"{len(sub_scores)} populated attributes (unpopulated attributes ignored)"
             ),
         )
 
