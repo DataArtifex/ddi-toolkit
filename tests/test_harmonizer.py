@@ -630,3 +630,43 @@ def test_resource_guid_vs_assigned_urn_properties():
     assert cat_urn.is_assigned_identifier is True
     assert cat_urn.identifier is not None
     assert cat_urn.identifier.kind == IdentifierKind.SEMANTIC_URN
+
+
+def test_country_codelist_alpha2_vs_numeric3_harmonization():
+    """Verifies that ISO 2-letter alpha and 3-digit numeric country lists share 100% category digests."""
+    countries = [
+        ("CA", "124", "Canada"),
+        ("DE", "276", "Germany"),
+        ("FR", "250", "France"),
+        ("GB", "826", "United Kingdom"),
+        ("JP", "392", "Japan"),
+        ("MX", "484", "Mexico"),
+        ("US", "840", "United States"),
+    ]
+
+    codes_alpha = [HarmonizedCode(value=alpha, category=HarmonizedCategory(label=name)) for alpha, _, name in countries]
+    codes_numeric = [HarmonizedCode(value=num, category=HarmonizedCategory(label=name)) for _, num, name in countries]
+
+    cl_alpha = HarmonizedCodeList(name="CL_COUNTRY_G7_ALPHA2", codes=codes_alpha)
+    cl_numeric = HarmonizedCodeList(name="CL_COUNTRY_G7_NUMERIC3", codes=codes_numeric)
+
+    # 1. Semantic category set and sequence digests match 100%
+    assert cl_alpha.category_set_digest == cl_numeric.category_set_digest
+    assert cl_alpha.category_sequence_digest == cl_numeric.category_sequence_digest
+    assert cl_alpha.substantive_category_set_digest == cl_numeric.substantive_category_set_digest
+
+    # 2. Literal code value digests and item bindings diverge
+    assert cl_alpha.value_set_digest != cl_numeric.value_set_digest
+    assert cl_alpha.code_set_digest != cl_numeric.code_set_digest
+    assert cl_alpha.fingerprint.digest != cl_numeric.fingerprint.digest
+
+    # 3. Registry fuzzy match via SequenceMatcher
+    reg: HarmonizationRegistry[HarmonizedCodeList] = HarmonizationRegistry(
+        comparator=SequenceMatcherComparator(threshold=0.75)
+    )
+    reg.register(cl_alpha)
+    match = reg.match(cl_numeric, threshold=0.75)
+
+    assert match.matched is True
+    assert match.match_type == MatchType.SYNTACTIC_SIMILAR
+    assert 0.75 <= match.score <= 0.85

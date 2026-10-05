@@ -1,0 +1,58 @@
+id: case_country_alpha2_vs_numeric3
+title: Country Code Recoding (ISO Alpha-2 vs. UN/ISO Numeric-3)
+domain: enumerated_list
+difficulty: intermediate
+real_world_context: UN Comtrade, OECD & World Bank International Data Crosswalks
+story: >
+  International statistical organizations and cross-national surveys frequently represent
+  identical country classifications using alternative ISO 3166-1 representations. Dataset A
+  (e.g. Eurostat / OECD) encodes member nations using standard ISO 2-letter alpha codes (CA,
+  DE, FR, GB, JP, MX, US), while Dataset B (e.g. UN Comtrade / UNSD) records the identical
+  geographic categories using 3-digit numeric codes (124, 276, 250, 826, 392, 484, 840).
+  While the literal code values and item bindings diverge, the underlying semantic category digests
+  (category_set_digest and category_sequence_digest) match 100%, proving conceptual equivalence across
+  the geographic domain.
+learning_objective: >
+  Demonstrates how granular Merkle category_set_digest and category_sequence_digest verify
+  semantic category equivalence when code notations and value schemes differ.
+source_resource:
+  name: CL_COUNTRY_G7_ALPHA2
+  codes:
+    - value: "CA"
+      label: "Canada"
+    - value: "DE"
+      label: "Germany"
+    - value: "FR"
+      label: "France"
+    - value: "GB"
+      label: "United Kingdom"
+    - value: "JP"
+      label: "Japan"
+    - value: "MX"
+      label: "Mexico"
+    - value: "US"
+      label: "United States"
+candidate_resource:
+  name: CL_COUNTRY_G7_NUMERIC3
+  codes:
+    - value: "124"
+      label: "Canada"
+    - value: "276"
+      label: "Germany"
+    - value: "250"
+      label: "France"
+    - value: "826"
+      label: "United Kingdom"
+    - value: "392"
+      label: "Japan"
+    - value: "484"
+      label: "Mexico"
+    - value: "840"
+      label: "United States"
+preset: STANDARD
+comparator: SequenceMatcher
+comparator_threshold: 0.75
+expected_match: true
+expected_match_type: SYNTACTIC_SIMILAR
+expected_score_min: 0.75
+expected_score_max: 0.85
