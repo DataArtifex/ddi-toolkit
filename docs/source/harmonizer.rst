@@ -1,94 +1,97 @@
 Resource Harmonization Framework
 =================================
 
-The ``dartfx.ddi.harmonizer`` package is a domain-agnostic, extensible framework designed to deduplicate, normalize, fingerprint, and reconcile structured metadata resources.
+The ``dartfx.ddi.harmonizer`` package is a domain-agnostic, high-performance metadata harmonization, cryptographic fingerprinting, and semantic deduplication engine.
 
-While currently packaged within the Data Artifex DDI Toolkit, the harmonizer is engineered with a **strict zero-DDI dependency boundary**: it has no internal dependencies on any DDI specification, schema, or URN structures, depending only on the Python standard library and Pydantic v2. This enables it to be extracted into a standalone utility library (e.g., ``dartfx-harmonizer``) whenever required.
+While packaged within the Data Artifex DDI Toolkit, the harmonizer is engineered with a **strict zero-DDI dependency boundary**: it has zero internal dependencies on any DDI specification, schema, or URN structures, depending only on the Python standard library and Pydantic v2. This enables it to serve as a standalone enterprise library (e.g., ``dartfx-harmonizer``) across diverse data catalog and survey systems.
 
-Overview & Key Pillars
-----------------------
+.. contents:: Table of Contents
+   :local:
+   :depth: 2
 
-Metadata harmonization is a fundamental challenge across data catalogs, survey systems, and semantic registries:
+Executive Overview & Value Proposition
+--------------------------------------
 
-1. **Two-Stage Text Preparation**:
-   - **Text Sanitization**: Cleans content for display, storage, and persistence (HTML/XML tag removal, unescaping entities, typo correction, smart punctuation standardization, and trimming).
-   - **Content Normalization**: Creates canonical, lossy keys for equivalence checking and indexing (Unicode NFKC/NFKD, de-accenting/diacritic removal, full Unicode casefolding, and whitespace collapsing).
+Metadata duplication and semantic fragmentation are pervasive challenges in observational data, statistical surveys, and multi-source research catalogs. Identical or near-identical concepts, response categories, and question constructs are repeatedly redefined across variables, survey waves, and institutions:
 
-2. **Hierarchical Merkle Fingerprinting**:
-   - **Atomic Digests**: Cryptographic SHA-256 hashes of normalized strings.
-   - **Ordered Sequence Digests**: Preserves exact item sequence for ordered lists.
-   - **Unordered / Set Digests**: Canonically sorts child digests before hashing, allowing instant detection of identical code lists across different sort orders.
-   - **Compound Merkle Digests**: Deterministically combines multiple named sub-attributes (e.g., Question text + Interviewer instructions + Research intent).
+* **Massive Metadata Bloat**: A single survey instrument with hundreds of variables often contains thousands of redundant category instances (e.g., repeating *"Yes/No"*, *"Male/Female"*, or 5-point Likert scales for every single question).
+* **Hidden Permutations**: Code lists sharing identical categorical semantics are frequently sorted differently across waves (e.g., numerically ``1=Yes, 2=No`` vs. alphabetically ``2=No, 1=Yes``), blinding traditional string-based deduplication to their equivalence.
+* **Divergent Missing Value Schemes**: Two surveys often share identical substantive measurement domains (e.g., ``1=Employed, 2=Unemployed, 3=Retired``) but use different sentinel missing codes (e.g., Survey A: ``98=Don't Know, 99=Refused`` vs. Survey B: ``8=DK, 9=Refused``), preventing naive full-list deduplication.
+* **Identifier Equivalence vs. Content Drift**: Resources sharing the same canonical URN across survey rounds may have modified lead-in text or updated interviewer instructions (content drift), whereas independently ingested resources with random UUIDs may possess 100% identical content.
+* **Compound Resource Complexity**: Complex items—such as survey questions comprising lead-in instructions, core prompts, exit statements, interviewer directions, and research intents—cannot be evaluated by single-string matching alone.
 
-3. **Multi-Tier Comparator Spectrum**:
-   - Instantaneous :math:`O(1)` exact cryptographic match.
-   - Syntactic string comparison (Normalized Levenshtein edit distance, Gestalt pattern matching, and Token Jaccard bag-of-words overlap).
-   - Dense vector semantic embeddings with cosine similarity.
-   - AI / LLM Agent-driven reasoning evaluating construct validity and returning confidence scores with rationales.
-   - Human-in-the-loop review queue for borderline candidates, supported by curated crosswalk overrides.
+To solve these challenges, the framework delivers:
 
-4. **Rich Domain-Agnostic Resource Schemas**:
-   - **Codes & Categories**: ``HarmonizedCategory``, ``HarmonizedCode``, ``HarmonizedCodeList``.
-   - **Questions**: ``HarmonizedQuestion`` (pre-question text, literal prompt, post-question text, interviewer instructions, and measurement intent).
-   - **Concepts**: ``HarmonizedConcept`` (preferred label, formal definition, classification notation, and vocabulary URI).
+1. **Instantaneous** :math:`O(1)` **Cryptographic Deduplication**: Fast SHA-256 Merkle root hashing of normalized content.
+2. **Order-Independent Permutation Matching**: Unordered set hashing that automatically identifies identical code lists regardless of sort order.
+3. **Granular Value, Category & Combo Hashing**: Distinct Merkle digests for code values alone, category meanings alone, and combined value :math:`\leftrightarrow` category bindings.
+4. **DDI-CDI / ISO 11404 Substantive vs. Sentinel Partitioning**: Separation of substantive measurement concepts from missing/sentinel schemes (e.g., ``REFUSED``, ``DONT_KNOW``, ``NOT_APPLICABLE``, ``TOP_CODED``, ``BOTTOM_CODED``).
+5. **URN / PID Classification & Match Disentanglement**: Distinguishing nominal identifier equivalence (assigned DDI/SDMX URNs vs. synthetic UUIDv4 GUIDs) from content match vs. content drift.
+6. **Multi-Tier Comparator Spectrum**: Graduated matching from exact hash lookups and syntactic distance (Levenshtein, Jaccard, Gestalt) to dense vector embeddings, dynamic multi-attribute weighting, and AI/LLM agent evaluation.
+7. **Interactive Harmonization Workbench & Living Example Bank**: A self-contained, client-side web application and 19-scenario Example Bank for live exploration, diffing, and Merkle tree inspection.
 
-Architecture
-------------
+In production deployment within the DDI-Codebook to DDI-Lifecycle conversion pipeline, the engine achieved a **94.1% reduction in duplicate categories** and a **92.3% reduction in redundant code lists**, operating with sub-millisecond overhead.
+
+Architecture & Framework Design
+-------------------------------
 
 .. code-block:: text
 
-   +--------------------------------------------------------------------------+
-   |                       1. TEXT PREPARATION PIPELINE                       |
-   |                                                                          |
-   |   Raw Text  --->  TextSanitizer (Readable)  --->  TextNormalizer (Keys)  |
-   +--------------------------------------------------------------------------+
-                                     |
-                                     v
-   +--------------------------------------------------------------------------+
-   |                       2. RESOURCE FINGERPRINTER                          |
-   |                                                                          |
-   |   - Atomic Digest (16-char / 64-char SHA-256)                            |
-   |   - Ordered Sequence Digest (exact sequence preservation)                |
-   |   - Unordered Set Digest (permutation / order-independent matching)      |
-   |   - Compound Merkle Digest (multi-attribute tree combination)            |
-   +--------------------------------------------------------------------------+
-                                     |
-                                     v
-   +--------------------------------------------------------------------------+
-   |                     3. CONTENT COMPARATOR SPECTRUM                       |
-   |                                                                          |
-   |   [Instantaneous] -----------------------------------> [Deep Reasoning]  |
-   |   Exact Hash  ->  Syntactic  ->  Semantic Vector  ->  AI/Agent  -> Human |
-   +--------------------------------------------------------------------------+
-                                     |
-                                     v
-   +--------------------------------------------------------------------------+
-   |                      4. HARMONIZATION REGISTRY                           |
-   |                                                                          |
-   |   - O(1) Digest, Set, and Signature Indexing                             |
-   |   - Curated Crosswalk Overrides                                          |
-   |   - Fuzzy Similarity Search & Automatic Escalation to Human Review Queue |
-   +--------------------------------------------------------------------------+
+   +-----------------------------------------------------------------------------------------+
+   |                       1. TWO-STAGE TEXT PREPARATION PIPELINE                            |
+   |     Raw Content  --->  TextSanitizer (Readable)  --->  TextNormalizer (Keys)            |
+   +-----------------------------------------------------------------------------------------+
+                                                |
+                                                v
+   +-----------------------------------------------------------------------------------------+
+   |                       2. MULTI-TIER MERKLE HIERARCHY                                    |
+   |   - Atomic Digest (16-char SHA-256)                                                     |
+   |   - Granular Component Digests: Code Value alone, Category alone, Combo Binding         |
+   |   - Substantive vs. Sentinel Partition Digests (ISO 11404 / DDI-CDI)                    |
+   |   - Ordered Sequence Digest (exact sequence) & Unordered Set Digest (permutations)      |
+   |   - Compound Merkle Digest (multi-attribute trees)                                      |
+   +-----------------------------------------------------------------------------------------+
+                                                |
+                                                v
+   +-----------------------------------------------------------------------------------------+
+   |                       3. URN & UNIQUE IDENTIFIER CLASSIFIER                             |
+   |   - Semantic / Assigned URNs (DDI, SDMX, DOIs, URLs) vs. Random Synthetic GUIDs (UUID)  |
+   |   - Two-Stage Evaluation: Nominal URN Identity vs. Content Match vs. Content Drift      |
+   +-----------------------------------------------------------------------------------------+
+                                                |
+                                                v
+   +-----------------------------------------------------------------------------------------+
+   |                       4. COMPREHENSIVE COMPARATOR SPECTRUM                              |
+   |   [Instantaneous] ---------------------------------------------> [Deep Reasoning]       |
+   |   Exact Hash  -->  Syntactic  -->  Semantic Vector  -->  AI/Agent  -->  Human Review   |
+   +-----------------------------------------------------------------------------------------+
+                                                |
+                                                v
+   +-----------------------------------------------------------------------------------------+
+   |                       5. HARMONIZATION REGISTRY & GOVERNANCE                            |
+   |   - O(1) Indexing: URNs, Primary Digests, Unordered Digests, Substantive Digests        |
+   |   - Curated Crosswalk Overrides (CuratedCrosswalk) & Human Review Queue                 |
+   +-----------------------------------------------------------------------------------------+
 
-Sanitization vs. Normalization
-------------------------------
+Two-Stage Text Preparation
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To avoid conflating user-facing text cleaning with comparison canonicalization, the pipeline provides two distinct stages:
+To prevent text cleaning from degrading display fidelity or polluting canonical keys, the pipeline separates text preparation into two distinct stages:
 
 Text Sanitizer (``TextSanitizer``)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Produces human-readable, clean text for display, storage, and reporting:
+Produces clean, human-readable text for display, storage, and reporting:
 
-- **Whitespace Trimming**: Strips leading and trailing whitespace.
-- **Control Character Removal**: Strips non-printable ASCII/Unicode control characters (e.g. ``\x00`` to ``\x1f``).
-- **HTML/XML Tag Stripping**: Removes tags such as ``<p>``, ``<b>``, and unescapes entities (``&amp;`` :math:`\to` ``&``).
-- **Punctuation Standardization**: Replaces smart/curly quotation marks and dashes with standard ASCII equivalents (``“smart”`` :math:`\to` ``"smart"``, ``—`` :math:`\to` ``-``).
-- **Typo Correction**: Applies domain-specific substitution dictionaries.
+* **Whitespace Trimming**: Strips leading and trailing whitespace.
+* **Control Character Removal**: Strips non-printable ASCII/Unicode control characters (e.g. ``\x00`` to ``\x1f``).
+* **HTML/XML Tag Stripping**: Removes tags such as ``<p>``, ``<b>``, and unescapes entities (``&amp;`` :math:`\to` ``&``).
+* **Punctuation Standardization**: Standardizes typographic curly quotes and dashes into ASCII equivalents (``“smart”`` :math:`\to` ``"smart"``, ``—`` :math:`\to` ``-``).
+* **Typo Correction**: Applies domain-specific substitution dictionaries.
 
 .. code-block:: python
 
-   from dartfx.ddi.harmonizer import TextSanitizer, SanitizerConfig
+   from dartfx.ddi.harmonizer import SanitizerConfig, TextSanitizer
 
    config = SanitizerConfig(
        typo_replacements={"fequency": "frequency", "teh": "the"}
@@ -98,14 +101,14 @@ Produces human-readable, clean text for display, storage, and reporting:
    # Result: '"Smart" quotes & the frequency'
 
 Text Normalizer (``TextNormalizer``)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Produces canonical, lossy keys specifically designed for equivalence checking and indexing:
 
-- **Whitespace Collapsing**: Converts all internal consecutive spaces, tabs, and newlines into a single space (``"a   \n\t  b"`` :math:`\to` ``"a b"``).
-- **De-accenting / Diacritic Removal**: Decomposes accented characters via Unicode **NFKD** and strips non-spacing combining marks (category ``Mn``). Transforms ``é, è, ê, ë`` :math:`\to` ``e``, ``ç`` :math:`\to` ``c``, ``ñ`` :math:`\to` ``n``.
-- **Case Folding**: Applies full Unicode casefolding (``str.casefold()``), properly handling German ``ß`` :math:`\to` ``ss``, Greek sigma, and uppercase accents.
-- **Unicode Normalization Forms**:
+* **Whitespace Collapsing**: Converts all internal consecutive spaces, tabs, and newlines into a single space (``"a   \n\t  b"`` :math:`\to` ``"a b"``).
+* **De-accenting / Diacritic Removal**: Decomposes accented characters via Unicode **NFKD** and strips non-spacing combining marks (category ``Mn``). Transforms ``é, è, ê, ë`` :math:`\to` ``e``, ``ç`` :math:`\to` ``c``, ``ñ`` :math:`\to` ``n``.
+* **Case Folding**: Applies full Unicode casefolding (``str.casefold()``), properly expanding German ``ß`` :math:`\to` ``ss``, ligatures (``æ`` :math:`\to` ``ae``, ``œ`` :math:`\to` ``oe``), and uppercase accents.
+* **Unicode Normalization Forms**:
 
 .. list-table::
    :widths: 15 35 50
@@ -129,16 +132,16 @@ Produces canonical, lossy keys specifically designed for equivalence checking an
 
 .. code-block:: python
 
-   from dartfx.ddi.harmonizer import TextNormalizer, NormalizationPreset
+   from dartfx.ddi.harmonizer import NormalizationPreset, TextNormalizer
 
    normalizer = TextNormalizer.from_preset(NormalizationPreset.STANDARD)
    norm = normalizer.normalize("  Élève   à l'école, Straße  ")
    # Result: "eleve a l'ecole, strasse"
 
-Resource Fingerprinter & Merkle Digests
----------------------------------------
+Hierarchical Merkle Fingerprints
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``ResourceFingerprinter`` generates reproducible cryptographic SHA-256 digests (defaulting to 16-character hexadecimal strings for compact identifiers, with full 64-character strings supported):
+The ``ResourceFingerprinter`` generates reproducible cryptographic SHA-256 digests (defaulting to 16-character hexadecimal strings for compact storage):
 
 1. **Atomic Fingerprint**:
    Computed from normalized text:
@@ -154,7 +157,7 @@ The ``ResourceFingerprinter`` generates reproducible cryptographic SHA-256 diges
 
       \text{digest}_{\text{ordered}} = \text{SHA256}("ORDERED::" + \text{join}([c.\text{digest} \text{ for } c \text{ in items}], ";;"))[:16]
 
-3. **Unordered / Set Digest (Order-Independent)**:
+3. **Unordered / Multiset Digest (Order-Independent)**:
    Sorts child digests canonically before hashing:
 
    .. math::
@@ -162,7 +165,7 @@ The ``ResourceFingerprinter`` generates reproducible cryptographic SHA-256 diges
       \text{digest}_{\text{unordered}} = \text{SHA256}("SET::" + \text{join}(\text{sorted}([c.\text{digest} \text{ for } c \text{ in items}]), ";;"))[:16]
 
    .. note::
-      This enables instant detection of identical code lists or answer sets even if one is ordered numerically (1=Yes, 2=No) and another alphabetically (2=No, 1=Yes).
+      This enables instantaneous :math:`O(1)` detection of identical code lists or answer sets even if one is ordered numerically (``1=Yes, 2=No``) and another alphabetically (``2=No, 1=Yes``).
 
 4. **Compound Component Digest (Merkle Tree)**:
    Combines named sub-component digests deterministically:
@@ -171,8 +174,52 @@ The ``ResourceFingerprinter`` generates reproducible cryptographic SHA-256 diges
 
       \text{digest}_{\text{compound}} = \text{SHA256}("COMPOUND::" + \text{join}(\text{sorted}([\text{name} + "=" + \text{digest}]), ";;"))[:16]
 
-Content Comparators Spectrum
-----------------------------
+Granular Value, Category & Combo Hashing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In DDI, GSIM, and ISO/IEC 11179 metadata models, a **Category** is a qualitative concept, while a **Code** binds a notation value to that category. The framework computes granular hashes at every level:
+
+* **``code_digest``**: Hash of the literal notation alone (e.g. ``"1"`` vs. ``"CA"``).
+* **``category_digest``**: Hash of the qualitative category label and meaning (e.g. ``"Canada"``).
+* **``item_digest``**: Hash of the paired binding (``"CA" ↔ "Canada"``).
+* **Collection Digests**: ``category_set_digest``, ``category_sequence_digest``, ``value_set_digest``, and ``value_sequence_digest``.
+
+.. note::
+   When two code lists share the exact same categories (e.g., ISO Alpha-2 ``CA, DE, FR`` vs. UN Numeric-3 ``124, 276, 250``), their ``category_set_digest`` matches 100%, allowing the engine to classify them as ``CATEGORIES_EXACT_CODES_DIFFERENT`` (Recoded Code List).
+
+Substantive vs. Sentinel Partitioning (DDI-CDI / ISO 11404)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The framework partitions response domains into **Substantive Concepts** (valid measurement values) and **Sentinel Values** (missing data, non-response, filter skips, quality flags):
+
+* **Semantic Classification (``SentinelType``)**:
+  * *Non-response*: ``REFUSED``, ``DONT_KNOW``, ``NO_ANSWER``
+  * *Survey Routing*: ``NOT_APPLICABLE`` (legitimate skips), ``NOT_REACHED``, ``NOT_COLLECTED``
+  * *Data Integrity*: ``INVALID``, ``OUT_OF_RANGE``
+  * *Disclosure & Semi-Missing*: ``SUPPRESSED``, ``TOP_CODED`` (e.g., "90+"), ``BOTTOM_CODED`` (e.g., "<18")
+  * *System*: ``SYSTEM_MISSING``
+* **Metadata Flags**: Extensible quality attributes (e.g., SDMX ``OBS_STATUS``, SPSS missing ranges, Stata missing codes).
+* **Partition Merkle Digests**: Separate ``substantive_code_set_digest`` and ``sentinel_code_set_digest``.
+* **Substantive Matches**: ``SUBSTANTIVE_EXACT`` and ``SUBSTANTIVE_PERMUTATION`` match types reconcile code lists that share 100% of substantive measurement items even when missing value definitions differ.
+
+URN / PID Classification & Content Drift Disentanglement
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The framework analyzes unique identifiers to disentangle nominal identity from content equivalence:
+
+* **Identifier Classification (``IdentifierKind``)**:
+  * ``SEMANTIC_URN``: Canonical structured URNs (e.g., DDI ``urn:ddi:us.mpc:CL_SEX:1.0.0``, SDMX).
+  * ``DOI``: Digital Object Identifiers (``doi:10.1234/...``).
+  * ``URI_URL``: Linked Data URIs and web URLs.
+  * ``RANDOM_GUID``: Synthetic UUIDv1–v5 strings (``is_random_guid=True``, ``is_assigned=False``).
+  * ``LOCAL_KEY``: Mnemonic string codes (e.g., ``CL_SEX_2020``).
+* **Two-Stage Matching & Content Drift Detection**:
+  * ``IDENTIFIER_EXACT_CONTENT_EXACT``: Same URN, bit-for-bit identical content (Score: 1.0).
+  * ``IDENTIFIER_EXACT_CONTENT_DRIFT``: Same URN, but content has drifted (e.g., translated language or revised instructions); matched as nominal resource identity while content similarity score is preserved.
+  * ``CONTENT_EXACT_DIFFERENT_IDENTIFIER``: 100% identical content digests despite distinct or synthetic identifiers.
+
+Multi-Tier Content Comparator Spectrum
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :widths: 25 35 25 15
@@ -180,7 +227,7 @@ Content Comparators Spectrum
 
    * - Comparator
      - Algorithm / Mechanism
-     - Best Used For
+     - Target Use Case
      - Speed
    * - **ExactComparator**
      - Bit-level and normalized digest equality
@@ -200,16 +247,35 @@ Content Comparators Spectrum
      - 0.5–1 ms
    * - **SemanticVectorComparator**
      - Dense vector embedding cosine distance
-     - Phrasing differences
+     - Alternative phrasings
      - 10–50 ms
    * - **RuleBasedMockAgentComparator**
      - LLM / Agent reasoning evaluating construct intent
      - Nuanced question intent
      - 200–800 ms
    * - **WeightedAttributeComparator**
-     - Weighted composite scoring across multiple attributes
-     - Compound Question comparison
+     - Dynamic weighted scoring across active populated attributes
+     - Compound Question & Concept matching
      - 2–5 ms
+
+Dynamic Multi-Attribute Weighting (Unpopulated Attributes Ignored)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When evaluating multi-attribute resources like ``HarmonizedQuestion`` or ``HarmonizedConcept`` with ``WeightedAttributeComparator``:
+
+* Attributes that are ``None``, empty ``""``, or omitted in **both** resources are **completely ignored** and not counted as artificial empty matches.
+* Weights are dynamically re-normalized over the active populated attributes.
+* If an attribute is present in one resource and absent/empty in the other, it is evaluated as a substantive discrepancy with a sub-score of ``0.0`` against its weight.
+
+The Harmonization Registry & Governance
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``HarmonizationRegistry[T]`` acts as the high-performance repository container:
+
+* :math:`O(1)` index lookups by URN, primary digest, unordered set digest, substantive code set digest, category set digest, or normalized signature.
+* Multi-tier fallback ladder from exact hash lookups to fuzzy comparators.
+* Support for ``CuratedCrosswalk`` explicit approved overrides and blocked pairs.
+* Automatic escalation of borderline candidates to ``HumanReviewQueue``.
 
 Domain Resource Models
 ----------------------
@@ -219,29 +285,41 @@ Codes & Categories
 
 .. code-block:: python
 
-   from dartfx.ddi.harmonizer import HarmonizedCategory, HarmonizedCode, HarmonizedCodeList
+   from dartfx.ddi.harmonizer.domains import (
+       HarmonizedCategory,
+       HarmonizedCode,
+       HarmonizedCodeList,
+       SentinelType,
+   )
 
-   # 1. Category with value, label, and missing status
-   cat_yes = HarmonizedCategory(label="Yes", value="1", is_missing=False)
-   cat_no = HarmonizedCategory(label="No", value="2", is_missing=False)
+   # 1. Categories with substantive and sentinel typing
+   cat_male = HarmonizedCategory(label="Male", value="1", is_missing=False)
+   cat_female = HarmonizedCategory(label="Female", value="2", is_missing=False)
+   cat_dk = HarmonizedCategory(
+       label="Don't Know",
+       value="98",
+       is_missing=True,
+       sentinel_type=SentinelType.DONT_KNOW,
+   )
 
    # 2. Codes linking values to categories
-   code_yes = HarmonizedCode(value="1", category=cat_yes)
-   code_no = HarmonizedCode(value="2", category=cat_no)
+   code_male = HarmonizedCode(value="1", category=cat_male)
+   code_female = HarmonizedCode(value="2", category=cat_female)
+   code_dk = HarmonizedCode(value="98", category=cat_dk)
 
-   # 3. CodeList with ordered and unordered fingerprints
-   cl = HarmonizedCodeList(name="CL_YESNO", codes=[code_yes, code_no])
-   print("Ordered Digest:  ", cl.fingerprint.ordered_digest)
-   print("Unordered Digest:", cl.fingerprint.unordered_digest)
+   # 3. CodeList with granular Merkle sub-digests
+   cl = HarmonizedCodeList(name="CL_GENDER", codes=[code_male, code_female, code_dk])
+
+   print("Code Sequence Digest:        ", cl.code_sequence_digest)
+   print("Substantive Code Set Digest: ", cl.substantive_code_set_digest)
+   print("Category Set Digest:         ", cl.category_set_digest)
 
 Questions
 ~~~~~~~~~
 
-Survey questions are modeled with full support for lead-in pre-text, core question literals, exit post-text, interviewer instructions, research intent, and response domain bindings:
-
 .. code-block:: python
 
-   from dartfx.ddi.harmonizer import HarmonizedQuestion
+   from dartfx.ddi.harmonizer.domains import HarmonizedQuestion
 
    question = HarmonizedQuestion(
        pre_question_text="Thinking about the past 12 months:",
@@ -259,7 +337,7 @@ Concepts
 
 .. code-block:: python
 
-   from dartfx.ddi.harmonizer import HarmonizedConcept
+   from dartfx.ddi.harmonizer.domains import HarmonizedConcept
 
    concept = HarmonizedConcept(
        preferred_label="Gross Domestic Product",
@@ -269,56 +347,304 @@ Concepts
    )
    print("Concept Hash:", concept.concept_hash)
 
-The Harmonization Registry
---------------------------
+Living Example Bank & Benchmark Case Studies
+--------------------------------------------
 
-The ``HarmonizationRegistry[T]`` provides high-performance deduplication and fuzzy matching:
+The framework is accompanied by an **Example Bank** of 19 declarative benchmark scenarios (located in ``tests/data/harmonizer/cases/``) that run as automated regression tests. Below are six representative real-world case studies:
 
-- :math:`O(1)` index lookups by primary digest, unordered set digest, or normalized signature.
-- Support for ``CuratedCrosswalk`` explicit approvals and blocked pairs.
-- Automatic escalation of borderline candidates to ``HumanReviewQueue``.
+Story 1: Typographic Normalization & Typo Correction
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Domain: Categorical Items | Preset: STANDARD | Match: NORMALIZED_EXACT (1.0)*
+
+**The Scenario:**
+Contractor A transcribed responses with French acute accents and typographic curly apostrophes (``"D’accord (fortement)"``). Contractor B recorded ``"  daccord (fortement)  "`` with leading whitespace and a typo.
+
+**The Challenge:**
+Conventional exact database lookups fail, leading to duplicate categories and broken joins.
+
+**The Harmonization Solution:**
+The two-stage pipeline cleans punctuation, fixes the typo via substitution dictionary, and normalizes via Unicode NFKD de-accenting and case-folding:
 
 .. code-block:: python
 
-   from dartfx.ddi.harmonizer import (
-       HarmonizationRegistry,
+   from dartfx.ddi.harmonizer.comparators import ExactComparator
+   from dartfx.ddi.harmonizer.domains import HarmonizedCategory
+   from dartfx.ddi.harmonizer.models import MatchType
+   from dartfx.ddi.harmonizer.normalizer import NormalizationPreset, TextNormalizer
+   from dartfx.ddi.harmonizer.registry import HarmonizationRegistry
+   from dartfx.ddi.harmonizer.sanitizer import SanitizerConfig, TextSanitizer
+
+   sanitizer = TextSanitizer(SanitizerConfig(typo_replacements={"daccord": "d'accord"}))
+   normalizer = TextNormalizer.from_preset(NormalizationPreset.STANDARD)
+   normalizer.sanitizer = sanitizer
+
+   cat_a = HarmonizedCategory(label="D’accord (fortement)", value="1")
+   cat_b = HarmonizedCategory(label="  daccord (fortement)  ", value="1")
+
+   registry = HarmonizationRegistry[HarmonizedCategory](comparator=ExactComparator(normalizer=normalizer))
+   registry.register(cat_a)
+   match = registry.match(cat_b)
+
+   assert match.matched is True
+   assert match.match_type == MatchType.NORMALIZED_EXACT
+   assert match.score == 1.0
+
+Story 2: Shuffled Demographics (Order-Independent Multiset Match)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Domain: Enumerated Lists | Technique: Unordered Set Digest | Match: PERMUTATION (1.0)*
+
+**The Scenario:**
+Study 1 ordered demographic sex as ``[1=Female, 2=Male]``, whereas Study 2 ordered options as ``[1=Male, 2=Female]``.
+
+**The Challenge:**
+In ordered sequence matching, the hash diverges completely, even though both code lists cover the identical conceptual universe.
+
+**The Harmonization Solution:**
+The framework computes an **Unordered Multiset Digest** (``SET::...``) that sorts child digests canonically before hashing:
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer.domains import HarmonizedCategory, HarmonizedCode, HarmonizedCodeList
+   from dartfx.ddi.harmonizer.models import MatchType
+   from dartfx.ddi.harmonizer.registry import HarmonizationRegistry
+
+   c_f = HarmonizedCode(value="1", category=HarmonizedCategory(label="Female", value="1"))
+   c_m = HarmonizedCode(value="2", category=HarmonizedCategory(label="Male", value="2"))
+
+   cl_a = HarmonizedCodeList(name="CL_SEX_A", codes=[c_f, c_m])
+   cl_b = HarmonizedCodeList(name="CL_SEX_B", codes=[c_m, c_f])
+
+   assert cl_a.code_sequence_digest != cl_b.code_sequence_digest
+   assert cl_a.code_set_digest == cl_b.code_set_digest
+
+   registry = HarmonizationRegistry[HarmonizedCodeList]()
+   registry.register(cl_a)
+   match = registry.match(cl_b)
+
+   assert match.matched is True
+   assert match.match_type == MatchType.PERMUTATION
+   assert match.score == 1.0
+
+Story 3: Missing Value Dilemma (Substantive vs. Sentinel Partitioning)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Domain: Enumerated Lists | Technique: Substantive Partition Digest | Match: SUBSTANTIVE_EXACT (1.0)*
+
+**The Scenario:**
+Survey A encodes missing values as ``98=Don't Know, 99=Refused``, while Survey B encodes missing values as ``8=DK, 9=Refused``. Both share identical substantive categories (``1=Male, 2=Female``).
+
+**The Challenge:**
+Full code lists differ due to conflicting missing notation conventions.
+
+**The Harmonization Solution:**
+The framework partitions items and matches on ``substantive_code_set_digest``:
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer.domains import (
        HarmonizedCategory,
-       HumanReviewQueue,
-       SequenceMatcherComparator,
+       HarmonizedCode,
+       HarmonizedCodeList,
+       SentinelType,
+   )
+   from dartfx.ddi.harmonizer.models import MatchType
+   from dartfx.ddi.harmonizer.registry import HarmonizationRegistry
+
+   # Survey A: 1=Male, 2=Female | 98=DK, 99=Refused
+   cl_a = HarmonizedCodeList(
+       name="CL_A",
+       codes=[
+           HarmonizedCode(value="1", category=HarmonizedCategory(label="Male")),
+           HarmonizedCode(value="2", category=HarmonizedCategory(label="Female")),
+           HarmonizedCode(value="98", category=HarmonizedCategory(label="Don't Know", is_missing=True, sentinel_type=SentinelType.DONT_KNOW)),
+           HarmonizedCode(value="99", category=HarmonizedCategory(label="Refused", is_missing=True, sentinel_type=SentinelType.REFUSED)),
+       ],
    )
 
-   queue = HumanReviewQueue(borderline_range=(0.70, 0.90))
-   registry = HarmonizationRegistry[HarmonizedCategory](
-       comparator=SequenceMatcherComparator(threshold=0.90),
-       review_queue=queue,
+   # Survey B: 1=Male, 2=Female | 8=DK, 9=Refused
+   cl_b = HarmonizedCodeList(
+       name="CL_B",
+       codes=[
+           HarmonizedCode(value="1", category=HarmonizedCategory(label="Male")),
+           HarmonizedCode(value="2", category=HarmonizedCategory(label="Female")),
+           HarmonizedCode(value="8", category=HarmonizedCategory(label="Don't Know", is_missing=True, sentinel_type=SentinelType.DONT_KNOW)),
+           HarmonizedCode(value="9", category=HarmonizedCategory(label="Refused", is_missing=True, sentinel_type=SentinelType.REFUSED)),
+       ],
    )
 
-   # 1. Register canonical category
-   cat1 = HarmonizedCategory(label="Female", value="2")
-   canon1, match1 = registry.register(cat1)
+   assert cl_a.code_set_digest != cl_b.code_set_digest
+   assert cl_a.substantive_code_set_digest == cl_b.substantive_code_set_digest
 
-   # 2. Register identical candidate -> Deduplicated!
-   cat2 = HarmonizedCategory(label="  FEMALE  ", value="2")
-   canon2, match2 = registry.register(cat2)
-   assert canon2 is canon1
-   assert len(registry) == 1
+   registry = HarmonizationRegistry[HarmonizedCodeList]()
+   registry.register(cl_a)
+   match = registry.match(cl_b)
 
-   # 3. Slightly divergent candidate -> Escalates to HumanReviewQueue
-   cat3 = HarmonizedCategory(label="Female Respondent", value="2")
-   match3 = registry.match(cat3, threshold=0.95)
-   assert not match3.matched
-   assert queue.pending_count == 1
+   assert match.matched is True
+   assert match.match_type == MatchType.SUBSTANTIVE_EXACT
+   assert match.score == 1.0
+
+Story 4: Longitudinal Wave Drift (Multi-Attribute Question Matching)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Domain: Survey Questions | Technique: Weighted Attribute Scoring | Match: SYNTACTIC_SIMILAR (0.90)*
+
+**The Scenario:**
+In Wave 1 (CAPI), an interviewer was instructed: *"Show Card C to respondent."* In Wave 2 (CAWI web mode), the instructions changed to: *"Select one option on the screen."* The core question prompt remained identical: *"Did you consult a medical doctor or specialist?"*
+
+**The Challenge:**
+Whole-question string matching drops significantly due to mode instruction differences.
+
+**The Harmonization Solution:**
+``WeightedAttributeComparator`` isolates prompt literals from instructions and shared battery contexts:
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer.comparators import SequenceMatcherComparator, WeightedAttributeComparator
+   from dartfx.ddi.harmonizer.models import MatchType
+
+   q_wave1 = {
+       "question_text": "Did you consult a medical doctor or specialist?",
+       "instructions": "Show Card C to respondent.",
+       "pre_question_text": "During the last 12 months:",
+   }
+   q_wave2 = {
+       "question_text": "Did you consult a medical doctor or specialist?",
+       "instructions": "Select one option on the screen.",
+       "pre_question_text": "During the last 12 months:",
+   }
+
+   cmp = WeightedAttributeComparator(
+       attribute_weights={"question_text": 0.65, "instructions": 0.15, "pre_question_text": 0.20},
+       base_comparator=SequenceMatcherComparator(),
+       match_threshold=0.85,
+   )
+
+   result = cmp.compare_attributes(q_wave1, q_wave2)
+   assert result.score >= 0.85
+   assert result.match_type == MatchType.SYNTACTIC_SIMILAR
+
+Story 5: Cross-Agency Semantic Construct Equivalence
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Domain: Survey Questions | Technique: Semantic Vector Embeddings | Match: SEMANTIC_SIMILAR (0.88)*
+
+**The Scenario:**
+The Ministry of Labor asks: *"Total monthly household income before taxes."* The Ministry of Finance asks: *"Household total pre-tax monthly income."*
+
+**The Challenge:**
+Character edit distance is low due to inverted word orders and phrasing differences.
+
+**The Harmonization Solution:**
+``SemanticVectorComparator`` projects prompts into embedding space to evaluate construct equivalence:
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer.comparators import SemanticVectorComparator
+   from dartfx.ddi.harmonizer.models import MatchType
+
+   cmp = SemanticVectorComparator(threshold=0.75)
+   result = cmp.compare(
+       "Total monthly household income before taxes",
+       "Household total pre-tax monthly income",
+   )
+
+   assert result.score >= 0.75
+   assert result.match_type == MatchType.SEMANTIC_SIMILAR
+
+Story 6: Country Code Recoding (ISO Alpha-2 vs. UN/ISO Numeric-3)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*Domain: Enumerated Lists | Technique: Granular Category Set Hashing | Match: CATEGORIES_EXACT_CODES_DIFFERENT (1.00)*
+
+**The Scenario:**
+Dataset A (OECD) encodes nations using ISO 2-letter alpha codes (``CA, DE, FR, GB, JP, MX, US``). Dataset B (UN Comtrade) records the identical geographic categories using 3-digit numeric codes (``124, 276, 250, 826, 392, 484, 840``).
+
+**The Challenge:**
+Literal code values diverge completely, but the underlying category universe is 100% equivalent.
+
+**The Harmonization Solution:**
+The framework computes granular Merkle category digests (``category_set_digest`` and ``category_sequence_digest``) independently of code notations:
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer.domains import HarmonizedCategory, HarmonizedCode, HarmonizedCodeList
+   from dartfx.ddi.harmonizer.models import MatchType
+   from dartfx.ddi.harmonizer.registry import HarmonizationRegistry
+
+   countries = [
+       ("CA", "124", "Canada"),
+       ("DE", "276", "Germany"),
+       ("FR", "250", "France"),
+       ("GB", "826", "United Kingdom"),
+       ("JP", "392", "Japan"),
+       ("MX", "484", "Mexico"),
+       ("US", "840", "United States"),
+   ]
+
+   cl_alpha = HarmonizedCodeList(
+       name="CL_COUNTRY_G7_ALPHA2",
+       codes=[HarmonizedCode(value=a, category=HarmonizedCategory(label=name)) for a, _, name in countries],
+   )
+   cl_numeric = HarmonizedCodeList(
+       name="CL_COUNTRY_G7_NUMERIC3",
+       codes=[HarmonizedCode(value=n, category=HarmonizedCategory(label=name)) for _, n, name in countries],
+   )
+
+   # Semantic category concept digests match 100%
+   assert cl_alpha.category_set_digest == cl_numeric.category_set_digest
+   assert cl_alpha.category_sequence_digest == cl_numeric.category_sequence_digest
+   assert cl_alpha.substantive_category_set_digest == cl_numeric.substantive_category_set_digest
+
+   # Literal code value digests differ
+   assert cl_alpha.value_set_digest != cl_numeric.value_set_digest
+   assert cl_alpha.code_set_digest != cl_numeric.code_set_digest
+
+   registry = HarmonizationRegistry[HarmonizedCodeList]()
+   registry.register(cl_alpha)
+   match = registry.match(cl_numeric)
+
+   assert match.matched is True
+   assert match.match_type == MatchType.CATEGORIES_EXACT_CODES_DIFFERENT
+   assert match.score == 1.0
+   assert match.content_matched is False
+   assert match.reason == "Identical category concepts (same semantic universe) with recoded/different code values"
+
+Interactive HTML Harmonization Workbench
+----------------------------------------
+
+To enable interactive exploration of scenarios, real-time debugging, and side-by-side metric inspection, the framework includes a zero-dependency, standalone **Interactive HTML Harmonization Workbench** (located at ``tests/outputs/harmonizer_explorer.html`` or launched via CLI).
+
+Features of the Workbench:
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. **Scenario Stories Browser**: Browse real-world case studies across ``categorical``, ``enumerated_list``, ``question``, and ``conceptual`` domains with narrative context and learning objectives.
+2. **Dual Source & Candidate Merkle Tree Inspector**: Inspect Merkle roots, substantive vs. sentinel sub-digests, category set digests, item-level hashes, and assigned URN vs. random GUID badges side-by-side with color-coded ``[MATCH]`` and ``[DIFFERS]`` badges.
+3. **Live Harmonization Playground**: Real-time side-by-side text/JSON editor with live similarity gauges, normalizer preset switches, and typo replacement overrides.
+4. **Live Code & Output Export**: Instant generation of reproducible Python SDK reproduction scripts and simulated execution logs.
+
+Launching the Workbench via CLI:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: bash
+
+   # Generate and open in default web browser
+   uv run dartfx-ddi harmonizer explore
+
+   # Save to custom output path without launching browser
+   uv run dartfx-ddi harmonizer explore --output tests/outputs/harmonizer_explorer.html --no-open
 
 Integration with DDI-C to Lifecycle Conversion
 ----------------------------------------------
 
 The DDI Toolkit's DDI-Codebook to DDI-Lifecycle converter (``dartfx.ddi.ddicodebook.converters.mappers.logical``) delegates category and code list harmonization directly to ``HarmonizationRegistry``:
 
-- When ``harmonize_codes=True`` is supplied:
-  - 2,376 duplicate categories in large survey instruments (e.g. Afghanistan WBCS) are harmonized down to **139 canonical categories**.
-  - 417 redundant code lists are consolidated into **32 canonical code lists**.
-- Emits standard DDI 3.3 and DDI 4.0 UserAttributes:
-  - ``harmonization:category_hash``
-  - ``harmonization:signature``
-  - ``harmonization:codelist_hash``
-  - ``harmonization:member_count``
+* When ``harmonize_codes=True`` is enabled:
+  * 2,376 duplicate categories in large survey instruments (e.g., Afghanistan WBCS) are harmonized down to **139 canonical categories**.
+  * 417 redundant code lists are consolidated into **32 canonical code lists**.
+* Emits standard DDI 3.3 and DDI 4.0 UserAttributes:
+  * ``harmonization:category_hash``
+  * ``harmonization:signature``
+  * ``harmonization:codelist_hash``
+  * ``harmonization:member_count``

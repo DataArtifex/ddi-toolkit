@@ -97,8 +97,6 @@ DDI-CDI & Assistant Framework usage::
    codebook_to_cdi_mappings
    codebook_to_lifecycle_mappings
    harmonizer
-   harmonizer_executive_overview
-   harmonizer_examples
 
 .. toctree::
    :maxdepth: 2
