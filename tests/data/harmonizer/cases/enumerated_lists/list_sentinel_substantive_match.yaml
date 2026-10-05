@@ -1,0 +1,55 @@
+id: case_sentinel_substantive_alignment
+title: Substantive Domain Alignment with Disparate Sentinel Missing Schemes
+domain: enumerated_list
+difficulty: advanced
+real_world_context: Cross-National Survey Merging (Afrobarometer vs. Latinobarómetro Missing Conventions)
+story: >
+  Survey A records Sex as 1=Male, 2=Female, with missing codes 98=Don't Know and 99=Refused.
+  Survey B records the identical substantive categories (1=Male, 2=Female) but uses standard single-digit
+  sentinel missing codes (8=Don't Know, 9=Refused). Full code set hashing flags a difference due to the
+  sentinel codes. However, the Substantive Code Set Merkle digest matches 100%, allowing data integration
+  pipelines to merge substantive analytical records without manual recoding.
+learning_objective: >
+  Substantive Partition Digests isolate subject-matter measurement from non-response sentinel schemes.
+source_resource:
+  name: CL_SEX_NATIONAL
+  codes:
+    - value: "1"
+      label: "Male"
+      is_missing: false
+    - value: "2"
+      label: "Female"
+      is_missing: false
+    - value: "98"
+      label: "Don't Know"
+      is_missing: true
+      sentinel_type: "DONT_KNOW"
+    - value: "99"
+      label: "Refused"
+      is_missing: true
+      sentinel_type: "REFUSED"
+candidate_resource:
+  name: CL_SEX_REGIONAL
+  codes:
+    - value: "1"
+      label: "Male"
+      is_missing: false
+    - value: "2"
+      label: "Female"
+      is_missing: false
+    - value: "8"
+      label: "Don't Know"
+      is_missing: true
+      sentinel_type: "DONT_KNOW"
+    - value: "9"
+      label: "Refused"
+      is_missing: true
+      sentinel_type: "REFUSED"
+preset: STANDARD
+custom_typos: {}
+comparator: SequenceMatcher
+comparator_threshold: 1.0
+expected_match: true
+expected_match_type: SUBSTANTIVE_EXACT
+expected_score_min: 1.0
+expected_score_max: 1.0

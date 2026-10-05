@@ -1,0 +1,37 @@
+id: case_iso_country_code_enumeration
+title: Geographic Region Code List Standard (ISO Alpha-2 Order Permutation)
+domain: enumerated_list
+difficulty: basic
+real_world_context: UN Comtrade & Regional Economic Integration Registries
+story: >
+  Regional trade registries catalog member country enumerations using standard ISO-3166 alpha-2
+  country codes. Ingestion pipelines encounter different sorting rules (alphabetical by country name
+  vs. alphabetical by ISO code). The fingerprinting engine verifies exact set equivalence.
+learning_objective: >
+  Order-independent multiset hashing recognizes identical geographic domain enumerations.
+source_resource:
+  name: CL_COUNTRY_NAFTA_A
+  codes:
+    - value: "CA"
+      label: Canada
+    - value: "MX"
+      label: Mexico
+    - value: "US"
+      label: United States
+candidate_resource:
+  name: CL_COUNTRY_NAFTA_B
+  codes:
+    - value: "US"
+      label: United States
+    - value: "CA"
+      label: Canada
+    - value: "MX"
+      label: Mexico
+preset: STANDARD
+custom_typos: {}
+comparator: SequenceMatcher
+comparator_threshold: 1.0
+expected_match: true
+expected_match_type: PERMUTATION
+expected_score_min: 1.0
+expected_score_max: 1.0

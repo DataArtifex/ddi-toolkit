@@ -1,0 +1,24 @@
+id: case_sdg_conceptual_indicators
+title: Sustainable Development Goal (SDG) Conceptual Alignment
+domain: conceptual
+difficulty: intermediate
+real_world_context: UN Sustainable Development Goal (SDG) Indicator Cataloging
+story: >
+  National statistics offices submit indicator definitions with varying formatting, notation prefixes,
+  and official descriptions. Conceptual matching reconciles label, notation, and formal definitions.
+learning_objective: HarmonizedConcept combines label, notation, and definition into a compound fingerprint.
+source_resource:
+  preferred_label: Proportion of population below international poverty line
+  notation: SDG_1.1.1
+  definition: Proportion of the population living on less than $2.15 a day at 2017 PPP.
+candidate_resource:
+  preferred_label: Population below international poverty line
+  notation: "1.1.1"
+  definition: Proportion of the population living on less than $2.15 a day at 2017 PPP.
+preset: STANDARD
+comparator: SequenceMatcher
+comparator_threshold: 0.80
+expected_match: true
+expected_match_type: SYNTACTIC_SIMILAR
+expected_score_min: 0.80
+expected_score_max: 0.95

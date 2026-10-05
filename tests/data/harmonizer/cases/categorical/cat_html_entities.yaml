@@ -1,0 +1,28 @@
+id: case_html_entity_sanitization
+title: Web Scraping HTML Entity & Markup Tag Sanitization
+domain: categorical
+difficulty: basic
+real_world_context: Web Survey Scraping & Open Data Portal Ingestion
+story: >
+  Data scraped from online survey instruments and open data portals often contains escaped
+  HTML entities (such as '&amp;', '&quot;', and '&lt;'), non-breaking spaces ('&nbsp;'), and extraneous
+  formatting tags like '<b>' or '<span>'. The sanitization pipeline decodes the entities, strips HTML tags,
+  and standardizes spacing so the clean category label matches the canonical ontology entry exactly.
+learning_objective: >
+  TextSanitizer unescapes HTML entities, removes markup tags, and standardizes spacing prior to normalization.
+source_resource:
+  label: "Research & Development / Science & Technology"
+  value: "RD"
+  is_missing: false
+candidate_resource:
+  label: "<span>Research &amp; Development&nbsp;/ Science &amp; Technology</span>"
+  value: "RD"
+  is_missing: false
+preset: STANDARD
+custom_typos: {}
+comparator: Exact
+comparator_threshold: 1.0
+expected_match: true
+expected_match_type: NORMALIZED_EXACT
+expected_score_min: 1.0
+expected_score_max: 1.0

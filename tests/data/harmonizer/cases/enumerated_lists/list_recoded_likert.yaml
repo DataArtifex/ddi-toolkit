@@ -1,0 +1,46 @@
+id: case_recoded_likert_scale
+title: Recoded 5-Point Likert Scale (Identical Categories with Polarity Inversion)
+domain: enumerated_list
+difficulty: intermediate
+real_world_context: General Social Survey (GSS) vs European Social Survey (ESS)
+story: >
+  Survey A records job satisfaction on a 1-to-5 scale: 1=Strongly Disagree, 2=Disagree,
+  3=Neutral, 4=Agree, 5=Strongly Agree. Survey B records the identical 5 categories with
+  inverted order and matching values. The Code Set (order-independent) digest matches 100%
+  because all bound items are present, while the Code Sequence digest identifies the inverted sequence.
+learning_objective: >
+  Code Set digests verify full set membership across inverted or permuted enumerations.
+source_resource:
+  name: CL_SATISFACTION_ASC
+  codes:
+    - value: "1"
+      label: "Strongly Disagree"
+    - value: "2"
+      label: "Disagree"
+    - value: "3"
+      label: "Neutral"
+    - value: "4"
+      label: "Agree"
+    - value: "5"
+      label: "Strongly Agree"
+candidate_resource:
+  name: CL_SATISFACTION_DESC
+  codes:
+    - value: "5"
+      label: "Strongly Agree"
+    - value: "4"
+      label: "Agree"
+    - value: "3"
+      label: "Neutral"
+    - value: "2"
+      label: "Disagree"
+    - value: "1"
+      label: "Strongly Disagree"
+preset: STANDARD
+custom_typos: {}
+comparator: SequenceMatcher
+comparator_threshold: 1.0
+expected_match: true
+expected_match_type: PERMUTATION
+expected_score_min: 1.0
+expected_score_max: 1.0

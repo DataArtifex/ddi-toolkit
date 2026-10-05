@@ -1,0 +1,46 @@
+id: case_missing_value_scheme_alignment
+title: Missing Value Scheme Alignment (Substantive vs Special Codes)
+domain: enumerated_list
+difficulty: intermediate
+real_world_context: Afrobarometer vs. World Values Survey Missing Code Conventions
+story: >
+  Survey organizations record substantive responses alongside standardized missing value codes.
+  When datasets sort missing values first (descending: 99=Refused, 98=Don't Know) versus last
+  (ascending: 1=Ruling Party, 2=Opposition, 3=Independent, 98=Don't Know, 99=Refused), sequential hashing
+  fails. The multiset code set digest recognizes the identical set of bound code-category items.
+learning_objective: >
+  Code Set Merkle digests verify complete enumerated set equivalence regardless of missing code sort order.
+source_resource:
+  name: CL_POLITICAL_PREF_A
+  codes:
+    - value: "1"
+      label: Ruling Party
+    - value: "2"
+      label: Opposition Party
+    - value: "3"
+      label: Independent
+    - value: "98"
+      label: "Don't Know"
+    - value: "99"
+      label: Refused
+candidate_resource:
+  name: CL_POLITICAL_PREF_B
+  codes:
+    - value: "99"
+      label: Refused
+    - value: "98"
+      label: "Don't Know"
+    - value: "3"
+      label: Independent
+    - value: "2"
+      label: Opposition Party
+    - value: "1"
+      label: Ruling Party
+preset: STANDARD
+custom_typos: {}
+comparator: SequenceMatcher
+comparator_threshold: 1.0
+expected_match: true
+expected_match_type: PERMUTATION
+expected_score_min: 1.0
+expected_score_max: 1.0

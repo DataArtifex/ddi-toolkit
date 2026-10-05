@@ -1385,6 +1385,30 @@ class UserAttributeProfile(BaseModel):
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
+class LanguageUsageProfile(BaseModel):
+    """Statistics for a specific metadata language code used across a document or class."""
+
+    language_code: str
+    count: int = 0
+    instance_count: int = 0
+    usage_pct: float = 0.0
+    min_per_instance: int = 0
+    max_per_instance: int = 0
+    avg_per_instance: float = 0.0
+    classes_used: dict[str, int] = Field(default_factory=dict)
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class LanguageProfile(BaseModel):
+    """Aggregated profile for metadata languages used across a document or class."""
+
+    total_language_elements: int = 0
+    unique_languages: int = 0
+    primary_language: str | None = None
+    languages: dict[str, LanguageUsageProfile] = Field(default_factory=dict)
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
 def _format_sample_values(values: set[str] | list[str], max_samples: int = 5, max_length: int = 80) -> list[str]:
     """Helper to format deterministic, clean sample values for attribute keys."""
     non_empty = [v for v in values if v]
@@ -1397,6 +1421,20 @@ def _format_sample_values(values: set[str] | list[str], max_samples: int = 5, ma
             clean_val = f"{clean_val[: max_length - 3]}..."
         samples.append(clean_val)
     return samples
+
+
+def _extract_element_languages(elem: ET.Element) -> Counter[str]:
+    """Extracts counts of language codes used in text or attributes within an XML element."""
+    counts: Counter[str] = Counter()
+    for sub in elem.iter():
+        for attr_k, attr_v in sub.attrib.items():
+            k_local = attr_k.rsplit("}", 1)[-1]
+            if k_local in ("lang", "audienceLanguage", "xml-lang") and attr_v and attr_v.strip():
+                counts[attr_v.strip()] += 1
+        tag_local = sub.tag.rsplit("}", 1)[-1]
+        if tag_local in ("Language", "DefaultLanguage", "AudienceLanguage") and sub.text and sub.text.strip():
+            counts[sub.text.strip()] += 1
+    return counts
 
 
 class ClassNode(BaseModel):
@@ -1415,6 +1453,8 @@ class ClassNode(BaseModel):
     functional_domain: str = ""
     child_elements: dict[str, ChildElementProfile] = Field(default_factory=dict)
     user_attributes: dict[str, UserAttributeKeyProfile] = Field(default_factory=dict)
+    languages: dict[str, LanguageUsageProfile] = Field(default_factory=dict)
+    primary_language: str | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
 
     def get_user_attribute_profile(self) -> UserAttributeProfile:
@@ -1425,6 +1465,15 @@ class ClassNode(BaseModel):
             unique_keys=len(self.user_attributes),
             total_distinct_values=distinct_vals,
             keys=self.user_attributes,
+        )
+
+    def get_language_profile(self) -> LanguageProfile:
+        """Returns aggregated profile and statistics for metadata languages used by this class."""
+        return LanguageProfile(
+            total_language_elements=sum(lp.count for lp in self.languages.values()),
+            unique_languages=len(self.languages),
+            primary_language=self.primary_language,
+            languages=self.languages,
         )
 
     @model_validator(mode="after")
@@ -1467,6 +1516,10 @@ class DdiLifecycleProfileSummary(BaseModel):
     total_user_attributes: int = 0
     unique_user_attribute_keys: int = 0
     user_attributes: dict[str, UserAttributeKeyProfile] = Field(default_factory=dict)
+    total_language_elements: int = 0
+    unique_languages: int = 0
+    primary_language: str | None = None
+    languages: dict[str, LanguageUsageProfile] = Field(default_factory=dict)
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
@@ -1526,6 +1579,43 @@ def _aggregate_subgraph_user_attributes(
     return total_uap, unique_keys, sub_global_uaps
 
 
+def _aggregate_subgraph_languages(
+    filtered_nodes: dict[str, ClassNode],
+) -> tuple[int, int, str | None, dict[str, LanguageUsageProfile]]:
+    """Aggregates metadata language statistics across a set of filtered ClassNode instances."""
+    total_lang_elems = sum(sum(lp.count for lp in n.languages.values()) for n in filtered_nodes.values())
+    unique_langs = len({lang_code for n in filtered_nodes.values() for lang_code in n.languages})
+    sub_global_langs: dict[str, LanguageUsageProfile] = {}
+    tot_filt_res = sum(n.resource_count for n in filtered_nodes.values())
+
+    for n in filtered_nodes.values():
+        for l_code, lp in n.languages.items():
+            if l_code not in sub_global_langs:
+                sub_global_langs[l_code] = LanguageUsageProfile(
+                    language_code=lp.language_code,
+                    count=lp.count,
+                    instance_count=lp.instance_count,
+                    min_per_instance=lp.min_per_instance,
+                    max_per_instance=lp.max_per_instance,
+                    classes_used={n.class_name: lp.count},
+                )
+            else:
+                target = sub_global_langs[l_code]
+                target.count += lp.count
+                target.instance_count += lp.instance_count
+                target.min_per_instance = min(target.min_per_instance, lp.min_per_instance)
+                target.max_per_instance = max(target.max_per_instance, lp.max_per_instance)
+                target.classes_used[n.class_name] = lp.count
+
+    for lp in sub_global_langs.values():
+        lp.usage_pct = round((lp.instance_count / tot_filt_res) * 100.0, 1) if tot_filt_res > 0 else 0.0
+        lp.avg_per_instance = round(lp.count / lp.instance_count, 2) if lp.instance_count > 0 else 0.0
+
+    sorted_langs = dict(sorted(sub_global_langs.items(), key=lambda x: (-x[1].count, x[0].lower())))
+    primary_lang = next(iter(sorted_langs.keys()), None)
+    return total_lang_elems, unique_langs, primary_lang, sorted_langs
+
+
 class DdiLifecycleProfile(BaseModel):
     """Class-level resource profile graph for DDI-Lifecycle metadata."""
 
@@ -1572,6 +1662,15 @@ class DdiLifecycleProfile(BaseModel):
             unique_keys=self.summary.unique_user_attribute_keys,
             total_distinct_values=distinct_vals,
             keys=self.summary.user_attributes,
+        )
+
+    def get_language_profile(self) -> LanguageProfile:
+        """Returns aggregated profile and statistics for metadata languages across the document."""
+        return LanguageProfile(
+            total_language_elements=self.summary.total_language_elements,
+            unique_languages=self.summary.unique_languages,
+            primary_language=self.summary.primary_language,
+            languages=self.summary.languages,
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -1832,6 +1931,7 @@ class DdiLifecycleProfile(BaseModel):
         total_child_elems = sum(sum(cp.count for cp in n.child_elements.values()) for n in filtered_nodes.values())
         unique_child_types = len({cp.element_name for n in filtered_nodes.values() for cp in n.child_elements.values()})
         total_uap, unique_uap_keys, sub_global_uaps = _aggregate_subgraph_user_attributes(filtered_nodes)
+        total_lang_elems, unique_langs, primary_lang, sub_global_langs = _aggregate_subgraph_languages(filtered_nodes)
 
         summary = DdiLifecycleProfileSummary(
             ddi_standard=self.summary.ddi_standard,
@@ -1849,6 +1949,10 @@ class DdiLifecycleProfile(BaseModel):
             total_user_attributes=total_uap,
             unique_user_attribute_keys=unique_uap_keys,
             user_attributes=sub_global_uaps,
+            total_language_elements=total_lang_elems,
+            unique_languages=unique_langs,
+            primary_language=primary_lang,
+            languages=sub_global_langs,
         )
 
         return DdiLifecycleProfile(
@@ -1961,6 +2065,7 @@ class DdiLifecycleProfile(BaseModel):
         total_child_elems = sum(sum(cp.count for cp in n.child_elements.values()) for n in filtered_nodes.values())
         unique_child_types = len({cp.element_name for n in filtered_nodes.values() for cp in n.child_elements.values()})
         total_uap, unique_uap_keys, sub_global_uaps = _aggregate_subgraph_user_attributes(filtered_nodes)
+        total_lang_elems, unique_langs, primary_lang, sub_global_langs = _aggregate_subgraph_languages(filtered_nodes)
 
         summary = DdiLifecycleProfileSummary(
             ddi_standard=base.summary.ddi_standard,
@@ -1987,6 +2092,10 @@ class DdiLifecycleProfile(BaseModel):
             total_user_attributes=total_uap,
             unique_user_attribute_keys=unique_uap_keys,
             user_attributes=sub_global_uaps,
+            total_language_elements=total_lang_elems,
+            unique_languages=unique_langs,
+            primary_language=primary_lang,
+            languages=sub_global_langs,
         )
 
         return DdiLifecycleProfile(
@@ -2057,6 +2166,8 @@ class DdiLifecycleProfile(BaseModel):
         nodes_with_children = [n for n in g.nodes.values() if n.child_elements]
         has_user_attributes = bool(g.summary.user_attributes and g.summary.total_user_attributes > 0)
         nodes_with_uap = [n for n in g.nodes.values() if n.user_attributes] if has_user_attributes else []
+        has_languages = bool(g.summary.languages and g.summary.total_language_elements > 0)
+        nodes_with_languages = [n for n in g.nodes.values() if n.languages] if has_languages else []
 
         toc_sections: list[tuple[str, str]] = [("Summary", "summary")]
         if g.connecting_paths:
@@ -2084,6 +2195,10 @@ class DdiLifecycleProfile(BaseModel):
                 toc_sections.append(
                     ("User Attributes Usage by Resource Class", "user-attributes-usage-by-resource-class")
                 )
+        if has_languages:
+            toc_sections.append(("Metadata Languages Profile", "metadata-languages-profile"))
+            if nodes_with_languages:
+                toc_sections.append(("Language Usage by Resource Class", "language-usage-by-resource-class"))
 
         lines: list[str] = [
             f"# {doc_title}",
@@ -2126,6 +2241,12 @@ class DdiLifecycleProfile(BaseModel):
             lines.append(
                 f"- **User Attributes (`<UserAttributePair>`):** {g.summary.total_user_attributes:,} "
                 f"({g.summary.unique_user_attribute_keys:,} distinct attribute keys)"
+            )
+        if g.summary.total_language_elements > 0:
+            primary_str = f" (Primary: `{g.summary.primary_language}`)" if g.summary.primary_language else ""
+            lines.append(
+                f"- **Metadata Languages:** {g.summary.total_language_elements:,} elements across "
+                f"{g.summary.unique_languages:,} distinct language codes{primary_str}"
             )
         lines.extend(
             [
@@ -2368,6 +2489,68 @@ class DdiLifecycleProfile(BaseModel):
                         lines.append(
                             f"| `{up.attribute_key}` | {up.count:,} | {up.instance_count:,} | "
                             f"{up.usage_pct:.1f}% | {up.distinct_values_count:,} | {mult_str} | {samples_str} |"
+                        )
+                    lines.append("")
+                lines.append("[↑ Back to Table of Contents](#table-of-contents)")
+                lines.append("")
+
+        if has_languages:
+            lines.extend(
+                [
+                    "## Metadata Languages Profile",
+                    "",
+                    (
+                        "| Language Code | Total Count | Instances Using | Usage % "
+                        "| Multiplicity (Min / Max / Avg) | Classes Using |"
+                    ),
+                    "| :--- | :--- | :--- | :--- | :--- | :--- |",
+                ]
+            )
+            for lp in g.summary.languages.values():
+                mult_str = f"{lp.min_per_instance} / {lp.max_per_instance} / {lp.avg_per_instance:.1f}x"
+                classes_str = ", ".join(
+                    f"`{cls}` ({cnt:,})"
+                    for cls, cnt in sorted(lp.classes_used.items(), key=lambda x: (-x[1], x[0].lower()))
+                )
+                lines.append(
+                    f"| `{lp.language_code}` | {lp.count:,} | {lp.instance_count:,} | "
+                    f"{lp.usage_pct:.1f}% | {mult_str} | {classes_str} |"
+                )
+            lines.append("")
+            lines.append("[↑ Back to Table of Contents](#table-of-contents)")
+            lines.append("")
+
+            if nodes_with_languages:
+                lines.extend(
+                    [
+                        "## Language Usage by Resource Class",
+                        "",
+                    ]
+                )
+                for node in sorted(nodes_with_languages, key=lambda x: x.class_name.lower()):
+                    inst_word = "instance" if node.resource_count == 1 else "instances"
+                    lang_word = "language" if len(node.languages) == 1 else "languages"
+                    primary_badge = f", primary: `{node.primary_language}`" if node.primary_language else ""
+                    header_info = (
+                        f"{node.resource_count:,} {inst_word}, "
+                        f"{len(node.languages):,} distinct {lang_word}{primary_badge}"
+                    )
+                    lines.append(f"### `{node.class_name}` ({header_info})")
+                    lines.extend(
+                        [
+                            "",
+                            (
+                                "| Language Code | Total Count | Instances Using | Usage % "
+                                "| Multiplicity (Min / Max / Avg) |"
+                            ),
+                            "| :--- | :--- | :--- | :--- | :--- |",
+                        ]
+                    )
+                    for lp in node.languages.values():
+                        mult_str = f"{lp.min_per_instance} / {lp.max_per_instance} / {lp.avg_per_instance:.1f}x"
+                        lines.append(
+                            f"| `{lp.language_code}` | {lp.count:,} | {lp.instance_count:,} | "
+                            f"{lp.usage_pct:.1f}% | {mult_str} |"
                         )
                     lines.append("")
                 lines.append("[↑ Back to Table of Contents](#table-of-contents)")
@@ -2764,6 +2947,20 @@ class DdiLifecycleProfile(BaseModel):
                         }
                         for up in node.user_attributes.values()
                     ],
+                    "languages": [
+                        {
+                            "languageCode": lp.language_code,
+                            "count": lp.count,
+                            "instanceCount": lp.instance_count,
+                            "usagePct": lp.usage_pct,
+                            "minPerInstance": lp.min_per_instance,
+                            "maxPerInstance": lp.max_per_instance,
+                            "avgPerInstance": lp.avg_per_instance,
+                            "classesUsed": lp.classes_used,
+                        }
+                        for lp in node.languages.values()
+                    ],
+                    "primaryLanguage": node.primary_language,
                 }
             )
 
@@ -2849,7 +3046,6 @@ class DdiLifecycleProfile(BaseModel):
             f"Resolution: {g.summary.resolution_rate:.1%} resolved locally "
             f"({g.summary.internal_reference_instances:,} int / {g.summary.external_reference_instances:,} ext)"
         )
-
         html_template = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2863,12 +3059,19 @@ class DdiLifecycleProfile(BaseModel):
       --panel-bg: rgba(15, 23, 42, 0.88);
       --panel-border: rgba(51, 65, 85, 0.6);
       --card-bg: rgba(30, 41, 59, 0.6);
+      --card-hover-bg: rgba(45, 59, 80, 0.7);
       --text: #f8fafc;
       --text-muted: #94a3b8;
       --accent: #38bdf8;
       --accent-glow: rgba(56, 189, 248, 0.25);
+      --accent-purple: #8b5cf6;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-cyan: #06b6d4;
       --btn-bg: #1e293b;
       --btn-hover: #334155;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
     }}
     * {{ box-sizing: border-box; margin: 0; padding: 0; }}
     body {{
@@ -2876,12 +3079,144 @@ class DdiLifecycleProfile(BaseModel):
       background: var(--bg);
       color: var(--text);
       display: flex;
+      flex-direction: column;
       height: 100vh;
       overflow: hidden;
     }}
+
+    /* Top Navigation App Bar */
+    #top-nav {{
+      height: 52px;
+      min-height: 52px;
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom: 1px solid var(--panel-border);
+      backdrop-filter: blur(16px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 20;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+    }}
+    .nav-brand {{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }}
+    .nav-logo {{
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      user-select: none;
+    }}
+    .nav-title-group {{
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }}
+    .nav-title-group h1 {{
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: -0.01em;
+    }}
+    .nav-title-group .file-badge {{
+      font-size: 0.7rem;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }}
+
+    /* Segmented Tab Navigation Buttons */
+    .nav-tabs {{
+      display: flex;
+      align-items: center;
+      background: rgba(10, 15, 29, 0.75);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 3px;
+    }}
+    .nav-tab {{
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+    }}
+    .nav-tab:hover {{
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+    }}
+    .nav-tab.active {{
+      background: var(--accent);
+      color: #090d16;
+      border-color: var(--accent);
+      box-shadow: 0 0 10px var(--accent-glow);
+      font-weight: 700;
+    }}
+    .tab-icon {{
+      font-size: 0.88rem;
+    }}
+
+    .nav-actions {{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }}
+    .standard-badge {{
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 9999px;
+      padding: 2px 9px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }}
+
+    /* Main View Container */
+    #app-body {{
+      flex: 1;
+      height: calc(100vh - 52px);
+      position: relative;
+      overflow: hidden;
+    }}
+    .app-view {{
+      width: 100%;
+      height: 100%;
+      display: none;
+    }}
+    .app-view.active {{
+      display: flex;
+    }}
+    #view-dashboard.app-view.active {{
+      display: block;
+      overflow-y: auto;
+    }}
+
+    /* Graph Explorer View Layout */
     #sidebar {{
-      width: 400px;
-      min-width: 340px;
+      width: 380px;
+      min-width: 320px;
+      max-width: 440px;
       background: var(--panel-bg);
       border-right: 1px solid var(--panel-border);
       backdrop-filter: blur(16px);
@@ -2889,20 +3224,21 @@ class DdiLifecycleProfile(BaseModel):
       flex-direction: column;
       z-index: 10;
       box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+      height: 100%;
     }}
     .header {{
-      padding: 16px 20px;
+      padding: 12px 16px;
       border-bottom: 1px solid var(--panel-border);
       background: rgba(15, 23, 42, 0.5);
     }}
     .header h1 {{
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 700;
       color: var(--accent);
       letter-spacing: -0.02em;
     }}
     .header p {{
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
       margin-top: 2px;
     }}
@@ -2910,28 +3246,28 @@ class DdiLifecycleProfile(BaseModel):
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 6px;
-      padding: 12px 20px;
+      padding: 10px 16px;
       background: rgba(10, 15, 29, 0.6);
       border-bottom: 1px solid var(--panel-border);
     }}
     .metric-item {{
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       text-transform: uppercase;
       color: var(--text-muted);
       letter-spacing: 0.04em;
     }}
     .metric-val {{
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 700;
       color: var(--text);
-      margin-top: 2px;
+      margin-top: 1px;
     }}
     .controls {{
-      padding: 12px 20px;
+      padding: 10px 16px;
       border-bottom: 1px solid var(--panel-border);
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }}
     .control-row {{
       display: flex;
@@ -2940,7 +3276,7 @@ class DdiLifecycleProfile(BaseModel):
       gap: 8px;
     }}
     .control-label {{
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 600;
       color: var(--text-muted);
       text-transform: uppercase;
@@ -2952,12 +3288,12 @@ class DdiLifecycleProfile(BaseModel):
     }}
     .search-input {{
       width: 100%;
-      padding: 7px 12px;
+      padding: 6px 10px;
       background: var(--btn-bg);
       border: 1px solid var(--panel-border);
       border-radius: 6px;
       color: var(--text);
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       transition: all 0.2s;
     }}
     .search-input:focus {{
@@ -2967,17 +3303,17 @@ class DdiLifecycleProfile(BaseModel):
     }}
     .btn-group {{
       display: flex;
-      gap: 5px;
+      gap: 4px;
       width: 100%;
     }}
     .btn {{
       flex: 1;
-      padding: 6px 8px;
+      padding: 5px 7px;
       background: var(--btn-bg);
       color: var(--text);
       border: 1px solid var(--panel-border);
       border-radius: 5px;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       cursor: pointer;
       font-weight: 600;
       transition: all 0.15s;
@@ -2996,7 +3332,7 @@ class DdiLifecycleProfile(BaseModel):
     .slider-container {{
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       width: 100%;
     }}
     .slider {{
@@ -3006,28 +3342,28 @@ class DdiLifecycleProfile(BaseModel):
       cursor: pointer;
     }}
     .slider-val {{
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
       color: var(--accent);
-      min-width: 28px;
+      min-width: 24px;
       text-align: right;
     }}
     .inspector {{
       flex: 1;
       overflow-y: auto;
-      padding: 16px 20px;
+      padding: 14px 16px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }}
     .inspector-placeholder {{
       color: var(--text-muted);
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       line-height: 1.5;
-      padding: 10px 0;
+      padding: 8px 0;
     }}
     .inspector-title {{
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 700;
       color: var(--accent);
       word-break: break-word;
@@ -3035,17 +3371,17 @@ class DdiLifecycleProfile(BaseModel):
     }}
     .inspector-tags {{
       display: flex;
-      gap: 6px;
+      gap: 5px;
       align-items: center;
       flex-wrap: wrap;
-      margin-top: 5px;
+      margin-top: 4px;
       margin-bottom: 2px;
     }}
     .badge {{
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       font-weight: 700;
       text-transform: uppercase;
-      padding: 2px 7px;
+      padding: 2px 6px;
       border-radius: 9999px;
       letter-spacing: 0.05em;
     }}
@@ -3053,36 +3389,36 @@ class DdiLifecycleProfile(BaseModel):
       background: var(--card-bg);
       border: 1px solid var(--panel-border);
       border-radius: 8px;
-      padding: 10px 12px;
+      padding: 9px 11px;
     }}
     .detail-card h4 {{
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
       color: var(--text-muted);
       letter-spacing: 0.05em;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       display: flex;
       justify-content: space-between;
     }}
     .stat-row {{
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      margin-top: 6px;
+      gap: 5px;
+      margin-top: 5px;
     }}
     .stat-box {{
       background: rgba(15, 23, 42, 0.6);
       border-radius: 5px;
-      padding: 6px 8px;
+      padding: 5px 7px;
       text-align: center;
     }}
     .stat-box-val {{
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-weight: 700;
       color: var(--text);
     }}
     .stat-box-lbl {{
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       color: var(--text-muted);
       margin-top: 1px;
     }}
@@ -3090,12 +3426,12 @@ class DdiLifecycleProfile(BaseModel):
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
     }}
     .ref-item {{
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       line-height: 1.35;
-      padding: 6px 8px;
+      padding: 5px 7px;
       background: rgba(15, 23, 42, 0.45);
       border-radius: 5px;
       border-left: 3px solid var(--accent);
@@ -3114,58 +3450,58 @@ class DdiLifecycleProfile(BaseModel):
       color: var(--accent);
       padding: 1px 4px;
       border-radius: 3px;
-      font-size: 0.72rem;
-      font-family: monospace;
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
     }}
     .connecting-card {{
       background: rgba(56, 189, 248, 0.05);
       border: 1px solid rgba(56, 189, 248, 0.3);
       border-radius: 8px;
-      padding: 10px 12px;
-      margin-bottom: 8px;
+      padding: 9px 11px;
+      margin-bottom: 7px;
     }}
     .connecting-card-title {{
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 700;
       color: var(--accent);
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }}
     .connecting-card-desc {{
-      font-size: 0.73rem;
+      font-size: 0.71rem;
       color: var(--text-muted);
       line-height: 1.4;
     }}
     .summary-grid {{
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 6px;
-      margin-top: 6px;
+      gap: 5px;
+      margin-top: 5px;
     }}
     .summary-stat-box {{
       background: rgba(15, 23, 42, 0.6);
       border: 1px solid var(--panel-border);
       border-radius: 6px;
-      padding: 8px 10px;
+      padding: 7px 9px;
       display: flex;
       flex-direction: column;
       cursor: help;
     }}
     .summary-stat-lbl {{
-      font-size: 0.64rem;
+      font-size: 0.62rem;
       text-transform: uppercase;
       color: var(--text-muted);
       letter-spacing: 0.04em;
     }}
     .summary-stat-val {{
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 700;
       color: var(--text);
       margin-top: 1px;
     }}
     .summary-stat-sub {{
-      font-size: 0.64rem;
+      font-size: 0.62rem;
       color: var(--text-muted);
-      margin-top: 2px;
+      margin-top: 1px;
     }}
     .chain-flow {{
       display: flex;
@@ -3179,8 +3515,8 @@ class DdiLifecycleProfile(BaseModel):
       color: var(--accent);
       border: 1px solid rgba(56, 189, 248, 0.35);
       border-radius: 4px;
-      padding: 2px 7px;
-      font-size: 0.72rem;
+      padding: 2px 6px;
+      font-size: 0.7rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.15s ease;
@@ -3195,13 +3531,13 @@ class DdiLifecycleProfile(BaseModel):
     }}
     .chain-arrow {{
       color: var(--text-muted);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       user-select: none;
     }}
     .domain-list {{
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
       margin-top: 4px;
     }}
     .domain-row {{
@@ -3212,7 +3548,7 @@ class DdiLifecycleProfile(BaseModel):
     .domain-label-row {{
       display: flex;
       justify-content: space-between;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
     }}
     .domain-bar-track {{
@@ -3244,25 +3580,168 @@ class DdiLifecycleProfile(BaseModel):
       background: var(--panel-bg);
       border: 1px solid var(--panel-border);
       border-radius: 8px;
-      padding: 10px 14px;
+      padding: 8px 12px;
       backdrop-filter: blur(12px);
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      font-size: 0.7rem;
+      gap: 5px;
+      font-size: 0.68rem;
       z-index: 5;
     }}
     .legend-item {{
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       color: var(--text-muted);
     }}
     .legend-dot {{
-      width: 10px;
-      height: 10px;
-      border-radius: 3px;
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
     }}
+
+    /* Full Summary Dashboard Styles */
+    .dashboard-container {{
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px 28px 48px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }}
+    .dash-header {{
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.85));
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      backdrop-filter: blur(12px);
+    }}
+    .dash-header-left {{
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }}
+    .dash-header-left h2 {{
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+    }}
+    .dash-header-left p {{
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }}
+    .dash-kpi-grid {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+    }}
+    .dash-kpi-card {{
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, border-color 0.2s;
+    }}
+    .dash-kpi-card:hover {{
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }}
+    .dash-kpi-title {{
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }}
+    .dash-kpi-val {{
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text);
+      margin: 4px 0 2px 0;
+      letter-spacing: -0.02em;
+    }}
+    .dash-kpi-sub {{
+      font-size: 0.73rem;
+      color: var(--text-muted);
+    }}
+    .dash-section-grid {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+      gap: 16px;
+    }}
+    .dash-card {{
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }}
+    .dash-card-header {{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+      padding-bottom: 10px;
+    }}
+    .dash-card-title {{
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }}
+    .dash-card-badge {{
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 9999px;
+      padding: 1px 8px;
+    }}
+    .dash-table {{
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+    }}
+    .dash-table th {{
+      text-align: left;
+      padding: 8px 10px;
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--panel-border);
+      background: rgba(10, 15, 29, 0.5);
+    }}
+    .dash-table td {{
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+      vertical-align: middle;
+    }}
+    .dash-table tr:hover td {{
+      background: rgba(255, 255, 255, 0.02);
+    }}
+    .dash-table-wrapper {{
+      max-height: 420px;
+      overflow-y: auto;
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+    }}
+
+    /* Tooltip styling */
     div.vis-tooltip {{
       position: absolute;
       background: rgba(15, 23, 42, 0.96) !important;
@@ -3303,103 +3782,134 @@ class DdiLifecycleProfile(BaseModel):
       color: var(--accent);
       padding: 1px 4px;
       border-radius: 3px;
-      font-family: monospace;
+      font-family: var(--font-mono);
     }}
   </style>
 </head>
 <body>
-  <div id="sidebar">
-    <div class="header">
-      <h1>DDI-Lifecycle Profile Explorer</h1>
-      {subtitle_html}
-    </div>
-    <div class="metrics">
-      <div class="metric-item" title="Total unique DDI-Lifecycle resource classes/types in this dataset">
-        Classes<div class="metric-val">{g.summary.total_classes:,}</div>
-      </div>
-      <div class="metric-item" title="Total resource instances instantiated across all classes">
-        Resources<div class="metric-val">{g.summary.total_resources:,}</div>
-      </div>
-      <div class="metric-item" title="Total reference instances pointing from one resource to another">
-        Refs<div class="metric-val">{g.summary.total_reference_instances:,}</div>
-      </div>
-      <div class="metric-item" title="{res_title}">
-        Resolution
-        <div class="metric-val">
-          {g.summary.resolution_rate:.1%}
-        </div>
+  <!-- Top Navigation App Bar -->
+  <header id="top-nav">
+    <div class="nav-brand">
+      <span class="nav-logo">⚡</span>
+      <div class="nav-title-group">
+        <h1>{doc_title}</h1>
+        {subtitle_html}
       </div>
     </div>
-    <div class="controls">
-      <div class="search-box">
-        <input
-          type="text"
-          id="nodeSearch"
-          class="search-input"
-          placeholder="Search class (e.g. Variable, QuestionItem)..."
-          onkeyup="filterNodes()"
-        />
-      </div>
-      <div>
-        <div class="control-row" style="margin-bottom: 5px;">
-          <span class="control-label">Layout Mode</span>
-        </div>
-        <div class="btn-group">
-          <button id="btnLayoutOrganic" class="btn active" onclick="setLayout('organic')">Organic</button>
-          <button id="btnLayoutLR" class="btn" onclick="setLayout('hierarchicalLR')">Left → Right</button>
-          <button id="btnLayoutUD" class="btn" onclick="setLayout('hierarchicalUD')">Top → Down</button>
-          <button id="btnLayoutRadial" class="btn" onclick="setLayout('radial')">Radial</button>
-        </div>
-      </div>
-      <div>
-        <div class="control-row" style="margin-bottom: 5px;">
-          <span class="control-label">Edge Labels</span>
-        </div>
-        <div class="btn-group">
-          <button id="btnLabelOff" class="btn active" onclick="setEdgeLabelDisplay(false)">Off</button>
-          <button id="btnLabelOn" class="btn" onclick="setEdgeLabelDisplay(true)">All Labels</button>
-        </div>
-      </div>
+    <div class="nav-tabs">
+      <button id="tabBtnGraph" class="nav-tab active" onclick="switchView('graph')">
+        <span class="tab-icon">🕸️</span> Graph Explorer
+      </button>
+      <button id="tabBtnDashboard" class="nav-tab" onclick="switchView('dashboard')">
+        <span class="tab-icon">📊</span> Summary Dashboard
+      </button>
+    </div>
+    <div class="nav-actions">
+      <span class="standard-badge">DDI-L 3.3</span>
+    </div>
+  </header>
 
-      <div>
-        <div class="control-row" style="margin-bottom: 4px;">
-          <span class="control-label">Min Reference Count</span>
-          <span class="slider-val" id="minCountVal">0</span>
+  <!-- Main View Container -->
+  <main id="app-body">
+    <!-- VIEW 1: Interactive Graph Explorer -->
+    <div id="view-graph" class="app-view active">
+      <div id="sidebar">
+        <div class="metrics">
+          <div class="metric-item" title="Total unique DDI-Lifecycle resource classes/types in this dataset">
+            Classes<div class="metric-val">{g.summary.total_classes:,}</div>
+          </div>
+          <div class="metric-item" title="Total resource instances instantiated across all classes">
+            Resources<div class="metric-val">{g.summary.total_resources:,}</div>
+          </div>
+          <div class="metric-item" title="Total reference instances pointing from one resource to another">
+            Refs<div class="metric-val">{g.summary.total_reference_instances:,}</div>
+          </div>
+          <div class="metric-item" title="{res_title}">
+            Resolution
+            <div class="metric-val">
+              {g.summary.resolution_rate:.1%}
+            </div>
+          </div>
         </div>
-        <div class="slider-container">
-          <input
-            type="range"
-            id="minCountSlider"
-            class="slider"
-            min="0"
-            max="{max(1, max_edge_count)}"
-            value="0"
-            oninput="handleMinCountChange(this.value)"
-          />
+        <div class="controls">
+          <div class="search-box">
+            <input
+              type="text"
+              id="nodeSearch"
+              class="search-input"
+              placeholder="Search class (e.g. Variable, QuestionItem)..."
+              onkeyup="filterNodes()"
+            />
+          </div>
+          <div>
+            <div class="control-row" style="margin-bottom: 5px;">
+              <span class="control-label">Layout Mode</span>
+            </div>
+            <div class="btn-group">
+              <button id="btnLayoutOrganic" class="btn active" onclick="setLayout('organic')">Organic</button>
+              <button id="btnLayoutLR" class="btn" onclick="setLayout('hierarchicalLR')">Left → Right</button>
+              <button id="btnLayoutUD" class="btn" onclick="setLayout('hierarchicalUD')">Top → Down</button>
+              <button id="btnLayoutRadial" class="btn" onclick="setLayout('radial')">Radial</button>
+            </div>
+          </div>
+          <div>
+            <div class="control-row" style="margin-bottom: 5px;">
+              <span class="control-label">Edge Labels</span>
+            </div>
+            <div class="btn-group">
+              <button id="btnLabelOff" class="btn active" onclick="setEdgeLabelDisplay(false)">Off</button>
+              <button id="btnLabelOn" class="btn" onclick="setEdgeLabelDisplay(true)">All Labels</button>
+            </div>
+          </div>
+
+          <div>
+            <div class="control-row" style="margin-bottom: 4px;">
+              <span class="control-label">Min Reference Count</span>
+              <span class="slider-val" id="minCountVal">0</span>
+            </div>
+            <div class="slider-container">
+              <input
+                type="range"
+                id="minCountSlider"
+                class="slider"
+                min="0"
+                max="{max(1, max_edge_count)}"
+                value="0"
+                oninput="handleMinCountChange(this.value)"
+              />
+            </div>
+          </div>
+          <div class="btn-group">
+            <button id="btnOverview" class="btn" onclick="showGraphSummary()">📊 Overview</button>
+            <button class="btn" onclick="network.fit({{animation: {{duration: 500}}}})">Fit Graph</button>
+            <button id="btnPhysics" class="btn" onclick="togglePhysics()">Freeze Physics</button>
+            <button class="btn" onclick="exportPNG()">Export PNG</button>
+          </div>
+        </div>
+        <div class="inspector" id="inspectorPanel">
         </div>
       </div>
-      <div class="btn-group">
-        <button id="btnOverview" class="btn active" onclick="showGraphSummary()">📊 Overview</button>
-        <button class="btn" onclick="network.fit({{animation: {{duration: 500}}}})">Fit Graph</button>
-        <button id="btnPhysics" class="btn" onclick="togglePhysics()">Freeze Physics</button>
-        <button class="btn" onclick="exportPNG()">Export PNG</button>
+      <div id="network-container">
+        <div id="network"></div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6;"></div>Study & Structure</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#0ea5e9;"></div>Data Collection</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#10b981;"></div>Variables & Data</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;"></div>Concepts & Universes</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f43f5e;"></div>Processing & Quality</div>
+        </div>
       </div>
     </div>
-    <div class="inspector" id="inspectorPanel">
+
+    <!-- VIEW 2: Summary Dashboard -->
+    <div id="view-dashboard" class="app-view">
+      <div class="dashboard-container" id="dashboardContent">
+      </div>
     </div>
-  </div>
-  <div id="network-container">
-    <div id="network"></div>
-    <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6;"></div>Study & Structure</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#0ea5e9;"></div>Data Collection</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#10b981;"></div>Variables & Data</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;"></div>Concepts & Universes</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#f43f5e;"></div>Processing & Quality</div>
-    </div>
-  </div>
+  </main>
   <script type="text/javascript">
     const rawData = {json_data};
+    let currentView = "graph";
     let currentLayout = "organic";
     let showAllEdgeLabels = false;
     let currentMinCount = 0;
@@ -3407,6 +3917,40 @@ class DdiLifecycleProfile(BaseModel):
     let selectedNodeId = null;
     let isNodeDimmedSelection = true;
     let focusedNeighborhood = false;
+
+    function switchView(viewName) {{
+      currentView = viewName;
+      const viewGraph = document.getElementById("view-graph");
+      const viewDashboard = document.getElementById("view-dashboard");
+      const tabGraph = document.getElementById("tabBtnGraph");
+      const tabDashboard = document.getElementById("tabBtnDashboard");
+
+      if (viewName === "dashboard") {{
+        viewGraph.classList.remove("active");
+        viewDashboard.classList.add("active");
+        tabGraph.classList.remove("active");
+        tabDashboard.classList.add("active");
+        renderFullDashboard();
+      }} else {{
+        viewDashboard.classList.remove("active");
+        viewGraph.classList.add("active");
+        tabDashboard.classList.remove("active");
+        tabGraph.classList.add("active");
+        if (network) {{
+          setTimeout(() => {{
+            network.redraw();
+            network.fit({{ animation: {{ duration: 300 }} }});
+          }}, 50);
+        }}
+      }}
+    }}
+
+    function jumpToNodeInGraph(nodeId) {{
+      switchView('graph');
+      setTimeout(() => {{
+        focusNode(nodeId);
+      }}, 100);
+    }}
 
     function createNodeTooltip(n) {{
       const el = document.createElement("div");
@@ -3859,8 +4403,6 @@ class DdiLifecycleProfile(BaseModel):
       }}
     }}
 
-
-
     function handleMinCountChange(val) {{
       currentMinCount = parseInt(val, 10);
       document.getElementById("minCountVal").innerText = currentMinCount;
@@ -4140,8 +4682,40 @@ class DdiLifecycleProfile(BaseModel):
         html += `</div>`;
       }}
 
-      const btnOverview = document.getElementById("btnOverview");
-      if (btnOverview) btnOverview.classList.remove("active");
+      if (n.languages && n.languages.length > 0) {{
+        const primaryTag = n.primaryLanguage
+          ? ` (Primary: <span style="color:#06b6d4;">${{n.primaryLanguage}}</span>)`
+          : "";
+        html += `<div class="detail-card">`;
+        html += `<h4>Metadata Languages <span>${{n.languages.length}}</span>${{primaryTag}}</h4>`;
+        html += `<ul class="ref-list">`;
+        n.languages.forEach(lp => {{
+          const multTitle = `Multiplicity: min ${{lp.minPerInstance}}, max ${{lp.maxPerInstance}}, `
+            + `avg ${{lp.avgPerInstance}}x per instance`;
+          const multTag = lp.maxPerInstance > 1
+            ? ` <span style="background:rgba(6,182,212,0.15); color:#22d3ee; font-size:0.62rem; `
+              + `padding:1px 4px; border-radius:3px; cursor:help;" `
+              + `title="${{multTitle}}">avg ${{lp.avgPerInstance}}x</span>`
+            : "";
+          const barWidth = Math.min(100, Math.max(0, lp.usagePct));
+          html += `<li class="ref-item" style="border-left-color: #06b6d4;">`;
+          html += `<div style="display:flex; justify-content:space-between; align-items:center;">`;
+          html += `<span class="ref-elem" style="color:#e2e8f0; font-family:var(--font-mono);">${{lp.languageCode}}`
+            + `</span><div>${{multTag}}</div>`;
+          html += `</div>`;
+          html += `<div style="display:flex; align-items:center; gap:6px; margin-top:3px;">`;
+          html += `<div style="flex:1; background:rgba(255,255,255,0.08); height:4px; `
+            + `border-radius:2px; overflow:hidden;">`;
+          html += `<div style="background:#06b6d4; height:100%; width:${{barWidth}}%;"></div>`;
+          html += `</div>`;
+          html += `<span style="font-size:0.65rem; color:var(--text-muted);">`
+            + `${{lp.count.toLocaleString()}} (${{lp.usagePct}}% of instances)</span>`;
+          html += `</div>`;
+          html += `</li>`;
+        }});
+        html += `</ul>`;
+        html += `</div>`;
+      }}
 
       document.getElementById("inspectorPanel").innerHTML = html;
     }}
@@ -4169,18 +4743,23 @@ class DdiLifecycleProfile(BaseModel):
     }}
 
     function renderGraphSummary() {{
-      const btnOverview = document.getElementById("btnOverview");
-      if (btnOverview) btnOverview.classList.add("active");
-
       const s = rawData.summary || {{}};
       let html = `<div class="inspector-title" `
         + `style="display:flex; justify-content:space-between; align-items:center;">`;
-      html += `<span>📊 Graph Summary</span>`;
+      html += `<span>📊 Quick Overview</span>`;
       html += `<span style="font-size:0.7rem; font-weight:normal; color:var(--text-muted);">`
         + `${{rawData.nodes.length}} classes</span>`;
       html += `</div>`;
 
-      // 1. Overview Metric Cards Grid
+      html += `<div style="font-size:0.73rem; color:var(--text-muted); line-height:1.4; margin-top:2px;">`
+        + `Click any node on the graph to inspect references & attributes, or open the full dashboard.</div>`;
+
+      html += `<div style="margin: 6px 0 10px 0;">`
+        + `<button class="btn active" style="width:100%; padding:7px 10px; font-size:0.75rem;" `
+        + `onclick="switchView('dashboard')">📊 Open Summary Dashboard</button>`
+        + `</div>`;
+
+      // Overview Metric Cards Grid
       html += `<div class="summary-grid">`;
 
       const resPct = s.resolution_rate !== undefined ? (s.resolution_rate * 100).toFixed(1) + "%" : "100%";
@@ -4239,6 +4818,19 @@ class DdiLifecycleProfile(BaseModel):
         html += `</div>`;
       }}
 
+      if (s.total_language_elements && s.total_language_elements > 0) {{
+        const langTooltip = `Metadata Languages: ${{s.total_language_elements.toLocaleString()}} total elements across `
+          + `${{s.unique_languages}} distinct language codes (Primary: ${{s.primary_language || 'None'}}).`;
+        html += `<div class="summary-stat-box" title="${{langTooltip}}">`;
+        html += `<div class="summary-stat-lbl">Languages ⓘ</div>`;
+        html += `<div class="summary-stat-val" style="color:#06b6d4;">`
+          + `${{s.unique_languages}} <span style="font-size:0.75rem; font-weight:normal; `
+          + `color:var(--text-muted);">codes</span></div>`;
+        html += `<div class="summary-stat-sub">${{s.total_language_elements.toLocaleString()}} elements • `
+          + `Primary: <b>${{s.primary_language || 'None'}}</b></div>`;
+        html += `</div>`;
+      }}
+
       html += `</div>`;
 
       // Referencing Mechanisms Breakdown
@@ -4282,45 +4874,7 @@ class DdiLifecycleProfile(BaseModel):
         html += `</div>`;
       }}
 
-      // User Attributes Breakdown
-      if (s.user_attributes && Object.keys(s.user_attributes).length > 0) {{
-        const totalUap = s.total_user_attributes || 1;
-        const uapCount = s.unique_user_attribute_keys || Object.keys(s.user_attributes).length;
-        html += `<div class="detail-card" style="margin-top:10px;" `
-          + `title="UserAttributePair extension keys and distinct values statistics across this document">`;
-        html += `<h4>User Attribute Keys (&lt;UserAttributePair&gt;) <span>${{uapCount}}</span></h4>`;
-        html += `<div class="domain-list">`;
-        const sortedUaps = Object.values(s.user_attributes).sort((a, b) => b.count - a.count);
-        sortedUaps.forEach(ua => {{
-          const distinctLabel = `${{ua.distinct_values_count || ua.distinctValuesCount || 1}} distinct val`;
-          const countVal = ua.count || 0;
-          const kName = ua.attribute_key || ua.attributeKey;
-          const pctStr = (countVal > 0 ? ((countVal / totalUap) * 100) : 0).toFixed(1);
-          html += `<div class="domain-row">`;
-          html += `<div class="domain-label-row">`;
-          html += `<span><span style="display:inline-block; width:8px; height:8px; border-radius:2px; `
-            + `background:#f59e0b; margin-right:5px;"></span><code>${{kName}}</code></span>`;
-          html += `<b style="color:var(--text);">${{countVal.toLocaleString()}} `
-            + `<span style="font-size:0.65rem; color:#34d399; font-weight:normal;">(${{distinctLabel}})</span></b>`;
-          html += `</div>`;
-          html += `<div class="domain-bar-track">`;
-          html += `<div class="domain-bar-fill" style="width:${{pctStr}}%; background:#f59e0b;"></div>`;
-          html += `</div>`;
-          const clsMap = ua.classes_used || ua.classesUsed;
-          if (clsMap && Object.keys(clsMap).length > 0) {{
-            const clsChips = Object.entries(clsMap)
-              .map(([c, cnt]) => `${{c}}: ${{cnt.toLocaleString()}}`)
-              .join(", ");
-            html += `<div style="font-size:0.63rem; color:var(--text-muted); margin-top:2px;">`
-              + `Classes: ${{clsChips}}</div>`;
-          }}
-          html += `</div>`;
-        }});
-        html += `</div>`;
-        html += `</div>`;
-      }}
-
-      // 2. Longest Dependency Chain (if available)
+      // Longest Dependency Chain (if available)
       if (s.longest_path && s.longest_path.length > 1) {{
         html += `<div class="detail-card" style="margin-top:10px;" `
           + `title="Longest acyclic sequence of class-to-class references in this dataset">`;
@@ -4335,7 +4889,7 @@ class DdiLifecycleProfile(BaseModel):
         html += `</div>`;
       }}
 
-      // 3. Central Structural Hubs (if available)
+      // Central Structural Hubs (if available)
       if (s.central_hubs && s.central_hubs.length > 0) {{
         html += `<div class="detail-card" style="margin-top:10px;" `
           + `title="Top resource classes ranked by total degree (inbound + outbound connections)">`;
@@ -4352,7 +4906,7 @@ class DdiLifecycleProfile(BaseModel):
         html += `</div>`;
       }}
 
-      // 4. Functional Domain Distribution
+      // Functional Domain Distribution
       if (s.domain_distribution && Object.keys(s.domain_distribution).length > 0) {{
         html += `<div class="detail-card" style="margin-top:10px;" `
           + `title="Percentage share of resource instances by DDI architectural functional domain">`;
@@ -4377,7 +4931,7 @@ class DdiLifecycleProfile(BaseModel):
         html += `</div>`;
       }}
 
-      // 5. Connecting Paths (if available from between queries)
+      // Connecting Paths (if available from between queries)
       if (rawData.connectingPaths && rawData.connectingPaths.length > 0) {{
         html += `<div style="margin-top:10px;">`;
         html += `<div class="inspector-title" style="margin-bottom:6px; font-size:0.9rem;">`;
@@ -4393,6 +4947,448 @@ class DdiLifecycleProfile(BaseModel):
       }}
 
       document.getElementById("inspectorPanel").innerHTML = html;
+    }}
+
+    function renderFullDashboard() {{
+      const s = rawData.summary || {{}};
+      const totalResources = s.total_resources || 0;
+      const totalRefs = s.total_reference_instances || 0;
+      const resPct = s.resolution_rate !== undefined ? (s.resolution_rate * 100).toFixed(1) + "%" : "100%";
+      const internalCount = s.internal_reference_instances || 0;
+      const externalCount = s.external_reference_instances || 0;
+      const densityVal = s.graph_density !== undefined ? s.graph_density.toFixed(4) : "0.0000";
+      const compCount = s.connected_components || 1;
+      const maxDepth = s.max_dependency_depth || 0;
+      const pathsCount = s.total_unique_paths || rawData.edges.length;
+      const avgRefs = totalResources > 0 ? (totalRefs / totalResources).toFixed(1) : "0.0";
+      const titleEsc = escapeHtml(rawData.title || 'DDI-Lifecycle Resource Profile & Graph Topology');
+      const domainCount = s.domain_distribution ? Object.keys(s.domain_distribution).length : 5;
+
+      let html = `
+        <div class="dash-header">
+          <div class="dash-header-left">
+            <h2>📊 DDI-Lifecycle Summary Dashboard</h2>
+            <p>${{titleEsc}} • <b>${{rawData.nodes.length}}</b> resource classes, `
+            + `<b>${{totalResources.toLocaleString()}}</b> instances, `
+            + `<b>${{totalRefs.toLocaleString()}}</b> refs (${{resPct}} resolved)</p>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn active" style="padding:7px 14px; font-size:0.75rem;" `
+              + `onclick="switchView('graph')">🕸️ Open Graph Explorer</button>
+          </div>
+        </div>
+      `;
+
+      // 1. KPI Cards Grid
+      html += `<div class="dash-kpi-grid">`;
+      html += `
+        <div class="dash-kpi-card">
+          <div class="dash-kpi-title">Classes <span>🏛️</span></div>
+          <div class="dash-kpi-val">${{rawData.nodes.length.toLocaleString()}}</div>
+          <div class="dash-kpi-sub">${{domainCount}} functional domains</div>
+        </div>
+        <div class="dash-kpi-card">
+          <div class="dash-kpi-title">Total Resources <span>📦</span></div>
+          <div class="dash-kpi-val">${{totalResources.toLocaleString()}}</div>
+          <div class="dash-kpi-sub">Instances defined in document</div>
+        </div>
+        <div class="dash-kpi-card">
+          <div class="dash-kpi-title">Total References <span>🔗</span></div>
+          <div class="dash-kpi-val">${{totalRefs.toLocaleString()}}</div>
+          <div class="dash-kpi-sub">${{avgRefs}} avg references / resource</div>
+        </div>
+        <div class="dash-kpi-card">
+          <div class="dash-kpi-title">Resolution Rate <span>🎯</span></div>
+          <div class="dash-kpi-val" style="color:#34d399;">${{resPct}}</div>
+          <div class="dash-kpi-sub">${{internalCount.toLocaleString()}} int • `
+            + `${{externalCount.toLocaleString()}} ext</div>
+        </div>
+        <div class="dash-kpi-card">
+          <div class="dash-kpi-title">Graph Density <span>🌐</span></div>
+          <div class="dash-kpi-val" style="color:var(--accent);">${{densityVal}}</div>
+          <div class="dash-kpi-sub">${{compCount}} connected component(s)</div>
+        </div>
+        <div class="dash-kpi-card">
+          <div class="dash-kpi-title">Max Depth <span>📏</span></div>
+          <div class="dash-kpi-val">${{maxDepth}} `
+            + `<span style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);">hops</span></div>
+          <div class="dash-kpi-sub">${{pathsCount.toLocaleString()}} unique reference paths</div>
+        </div>
+      `;
+
+      if (s.total_user_attributes && s.total_user_attributes > 0) {{
+        html += `
+          <div class="dash-kpi-card">
+            <div class="dash-kpi-title">User Attributes <span>🏷️</span></div>
+            <div class="dash-kpi-val" style="color:#f59e0b;">${{s.total_user_attributes.toLocaleString()}}</div>
+            <div class="dash-kpi-sub">${{s.unique_user_attribute_keys}} distinct attribute keys</div>
+          </div>
+        `;
+      }}
+
+      if (s.total_language_elements && s.total_language_elements > 0) {{
+        const primaryLang = s.primary_language || 'None';
+        html += `
+          <div class="dash-kpi-card">
+            <div class="dash-kpi-title">Metadata Languages <span>🌐</span></div>
+            <div class="dash-kpi-val" style="color:#06b6d4;">${{s.unique_languages}} `
+              + `<span style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);">codes</span></div>
+            <div class="dash-kpi-sub">${{s.total_language_elements.toLocaleString()}} elements • `
+              + `Primary: <b>${{primaryLang}}</b></div>
+          </div>
+        `;
+      }}
+      html += `</div>`;
+
+      // 2. Analytical Section Grid
+      html += `<div class="dash-section-grid">`;
+
+      // Referencing Mechanisms
+      if (s.referencing_mechanisms && Object.keys(s.referencing_mechanisms).length > 0) {{
+        html += `
+          <div class="dash-card">
+            <div class="dash-card-header">
+              <div class="dash-card-title">🔗 Referencing Mechanisms</div>
+              <span class="dash-card-badge">${{Object.keys(s.referencing_mechanisms).length}} modes</span>
+            </div>
+            <div class="domain-list">
+        `;
+        const mechLabels = {{
+          "canonical_id": "Agency / ID / Version",
+          "urn": "URN",
+          "both": "Both URN & Canonical ID",
+          "typeofobject_only": "TypeOfObject Only"
+        }};
+        const mechColors = {{
+          "canonical_id": "#38bdf8",
+          "urn": "#8b5cf6",
+          "both": "#10b981",
+          "typeofobject_only": "#f59e0b"
+        }};
+        const sortedMechs = Object.entries(s.referencing_mechanisms).sort((a, b) => b[1] - a[1]);
+        sortedMechs.forEach(([mKey, count]) => {{
+          const pct = s.referencing_mechanisms_pct && s.referencing_mechanisms_pct[mKey] !== undefined
+            ? s.referencing_mechanisms_pct[mKey]
+            : (totalRefs > 0 ? ((count / totalRefs) * 100) : 0);
+          const pctStr = pct.toFixed(1);
+          const label = mechLabels[mKey] || mKey;
+          const barCol = mechColors[mKey] || "#64748b";
+          html += `
+            <div class="domain-row">
+              <div class="domain-label-row">
+                <span><span style="display:inline-block; width:8px; height:8px; border-radius:2px; `
+                  + `background:${{barCol}}; margin-right:6px;"></span>${{label}}</span>
+                <b style="color:var(--text);">${{count.toLocaleString()}} (${{pctStr}}%)</b>
+              </div>
+              <div class="domain-bar-track">
+                <div class="domain-bar-fill" style="width:${{pctStr}}%; background:${{barCol}};"></div>
+              </div>
+            </div>
+          `;
+        }});
+        html += `</div></div>`;
+      }}
+
+      // Functional Domain Distribution
+      if (s.domain_distribution && Object.keys(s.domain_distribution).length > 0) {{
+        html += `
+          <div class="dash-card">
+            <div class="dash-card-header">
+              <div class="dash-card-title">🏛️ Functional Domain Breakdown</div>
+              <span class="dash-card-badge">${{Object.keys(s.domain_distribution).length}} domains</span>
+            </div>
+            <div class="domain-list">
+        `;
+        const sortedDomains = Object.entries(s.domain_distribution).sort((a, b) => b[1] - a[1]);
+        sortedDomains.forEach(([dName, frac]) => {{
+          const pctStr = (frac * 100).toFixed(1);
+          const barCol = getDomainColor(dName);
+          html += `
+            <div class="domain-row">
+              <div class="domain-label-row">
+                <span><span style="display:inline-block; width:8px; height:8px; border-radius:2px; `
+                  + `background:${{barCol}}; margin-right:6px;"></span>${{dName}}</span>
+                <b style="color:var(--text);">${{pctStr}}%</b>
+              </div>
+              <div class="domain-bar-track">
+                <div class="domain-bar-fill" style="width:${{pctStr}}%; background:${{barCol}};"></div>
+              </div>
+            </div>
+          `;
+        }});
+        html += `</div></div>`;
+      }}
+
+      // Structural Topology: Longest Dependency Chain & Central Hubs
+      html += `
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <div class="dash-card-title">🧭 Key Structural Dependencies</div>
+            <span class="dash-card-badge">Topology Insights</span>
+          </div>
+      `;
+
+      if (s.longest_path && s.longest_path.length > 1) {{
+        const hopsCount = s.longest_path.length - 1;
+        html += `
+          <div>
+            <h4 style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px;">`
+              + `Longest Dependency Chain (${{hopsCount}} hops)</h4>
+            <div class="chain-flow">
+        `;
+        s.longest_path.forEach((cls, idx) => {{
+          if (idx > 0) html += `<span class="chain-arrow">→</span>`;
+          html += `<span class="pill-link" onclick="jumpToNodeInGraph('${{cls}}')" `
+            + `title="Click to view in Graph">${{cls}}</span>`;
+        }});
+        html += `</div></div>`;
+      }}
+
+      if (s.central_hubs && s.central_hubs.length > 0) {{
+        html += `
+          <div style="margin-top:10px;">
+            <h4 style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px;">`
+              + `Central Structural Hubs</h4>
+            <div class="chain-flow">
+        `;
+        s.central_hubs.forEach(hub => {{
+          const hubNode = rawData.nodes.find(n => n.id === hub);
+          const totalDegree = hubNode ? (hubNode.inCount + hubNode.outCount) : 0;
+          html += `<span class="pill-link" onclick="jumpToNodeInGraph('${{hub}}')" `
+            + `title="${{totalDegree}} connections • Click to view in Graph">${{hub}} `
+            + `<span style="opacity:0.7; font-size:0.65rem; margin-left:3px;">(${{totalDegree}})</span></span>`;
+        }});
+        html += `</div></div>`;
+      }}
+      html += `</div>`;
+
+      // Connecting Paths (if present)
+      if (rawData.connectingPaths && rawData.connectingPaths.length > 0) {{
+        html += `
+          <div class="dash-card">
+            <div class="dash-card-header">
+              <div class="dash-card-title">🔀 Connecting Paths</div>
+              <span class="dash-card-badge">${{rawData.connectingPaths.length}} discovered</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px; max-height:260px; overflow-y:auto;">
+        `;
+        rawData.connectingPaths.forEach((p, idx) => {{
+          html += `
+            <div class="connecting-card">
+              <div class="connecting-card-title">${{idx + 1}}. ${{p.source_class}} → `
+                + `${{p.target_class}} (${{p.hops}} hops)</div>
+              <div class="connecting-card-desc">${{p.path_description}}</div>
+            </div>
+          `;
+        }});
+        html += `</div></div>`;
+      }}
+
+      html += `</div>`; // Close dash-section-grid
+
+      // 3. User Attributes Profile Section
+      if (s.user_attributes && Object.keys(s.user_attributes).length > 0) {{
+        const totalUap = s.total_user_attributes || 1;
+        const uapCount = s.unique_user_attribute_keys || Object.keys(s.user_attributes).length;
+        const sortedUaps = Object.values(s.user_attributes).sort((a, b) => b.count - a.count);
+        html += `
+          <div class="dash-card">
+            <div class="dash-card-header">
+              <div class="dash-card-title">🏷️ User Attribute Keys Profile (&lt;UserAttributePair&gt;)</div>
+              <span class="dash-card-badge" style="color:#fbbf24; border-color:rgba(245,158,11,0.3); `
+                + `background:rgba(245,158,11,0.12);">${{uapCount}} keys</span>
+            </div>
+            <div class="dash-table-wrapper">
+              <table class="dash-table">
+                <thead>
+                  <tr>
+                    <th>Attribute Key</th>
+                    <th>Total Occurrences</th>
+                    <th>Doc Usage %</th>
+                    <th>Distinct Values</th>
+                    <th>Multiplicity (Avg)</th>
+                    <th>Sample Values</th>
+                    <th>Classes Used</th>
+                  </tr>
+                </thead>
+                <tbody>
+        `;
+        sortedUaps.forEach(ua => {{
+          const kName = ua.attribute_key || ua.attributeKey;
+          const countVal = ua.count || 0;
+          const pctStr = (countVal > 0 ? ((countVal / totalUap) * 100) : 0).toFixed(1);
+          const distinctVal = ua.distinct_values_count || ua.distinctValuesCount || 1;
+          const avgMult = ua.avg_per_instance || ua.avgPerInstance || 1.0;
+          const sampleHtml = (ua.sample_values || ua.sampleValues || [])
+            .slice(0, 3)
+            .map(item => `<code>${{escapeHtml(item)}}</code>`)
+            .join(" ");
+          const clsMap = ua.classes_used || ua.classesUsed || {{}};
+          const clsChips = Object.keys(clsMap)
+            .map(c => `<span class="pill-link" style="font-size:0.65rem;" `
+              + `onclick="jumpToNodeInGraph('${{c}}')">${{c}}</span>`)
+            .join(" ");
+          html += `
+            <tr>
+              <td><b style="color:#fbbf24; font-family:var(--font-mono);">${{kName}}</b></td>
+              <td><b>${{countVal.toLocaleString()}}</b></td>
+              <td>${{pctStr}}%</td>
+              <td><span style="color:#34d399; font-weight:600;">${{distinctVal}} distinct</span></td>
+              <td>${{avgMult}}x</td>
+              <td style="max-width:280px; word-break:break-all;">`
+                + `${{sampleHtml || '<span style="color:var(--text-muted);">-</span>'}}</td>
+              <td><div style="display:flex; flex-wrap:wrap; gap:3px;">`
+                + `${{clsChips || '<span style="color:var(--text-muted);">-</span>'}}</div></td>
+            </tr>
+          `;
+        }});
+        html += `</tbody></table></div></div>`;
+      }}
+
+      // 4. Metadata Languages Profile Section
+      if (s.languages && Object.keys(s.languages).length > 0) {{
+        const totalLangElems = s.total_language_elements || 1;
+        const langCount = s.unique_languages || Object.keys(s.languages).length;
+        const sortedLangs = Object.values(s.languages).sort((a, b) => b.count - a.count);
+        html += `
+          <div class="dash-card">
+            <div class="dash-card-header">
+              <div class="dash-card-title">🌐 Metadata Languages Profile</div>
+              <span class="dash-card-badge" style="color:#22d3ee; border-color:rgba(6,182,212,0.3); `
+                + `background:rgba(6,182,212,0.12);">${{langCount}} language codes</span>
+            </div>
+            <div class="dash-table-wrapper">
+              <table class="dash-table">
+                <thead>
+                  <tr>
+                    <th>Language Code</th>
+                    <th>Total Elements</th>
+                    <th>Doc Usage %</th>
+                    <th>Status</th>
+                    <th>Multiplicity (Avg)</th>
+                    <th>Classes Used</th>
+                  </tr>
+                </thead>
+                <tbody>
+        `;
+        sortedLangs.forEach(lp => {{
+          const lCode = lp.language_code || lp.languageCode;
+          const countVal = lp.count || 0;
+          const pctStr = (countVal > 0 ? ((countVal / totalLangElems) * 100) : 0).toFixed(1);
+          const avgMult = lp.avg_per_instance || lp.avgPerInstance || 1.0;
+          const isPrimary = (s.primary_language && s.primary_language === lCode);
+          const statusBadge = isPrimary
+            ? `<span class="badge" style="background:#06b6d4; color:#090d16;">Primary</span>`
+            : `<span class="badge" style="background:rgba(148,163,184,0.2); color:#94a3b8;">Secondary</span>`;
+          const clsMap = lp.classes_used || lp.classesUsed || {{}};
+          const clsChips = Object.keys(clsMap)
+            .map(c => `<span class="pill-link" style="font-size:0.65rem;" `
+              + `onclick="jumpToNodeInGraph('${{c}}')">${{c}}</span>`)
+            .join(" ");
+          html += `
+            <tr>
+              <td><b style="color:#22d3ee; font-family:var(--font-mono);">${{lCode}}</b></td>
+              <td><b>${{countVal.toLocaleString()}}</b></td>
+              <td>${{pctStr}}%</td>
+              <td>${{statusBadge}}</td>
+              <td>${{avgMult}}x</td>
+              <td><div style="display:flex; flex-wrap:wrap; gap:3px;">`
+                + `${{clsChips || '<span style="color:var(--text-muted);">-</span>'}}</div></td>
+            </tr>
+          `;
+        }});
+        html += `</tbody></table></div></div>`;
+      }}
+
+      // 5. Complete Resource Class Inventory Table
+      html += `
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <div class="dash-card-title">📋 Complete Resource Class Inventory (${{rawData.nodes.length}})</div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <input
+                type="text"
+                id="dashClassSearch"
+                class="search-input"
+                style="width:240px; padding:4px 10px; font-size:0.75rem;"
+                placeholder="Filter classes..."
+                onkeyup="filterDashboardClasses(this.value)"
+              />
+            </div>
+          </div>
+          <div class="dash-table-wrapper" style="max-height:480px;">
+            <table class="dash-table" id="dashClassTable">
+              <thead>
+                <tr>
+                  <th>Resource Class</th>
+                  <th>Domain</th>
+                  <th>Role</th>
+                  <th>Instances</th>
+                  <th>Inbound</th>
+                  <th>Outbound</th>
+                  <th>Unreferenced</th>
+                  <th>Primary Language</th>
+                  <th>Child Elements</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+      `;
+
+      rawData.nodes.forEach(n => {{
+        const roleCol = n.role === "root"
+          ? "#8b5cf6"
+          : (n.role === "bridge" ? "#0ea5e9" : (n.role === "leaf" ? "#10b981" : "#64748b"));
+        const unrefRate = (n.unreferencedRate * 100).toFixed(0);
+        const unrefWarning = n.unreferencedInstances > 0
+          ? `<span style="color:#f59e0b; font-weight:600;">`
+            + `⚠️ ${{n.unreferencedInstances.toLocaleString()}} (${{unrefRate}}%)</span>`
+          : `<span style="color:#34d399;">0</span>`;
+        const childCount = n.childElements ? n.childElements.length : 0;
+        const langBadge = n.primaryLanguage
+          ? `<span style="color:#06b6d4; font-family:var(--font-mono);">${{n.primaryLanguage}}</span>`
+          : `<span style="color:var(--text-muted);">-</span>`;
+
+        html += `
+          <tr class="dash-class-row" data-name="${{n.id.toLowerCase()}}" data-domain="${{n.category.toLowerCase()}}">
+            <td>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="width:8px; height:8px; border-radius:2px; `
+                  + `background:${{n.color.border}}; display:inline-block;"></span>
+                <b style="color:var(--text); cursor:pointer;" `
+                  + `onclick="jumpToNodeInGraph('${{n.id}}')">${{n.id}}</b>
+              </div>
+            </td>
+            <td><span class="badge" style="background:${{n.color.border}}; color:#090d16;">${{n.category}}</span></td>
+            <td><span class="badge" style="background:${{roleCol}}; color:#ffffff;">${{n.role || 'normal'}}</span></td>
+            <td><b>${{n.resourceCount.toLocaleString()}}</b></td>
+            <td>${{n.inCount}}</td>
+            <td>${{n.outCount}}</td>
+            <td>${{unrefWarning}}</td>
+            <td>${{langBadge}}</td>
+            <td>${{childCount}}</td>
+            <td>
+              <button class="btn" style="padding:3px 8px; font-size:0.65rem;" `
+                + `onclick="jumpToNodeInGraph('${{n.id}}')">🔍 View in Graph</button>
+            </td>
+          </tr>
+        `;
+      }});
+
+      html += `</tbody></table></div></div>`;
+
+      document.getElementById("dashboardContent").innerHTML = html;
+    }}
+
+    function filterDashboardClasses(query) {{
+      const q = (query || "").toLowerCase().trim();
+      const rows = document.querySelectorAll(".dash-class-row");
+      rows.forEach(r => {{
+        const name = r.getAttribute("data-name") || "";
+        const dom = r.getAttribute("data-domain") || "";
+        const match = name.includes(q) || dom.includes(q);
+        r.style.display = match ? "" : "none";
+      }});
     }}
 
     function exportPNG() {{
@@ -4625,6 +5621,12 @@ def analyze_ddil_profile(
     global_uap_stats: dict[str, dict[str, Any]] = defaultdict(
         lambda: {"count": 0, "instance_count": 0, "min": 0, "max": 0, "values": set(), "classes": Counter()}
     )
+    class_lang_stats: dict[str, dict[str, dict[str, Any]]] = defaultdict(
+        lambda: defaultdict(lambda: {"count": 0, "instance_count": 0, "min": 0, "max": 0})
+    )
+    global_lang_stats: dict[str, dict[str, Any]] = defaultdict(
+        lambda: {"count": 0, "instance_count": 0, "min": 0, "max": 0, "classes": Counter()}
+    )
 
     for res_elem in _get_stream(pass_progress=_pass1_progress if has_progress else None):
         c_name, agency, rid, ver, urn = _extract_resource_identifiers(res_elem)
@@ -4686,6 +5688,22 @@ def analyze_ddil_profile(
                 g_entry["max"] = max(g_entry["max"], k_cnt)
                 g_entry["min"] = min(g_entry["min"], k_cnt) if g_entry["min"] > 0 else k_cnt
                 g_entry["values"].update(inst_uap_values[k_val])
+
+        # Collect Language statistics for this resource instance
+        inst_langs = _extract_element_languages(res_elem)
+        for l_code, l_cnt in inst_langs.items():
+            c_entry = class_lang_stats[c_name][l_code]
+            c_entry["count"] += l_cnt
+            c_entry["instance_count"] += 1
+            c_entry["max"] = max(c_entry["max"], l_cnt)
+            c_entry["min"] = min(c_entry["min"], l_cnt) if c_entry["min"] > 0 else l_cnt
+
+            g_entry = global_lang_stats[l_code]
+            g_entry["count"] += l_cnt
+            g_entry["instance_count"] += 1
+            g_entry["classes"][c_name] += l_cnt
+            g_entry["max"] = max(g_entry["max"], l_cnt)
+            g_entry["min"] = min(g_entry["min"], l_cnt) if g_entry["min"] > 0 else l_cnt
 
     # Pass 2: Extract reference paths and compute counts
     path_stats: dict[tuple[str, str, str, str], dict[str, Any]] = {}
@@ -4847,6 +5865,26 @@ def analyze_ddil_profile(
                 classes_used={c_name: cnt},
             )
 
+        # Build language profiles
+        raw_langs = class_lang_stats.get(c_name, {})
+        lang_profiles: dict[str, LanguageUsageProfile] = {}
+        for l_code, stats in sorted(raw_langs.items(), key=lambda x: (-x[1]["count"], x[0].lower())):
+            cnt = stats["count"]
+            inst_cnt = stats["instance_count"]
+            pct = round((inst_cnt / res_cnt) * 100.0, 1) if res_cnt > 0 else 0.0
+            avg = round(cnt / inst_cnt, 2) if inst_cnt > 0 else 0.0
+            lang_profiles[l_code] = LanguageUsageProfile(
+                language_code=l_code,
+                count=cnt,
+                instance_count=inst_cnt,
+                usage_pct=pct,
+                min_per_instance=stats["min"],
+                max_per_instance=stats["max"],
+                avg_per_instance=avg,
+                classes_used={c_name: cnt},
+            )
+        primary_lang = next(iter(lang_profiles.keys()), None)
+
         nodes[c_name] = ClassNode(
             class_name=c_name,
             resource_count=res_cnt,
@@ -4861,6 +5899,8 @@ def analyze_ddil_profile(
             functional_domain=domain,
             child_elements=child_profiles,
             user_attributes=user_attr_profiles,
+            languages=lang_profiles,
+            primary_language=primary_lang,
         )
 
     total_ref_instances = sum(e.count for e in edges)
@@ -4903,6 +5943,27 @@ def analyze_ddil_profile(
     total_uap = sum(k.count for k in global_uap_profiles.values())
     unique_uap_keys = len(global_uap_profiles)
 
+    global_lang_profiles: dict[str, LanguageUsageProfile] = {}
+    for l_code, stats in sorted(global_lang_stats.items(), key=lambda x: (-x[1]["count"], x[0].lower())):
+        cnt = stats["count"]
+        inst_cnt = stats["instance_count"]
+        pct = round((inst_cnt / tot_resources) * 100.0, 1) if tot_resources > 0 else 0.0
+        avg = round(cnt / inst_cnt, 2) if inst_cnt > 0 else 0.0
+        global_lang_profiles[l_code] = LanguageUsageProfile(
+            language_code=l_code,
+            count=cnt,
+            instance_count=inst_cnt,
+            usage_pct=pct,
+            min_per_instance=stats["min"],
+            max_per_instance=stats["max"],
+            avg_per_instance=avg,
+            classes_used=dict(stats["classes"]),
+        )
+
+    total_lang_elems = sum(k.count for k in global_lang_profiles.values())
+    unique_langs = len(global_lang_profiles)
+    global_primary_lang = next(iter(global_lang_profiles.keys()), None)
+
     summary = DdiLifecycleProfileSummary(
         ddi_standard="DDI-Lifecycle",
         standard_version="3.3",
@@ -4928,6 +5989,10 @@ def analyze_ddil_profile(
         total_user_attributes=total_uap,
         unique_user_attribute_keys=unique_uap_keys,
         user_attributes=global_uap_profiles,
+        total_language_elements=total_lang_elems,
+        unique_languages=unique_langs,
+        primary_language=global_primary_lang,
+        languages=global_lang_profiles,
     )
 
     profile = DdiLifecycleProfile(

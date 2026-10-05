@@ -1,0 +1,28 @@
+id: case_levenshtein_minor_transposition
+title: Fuzzy Edit-Distance Matching on Misspelled Category Labels
+domain: categorical
+difficulty: edge_case
+real_world_context: Field Interviewer CAPI Free-Text Coded Entry
+story: >
+  In rapid mobile computer-assisted personal interviewing (CAPI), field interviewers occasionally
+  introduce single-character transposition or repetition typos in category descriptions (e.g.
+  'Unemployed looking for work' vs 'Unemployed loooking for work'). Levenshtein edit distance with
+  a 0.90 similarity threshold reconciles the category without requiring an exhaustive dictionary of typo rules.
+learning_objective: >
+  LevenshteinComparator calculates character-level edit distance to catch minor human typing errors.
+source_resource:
+  label: "Unemployed looking for work"
+  value: "3"
+  is_missing: false
+candidate_resource:
+  label: "Unemployed loooking for work"
+  value: "3"
+  is_missing: false
+preset: STANDARD
+custom_typos: {}
+comparator: Levenshtein
+comparator_threshold: 0.90
+expected_match: true
+expected_match_type: SYNTACTIC_SIMILAR
+expected_score_min: 0.92
+expected_score_max: 0.99

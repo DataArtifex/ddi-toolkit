@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from rdflib import Graph
 
     from ..ddicdi.assistants import CdiAssistant
+    from .converters import CodebookToLifecycleConverter
 
 _NCNAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_.-]*$")
 
@@ -651,3 +652,141 @@ def codebook_to_cdif_graph(
 
     resources = codebook_to_cdif(codebook, base_uri, files, use_skos)
     return ddi_cdi_resources_to_graph(resources)
+
+
+def codebook_to_lifecycle(
+    codebook: codeBookType,
+    agency: str | None = None,
+    version: str | None = None,
+    identifier: str | None = None,
+    id_strategy: str = "hierarchical",
+    harmonize_codes: bool = True,
+    strict: bool = False,
+) -> CodebookToLifecycleConverter:
+    """Converts a DDI-Codebook document into a CodebookToLifecycleConverter instance."""
+    from .converters import CodebookToLifecycleConverter
+
+    return CodebookToLifecycleConverter(
+        codebook=codebook,
+        agency=agency,
+        version=version,
+        identifier=identifier,
+        id_strategy=id_strategy,
+        harmonize_codes=harmonize_codes,
+        strict=strict,
+    )
+
+
+def codebook_to_ddi4(
+    codebook: codeBookType,
+    agency: str | None = None,
+    version: str | None = None,
+    identifier: str | None = None,
+    id_strategy: str = "hierarchical",
+    harmonize_codes: bool = True,
+    strict: bool = False,
+) -> Any:
+    """Converts a DDI-Codebook document into a DDI 4.0 RC1 StudyUnit Pydantic model."""
+    converter = codebook_to_lifecycle(
+        codebook,
+        agency=agency,
+        version=version,
+        identifier=identifier,
+        id_strategy=id_strategy,
+        harmonize_codes=harmonize_codes,
+        strict=strict,
+    )
+    return converter.to_ddi4()
+
+
+def codebook_to_ddi4_json(
+    codebook: codeBookType,
+    agency: str | None = None,
+    version: str | None = None,
+    identifier: str | None = None,
+    id_strategy: str = "hierarchical",
+    harmonize_codes: bool = True,
+    strict: bool = False,
+    indent: int = 2,
+) -> str:
+    """Converts a DDI-Codebook document into a DDI 4.0 RC1 JSON string."""
+    converter = codebook_to_lifecycle(
+        codebook,
+        agency=agency,
+        version=version,
+        identifier=identifier,
+        id_strategy=id_strategy,
+        harmonize_codes=harmonize_codes,
+        strict=strict,
+    )
+    return converter.to_ddi4_json(indent=indent)
+
+
+def codebook_to_ddi4_xml(
+    codebook: codeBookType,
+    agency: str | None = None,
+    version: str | None = None,
+    identifier: str | None = None,
+    id_strategy: str = "hierarchical",
+    harmonize_codes: bool = True,
+    strict: bool = False,
+) -> str:
+    """Converts a DDI-Codebook document into a DDI 4.0 RC1 XML string."""
+    converter = codebook_to_lifecycle(
+        codebook,
+        agency=agency,
+        version=version,
+        identifier=identifier,
+        id_strategy=id_strategy,
+        harmonize_codes=harmonize_codes,
+        strict=strict,
+    )
+    return converter.to_ddi4_xml()
+
+
+def codebook_to_ddi33_xml(
+    codebook: codeBookType,
+    agency: str | None = None,
+    version: str | None = None,
+    identifier: str | None = None,
+    id_strategy: str = "hierarchical",
+    harmonize_codes: bool = True,
+    strict: bool = False,
+    urn_only: bool = False,
+    pretty: bool = True,
+) -> str:
+    """Converts a DDI-Codebook document into a canonical DDI-Lifecycle 3.3 XML document."""
+    converter = codebook_to_lifecycle(
+        codebook,
+        agency=agency,
+        version=version,
+        identifier=identifier,
+        id_strategy=id_strategy,
+        harmonize_codes=harmonize_codes,
+        strict=strict,
+    )
+    return converter.to_ddi33_xml(pretty=pretty, urn_only=urn_only)
+
+
+def codebook_to_ddi33_fragments(
+    codebook: codeBookType,
+    agency: str | None = None,
+    version: str | None = None,
+    identifier: str | None = None,
+    id_strategy: str = "hierarchical",
+    harmonize_codes: bool = True,
+    strict: bool = False,
+    urn_only: bool = False,
+    pretty: bool = True,
+) -> list[str]:
+    """Converts a DDI-Codebook document into a list of DDI-Lifecycle 3.3 fragment XML strings."""
+    converter = codebook_to_lifecycle(
+        codebook,
+        agency=agency,
+        version=version,
+        identifier=identifier,
+        id_strategy=id_strategy,
+        harmonize_codes=harmonize_codes,
+        strict=strict,
+    )
+    return converter.to_ddi33_fragments(pretty=pretty, urn_only=urn_only)

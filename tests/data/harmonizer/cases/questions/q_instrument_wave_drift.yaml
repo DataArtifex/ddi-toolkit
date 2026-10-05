@@ -1,0 +1,29 @@
+id: case_question_instruction_mode_drift
+title: Longitudinal Question Adaptation (CAPI Face-to-Face vs. CAWI Web Mode)
+domain: question
+difficulty: intermediate
+real_world_context: Multi-Wave Longitudinal Health & Labor Panel
+story: >
+  In Wave 1 (in-person CAPI), the questionnaire had interviewer instruction 'Show Card C to respondent'.
+  In Wave 5 (self-administered CAWI web), the instruction was replaced by 'Select one option on screen',
+  and a lead-in prompt was added. The core prompt literal remained unchanged. Weighted multi-attribute
+  comparison weights the prompt literal (0.70) higher than instructions (0.15), correctly identifying
+  a high syntactic similarity (score ~0.89) without false rejection.
+learning_objective: WeightedAttributeComparator allows nuanced question alignment across collection modes.
+source_resource:
+  pre_question_text: "Thinking about the past 12 months:"
+  question_text: "Did you consult a medical doctor or specialist?"
+  instructions: "Show Card C to respondent."
+  intent: "Healthcare access utilization"
+candidate_resource:
+  pre_question_text: "During the last 12 months:"
+  question_text: "Did you consult a medical doctor or specialist?"
+  instructions: "Select one option on the screen."
+  intent: "Healthcare access utilization"
+preset: STANDARD
+comparator: SequenceMatcher
+comparator_threshold: 0.85
+expected_match: true
+expected_match_type: SYNTACTIC_SIMILAR
+expected_score_min: 0.85
+expected_score_max: 0.95

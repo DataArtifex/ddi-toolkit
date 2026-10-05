@@ -1,0 +1,30 @@
+id: case_likert_smart_quotes_typos
+title: Likert Scale Typographic Standardization & Typo Correction
+domain: categorical
+difficulty: basic
+real_world_context: National Census vs. Academic Social Science Poll
+story: >
+  One statistical agency recorded survey responses as "D’accord (fortement)" with typographic
+  curly apostrophes and French acute accents. An independent polling dataset recorded
+  "daccord (fortement)" with a typo and no apostrophe. The sanitization and normalizer
+  pipeline standardizes punctuation, fixes typos, strips accents via NFKD, and collapses
+  whitespace, resulting in an exact match.
+learning_objective: >
+  Two-stage pipeline: TextSanitizer cleans punctuation/typos, TextNormalizer canonicalizes keys.
+source_resource:
+  label: "D’accord (fortement)"
+  value: "1"
+  is_missing: false
+candidate_resource:
+  label: "  daccord (fortement)  "
+  value: "1"
+  is_missing: false
+preset: STANDARD
+custom_typos:
+  daccord: "d'accord"
+comparator: Exact
+comparator_threshold: 1.0
+expected_match: true
+expected_match_type: NORMALIZED_EXACT
+expected_score_min: 1.0
+expected_score_max: 1.0

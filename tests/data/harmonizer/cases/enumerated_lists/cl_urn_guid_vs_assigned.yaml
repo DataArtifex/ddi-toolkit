@@ -1,0 +1,53 @@
+id: case_codelist_urn_guid_vs_assigned
+title: Identical Code List with Assigned DDI URN vs. Synthetic UUIDv4
+domain: enumerated_list
+difficulty: intermediate
+real_world_context: SDMX / DDI-CDI Data Pipeline Ingestion
+story: >
+  An authoritative statistical agency publishes an Urban/Rural classification under assigned DDI URN
+  'urn:ddi:org.sdmx:CL_URBAN_RURAL:1.0'. An ad-hoc pipeline ingested the same list but minted a random
+  synthetic UUIDv4 GUID 'urn:uuid:8b96c21e-12fa-48e2-b88a-6759c9918bc3'. The Harmonizer detects 100%
+  identical content digests, flags the candidate identifier as a synthetic random GUID (is_random_guid=True),
+  and classifies the match as CONTENT_EXACT_DIFFERENT_IDENTIFIER with a 1.0 confidence score.
+learning_objective: Differentiates assigned semantic URNs from random synthetic GUIDs while preserving 100% content matches.
+source_resource:
+  name: CL_URBAN_RURAL_CANON
+  urn: "urn:ddi:org.sdmx:CL_URBAN_RURAL:1.0"
+  codes:
+    - value: "1"
+      label: "Urban Area (High Density)"
+      is_missing: false
+    - value: "2"
+      label: "Semi-Urban / Peri-Urban"
+      is_missing: false
+    - value: "3"
+      label: "Rural Area (Dispersed)"
+      is_missing: false
+    - value: "9"
+      label: "Not Classifiable"
+      is_missing: true
+      sentinel_type: "NOT_APPLICABLE"
+candidate_resource:
+  name: CL_URBAN_RURAL_INGESTED
+  urn: "urn:uuid:8b96c21e-12fa-48e2-b88a-6759c9918bc3"
+  codes:
+    - value: "1"
+      label: "Urban Area (High Density)"
+      is_missing: false
+    - value: "2"
+      label: "Semi-Urban / Peri-Urban"
+      is_missing: false
+    - value: "3"
+      label: "Rural Area (Dispersed)"
+      is_missing: false
+    - value: "9"
+      label: "Not Classifiable"
+      is_missing: true
+      sentinel_type: "NOT_APPLICABLE"
+preset: STANDARD
+comparator: Exact
+comparator_threshold: 1.0
+expected_match: true
+expected_match_type: CONTENT_EXACT_DIFFERENT_IDENTIFIER
+expected_score_min: 1.0
+expected_score_max: 1.0

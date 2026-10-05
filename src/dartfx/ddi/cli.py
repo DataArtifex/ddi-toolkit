@@ -19,6 +19,7 @@ from rich.progress import (
 )
 
 from dartfx.ddi.basex.cli import basex_cli
+from dartfx.ddi.harmonizer.cli import harmonizer_cli
 
 app = typer.Typer(
     name="dartfx-ddi",
@@ -28,6 +29,7 @@ app = typer.Typer(
     context_settings={"help_option_names": ["-h", "--help"]},
 )
 app.add_typer(basex_cli, name="basex")
+app.add_typer(harmonizer_cli, name="harmonizer")
 
 
 class LogLevel(StrEnum):
@@ -36,6 +38,23 @@ class LogLevel(StrEnum):
     warning = "WARNING"
     error = "ERROR"
     critical = "CRITICAL"
+
+
+class LifecycleOutputFormat(StrEnum):
+    ddi4_json = "ddi4-json"
+    ddi4_xml = "ddi4-xml"
+    ddi33_xml = "ddi33-xml"
+    ddi33_fragments = "ddi33-fragments"
+
+    @property
+    def extension(self) -> str:
+        mapping = {
+            LifecycleOutputFormat.ddi4_json: ".ddi40.json",
+            LifecycleOutputFormat.ddi4_xml: ".ddi40.xml",
+            LifecycleOutputFormat.ddi33_xml: ".ddi33.xml",
+            LifecycleOutputFormat.ddi33_fragments: ".fragments.xml",
+        }
+        return mapping[self]
 
 
 class OutputFormat(StrEnum):
@@ -121,6 +140,103 @@ def ddic2cdi(
 
     logging.info(f"Writing output to {output}")
     output.write_text(serialized, encoding="utf-8")
+
+
+@app.command(name="ddic2l", no_args_is_help=True)
+def ddic2l(
+    ddifile: Annotated[Path, typer.Argument(help="DDI Codebook 2.6 XML file", exists=True, dir_okay=False)],
+    output: Annotated[
+        Path | None,
+        typer.Option("--output", "-o", help="Output file path (defaults to <ddifile>.<ext> if not specified)"),
+    ] = None,
+    format: Annotated[
+        LifecycleOutputFormat,
+        typer.Option("--format", "-f", help="Target output format: ddi4-json, ddi4-xml, ddi33-xml, ddi33-fragments"),
+    ] = LifecycleOutputFormat.ddi4_json,
+    agency: Annotated[str | None, typer.Option("--agency", "-a", help="DDI Agency identifier")] = None,
+    version: Annotated[
+        str | None, typer.Option("--version", "-v", help="Resource version identifier (default: 1.0.0)")
+    ] = None,
+    identifier: Annotated[
+        str | None, typer.Option("--identifier", "-i", help="Explicit study/codebook identifier override")
+    ] = None,
+    id_strategy: Annotated[
+        str,
+        typer.Option("--id-strategy", help="ID generation strategy: hierarchical, prefix, original, uuid, sequential"),
+    ] = "hierarchical",
+    harmonize_codes: Annotated[
+        bool,
+        typer.Option(
+            "--harmonize-codes/--no-harmonize-codes",
+            help="Aggregate and reuse identical codelists and categories across variables",
+        ),
+    ] = True,
+    urn_only: Annotated[
+        bool,
+        typer.Option(
+            "--urn-only/--no-urn-only",
+            help="Omit agency/id/version sequence elements when URN is present in DDI 3.3 XML",
+        ),
+    ] = False,
+    pretty: Annotated[bool, typer.Option("--pretty/--no-pretty", "-p/-np", help="Pretty-print output")] = True,
+    stats: Annotated[
+        bool, typer.Option("--stats/--no-stats", "-s/-ns", help="Display conversion summary statistics")
+    ] = True,
+    strict: Annotated[
+        bool, typer.Option("--strict/--no-strict", help="Halt on validation or agency resolution warnings")
+    ] = False,
+    loglevel: Annotated[LogLevel, typer.Option(help="Log level")] = LogLevel.info,
+):
+    """
+    Converts DDI-Codebook 2.5/2.6 XML file to DDI-Lifecycle (DDI 4.0 RC1 JSON/XML or DDI 3.3 XML).
+    """
+    setup_logging(loglevel)
+    from dartfx.ddi import ddicodebook as codebook
+    from dartfx.ddi.ddicodebook import utils as cb_utils
+
+    logging.info(f"Converting {ddifile} to DDI-Lifecycle ({format.value})")
+    cb = codebook.loadxml(str(ddifile))
+    converter = cb_utils.codebook_to_lifecycle(
+        cb,
+        agency=agency,
+        version=version,
+        identifier=identifier,
+        id_strategy=id_strategy,
+        harmonize_codes=harmonize_codes,
+        strict=strict,
+    )
+
+    if format == LifecycleOutputFormat.ddi4_json:
+        serialized = converter.to_ddi4_json(indent=2 if pretty else 0)
+    elif format == LifecycleOutputFormat.ddi4_xml:
+        study_unit = converter.to_ddi4()
+        serialized = study_unit.to_xml(xml_declaration=True)
+    elif format == LifecycleOutputFormat.ddi33_xml:
+        serialized = converter.to_ddi33_xml(pretty=pretty, urn_only=urn_only)
+    elif format == LifecycleOutputFormat.ddi33_fragments:
+        frags = converter.to_ddi33_fragments(pretty=pretty, urn_only=urn_only)
+        serialized = "\n".join(frags)
+    else:
+        raise typer.BadParameter(f"Unsupported format: {format}")
+
+    if output is None:
+        output = ddifile.with_suffix(format.extension)
+
+    logging.info(f"Writing output to {output}")
+    output.write_text(serialized, encoding="utf-8")
+
+    if stats:
+        summary = converter.get_summary()
+        typer.echo("\nConversion Summary:")
+        typer.echo(f"  Agency: {summary['agency']}")
+        typer.echo(f"  Version: {summary['version']}")
+        typer.echo(f"  Study Title: {summary['title']}")
+        typer.echo(f"  Variables: {summary['variable_count']}")
+        typer.echo(f"  CodeLists: {summary['codelist_count']}")
+        typer.echo(f"  Categories: {summary['category_count']}")
+        typer.echo(f"  Questions: {summary['question_count']}")
+        typer.echo(f"  Variable Groups: {summary['variable_group_count']}")
+        typer.echo(f"  Physical Instances: {summary['physical_instance_count']}")
 
 
 @app.command(name="ddic-dump", no_args_is_help=True)

@@ -1,0 +1,30 @@
+id: case_labor_hours_reference_period
+title: Labor Force Work Hours Question Alignment (Reference Recall Window)
+domain: question
+difficulty: basic
+real_world_context: Current Population Survey (CPS) vs American Community Survey (ACS)
+story: >
+  Labor force survey instruments formulate weekly hours worked with slight stylistic differences
+  in prompt phrasing ('Last week, how many hours did you actually work at all jobs?' vs
+  'During the last week, how many hours did you actually work at all jobs?'). Multi-attribute comparison
+  aligns the core prompt, instructions, and research intent seamlessly.
+learning_objective: >
+  Demonstrates multi-attribute question matching with slight temporal introductory phrasing differences.
+source_resource:
+  pre_question_text: "Thinking about your primary job and any secondary employment:"
+  question_text: "Last week, how many hours did you actually work at all jobs?"
+  instructions: "Enter total number of hours worked."
+  intent: "Measure weekly actual work hours"
+candidate_resource:
+  pre_question_text: "Thinking about your primary job and secondary employment:"
+  question_text: "During the last week, how many hours did you actually work at all jobs?"
+  instructions: "Enter total number of hours worked."
+  intent: "Measure weekly actual work hours"
+preset: STANDARD
+custom_typos: {}
+comparator: SequenceMatcher
+comparator_threshold: 0.85
+expected_match: true
+expected_match_type: SYNTACTIC_SIMILAR
+expected_score_min: 0.85
+expected_score_max: 0.96

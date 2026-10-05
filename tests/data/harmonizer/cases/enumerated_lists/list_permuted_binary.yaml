@@ -1,0 +1,32 @@
+id: case_permuted_binary_enumeration
+title: Permuted Binary Categorical Enumeration (Order-Independent Matching)
+domain: enumerated_list
+difficulty: intermediate
+real_world_context: Social Survey (DHS) vs. Electronic Health Record (EHR) Ingestion
+story: >
+  Dataset A encodes Sex as 1=Female, 2=Male. Dataset B encodes Sex as 1=Male, 2=Female.
+  Standard sequential hashing produces completely disparate digests because the sequence is inverted.
+  The ResourceFingerprinter computes both an ordered sequence digest and an unordered multiset digest.
+  The HarmonizationRegistry detects a 100% PERMUTATION match, preventing duplicate code list creation.
+learning_objective: Order-independent Multiset Hashing detects permuted enumerations.
+source_resource:
+  name: CL_SEX_A
+  codes:
+    - value: "1"
+      label: Female
+    - value: "2"
+      label: Male
+candidate_resource:
+  name: CL_SEX_B
+  codes:
+    - value: "2"
+      label: Male
+    - value: "1"
+      label: Female
+preset: STANDARD
+comparator: SequenceMatcher
+comparator_threshold: 1.0
+expected_match: true
+expected_match_type: PERMUTATION
+expected_score_min: 1.0
+expected_score_max: 1.0

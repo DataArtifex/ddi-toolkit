@@ -1,0 +1,31 @@
+id: case_question_urn_multilingual_drift
+title: Longitudinal DDI URN Match with Content Drift & Language Revision
+domain: question
+difficulty: edge_case
+real_world_context: Cross-National Survey Program (DDI Lifecycle & CDI Integration)
+story: >
+  In a multi-country survey program, both questionnaires share the identical canonical DDI URN
+  'urn:ddi:int.ess:Q_POL_TRUST:2.0'. However, the candidate resource has been adapted with a modified
+  lead-in and updated interviewer instructions. The Harmonizer engine detects the exact URN match,
+  but disentangles the nominal resource identity from the content similarity (score ~0.84), classifying
+  the result as IDENTIFIER_EXACT_CONTENT_DRIFT rather than a false 100% bit-for-bit exact match.
+learning_objective: Disentangles nominal URN/PID identity matching from content drift and revision detection.
+source_resource:
+  urn: "urn:ddi:int.ess:Q_POL_TRUST:2.0"
+  pre_question_text: "Please indicate on a score of 0-10 how much you personally trust each institution:"
+  question_text: "How much trust do you have in the national parliament?"
+  instructions: "Card 12: Hand the scale card to the respondent."
+  intent: "Political institution trust index"
+candidate_resource:
+  urn: "urn:ddi:int.ess:Q_POL_TRUST:2.0"
+  pre_question_text: "Using a scale from 0 to 10, how much do you personally trust:"
+  question_text: "How much trust do you have in the national parliament?"
+  instructions: "Self-completion screen: ensure respondent completes without assistance."
+  intent: "Political institution trust index"
+preset: STANDARD
+comparator: SequenceMatcher
+comparator_threshold: 0.70
+expected_match: true
+expected_match_type: IDENTIFIER_EXACT_CONTENT_DRIFT
+expected_score_min: 0.70
+expected_score_max: 0.85

@@ -1,0 +1,29 @@
+id: case_matrix_grid_question_battery
+title: Institutional Trust Matrix Grid Battery (Question Item Alignment)
+domain: question
+difficulty: intermediate
+real_world_context: World Values Survey (WVS) vs. European Social Survey (ESS)
+story: >
+  In matrix grid question batteries, a common lead-in / pre-question prompt ('Please indicate how much
+  trust you have in each institution:') introduces multiple sub-items. Comparing the question item for the
+  Judiciary alongside the shared context and response instructions yields a high composite multi-attribute score.
+learning_objective: >
+  WeightedAttributeComparator weights prompt literals, instructions, and shared battery contexts appropriately.
+source_resource:
+  pre_question_text: "Please indicate how much personal trust you have in each institution:"
+  question_text: "The judicial and court system"
+  instructions: "Rate on a scale from 1 (No trust at all) to 4 (A great deal of trust)."
+  intent: "Assess public institutional trust in judiciary"
+candidate_resource:
+  pre_question_text: "Please indicate how much trust you have in each institution:"
+  question_text: "The court and judicial system"
+  instructions: "Rate on a scale from 1 (No trust at all) to 4 (Complete trust)."
+  intent: "Assess public institutional trust in judiciary"
+preset: STANDARD
+custom_typos: {}
+comparator: SequenceMatcher
+comparator_threshold: 0.70
+expected_match: true
+expected_match_type: SYNTACTIC_SIMILAR
+expected_score_min: 0.70
+expected_score_max: 0.85

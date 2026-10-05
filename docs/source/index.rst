@@ -32,6 +32,7 @@ Key Features
 * **Assistant Framework**: Streamlined resource creation, automated DDI identifier management, and method proxying for DDI-CDI.
 * **RDF Integration**: Generate and validate RDF representations using the `DataArtifex RDF Toolkit <https://github.com/DataArtifex/rdf-toolkit>`_.
 * **Cross-Format Conversion**: Transform between DDI-Codebook and DDI-CDI formats aligned with the CDIF profile.
+* **Generic Resource Harmonization Framework**: Domain-agnostic, extensible deduplication, hierarchical Merkle fingerprinting, syntactic/semantic/AI comparison, and reconciliation engine for codes, categories, questions, and concepts.
 * **BaseX XML Database & Reporting** *(Experimental, Optional)*: Connect to BaseX servers over REST, query collections, and generate publication-ready reports (Markdown, HTML, JSON, CSV, Polars DataFrames).
 
 Quick Start
@@ -94,6 +95,10 @@ DDI-CDI & Assistant Framework usage::
    quickstart
    examples
    codebook_to_cdi_mappings
+   codebook_to_lifecycle_mappings
+   harmonizer
+   harmonizer_executive_overview
+   harmonizer_examples
 
 .. toctree::
    :maxdepth: 2

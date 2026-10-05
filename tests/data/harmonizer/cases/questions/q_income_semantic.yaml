@@ -1,0 +1,26 @@
+id: case_semantic_income_synonyms
+title: Semantic Construct Equivalence (Alternative Ministry Wording)
+domain: question
+difficulty: edge_case
+real_world_context: Cross-Ministry Administrative Data Reconciliation
+story: >
+  The Ministry of Labor asks: 'Total monthly household income before taxes'.
+  The Ministry of Finance asks: 'Household total pre-tax monthly income'.
+  String edit distance is lower due to word ordering and variations, but semantic vector
+  projection captures the common conceptual intent, reconciling the items.
+learning_objective: >
+  SemanticVectorComparator captures semantic intent beyond character edit distance.
+source_resource:
+  question_text: "Total monthly household income before taxes"
+  intent: "Measure baseline pre-tax household income"
+candidate_resource:
+  question_text: "Household total pre-tax monthly income"
+  intent: "Measure baseline pre-tax household income"
+preset: STANDARD
+custom_typos: {}
+comparator: Semantic
+comparator_threshold: 0.75
+expected_match: true
+expected_match_type: SEMANTIC_SIMILAR
+expected_score_min: 0.75
+expected_score_max: 1.0

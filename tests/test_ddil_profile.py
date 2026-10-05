@@ -13,6 +13,8 @@ from dartfx.ddi.ddilifecycle import (
     ClassProfileEdge,
     DdiLifecycleProfile,
     DdiLifecycleProfileSummary,
+    LanguageProfile,
+    LanguageUsageProfile,
     UserAttributeKeyProfile,
     UserAttributeProfile,
     analyze_ddil_profile,
@@ -1368,3 +1370,223 @@ def test_markdown_toc_and_user_attributes_ordering_and_skipping():
     assert "User Attribute Keys Profile" not in md_no_uap
     assert "User Attributes Usage by Resource Class" not in md_no_uap
     assert "userattributepair" not in md_no_uap
+
+
+def test_language_profile_basic():
+    xml_path = sample_xml_path()
+    profile = analyze_ddil_profile(xml_path)
+
+    # Document-level summary language metrics
+    assert profile.summary.total_language_elements == 5085
+    assert profile.summary.unique_languages == 3
+    assert profile.summary.primary_language == "en-IE"
+    assert "en-IE" in profile.summary.languages
+    assert "en-US" in profile.summary.languages
+    assert "en" in profile.summary.languages
+
+    en_ie = profile.summary.languages["en-IE"]
+    assert isinstance(en_ie, LanguageUsageProfile)
+    assert en_ie.language_code == "en-IE"
+    assert en_ie.count == 5069
+    assert en_ie.instance_count > 1000
+    assert en_ie.usage_pct > 90.0
+    assert "QuestionItem" in en_ie.classes_used
+    assert en_ie.classes_used["QuestionItem"] == 873
+
+    en_us = profile.summary.languages["en-US"]
+    assert en_us.language_code == "en-US"
+    assert en_us.count == 15
+    assert en_us.classes_used == {"Sequence": 14, "Instrument": 1}
+
+    en_base = profile.summary.languages["en"]
+    assert en_base.language_code == "en"
+    assert en_base.count == 1
+    assert en_base.classes_used == {"Concept": 1}
+
+    # get_language_profile helper on document
+    doc_lang_prof = profile.get_language_profile()
+    assert isinstance(doc_lang_prof, LanguageProfile)
+    assert doc_lang_prof.total_language_elements == 5085
+    assert doc_lang_prof.unique_languages == 3
+    assert doc_lang_prof.primary_language == "en-IE"
+
+    # Class-level language metrics
+    qi_node = profile.nodes["QuestionItem"]
+    assert qi_node.languages
+    assert "en-IE" in qi_node.languages
+    assert qi_node.languages["en-IE"].count == 873
+    assert qi_node.languages["en-IE"].instance_count == 228
+    assert qi_node.languages["en-IE"].usage_pct == 100.0
+    assert qi_node.primary_language == "en-IE"
+
+    qi_lang_prof = qi_node.get_language_profile()
+    assert isinstance(qi_lang_prof, LanguageProfile)
+    assert qi_lang_prof.total_language_elements == 873
+    assert qi_lang_prof.unique_languages == 1
+    assert qi_lang_prof.primary_language == "en-IE"
+
+    seq_node = profile.nodes["Sequence"]
+    assert "en-IE" in seq_node.languages
+    assert "en-US" in seq_node.languages
+    assert seq_node.languages["en-IE"].count == 331
+    assert seq_node.languages["en-US"].count == 14
+    assert seq_node.primary_language == "en-IE"
+
+    concept_node = profile.nodes["Concept"]
+    assert "en-IE" in concept_node.languages
+    assert "en" in concept_node.languages
+    assert concept_node.languages["en-IE"].count == 762
+    assert concept_node.languages["en"].count == 1
+    assert concept_node.primary_language == "en-IE"
+
+
+def test_language_profile_in_memory_xml():
+    xml_data = """<?xml version="1.0" encoding="utf-8"?>
+    <ddi:FragmentInstance xmlns:r="ddi:reusable:3_3" xmlns:d="ddi:datacollection:3_3" xmlns:ddi="ddi:instance:3_3">
+      <Fragment xmlns="ddi:instance:3_3">
+        <d:QuestionItem>
+          <r:URN>urn:ddi:ex:qi1:1</r:URN>
+          <r:Agency>ex</r:Agency>
+          <r:ID>qi1</r:ID>
+          <r:Version>1</r:Version>
+          <d:QuestionText>
+            <d:LiteralText><d:Text xml:lang="en">What is your age?</d:Text></d:LiteralText>
+            <d:LiteralText><d:Text xml:lang="fr">Quel est votre âge?</d:Text></d:LiteralText>
+          </d:QuestionText>
+          <r:Language>en</r:Language>
+        </d:QuestionItem>
+      </Fragment>
+      <Fragment xmlns="ddi:instance:3_3">
+        <d:QuestionItem>
+          <r:URN>urn:ddi:ex:qi2:1</r:URN>
+          <r:Agency>ex</r:Agency>
+          <r:ID>qi2</r:ID>
+          <r:Version>1</r:Version>
+          <d:QuestionText>
+            <d:LiteralText><d:Text xml:lang="en">What is your occupation?</d:Text></d:LiteralText>
+            <d:LiteralText><d:Text xml:lang="de">Was ist Ihr Beruf?</d:Text></d:LiteralText>
+          </d:QuestionText>
+        </d:QuestionItem>
+      </Fragment>
+    </ddi:FragmentInstance>
+    """
+    root = ET.fromstring(xml_data)
+    profile = analyze_ddil_profile(root)
+
+    assert profile.summary.total_language_elements == 5  # en: 3 (qi1 text, qi1 tag, qi2 text), fr: 1, de: 1
+    assert profile.summary.unique_languages == 3
+    assert profile.summary.primary_language == "en"
+    assert profile.summary.languages["en"].count == 3
+    assert profile.summary.languages["en"].instance_count == 2
+    assert profile.summary.languages["en"].usage_pct == 100.0
+    assert profile.summary.languages["fr"].count == 1
+    assert profile.summary.languages["fr"].instance_count == 1
+    assert profile.summary.languages["fr"].usage_pct == 50.0
+    assert profile.summary.languages["de"].count == 1
+    assert profile.summary.languages["de"].instance_count == 1
+    assert profile.summary.languages["de"].usage_pct == 50.0
+
+
+def test_language_profile_serialization_and_reporting():
+    xml_path = sample_xml_path()
+    profile = analyze_ddil_profile(xml_path)
+
+    # 1. to_dict & to_json roundtrip
+    p_dict = profile.to_dict()
+    assert "languages" in p_dict["summary"]
+    assert "total_language_elements" in p_dict["summary"]
+    assert p_dict["summary"]["total_language_elements"] == 5085
+    assert p_dict["summary"]["primary_language"] == "en-IE"
+
+    p_json = profile.to_json()
+    assert '"total_language_elements": 5085' in p_json
+    assert '"primary_language": "en-IE"' in p_json
+
+    restored = DdiLifecycleProfile.from_dict(p_dict)
+    assert restored.summary.total_language_elements == 5085
+    assert restored.summary.primary_language == "en-IE"
+    assert "en-IE" in restored.summary.languages
+
+    # 2. Markdown export
+    md = profile.to_markdown()
+    assert "## Table of Contents" in md
+    assert "- [Metadata Languages Profile](#metadata-languages-profile)" in md
+    assert "- [Language Usage by Resource Class](#language-usage-by-resource-class)" in md
+    assert "## Metadata Languages Profile" in md
+    assert "## Language Usage by Resource Class" in md
+    assert "- **Metadata Languages:** 5,085 elements across 3 distinct language codes (Primary: `en-IE`)" in md
+    assert "| `en-IE` | 5,069 |" in md
+    assert "| `en-US` | 15 |" in md
+    assert "| `en` | 1 |" in md
+    assert "### `QuestionItem` (228 instances, 1 distinct language, primary: `en-IE`)" in md
+    assert "### `Sequence` (157 instances, 2 distinct languages, primary: `en-IE`)" in md
+
+    # 3. HTML export
+    html = profile.to_html()
+    assert "Metadata Languages" in html
+    assert "languages" in html
+    assert "primaryLanguage" in html
+    assert "en-IE" in html
+
+
+def test_language_profile_filtering_preservation():
+    xml_path = sample_xml_path()
+    profile = analyze_ddil_profile(xml_path)
+
+    # Filter to only Concept
+    filtered = profile.filter(include_classes=["Concept"])
+    assert "Concept" in filtered.nodes
+    c_node = filtered.nodes["Concept"]
+    assert c_node.languages
+    assert "en-IE" in c_node.languages
+    assert "en" in c_node.languages
+    assert "en-US" not in c_node.languages
+
+    # Check summary metrics for filtered subgraph
+    assert filtered.summary.total_language_elements == 763  # 762 en-IE + 1 en
+    assert filtered.summary.unique_languages == 2
+    assert filtered.summary.primary_language == "en-IE"
+    assert "en-IE" in filtered.summary.languages
+    assert "en" in filtered.summary.languages
+    assert "en-US" not in filtered.summary.languages
+    assert filtered.summary.languages["en-IE"].count == 762
+    assert filtered.summary.languages["en"].count == 1
+
+
+def test_markdown_toc_and_languages_ordering_and_skipping():
+    xml_path = sample_xml_path()
+    profile = analyze_ddil_profile(xml_path)
+
+    md = profile.to_markdown()
+
+    # Verify section order: Child Elements -> User Attributes -> Metadata Languages Profile -> Language Usage
+    pos_child = md.find("## Child Elements Usage by Resource Class")
+    pos_uap = md.find("## User Attribute Keys Profile")
+    pos_lang_summary = md.find("## Metadata Languages Profile")
+    pos_lang_usage = md.find("## Language Usage by Resource Class")
+
+    assert 0 <= pos_child < pos_uap < pos_lang_summary < pos_lang_usage
+
+    # Verify skipping when no languages are present
+    xml_no_lang = """<?xml version="1.0" encoding="utf-8"?>
+    <ddi:FragmentInstance xmlns:r="ddi:reusable:3_3" xmlns:d="ddi:datacollection:3_3" xmlns:ddi="ddi:instance:3_3">
+      <Fragment xmlns="ddi:instance:3_3">
+        <d:QuestionItem>
+          <r:URN>urn:ddi:ex:qi1:1</r:URN>
+          <r:Agency>ex</r:Agency>
+          <r:ID>qi1</r:ID>
+          <r:Version>1</r:Version>
+          <d:QuestionText><d:LiteralText><d:Text>Sample Text Without Lang</d:Text></d:LiteralText></d:QuestionText>
+        </d:QuestionItem>
+      </Fragment>
+    </ddi:FragmentInstance>
+    """
+    root = ET.fromstring(xml_no_lang)
+    prof_no_lang = analyze_ddil_profile(root)
+    assert prof_no_lang.summary.total_language_elements == 0
+    assert prof_no_lang.summary.unique_languages == 0
+    assert prof_no_lang.summary.primary_language is None
+
+    md_no_lang = prof_no_lang.to_markdown()
+    assert "Metadata Languages Profile" not in md_no_lang
+    assert "Language Usage by Resource Class" not in md_no_lang

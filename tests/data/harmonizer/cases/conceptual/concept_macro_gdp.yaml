@@ -1,0 +1,27 @@
+id: case_macro_gdp_indicator
+title: Macroeconomic Indicator Concept Alignment (World Bank vs IMF)
+domain: conceptual
+difficulty: intermediate
+real_world_context: World Bank World Development Indicators (WDI) vs IMF Financial Statistics
+story: >
+  Multilateral development organizations publish national accounts statistics with distinct naming
+  conventions for identical economic concepts (e.g. 'GDP per capita, PPP' vs 'Gross domestic product
+  per capita, PPP'). HarmonizedConcept reconciles the preferred labels, notation identifiers, and formal definitions.
+learning_objective: >
+  Demonstrates conceptual alignment where definitions are identical but notation schemes and title formats differ.
+source_resource:
+  preferred_label: "GDP per capita, PPP"
+  notation: "NY.GDP.PCAP.PP.CD"
+  definition: "Gross domestic product converted to international dollars using purchasing power parity rates."
+candidate_resource:
+  preferred_label: "Gross domestic product per capita, PPP"
+  notation: "GDP_PCAP_PPP"
+  definition: "Gross domestic product converted to international dollars using purchasing power parity rates."
+preset: STANDARD
+custom_typos: {}
+comparator: SequenceMatcher
+comparator_threshold: 0.70
+expected_match: true
+expected_match_type: SYNTACTIC_SIMILAR
+expected_score_min: 0.70
+expected_score_max: 0.85

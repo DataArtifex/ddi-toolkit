@@ -1,0 +1,27 @@
+id: case_multilingual_accents_and_ligatures
+title: Multilingual Diacritic Stripping and Ligature Normalization
+domain: categorical
+difficulty: basic
+real_world_context: Eurobarometer Multilingual Fieldwork Harmonization
+story: >
+  Survey instruments fielded across French, Spanish, and German populations often experience
+  encoding variations: precomposed characters vs. decomposed accents (NFC vs. NFD), ligatures like
+  'œ' or 'ﬁ', and Eszett 'ß'. The normalizer maps ligatures and removes combining marks cleanly.
+learning_objective: >
+  NFKD Unicode decomposition ensures reproducible cross-language normalization.
+source_resource:
+  label: "Très satisfait / Straße"
+  value: "1"
+  is_missing: false
+candidate_resource:
+  label: "Tres satisfait / Strasse"
+  value: "1"
+  is_missing: false
+preset: STANDARD
+custom_typos: {}
+comparator: Exact
+comparator_threshold: 1.0
+expected_match: true
+expected_match_type: NORMALIZED_EXACT
+expected_score_min: 1.0
+expected_score_max: 1.0

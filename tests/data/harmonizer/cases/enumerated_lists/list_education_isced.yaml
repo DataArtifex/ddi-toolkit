@@ -1,0 +1,38 @@
+id: case_education_isced_classification
+title: Harmonized Education Level Classification (3-Tier Broad Categories)
+domain: enumerated_list
+difficulty: intermediate
+real_world_context: Cross-National ISCED-2011 Education Harmonization
+story: >
+  National statistical agencies often collapse detailed local educational qualifications into
+  standardized 3-tier international ISCED levels (Low, Medium, High). Comparing code lists across
+  datasets where response options are sorted from highest to lowest education vs lowest to highest
+  succeeds via order-independent multiset hashing.
+learning_objective: >
+  Demonstrates automated code list deduplication across inverted educational hierarchies.
+source_resource:
+  name: CL_EDUCATION_ISCED_A
+  codes:
+    - value: "1"
+      label: "Low (Primary or Lower Secondary)"
+    - value: "2"
+      label: "Medium (Upper Secondary)"
+    - value: "3"
+      label: "High (Tertiary Degree)"
+candidate_resource:
+  name: CL_EDUCATION_ISCED_B
+  codes:
+    - value: "3"
+      label: "High (Tertiary Degree)"
+    - value: "2"
+      label: "Medium (Upper Secondary)"
+    - value: "1"
+      label: "Low (Primary or Lower Secondary)"
+preset: STANDARD
+custom_typos: {}
+comparator: SequenceMatcher
+comparator_threshold: 1.0
+expected_match: true
+expected_match_type: PERMUTATION
+expected_score_min: 1.0
+expected_score_max: 1.0
