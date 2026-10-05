@@ -12,8 +12,14 @@ While packaged within the Data Artifex DDI Toolkit, the harmonizer is engineered
 Executive Overview & Value Proposition
 --------------------------------------
 
+The Resource Harmonization Framework is designed for two fundamental operational workflows:
+
+1. **Direct Pairwise Resource Comparison**: Determining whether two individual resources (such as two survey questions, two response code lists, two categories, or two concepts) are equivalent, drifted across survey waves, permuted, or semantically distinct. It provides instant :math:`O(1)` cryptographic equivalence verification as well as multi-attribute similarity scores, difference rationales, and fine-grained sub-attribute score breakdowns.
+2. **Registry-Scale Ingestion, Deduplication & Governance**: Ingesting hundreds or thousands of resources into a high-performance ``HarmonizationRegistry`` for automated deduplication, canonical ID assignment, curated crosswalk overrides, and borderline match escalation to human reviewers.
+
 Metadata duplication and semantic fragmentation are pervasive challenges in observational data, statistical surveys, and multi-source research catalogs. Identical or near-identical concepts, response categories, and question constructs are repeatedly redefined across variables, survey waves, and institutions:
 
+* **Direct Question Equivalence & Wave Drift**: Survey instruments often repeat the same question construct across survey rounds with slight variations—such as updated interviewer instructions (e.g., CAPI *"Show Card C"* vs. CAWI *"Select on screen"*) or minor wording refinements—requiring intelligent pairwise comparison that isolates core prompts from instructions and context.
 * **Massive Metadata Bloat**: A single survey instrument with hundreds of variables often contains thousands of redundant category instances (e.g., repeating *"Yes/No"*, *"Male/Female"*, or 5-point Likert scales for every single question).
 * **Hidden Permutations**: Code lists sharing identical categorical semantics are frequently sorted differently across waves (e.g., numerically ``1=Yes, 2=No`` vs. alphabetically ``2=No, 1=Yes``), blinding traditional string-based deduplication to their equivalence.
 * **Divergent Missing Value Schemes**: Two surveys often share identical substantive measurement domains (e.g., ``1=Employed, 2=Unemployed, 3=Retired``) but use different sentinel missing codes (e.g., Survey A: ``98=Don't Know, 99=Refused`` vs. Survey B: ``8=DK, 9=Refused``), preventing naive full-list deduplication.
@@ -22,15 +28,17 @@ Metadata duplication and semantic fragmentation are pervasive challenges in obse
 
 To solve these challenges, the framework delivers:
 
-1. **Instantaneous** :math:`O(1)` **Cryptographic Deduplication**: Fast SHA-256 Merkle root hashing of normalized content.
-2. **Order-Independent Permutation Matching**: Unordered set hashing that automatically identifies identical code lists regardless of sort order.
-3. **Granular Value, Category & Combo Hashing**: Distinct Merkle digests for code values alone, category meanings alone, and combined value :math:`\leftrightarrow` category bindings.
-4. **DDI-CDI / ISO 11404 Substantive vs. Sentinel Partitioning**: Separation of substantive measurement concepts from missing/sentinel schemes (e.g., ``REFUSED``, ``DONT_KNOW``, ``NOT_APPLICABLE``, ``TOP_CODED``, ``BOTTOM_CODED``).
-5. **URN / PID Classification & Match Disentanglement**: Distinguishing nominal identifier equivalence (assigned DDI/SDMX URNs vs. synthetic UUIDv4 GUIDs) from content match vs. content drift.
-6. **Multi-Tier Comparator Spectrum**: Graduated matching from exact hash lookups and syntactic distance (Levenshtein, Jaccard, Gestalt) to dense vector embeddings, dynamic multi-attribute weighting, and AI/LLM agent evaluation.
-7. **Interactive Harmonization Workbench & Living Example Bank**: A self-contained, client-side web application and 19-scenario Example Bank for live exploration, diffing, and Merkle tree inspection.
+1. **Direct Pairwise Comparators & 1-Liner Utilities**: Specialized tools (``compare_questions``, ``compare_codelists``, ``compare_resources``, ``QuestionComparator``, ``WeightedAttributeComparator``) that evaluate similarity, classify match types, and produce attribute-level diffs in a single call.
+2. **Instantaneous** :math:`O(1)` **Cryptographic Deduplication**: Fast SHA-256 Merkle root hashing of normalized content.
+3. **Order-Independent Permutation Matching**: Unordered set hashing that automatically identifies identical code lists regardless of sort order.
+4. **Granular Value, Category & Combo Hashing**: Distinct Merkle digests for code values alone, category meanings alone, and combined value :math:`\leftrightarrow` category bindings.
+5. **DDI-CDI / ISO 11404 Substantive vs. Sentinel Partitioning**: Separation of substantive measurement concepts from missing/sentinel schemes (e.g., ``REFUSED``, ``DONT_KNOW``, ``NOT_APPLICABLE``, ``TOP_CODED``, ``BOTTOM_CODED``).
+6. **URN / PID Classification & Match Disentanglement**: Distinguishing nominal identifier equivalence (assigned DDI/SDMX URNs vs. synthetic UUIDv4 GUIDs) from content match vs. content drift.
+7. **Multi-Tier Comparator Spectrum**: Graduated matching from exact hash lookups and syntactic distance (Levenshtein, Jaccard, Gestalt) to dense vector embeddings, dynamic multi-attribute weighting, and AI/LLM agent evaluation.
+8. **Interactive Harmonization Workbench & Living Example Bank**: A self-contained, client-side web application and 19-scenario Example Bank for live exploration, diffing, and Merkle tree inspection.
 
 In production deployment within the DDI-Codebook to DDI-Lifecycle conversion pipeline, the engine achieved a **94.1% reduction in duplicate categories** and a **92.3% reduction in redundant code lists**, operating with sub-millisecond overhead.
+
 
 Architecture & Framework Design
 -------------------------------
@@ -257,11 +265,114 @@ Multi-Tier Content Comparator Spectrum
      - Dynamic weighted scoring across active populated attributes
      - Compound Question & Concept matching
      - 2–5 ms
+   * - **QuestionComparator**
+     - Dedicated composite comparator for survey question constructs
+     - Question prompt vs. instructions vs. intent
+     - 2–5 ms
+
+Direct Pairwise Resource Comparison (1-Liner Utilities)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to indexing collections in a registry, a fundamental use case is to **directly compare two resources** to determine if they are identical, have drifted across survey waves, or share substantive concepts. The framework provides dedicated 1-liner functions and specialized comparators for this workflow:
+
+1. Comparing Two Survey Questions (``compare_questions``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Determines whether two survey questions represent the same measurement item, isolating core prompt text from interviewer instructions and mode-specific wording:
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import HarmonizedQuestion, compare_questions
+
+   # Wave 1: In-person CAPI interview
+   q_capi = HarmonizedQuestion(
+       pre_question_text="Thinking about the last 12 months:",
+       question_text="Did you consult a medical doctor or specialist?",
+       instructions="Show Card C to respondent. Single response only.",
+       intent="Measure access to outpatient healthcare services",
+   )
+
+   # Wave 2: Self-administered CAWI web survey
+   q_cawi = HarmonizedQuestion(
+       pre_question_text="Thinking about the last 12 months:",
+       question_text="Did you consult a medical doctor or specialist?",
+       instructions="Please select one option on the screen.",
+       intent="Measure access to outpatient healthcare services",
+   )
+
+   # Pairwise comparison with automatic multi-attribute weighting
+   result = compare_questions(q_capi, q_cawi, threshold=0.85)
+
+   print("Matched:        ", result.score >= 0.85)
+   print("Overall Score:  ", f"{result.score:.1%}")
+   print("Classification: ", result.match_type)
+   print("Sub-Scores:     ", result.sub_scores)
+   print("Rationale:      ", result.rationale)
+
+   # Output:
+   # Matched:         True
+   # Overall Score:   90.2%
+   # Classification:  SYNTACTIC_SIMILAR
+   # Sub-Scores:      {'pre_question_text': 1.0, 'question_text': 1.0, 'instructions': 0.35, 'intent': 1.0}
+   # Rationale:       Weighted composite score: 0.9021 across 4 populated attributes
+
+2. Comparing Two Code Lists (``compare_codelists``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Evaluates whether two response code lists are identical in sequence, permuted in order, substantively identical while differing in missing sentinel codes, or sharing identical categories with recoded values:
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import (
+       HarmonizedCategory,
+       HarmonizedCode,
+       HarmonizedCodeList,
+       SentinelType,
+       compare_codelists,
+   )
+
+   # Survey A: 1=Male, 2=Female, 98=DK, 99=Refused
+   cl_a = HarmonizedCodeList(
+       name="CL_GENDER_A",
+       codes=[
+           HarmonizedCode(value="1", category=HarmonizedCategory(label="Male")),
+           HarmonizedCode(value="2", category=HarmonizedCategory(label="Female")),
+           HarmonizedCode(value="98", category=HarmonizedCategory(label="DK", is_missing=True, sentinel_type=SentinelType.DONT_KNOW)),
+           HarmonizedCode(value="99", category=HarmonizedCategory(label="Refused", is_missing=True, sentinel_type=SentinelType.REFUSED)),
+       ],
+   )
+
+   # Survey B: 1=Male, 2=Female, 8=DK, 9=Refused
+   cl_b = HarmonizedCodeList(
+       name="CL_GENDER_B",
+       codes=[
+           HarmonizedCode(value="1", category=HarmonizedCategory(label="Male")),
+           HarmonizedCode(value="2", category=HarmonizedCategory(label="Female")),
+           HarmonizedCode(value="8", category=HarmonizedCategory(label="DK", is_missing=True, sentinel_type=SentinelType.DONT_KNOW)),
+           HarmonizedCode(value="9", category=HarmonizedCategory(label="Refused", is_missing=True, sentinel_type=SentinelType.REFUSED)),
+       ],
+   )
+
+   result = compare_codelists(cl_a, cl_b)
+   print("Classification:", result.match_type)  # MatchType.SUBSTANTIVE_EXACT
+   print("Score:         ", result.score)       # 1.0
+   print("Rationale:     ", result.rationale)
+
+3. Polymorphic Universal Comparison (``compare_resources``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A flexible entry point that automatically inspects input types (questions, code lists, concepts, categories, or strings) and applies the optimal comparison strategy:
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import compare_resources
+
+   res = compare_resources(item_a, item_b)
 
 Dynamic Multi-Attribute Weighting (Unpopulated Attributes Ignored)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-When evaluating multi-attribute resources like ``HarmonizedQuestion`` or ``HarmonizedConcept`` with ``WeightedAttributeComparator``:
+When evaluating multi-attribute resources like ``HarmonizedQuestion`` or ``HarmonizedConcept`` with ``WeightedAttributeComparator`` or ``QuestionComparator``:
 
 * Attributes that are ``None``, empty ``""``, or omitted in **both** resources are **completely ignored** and not counted as artificial empty matches.
 * Weights are dynamically re-normalized over the active populated attributes.
@@ -317,20 +428,37 @@ Codes & Categories
 Questions
 ~~~~~~~~~
 
+The ``HarmonizedQuestion`` model captures all structural facets of a survey question construct:
+
 .. code-block:: python
 
-   from dartfx.ddi.harmonizer.domains import HarmonizedQuestion
+   from dartfx.ddi.harmonizer import HarmonizedQuestion, compare_questions
 
-   question = HarmonizedQuestion(
+   # 1. Instantiate structured question construct
+   q1 = HarmonizedQuestion(
        pre_question_text="Thinking about the past 12 months:",
        question_text="Did you visit a medical doctor or specialist?",
        post_question_text="Thank you. Now moving to the next section.",
        instructions="Show Card 4. Single answer only.",
        intent="Measure access to professional medical healthcare",
    )
-   fp = question.fingerprint
+   fp = q1.fingerprint
    print("Compound Question Digest:", fp.digest)
    print("Component Digests:       ", fp.component_digests)
+
+   # 2. Directly compare with another question instance (e.g. cross-wave web mode)
+   q2 = HarmonizedQuestion(
+       pre_question_text="Thinking about the past 12 months:",
+       question_text="Did you visit a medical doctor or specialist?",
+       instructions="Select one option on the screen.",
+       intent="Measure access to professional medical healthcare",
+   )
+
+   res = compare_questions(q1, q2)
+   print("Similarity Score:        ", f"{res.score:.1%}")
+   print("Question Text Match:     ", res.sub_scores["question_text"] == 1.0)
+   print("Instruction Difference:  ", res.sub_scores["instructions"] < 1.0)
+
 
 Concepts
 ~~~~~~~~

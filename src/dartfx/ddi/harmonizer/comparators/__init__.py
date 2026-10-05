@@ -2,7 +2,13 @@
 
 from .agent import AgentComparator, AgentComparisonResult, AgentDecision, RuleBasedMockAgentComparator
 from .base import ComparisonResult, ContentComparator
-from .composite import WeightedAttributeComparator
+from .composite import (
+    QuestionComparator,
+    WeightedAttributeComparator,
+    compare_codelists,
+    compare_questions,
+    compare_resources,
+)
 from .semantic import (
     DefaultTfIdfEmbeddingProvider,
     EmbeddingProvider,
@@ -25,9 +31,13 @@ __all__ = [
     "EmbeddingProvider",
     "ExactComparator",
     "LevenshteinComparator",
+    "QuestionComparator",
     "RuleBasedMockAgentComparator",
     "SemanticVectorComparator",
     "SequenceMatcherComparator",
     "TokenJaccardComparator",
     "WeightedAttributeComparator",
+    "compare_codelists",
+    "compare_questions",
+    "compare_resources",
 ]

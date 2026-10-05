@@ -87,6 +87,19 @@ DDI-CDI & Assistant Framework usage::
    # Serialize to RDF
    graph = dataset.to_rdf_graph()
 
+Pairwise Resource Comparison & Harmonization usage::
+
+   from dartfx.ddi.harmonizer import HarmonizedQuestion, compare_questions
+
+   # Compare two survey questions (isolating prompts from mode instructions)
+   q1 = HarmonizedQuestion(question_text="Are you currently employed?", instructions="Show Card 4.")
+   q2 = HarmonizedQuestion(question_text="Are you currently employed?", instructions="Select one on screen.")
+
+   result = compare_questions(q1, q2)
+   print(f"Similarity: {result.score:.1%} | Match: {result.match_type}")
+   print(f"Sub-scores: {result.sub_scores}")
+
+
 .. toctree::
    :maxdepth: 2
    :caption: User Guide:

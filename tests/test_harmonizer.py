@@ -17,6 +17,7 @@ from dartfx.ddi.harmonizer import (
     LevenshteinComparator,
     MatchType,
     NormalizationPreset,
+    QuestionComparator,
     ResourceFingerprinter,
     RuleBasedMockAgentComparator,
     SanitizerConfig,
@@ -27,6 +28,9 @@ from dartfx.ddi.harmonizer import (
     TextSanitizer,
     TokenJaccardComparator,
     WeightedAttributeComparator,
+    compare_codelists,
+    compare_questions,
+    compare_resources,
     parse_identifier,
 )
 
@@ -689,3 +693,103 @@ def test_country_codelist_alpha2_vs_numeric3_harmonization():
     assert match.content_matched is False
     assert match.canonical_resource is cl_alpha
     assert reg.get_by_category_set(cl_numeric.category_set_digest) is cl_alpha
+
+
+# =============================================================================
+# 11. Pairwise Resource Comparison Tests (Direct Two-Resource Comparison)
+# =============================================================================
+
+
+def test_compare_questions_exact():
+    """Verifies that identical questions return EXACT_IDENTICAL (1.0)."""
+    q1 = HarmonizedQuestion(
+        question_text="What is your current employment status?",
+        instructions="Show Card 4.",
+    )
+    q2 = HarmonizedQuestion(
+        question_text="What is your current employment status?",
+        instructions="Show Card 4.",
+    )
+    res = compare_questions(q1, q2)
+    assert res.score == 1.0
+    assert res.match_type == MatchType.EXACT_IDENTICAL
+
+
+def test_compare_questions_partial_instruction_drift():
+    """Verifies pairwise comparison when prompt matches but instructions vary across survey waves."""
+    q_wave1 = HarmonizedQuestion(
+        question_text="Did you consult a medical doctor or specialist?",
+        instructions="Show Card C to respondent.",
+        pre_question_text="During the last 12 months:",
+    )
+    q_wave2 = HarmonizedQuestion(
+        question_text="Did you consult a medical doctor or specialist?",
+        instructions="Select one option on the screen.",
+        pre_question_text="During the last 12 months:",
+    )
+    res = compare_questions(q_wave1, q_wave2, threshold=0.80)
+    assert res.score >= 0.80
+    assert res.match_type == MatchType.SYNTACTIC_SIMILAR
+    assert "question_text" in res.sub_scores
+    assert res.sub_scores["question_text"] == 1.0
+    assert res.sub_scores["instructions"] < 1.0
+
+
+def test_question_comparator_class():
+    """Verifies QuestionComparator instance configuration and attribute weights."""
+    comp = QuestionComparator(match_threshold=0.90)
+    q1 = HarmonizedQuestion(question_text="Are you employed?", instructions="Show Card 1")
+    q2 = HarmonizedQuestion(question_text="Are you employed?", instructions="Show Card 2")
+    res = comp.compare(q1, q2)
+    assert res.score > 0.70
+    assert "question_text" in res.sub_scores
+
+
+def test_compare_codelists_pairwise():
+    """Verifies pairwise comparison of code lists across permutation and substantive partitioning."""
+    c_m = HarmonizedCode(value="1", category=HarmonizedCategory(label="Male", value="1"))
+    c_f = HarmonizedCode(value="2", category=HarmonizedCategory(label="Female", value="2"))
+    c_dk1 = HarmonizedCode(
+        value="98",
+        category=HarmonizedCategory(label="Don't Know", is_missing=True, sentinel_type=SentinelType.DONT_KNOW),
+    )
+    c_dk2 = HarmonizedCode(
+        value="8",
+        category=HarmonizedCategory(label="Don't Know", is_missing=True, sentinel_type=SentinelType.DONT_KNOW),
+    )
+
+    cl_ordered = HarmonizedCodeList(name="CL1", codes=[c_m, c_f])
+    cl_permuted = HarmonizedCodeList(name="CL2", codes=[c_f, c_m])
+    cl_subst1 = HarmonizedCodeList(name="CL3", codes=[c_m, c_f, c_dk1])
+    cl_subst2 = HarmonizedCodeList(name="CL4", codes=[c_m, c_f, c_dk2])
+
+    # Exact
+    res_exact = compare_codelists(cl_ordered, cl_ordered)
+    assert res_exact.score == 1.0
+    assert res_exact.match_type == MatchType.EXACT_IDENTICAL
+
+    # Permutation
+    res_perm = compare_codelists(cl_ordered, cl_permuted)
+    assert res_perm.score == 1.0
+    assert res_perm.match_type == MatchType.PERMUTATION
+
+    # Substantive
+    res_subst = compare_codelists(cl_subst1, cl_subst2)
+    assert res_subst.score == 1.0
+    assert res_subst.match_type == MatchType.SUBSTANTIVE_EXACT
+
+
+def test_compare_resources_polymorphic():
+    """Verifies polymorphic compare_resources across questions, code lists, concepts, and strings."""
+    # Questions
+    q1 = HarmonizedQuestion(question_text="Total household income")
+    q2 = HarmonizedQuestion(question_text="Total household income")
+    assert compare_resources(q1, q2).score == 1.0
+
+    # Concepts
+    c1 = HarmonizedConcept(preferred_label="GDP", notation="B1GQ")
+    c2 = HarmonizedConcept(preferred_label="GDP", notation="B1GQ")
+    assert compare_resources(c1, c2).score == 1.0
+
+    # Raw strings
+    assert compare_resources("Active Employment", "active employment").score == 1.0

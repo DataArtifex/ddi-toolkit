@@ -198,11 +198,46 @@ CLI usage:
    # Generate study summary report
    dartfx-ddi basex report surveys --type ddic-summary --format md
 
+Resource Harmonization & Pairwise Comparison
+---------------------------------------------
+
+Compare two resources directly (e.g., determining if two survey questions are equivalent across interview modes) or deduplicate large collections via hierarchical Merkle fingerprints:
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import HarmonizedQuestion, compare_questions
+
+   # Pairwise Question Comparison
+   q1 = HarmonizedQuestion(
+       question_text="Did you consult a medical doctor or specialist?",
+       instructions="Show Card C to respondent.",
+   )
+   q2 = HarmonizedQuestion(
+       question_text="Did you consult a medical doctor or specialist?",
+       instructions="Select one option on the screen.",
+   )
+
+   result = compare_questions(q1, q2)
+   print(f"Similarity Score: {result.score:.1%}")
+   print(f"Match Classification: {result.match_type}")
+   print(f"Sub-Scores: {result.sub_scores}")
+
+CLI exploration workbench:
+
+.. code-block:: bash
+
+   # Launch interactive Harmonization Workbench in browser
+   dartfx-ddi harmonizer explore
+
+   # Compare two text strings directly in the terminal
+   dartfx-ddi harmonizer compare "Employment Status" "Current employment status"
+
 Next Steps
 ----------
 
 * Learn about the core :doc:`ddicdi` implementation.
 * Explore the :doc:`ddicodebook` API reference.
 * Learn about :doc:`ddilifecycle` fragment streaming, DDI 4.0 models, and resource profile analysis.
+* Read the comprehensive :doc:`harmonizer` framework documentation.
 * Explore the optional :doc:`basex` XML database and reporting extension.
 * See :doc:`examples` for more detailed use cases.
