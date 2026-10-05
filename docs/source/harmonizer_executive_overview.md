@@ -309,13 +309,15 @@ assert cl_alpha.substantive_category_set_digest == cl_numeric.substantive_catego
 assert cl_alpha.value_set_digest != cl_numeric.value_set_digest
 assert cl_alpha.code_set_digest != cl_numeric.code_set_digest
 
-reg = HarmonizationRegistry[HarmonizedCodeList](comparator=SequenceMatcherComparator(threshold=0.75))
+reg = HarmonizationRegistry[HarmonizedCodeList]()
 reg.register(cl_alpha)
-match = reg.match(cl_numeric, threshold=0.75)
+match = reg.match(cl_numeric)
 
 assert match.matched is True
-assert match.match_type == MatchType.SYNTACTIC_SIMILAR
-assert 0.75 <= match.score <= 0.85
+assert match.match_type == MatchType.CATEGORIES_EXACT_CODES_DIFFERENT
+assert match.score == 1.0
+assert match.content_matched is False
+assert match.reason == "Identical category concepts (same semantic universe) with recoded/different code values"
 ```
 
 ---

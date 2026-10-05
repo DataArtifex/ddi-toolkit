@@ -660,7 +660,7 @@ def test_country_codelist_alpha2_vs_numeric3_harmonization():
     assert cl_alpha.code_set_digest != cl_numeric.code_set_digest
     assert cl_alpha.fingerprint.digest != cl_numeric.fingerprint.digest
 
-    # 3. Registry fuzzy match via SequenceMatcher
+    # 3. Registry exact category concept match (O(1) category set indexing)
     reg: HarmonizationRegistry[HarmonizedCodeList] = HarmonizationRegistry(
         comparator=SequenceMatcherComparator(threshold=0.75)
     )
@@ -668,5 +668,8 @@ def test_country_codelist_alpha2_vs_numeric3_harmonization():
     match = reg.match(cl_numeric, threshold=0.75)
 
     assert match.matched is True
-    assert match.match_type == MatchType.SYNTACTIC_SIMILAR
-    assert 0.75 <= match.score <= 0.85
+    assert match.match_type == MatchType.CATEGORIES_EXACT_CODES_DIFFERENT
+    assert match.score == 1.0
+    assert match.content_matched is False
+    assert match.canonical_resource is cl_alpha
+    assert reg.get_by_category_set(cl_numeric.category_set_digest) is cl_alpha

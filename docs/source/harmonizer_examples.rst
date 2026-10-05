@@ -283,7 +283,7 @@ The engine classifies identifier kinds (recognizing ``is_random_guid=True``), ve
 Story 6: Country Code Recoding (ISO 2-Letter Alpha vs. 3-Digit Numeric)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-*Domain: Enumerated Lists | Technique: Granular Category Set Hashing | Match: SYNTACTIC_SIMILAR (0.80)*
+*Domain: Enumerated Lists | Technique: Granular Category Set Hashing | Match: CATEGORIES_EXACT_CODES_DIFFERENT (1.00)*
 
 **The Scenario:**
 International organizations publish national data under different ISO 3166-1 standards: Dataset A (Eurostat/OECD) uses ISO 2-letter alpha codes (``CA, DE, FR, GB, JP, MX, US``), while Dataset B (UNSD/UN Comtrade) uses 3-digit numeric codes (``124, 276, 250, 826, 392, 484, 840``) for the identical country categories.
@@ -296,7 +296,6 @@ The framework computes granular Merkle category digests (``category_set_digest``
 
 .. code-block:: python
 
-   from dartfx.ddi.harmonizer.comparators import SequenceMatcherComparator
    from dartfx.ddi.harmonizer.domains import HarmonizedCategory, HarmonizedCode, HarmonizedCodeList
    from dartfx.ddi.harmonizer.models import MatchType
    from dartfx.ddi.harmonizer.registry import HarmonizationRegistry
@@ -329,13 +328,15 @@ The framework computes granular Merkle category digests (``category_set_digest``
    assert cl_alpha.value_set_digest != cl_numeric.value_set_digest
    assert cl_alpha.code_set_digest != cl_numeric.code_set_digest
 
-   registry = HarmonizationRegistry[HarmonizedCodeList](comparator=SequenceMatcherComparator(threshold=0.75))
+   registry = HarmonizationRegistry[HarmonizedCodeList]()
    registry.register(cl_alpha)
-   match = registry.match(cl_numeric, threshold=0.75)
+   match = registry.match(cl_numeric)
 
    assert match.matched is True
-   assert match.match_type == MatchType.SYNTACTIC_SIMILAR
-   assert 0.75 <= match.score <= 0.85
+   assert match.match_type == MatchType.CATEGORIES_EXACT_CODES_DIFFERENT
+   assert match.score == 1.0
+   assert match.content_matched is False
+   assert match.reason == "Identical category concepts (same semantic universe) with recoded/different code values"
 
 Interactive HTML Harmonization Workbench
 ----------------------------------------

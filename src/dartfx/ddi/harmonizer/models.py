@@ -34,6 +34,9 @@ class MatchType(StrEnum):
     SUBSTANTIVE_PERMUTATION = (
         "SUBSTANTIVE_PERMUTATION"  # Substantive items match permuted, sentinel missing schemes differ
     )
+    CATEGORIES_EXACT_CODES_DIFFERENT = (
+        "CATEGORIES_EXACT_CODES_DIFFERENT"  # 1.0: Same categories, different code values (recoded)
+    )
     DISTINCT = "DISTINCT"  # Below match threshold
 
 

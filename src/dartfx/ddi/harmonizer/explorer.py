@@ -1797,12 +1797,19 @@ print(f"Similarity Score: {{match_result.score:.4f}}")
 print(f"Reason:           {{match_result.reason}}")`;
     }}
 
-    function generatePythonOutput(domain, compClass, threshold, verdict, scorePct, srcDigest, candDigest, isPermutation, reason) {{
+    function generatePythonOutput(domain, compClass, threshold, verdict, scorePct, srcDigest, candDigest, isPermutation, isSubstantiveMatch, isCategoriesMatch, reason) {{
       const isMatch = !verdict.includes('DISTINCT');
       const scoreNum = (scorePct / 100).toFixed(4);
       const threshNum = threshold.toFixed(2);
       const statusStr = isMatch ? "PASSED (>= threshold)" : "REJECTED (< threshold)";
-      const strategyStr = isPermutation ? "Unordered Multiset / Permutation (Set Match)" : "Canonical Primary Fingerprint";
+      let strategyStr = "Canonical Primary Fingerprint";
+      if (isPermutation) {{
+        strategyStr = "Unordered Multiset / Permutation (Set Match)";
+      }} else if (isSubstantiveMatch) {{
+        strategyStr = "Substantive Measurement Domain (Sentinel-Invariant)";
+      }} else if (isCategoriesMatch) {{
+        strategyStr = "Category Concept Space (Recoded Code Values)";
+      }}
 
       const jsonPayload = {{
         matched: isMatch,
@@ -1926,6 +1933,7 @@ ${{jsonDump}}
       let badgeClass = 'verdict-distinct';
 
       let isSubstantiveMatch = false;
+      let isCategoriesMatch = false;
       if (parsedSrc && parsedCand && parsedSrc.codes && parsedCand.codes && Array.isArray(parsedSrc.codes) && Array.isArray(parsedCand.codes)) {{
         const srcSubst = parsedSrc.codes.filter(c => !c.is_missing);
         const candSubst = parsedCand.codes.filter(c => !c.is_missing);
@@ -1933,6 +1941,14 @@ ${{jsonDump}}
         const candSubstHash = simpleHash(candSubst.map(c => `${{normalizeText(c.value || '')}}=${{normalizeText(c.label || c.category_label || '')}}`).sort().join(';'));
         if (srcSubst.length > 0 && srcSubstHash === candSubstHash) {{
           isSubstantiveMatch = true;
+        }}
+
+        const srcCatHash = simpleHash(parsedSrc.codes.map(c => normalizeText(c.label || c.category_label || '')).sort().join(';'));
+        const candCatHash = simpleHash(parsedCand.codes.map(c => normalizeText(c.label || c.category_label || '')).sort().join(';'));
+        const srcValHash = simpleHash(parsedSrc.codes.map(c => normalizeText(c.value || '')).sort().join(';'));
+        const candValHash = simpleHash(parsedCand.codes.map(c => normalizeText(c.value || '')).sort().join(';'));
+        if (parsedSrc.codes.length > 0 && srcCatHash === candCatHash && srcValHash !== candValHash) {{
+          isCategoriesMatch = true;
         }}
       }}
 
@@ -1960,6 +1976,10 @@ ${{jsonDump}}
       }} else if (isSubstantiveMatch || (currentCase && currentCase.expected_match_type === 'SUBSTANTIVE_EXACT')) {{
         score = 1.0;
         verdict = 'SUBSTANTIVE_EXACT (CORE MATCH)';
+        badgeClass = 'verdict-match';
+      }} else if (isCategoriesMatch || (currentCase && currentCase.expected_match_type === 'CATEGORIES_EXACT_CODES_DIFFERENT')) {{
+        score = 1.0;
+        verdict = 'CATEGORIES_EXACT_CODES_DIFFERENT (RECODED LIST)';
         badgeClass = 'verdict-match';
       }} else if (score >= threshold) {{
         verdict = method === 'Semantic' ? 'SEMANTIC_SIMILAR' : 'SYNTACTIC_SIMILAR';
@@ -2180,6 +2200,8 @@ ${{jsonDump}}
         srcDigest,
         candDigest,
         isPermutation,
+        isSubstantiveMatch,
+        isCategoriesMatch,
         currentCase ? currentCase.expected_explanation : ''
       );
 

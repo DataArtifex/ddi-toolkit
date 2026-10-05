@@ -46,6 +46,8 @@ class HarmonizationRegistry[T: HarmonizableResource]:
         self._by_unordered_digest: dict[str, T] = {}
         self._by_substantive_code_set: dict[str, T] = {}
         self._by_substantive_code_seq: dict[str, T] = {}
+        self._by_category_set: dict[str, T] = {}
+        self._by_category_seq: dict[str, T] = {}
         self._by_signature: dict[str, T] = {}
         self._canonical_list: list[T] = []
 
@@ -277,7 +279,34 @@ class HarmonizationRegistry[T: HarmonizableResource]:
                 reason=reason,
             )
 
-        # 7. Comparator search across canonical items
+        # 7. Category Concept Set Match (Same categories/meanings, recoded code values)
+        cand_cat_set = cand_fp.component_digests.get("category_set")
+        if cand_cat_set and cand_cat_set in self._by_category_set and getattr(candidate, "member_count", 1) > 0:
+            canonical = self._by_category_set[cand_cat_set]
+            cand_cat_seq = cand_fp.component_digests.get("category_sequence")
+            canon_cat_seq = canonical.fingerprint.component_digests.get("category_sequence")
+            if cand_cat_seq and cand_cat_seq == canon_cat_seq:
+                reason = "Identical category concepts (same semantic universe) with recoded/different code values"
+            else:
+                reason = "Identical category concepts in permuted order with recoded/different code values"
+
+            canon_urn = getattr(canonical, "urn", None)
+            id_matched = bool(cand_urn and canon_urn and cand_urn == canon_urn)
+            return HarmonizationMatch(
+                matched=True,
+                canonical_resource=canonical,
+                candidate_resource=candidate,
+                score=1.0,
+                match_type=MatchType.CATEGORIES_EXACT_CODES_DIFFERENT,
+                identifier_matched=id_matched,
+                content_matched=False,
+                identifier_kind=cand_ident_kind,
+                is_random_guid=cand_is_guid,
+                content_similarity_score=1.0,
+                reason=reason,
+            )
+
+        # 8. Comparator search across canonical items
         if self._canonical_list:
             best_match: T | None = None
             best_score = 0.0
@@ -376,6 +405,13 @@ class HarmonizationRegistry[T: HarmonizableResource]:
             if subst_seq:
                 self._by_substantive_code_seq[subst_seq] = resource
 
+        cat_set = fp.component_digests.get("category_set")
+        if cat_set and getattr(resource, "member_count", 1) > 0:
+            self._by_category_set[cat_set] = resource
+            cat_seq = fp.component_digests.get("category_sequence")
+            if cat_seq:
+                self._by_category_seq[cat_seq] = resource
+
         self._canonical_list.append(resource)
 
         cand_ident = getattr(resource, "identifier", None)
@@ -404,3 +440,11 @@ class HarmonizationRegistry[T: HarmonizableResource]:
     def get_by_signature(self, signature: str) -> T | None:
         """Retrieves canonical resource by signature."""
         return self._by_signature.get(signature)
+
+    def get_by_substantive_code_set(self, substantive_code_set_digest: str) -> T | None:
+        """Retrieves canonical resource by substantive code set digest."""
+        return self._by_substantive_code_set.get(substantive_code_set_digest)
+
+    def get_by_category_set(self, category_set_digest: str) -> T | None:
+        """Retrieves canonical resource by category set digest."""
+        return self._by_category_set.get(category_set_digest)

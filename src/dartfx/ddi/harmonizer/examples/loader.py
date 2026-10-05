@@ -741,9 +741,9 @@ BUILTIN_SEED_CASES: list[dict[str, Any]] = [
         "comparator": "SequenceMatcher",
         "comparator_threshold": 0.75,
         "expected_match": True,
-        "expected_match_type": "SYNTACTIC_SIMILAR",
-        "expected_score_min": 0.75,
-        "expected_score_max": 0.85,
+        "expected_match_type": "CATEGORIES_EXACT_CODES_DIFFERENT",
+        "expected_score_min": 1.0,
+        "expected_score_max": 1.0,
     },
 ]
 
