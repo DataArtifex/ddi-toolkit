@@ -37,6 +37,17 @@ class MatchType(StrEnum):
     CATEGORIES_EXACT_CODES_DIFFERENT = (
         "CATEGORIES_EXACT_CODES_DIFFERENT"  # 1.0: Same categories, different code values (recoded)
     )
+    UNIT_CONVERSION_REQUIRED = (
+        "UNIT_CONVERSION_REQUIRED"  # Same quantity kind, different measurement units (e.g. lbs vs kg)
+    )
+    QUESTION_EQUIVALENT_LABEL_DIFFERENT = (
+        "QUESTION_EQUIVALENT_LABEL_DIFFERENT"  # Same survey question construct, different variable labels/names
+    )
+    CONCEPTUAL_MATCH_DIFFERENT_DOMAIN = (
+        "CONCEPTUAL_MATCH_DIFFERENT_DOMAIN"  # Same conceptual construct, different representation (e.g. age vs bracket)
+    )
+    DIMENSION_INCOMPATIBLE = "DIMENSION_INCOMPATIBLE"  # Conflicting quantity kinds (e.g. Mass vs Currency)
+    TYPE_INCOMPATIBLE = "TYPE_INCOMPATIBLE"  # Structurally incompatible data types (e.g. Boolean vs DateTime)
     DISTINCT = "DISTINCT"  # Below match threshold
 
 

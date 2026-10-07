@@ -255,11 +255,17 @@ def compare_resources(
     threshold: float = 0.85,
 ) -> ComparisonResult:
     """Polymorphic entry point to compare any two resources (questions, code lists, categories, concepts, or text)."""
-    # 1. Questions
+    # 1. Variables
+    if hasattr(resource1, "data_type") or hasattr(resource2, "data_type"):
+        from .variable import compare_variables
+
+        return compare_variables(resource1, resource2, threshold=threshold)
+
+    # 2. Questions
     if hasattr(resource1, "question_text") or hasattr(resource2, "question_text"):
         return compare_questions(resource1, resource2, threshold=threshold)
 
-    # 2. Code lists
+    # 3. Code lists
     if hasattr(resource1, "code_set_digest") and hasattr(resource2, "code_set_digest"):
         return compare_codelists(resource1, resource2, threshold=threshold)
 

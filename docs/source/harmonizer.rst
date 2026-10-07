@@ -739,6 +739,146 @@ The framework computes granular Merkle category digests (``category_set_digest``
    assert match.content_matched is False
    assert match.reason == "Identical category concepts (same semantic universe) with recoded/different code values"
 
+Variable Comparison & Harmonization
+-----------------------------------
+
+The framework provides a dedicated, multi-tiered **Variable Comparison and Harmonization Engine** (``HarmonizedVariable``, ``VariableComparator``, ``compare_variables``) that bridges simple tabular data wrangling with advanced statistical metadata standards (GSIM, DDI-CDI, DDI-Lifecycle, and ISO/IEC 11179).
+
+Core Identity Anchors & Multi-Tier Decomposition
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Variables are structured across two operational tiers:
+
+1. **Lightweight Operational Anchors**: For fast tabular matching, variables are anchored primarily by ``name`` (mnemonic / column alias), ``label`` (human-readable title), and ``data_type``.
+2. **Advanced GSIM / DDI-CDI Conceptual Decomposition**:
+   * **Conceptual Variable**: Associates a ``HarmonizedConcept`` (e.g., *"Gross Income"*, *"Body Mass"*) with a target ``HarmonizedUniverse`` (e.g., *"Adults aged 18+"*).
+   * **Represented Variable**: Defines the ``HarmonizedValueDomain`` (Categorical CodeList, Continuous Numeric, Textual, or Temporal) along with physical metrology dimensions.
+   * **Instance Variable**: Specific dataset manifestation with physical data type representations and column identifiers.
+   * **Source Instrument**: Direct association with a ``HarmonizedQuestion`` (literal questionnaire prompt, interviewer instructions, and mode).
+
+Standard Data Type Controlled Vocabularies
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Rather than relying on ad-hoc type names, the engine supports standard controlled vocabularies and type systems via ``DataType`` and ``DataTypeVocabulary``:
+
+* **DDI Controlled Vocabulary (``DDI_CV``)**: Standard terms from DDI DataType 1.1.2 (e.g., ``Integer``, ``Numeric``, ``Decimal``, ``Text``, ``DateTime``, ``Spatial``).
+* **W3C XML Schema Datatypes (``XSD``)**: W3C XSD types (e.g., ``xs:string``, ``xs:integer``, ``xs:decimal``, ``xs:dateTime``, ``xs:nonNegativeInteger``).
+* **SQL / Relational Standards (``SQL``)**: Relational database types (e.g., ``BIGINT``, ``VARCHAR(255)``, ``FLOAT``, ``TIMESTAMPTZ``, ``JSONB``).
+* **JSON Schema (``JSON_SCHEMA``)**: JSON Schema draft-07 and 2020-12 data types and formats (e.g., ``integer``, ``number``, ``string(format=date-time)``).
+
+All types map to a normalized ``CanonicalDataType`` for cross-vocabulary compatibility matching (e.g., matching a PostgreSQL ``BIGINT`` with an XSD ``xs:integer``).
+
+Metrology & QUDT Alignment: Quantity Kind vs. Unit of Measure
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The engine enforces a rigorous separation between **physical measurement dimension** (``QuantityKind``) and **measurement scale / unit** (``UnitOfMeasure``), directly aligned with the **QUDT (Quantities, Units, Dimensions and Data Types)** ontology and ISO 80000:
+
+* **QuantityKind**: Conceptual measurement dimension (e.g., ``Mass``, ``Length``, ``Currency``, ``Duration``, ``Temperature``). Includes canonical QUDT URIs (e.g., ``http://qudt.org/vocab/quantitykind/Mass``).
+* **UnitOfMeasure**: Concrete unit of measurement (e.g., ``Kilogram``, ``Pound``, ``US Dollar``, ``Year``) with standardized conversion multipliers (``scale_factor_to_base``) and affine offsets (``offset_to_base``).
+
+When two variables measure the same ``QuantityKind`` in different units (e.g., body weight in ``lbs`` vs. ``kg``), the comparator normalizes numeric range bounds to base units and automatically emits **Transformation Advice** with the exact conversion multiplier.
+
+Convenience 1-Liners & Ingestion Adapters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Variables can be ingested seamlessly from Python dictionaries, JSON Schema property definitions, entire JSON Schema documents, or Polars/Pandas Series:
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import (
+       ComparisonProfile,
+       HarmonizedVariable,
+       TransformationAction,
+       compare_variables,
+   )
+
+   # 1. Compare two variables from simple dictionaries
+   var_a = {
+       "name": "WEIGHT_LBS",
+       "label": "Body Weight in Pounds",
+       "type": "decimal",
+       "quantity_kind": "Mass",
+       "unit": "lbs",
+       "min": 80.0,
+       "max": 450.0,
+   }
+   var_b = {
+       "name": "WGT_KG",
+       "label": "Body Weight in Kilograms",
+       "type": "decimal",
+       "quantity_kind": "Mass",
+       "unit": "kg",
+       "min": 36.0,
+       "max": 204.0,
+   }
+
+   result = compare_variables(var_a, var_b, profile=ComparisonProfile.LIGHTWEIGHT)
+
+   print(f"Similarity Score: {result.score:.2%}")
+   print(f"Match Classification: {result.match_type.value}")
+   for advice in result.transformation_advice:
+       print(f"Advice [{advice.action.value}]: {advice.description}")
+       print(f"  Formula: {advice.parameters.get('formula')}")
+
+   # 2. Ingest from JSON Schema
+   json_schema = {
+       "title": "Household Income",
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1000000,
+   }
+   var_json = HarmonizedVariable.from_json_schema(
+       json_schema,
+       name="hh_income",
+       quantity_kind="Currency",
+       unit="USD",
+   )
+
+Comparison Profiles & Weighted Facet Matching
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``VariableComparator`` provides pre-configured weighting profiles tailored for different analysis workflows:
+
+.. list-table::
+   :widths: 20 15 15 15 15 20
+   :header-rows: 1
+
+   * - Profile
+     - Primary Focus
+     - Label / Name
+     - Data Type
+     - Value Domain
+     - Question / Concept / Universe
+   * - **``LIGHTWEIGHT``**
+     - Fast tabular / JSON Schema
+     - 40% / 10%
+     - 20%
+     - 30%
+     - 0% / 0% / 0%
+   * - **``SURVEY_INSTRUMENT``**
+     - Questionnaire items & waves
+     - 20% / 5%
+     - 5%
+     - 20%
+     - 50% / 0% / 0%
+   * - **``STATISTICAL_GSIM``**
+     - GSIM / DDI-CDI / ISO 11179
+     - 15% / 5%
+     - 5%
+     - 20% (Unit: 10%)
+     - 10% / 30% / 5%
+
+Actionable Transformation Advisories
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When two variables are compatible but require harmonization, ``VariableComparisonResult`` generates structured ``TransformationAdvice`` records:
+
+* **``CONVERT_UNIT``**: Calculates exact scale factors (e.g., :math:`\text{lbs} \to \text{kg} \times 0.45359237`).
+* **``RECODE_VALUES``**: Emits complete value recode maps (e.g., mapping numeric ``1=Male, 2=Female`` to ISO/Alpha ``M=Male, F=Female``).
+* **``REMAP_MISSING``**: Identifies sentinel missing value scheme discrepancies.
+* **``CAST_DATA_TYPE``**: Specifies safe widening or type coercions (e.g., ``INTEGER`` to ``DECIMAL``).
+* **``RENAME_COLUMN``**: Maps column names across dataset schemas.
+
 Interactive HTML Harmonization Workbench
 ----------------------------------------
 
