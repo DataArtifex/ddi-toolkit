@@ -1483,6 +1483,45 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       return text;
     }
 
+    function sequenceMatcherRatio(s1, s2) {
+      if (!s1 || !s2) return (s1 === s2) ? 1.0 : 0.0;
+      if (s1 === s2) return 1.0;
+
+      function findLongestMatch(alo, ahi, blo, bhi) {
+        let besti = alo, bestj = blo, bestsize = 0;
+        for (let i = alo; i < ahi; i++) {
+          for (let j = blo; j < bhi; j++) {
+            let k = 0;
+            while (i + k < ahi && j + k < bhi && s1[i + k] === s2[j + k]) {
+              k++;
+            }
+            if (k > bestsize) {
+              besti = i;
+              bestj = j;
+              bestsize = k;
+            }
+          }
+        }
+        return [besti, bestj, bestsize];
+      }
+
+      function getMatchingBlocks(alo, ahi, blo, bhi) {
+        const [i, j, k] = findLongestMatch(alo, ahi, blo, bhi);
+        if (k === 0) return 0;
+        let matchingChars = k;
+        if (alo < i && blo < j) {
+          matchingChars += getMatchingBlocks(alo, i, blo, j);
+        }
+        if (i + k < ahi && j + k < bhi) {
+          matchingChars += getMatchingBlocks(i + k, ahi, j + k, bhi);
+        }
+        return matchingChars;
+      }
+
+      const totalMatches = getMatchingBlocks(0, s1.length, 0, s2.length);
+      return (2.0 * totalMatches) / (s1.length + s2.length);
+    }
+
     function computeSimilarity(s1, s2, method) {
       const n1 = normalizeText(s1);
       const n2 = normalizeText(s2);
@@ -1505,13 +1544,17 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         return maxLen === 0 ? 1.0 : Math.max(0.0, 1.0 - (dp[m][n] / maxLen));
       }
 
-      // Default SequenceMatcher Gestalt
-      let matches = 0;
-      const t1 = n1.split(' '), t2 = n2.split(' ');
-      const set2 = new Set(t2);
-      t1.forEach(w => { if (set2.has(w)) matches++; });
-      const jaccard = matches / (new Set([...t1, ...t2]).size || 1);
-      return Math.min(1.0, 0.5 * jaccard + 0.5 * (1.0 - Math.abs(n1.length - n2.length) / Math.max(n1.length, n2.length, 1)));
+      if (method === 'Jaccard') {
+        const t1 = n1.split(/\s+/), t2 = n2.split(/\s+/);
+        const s1Set = new Set(t1), s2Set = new Set(t2);
+        let matches = 0;
+        s1Set.forEach(w => { if (s2Set.has(w)) matches++; });
+        const union = new Set([...t1, ...t2]).size;
+        return union === 0 ? 1.0 : (matches / union);
+      }
+
+      // Default: SequenceMatcher Gestalt (identical to Python difflib)
+      return sequenceMatcherRatio(n1, n2);
     }
 
     function generatePythonSnippet(domain, parsedSrc, parsedCand, method, threshold) {
@@ -1677,37 +1720,54 @@ Execution:        Completed in 0.42ms with zero allocations.`;
       const isVariableDomain = (currentCase && currentCase.domain === 'variable') || (parsedSrc && (parsedSrc.data_type || parsedSrc.quantity_kind || parsedSrc.numeric_domain));
 
       if (isVariableDomain && parsedSrc && parsedCand) {
-        // Compute Variable Facets
+        // Dynamic facet weighting matching Python VariableComparator
         const lblScore = computeSimilarity(parsedSrc.label || parsedSrc.name || '', parsedCand.label || parsedCand.name || '', method);
         const nameScore = computeSimilarity(parsedSrc.name || '', parsedCand.name || '', method);
-        const typeScore = (parsedSrc.data_type && parsedCand.data_type && String(parsedSrc.data_type).toLowerCase() === String(parsedCand.data_type).toLowerCase()) ? 1.0 : 0.8;
 
-        let metrologyScore = 1.0;
+        let typeScore = 0.5;
+        if (parsedSrc.data_type && parsedCand.data_type) {
+          const sType = String(parsedSrc.data_type).toLowerCase();
+          const cType = String(parsedCand.data_type).toLowerCase();
+          if (sType === cType) typeScore = 1.0;
+          else if ((sType === 'integer' && cType === 'decimal') || (sType === 'decimal' && cType === 'integer')) typeScore = 0.9;
+          else typeScore = 0.7;
+        }
+
+        let weighted_sum = (lblScore * 0.40) + (nameScore * 0.10) + (typeScore * 0.20);
+        let total_weight = 0.70;
+
         let isUnitConv = false;
-        if (parsedSrc.unit && parsedCand.unit && String(parsedSrc.unit).toLowerCase() !== String(parsedCand.unit).toLowerCase()) {
-          isUnitConv = true;
-          metrologyScore = 0.95;
-          let scaleFactor = 1.0;
-          if (String(parsedSrc.unit).toLowerCase() === 'lbs' && String(parsedCand.unit).toLowerCase() === 'kg') {
-            scaleFactor = 0.45359237;
-          } else if (String(parsedSrc.unit).toLowerCase() === 'usd' && String(parsedCand.unit).toLowerCase() === 'cad') {
-            scaleFactor = 1.35;
+        let isDimIncompat = false;
+        if (parsedSrc.unit && parsedCand.unit) {
+          total_weight += 0.10;
+          const sU = String(parsedSrc.unit).toLowerCase();
+          const cU = String(parsedCand.unit).toLowerCase();
+          if (sU === cU) {
+            weighted_sum += 1.0 * 0.10;
+          } else {
+            isUnitConv = true;
+            weighted_sum += 0.95 * 0.10;
+            let scaleFactor = 1.0;
+            if (sU === 'lbs' && cU === 'kg') scaleFactor = 0.45359237;
+            else if (sU === 'usd' && cU === 'cad') scaleFactor = 1.35;
+            adviceList.push({
+              action: 'CONVERT_UNIT',
+              badge: 'badge-primary',
+              title: `Unit Conversion: ${parsedSrc.unit} &rarr; ${parsedCand.unit}`,
+              formula: `${parsedCand.name || 'target'} = ${parsedSrc.name || 'source'} * ${scaleFactor}`,
+              desc: `Scale continuous measurements by linear conversion factor ${scaleFactor}`
+            });
           }
-          adviceList.push({
-            action: 'CONVERT_UNIT',
-            badge: 'badge-primary',
-            title: `Unit Conversion: ${parsedSrc.unit} &rarr; ${parsedCand.unit}`,
-            formula: `${parsedCand.name || 'target'} = ${parsedSrc.name || 'source'} * ${scaleFactor}`,
-            desc: `Scale continuous measurements by linear conversion factor ${scaleFactor}`
-          });
         }
 
         let isRecode = false;
         if (parsedSrc.value_domain && parsedCand.value_domain && parsedSrc.value_domain.codes && parsedCand.value_domain.codes) {
+          total_weight += 0.20;
           const sCodes = parsedSrc.value_domain.codes;
           const cCodes = parsedCand.value_domain.codes;
           if (sCodes.length === cCodes.length) {
             isRecode = true;
+            weighted_sum += 0.95 * 0.20;
             const recodeMapping = sCodes.map((sc, i) => `${sc.value} &rarr; ${cCodes[i].value} (${sc.label})`).join(', ');
             adviceList.push({
               action: 'RECODE_VALUES',
@@ -1719,27 +1779,47 @@ Execution:        Completed in 0.42ms with zero allocations.`;
           }
         }
 
-        if (parsedSrc.name !== parsedCand.name) {
-          adviceList.push({
-            action: 'RENAME_COLUMN',
-            badge: 'badge-primary',
-            title: `Column Renaming: ${parsedSrc.name} &rarr; ${parsedCand.name}`,
-            formula: `df.rename({'${parsedSrc.name}': '${parsedCand.name}'})`,
-            desc: `Map column identifier in dataset schema`
-          });
-        }
+        score = total_weight > 0 ? (weighted_sum / total_weight) : 0.0;
 
-        score = (lblScore * 0.40) + (nameScore * 0.10) + (typeScore * 0.20) + (metrologyScore * 0.30);
+        if (score >= threshold) {
+          if (isUnitConv) {
+            verdict = 'UNIT_CONVERSION_REQUIRED';
+            badgeClass = 'verdict-match';
+          } else if (isRecode) {
+            verdict = 'CATEGORIES_EXACT_CODES_DIFFERENT';
+            badgeClass = 'verdict-match';
+          } else if (score === 1.0) {
+            verdict = (srcDigest === candDigest) ? 'EXACT_IDENTICAL' : 'NORMALIZED_EXACT';
+            badgeClass = 'verdict-match';
+          } else {
+            verdict = 'SYNTACTIC_SIMILAR';
+            badgeClass = 'verdict-match';
+          }
 
-        if (isUnitConv && score >= threshold) {
-          verdict = 'UNIT_CONVERSION_REQUIRED';
-          badgeClass = 'verdict-match';
-        } else if (isRecode && score >= threshold) {
-          verdict = 'CATEGORIES_EXACT_CODES_DIFFERENT';
-          badgeClass = 'verdict-match';
-        } else if (score >= threshold) {
-          verdict = 'SYNTACTIC_SIMILAR';
-          badgeClass = 'verdict-match';
+          if (parsedSrc.name && parsedCand.name && parsedSrc.name !== parsedCand.name) {
+            adviceList.push({
+              action: 'RENAME_COLUMN',
+              badge: 'badge-primary',
+              title: `Column Renaming: ${parsedSrc.name} &rarr; ${parsedCand.name}`,
+              formula: `df.rename({'${parsedSrc.name}': '${parsedCand.name}'})`,
+              desc: `Map column identifier in dataset schema`
+            });
+          }
+
+          if (typeScore < 1.0 && typeScore >= 0.7) {
+            adviceList.push({
+              action: 'CAST_DATA_TYPE',
+              badge: 'badge-warning',
+              title: `Data Type Widening / Casting: ${parsedSrc.data_type} &rarr; ${parsedCand.data_type}`,
+              formula: `df['${parsedCand.name || 'target'}'].cast(pl.${parsedCand.data_type})`,
+              desc: `Coerce physical storage type`
+            });
+          }
+        } else {
+          verdict = 'DISTINCT';
+          badgeClass = 'verdict-distinct';
+          // Suppress advisories for distinct, unrelated variables
+          adviceList.length = 0;
         }
       } else {
         score = computeSimilarity(srcRaw, candRaw, method);

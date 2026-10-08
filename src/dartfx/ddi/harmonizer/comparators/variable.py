@@ -502,6 +502,9 @@ class VariableComparator:
         else:
             final_match_type = MatchType.DISTINCT
 
+        if final_match_type == MatchType.DISTINCT:
+            advice_list = []
+
         rationale = (
             f"Variable comparison score: {composite_score:.2%} under {self.profile.value} profile "
             f"across {len(sub_scores)} populated facets ({final_match_type.value})"
