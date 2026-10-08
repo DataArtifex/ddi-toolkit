@@ -480,13 +480,15 @@ class VariableComparator:
             composite_score = 0.0
         elif type_score == 0.0:
             final_match_type = MatchType.TYPE_INCOMPATIBLE
-        elif unit_match_type == MatchType.UNIT_CONVERSION_REQUIRED and composite_score >= 0.80:
+        elif unit_match_type == MatchType.UNIT_CONVERSION_REQUIRED and composite_score >= self.match_threshold:
             final_match_type = MatchType.UNIT_CONVERSION_REQUIRED
-        elif domain_match_type == MatchType.CATEGORIES_EXACT_CODES_DIFFERENT and composite_score >= 0.80:
+        elif (
+            domain_match_type == MatchType.CATEGORIES_EXACT_CODES_DIFFERENT and composite_score >= self.match_threshold
+        ):
             final_match_type = MatchType.CATEGORIES_EXACT_CODES_DIFFERENT
         elif (
             domain_match_type in (MatchType.SUBSTANTIVE_EXACT, MatchType.SUBSTANTIVE_PERMUTATION)
-            and composite_score >= 0.80
+            and composite_score >= self.match_threshold
         ):
             final_match_type = MatchType.SUBSTANTIVE_EXACT
         elif sub_scores.get("question", 0.0) >= 0.85 and lbl_res.score < 0.80:

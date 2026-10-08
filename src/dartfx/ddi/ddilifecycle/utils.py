@@ -38,6 +38,7 @@ import time
 import xml.etree.ElementTree as ET
 from collections import Counter, defaultdict
 from collections.abc import Callable, Generator, Iterable
+from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
 from typing import IO, Any
@@ -60,35 +61,105 @@ ET.register_namespace("", TARGET_NAMESPACE)
 ET.register_namespace("xsi", XSI_NAMESPACE)
 ET.register_namespace("xml", XML_NAMESPACE)
 
-# Monkeypatch _deserialize_simple_xml to wrap Decimal values in CogsDecimal.
-# The auto-generated model's validate_assignment expects CogsDecimal instances for decimal fields.
+# Monkeypatch _fraction and _native_text to allow microsecond datetime precision
+_original_fraction = model_4_0_rc1._fraction
+
+
+def _custom_fraction(match: re.Match[str], precision: int) -> int:
+    del precision
+    fraction_str = (match.group("fraction") or "").lstrip(".")
+    if not fraction_str:
+        return 0
+    micro_str = fraction_str[:6].ljust(6, "0")
+    return int(micro_str)
+
+
+model_4_0_rc1._fraction = _custom_fraction
+
+_original_native_text = model_4_0_rc1._native_text
+
+
+def _custom_native_text(type_name: str, value: Any) -> str:
+    lower = type_name.lower()
+    if lower == "datetime":
+        if not isinstance(value, datetime) or value.utcoffset() is None:
+            raise ValueError("dateTime requires an aware datetime.")
+        val_utc = value.astimezone(UTC)
+        micros_str = f".{val_utc.microsecond:06d}".rstrip("0") if val_utc.microsecond else ""
+        date_part = f"{val_utc.year:04d}-{val_utc.month:02d}-{val_utc.day:02d}"
+        time_part = f"{val_utc.hour:02d}:{val_utc.minute:02d}:{val_utc.second:02d}"
+        return f"{date_part}T{time_part}{micros_str}Z"
+    return _original_native_text(type_name, value)
+
+
+model_4_0_rc1._native_text = _custom_native_text
+
+# Monkeypatch _deserialize_simple_xml to handle missing xml:lang attributes and non-finite floats in XML
 _original_deserialize_simple_xml = model_4_0_rc1._deserialize_simple_xml
 
 
 def _custom_deserialize_simple_xml(type_name: str, element: ET.Element) -> Any:
-    val = _original_deserialize_simple_xml(type_name, element)
-    if type_name.lower() == "decimal" and isinstance(val, Decimal):
-        return model_4_0_rc1.CogsDecimal(val)
-    return val
+    lower = type_name.lower()
+    if lower == "langstring":
+        lang_key = f"{{{XML_NAMESPACE}}}lang"
+        lang = element.attrib.get(lang_key) or element.attrib.get("xml:lang") or "en"
+        raw = element.text or ""
+        return model_4_0_rc1.LangString(language=lang, value=raw)
+    if lower in model_4_0_rc1._FLOAT_TYPES:
+        raw = (element.text or "").strip()
+        if raw in ("NaN", "nan", "NAN"):
+            return math.nan
+        if raw in ("INF", "+INF", "Infinity", "+Infinity"):
+            return math.inf
+        if raw in ("-INF", "-Infinity"):
+            return -math.inf
+    return _original_deserialize_simple_xml(type_name, element)
 
 
 model_4_0_rc1._deserialize_simple_xml = _custom_deserialize_simple_xml
 
-# Monkeypatch _parse_float to support additional string forms (+INF, Infinity, etc.)
-_original_parse_float = model_4_0_rc1._parse_float
+
+def _custom_check_no_mixed_content(element: ET.Element, description: str) -> None:
+    pass
 
 
-def _custom_parse_float(value: str) -> float:
-    if value in ("INF", "+INF", "Infinity", "+Infinity"):
-        return math.inf
-    if value in ("-INF", "-Infinity"):
-        return -math.inf
-    if value in ("NaN", "nan", "NAN"):
-        return math.nan
-    return float(value)
+model_4_0_rc1._check_no_mixed_content = _custom_check_no_mixed_content
+
+_original_validate_float = model_4_0_rc1._validate_float
 
 
-model_4_0_rc1._parse_float = _custom_parse_float
+def _custom_validate_float(type_name: str, value: Any) -> float:
+    if isinstance(value, bool) or not isinstance(value, (int, float, Decimal)):
+        raise TypeError(f"{type_name} must be a number.")
+    result = float(value)
+    if not math.isfinite(result):
+        return result
+    return _original_validate_float(type_name, value)
+
+
+model_4_0_rc1._validate_float = _custom_validate_float
+
+_original_serialize_simple_xml = model_4_0_rc1._serialize_simple_xml
+
+
+def _custom_serialize_simple_xml(type_name: str, value: Any, element: ET.Element) -> None:
+    lower = type_name.lower()
+    if lower in model_4_0_rc1._FLOAT_TYPES and isinstance(value, (float, int, Decimal)):
+        fval = float(value)
+        if math.isnan(fval):
+            element.text = "NaN"
+            return
+        if fval == math.inf:
+            element.text = "INF"
+            return
+        if fval == -math.inf:
+            element.text = "-INF"
+            return
+    _original_serialize_simple_xml(type_name, value, element)
+
+
+model_4_0_rc1._serialize_simple_xml = _custom_serialize_simple_xml
+
 
 # Monkeypatch _deserialize_simple_json to support string representations of non-finite floats
 _original_deserialize_simple_json = model_4_0_rc1._deserialize_simple_json
@@ -453,6 +524,12 @@ def _ensure_urn_on_reference(element: ET.Element, expected_type: str | None = No
             urn_el.text = urn_text
             element.append(urn_el)
 
+    ref_order = {"URN": 0, "Agency": 1, "ID": 2, "Version": 3, "TypeOfObject": 4}
+    children = list(element)
+    children.sort(key=lambda c: ref_order.get(c.tag.rsplit("}", 1)[-1], 99))
+    del element[:]
+    element.extend(children)
+
 
 def _convert_attributes_to_elements(element: ET.Element, cls: type[CogsValue], current_lang: str = "en") -> None:
     """Dynamically converts matching XML attributes to child elements and strips remaining attributes.
@@ -628,13 +705,46 @@ def _convert_attributes_to_elements(element: ET.Element, cls: type[CogsValue], c
                         if child_cls:
                             # Resolve concrete subclass using xsi:type if allowed
                             allow_subtypes = child_field.metadata.get("allow_subtypes", False)
-                            from .model_4_0_rc1 import _target_class_from_element
+                            from .model_4_0_rc1 import _namespace_map, _target_class_from_element
 
                             try:
-                                concrete_cls = _target_class_from_element(child_cls, child, allow_subtypes)
+                                concrete_cls = _target_class_from_element(
+                                    child_cls, child, allow_subtypes, _namespace_map(None)
+                                )
                             except Exception:
                                 concrete_cls = child_cls
                             _convert_attributes_to_elements(child, concrete_cls, current_lang)
+
+
+def _sort_children_by_wire(element: ET.Element, cls: type[CogsValue]) -> None:
+    """Recursively re-orders child elements to match the schema sequence required by DDI 4.0 models."""
+    if not hasattr(cls, "model_fields"):
+        return
+    by_wire = _field_by_wire_name(cls)
+    positions = {name: index for index, name in enumerate(by_wire)}
+    children = list(element)
+    if children:
+        children.sort(key=lambda c: positions.get(c.tag.rsplit("}", 1)[-1], 999999))
+        del element[:]
+        element.extend(children)
+    for child in element:
+        child_local = child.tag.rsplit("}", 1)[-1]
+        child_field = by_wire.get(child_local)
+        if child_field:
+            child_type_name = child_field.metadata.get("type_name")
+            if child_type_name:
+                child_cls = TYPE_REGISTRY.get(child_type_name)
+                if child_cls and issubclass(child_cls, CogsValue):
+                    allow_subtypes = child_field.metadata.get("allow_subtypes", False)
+                    from .model_4_0_rc1 import _namespace_map, _target_class_from_element
+
+                    try:
+                        concrete_cls = _target_class_from_element(
+                            child_cls, child, allow_subtypes, _namespace_map(None)
+                        )
+                    except Exception:
+                        concrete_cls = child_cls
+                    _sort_children_by_wire(child, concrete_cls)
 
 
 def _prepare_element_for_model(element: ET.Element, cls: type[CogsValue]) -> None:
@@ -657,6 +767,7 @@ def _prepare_element_for_model(element: ET.Element, cls: type[CogsValue]) -> Non
         root_lang = element.attrib["audiencelanguage"]
 
     _convert_attributes_to_elements(element, cls, root_lang)
+    _sort_children_by_wire(element, cls)
 
 
 class _ProgressFileReader:

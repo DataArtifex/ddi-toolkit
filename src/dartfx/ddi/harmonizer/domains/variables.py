@@ -577,10 +577,77 @@ class HarmonizedVariable(BaseModel):
 
         # Value domain resolution
         vdomain: HarmonizedValueDomain | None = None
-        if "categories" in data or "codes" in data or "value_labels" in data:
+        if "value_domain" in data:
+            vd_raw = data["value_domain"]
+            if isinstance(vd_raw, HarmonizedValueDomain):
+                vdomain = vd_raw
+            elif isinstance(vd_raw, dict):
+                if "codes" in vd_raw or "categories" in vd_raw:
+                    raw_codes = vd_raw.get("codes") or vd_raw.get("categories") or []
+                    code_items = []
+                    for c in raw_codes:
+                        if isinstance(c, HarmonizedCode):
+                            code_items.append(c)
+                        elif isinstance(c, dict):
+                            val = str(c.get("value", ""))
+                            lbl = str(c.get("label", val))
+                            is_m = bool(c.get("is_missing", False))
+                            st = c.get("sentinel_type")
+                            cat = HarmonizedCategory(label=lbl, is_missing=is_m, sentinel_type=st)
+                            code_items.append(
+                                HarmonizedCode(
+                                    value=val,
+                                    category=cat,
+                                    is_missing_override=is_m,
+                                    sentinel_type_override=st,
+                                )
+                            )
+                    cl = HarmonizedCodeList(name=vd_raw.get("name", f"CL_{name}"), codes=code_items)
+                    vdomain = HarmonizedValueDomain(kind=ValueDomainKind.ENUMERATED, codelist=cl)
+                elif "numeric_domain" in vd_raw or "min_value" in vd_raw:
+                    num_raw = vd_raw.get("numeric_domain", vd_raw)
+                    qk_raw = num_raw.get("quantity_kind", data.get("quantity_kind"))
+                    qk = QuantityKind.from_name(qk_raw) if qk_raw else None
+                    u_raw = num_raw.get("unit", data.get("unit"))
+                    uom = UnitOfMeasure.from_symbol(u_raw, quantity_kind=qk) if u_raw else None
+                    num_dom = HarmonizedNumericDomain(
+                        min_value=num_raw.get("min_value", num_raw.get("min")),
+                        max_value=num_raw.get("max_value", num_raw.get("max")),
+                        quantity_kind=qk,
+                        unit=uom,
+                    )
+                    vdomain = HarmonizedValueDomain(kind=ValueDomainKind.CONTINUOUS_NUMERIC, numeric_domain=num_dom)
+        elif "numeric_domain" in data:
+            num_raw = data["numeric_domain"]
+            qk_raw = (
+                num_raw.get("quantity_kind", data.get("quantity_kind"))
+                if isinstance(num_raw, dict)
+                else data.get("quantity_kind")
+            )
+            qk = QuantityKind.from_name(qk_raw) if qk_raw else None
+            u_raw = num_raw.get("unit", data.get("unit")) if isinstance(num_raw, dict) else data.get("unit")
+            uom = UnitOfMeasure.from_symbol(u_raw, quantity_kind=qk) if u_raw else None
+            min_v = (
+                num_raw.get("min_value", num_raw.get("min"))
+                if isinstance(num_raw, dict)
+                else getattr(num_raw, "min_value", None)
+            )
+            max_v = (
+                num_raw.get("max_value", num_raw.get("max"))
+                if isinstance(num_raw, dict)
+                else getattr(num_raw, "max_value", None)
+            )
+            num_dom = HarmonizedNumericDomain(
+                min_value=min_v,
+                max_value=max_v,
+                quantity_kind=qk,
+                unit=uom,
+            )
+            vdomain = HarmonizedValueDomain(kind=ValueDomainKind.CONTINUOUS_NUMERIC, numeric_domain=num_dom)
+        elif "categories" in data or "codes" in data or "value_labels" in data:
             val_labels = data.get("value_labels", data.get("categories", data.get("codes", {})))
             missings = set(data.get("missing_values", []))
-            code_items: list[HarmonizedCode] = []
+            code_items = []
             if isinstance(val_labels, dict):
                 for val, lbl in val_labels.items():
                     val_str = str(val)
@@ -741,4 +808,276 @@ class HarmonizedVariable(BaseModel):
                 "quantity_kind": quantity_kind,
                 "unit": unit,
             }
+        )
+
+    @classmethod
+    def from_ddi_codebook(cls, var: Any) -> HarmonizedVariable:
+        """Instantiates HarmonizedVariable from a DDI-Codebook 2.6 varType instance or XML dictionary."""
+        name = getattr(var, "name", None) or getattr(var, "ID", "unnamed_var")
+
+        # Label
+        labl_list = getattr(var, "labl", []) or []
+        label = name
+        if labl_list:
+            first_labl = labl_list[0]
+            label = getattr(first_labl, "content", None) or getattr(first_labl, "value", None) or str(first_labl)
+
+        # Description
+        txt_list = getattr(var, "txt", []) or []
+        desc = None
+        if txt_list:
+            first_txt = txt_list[0]
+            desc = getattr(first_txt, "content", None) or getattr(first_txt, "value", None) or str(first_txt)
+
+        # Value domain / Categories
+        cat_list = getattr(var, "catgry", []) or []
+        vdomain: HarmonizedValueDomain | None = None
+        dtype: DataType | None = None
+
+        if cat_list:
+            code_items: list[HarmonizedCode] = []
+            for cat in cat_list:
+                cat_val = ""
+                if hasattr(cat, "catValu") and cat.catValu:
+                    cat_val = (
+                        getattr(cat.catValu, "content", None) or getattr(cat.catValu, "value", None) or str(cat.catValu)
+                    )
+
+                cat_lbl = cat_val
+                if hasattr(cat, "labl") and cat.labl:
+                    cat_lbl = (
+                        getattr(cat.labl[0], "content", None) or getattr(cat.labl[0], "value", None) or str(cat.labl[0])
+                    )
+
+                is_miss = bool(getattr(cat, "is_missing", False) or str(getattr(cat, "missing", "")).upper() == "Y")
+                miss_type = getattr(cat, "missType", None)
+
+                cat_obj = HarmonizedCategory(
+                    label=str(cat_lbl).strip(),
+                    is_missing=is_miss,
+                    sentinel_type=miss_type,
+                )
+                code_items.append(HarmonizedCode(value=str(cat_val).strip(), category=cat_obj))
+
+            cl = HarmonizedCodeList(name=f"CL_{name}", codes=code_items)
+            vdomain = HarmonizedValueDomain(kind=ValueDomainKind.ENUMERATED, codelist=cl)
+            dtype = DataType(
+                name="categorical",
+                vocabulary=DataTypeVocabulary.DDI_CV,
+                canonical_kind=CanonicalDataType.CATEGORICAL,
+            )
+        elif getattr(var, "valrng", None):
+            valrng_list = getattr(var, "valrng", [])
+            min_v = None
+            max_v = None
+            u_str = None
+            if valrng_list:
+                vr = valrng_list[0]
+                u_str = getattr(vr, "UNITS", None)
+                if hasattr(vr, "item") and vr.item:
+                    for item in vr.item:
+                        min_v = getattr(item, "min", None) or min_v
+                        max_v = getattr(item, "max", None) or max_v
+                elif hasattr(vr, "range") and vr.range:
+                    for r in vr.range:
+                        min_v = getattr(r, "min", None) or min_v
+                        max_v = getattr(r, "max", None) or max_v
+
+            try:
+                min_f = float(min_v) if min_v is not None else None
+                max_f = float(max_v) if max_v is not None else None
+            except (ValueError, TypeError):
+                min_f, max_f = None, None
+
+            uom = UnitOfMeasure.from_symbol(u_str) if u_str else None
+            num_dom = HarmonizedNumericDomain(min_value=min_f, max_value=max_f, unit=uom)
+            vdomain = HarmonizedValueDomain(kind=ValueDomainKind.CONTINUOUS_NUMERIC, numeric_domain=num_dom)
+
+        # Data Type fallback
+        if dtype is None:
+            var_fmt = getattr(var, "varFormat", None)
+            fmt_type = getattr(var_fmt, "type", None) if var_fmt else None
+            dcml = getattr(var, "dcml", None)
+            intrvl = getattr(var, "intrvl", None)
+
+            if fmt_type:
+                dtype = DataType.from_ddi_cv(str(fmt_type))
+            elif dcml and dcml != "0":
+                dtype = DataType.from_ddi_cv("Decimal")
+            elif intrvl == "contin":
+                dtype = DataType.from_ddi_cv("Numeric")
+            elif intrvl == "discrete":
+                dtype = DataType.from_ddi_cv("Integer")
+            else:
+                dtype = DataType(
+                    name="unknown",
+                    vocabulary=DataTypeVocabulary.DDI_CV,
+                    canonical_kind=CanonicalDataType.UNKNOWN,
+                )
+
+        # Question construct
+        qstn_list = getattr(var, "qstn", []) or []
+        question_obj: HarmonizedQuestion | None = None
+        if qstn_list:
+            q = qstn_list[0]
+            q_lit = getattr(q, "qstnLit", None)
+            q_text = getattr(q_lit, "content", None) or getattr(q_lit, "value", None) or (str(q_lit) if q_lit else "")
+
+            ivu = getattr(q, "ivuInstr", None)
+            ivu_text = getattr(ivu, "content", None) or getattr(ivu, "value", None) or (str(ivu) if ivu else None)
+
+            pre = getattr(q, "preQTxt", None)
+            pre_text = getattr(pre, "content", None) or getattr(pre, "value", None) or (str(pre) if pre else None)
+
+            post = getattr(q, "postQTxt", None)
+            post_text = getattr(post, "content", None) or getattr(post, "value", None) or (str(post) if post else None)
+
+            if q_text or ivu_text or pre_text or post_text:
+                question_obj = HarmonizedQuestion(
+                    question_text=str(q_text) if q_text else "Question prompt",
+                    instructions=str(ivu_text) if ivu_text else None,
+                    pre_question_text=str(pre_text) if pre_text else None,
+                    post_question_text=str(post_text) if post_text else None,
+                )
+
+        # Concept
+        concept_list = getattr(var, "concept", []) or []
+        concept_obj: HarmonizedConcept | None = None
+        if concept_list:
+            c = concept_list[0]
+            c_label = getattr(c, "content", None) or getattr(c, "value", None) or str(c)
+            if c_label:
+                concept_obj = HarmonizedConcept(preferred_label=str(c_label))
+
+        # Universe
+        univ_list = getattr(var, "universe", []) or []
+        univ_obj: HarmonizedUniverse | None = None
+        if univ_list:
+            u = univ_list[0]
+            u_name = getattr(u, "content", None) or getattr(u, "value", None) or str(u)
+            if u_name:
+                univ_obj = HarmonizedUniverse(name=str(u_name))
+
+        return cls(
+            name=str(name),
+            label=str(label),
+            description=str(desc) if desc else None,
+            data_type=dtype,
+            value_domain=vdomain,
+            question=question_obj,
+            concept=concept_obj,
+            universe=univ_obj,
+            urn=getattr(var, "id", None) or getattr(var, "ID", None) or getattr(var, "ddiCodebookUrn", None),
+        )
+
+    @classmethod
+    def from_ddi_lifecycle(cls, var: Any) -> HarmonizedVariable:
+        """Instantiates HarmonizedVariable from a DDI-Lifecycle 3.3 / DDI 4.0 Variable model."""
+        # Variable name
+        var_names = getattr(var, "variable_name", []) or []
+        name = "ddil_var"
+        if var_names:
+            vn = var_names[0]
+            name = getattr(vn, "content", None) or getattr(vn, "value", None) or str(vn)
+        else:
+            name = getattr(var, "name", "ddil_var")
+
+        # Label
+        labels = getattr(var, "label", []) or []
+        label = name
+        if labels:
+            lbl = labels[0]
+            label = getattr(lbl, "content", None) or getattr(lbl, "value", None) or str(lbl)
+
+        # Description
+        descriptions = getattr(var, "description", []) or []
+        desc = None
+        if descriptions:
+            d = descriptions[0]
+            desc = getattr(d, "content", None) or getattr(d, "value", None) or str(d)
+
+        # Question
+        questions = getattr(var, "question_reference", []) or []
+        question_obj: HarmonizedQuestion | None = None
+        if questions:
+            q_ref = questions[0]
+            q_text = getattr(q_ref, "question_text", None) or getattr(q_ref, "name", None) or str(q_ref)
+            question_obj = HarmonizedQuestion(question_text=str(q_text))
+
+        # Concept
+        concepts = getattr(var, "concept_reference", []) or []
+        concept_obj: HarmonizedConcept | None = None
+        if concepts:
+            c_ref = concepts[0]
+            c_lbl = getattr(c_ref, "name", None) or getattr(c_ref, "label", None) or str(c_ref)
+            concept_obj = HarmonizedConcept(preferred_label=str(c_lbl))
+
+        # Universe
+        universes = getattr(var, "universe_reference", []) or []
+        univ_obj: HarmonizedUniverse | None = None
+        if universes:
+            u_ref = universes[0]
+            u_name = getattr(u_ref, "name", None) or getattr(u_ref, "description", None) or str(u_ref)
+            univ_obj = HarmonizedUniverse(name=str(u_name))
+
+        # Value domain
+        vdomain: HarmonizedValueDomain | None = None
+        dtype = DataType(name="unknown", vocabulary=DataTypeVocabulary.DDI_CV, canonical_kind=CanonicalDataType.UNKNOWN)
+
+        return cls(
+            name=str(name),
+            label=str(label),
+            description=str(desc) if desc else None,
+            data_type=dtype,
+            value_domain=vdomain,
+            question=question_obj,
+            concept=concept_obj,
+            universe=univ_obj,
+            urn=getattr(var, "id", None) or getattr(var, "urn", None),
+        )
+
+    @classmethod
+    def from_ddi_cdi(cls, var: Any, _dataset: Any = None) -> HarmonizedVariable:
+        """Instantiates HarmonizedVariable from a DDI-CDI InstanceVariable or RepresentedVariable."""
+        target = getattr(var, "resource", var)
+
+        name = getattr(target, "name", None) or getattr(target, "display_label", "cdi_var") or "cdi_var"
+        label = getattr(target, "display_label", None) or getattr(target, "displayLabel", name) or name
+        desc = getattr(target, "description", None)
+
+        # Data type
+        dtype = DataType(name="unknown", vocabulary=DataTypeVocabulary.DDI_CV, canonical_kind=CanonicalDataType.UNKNOWN)
+        p_dt = getattr(target, "physicalDataType", None)
+        if p_dt:
+            dt_name = getattr(p_dt, "name", None) or getattr(p_dt, "entryValue", str(p_dt))
+            if dt_name:
+                dtype = DataType.from_ddi_cv(str(dt_name))
+
+        # Concept & Universe
+        concept_obj: HarmonizedConcept | None = None
+        concepts = getattr(target, "takes_concepts_from", None) or getattr(target, "concept", None)
+        if concepts:
+            c_first = concepts[0] if isinstance(concepts, list) else concepts
+            c_res = getattr(c_first, "resource", c_first)
+            c_lbl = getattr(c_res, "name", None) or getattr(c_res, "prefLabel", str(c_res))
+            concept_obj = HarmonizedConcept(preferred_label=str(c_lbl))
+
+        univ_obj: HarmonizedUniverse | None = None
+        universes = getattr(target, "takes_universe_from", None) or getattr(target, "universe", None)
+        if universes:
+            u_first = universes[0] if isinstance(universes, list) else universes
+            u_res = getattr(u_first, "resource", u_first)
+            u_name = getattr(u_res, "name", None) or getattr(u_res, "definition", str(u_res))
+            univ_obj = HarmonizedUniverse(name=str(u_name))
+
+        urn_val = getattr(target, "identifier", None) or getattr(target, "id", None) or getattr(target, "uri", None)
+
+        return cls(
+            name=str(name),
+            label=str(label),
+            description=str(desc) if desc else None,
+            data_type=dtype,
+            concept=concept_obj,
+            universe=univ_obj,
+            urn=str(urn_val) if urn_val else None,
         )

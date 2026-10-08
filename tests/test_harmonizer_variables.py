@@ -327,3 +327,84 @@ def test_compare_resources_polymorphic_variable():
     res = compare_resources(v1, v2)
     assert res.score == 1.0
     assert res.match_type == MatchType.EXACT_IDENTICAL
+
+
+# =============================================================================
+# 6. DDI Specification Adapter Tests (DDI-Codebook, DDI-Lifecycle, DDI-CDI)
+# =============================================================================
+
+
+def test_variable_from_ddi_codebook():
+    """Verifies HarmonizedVariable extraction from DDI-Codebook 2.6 varType."""
+    import os
+
+    from dartfx.ddi import ddicodebook
+
+    # 1. Simple YNDK (Categories and Value Labels)
+    data_path = os.path.join(os.path.dirname(__file__), "data/codebook/simple_yndk.xml")
+    cb = ddicodebook.loadxml(data_path)
+    vars_list = cb.search_variables()
+    assert len(vars_list) == 1
+    var_cb = vars_list[0]
+
+    var_harm = HarmonizedVariable.from_ddi_codebook(var_cb)
+    assert var_harm.name == "yesnodk"
+    assert var_harm.urn == "V1"
+    assert "Yes / No" in var_harm.label
+    assert var_harm.data_type.canonical_kind == CanonicalDataType.CATEGORICAL
+    assert var_harm.value_domain is not None
+    assert var_harm.value_domain.kind == ValueDomainKind.ENUMERATED
+    assert len(var_harm.value_domain.codelist.codes) == 3
+
+    # 2. NES1948 (Question construct with literal prompt)
+    nes_path = os.path.join(os.path.dirname(__file__), "data/codebook/NES1948.xml")
+    nes_cb = ddicodebook.loadxml(nes_path)
+    nes_vars = nes_cb.search_variables()
+    assert len(nes_vars) == 67
+    nes_v1 = nes_vars[0]
+    var_nes = HarmonizedVariable.from_ddi_codebook(nes_v1)
+    assert var_nes.name is not None
+    assert var_nes.label is not None
+    if nes_v1.qstn:
+        assert var_nes.question is not None
+
+
+def test_variable_from_ddi_cdi():
+    """Verifies HarmonizedVariable extraction from DDI-CDI InstanceVariable."""
+    import os
+
+    from dartfx.ddi import ddicodebook
+    from dartfx.ddi.ddicdi import model_1_1_0 as cdi_model
+    from dartfx.ddi.ddicodebook import utils as cb_utils
+
+    data_path = os.path.join(os.path.dirname(__file__), "data/codebook/simple_yndk.xml")
+    cb = ddicodebook.loadxml(data_path)
+    resources = cb_utils.codebook_to_cdif(cb, use_skos=True)
+
+    cdi_vars = [
+        r for r in resources.values() if hasattr(r, "resource") and isinstance(r.resource, cdi_model.InstanceVariable)
+    ]
+    assert len(cdi_vars) >= 1
+    var_cdi = cdi_vars[0]
+
+    var_harm = HarmonizedVariable.from_ddi_cdi(var_cdi)
+    assert var_harm.name in ("V1", "yesnodk", "cdi_var") or var_harm.label is not None
+    assert var_harm.urn is not None
+
+
+def test_variable_from_ddi_lifecycle():
+    """Verifies HarmonizedVariable extraction from DDI-Lifecycle 4.0 / 3.3 Variable."""
+    from dartfx.ddi.ddilifecycle import model_4_0_rc1 as ddil_model
+
+    var_ddil = ddil_model.Variable(
+        id="VAR_AGE_01",
+        variable_name=[ddil_model.LangString(language="en", value="AGE_YEARS")],
+        label=[ddil_model.LangString(language="en", value="Age in Years")],
+        description=[ddil_model.LangString(language="en", value="Respondent age at interview date")],
+    )
+
+    var_harm = HarmonizedVariable.from_ddi_lifecycle(var_ddil)
+    assert var_harm.name == "AGE_YEARS"
+    assert var_harm.label == "Age in Years"
+    assert var_harm.description == "Respondent age at interview date"
+    assert var_harm.urn == "VAR_AGE_01"

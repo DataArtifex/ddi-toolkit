@@ -1,0 +1,53 @@
+id: case_var_education_isced_levels
+title: ISCED 2011 Education Attainment Classification Alignment
+domain: variable
+difficulty: basic
+real_world_context: Cross-National Educational Attainment Census Harmonization
+story: >
+  Two educational registries measure highest completed level of education using different local acronyms
+  mapped to standard UNESCO ISCED-2011 categories with slight phrasing variation in the highest category.
+  Variable comparison evaluates value domain category equivalence and confirms high semantic overlap.
+learning_objective: >
+  VariableComparator matches ordered classification hierarchies across survey instruments.
+source_resource:
+  name: "EDUC_LEVEL_A"
+  label: "Highest Educational Attainment Level"
+  data_type: "INTEGER"
+  value_domain:
+    name: "EducSchemeA"
+    codes:
+      - value: "1"
+        label: "Primary education"
+      - value: "2"
+        label: "Lower secondary education"
+      - value: "3"
+        label: "Upper secondary education"
+      - value: "4"
+        label: "Bachelor or equivalent level"
+      - value: "5"
+        label: "Master or doctoral equivalent"
+candidate_resource:
+  name: "education_attainment"
+  label: "Highest completed education level"
+  data_type: "INTEGER"
+  value_domain:
+    name: "EducSchemeB"
+    codes:
+      - value: "1"
+        label: "Primary education"
+      - value: "2"
+        label: "Lower secondary education"
+      - value: "3"
+        label: "Upper secondary education"
+      - value: "4"
+        label: "Bachelor or equivalent level"
+      - value: "5"
+        label: "Master or doctoral level"
+preset: STANDARD
+custom_typos: {}
+comparator: Variable
+comparator_threshold: 0.70
+expected_match: true
+expected_match_type: SYNTACTIC_SIMILAR
+expected_score_min: 0.75
+expected_score_max: 1.0

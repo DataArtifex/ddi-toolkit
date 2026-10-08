@@ -57,7 +57,7 @@ class Ddi4ModelAssembler:
                 m4_code = m4.CodeType(
                     id=c.id,
                     urn=f"urn:ddi:{cl.agency}:{c.id}:{cl.version}",
-                    value=m4.ValueType(content=c.value),
+                    value=m4.ValueType(string_value=c.value),
                     category_reference=cat_ref,
                     is_discrete=True,
                 )
@@ -102,7 +102,7 @@ class Ddi4ModelAssembler:
             if q.question_text:
                 q_text_elements.append(
                     m4.DynamicTextType(
-                        literal_text=[m4.LiteralTextType(text=[LangString(language="en", value=q.question_text)])]
+                        text_content=[m4.LiteralTextType(text=[LangString(language="en", value=q.question_text)])]
                     )
                 )
 
@@ -138,7 +138,7 @@ class Ddi4ModelAssembler:
                 agency=self.doc.agency,
                 version=self.doc.version,
                 urn=dc_urn,
-                data_collection_name=[LangString(language="en", value=f"Data Collection for {self.doc.id}")],
+                data_collection_module_name=[LangString(language="en", value=f"Data Collection for {self.doc.id}")],
                 question_scheme_reference=[m4_question_scheme],
             )
 
@@ -152,20 +152,20 @@ class Ddi4ModelAssembler:
                 var_rep = m4.VariableRepresentationType(value_representation=code_rep)
             elif v.representation_type == "numeric":
                 num_rep = m4.NumericRepresentationBaseType(
-                    numeric_type_code=m4.CodeValueType(content=v.numeric_type or "integer"),
+                    numeric_type_code=m4.CodeValueType(string_value=v.numeric_type or "integer"),
                     decimal_positions=v.decimal_places,
                 )
                 var_rep = m4.VariableRepresentationType(value_representation=num_rep)
             elif v.representation_type == "datetime":
                 dt_rep = m4.DateTimeRepresentationBaseType(
-                    date_field_format=m4.CodeValueType(content=v.date_format) if v.date_format else None
+                    date_field_format=m4.CodeValueType(string_value=v.date_format) if v.date_format else None
                 )
                 var_rep = m4.VariableRepresentationType(value_representation=dt_rep)
             else:
                 txt_rep = m4.TextRepresentationBaseType(max_length=v.max_length)
                 var_rep = m4.VariableRepresentationType(value_representation=txt_rep)
 
-            q_ref_list = []
+            q_ref_list: list[m4.Question] = []
             if v.question_id and v.question_id in m4_questions:
                 q_ref_list.append(m4_questions[v.question_id])
 
@@ -226,16 +226,15 @@ class Ddi4ModelAssembler:
         # 6. Physical Instances
         m4_phys_instances: list[m4.PhysicalInstance] = []
         for pi in self.doc.physical_instances:
+            data_file_id = m4.DataFileIdentificationType(
+                data_file_uri=m4.URIType(any_uri_value=pi.file_uri) if pi.file_uri else None
+            )
             m4_pi = m4.PhysicalInstance(
                 id=pi.id,
                 agency=pi.agency,
                 version=pi.version,
                 urn=pi.urn,
-                data_file_identification=[
-                    m4.DataFileIdentificationType(
-                        file_uri=pi.file_uri,
-                    )
-                ],
+                data_file_identification=[data_file_id],
             )
             m4_phys_instances.append(m4_pi)
 

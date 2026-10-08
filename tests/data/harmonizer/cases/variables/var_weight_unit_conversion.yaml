@@ -1,0 +1,38 @@
+id: case_var_weight_unit_conversion
+title: Continuous Measurement Unit Transformation (Imperial Pounds to Metric Kilograms)
+domain: variable
+difficulty: intermediate
+real_world_context: Cross-National Health & Epidemiological Survey Harmonization
+story: >
+  Survey Wave 1 (US NHANES) measures respondent body weight in Imperial Pounds (lbs) with a numeric range of 80 to 450 lbs.
+  Survey Wave 2 (European Health Survey) records body weight in Metric Kilograms (kg) with a range of 36.28 to 204.12 kg.
+  Although the raw numeric bounds and units differ, QUDT metrological knowledge detects that both measure the QuantityKind 'Mass' (QUDT: Mass)
+  and calculates the exact linear scale factor 0.45359237 to produce an automated conversion advisory with 100% domain equivalence.
+learning_objective: >
+  Metrologically-aware VariableComparator detects physical QuantityKind equivalence, calculates unit scaling factors, and emits CONVERT_UNIT advice.
+source_resource:
+  name: "WEIGHT_LBS"
+  label: "Respondent Weight in Pounds"
+  data_type: "DECIMAL"
+  quantity_kind: "Mass"
+  unit: "lbs"
+  numeric_domain:
+    min_value: 80.0
+    max_value: 450.0
+candidate_resource:
+  name: "weight_kg"
+  label: "Body weight (kilograms)"
+  data_type: "DECIMAL"
+  quantity_kind: "Mass"
+  unit: "kg"
+  numeric_domain:
+    min_value: 36.2873896
+    max_value: 204.1165665
+preset: STANDARD
+custom_typos: {}
+comparator: Variable
+comparator_threshold: 0.70
+expected_match: true
+expected_match_type: UNIT_CONVERSION_REQUIRED
+expected_score_min: 0.75
+expected_score_max: 1.0

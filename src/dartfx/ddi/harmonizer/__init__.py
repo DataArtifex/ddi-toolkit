@@ -35,6 +35,12 @@ from .comparators import (
     compare_resources,
     compare_variables,
 )
+from .crosswalk import (
+    DatasetCrosswalk,
+    DatasetHarmonizer,
+    VariableAlignment,
+    harmonize_datasets,
+)
 from .domains import (
     CanonicalDataType,
     DataType,
@@ -92,6 +98,8 @@ __all__ = [
     "ContentFingerprint",
     "ContentSignature",
     "CuratedCrosswalk",
+    "DatasetCrosswalk",
+    "DatasetHarmonizer",
     "DataType",
     "DataTypeVocabulary",
     "DefaultTfIdfEmbeddingProvider",
@@ -136,6 +144,7 @@ __all__ = [
     "UnicodeForm",
     "UnitOfMeasure",
     "ValueDomainKind",
+    "VariableAlignment",
     "VariableComparator",
     "VariableComparisonResult",
     "VariableComparisonWeights",
@@ -145,6 +154,7 @@ __all__ = [
     "compare_resources",
     "compare_variables",
     "generate_harmonizer_explorer_html",
+    "harmonize_datasets",
     "launch_explorer",
     "parse_identifier",
 ]

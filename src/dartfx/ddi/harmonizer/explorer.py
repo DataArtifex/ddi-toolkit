@@ -229,6 +229,7 @@ def generate_harmonizer_explorer_html(
     .tag-enumerated_list {{ background: rgba(16, 185, 129, 0.2); color: #34d399; }}
     .tag-question {{ background: rgba(245, 158, 11, 0.2); color: #fbbf24; }}
     .tag-conceptual {{ background: rgba(168, 85, 247, 0.2); color: #c084fc; }}
+    .tag-variable {{ background: rgba(236, 72, 153, 0.2); color: #f472b6; }}
     .case-desc {{
       font-size: 0.78rem;
       color: var(--text-muted);
@@ -917,6 +918,7 @@ def generate_harmonizer_explorer_html(
           <span class="chip" data-domain="enumerated_list" onclick="selectDomainFilter('enumerated_list')">Lists</span>
           <span class="chip" data-domain="question" onclick="selectDomainFilter('question')">Questions</span>
           <span class="chip" data-domain="conceptual" onclick="selectDomainFilter('conceptual')">Concepts</span>
+          <span class="chip" data-domain="variable" onclick="selectDomainFilter('variable')">Variables</span>
         </div>
       </div>
       <div class="case-list" id="caseListContainer"></div>
@@ -1165,7 +1167,54 @@ def generate_harmonizer_explorer_html(
         `;
       }}
 
-      // 1. Code list / Enumerated list
+      // 1. Variable Item
+      if (domainHint === 'variable' || (parsed.name && (parsed.data_type || parsed.quantity_kind || parsed.numeric_domain || parsed.value_domain))) {{
+        let details = '';
+        if (parsed.quantity_kind || parsed.unit) {{
+          const qkText = typeof parsed.quantity_kind === 'object' ? parsed.quantity_kind.name : parsed.quantity_kind;
+          const uomText = typeof parsed.unit === 'object' ? parsed.unit.symbol : parsed.unit;
+          details += `<div style="display:flex; gap:6px; margin: 6px 0;">
+            ${{qkText ? `<span class="badge-pill badge-primary">QuantityKind: ${{escapeHtml(qkText)}}</span>` : ''}}
+            ${{uomText ? `<span class="badge-pill badge-success">Unit: ${{escapeHtml(uomText)}}</span>` : ''}}
+          </div>`;
+        }}
+        if (parsed.numeric_domain) {{
+          const num = parsed.numeric_domain;
+          const minVal = num.min_value !== undefined ? num.min_value : num.min;
+          const maxVal = num.max_value !== undefined ? num.max_value : num.max;
+          details += `<div style="margin-top:6px; font-size:0.75rem; background:rgba(0,0,0,0.25); padding:6px 10px; border-radius:4px; border: 1px solid var(--border-color);">
+            <strong style="color:var(--text-muted); text-transform:uppercase; font-size:0.68rem;">Numeric Bounds:</strong>
+            <span style="font-family:var(--font-mono); margin-left:6px; color:#38bdf8;">[${{minVal !== undefined ? minVal : '-∞'}} ... ${{maxVal !== undefined ? maxVal : '+∞'}}]</span>
+          </div>`;
+        }}
+        if (parsed.value_domain && parsed.value_domain.codes) {{
+          const rows = parsed.value_domain.codes.map((c, i) => `
+            <tr class="code-row">
+              <td>#${{i + 1}}</td>
+              <td style="width:70px;"><span class="val-chip">${{escapeHtml(String(c.value !== undefined ? c.value : ''))}}</span></td>
+              <td><span class="label-text">${{escapeHtml(String(c.label !== undefined ? c.label : (c.category ? c.category.label : '')))}}</span></td>
+              <td style="text-align:right;">${{c.is_missing ? '<span class="badge-pill badge-warning">Missing</span>' : '<span class="badge-pill badge-success" style="opacity:0.85; font-size:0.65rem;">Valid</span>'}}</td>
+            </tr>
+          `).join('');
+          details += `<table class="codelist-table" style="margin-top:8px;">
+            <thead><tr><th>Seq</th><th>Value</th><th>Category Label</th><th></th></tr></thead>
+            <tbody>${{rows}}</tbody>
+          </table>`;
+        }}
+        const dtName = typeof parsed.data_type === 'object' ? parsed.data_type.name : (parsed.data_type || 'Variable');
+        return `
+          <div class="render-card">
+            <div class="render-title-bar">
+              <span class="render-title">${{escapeHtml(parsed.name)}}</span>
+              <span class="badge-pill badge-primary">${{escapeHtml(dtName)}}</span>
+            </div>
+            ${{parsed.label ? `<div style="font-weight:600; font-size:0.88rem; margin:6px 0; color:var(--text-main);">${{escapeHtml(parsed.label)}}</div>` : ''}}
+            ${{details}}
+          </div>
+        `;
+      }}
+
+      // 2. Code list / Enumerated list
       if (Array.isArray(parsed.codes) || (domainHint === 'enumerated_list' && parsed.codes)) {{
         const codes = parsed.codes || [];
         const rows = codes.map((c, i) => `
@@ -1755,6 +1804,32 @@ print(f"Matched:          {{match_result.matched}}")
 print(f"Match Type:       {{match_result.match_type.value}}")
 print(f"Similarity Score: {{match_result.score:.4f}}")
 print(f"Reason:           {{match_result.reason}}")`;
+      }}
+
+      // Variable Resource
+      if (domain === 'variable' || (parsedSrc && (parsedSrc.data_type || parsedSrc.quantity_kind || parsedSrc.numeric_domain))) {{
+        return `from dartfx.ddi.harmonizer import (
+    HarmonizedVariable,
+    VariableComparator,
+    compare_variables,
+)
+
+# 1. Instantiate Harmonized Variables from Raw Payloads
+source_var = HarmonizedVariable.from_dict(${{JSON.stringify(parsedSrc, null, 4)}})
+candidate_var = HarmonizedVariable.from_dict(${{JSON.stringify(parsedCand, null, 4)}})
+
+# 2. Compare Variables & Derive Metrological / Recoding Transformation Advice
+result = compare_variables(source_var, candidate_var, threshold=${{threshVal}})
+
+print(f"Matched:          {{result.score >= ${{threshVal}}}}")
+print(f"Match Type:       {{result.match_type.value}}")
+print(f"Similarity Score: {{result.score:.4f}}")
+print(f"Rationale:        {{result.rationale}}")
+print("Sub-scores:", result.sub_scores)
+if result.transformation_advice:
+    print("\\nTransformation Advisories:")
+    for advice in result.transformation_advice:
+        print(f"  [{{advice.action.value}}]: {{advice.description}}")`;
       }}
 
       // Categorical (Default)

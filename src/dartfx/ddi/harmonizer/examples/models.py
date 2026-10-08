@@ -17,7 +17,7 @@ class HarmonizerTestCase(BaseModel):
 
     id: str = Field(description="Unique case identifier (e.g. 'case_permuted_binary_enumeration')")
     title: str = Field(description="Human-readable title (e.g. 'Permuted Binary Demographics')")
-    domain: Literal["categorical", "enumerated_list", "question", "conceptual"] = Field(
+    domain: Literal["categorical", "enumerated_list", "question", "conceptual", "variable"] = Field(
         description="Resource domain classification"
     )
     difficulty: Literal["basic", "intermediate", "edge_case", "adversarial"] = Field(

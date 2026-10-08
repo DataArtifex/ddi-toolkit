@@ -15,6 +15,7 @@ from dartfx.ddi.harmonizer import (
     HarmonizedCodeList,
     HarmonizedConcept,
     HarmonizedQuestion,
+    HarmonizedVariable,
     HarmonizerTestCase,
     LevenshteinComparator,
     MatchType,
@@ -24,6 +25,7 @@ from dartfx.ddi.harmonizer import (
     TextNormalizer,
     TextSanitizer,
     WeightedAttributeComparator,
+    compare_variables,
 )
 from dartfx.ddi.harmonizer.comparators import RuleBasedMockAgentComparator
 
@@ -199,6 +201,19 @@ def test_harmonizer_use_case_from_bank(case: HarmonizerTestCase):
                     "match_type": comp_res.match_type,
                 },
             )()
+    elif case.domain == "variable":
+        v_src = HarmonizedVariable.from_dict(case.source_resource)
+        v_cand = HarmonizedVariable.from_dict(case.candidate_resource)
+        comp_res = compare_variables(v_src, v_cand, threshold=case.comparator_threshold)
+        match = type(
+            "VariableMatchResult",
+            (),
+            {
+                "matched": comp_res.score >= case.comparator_threshold,
+                "score": comp_res.score,
+                "match_type": comp_res.match_type,
+            },
+        )()
     else:
         pytest.fail(f"Unknown domain: {case.domain}")
 

@@ -1,0 +1,48 @@
+id: case_var_gender_iso_recode
+title: Categorical Variable Value Recoding (Numeric Codes to ISO Alpha Representation)
+domain: variable
+difficulty: intermediate
+real_world_context: Multi-Source Demographic Registry Integration
+story: >
+  Legacy administrative records store respondent sex using numeric codes (1=Male, 2=Female, 9=Unknown).
+  The modern centralized master data service uses ISO 5218 alphanumeric codes (M=Male, F=Female, U=Unknown).
+  The categorical variable comparator isolates the substantive categories, confirms exact 1-to-1 semantic alignment,
+  and synthesizes a complete value recoding table (1 -> M, 2 -> F, 9 -> U).
+learning_objective: >
+  VariableComparator detects semantic category equivalence across physical notation schemes and emits RECODE_VALUES advice.
+source_resource:
+  name: "GENDER_NUM"
+  label: "Respondent Gender"
+  data_type: "categorical"
+  value_domain:
+    name: "GenderNumericScheme"
+    codes:
+      - value: "1"
+        label: "Male"
+      - value: "2"
+        label: "Female"
+      - value: "9"
+        label: "Unknown"
+        is_missing: true
+candidate_resource:
+  name: "sex_iso"
+  label: "Respondent Gender"
+  data_type: "categorical"
+  value_domain:
+    name: "SexIsoScheme"
+    codes:
+      - value: "M"
+        label: "Male"
+      - value: "F"
+        label: "Female"
+      - value: "U"
+        label: "Unknown"
+        is_missing: true
+preset: STANDARD
+custom_typos: {}
+comparator: Variable
+comparator_threshold: 0.70
+expected_match: true
+expected_match_type: CATEGORIES_EXACT_CODES_DIFFERENT
+expected_score_min: 0.70
+expected_score_max: 1.0

@@ -1,0 +1,37 @@
+id: case_var_income_currency_range
+title: Economic Indicator Currency & Bounded Interval Alignment
+domain: variable
+difficulty: intermediate
+real_world_context: Household Budget & Income Dynamics Survey
+story: >
+  Survey Wave A records gross annual household income in US Dollars (USD) between $0 and $1,000,000.
+  Survey Wave B records annual household income in Canadian Dollars (CAD) between $0 and $1,350,000.
+  Both variables measure the QuantityKind 'Currency' with overlapping scaled bounds, requiring currency conversion advice.
+learning_objective: >
+  VariableComparator checks currency unit of measure compatibility and provides actionable currency transformation advisories.
+source_resource:
+  name: "HH_INCOME_USD"
+  label: "Total Gross Annual Household Income"
+  data_type: "DECIMAL"
+  quantity_kind: "Currency"
+  unit: "USD"
+  numeric_domain:
+    min_value: 0.0
+    max_value: 1000000.0
+candidate_resource:
+  name: "income_cad"
+  label: "Annual household income gross"
+  data_type: "DECIMAL"
+  quantity_kind: "Currency"
+  unit: "CAD"
+  numeric_domain:
+    min_value: 0.0
+    max_value: 1350000.0
+preset: STANDARD
+custom_typos: {}
+comparator: Variable
+comparator_threshold: 0.70
+expected_match: true
+expected_match_type: UNIT_CONVERSION_REQUIRED
+expected_score_min: 0.70
+expected_score_max: 1.0

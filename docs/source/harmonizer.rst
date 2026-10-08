@@ -879,6 +879,53 @@ When two variables are compatible but require harmonization, ``VariableCompariso
 * **``CAST_DATA_TYPE``**: Specifies safe widening or type coercions (e.g., ``INTEGER`` to ``DECIMAL``).
 * **``RENAME_COLUMN``**: Maps column names across dataset schemas.
 
+Dataset-to-Dataset Harmonization & Schema Crosswalks
+-------------------------------------------------------
+
+When integrating multiple datasets or harmonizing across survey waves, ``DatasetHarmonizer`` provides automated bipartite schema matching, transformation planning, and transformation execution across Polars DataFrames:
+
+.. code-block:: python
+
+    import polars as pl
+    from dartfx.ddi.harmonizer import DatasetHarmonizer, harmonize_datasets
+
+    # Source DataFrame (Survey Wave 1: Weight in lbs, Gender as numeric)
+    df_wave1 = pl.DataFrame({
+        "WEIGHT_LBS": [150.0, 185.5, 210.0],
+        "GENDER": [1, 2, 1],
+    })
+
+    # Target DataFrame (Survey Wave 2: Weight in kg, Sex as ISO codes)
+    df_wave2 = pl.DataFrame({
+        "weight_kg": [68.0, 84.1, 95.2],
+        "sex": ["M", "F", "M"],
+    })
+
+    # 1. Generate Schema Crosswalk Matrix
+    harmonizer = DatasetHarmonizer(min_confidence=0.7)
+    crosswalk = harmonizer.harmonize(df_wave1, df_wave2)
+
+    # 2. Inspect Alignment Summary & Markdown Crosswalk
+    print(crosswalk.summary_report())
+    print(crosswalk.to_markdown())
+
+    # 3. Automatically Execute Transformations on Source Data
+    df_aligned = crosswalk.apply_to_polars(df_wave1)
+    # Output columns: weight_kg (converted from lbs), sex (recoded 1->M, 2->F)
+
+The ``DatasetHarmonizer`` accepts inputs across multiple formats seamlessly:
+* Lists of ``HarmonizedVariable`` instances.
+* In-memory ``polars.DataFrame`` instances.
+* JSON Schema root documents (``{"type": "object", "properties": {...}}``).
+* DDI CodeBook 2.6 ``CodeBook`` objects.
+
+Key Crosswalk Features:
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* **Optimal Bipartite Matching**: Automatically pairs source and target variables using greedy score ranking with strict 1-to-1 matching constraints (or optional many-to-one mapping).
+* **Cross-Format Exporters**: Export crosswalks directly to Polars DataFrames (``.to_polars()``), Pandas DataFrames (``.to_pandas()``), JSON dictionaries (``.to_dict()``), and Markdown summary tables (``.to_markdown()``).
+* **Automated Polars Pipeline Execution**: ``crosswalk.apply_to_polars(df)`` applies unit scaling, category recoding via ``replace()``, and column renames in a single chained pipeline.
+
 Interactive HTML Harmonization Workbench
 ----------------------------------------
 
