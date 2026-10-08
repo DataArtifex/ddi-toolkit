@@ -748,6 +748,14 @@ BUILTIN_SEED_CASES: list[dict[str, Any]] = [
 ]
 
 
+DIFFICULTY_RANK: dict[str, int] = {
+    "basic": 1,
+    "intermediate": 2,
+    "advanced": 3,
+    "edge_case": 4,
+}
+
+
 class CaseBankLoader:
     """Discovers, loads, and filters test cases from disk or built-in defaults."""
 
@@ -761,9 +769,12 @@ class CaseBankLoader:
         self._loaded = False
 
     def load_all(self, force_reload: bool = False) -> list[HarmonizerTestCase]:
-        """Loads all test cases from disk files and built-in seeds."""
+        """Loads all test cases from disk files and built-in seeds, ordered by complexity."""
         if self._loaded and not force_reload:
-            return list(self._cases.values())
+            return sorted(
+                self._cases.values(),
+                key=lambda c: (DIFFICULTY_RANK.get(c.difficulty, 99), c.domain, c.title),
+            )
 
         self._cases.clear()
 
@@ -787,7 +798,10 @@ class CaseBankLoader:
                         pass
 
         self._loaded = True
-        return list(self._cases.values())
+        return sorted(
+            self._cases.values(),
+            key=lambda c: (DIFFICULTY_RANK.get(c.difficulty, 99), c.domain, c.title),
+        )
 
     def _load_file(self, path: Path) -> None:
         content = path.read_text(encoding="utf-8")

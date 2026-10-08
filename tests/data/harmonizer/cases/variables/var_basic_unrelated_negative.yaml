@@ -1,0 +1,28 @@
+id: case_var_basic_unrelated_negative
+title: Distinct Unrelated Variables (Negative Control False Positive Rejection)
+domain: variable
+difficulty: basic
+real_world_context: Automated Schema Crosswalk Quality Assurance
+story: >
+  An automated harmonization pipeline compares two semantically and dimensionally unrelated variables:
+  ANNUAL_INCOME ('Total annual household income', Decimal) vs. COMMUTE_DISTANCE ('Distance from home to workplace', Decimal).
+  The Harmonizer evaluates the divergent names and labels, assigning a low composite score (~47%) and classifying
+  the pair as DISTINCT, preventing false positive schema alignments.
+learning_objective: >
+  Demonstrates negative control rejection for unrelated variables sharing high-level data types.
+source_resource:
+  name: "ANNUAL_INCOME"
+  label: "Total annual household income"
+  data_type: "Decimal"
+candidate_resource:
+  name: "COMMUTE_DISTANCE"
+  label: "Distance from home to workplace"
+  data_type: "Decimal"
+preset: STANDARD
+custom_typos: {}
+comparator: Variable
+comparator_threshold: 0.70
+expected_match: false
+expected_match_type: DISTINCT
+expected_score_min: 0.30
+expected_score_max: 0.60

@@ -1,0 +1,27 @@
+id: case_var_basic_household_casting
+title: Numeric Variable Data Type Casting (Integer to Decimal Widening)
+domain: variable
+difficulty: basic
+real_world_context: Demographic Roster & Census Aggregation
+story: >
+  Dataset A stores household member count under integer field HH_SIZE with label 'Total number of persons in household'.
+  Dataset B stores the count in a decimal column hh_size with the identical label.
+  The Harmonizer scores the variables at ~97% compatibility and provides both RENAME_COLUMN and CAST_DATA_TYPE advisories.
+learning_objective: >
+  Illustrates automated data type compatibility checking (safe integer-to-decimal widening) and casting advice.
+source_resource:
+  name: "HH_SIZE"
+  label: "Total number of persons in household"
+  data_type: "Integer"
+candidate_resource:
+  name: "hh_size"
+  label: "Total number of persons in household"
+  data_type: "Decimal"
+preset: STANDARD
+custom_typos: {}
+comparator: Variable
+comparator_threshold: 0.70
+expected_match: true
+expected_match_type: SYNTACTIC_SIMILAR
+expected_score_min: 0.90
+expected_score_max: 0.99

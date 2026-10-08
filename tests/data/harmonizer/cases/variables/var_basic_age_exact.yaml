@@ -1,0 +1,35 @@
+id: case_var_basic_age_exact
+title: Exact Variable Definition (Baseline Identity)
+domain: variable
+difficulty: basic
+real_world_context: Multi-Wave Census & Demographic Survey Baseline
+story: >
+  Two consecutive census enumeration waves define respondent chronological age using the identical
+  mnemonic (AGE), descriptive label ('Age in completed years'), integer data type, and year unit.
+  The Harmonizer compares the variable representations and detects exact cryptographic and semantic equivalence (100%).
+learning_objective: >
+  Establishes baseline identity comparison for variables sharing identical mnemonics, labels, and types.
+source_resource:
+  name: "AGE"
+  label: "Age in completed years"
+  data_type: "Integer"
+  unit: "year"
+  numeric_domain:
+    min: 0
+    max: 120
+candidate_resource:
+  name: "AGE"
+  label: "Age in completed years"
+  data_type: "Integer"
+  unit: "year"
+  numeric_domain:
+    min: 0
+    max: 120
+preset: STANDARD
+custom_typos: {}
+comparator: Variable
+comparator_threshold: 0.85
+expected_match: true
+expected_match_type: EXACT_IDENTICAL
+expected_score_min: 1.0
+expected_score_max: 1.0

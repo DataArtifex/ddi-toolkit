@@ -1,0 +1,28 @@
+id: case_var_basic_binary_flag
+title: Binary Indicator Variable Alignment (Boolean Flag & Column Renaming)
+domain: variable
+difficulty: basic
+real_world_context: Screener Qualification & Housing Survey Ingestion
+story: >
+  Two housing survey instruments record homeownership status as a boolean flag.
+  Dataset A names the variable IS_HOMEOWNER with label 'Homeowner status (Yes/No)'.
+  Dataset B names the variable homeowner_flag with the identical label 'Homeowner status (Yes/No)'.
+  The Harmonizer detects high similarity (~95%) and outputs an actionable RENAME_COLUMN advisory.
+learning_objective: >
+  Demonstrates Boolean indicator variable comparison with column renaming advisory generation.
+source_resource:
+  name: "IS_HOMEOWNER"
+  label: "Homeowner status (Yes/No)"
+  data_type: "Boolean"
+candidate_resource:
+  name: "homeowner_flag"
+  label: "Homeowner status (Yes/No)"
+  data_type: "Boolean"
+preset: STANDARD
+custom_typos: {}
+comparator: Variable
+comparator_threshold: 0.70
+expected_match: true
+expected_match_type: SYNTACTIC_SIMILAR
+expected_score_min: 0.90
+expected_score_max: 0.99

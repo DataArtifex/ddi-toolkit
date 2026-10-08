@@ -1,0 +1,27 @@
+id: case_var_basic_name_synonym
+title: Syntactic Variable Alignment (Casefold & Label Synonym)
+domain: variable
+difficulty: basic
+real_world_context: Administrative Ingestion & Field Registry Mapping
+story: >
+  Legacy registry files store respondent first name under uppercase column FIRST_NAME with label 'First Name',
+  while a modern web intake portal stores first_name with label 'Given Name'. Both share the String data type.
+  The Harmonizer matches the two variables with a similarity score of ~77% and emits a RENAME_COLUMN advisory.
+learning_objective: >
+  Demonstrates string normalization, case-folding, and label synonym alignment between tabular variables.
+source_resource:
+  name: "FIRST_NAME"
+  label: "First Name"
+  data_type: "String"
+candidate_resource:
+  name: "first_name"
+  label: "Given Name"
+  data_type: "String"
+preset: STANDARD
+custom_typos: {}
+comparator: Variable
+comparator_threshold: 0.70
+expected_match: true
+expected_match_type: SYNTACTIC_SIMILAR
+expected_score_min: 0.75
+expected_score_max: 0.85
