@@ -936,10 +936,13 @@ To enable interactive exploration of scenarios, real-time debugging, and side-by
 Features of the Workbench:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. **Scenario Stories Browser**: Browse real-world case studies across ``categorical``, ``enumerated_list``, ``question``, and ``conceptual`` domains with narrative context and learning objectives.
-2. **Dual Source & Candidate Merkle Tree Inspector**: Inspect Merkle roots, substantive vs. sentinel sub-digests, category set digests, item-level hashes, and assigned URN vs. random GUID badges side-by-side with color-coded ``[MATCH]`` and ``[DIFFERS]`` badges.
-3. **Live Harmonization Playground**: Real-time side-by-side text/JSON editor with live similarity gauges, normalizer preset switches, and typo replacement overrides.
-4. **Live Code & Output Export**: Instant generation of reproducible Python SDK reproduction scripts and simulated execution logs.
+1. **Scenario Stories Browser**: Browse real-world case studies across ``categorical``, ``enumerated_list``, ``question``, ``conceptual``, and ``variable`` domains with narrative context and learning objectives.
+2. **Step-by-Step Normalization Pipeline Inspector**: Real-time side-by-side progression showing intermediate text transformations at every stage (HTML sanitization, typo correction, Unicode NFKD de-accenting, casefolding, punctuation stripping, and whitespace collapsing) with component-level field selector and convergence indicators.
+3. **Multi-Stage Decision & Reasoning Trace**: Audit log breaking down the engine's reasoning across 4 decision gates (Gate 1: Identifier/URN Resolution, Gate 2: Merkle Tree & Structural Invariants, Gate 3: Attribute & Facet Weight Decomposition, Gate 4: Advisory Trigger Rationale & Verdict Derivation).
+4. **Dual Source & Candidate Merkle Tree Inspector**: Inspect Merkle roots, substantive vs. sentinel sub-digests, category set digests, item-level hashes, and assigned URN vs. random GUID badges side-by-side with color-coded ``[MATCH]`` and ``[DIFFERS]`` badges.
+5. **Live Harmonization Playground**: Real-time side-by-side text/JSON editor with live similarity gauges, normalizer preset switches, and typo replacement overrides.
+6. **Dataset Crosswalk Studio**: Interactive bipartite variable alignment matrix, QUDT unit scale factor computation, and executable Polars transformation pipeline preview.
+7. **Live Code & Output Export**: Instant generation of reproducible Python SDK reproduction scripts and simulated execution logs.
 
 Launching the Workbench via CLI:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

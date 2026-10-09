@@ -754,6 +754,220 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       display: inline-block;
     }
 
+    /* Normalization Pipeline Inspector */
+    .pipeline-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .pipeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+    .pipeline-title {
+      font-size: 0.84rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pipeline-field-select {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.76rem;
+      outline: none;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .pipeline-steps-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .pipe-step-row {
+      background: var(--bg-base);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .pipe-step-row.converged {
+      border-color: rgba(16, 185, 129, 0.6);
+      background: rgba(16, 185, 129, 0.06);
+    }
+    .pipe-step-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.74rem;
+    }
+    .pipe-step-name {
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pipe-step-status {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .pipe-status-converged { background: rgba(16, 185, 129, 0.25); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.5); }
+    .pipe-status-modifying { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+    .pipe-status-neutral { background: var(--bg-card); color: var(--text-muted); border: 1px solid var(--border-color); }
+    .pipe-status-diverged { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .pipe-values-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+    }
+    .pipe-val-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 5px 8px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.4;
+    }
+    .pipe-val-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-family: var(--font-sans);
+      margin-bottom: 2px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .pipe-note {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    /* Decision Reasoning Trace */
+    .reasoning-trace-card {
+      background: var(--bg-base);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .trace-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 6px;
+    }
+    .trace-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--primary);
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .trace-gate-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 900px) {
+      .trace-gate-grid { grid-template-columns: 1fr; }
+    }
+    .trace-gate-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .trace-gate-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .trace-gate-desc {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .facet-decomp-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 4px;
+    }
+    .facet-decomp-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      gap: 8px;
+    }
+    .facet-name-col {
+      width: 110px;
+      font-weight: 600;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .facet-bar-col {
+      flex: 1;
+      height: 6px;
+      background: var(--bg-card);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .facet-bar-inner {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--cyan));
+      border-radius: 3px;
+    }
+    .facet-score-col {
+      width: 50px;
+      text-align: right;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
     /* Python Workbench Card */
     .python-workbench-card {
       background: var(--bg-surface);
@@ -1115,6 +1329,51 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           </div>
         </div>
 
+        <!-- Multi-Stage Decision & Reasoning Trace -->
+        <div class="reasoning-trace-card" id="reasoningTraceCard">
+          <div class="trace-title-row">
+            <div class="trace-title">
+              <span>🧠</span>
+              <span>Decision &amp; Reasoning Trace (Audit Log)</span>
+            </div>
+            <span style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono);" id="traceTimestamp">Invariant Verification Trace</span>
+          </div>
+          <div class="trace-gate-grid">
+            <!-- Gate 1: Identifier Resolution -->
+            <div class="trace-gate-box" id="gate1Box">
+              <div class="trace-gate-header">
+                <span>Gate 1: Identifier Resolution &amp; URN Check</span>
+                <span id="gate1StatusPill" class="badge-pill badge-primary">EVALUATING</span>
+              </div>
+              <div class="trace-gate-desc" id="gate1Desc">Analyzing semantic agency, version, and persistent URN / GUID...</div>
+            </div>
+            <!-- Gate 2: Merkle Tree & Digest Invariants -->
+            <div class="trace-gate-box" id="gate2Box">
+              <div class="trace-gate-header">
+                <span>Gate 2: Merkle Tree &amp; Set Invariants</span>
+                <span id="gate2StatusPill" class="badge-pill badge-success">EVALUATING</span>
+              </div>
+              <div class="trace-gate-desc" id="gate2Desc">Inspecting atomic, unordered set, substantive partition, and category digests...</div>
+            </div>
+            <!-- Gate 3: Facet / Attribute Decomposition -->
+            <div class="trace-gate-box" id="gate3Box">
+              <div class="trace-gate-header">
+                <span>Gate 3: Attribute Decomposition &amp; Weights</span>
+                <span id="gate3StatusPill" class="badge-pill badge-primary">EVALUATING</span>
+              </div>
+              <div id="gate3FacetList" class="facet-decomp-list"></div>
+            </div>
+            <!-- Gate 4: Transformation Advisory Trigger & Verdict Derivation -->
+            <div class="trace-gate-box" id="gate4Box">
+              <div class="trace-gate-header">
+                <span>Gate 4: Advisory Trigger &amp; Verdict Derivation</span>
+                <span id="gate4StatusPill" class="badge-pill badge-success">EVALUATING</span>
+              </div>
+              <div class="trace-gate-desc" id="gate4Desc">Deriving executable conversion rules and assigning final match classification...</div>
+            </div>
+          </div>
+        </div>
+
         <!-- Actionable Transformation Advisories Container -->
         <div id="adviceSection" style="display:none; flex-direction: column; gap:6px;">
           <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; color:var(--primary); letter-spacing:0.05em;">
@@ -1141,6 +1400,23 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           <div class="merkle-viewer" id="merkleViewer">
             Loading Merkle visualization...
           </div>
+        </div>
+      </div>
+
+      <!-- Step-by-Step Normalization Pipeline Inspector -->
+      <div class="pipeline-card" id="normPipelineCard">
+        <div class="pipeline-header">
+          <div class="pipeline-title">
+            <span>🔍</span>
+            <span>Step-by-Step Normalization Pipeline Inspector</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <label style="font-size:0.75rem; color:var(--text-muted); font-weight:600; text-transform:uppercase;">Inspect Field / Component:</label>
+            <select id="normFieldSelect" class="pipeline-field-select" onchange="renderNormalizationPipeline()"></select>
+          </div>
+        </div>
+        <div id="normStepsContainer" class="pipeline-steps-container">
+          <!-- Dynamically populated step ladder -->
         </div>
       </div>
 
@@ -1912,14 +2188,33 @@ Execution:        Completed in 0.42ms with zero allocations.`;
         }
 
         let isRecode = false;
+        let vdScore = 1.0;
         if (parsedSrc.value_domain && parsedCand.value_domain && parsedSrc.value_domain.codes && parsedCand.value_domain.codes) {
           total_weight += 0.20;
           const sCodes = parsedSrc.value_domain.codes;
           const cCodes = parsedCand.value_domain.codes;
-          if (sCodes.length === cCodes.length) {
+
+          const sCatLabels = sCodes.map(c => normalizeText(c.label || '')).sort();
+          const cCatLabels = cCodes.map(c => normalizeText(c.label || '')).sort();
+          const sCatDigest = simpleHash(sCatLabels.join('||'));
+          const cCatDigest = simpleHash(cCatLabels.join('||'));
+
+          const sCodeItems = sCodes.map(c => String(c.value) + ':' + normalizeText(c.label || '')).sort();
+          const cCodeItems = cCodes.map(c => String(c.value) + ':' + normalizeText(c.label || '')).sort();
+          const sCodeSetDigest = simpleHash(sCodeItems.join('||'));
+          const cCodeSetDigest = simpleHash(cCodeItems.join('||'));
+
+          if (sCodeSetDigest === cCodeSetDigest) {
+            vdScore = 1.0;
+            weighted_sum += 1.0 * 0.20;
+          } else if (sCatDigest === cCatDigest && sCodes.length > 0) {
             isRecode = true;
+            vdScore = 0.95;
             weighted_sum += 0.95 * 0.20;
-            const recodeMapping = sCodes.map((sc, i) => `${sc.value} &rarr; ${cCodes[i].value} (${sc.label})`).join(', ');
+            const recodeMapping = sCodes.map((sc) => {
+              const matched = cCodes.find(cc => normalizeText(cc.label || '') === normalizeText(sc.label || ''));
+              return matched ? `${sc.value} &rarr; ${matched.value} (${sc.label})` : `${sc.value} &rarr; ?`;
+            }).join(', ');
             adviceList.push({
               action: 'RECODE_VALUES',
               badge: 'badge-warning',
@@ -1927,6 +2222,9 @@ Execution:        Completed in 0.42ms with zero allocations.`;
               formula: `Map notations: [${recodeMapping}]`,
               desc: `Re-map source discrete codes to target standard notation`
             });
+          } else {
+            vdScore = computeSimilarity(sCatLabels.join(' '), cCatLabels.join(' '), method);
+            weighted_sum += vdScore * 0.20;
           }
         }
 
@@ -2091,6 +2389,13 @@ Execution:        Completed in 0.42ms with zero allocations.`;
       badge.className = 'verdict-badge ' + badgeClass;
       badge.innerText = verdict;
 
+      // Render Decision & Reasoning Trace (Audit Log)
+      renderDecisionReasoningTrace(domain, parsedSrc, parsedCand, method, threshold, verdict, scorePct, srcDigest, candDigest, adviceList);
+
+      // Render Step-by-Step Normalization Pipeline
+      updateNormalizationPipelineFields(parsedSrc, parsedCand, domain);
+      renderNormalizationPipeline();
+
       // Render Transformation Advisories
       const adviceSec = document.getElementById('adviceSection');
       const adviceCont = document.getElementById('adviceCardsContainer');
@@ -2138,6 +2443,424 @@ Execution:        Completed in 0.42ms with zero allocations.`;
       if (modalSub && currentCase) {
         modalSub.textContent = `${currentCase.title} (${currentCase.domain.toUpperCase()})`;
       }
+    }
+
+    // =========================================================================
+    // Normalization Pipeline Step Tracer & Decision Reasoning Audit Log
+    // =========================================================================
+
+    function getNormalizationTrace(text, caseContext) {
+      if (text === null || text === undefined) text = '';
+      const str = String(text);
+      const steps = [];
+
+      // Step 0: Raw Input
+      let current = str;
+      steps.push({
+        name: 'Step 0: Raw Input',
+        text: current,
+        note: 'Original un-processed text input string',
+        modified: false
+      });
+
+      // Step 1: HTML & Character Entity Sanitization
+      let step1 = current;
+      if (document.getElementById('optSanitize').checked) {
+        step1 = step1.replace(/&nbsp;/g, ' ').replace(/&#160;/g, ' ');
+        step1 = step1.replace(/<\/?(?:b|i|u|em|strong|span|small|mark|sub|sup|abbr|font|code)[^>]*>/gi, '');
+        step1 = step1.replace(/<[^>]+>/g, ' ');
+        step1 = unescapeHtmlEntities(step1);
+        step1 = step1.replace(/[\u201C\u201D\u201E\u201F"]/g, '"')
+                     .replace(/[\u2018\u2019\u201A\u201B']/g, "'")
+                     .replace(/[\u2013\u2014\u2015]/g, '-')
+                     .replace(/\u2026/g, '...')
+                     .replace(/\u00a0/g, ' ');
+      }
+      steps.push({
+        name: 'Step 1: HTML & Entity Sanitization',
+        text: step1,
+        note: document.getElementById('optSanitize').checked ? 'Decoded HTML entities, stripped markup tags, and standardized quotes/dashes' : 'Sanitization disabled',
+        modified: step1 !== current
+      });
+      current = step1;
+
+      // Step 2: Custom Typo & Scenario Replacements
+      let step2 = current;
+      let typoApplied = false;
+      if (document.getElementById('optSanitize').checked && caseContext && caseContext.custom_typos) {
+        for (const [typo, replacement] of Object.entries(caseContext.custom_typos)) {
+          const escapedTypo = typo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const regex = new RegExp('\\b' + escapedTypo + '\\b', 'gi');
+          if (regex.test(step2)) {
+            step2 = step2.replace(regex, replacement);
+            typoApplied = true;
+          }
+        }
+      }
+      steps.push({
+        name: 'Step 2: Custom Typo & Scenario Replacements',
+        text: step2,
+        note: typoApplied ? 'Applied scenario typo correction dictionary & contextual mapping' : 'No typo rules applied',
+        modified: step2 !== current
+      });
+      current = step2;
+
+      // Step 3: Unicode NFKD & De-accenting
+      let step3 = current;
+      if (document.getElementById('optDeaccent').checked) {
+        step3 = step3.normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
+      }
+      steps.push({
+        name: 'Step 3: Unicode NFKD & De-accenting',
+        text: step3,
+        note: document.getElementById('optDeaccent').checked ? 'Decomposed Unicode glyphs and stripped combining diacritics' : 'De-accenting disabled',
+        modified: step3 !== current
+      });
+      current = step3;
+
+      // Step 4: Case-folding
+      let step4 = current;
+      if (document.getElementById('optCasefold').checked) {
+        step4 = step4.toLowerCase();
+      }
+      steps.push({
+        name: 'Step 4: Case-folding',
+        text: step4,
+        note: document.getElementById('optCasefold').checked ? 'Converted characters to lowercase for case-insensitivity' : 'Case-folding disabled',
+        modified: step4 !== current
+      });
+      current = step4;
+
+      // Step 5: Punctuation Stripping
+      let step5 = current;
+      if (document.getElementById('optPunctuation').checked) {
+        step5 = step5.replace(/[^a-zA-Z0-9\s]/g, '');
+      }
+      steps.push({
+        name: 'Step 5: Punctuation Stripping',
+        text: step5,
+        note: document.getElementById('optPunctuation').checked ? 'Stripped non-alphanumeric punctuation and symbols' : 'Punctuation stripping disabled',
+        modified: step5 !== current
+      });
+      current = step5;
+
+      // Step 6: Whitespace Collapsing & Trimming
+      let step6 = current;
+      if (document.getElementById('optCollapseSpace').checked) {
+        step6 = step6.replace(/\s+/g, ' ').trim();
+      }
+      steps.push({
+        name: 'Step 6: Whitespace Collapsing & Trimming',
+        text: step6,
+        note: document.getElementById('optCollapseSpace').checked ? 'Collapsed multiple internal spaces and trimmed edges' : 'Whitespace collapsing disabled',
+        modified: step6 !== current
+      });
+
+      return steps;
+    }
+
+    let activeFieldOptions = [];
+
+    function updateNormalizationPipelineFields(parsedSrc, parsedCand, domain) {
+      const select = document.getElementById('normFieldSelect');
+      const currentSelected = select.value;
+      activeFieldOptions = [];
+
+      if (domain === 'variable' || (parsedSrc && (parsedSrc.data_type || parsedSrc.quantity_kind))) {
+        if (parsedSrc.label || (parsedCand && parsedCand.label)) {
+          activeFieldOptions.push({ id: 'label', label: 'Variable Label', src: parsedSrc.label || '', cand: parsedCand ? (parsedCand.label || '') : '' });
+        }
+        if (parsedSrc.name || (parsedCand && parsedCand.name)) {
+          activeFieldOptions.push({ id: 'name', label: 'Variable Name / Identifier', src: parsedSrc.name || '', cand: parsedCand ? (parsedCand.name || '') : '' });
+        }
+        if (parsedSrc.value_domain && parsedSrc.value_domain.codes) {
+          parsedSrc.value_domain.codes.forEach((c, idx) => {
+            const candCode = (parsedCand && parsedCand.value_domain && parsedCand.value_domain.codes) ? parsedCand.value_domain.codes[idx] : null;
+            activeFieldOptions.push({
+              id: `code_${idx}`,
+              label: `Code #${idx + 1} Label ("${c.value}")`,
+              src: c.label || (c.category ? c.category.label : ''),
+              cand: candCode ? (candCode.label || (candCode.category ? candCode.category.label : '')) : ''
+            });
+          });
+        }
+      } else if (domain === 'question' && parsedSrc) {
+        if (parsedSrc.question_text) activeFieldOptions.push({ id: 'question_text', label: 'Question Prompt Text', src: parsedSrc.question_text || '', cand: parsedCand ? (parsedCand.question_text || '') : '' });
+        if (parsedSrc.instructions || (parsedCand && parsedCand.instructions)) activeFieldOptions.push({ id: 'instructions', label: 'Interviewer Instructions', src: parsedSrc.instructions || '', cand: parsedCand ? (parsedCand.instructions || '') : '' });
+        if (parsedSrc.pre_question_text || (parsedCand && parsedCand.pre_question_text)) activeFieldOptions.push({ id: 'pre_question_text', label: 'Pre-Question Intro', src: parsedSrc.pre_question_text || '', cand: parsedCand ? (parsedCand.pre_question_text || '') : '' });
+      } else if (domain === 'conceptual' && parsedSrc) {
+        if (parsedSrc.preferred_label) activeFieldOptions.push({ id: 'preferred_label', label: 'Preferred Concept Label', src: parsedSrc.preferred_label || '', cand: parsedCand ? (parsedCand.preferred_label || '') : '' });
+        if (parsedSrc.definition) activeFieldOptions.push({ id: 'definition', label: 'Concept Definition', src: parsedSrc.definition || '', cand: parsedCand ? (parsedCand.definition || '') : '' });
+        if (parsedSrc.notation) activeFieldOptions.push({ id: 'notation', label: 'Notation Scheme', src: parsedSrc.notation || '', cand: parsedCand ? (parsedCand.notation || '') : '' });
+      } else if (domain === 'enumerated_list' && parsedSrc && parsedSrc.codes) {
+        parsedSrc.codes.forEach((c, idx) => {
+          const candCode = (parsedCand && parsedCand.codes) ? parsedCand.codes[idx] : null;
+          activeFieldOptions.push({
+            id: `code_${idx}`,
+            label: `Code Item #${idx + 1} ("${c.value}")`,
+            src: c.label || (c.category ? c.category.label : ''),
+            cand: candCode ? (candCode.label || (candCode.category ? candCode.category.label : '')) : ''
+          });
+        });
+      }
+
+      if (activeFieldOptions.length === 0) {
+        const sRaw = (parsedSrc && (parsedSrc.label || parsedSrc.name)) || String(parsedSrc || '');
+        const cRaw = (parsedCand && (parsedCand.label || parsedCand.name)) || String(parsedCand || '');
+        activeFieldOptions.push({ id: 'default', label: 'Category Label', src: sRaw, cand: cRaw });
+      }
+
+      select.innerHTML = activeFieldOptions.map(opt => `<option value="${opt.id}">${opt.label}</option>`).join('');
+      if (activeFieldOptions.some(o => o.id === currentSelected)) {
+        select.value = currentSelected;
+      }
+    }
+
+    function renderNormalizationPipeline() {
+      const select = document.getElementById('normFieldSelect');
+      const chosenId = select.value;
+      const opt = activeFieldOptions.find(o => o.id === chosenId) || activeFieldOptions[0];
+      if (!opt) return;
+
+      const srcSteps = getNormalizationTrace(opt.src, currentCase);
+      const candSteps = getNormalizationTrace(opt.cand, currentCase);
+      const container = document.getElementById('normStepsContainer');
+
+      let html = '';
+      for (let i = 0; i < srcSteps.length; i++) {
+        const sStep = srcSteps[i];
+        const cStep = candSteps[i];
+        const isEqual = (sStep.text === cStep.text);
+        const prevEqual = (i > 0) && (srcSteps[i - 1].text === candSteps[i - 1].text);
+        const justConverged = isEqual && !prevEqual;
+
+        let statusClass = 'pipe-status-neutral';
+        let statusLabel = 'IDENTITY (NO CHANGE)';
+
+        if (justConverged) {
+          statusClass = 'pipe-status-converged';
+          statusLabel = '✨ CONVERGED AT THIS STEP!';
+        } else if (isEqual) {
+          statusClass = 'pipe-status-converged';
+          statusLabel = '100% IDENTICAL';
+        } else if (sStep.modified || cStep.modified) {
+          statusClass = 'pipe-status-modifying';
+          statusLabel = 'MODIFIED';
+        } else {
+          statusClass = 'pipe-status-diverged';
+          statusLabel = 'DISCREPANT';
+        }
+
+        const isConvergedClass = (isEqual || justConverged) ? ' converged' : '';
+        const sHash = simpleHash(sStep.text);
+        const cHash = simpleHash(cStep.text);
+
+        html += `
+          <div class="pipe-step-row${isConvergedClass}">
+            <div class="pipe-step-top">
+              <span class="pipe-step-name">
+                <span>${i === 0 ? '📥' : (justConverged ? '✨' : '⚙️')}</span>
+                <span>${sStep.name}</span>
+              </span>
+              <span class="pipe-step-status ${statusClass}">${statusLabel}</span>
+            </div>
+            <div class="pipe-values-grid">
+              <div class="pipe-val-box">
+                <div class="pipe-val-label">
+                  <span>Source Intermediate Value</span>
+                  <span style="font-family:var(--font-mono); color:#818cf8;">[${sHash.substring(0, 8)}]</span>
+                </div>
+                <div>${escapeHtml(sStep.text || '(empty)')}</div>
+              </div>
+              <div class="pipe-val-box">
+                <div class="pipe-val-label">
+                  <span>Candidate Intermediate Value</span>
+                  <span style="font-family:var(--font-mono); color:#34d399;">[${cHash.substring(0, 8)}]</span>
+                </div>
+                <div>${escapeHtml(cStep.text || '(empty)')}</div>
+              </div>
+            </div>
+            <div class="pipe-note">${sStep.note}</div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = html;
+    }
+
+    function renderDecisionReasoningTrace(domain, parsedSrc, parsedCand, method, threshold, verdict, scorePct, srcDigest, candDigest, adviceList) {
+      // 1. Gate 1: Identifier Resolution
+      const sUrn = parsedSrc ? (parsedSrc.urn || parsedSrc.id || parsedSrc.identifier) : null;
+      const cUrn = parsedCand ? (parsedCand.urn || parsedCand.id || parsedCand.identifier) : null;
+      const sId = parseIdKind(sUrn);
+      const cId = parseIdKind(cUrn);
+
+      let g1Pill = 'badge-primary';
+      let g1Status = 'RESOLVED';
+      let g1Html = '';
+
+      if (sUrn && cUrn && sUrn === cUrn) {
+        if (scorePct < 100) {
+          g1Pill = 'badge-warning';
+          g1Status = '⚡ DRIFT DETECTED';
+          g1Html = `Identical semantic identifier <code>${escapeHtml(sUrn)}</code> detected, but question prompt / instructions drifted across survey modes. Content similarity: ${scorePct}%.`;
+        } else {
+          g1Pill = 'badge-success';
+          g1Status = '✓ IDENTICAL URN';
+          g1Html = `Identical persistent identifier <code>${escapeHtml(sUrn)}</code> with 100% invariant content match.`;
+        }
+      } else if (sId.isGuid || cId.isGuid) {
+        g1Pill = 'badge-primary';
+        g1Status = 'ℹ SYNTHETIC GUID';
+        g1Html = `Random synthetic GUID detected (<code>${escapeHtml(sUrn || cUrn)}</code>). Engine bypassed identifier equivalence to evaluate Merkle content invariants.`;
+      } else if (sUrn && cUrn) {
+        g1Pill = scorePct === 100 ? 'badge-success' : 'badge-primary';
+        g1Status = scorePct === 100 ? '✓ RE-USED CONTENT' : 'ℹ INDEPENDENT KEYS';
+        g1Html = `Source: <code>${escapeHtml(sUrn)}</code> &bull; Candidate: <code>${escapeHtml(cUrn)}</code>. Evaluated as distinct agency keys with ${scorePct}% content similarity.`;
+      } else {
+        g1Pill = 'badge-primary';
+        g1Status = 'LOCAL INGEST';
+        g1Html = 'No persistent external URNs declared. Evaluated via local Merkle structural fingerprinting.';
+      }
+
+      document.getElementById('gate1StatusPill').className = `badge-pill ${g1Pill}`;
+      document.getElementById('gate1StatusPill').innerText = g1Status;
+      document.getElementById('gate1Desc').innerHTML = g1Html;
+
+      // 2. Gate 2: Merkle Tree & Structural Digest
+      let g2Pill = 'badge-success';
+      let g2Status = 'VERIFIED';
+      let g2Html = '';
+
+      if (verdict === 'PERMUTATION') {
+        g2Pill = 'badge-warning';
+        g2Status = '⚡ PERMUTATION';
+        g2Html = `Ordered sequence digest diverged, but unordered code set digest matched 100% (<code>${srcDigest}</code>). Both lists contain identical members in different sequence.`;
+      } else if (verdict === 'SUBSTANTIVE_EXACT') {
+        g2Pill = 'badge-success';
+        g2Status = '✓ SUBSTANTIVE CORE MATCH';
+        g2Html = `Full code sets differ due to missing sentinel conventions (98/99 vs 8/9), but substantive partition code set digest matches 100% (<code>${srcDigest}</code>).`;
+      } else if (verdict === 'CATEGORIES_EXACT_CODES_DIFFERENT') {
+        g2Pill = 'badge-success';
+        g2Status = '✓ CATEGORY CONCEPT MATCH';
+        g2Html = `Category concept set digest matched 100% across all items. Underlying semantic definitions align perfectly despite different numerical/alphabetic code schemes.`;
+      } else if (srcDigest === candDigest) {
+        g2Pill = 'badge-success';
+        g2Status = '✓ DIGEST EXACT (100%)';
+        g2Html = `Primary Merkle root digest matched bit-for-bit: <code>[${srcDigest}]</code>.`;
+      } else {
+        g2Pill = scorePct >= Math.round(threshold * 100) ? 'badge-primary' : 'badge-warning';
+        g2Status = scorePct >= Math.round(threshold * 100) ? 'SYNTACTIC MATCH' : 'DIVERGED';
+        g2Html = `Merkle root digests differ (<code>[${srcDigest}]</code> &harr; <code>[${candDigest}]</code>). Evaluated under ${method} comparator at ${scorePct}%.`;
+      }
+
+      document.getElementById('gate2StatusPill').className = `badge-pill ${g2Pill}`;
+      document.getElementById('gate2StatusPill').innerText = g2Status;
+      document.getElementById('gate2Desc').innerHTML = g2Html;
+
+      // 3. Gate 3: Attribute Decomposition & Weights
+      const facetList = document.getElementById('gate3FacetList');
+      const facets = [];
+
+      if (domain === 'variable' || (parsedSrc && (parsedSrc.data_type || parsedSrc.quantity_kind))) {
+        const lblScore = computeSimilarity(parsedSrc.label || '', parsedCand.label || '', method);
+        const nameScore = computeSimilarity(parsedSrc.name || '', parsedCand.name || '', method);
+        let typeScore = 0.7;
+        if (parsedSrc.data_type && parsedCand.data_type) {
+          const sT = String(parsedSrc.data_type).toLowerCase(), cT = String(parsedCand.data_type).toLowerCase();
+          if (sT === cT) typeScore = 1.0;
+          else if ((sT === 'integer' && cT === 'decimal') || (sT === 'decimal' && cT === 'integer')) typeScore = 0.9;
+        }
+        let unitScore = 1.0;
+        if (parsedSrc.unit && parsedCand.unit && String(parsedSrc.unit).toLowerCase() !== String(parsedCand.unit).toLowerCase()) {
+          unitScore = 0.95;
+        }
+        let vdScoreFacet = 100;
+        if (parsedSrc.value_domain && parsedCand.value_domain && parsedSrc.value_domain.codes && parsedCand.value_domain.codes) {
+          const sCodes = parsedSrc.value_domain.codes;
+          const cCodes = parsedCand.value_domain.codes;
+          const sCatLabels = sCodes.map(c => normalizeText(c.label || '')).sort();
+          const cCatLabels = cCodes.map(c => normalizeText(c.label || '')).sort();
+          const sCatDigest = simpleHash(sCatLabels.join('||'));
+          const cCatDigest = simpleHash(cCatLabels.join('||'));
+
+          const sCodeItems = sCodes.map(c => String(c.value) + ':' + normalizeText(c.label || '')).sort();
+          const cCodeItems = cCodes.map(c => String(c.value) + ':' + normalizeText(c.label || '')).sort();
+          const sCodeSetDigest = simpleHash(sCodeItems.join('||'));
+          const cCodeSetDigest = simpleHash(cCodeItems.join('||'));
+
+          if (sCodeSetDigest === cCodeSetDigest) vdScoreFacet = 100;
+          else if (sCatDigest === cCatDigest) vdScoreFacet = 95;
+          else vdScoreFacet = Math.round(computeSimilarity(sCatLabels.join(' '), cCatLabels.join(' '), method) * 100);
+        }
+        facets.push({ name: 'Variable Label', weight: '40%', score: Math.round(lblScore * 100) });
+        facets.push({ name: 'Variable Name', weight: '10%', score: Math.round(nameScore * 100) });
+        facets.push({ name: 'Data Type', weight: '20%', score: Math.round(typeScore * 100) });
+        facets.push({ name: 'Metrology / Unit', weight: '10%', score: Math.round(unitScore * 100) });
+        facets.push({ name: 'Value Domain', weight: '20%', score: vdScoreFacet });
+      } else if (domain === 'question' && parsedSrc) {
+        const qScore = computeSimilarity(parsedSrc.question_text || '', parsedCand.question_text || '', method);
+        const iScore = computeSimilarity(parsedSrc.instructions || '', parsedCand.instructions || '', method);
+        const preScore = computeSimilarity(parsedSrc.pre_question_text || '', parsedCand.pre_question_text || '', method);
+        facets.push({ name: 'Question Text', weight: '65%', score: Math.round(qScore * 100) });
+        facets.push({ name: 'Instructions', weight: '15%', score: Math.round(iScore * 100) });
+        facets.push({ name: 'Pre-Question', weight: '10%', score: Math.round(preScore * 100) });
+        facets.push({ name: 'Intent', weight: '10%', score: 100 });
+      } else if (domain === 'conceptual' && parsedSrc) {
+        const lblScore = computeSimilarity(parsedSrc.preferred_label || '', parsedCand.preferred_label || '', method);
+        const defScore = computeSimilarity(parsedSrc.definition || '', parsedCand.definition || '', method);
+        facets.push({ name: 'Preferred Label', weight: '50%', score: Math.round(lblScore * 100) });
+        facets.push({ name: 'Definition', weight: '30%', score: Math.round(defScore * 100) });
+        facets.push({ name: 'Notation', weight: '20%', score: (parsedSrc.notation === (parsedCand && parsedCand.notation)) ? 100 : 0 });
+      } else {
+        facets.push({ name: 'Category Label', weight: '70%', score: scorePct });
+        facets.push({ name: 'Sentinel / Missing', weight: '30%', score: (parsedSrc && parsedCand && parsedSrc.is_missing === parsedCand.is_missing) ? 100 : 80 });
+      }
+
+      facetList.innerHTML = facets.map(f => `
+        <div class="facet-decomp-row">
+          <span class="facet-name-col" title="${f.name}">${f.name} <small style="color:var(--text-muted);">(${f.weight})</small></span>
+          <div class="facet-bar-col">
+            <div class="facet-bar-inner" style="width: ${f.score}%;"></div>
+          </div>
+          <span class="facet-score-col">${f.score}%</span>
+        </div>
+      `).join('');
+
+      document.getElementById('gate3StatusPill').className = `badge-pill ${scorePct >= Math.round(threshold * 100) ? 'badge-success' : 'badge-warning'}`;
+      document.getElementById('gate3StatusPill').innerText = `${scorePct}% COMPOSITE`;
+
+      // 4. Gate 4: Transformation Advisory Trigger & Verdict Derivation
+      let g4Html = '';
+      if (adviceList.length > 0) {
+        g4Html = `Triggered <strong>${adviceList.length} actionable transformation advisories</strong>: ${adviceList.map(a => `<span class="badge-pill ${a.badge}" style="font-size:0.65rem;">${a.action}</span>`).join(' ')}. Resulting in verdict <strong>${verdict}</strong>.`;
+      } else if (verdict === 'EXACT_IDENTICAL' || verdict === 'NORMALIZED_EXACT') {
+        g4Html = `All invariants satisfied with zero transformations required. Assigned classification <strong>${verdict}</strong>.`;
+      } else if (scorePct >= Math.round(threshold * 100)) {
+        g4Html = `Syntactic similarity (${scorePct}%) exceeds threshold (${Math.round(threshold * 100)}%). Assigned classification <strong>${verdict}</strong>.`;
+      } else {
+        g4Html = `Score (${scorePct}%) below threshold (${Math.round(threshold * 100)}%). Resources classified as <strong>DISTINCT</strong>.`;
+      }
+
+      document.getElementById('gate4StatusPill').className = `badge-pill ${scorePct >= Math.round(threshold * 100) ? 'badge-success' : 'badge-danger'}`;
+      document.getElementById('gate4StatusPill').innerText = verdict;
+      document.getElementById('gate4Desc').innerHTML = g4Html;
+    }
+
+    function parseIdKind(urn) {
+      if (!urn) return { kind: 'UNASSIGNED', agency: '-', id: '-', isGuid: false };
+      const str = String(urn).trim();
+      if (str.startsWith('urn:ddi:') || str.startsWith('urn:sdmx:')) {
+        const parts = str.split(':');
+        return { kind: 'SEMANTIC_URN', agency: parts[2] || 'ddi', id: parts[3] || parts[parts.length - 1], isGuid: false };
+      }
+      if (str.startsWith('doi:')) {
+        return { kind: 'DOI', agency: 'doi', id: str.replace('doi:', ''), isGuid: false };
+      }
+      if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str) || str.startsWith('urn:uuid:')) {
+        return { kind: 'RANDOM_GUID', agency: 'synthetic', id: str.substring(0, 12) + '...', isGuid: true };
+      }
+      return { kind: 'LOCAL_KEY', agency: 'local', id: str, isGuid: false };
     }
 
     function renderCrosswalkStudioTable() {
