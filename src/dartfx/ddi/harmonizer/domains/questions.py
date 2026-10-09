@@ -13,7 +13,7 @@ from ..identifiers import ResourceIdentifier, parse_identifier
 from ..models import ContentFingerprint
 
 
-class HarmonizedQuestion(BaseModel):
+class Question(BaseModel):
     """Generic question structure capturing all facets of a survey question item."""
 
     model_config = ConfigDict(frozen=True)

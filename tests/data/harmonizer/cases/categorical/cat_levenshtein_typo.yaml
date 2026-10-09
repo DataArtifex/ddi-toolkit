@@ -12,11 +12,9 @@ learning_objective: >
   LevenshteinComparator calculates character-level edit distance to catch minor human typing errors.
 source_resource:
   label: "Unemployed looking for work"
-  value: "3"
   is_missing: false
 candidate_resource:
   label: "Unemployed loooking for work"
-  value: "3"
   is_missing: false
 preset: STANDARD
 custom_typos: {}

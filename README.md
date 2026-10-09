@@ -43,6 +43,7 @@ There are three major flavors of DDI. This package currently supports:
 - **Assistant Framework**: A high-level API (`CdiClassAssistant`) that simplifies CDI resource creation, automated identifier generation, and method proxying.
 - **RDF Serialization**: Built-in support for serializing CDI models to RDF graphs.
 - **Cross-Format Conversion**: Transform DDI-Codebook metadata into DDI-CDI resources via the CDIF profile.
+- **Resource Harmonization & Deduplication**: Cryptographic Merkle fingerprinting, order-independent permutation matching, substantive vs sentinel code list partitioning, multi-attribute weighted question comparison, and Polars dataset schema crosswalks with automated transformation execution.
 - **Validation Reporting**: Validate DDI-Codebook XML documents and generate machine-friendly JSON or human-readable Markdown reports.
 - **BaseX XML Database & Reporting** *(Experimental, Optional)*: Connect to BaseX servers over REST, load and query DDI-C/DDI-L collections, and generate publication-ready reports (Markdown, HTML, JSON, CSV, Polars DataFrames).
 
@@ -267,6 +268,34 @@ dartfx-ddi basex create-db surveys --input ./xml_files/
 dartfx-ddi basex report surveys --type ddic-dictionary --format html -o dictionary.html
 ```
 
+### Resource Harmonization & Pairwise Comparison
+
+Compare two resources directly (e.g., determining if two survey questions are equivalent across interview modes) or deduplicate large collections via hierarchical Merkle fingerprints:
+
+```python
+from dartfx.ddi.harmonizer import Question, compare_questions
+
+# Pairwise Question Comparison
+q1 = Question(
+    question_text="Did you consult a medical doctor or specialist?",
+    instructions="Show Card C to respondent.",
+)
+q2 = Question(
+    question_text="Did you consult a medical doctor or specialist?",
+    instructions="Select one option on the screen.",
+)
+
+result = compare_questions(q1, q2)
+print(f"Similarity Score: {result.score:.1%}")
+print(f"Match Classification: {result.match_type}")
+```
+
+Launch the interactive Harmonization Workbench:
+
+```bash
+dartfx-ddi harmonizer explore
+```
+
 ### Specification Loading
 
 For advanced users needing to introspect the DDI-CDI specification itself:
@@ -286,6 +315,7 @@ classes = cdi_spec.get_ucmis_classes()
 ```
 ddi-toolkit/
 ├── src/dartfx/ddi/
+│   ├── harmonizer/             # Resource Harmonization & Comparison engine (zero-DDI dependency)
 │   ├── ddicodebook/            # DDI-Codebook subpackage (models & validation)
 │   │   ├── model.py            # DDI-Codebook 2.6 models
 │   │   └── utils.py            # Codebook utilities (validation, CDIF mapping)

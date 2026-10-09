@@ -9,7 +9,7 @@ from ..identifiers import ResourceIdentifier, parse_identifier
 from ..models import ContentFingerprint
 
 
-class HarmonizedConcept(BaseModel):
+class Concept(BaseModel):
     """Generic representation of a concept or classification category."""
 
     model_config = ConfigDict(frozen=True)

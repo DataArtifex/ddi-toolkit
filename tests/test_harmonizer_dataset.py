@@ -8,7 +8,7 @@ from dartfx.ddi.harmonizer import (
     ComparisonProfile,
     DatasetCrosswalk,
     DatasetHarmonizer,
-    HarmonizedVariable,
+    Variable,
     harmonize_datasets,
 )
 
@@ -135,15 +135,15 @@ def test_harmonize_polars_dataframes_and_execution():
     ]
 
     source_vars = [
-        HarmonizedVariable.from_dict({"name": "AGE_YR", "label": "Respondent Age in Years", "type": "integer"}),
-        HarmonizedVariable.from_dict(
+        Variable.from_dict({"name": "AGE_YR", "label": "Respondent Age in Years", "type": "integer"}),
+        Variable.from_dict(
             {
                 "name": "SEX_NUM",
                 "label": "Biological Sex",
                 "value_labels": {"1": "Male", "2": "Female"},
             }
         ),
-        HarmonizedVariable.from_dict(
+        Variable.from_dict(
             {
                 "name": "WEIGHT_LBS",
                 "label": "Body Weight in Pounds",
@@ -173,7 +173,7 @@ def test_harmonize_polars_dataframes_and_execution():
 
 def test_dataset_crosswalk_markdown_and_dataframe_exports():
     """Verifies Markdown, Polars DataFrame, and JSON dictionary crosswalk exports."""
-    var_src = HarmonizedVariable.from_dict(
+    var_src = Variable.from_dict(
         {
             "name": "INCOME_MTH",
             "label": "Monthly Income in USD",
@@ -182,7 +182,7 @@ def test_dataset_crosswalk_markdown_and_dataframe_exports():
             "unit": "USD",
         }
     )
-    var_tgt = HarmonizedVariable.from_dict(
+    var_tgt = Variable.from_dict(
         {
             "name": "income_usd",
             "label": "Monthly Household Income in USD",

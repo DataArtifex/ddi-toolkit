@@ -1,37 +1,47 @@
 """Domain resource models for harmonization."""
 
-from .codes import HarmonizedCategory, HarmonizedCode, HarmonizedCodeItem, HarmonizedCodeList, SentinelType
-from .concepts import HarmonizedConcept
-from .questions import HarmonizedQuestion
+from .codes import (
+    Category,
+    Code,
+    CodeList,
+    SentinelType,
+)
+from .concepts import (
+    Concept,
+)
+from .questions import (
+    Question,
+)
 from .variables import (
     CanonicalDataType,
     DataType,
     DataTypeVocabulary,
-    HarmonizedNumericDomain,
-    HarmonizedTextDomain,
-    HarmonizedUniverse,
-    HarmonizedValueDomain,
-    HarmonizedVariable,
+    NumericDomain,
     QuantityKind,
+    TextDomain,
     UnitOfMeasure,
+    Universe,
+    ValueDomain,
     ValueDomainKind,
+    Variable,
 )
 
 __all__ = [
+    # Primary Domain Models
+    "Category",
+    "Code",
+    "CodeList",
+    "Concept",
+    "Question",
+    "Variable",
+    "ValueDomain",
+    "NumericDomain",
+    "TextDomain",
+    "Universe",
+    # Classifiers & Vocabularies
     "CanonicalDataType",
     "DataType",
     "DataTypeVocabulary",
-    "HarmonizedCategory",
-    "HarmonizedCode",
-    "HarmonizedCodeItem",
-    "HarmonizedCodeList",
-    "HarmonizedConcept",
-    "HarmonizedNumericDomain",
-    "HarmonizedQuestion",
-    "HarmonizedTextDomain",
-    "HarmonizedUniverse",
-    "HarmonizedValueDomain",
-    "HarmonizedVariable",
     "QuantityKind",
     "SentinelType",
     "UnitOfMeasure",

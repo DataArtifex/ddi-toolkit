@@ -12,11 +12,9 @@ learning_objective: >
   TextSanitizer unescapes HTML entities, removes markup tags, and standardizes spacing prior to normalization.
 source_resource:
   label: "Research & Development / Science & Technology"
-  value: "RD"
   is_missing: false
 candidate_resource:
   label: "<span>Research &amp; Development&nbsp;/ Science &amp; Technology</span>"
-  value: "RD"
   is_missing: false
 preset: STANDARD
 custom_typos: {}

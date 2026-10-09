@@ -1,7 +1,7 @@
 """Compound variable comparators, multi-attribute scoring, and transformation advisories.
 
 Provides:
-- Multi-dimensional comparison of HarmonizedVariable instances across:
+- Multi-dimensional comparison of Variable instances across:
   1. Primary Identifiers & Labels (string similarity)
   2. Data Type Compatibility Matrix (cross-vocabulary matching)
   3. Metrology: QuantityKind matching and UnitOfMeasure scaling factor detection
@@ -20,15 +20,15 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..domains.codes import HarmonizedCodeList
+from ..domains.codes import CodeList
 from ..domains.variables import (
     CanonicalDataType,
     DataType,
-    HarmonizedNumericDomain,
-    HarmonizedVariable,
+    NumericDomain,
     QuantityKind,
     UnitOfMeasure,
     ValueDomainKind,
+    Variable,
 )
 from ..models import MatchType
 from .base import ComparisonResult, ContentComparator
@@ -196,7 +196,7 @@ class VariableComparator:
         # Structurally incompatible
         return 0.0
 
-    def _score_numeric_range_overlap(self, src: HarmonizedNumericDomain, tgt: HarmonizedNumericDomain) -> float:
+    def _score_numeric_range_overlap(self, src: NumericDomain, tgt: NumericDomain) -> float:
         """Calculates overlap ratio between two continuous numeric ranges with metrology unit normalization."""
         s_min = src.min_value if src.min_value is not None else -1e9
         s_max = src.max_value if src.max_value is not None else 1e9
@@ -243,13 +243,13 @@ class VariableComparator:
 
     def compare(
         self,
-        source: HarmonizedVariable | dict[str, Any],
-        target: HarmonizedVariable | dict[str, Any],
+        source: Variable | dict[str, Any],
+        target: Variable | dict[str, Any],
     ) -> VariableComparisonResult:
         """Compares two variables and produces similarity scores and transformation advice."""
         # Ingest dictionaries if needed
-        var_a = source if isinstance(source, HarmonizedVariable) else HarmonizedVariable.from_dict(source)
-        var_b = target if isinstance(target, HarmonizedVariable) else HarmonizedVariable.from_dict(target)
+        var_a = source if isinstance(source, Variable) else Variable.from_dict(source)
+        var_b = target if isinstance(target, Variable) else Variable.from_dict(target)
 
         # 1. Instant Cryptographic Equality Check (Merkle Root)
         if var_a.fingerprint.digest == var_b.fingerprint.digest:
@@ -383,8 +383,8 @@ class VariableComparator:
 
         if vd_a and vd_b:
             if vd_a.kind == ValueDomainKind.ENUMERATED and vd_b.kind == ValueDomainKind.ENUMERATED:
-                cl_a = vd_a.codelist or HarmonizedCodeList(name="CLA")
-                cl_b = vd_b.codelist or HarmonizedCodeList(name="CLB")
+                cl_a = vd_a.codelist or CodeList(name="CLA")
+                cl_b = vd_b.codelist or CodeList(name="CLB")
                 cl_res = compare_codelists(cl_a, cl_b)
                 sub_scores["value_domain"] = cl_res.score
                 domain_match_type = cl_res.match_type
@@ -414,8 +414,8 @@ class VariableComparator:
                         )
                     )
             elif vd_a.kind == ValueDomainKind.CONTINUOUS_NUMERIC and vd_b.kind == ValueDomainKind.CONTINUOUS_NUMERIC:
-                num_dom_a = vd_a.numeric_domain or HarmonizedNumericDomain()
-                num_dom_b = vd_b.numeric_domain or HarmonizedNumericDomain()
+                num_dom_a = vd_a.numeric_domain or NumericDomain()
+                num_dom_b = vd_b.numeric_domain or NumericDomain()
                 overlap_score = self._score_numeric_range_overlap(num_dom_a, num_dom_b)
                 sub_scores["value_domain"] = overlap_score
             else:
@@ -530,8 +530,8 @@ def compare_variables(
     """Convenience 1-liner function to compare two variables.
 
     Args:
-        source: First variable (HarmonizedVariable or dict).
-        target: Second variable (HarmonizedVariable or dict).
+        source: First variable (Variable or dict).
+        target: Second variable (Variable or dict).
         profile: Comparison profile (LIGHTWEIGHT, SURVEY_INSTRUMENT, STATISTICAL_GSIM).
         weights: Optional custom facet weights.
         base_comparator: Optional string comparator.

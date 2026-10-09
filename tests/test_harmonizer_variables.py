@@ -1,23 +1,23 @@
-"""Comprehensive unit tests for HarmonizedVariable, Metrology, and Compound Variable Comparators."""
+"""Comprehensive unit tests for Variable, Metrology, and Compound Variable Comparators."""
 
 from __future__ import annotations
 
 from dartfx.ddi.harmonizer import (
     CanonicalDataType,
     ComparisonProfile,
+    Concept,
     DataType,
     DataTypeVocabulary,
-    HarmonizedConcept,
-    HarmonizedNumericDomain,
-    HarmonizedQuestion,
-    HarmonizedUniverse,
-    HarmonizedValueDomain,
-    HarmonizedVariable,
     MatchType,
+    NumericDomain,
     QuantityKind,
+    Question,
     TransformationAction,
     UnitOfMeasure,
+    Universe,
+    ValueDomain,
     ValueDomainKind,
+    Variable,
     compare_resources,
     compare_variables,
 )
@@ -84,7 +84,7 @@ def test_quantity_kind_and_unit_qudt():
 
 
 # =============================================================================
-# 3. HarmonizedVariable Domain Model & Merkle Tree Tests
+# 3. Variable Domain Model & Merkle Tree Tests
 # =============================================================================
 
 
@@ -92,14 +92,14 @@ def test_harmonized_variable_fingerprinting():
     """Verifies hierarchical Merkle tree fingerprints across variable sub-facets."""
     qk_mass = QuantityKind.from_name("Mass")
     u_kg = UnitOfMeasure.from_symbol("kg", quantity_kind=qk_mass)
-    num_dom = HarmonizedNumericDomain(min_value=0.0, max_value=250.0, quantity_kind=qk_mass, unit=u_kg)
-    vdomain = HarmonizedValueDomain(kind=ValueDomainKind.CONTINUOUS_NUMERIC, numeric_domain=num_dom)
+    num_dom = NumericDomain(min_value=0.0, max_value=250.0, quantity_kind=qk_mass, unit=u_kg)
+    vdomain = ValueDomain(kind=ValueDomainKind.CONTINUOUS_NUMERIC, numeric_domain=num_dom)
 
-    question = HarmonizedQuestion(question_text="What is your weight in kilograms?")
-    concept = HarmonizedConcept(preferred_label="Body Mass", notation="MASS_BODY")
-    universe = HarmonizedUniverse(name="Adult Population aged 18+")
+    question = Question(question_text="What is your weight in kilograms?")
+    concept = Concept(preferred_label="Body Mass", notation="MASS_BODY")
+    universe = Universe(name="Adult Population aged 18+")
 
-    var = HarmonizedVariable(
+    var = Variable(
         name="WGT_KG",
         label="Respondent Weight (kg)",
         data_type=DataType.from_xsd("xs:decimal"),
@@ -135,7 +135,7 @@ def test_variable_from_dict_and_from_json_schema():
         "unit": "years",
         "quantity_kind": "Duration",
     }
-    var_dict = HarmonizedVariable.from_dict(d)
+    var_dict = Variable.from_dict(d)
     assert var_dict.name == "age"
     assert var_dict.data_type.canonical_kind == CanonicalDataType.INTEGER
     assert var_dict.value_domain is not None
@@ -149,7 +149,7 @@ def test_variable_from_dict_and_from_json_schema():
         "minimum": 0,
         "maximum": 500000,
     }
-    var_json = HarmonizedVariable.from_json_schema(
+    var_json = Variable.from_json_schema(
         schema_prop,
         name="hh_income",
         quantity_kind="Currency",
@@ -170,7 +170,7 @@ def test_variable_from_json_schema_document():
             "sex": {"title": "Sex", "type": "string", "enum": ["Male", "Female", "Other"]},
         },
     }
-    vars_list = HarmonizedVariable.from_json_schema_document(doc)
+    vars_list = Variable.from_json_schema_document(doc)
     assert len(vars_list) == 2
     var_sex = next(v for v in vars_list if v.name == "sex")
     assert var_sex.data_type.canonical_kind == CanonicalDataType.CATEGORICAL
@@ -185,8 +185,8 @@ def test_variable_from_json_schema_document():
 
 def test_compare_variables_exact():
     """Identical variables return EXACT_IDENTICAL (1.0)."""
-    v1 = HarmonizedVariable.from_dict({"name": "AGE", "label": "Age of Respondent", "type": "integer"})
-    v2 = HarmonizedVariable.from_dict({"name": "AGE", "label": "Age of Respondent", "type": "integer"})
+    v1 = Variable.from_dict({"name": "AGE", "label": "Age of Respondent", "type": "integer"})
+    v2 = Variable.from_dict({"name": "AGE", "label": "Age of Respondent", "type": "integer"})
 
     res = compare_variables(v1, v2)
     assert res.score == 1.0
@@ -196,7 +196,7 @@ def test_compare_variables_exact():
 def test_compare_variables_unit_conversion_advice():
     """Verifies unit conversion advice when variables measure same quantity kind in different units."""
     # Variable A: Weight in Pounds (lbs)
-    v_lbs = HarmonizedVariable.from_dict(
+    v_lbs = Variable.from_dict(
         {
             "name": "WEIGHT_LBS",
             "label": "Body Weight in Pounds",
@@ -209,7 +209,7 @@ def test_compare_variables_unit_conversion_advice():
     )
 
     # Variable B: Weight in Kilograms (kg)
-    v_kg = HarmonizedVariable.from_dict(
+    v_kg = Variable.from_dict(
         {
             "name": "WGT_KG",
             "label": "Body Weight in Kilograms",
@@ -235,7 +235,7 @@ def test_compare_variables_unit_conversion_advice():
 
 def test_compare_variables_dimension_incompatibility():
     """Verifies DIMENSION_INCOMPATIBLE when quantity kinds conflict."""
-    v_weight = HarmonizedVariable.from_dict(
+    v_weight = Variable.from_dict(
         {
             "name": "WGT",
             "label": "Weight of Item",
@@ -244,7 +244,7 @@ def test_compare_variables_dimension_incompatibility():
             "unit": "kg",
         }
     )
-    v_income = HarmonizedVariable.from_dict(
+    v_income = Variable.from_dict(
         {
             "name": "INC",
             "label": "Income of Household",
@@ -262,7 +262,7 @@ def test_compare_variables_dimension_incompatibility():
 def test_compare_variables_category_recoding_advice():
     """Verifies category recoding advice between numeric and alpha country codes."""
     # Dataset A (Numeric: 1=Male, 2=Female)
-    v_num = HarmonizedVariable.from_dict(
+    v_num = Variable.from_dict(
         {
             "name": "SEX",
             "label": "Biological Sex",
@@ -271,7 +271,7 @@ def test_compare_variables_category_recoding_advice():
     )
 
     # Dataset B (Alpha: M=Male, F=Female)
-    v_alpha = HarmonizedVariable.from_dict(
+    v_alpha = Variable.from_dict(
         {
             "name": "GENDER",
             "label": "Biological Sex",
@@ -290,22 +290,22 @@ def test_compare_variables_category_recoding_advice():
 
 def test_compare_variables_question_mode_drift():
     """Verifies survey instrument question construct evaluation across survey waves."""
-    q_capi = HarmonizedQuestion(
+    q_capi = Question(
         question_text="Did you consult a medical doctor or specialist?",
         instructions="Show Card C to respondent.",
     )
-    q_cawi = HarmonizedQuestion(
+    q_cawi = Question(
         question_text="Did you consult a medical doctor or specialist?",
         instructions="Select one option on the screen.",
     )
 
-    v_wave1 = HarmonizedVariable(
+    v_wave1 = Variable(
         name="Q12_DOCTOR",
         label="Consulted Medical Doctor",
         data_type=DataType.from_ddi_cv("Integer"),
         question=q_capi,
     )
-    v_wave2 = HarmonizedVariable(
+    v_wave2 = Variable(
         name="VAR_HEALTH_DOC",
         label="Doctor Consultation (Web Mode)",
         data_type=DataType.from_ddi_cv("Integer"),
@@ -320,9 +320,9 @@ def test_compare_variables_question_mode_drift():
 
 
 def test_compare_resources_polymorphic_variable():
-    """Verifies polymorphic compare_resources function with HarmonizedVariable."""
-    v1 = HarmonizedVariable.from_dict({"name": "income", "label": "Household Income", "type": "decimal"})
-    v2 = HarmonizedVariable.from_dict({"name": "income", "label": "Household Income", "type": "decimal"})
+    """Verifies polymorphic compare_resources function with Variable."""
+    v1 = Variable.from_dict({"name": "income", "label": "Household Income", "type": "decimal"})
+    v2 = Variable.from_dict({"name": "income", "label": "Household Income", "type": "decimal"})
 
     res = compare_resources(v1, v2)
     assert res.score == 1.0
@@ -335,7 +335,7 @@ def test_compare_resources_polymorphic_variable():
 
 
 def test_variable_from_ddi_codebook():
-    """Verifies HarmonizedVariable extraction from DDI-Codebook 2.6 varType."""
+    """Verifies Variable extraction from DDI-Codebook 2.6 varType."""
     import os
 
     from dartfx.ddi import ddicodebook
@@ -347,7 +347,7 @@ def test_variable_from_ddi_codebook():
     assert len(vars_list) == 1
     var_cb = vars_list[0]
 
-    var_harm = HarmonizedVariable.from_ddi_codebook(var_cb)
+    var_harm = Variable.from_ddi_codebook(var_cb)
     assert var_harm.name == "yesnodk"
     assert var_harm.urn == "V1"
     assert "Yes / No" in var_harm.label
@@ -362,7 +362,7 @@ def test_variable_from_ddi_codebook():
     nes_vars = nes_cb.search_variables()
     assert len(nes_vars) == 67
     nes_v1 = nes_vars[0]
-    var_nes = HarmonizedVariable.from_ddi_codebook(nes_v1)
+    var_nes = Variable.from_ddi_codebook(nes_v1)
     assert var_nes.name is not None
     assert var_nes.label is not None
     if nes_v1.qstn:
@@ -370,7 +370,7 @@ def test_variable_from_ddi_codebook():
 
 
 def test_variable_from_ddi_cdi():
-    """Verifies HarmonizedVariable extraction from DDI-CDI InstanceVariable."""
+    """Verifies Variable extraction from DDI-CDI InstanceVariable."""
     import os
 
     from dartfx.ddi import ddicodebook
@@ -387,13 +387,13 @@ def test_variable_from_ddi_cdi():
     assert len(cdi_vars) >= 1
     var_cdi = cdi_vars[0]
 
-    var_harm = HarmonizedVariable.from_ddi_cdi(var_cdi)
+    var_harm = Variable.from_ddi_cdi(var_cdi)
     assert var_harm.name in ("V1", "yesnodk", "cdi_var") or var_harm.label is not None
     assert var_harm.urn is not None
 
 
 def test_variable_from_ddi_lifecycle():
-    """Verifies HarmonizedVariable extraction from DDI-Lifecycle 4.0 / 3.3 Variable."""
+    """Verifies Variable extraction from DDI-Lifecycle 4.0 / 3.3 Variable."""
     from dartfx.ddi.ddilifecycle import model_4_0_rc1 as ddil_model
 
     var_ddil = ddil_model.Variable(
@@ -403,7 +403,7 @@ def test_variable_from_ddi_lifecycle():
         description=[ddil_model.LangString(language="en", value="Respondent age at interview date")],
     )
 
-    var_harm = HarmonizedVariable.from_ddi_lifecycle(var_ddil)
+    var_harm = Variable.from_ddi_lifecycle(var_ddil)
     assert var_harm.name == "AGE_YEARS"
     assert var_harm.label == "Age in Years"
     assert var_harm.description == "Respondent age at interview date"

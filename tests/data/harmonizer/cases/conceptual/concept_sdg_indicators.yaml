@@ -6,7 +6,7 @@ real_world_context: UN Sustainable Development Goal (SDG) Indicator Cataloging
 story: >
   National statistics offices submit indicator definitions with varying formatting, notation prefixes,
   and official descriptions. Conceptual matching reconciles label, notation, and formal definitions.
-learning_objective: HarmonizedConcept combines label, notation, and definition into a compound fingerprint.
+learning_objective: Concept combines label, notation, and definition into a compound fingerprint.
 source_resource:
   preferred_label: Proportion of population below international poverty line
   notation: SDG_1.1.1

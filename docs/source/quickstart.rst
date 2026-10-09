@@ -205,14 +205,14 @@ Compare two resources directly (e.g., determining if two survey questions are eq
 
 .. code-block:: python
 
-   from dartfx.ddi.harmonizer import HarmonizedQuestion, compare_questions
+   from dartfx.ddi.harmonizer import Question, compare_questions
 
    # Pairwise Question Comparison
-   q1 = HarmonizedQuestion(
+   q1 = Question(
        question_text="Did you consult a medical doctor or specialist?",
        instructions="Show Card C to respondent.",
    )
-   q2 = HarmonizedQuestion(
+   q2 = Question(
        question_text="Did you consult a medical doctor or specialist?",
        instructions="Select one option on the screen.",
    )

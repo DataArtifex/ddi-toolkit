@@ -22,7 +22,7 @@ from .comparators.variable import (
     VariableComparator,
     VariableComparisonResult,
 )
-from .domains.variables import HarmonizedVariable
+from .domains.variables import Variable
 from .models import MatchType
 
 
@@ -31,8 +31,8 @@ class VariableAlignment(BaseModel):
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    source_variable: HarmonizedVariable = Field(description="The source variable")
-    target_variable: HarmonizedVariable = Field(description="The matched target canonical variable")
+    source_variable: Variable = Field(description="The source variable")
+    target_variable: Variable = Field(description="The matched target canonical variable")
     comparison: VariableComparisonResult = Field(description="Detailed pairwise comparison result")
 
     @property
@@ -77,11 +77,11 @@ class DatasetCrosswalk(BaseModel):
         default_factory=list,
         description="Matched and aligned variable pairs",
     )
-    unmatched_source: list[HarmonizedVariable] = Field(
+    unmatched_source: list[Variable] = Field(
         default_factory=list,
         description="Variables present in source dataset with no compatible target match",
     )
-    unmatched_target: list[HarmonizedVariable] = Field(
+    unmatched_target: list[Variable] = Field(
         default_factory=list,
         description="Variables present in target dataset with no compatible source match",
     )
@@ -272,23 +272,23 @@ class DatasetHarmonizer:
         self.allow_many_to_one = allow_many_to_one
 
     @staticmethod
-    def _extract_variables(data: Any) -> list[HarmonizedVariable]:
-        """Extracts HarmonizedVariable instances from a variety of data structures."""
+    def _extract_variables(data: Any) -> list[Variable]:
+        """Extracts Variable instances from a variety of data structures."""
         if isinstance(data, list):
-            vars_out: list[HarmonizedVariable] = []
+            vars_out: list[Variable] = []
             for item in data:
-                if isinstance(item, HarmonizedVariable):
+                if isinstance(item, Variable):
                     vars_out.append(item)
                 elif isinstance(item, dict):
-                    vars_out.append(HarmonizedVariable.from_dict(item))
+                    vars_out.append(Variable.from_dict(item))
                 elif hasattr(item, "variable_name") or hasattr(item, "labl") or hasattr(item, "displayLabel"):
                     # DDI object
                     if hasattr(item, "labl"):
-                        vars_out.append(HarmonizedVariable.from_ddi_codebook(item))
+                        vars_out.append(Variable.from_ddi_codebook(item))
                     elif hasattr(item, "variable_name"):
-                        vars_out.append(HarmonizedVariable.from_ddi_lifecycle(item))
+                        vars_out.append(Variable.from_ddi_lifecycle(item))
                     else:
-                        vars_out.append(HarmonizedVariable.from_ddi_cdi(item))
+                        vars_out.append(Variable.from_ddi_cdi(item))
             return vars_out
 
         # Polars DataFrame
@@ -296,24 +296,24 @@ class DatasetHarmonizer:
             vars_out = []
             for col_name in data.columns:
                 series = data[col_name]
-                vars_out.append(HarmonizedVariable.from_series(series, label=col_name))
+                vars_out.append(Variable.from_series(series, label=col_name))
             return vars_out
 
         # JSON Schema root document
         if isinstance(data, dict) and "properties" in data:
-            return HarmonizedVariable.from_json_schema_document(data)
+            return Variable.from_json_schema_document(data)
 
         # Single dictionary
         if isinstance(data, dict):
             # Check if dict of variables {var_name: spec}
             if all(isinstance(v, dict) for v in data.values()):
-                return [HarmonizedVariable.from_dict({"name": k, **v}) for k, v in data.items()]
-            return [HarmonizedVariable.from_dict(data)]
+                return [Variable.from_dict({"name": k, **v}) for k, v in data.items()]
+            return [Variable.from_dict(data)]
 
         # DDI CodeBook object
         if hasattr(data, "search_variables"):
             cb_vars = data.search_variables()
-            return [HarmonizedVariable.from_ddi_codebook(v) for v in cb_vars]
+            return [Variable.from_ddi_codebook(v) for v in cb_vars]
 
         return []
 
@@ -327,8 +327,8 @@ class DatasetHarmonizer:
         """Harmonizes two datasets, producing an aligned variable crosswalk.
 
         Args:
-            source: Source dataset (list of HarmonizedVariable, DataFrame, JSON Schema, DDI model).
-            target: Target dataset (list of HarmonizedVariable, DataFrame, JSON Schema, DDI model).
+            source: Source dataset (list of Variable, DataFrame, JSON Schema, DDI model).
+            target: Target dataset (list of Variable, DataFrame, JSON Schema, DDI model).
             source_name: Optional descriptive label for source dataset.
             target_name: Optional descriptive label for target dataset.
 
@@ -353,7 +353,7 @@ class DatasetHarmonizer:
         # Compute full N x M pairwise comparison matrix
         sim_matrix: dict[str, dict[str, float]] = {}
         comparison_cache: dict[tuple[str, str], VariableComparisonResult] = {}
-        candidate_pairs: list[tuple[float, HarmonizedVariable, HarmonizedVariable, VariableComparisonResult]] = []
+        candidate_pairs: list[tuple[float, Variable, Variable, VariableComparisonResult]] = []
 
         for s_var in src_vars:
             sim_matrix[s_var.name] = {}
@@ -415,8 +415,8 @@ def harmonize_datasets(
     """Convenience 1-liner function to harmonize and generate crosswalks between two datasets.
 
     Args:
-        source: First dataset (list of HarmonizedVariable, DataFrame, dict, JSON Schema, DDI model).
-        target: Second dataset (list of HarmonizedVariable, DataFrame, dict, JSON Schema, DDI model).
+        source: First dataset (list of Variable, DataFrame, dict, JSON Schema, DDI model).
+        target: Second dataset (list of Variable, DataFrame, dict, JSON Schema, DDI model).
         profile: Comparison profile (LIGHTWEIGHT, SURVEY_INSTRUMENT, STATISTICAL_GSIM).
         threshold: Minimum similarity threshold for variable alignment.
         source_name: Name/label for source dataset.

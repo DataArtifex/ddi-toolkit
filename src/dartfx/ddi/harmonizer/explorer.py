@@ -842,6 +842,88 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     .crosswalk-table tr:hover {
       background: rgba(255,255,255,0.02);
     }
+
+    /* Custom Visible Scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-base);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
+
+    /* Python SDK Code Modal */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-backdrop.open {
+      display: flex;
+    }
+    .modal-dialog {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 1050px;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      animation: modalFadeIn 0.15s ease-out;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 0 6px;
+      line-height: 1;
+    }
+    .modal-close-btn:hover {
+      color: var(--text-main);
+    }
+    .modal-body {
+      padding: 18px 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 12px 20px;
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-card);
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
   </style>
 </head>
 <body>
@@ -858,9 +940,48 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     </div>
     <div class="header-actions">
       <button id="themeToggleBtn" onclick="toggleTheme()">🌓 Theme</button>
-      <button class="btn btn-primary" onclick="copyPythonCode()">📋 Copy Python SDK Code</button>
+      <button class="btn btn-primary" onclick="openPythonModal()">🐍 View Python Code</button>
+      <button class="btn" onclick="copyPythonCode()">📋 Copy Snippet</button>
     </div>
   </header>
+
+  <!-- Python SDK Modal Dialog -->
+  <div class="modal-backdrop" id="pythonModal" onclick="if(event.target === this) closePythonModal()">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:1.3rem;">🐍</span>
+          <div>
+            <div style="font-weight:700; font-size:1rem;" id="modalTitle">Python SDK Implementation &amp; Execution</div>
+            <div style="font-size:0.75rem; color:var(--text-muted);" id="modalSubtitle">dartfx.ddi.harmonizer</div>
+          </div>
+        </div>
+        <button class="modal-close-btn" onclick="closePythonModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="py-grid">
+          <div class="py-panel">
+            <div class="py-panel-header">
+              <span>Executable Python Snippet</span>
+              <button class="btn" style="padding:2px 8px; font-size:0.72rem;" onclick="copyPythonCode()">📋 Copy Snippet</button>
+            </div>
+            <pre class="py-code" id="modalPythonCode" style="max-height:420px;"># Loading Python code...</pre>
+          </div>
+          <div class="py-panel">
+            <div class="py-panel-header">
+              <span>Simulated Execution Output</span>
+              <button class="btn" style="padding:2px 8px; font-size:0.72rem;" onclick="copyPythonOutput()">📋 Copy Output</button>
+            </div>
+            <pre class="py-code" id="modalPythonOutput" style="max-height:420px;"># Loading Output...</pre>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="copyPythonCode()">📋 Copy Python Code</button>
+        <button class="btn" onclick="closePythonModal()">Close</button>
+      </div>
+    </div>
+  </div>
 
   <!-- 1. RESOURCE COMPARATOR VIEW -->
   <main id="resourceMainView">
@@ -1394,7 +1515,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         <div class="cat-display">
           <div class="cat-label">"${escapeHtml(parsed.label || '')}"</div>
           <div class="cat-meta">
-            ${parsed.value !== undefined ? `<span class="val-chip">Code: ${escapeHtml(String(parsed.value))}</span>` : ''}
+            ${parsed.value ? `<span class="val-chip">Notation: ${escapeHtml(String(parsed.value))}</span>` : ''}
             ${parsed.is_missing ? '<span class="badge-pill badge-warning">Missing Flag</span>' : '<span class="badge-pill badge-success">Substantive Category</span>'}
           </div>
         </div>
@@ -1462,24 +1583,56 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       return (hex + hex).substring(0, 16);
     }
 
+    function unescapeHtmlEntities(str) {
+      if (!str) return '';
+      const doc = new DOMParser().parseFromString(str, 'text/html');
+      return doc.documentElement.textContent || str;
+    }
+
     function normalizeText(str) {
       if (!str) return '';
       let text = String(str);
+
       if (document.getElementById('optSanitize').checked) {
-        text = text.replace(/[\u201C\u201D"]/g, '"').replace(/[\u2018\u2019']/g, "'").replace(/[—–]/g, '-').replace(/&amp;/g, '&');
+        // 1. Unescape HTML entities & strip markup tags
+        text = text.replace(/&nbsp;/g, ' ').replace(/&#160;/g, ' ');
+        text = text.replace(/<\/?(?:b|i|u|em|strong|span|small|mark|sub|sup|abbr|font|code)[^>]*>/gi, '');
+        text = text.replace(/<[^>]+>/g, ' ');
+        text = unescapeHtmlEntities(text);
+
+        // 2. Standardize smart/curly quotes, dashes, ellipsis, non-breaking spaces
+        text = text.replace(/[\u201C\u201D\u201E\u201F"]/g, '"')
+                   .replace(/[\u2018\u2019\u201A\u201B']/g, "'")
+                   .replace(/[\u2013\u2014\u2015]/g, '-')
+                   .replace(/\u2026/g, '...')
+                   .replace(/\u00a0/g, ' ');
+
+        // 3. Apply scenario custom typo rules (e.g. daccord -> d'accord)
+        if (currentCase && currentCase.custom_typos) {
+          for (const [typo, replacement] of Object.entries(currentCase.custom_typos)) {
+            const escapedTypo = typo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const regex = new RegExp('\\b' + escapedTypo + '\\b', 'gi');
+            text = text.replace(regex, replacement);
+          }
+        }
       }
+
       if (document.getElementById('optDeaccent').checked) {
         text = text.normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
       }
+
       if (document.getElementById('optCasefold').checked) {
         text = text.toLowerCase();
       }
+
       if (document.getElementById('optPunctuation').checked) {
         text = text.replace(/[^a-zA-Z0-9\s]/g, '');
       }
+
       if (document.getElementById('optCollapseSpace').checked) {
         text = text.replace(/\s+/g, ' ').trim();
       }
+
       return text;
     }
 
@@ -1562,14 +1715,14 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       if (domain === 'variable' || (parsedSrc && (parsedSrc.data_type || parsedSrc.quantity_kind || parsedSrc.numeric_domain))) {
         return `import polars as pl
 from dartfx.ddi.harmonizer import (
-    HarmonizedVariable,
+    Variable,
     VariableComparator,
     compare_variables,
 )
 
-# 1. Instantiate Harmonized Variables from Payloads
-source_var = HarmonizedVariable.from_dict(${JSON.stringify(parsedSrc, null, 4)})
-candidate_var = HarmonizedVariable.from_dict(${JSON.stringify(parsedCand, null, 4)})
+# 1. Instantiate Variables from Payloads
+source_var = Variable.from_dict(${JSON.stringify(parsedSrc, null, 4)})
+candidate_var = Variable.from_dict(${JSON.stringify(parsedCand, null, 4)})
 
 # 2. Compare Variables & Derive Metrological / Recoding Transformation Advice
 result = compare_variables(source_var, candidate_var, threshold=${threshVal})
@@ -1587,16 +1740,16 @@ if result.transformation_advice:
 
       if (domain === 'enumerated_list' || (parsedSrc && parsedSrc.codes)) {
         return `from dartfx.ddi.harmonizer import (
-    HarmonizedCode,
-    HarmonizedCodeList,
-    HarmonizedCategory,
+    Category,
+    Code,
+    CodeList,
     SequenceMatcherComparator,
     compare_codelists,
 )
 
 # 1. Parse Code Lists with Merkle Fingerprinting
-cl_source = HarmonizedCodeList.from_dict(${JSON.stringify(parsedSrc, null, 4)})
-cl_candidate = HarmonizedCodeList.from_dict(${JSON.stringify(parsedCand, null, 4)})
+cl_source = CodeList.from_dict(${JSON.stringify(parsedSrc, null, 4)})
+cl_candidate = CodeList.from_dict(${JSON.stringify(parsedCand, null, 4)})
 
 # 2. Execute Code List Comparison
 result = compare_codelists(cl_source, cl_candidate, threshold=${threshVal})
@@ -1609,14 +1762,14 @@ print(f"Category Digest Match: {cl_source.fingerprint.category_set_digest == cl_
 
       if (domain === 'question' || (parsedSrc && parsedSrc.question_text)) {
         return `from dartfx.ddi.harmonizer import (
-    HarmonizedQuestion,
+    Question,
     SequenceMatcherComparator,
     WeightedAttributeComparator,
 )
 
-# 1. Instantiate Harmonized Questions
-q_source = HarmonizedQuestion(**${JSON.stringify(parsedSrc, null, 4)})
-q_candidate = HarmonizedQuestion(**${JSON.stringify(parsedCand, null, 4)})
+# 1. Instantiate Questions
+q_source = Question(**${JSON.stringify(parsedSrc, null, 4)})
+q_candidate = Question(**${JSON.stringify(parsedCand, null, 4)})
 
 # 2. Multi-Attribute Weighted Comparison
 comparator = WeightedAttributeComparator(
@@ -1632,14 +1785,14 @@ print(f"Match Type:       {result.match_type.value}")`;
 
       if (domain === 'conceptual' || (parsedSrc && (parsedSrc.preferred_label || parsedSrc.definition))) {
         return `from dartfx.ddi.harmonizer import (
-    HarmonizedConcept,
+    Concept,
     SequenceMatcherComparator,
     WeightedAttributeComparator,
 )
 
-# 1. Instantiate Harmonized Concepts
-c_source = HarmonizedConcept(**${JSON.stringify(parsedSrc, null, 4)})
-c_candidate = HarmonizedConcept(**${JSON.stringify(parsedCand, null, 4)})
+# 1. Instantiate Concepts
+c_source = Concept(**${JSON.stringify(parsedSrc, null, 4)})
+c_candidate = Concept(**${JSON.stringify(parsedCand, null, 4)})
 
 # 2. Conceptual Weighted Comparison
 comparator = WeightedAttributeComparator(
@@ -1655,9 +1808,9 @@ print(f"Match Type:       {result.match_type.value}")`;
 
       // Default: Categorical
       return `from dartfx.ddi.harmonizer import (
+    Category,
     ExactComparator,
     HarmonizationRegistry,
-    HarmonizedCategory,
     NormalizerConfig,
     TextNormalizer,
     TextSanitizer,
@@ -1671,8 +1824,8 @@ comparator = ExactComparator(normalizer=normalizer)
 
 # 2. Register & Match Categories
 registry = HarmonizationRegistry(comparator=comparator)
-cat_source = HarmonizedCategory(**${JSON.stringify(parsedSrc, null, 4)})
-cat_candidate = HarmonizedCategory(**${JSON.stringify(parsedCand, null, 4)})
+cat_source = Category(**${JSON.stringify(parsedSrc, null, 4)})
+cat_candidate = Category(**${JSON.stringify(parsedCand, null, 4)})
 
 registry.register(cat_source)
 match = registry.match(cat_candidate, threshold=${threshVal})
@@ -1706,20 +1859,19 @@ Execution:        Completed in 0.42ms with zero allocations.`;
       try { parsedSrc = JSON.parse(srcRaw); } catch (e) {}
       try { parsedCand = JSON.parse(candRaw); } catch (e) {}
 
-      const srcDigest = simpleHash(normalizeText(srcRaw));
-      const candDigest = simpleHash(normalizeText(candRaw));
-
-      document.getElementById('sourceDigest').innerText = srcDigest;
-      document.getElementById('candidateDigest').innerText = candDigest;
-
+      let srcDigest = '';
+      let candDigest = '';
       let score = 0.0;
       let verdict = 'DISTINCT';
       let badgeClass = 'verdict-distinct';
       const adviceList = [];
 
-      const isVariableDomain = (currentCase && currentCase.domain === 'variable') || (parsedSrc && (parsedSrc.data_type || parsedSrc.quantity_kind || parsedSrc.numeric_domain));
+      const domain = currentCase ? currentCase.domain : 'categorical';
 
-      if (isVariableDomain && parsedSrc && parsedCand) {
+      if (domain === 'variable' || (parsedSrc && (parsedSrc.data_type || parsedSrc.quantity_kind || parsedSrc.numeric_domain))) {
+        srcDigest = simpleHash(normalizeText((parsedSrc.name || '') + ':' + (parsedSrc.label || '') + ':' + (parsedSrc.data_type || '')));
+        candDigest = simpleHash(normalizeText((parsedCand.name || '') + ':' + (parsedCand.label || '') + ':' + (parsedCand.data_type || '')));
+
         // Dynamic facet weighting matching Python VariableComparator
         const lblScore = computeSimilarity(parsedSrc.label || parsedSrc.name || '', parsedCand.label || parsedCand.name || '', method);
         const nameScore = computeSimilarity(parsedSrc.name || '', parsedCand.name || '', method);
@@ -1737,7 +1889,6 @@ Execution:        Completed in 0.42ms with zero allocations.`;
         let total_weight = 0.70;
 
         let isUnitConv = false;
-        let isDimIncompat = false;
         if (parsedSrc.unit && parsedCand.unit) {
           total_weight += 0.10;
           const sU = String(parsedSrc.unit).toLowerCase();
@@ -1818,16 +1969,119 @@ Execution:        Completed in 0.42ms with zero allocations.`;
         } else {
           verdict = 'DISTINCT';
           badgeClass = 'verdict-distinct';
-          // Suppress advisories for distinct, unrelated variables
           adviceList.length = 0;
         }
-      } else {
-        score = computeSimilarity(srcRaw, candRaw, method);
-        if (score >= threshold) {
-          verdict = score === 1.0 ? 'EXACT_MATCH' : 'SYNTACTIC_SIMILAR';
+      } else if (domain === 'enumerated_list' && parsedSrc && parsedCand && parsedSrc.codes && parsedCand.codes) {
+        const sLabels = parsedSrc.codes.map(c => normalizeText(c.label || '')).sort();
+        const cLabels = parsedCand.codes.map(c => normalizeText(c.label || '')).sort();
+        const sCatDigest = simpleHash(sLabels.join('||'));
+        const cCatDigest = simpleHash(cLabels.join('||'));
+
+        const sCodeItems = parsedSrc.codes.map(c => String(c.value) + ':' + normalizeText(c.label || '')).sort();
+        const cCodeItems = parsedCand.codes.map(c => String(c.value) + ':' + normalizeText(c.label || '')).sort();
+        const sCodeSetDigest = simpleHash(sCodeItems.join('||'));
+        const cCodeSetDigest = simpleHash(cCodeItems.join('||'));
+
+        const sSeq = parsedSrc.codes.map(c => String(c.value) + ':' + normalizeText(c.label || '')).join('->');
+        const cSeq = parsedCand.codes.map(c => String(c.value) + ':' + normalizeText(c.label || '')).join('->');
+        const sSeqDigest = simpleHash(sSeq);
+        const cSeqDigest = simpleHash(cSeq);
+
+        srcDigest = sCodeSetDigest;
+        candDigest = cCodeSetDigest;
+
+        if (sCodeSetDigest === cCodeSetDigest && parsedCand.urn && (parsedCand.urn.includes('uuid:') || (parsedSrc.urn && parsedCand.urn !== parsedSrc.urn))) {
+          verdict = 'CONTENT_EXACT_DIFFERENT_IDENTIFIER';
+          score = 1.0;
           badgeClass = 'verdict-match';
+        } else if (sCodeSetDigest === cCodeSetDigest) {
+          if (sSeqDigest === cSeqDigest) {
+            verdict = 'EXACT_IDENTICAL';
+            score = 1.0;
+            badgeClass = 'verdict-match';
+          } else {
+            verdict = 'PERMUTATION';
+            score = 1.0;
+            badgeClass = 'verdict-match';
+          }
+        } else if (sCatDigest === cCatDigest) {
+          verdict = 'CATEGORIES_EXACT_CODES_DIFFERENT';
+          score = 1.0;
+          badgeClass = 'verdict-match';
+        } else {
+          score = computeSimilarity(sLabels.join(' '), cLabels.join(' '), method);
+          if (score >= threshold) {
+            verdict = 'SYNTACTIC_SIMILAR';
+            badgeClass = 'verdict-match';
+          } else {
+            verdict = 'DISTINCT';
+            badgeClass = 'verdict-distinct';
+          }
+        }
+      } else if (domain === 'question' && parsedSrc && parsedCand) {
+        const qScore = computeSimilarity(parsedSrc.question_text || '', parsedCand.question_text || '', method);
+        const iScore = computeSimilarity(parsedSrc.instructions || '', parsedCand.instructions || '', method);
+        const preScore = computeSimilarity(parsedSrc.pre_question_text || '', parsedCand.pre_question_text || '', method);
+        const intScore = computeSimilarity(parsedSrc.intent || '', parsedCand.intent || '', method);
+        score = (qScore * 0.65) + (iScore * 0.15) + (preScore * 0.10) + (intScore * 0.10);
+
+        srcDigest = simpleHash(normalizeText(parsedSrc.question_text || ''));
+        candDigest = simpleHash(normalizeText(parsedCand.question_text || ''));
+
+        if (parsedSrc.urn && parsedCand.urn && parsedSrc.urn === parsedCand.urn && score < 1.0) {
+          verdict = 'IDENTIFIER_EXACT_CONTENT_DRIFT';
+          badgeClass = 'verdict-match';
+        } else if (score >= threshold) {
+          verdict = score === 1.0 ? 'EXACT_IDENTICAL' : 'SYNTACTIC_SIMILAR';
+          badgeClass = 'verdict-match';
+        } else {
+          verdict = 'DISTINCT';
+          badgeClass = 'verdict-distinct';
+        }
+      } else if (domain === 'conceptual' && parsedSrc && parsedCand) {
+        const lblScore = computeSimilarity(parsedSrc.preferred_label || '', parsedCand.preferred_label || '', method);
+        const notScore = (parsedSrc.notation && parsedCand.notation && parsedSrc.notation === parsedCand.notation) ? 1.0 : (parsedSrc.notation || parsedCand.notation ? 0.0 : 1.0);
+        const defScore = computeSimilarity(parsedSrc.definition || '', parsedCand.definition || '', method);
+        score = (lblScore * 0.50) + (notScore * 0.20) + (defScore * 0.30);
+
+        srcDigest = simpleHash(normalizeText((parsedSrc.preferred_label || '') + '|' + (parsedSrc.definition || '')));
+        candDigest = simpleHash(normalizeText((parsedCand.preferred_label || '') + '|' + (parsedCand.definition || '')));
+
+        if (score >= threshold) {
+          verdict = score === 1.0 ? 'EXACT_IDENTICAL' : 'SYNTACTIC_SIMILAR';
+          badgeClass = 'verdict-match';
+        } else {
+          verdict = 'DISTINCT';
+          badgeClass = 'verdict-distinct';
+        }
+      } else {
+        // Domain: Categorical (or generic text/label)
+        const srcLabel = (parsedSrc && (parsedSrc.label || parsedSrc.name)) || (typeof parsedSrc === 'string' ? parsedSrc : srcRaw);
+        const candLabel = (parsedCand && (parsedCand.label || parsedCand.name)) || (typeof parsedCand === 'string' ? parsedCand : candRaw);
+
+        const srcNorm = normalizeText(srcLabel);
+        const candNorm = normalizeText(candLabel);
+
+        srcDigest = simpleHash(srcNorm);
+        candDigest = simpleHash(candNorm);
+
+        score = computeSimilarity(srcLabel, candLabel, method);
+
+        if (srcNorm === candNorm) {
+          verdict = 'NORMALIZED_EXACT';
+          score = 1.0;
+          badgeClass = 'verdict-match';
+        } else if (score >= threshold) {
+          verdict = (score === 1.0) ? 'EXACT_MATCH' : 'SYNTACTIC_SIMILAR';
+          badgeClass = 'verdict-match';
+        } else {
+          verdict = 'DISTINCT';
+          badgeClass = 'verdict-distinct';
         }
       }
+
+      document.getElementById('sourceDigest').innerText = srcDigest;
+      document.getElementById('candidateDigest').innerText = candDigest;
 
       const scorePct = Math.round(score * 100);
       document.getElementById('scoreVal').innerText = scorePct + '%';
@@ -1867,10 +2121,23 @@ Execution:        Completed in 0.42ms with zero allocations.`;
         </div>
       `;
 
-      // Update Python Snippet & Output
+      // Update Python Snippet & Output (both in-page and modal)
       const domainName = currentCase ? currentCase.domain : 'variable';
-      document.getElementById('pythonCodeViewer').textContent = generatePythonSnippet(domainName, parsedSrc, parsedCand, method, threshold);
-      document.getElementById('pythonOutputViewer').textContent = generatePythonOutput(domainName, method, threshold, verdict, scorePct, srcDigest, candDigest);
+      const pyCode = generatePythonSnippet(domainName, parsedSrc, parsedCand, method, threshold);
+      const pyOut = generatePythonOutput(domainName, method, threshold, verdict, scorePct, srcDigest, candDigest);
+
+      document.getElementById('pythonCodeViewer').textContent = pyCode;
+      document.getElementById('pythonOutputViewer').textContent = pyOut;
+
+      const modalCode = document.getElementById('modalPythonCode');
+      if (modalCode) modalCode.textContent = pyCode;
+      const modalOut = document.getElementById('modalPythonOutput');
+      if (modalOut) modalOut.textContent = pyOut;
+
+      const modalSub = document.getElementById('modalSubtitle');
+      if (modalSub && currentCase) {
+        modalSub.textContent = `${currentCase.title} (${currentCase.domain.toUpperCase()})`;
+      }
     }
 
     function renderCrosswalkStudioTable() {
@@ -1898,6 +2165,16 @@ Execution:        Completed in 0.42ms with zero allocations.`;
       alert("⚡ Executed DatasetCrosswalk.apply_to_polars(df)! Transformed 3 rows & aligned 4 variable columns with 100% schema fidelity.");
     }
 
+    function openPythonModal() {
+      const modal = document.getElementById('pythonModal');
+      if (modal) modal.classList.add('open');
+    }
+
+    function closePythonModal() {
+      const modal = document.getElementById('pythonModal');
+      if (modal) modal.classList.remove('open');
+    }
+
     function copyPythonCode() {
       const code = document.getElementById('pythonCodeViewer').textContent;
       navigator.clipboard.writeText(code).then(() => alert("Python SDK code copied to clipboard!"));
@@ -1911,6 +2188,10 @@ Execution:        Completed in 0.42ms with zero allocations.`;
     function toggleTheme() {
       document.body.classList.toggle('light-theme');
     }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closePythonModal();
+    });
 
     window.onload = init;
   </script>

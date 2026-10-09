@@ -13,11 +13,9 @@ learning_objective: >
   Two-stage pipeline: TextSanitizer cleans punctuation/typos, TextNormalizer canonicalizes keys.
 source_resource:
   label: "D’accord (fortement)"
-  value: "1"
   is_missing: false
 candidate_resource:
   label: "  daccord (fortement)  "
-  value: "1"
   is_missing: false
 preset: STANDARD
 custom_typos:

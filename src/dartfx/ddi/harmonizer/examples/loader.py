@@ -35,12 +35,10 @@ BUILTIN_SEED_CASES: list[dict[str, Any]] = [
         ),
         "source_resource": {
             "label": "D’accord (fortement)",
-            "value": "1",
             "is_missing": False,
         },
         "candidate_resource": {
             "label": "  daccord (fortement)  ",
-            "value": "1",
             "is_missing": False,
         },
         "preset": "STANDARD",
@@ -66,12 +64,10 @@ BUILTIN_SEED_CASES: list[dict[str, Any]] = [
         "learning_objective": "NFKD Unicode decomposition ensures reproducible cross-language normalization.",
         "source_resource": {
             "label": "Très satisfait / Straße",
-            "value": "1",
             "is_missing": False,
         },
         "candidate_resource": {
             "label": "Tres satisfait / Strasse",
-            "value": "1",
             "is_missing": False,
         },
         "preset": "STANDARD",
@@ -100,12 +96,10 @@ BUILTIN_SEED_CASES: list[dict[str, Any]] = [
         ),
         "source_resource": {
             "label": "Research & Development / Science & Technology",
-            "value": "RD",
             "is_missing": False,
         },
         "candidate_resource": {
             "label": "<span>Research &amp; Development&nbsp;/ Science &amp; Technology</span>",
-            "value": "RD",
             "is_missing": False,
         },
         "preset": "STANDARD",
@@ -133,12 +127,10 @@ BUILTIN_SEED_CASES: list[dict[str, Any]] = [
         ),
         "source_resource": {
             "label": "Unemployed looking for work",
-            "value": "3",
             "is_missing": False,
         },
         "candidate_resource": {
             "label": "Unemployed loooking for work",
-            "value": "3",
             "is_missing": False,
         },
         "preset": "STANDARD",
@@ -526,7 +518,7 @@ BUILTIN_SEED_CASES: list[dict[str, Any]] = [
             "National statistics offices submit indicator definitions with varying formatting, notation prefixes, "
             "and official descriptions. Conceptual matching reconciles label, notation, and formal definitions."
         ),
-        "learning_objective": "HarmonizedConcept combines label, notation, and definition into a compound fingerprint.",
+        "learning_objective": "Concept combines label, notation, and definition into a compound fingerprint.",
         "source_resource": {
             "preferred_label": "Proportion of population below international poverty line",
             "notation": "SDG_1.1.1",
@@ -554,7 +546,7 @@ BUILTIN_SEED_CASES: list[dict[str, Any]] = [
         "story": (
             "Electronic Health Record (EHR) repositories and epidemiological research datasets classify clinical "
             "diagnoses using different standardized medical vocabularies (e.g., Medical Subject Headings / MeSH "
-            "vs SNOMED CT). HarmonizedConcept compares preferred labels, notation codes, and formal definitions."
+            "vs SNOMED CT). Concept comparison evaluates preferred labels, notation codes, and formal definitions."
         ),
         "learning_objective": (
             "WeightedAttributeComparator balances preferred label, notation code, and formal definition in "
@@ -587,7 +579,7 @@ BUILTIN_SEED_CASES: list[dict[str, Any]] = [
         "story": (
             "Multilateral development organizations publish national accounts statistics with distinct naming "
             "conventions for identical economic concepts (e.g. 'GDP per capita, PPP' vs 'Gross domestic product "
-            "per capita, PPP'). HarmonizedConcept reconciles labels, notation identifiers, and formal definitions."
+            "per capita, PPP'). Concept comparison reconciles labels, notation identifiers, and formal definitions."
         ),
         "learning_objective": (
             "Demonstrates conceptual alignment where definitions are identical but notation schemes differ."

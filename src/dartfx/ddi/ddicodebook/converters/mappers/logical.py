@@ -4,10 +4,10 @@ import urllib.parse
 from typing import TYPE_CHECKING, Any
 
 from ....harmonizer import (
+    Category,
+    Code,
+    CodeList,
     HarmonizationRegistry,
-    HarmonizedCategory,
-    HarmonizedCode,
-    HarmonizedCodeList,
 )
 from ..models import (
     ConvertedCategory,
@@ -99,8 +99,8 @@ def map_variables_and_codes(
     categories: list[ConvertedCategory] = []
 
     # Harmonization registries
-    cat_registry: HarmonizationRegistry[HarmonizedCategory] = HarmonizationRegistry()
-    cl_registry: HarmonizationRegistry[HarmonizedCodeList] = HarmonizationRegistry()
+    cat_registry: HarmonizationRegistry[Category] = HarmonizationRegistry()
+    cl_registry: HarmonizationRegistry[CodeList] = HarmonizationRegistry()
     cat_obj_map: dict[str, ConvertedCategory] = {}
     cl_obj_map: dict[str, ConvertedCodeList] = {}
     seen_cat_ids: set[str] = set()
@@ -202,13 +202,13 @@ def map_variables_and_codes(
             if context.harmonize_codes:
                 # 1. Harmonized Categories
                 cl_codes: list[ConvertedCode] = []
-                harm_codes: list[HarmonizedCode] = []
+                harm_codes: list[Code] = []
 
                 for raw_val, cat_label, cat_desc, is_missing, idx in var_code_entries:
                     raw_val_clean = raw_val.strip()
                     cat_label_clean = cat_label.strip()
 
-                    harm_cat = HarmonizedCategory(
+                    harm_cat = Category(
                         label=cat_label_clean,
                         value=raw_val_clean,
                         description=cat_desc,
@@ -242,7 +242,7 @@ def map_variables_and_codes(
                         cat_obj_map[cat_hash] = cat_obj
                         categories.append(cat_obj)
 
-                    harm_code = HarmonizedCode(value=raw_val, category=canon_cat)
+                    harm_code = Code(value=raw_val, category=canon_cat)
                     harm_codes.append(harm_code)
 
                     code_id = context.make_item_id("code", f"code_{cat_slug}", "codelists")
@@ -258,7 +258,7 @@ def map_variables_and_codes(
                     )
 
                 # 2. Harmonized CodeLists
-                harm_cl = HarmonizedCodeList(
+                harm_cl = CodeList(
                     name=f"CL_{var_name}",
                     label=var_label,
                     codes=harm_codes,

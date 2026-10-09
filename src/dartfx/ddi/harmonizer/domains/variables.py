@@ -20,9 +20,9 @@ from pydantic import BaseModel, ConfigDict, Field
 from ..fingerprinter import ResourceFingerprinter
 from ..identifiers import ResourceIdentifier, parse_identifier
 from ..models import ContentFingerprint
-from .codes import HarmonizedCategory, HarmonizedCode, HarmonizedCodeList
-from .concepts import HarmonizedConcept
-from .questions import HarmonizedQuestion
+from .codes import Category, Code, CodeList
+from .concepts import Concept
+from .questions import Question
 
 # =============================================================================
 # 1. Data Type Vocabularies and Extensible Classifiers
@@ -381,7 +381,7 @@ class ValueDomainKind(StrEnum):
     MIXED = "mixed"
 
 
-class HarmonizedNumericDomain(BaseModel):
+class NumericDomain(BaseModel):
     """Continuous or discrete numeric measurement domain with metrology support."""
 
     model_config = ConfigDict(frozen=True)
@@ -394,7 +394,7 @@ class HarmonizedNumericDomain(BaseModel):
     unit: UnitOfMeasure | str | None = None
 
 
-class HarmonizedTextDomain(BaseModel):
+class TextDomain(BaseModel):
     """Textual representation bounds and constraints."""
 
     model_config = ConfigDict(frozen=True)
@@ -404,15 +404,15 @@ class HarmonizedTextDomain(BaseModel):
     pattern: str | None = None
 
 
-class HarmonizedValueDomain(BaseModel):
+class ValueDomain(BaseModel):
     """Encapsulates the representation and measurement domain of a variable."""
 
     model_config = ConfigDict(frozen=True)
 
     kind: ValueDomainKind = ValueDomainKind.TEXT
-    codelist: HarmonizedCodeList | None = None
-    numeric_domain: HarmonizedNumericDomain | None = None
-    text_domain: HarmonizedTextDomain | None = None
+    codelist: CodeList | None = None
+    numeric_domain: NumericDomain | None = None
+    text_domain: TextDomain | None = None
 
     @property
     def domain_digest(self) -> str:
@@ -433,7 +433,7 @@ class HarmonizedValueDomain(BaseModel):
         return fp.fingerprint_atomic(str(self.kind)).digest
 
 
-class HarmonizedUniverse(BaseModel):
+class Universe(BaseModel):
     """Target population or universe scope for the variable."""
 
     model_config = ConfigDict(frozen=True)
@@ -444,11 +444,11 @@ class HarmonizedUniverse(BaseModel):
 
 
 # =============================================================================
-# 4. The HarmonizedVariable Domain Model
+# 4. The Variable Domain Model
 # =============================================================================
 
 
-class HarmonizedVariable(BaseModel):
+class Variable(BaseModel):
     """Universal, compound variable representation supporting both casual and GSIM/DDI use cases."""
 
     model_config = ConfigDict(frozen=True)
@@ -466,23 +466,23 @@ class HarmonizedVariable(BaseModel):
     )
 
     # 2. Associated Value Domain (CodeList, Numeric, Text)
-    value_domain: HarmonizedValueDomain | None = Field(
+    value_domain: ValueDomain | None = Field(
         default=None,
         description="Value domain (categorical CodeList, continuous numeric range, or text format)",
     )
 
     # 3. Associated Survey Instrument & Question Construct
-    question: HarmonizedQuestion | None = Field(
+    question: Question | None = Field(
         default=None,
         description="Attached survey question item, prompt literal, and interviewer instructions",
     )
 
     # 4. Associated Conceptual Resources (GSIM / DDI-CDI / ISO 11179)
-    concept: HarmonizedConcept | None = Field(
+    concept: Concept | None = Field(
         default=None,
         description="Underlying conceptual construct or statistical classification concept",
     )
-    universe: HarmonizedUniverse | None = Field(
+    universe: Universe | None = Field(
         default=None,
         description="Target population universe scope",
     )
@@ -557,8 +557,8 @@ class HarmonizedVariable(BaseModel):
     # =========================================================================
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> HarmonizedVariable:
-        """Instantiates HarmonizedVariable from a simple Python dictionary."""
+    def from_dict(cls, data: dict[str, Any]) -> Variable:
+        """Instantiates Variable from a simple Python dictionary."""
         name = data.get("name", "unnamed_var")
         label = data.get("label", data.get("title", name))
         desc = data.get("description")
@@ -576,47 +576,47 @@ class HarmonizedVariable(BaseModel):
             dtype = DataType.from_python(raw_type)
 
         # Value domain resolution
-        vdomain: HarmonizedValueDomain | None = None
+        vdomain: ValueDomain | None = None
         if "value_domain" in data:
             vd_raw = data["value_domain"]
-            if isinstance(vd_raw, HarmonizedValueDomain):
+            if isinstance(vd_raw, ValueDomain):
                 vdomain = vd_raw
             elif isinstance(vd_raw, dict):
                 if "codes" in vd_raw or "categories" in vd_raw:
                     raw_codes = vd_raw.get("codes") or vd_raw.get("categories") or []
                     code_items = []
                     for c in raw_codes:
-                        if isinstance(c, HarmonizedCode):
+                        if isinstance(c, Code):
                             code_items.append(c)
                         elif isinstance(c, dict):
                             val = str(c.get("value", ""))
                             lbl = str(c.get("label", val))
                             is_m = bool(c.get("is_missing", False))
                             st = c.get("sentinel_type")
-                            cat = HarmonizedCategory(label=lbl, is_missing=is_m, sentinel_type=st)
+                            cat = Category(label=lbl, is_missing=is_m, sentinel_type=st)
                             code_items.append(
-                                HarmonizedCode(
+                                Code(
                                     value=val,
                                     category=cat,
                                     is_missing_override=is_m,
                                     sentinel_type_override=st,
                                 )
                             )
-                    cl = HarmonizedCodeList(name=vd_raw.get("name", f"CL_{name}"), codes=code_items)
-                    vdomain = HarmonizedValueDomain(kind=ValueDomainKind.ENUMERATED, codelist=cl)
+                    cl = CodeList(name=vd_raw.get("name", f"CL_{name}"), codes=code_items)
+                    vdomain = ValueDomain(kind=ValueDomainKind.ENUMERATED, codelist=cl)
                 elif "numeric_domain" in vd_raw or "min_value" in vd_raw:
                     num_raw = vd_raw.get("numeric_domain", vd_raw)
                     qk_raw = num_raw.get("quantity_kind", data.get("quantity_kind"))
                     qk = QuantityKind.from_name(qk_raw) if qk_raw else None
                     u_raw = num_raw.get("unit", data.get("unit"))
                     uom = UnitOfMeasure.from_symbol(u_raw, quantity_kind=qk) if u_raw else None
-                    num_dom = HarmonizedNumericDomain(
+                    num_dom = NumericDomain(
                         min_value=num_raw.get("min_value", num_raw.get("min")),
                         max_value=num_raw.get("max_value", num_raw.get("max")),
                         quantity_kind=qk,
                         unit=uom,
                     )
-                    vdomain = HarmonizedValueDomain(kind=ValueDomainKind.CONTINUOUS_NUMERIC, numeric_domain=num_dom)
+                    vdomain = ValueDomain(kind=ValueDomainKind.CONTINUOUS_NUMERIC, numeric_domain=num_dom)
         elif "numeric_domain" in data:
             num_raw = data["numeric_domain"]
             qk_raw = (
@@ -637,13 +637,13 @@ class HarmonizedVariable(BaseModel):
                 if isinstance(num_raw, dict)
                 else getattr(num_raw, "max_value", None)
             )
-            num_dom = HarmonizedNumericDomain(
+            num_dom = NumericDomain(
                 min_value=min_v,
                 max_value=max_v,
                 quantity_kind=qk,
                 unit=uom,
             )
-            vdomain = HarmonizedValueDomain(kind=ValueDomainKind.CONTINUOUS_NUMERIC, numeric_domain=num_dom)
+            vdomain = ValueDomain(kind=ValueDomainKind.CONTINUOUS_NUMERIC, numeric_domain=num_dom)
         elif "categories" in data or "codes" in data or "value_labels" in data:
             val_labels = data.get("value_labels", data.get("categories", data.get("codes", {})))
             missings = set(data.get("missing_values", []))
@@ -652,29 +652,29 @@ class HarmonizedVariable(BaseModel):
                 for val, lbl in val_labels.items():
                     val_str = str(val)
                     is_miss = val in missings or val_str in missings
-                    cat = HarmonizedCategory(label=str(lbl), is_missing=is_miss)
-                    code_items.append(HarmonizedCode(value=val_str, category=cat))
+                    cat = Category(label=str(lbl), is_missing=is_miss)
+                    code_items.append(Code(value=val_str, category=cat))
             elif isinstance(val_labels, list):
                 for item in val_labels:
-                    if isinstance(item, HarmonizedCode):
+                    if isinstance(item, Code):
                         code_items.append(item)
                     elif isinstance(item, (tuple, list)) and len(item) >= 2:
                         val_str = str(item[0])
-                        cat = HarmonizedCategory(label=str(item[1]), is_missing=item[0] in missings)
-                        code_items.append(HarmonizedCode(value=val_str, category=cat))
+                        cat = Category(label=str(item[1]), is_missing=item[0] in missings)
+                        code_items.append(Code(value=val_str, category=cat))
                     else:
                         val_str = str(item)
-                        cat = HarmonizedCategory(label=val_str)
-                        code_items.append(HarmonizedCode(value=val_str, category=cat))
+                        cat = Category(label=val_str)
+                        code_items.append(Code(value=val_str, category=cat))
 
-            cl = HarmonizedCodeList(name=f"CL_{name}", codes=code_items)
-            vdomain = HarmonizedValueDomain(kind=ValueDomainKind.ENUMERATED, codelist=cl)
+            cl = CodeList(name=f"CL_{name}", codes=code_items)
+            vdomain = ValueDomain(kind=ValueDomainKind.ENUMERATED, codelist=cl)
             if dtype.canonical_kind == CanonicalDataType.UNKNOWN:
                 dtype = DataType(name="categorical", canonical_kind=CanonicalDataType.CATEGORICAL)
         elif "min" in data or "max" in data or "unit" in data or "quantity_kind" in data:
             qk = QuantityKind.from_name(data["quantity_kind"]) if "quantity_kind" in data else None
             uom = UnitOfMeasure.from_symbol(data["unit"], quantity_kind=qk) if "unit" in data else None
-            num_dom = HarmonizedNumericDomain(
+            num_dom = NumericDomain(
                 min_value=data.get("min", data.get("min_value")),
                 max_value=data.get("max", data.get("max_value")),
                 step=data.get("step"),
@@ -682,18 +682,18 @@ class HarmonizedVariable(BaseModel):
                 quantity_kind=qk,
                 unit=uom,
             )
-            vdomain = HarmonizedValueDomain(kind=ValueDomainKind.CONTINUOUS_NUMERIC, numeric_domain=num_dom)
+            vdomain = ValueDomain(kind=ValueDomainKind.CONTINUOUS_NUMERIC, numeric_domain=num_dom)
 
         # Question resolution
-        q: HarmonizedQuestion | None = None
+        q: Question | None = None
         if "question" in data:
             q_val = data["question"]
-            if isinstance(q_val, HarmonizedQuestion):
+            if isinstance(q_val, Question):
                 q = q_val
             elif isinstance(q_val, dict):
-                q = HarmonizedQuestion(**q_val)
+                q = Question(**q_val)
             elif isinstance(q_val, str):
-                q = HarmonizedQuestion(question_text=q_val)
+                q = Question(question_text=q_val)
 
         return cls(
             name=str(name),
@@ -713,22 +713,20 @@ class HarmonizedVariable(BaseModel):
         name: str = "property",
         quantity_kind: str | QuantityKind | None = None,
         unit: str | UnitOfMeasure | None = None,
-    ) -> HarmonizedVariable:
-        """Instantiates HarmonizedVariable from a JSON Schema property definition."""
+    ) -> Variable:
+        """Instantiates Variable from a JSON Schema property definition."""
         label = schema.get("title", name)
         desc = schema.get("description")
         j_type = schema.get("type", "string")
         j_format = schema.get("format")
         dtype = DataType.from_json_schema(j_type, format_str=j_format)
 
-        vdomain: HarmonizedValueDomain | None = None
+        vdomain: ValueDomain | None = None
         if "enum" in schema:
             enum_vals = schema["enum"]
-            codes = [
-                HarmonizedCode(value=str(v), category=HarmonizedCategory(label=str(v), value=str(v))) for v in enum_vals
-            ]
-            cl = HarmonizedCodeList(name=f"CL_{name}", codes=codes)
-            vdomain = HarmonizedValueDomain(kind=ValueDomainKind.ENUMERATED, codelist=cl)
+            codes = [Code(value=str(v), category=Category(label=str(v), value=str(v))) for v in enum_vals]
+            cl = CodeList(name=f"CL_{name}", codes=codes)
+            vdomain = ValueDomain(kind=ValueDomainKind.ENUMERATED, codelist=cl)
             dtype = DataType(
                 name="categorical",
                 vocabulary=DataTypeVocabulary.JSON_SCHEMA,
@@ -737,21 +735,21 @@ class HarmonizedVariable(BaseModel):
         elif "minimum" in schema or "maximum" in schema or quantity_kind is not None or unit is not None:
             qk = QuantityKind.from_name(quantity_kind) if isinstance(quantity_kind, str) else quantity_kind
             uom = UnitOfMeasure.from_symbol(unit, quantity_kind=qk) if isinstance(unit, str) else unit
-            num_dom = HarmonizedNumericDomain(
+            num_dom = NumericDomain(
                 min_value=schema.get("minimum", schema.get("exclusiveMinimum")),
                 max_value=schema.get("maximum", schema.get("exclusiveMaximum")),
                 step=schema.get("multipleOf"),
                 quantity_kind=qk,
                 unit=uom,
             )
-            vdomain = HarmonizedValueDomain(kind=ValueDomainKind.CONTINUOUS_NUMERIC, numeric_domain=num_dom)
+            vdomain = ValueDomain(kind=ValueDomainKind.CONTINUOUS_NUMERIC, numeric_domain=num_dom)
         elif "pattern" in schema or "maxLength" in schema or "minLength" in schema:
-            txt_dom = HarmonizedTextDomain(
+            txt_dom = TextDomain(
                 min_length=schema.get("minLength"),
                 max_length=schema.get("maxLength"),
                 pattern=schema.get("pattern"),
             )
-            vdomain = HarmonizedValueDomain(kind=ValueDomainKind.TEXT, text_domain=txt_dom)
+            vdomain = ValueDomain(kind=ValueDomainKind.TEXT, text_domain=txt_dom)
 
         return cls(
             name=name,
@@ -762,10 +760,10 @@ class HarmonizedVariable(BaseModel):
         )
 
     @classmethod
-    def from_json_schema_document(cls, doc: dict[str, Any]) -> list[HarmonizedVariable]:
+    def from_json_schema_document(cls, doc: dict[str, Any]) -> list[Variable]:
         """Extracts all variables defined under 'properties' in a root JSON Schema document."""
         props = doc.get("properties", {})
-        variables: list[HarmonizedVariable] = []
+        variables: list[Variable] = []
         for prop_name, prop_schema in props.items():
             if isinstance(prop_schema, dict):
                 variables.append(cls.from_json_schema(prop_schema, name=prop_name))
@@ -780,8 +778,8 @@ class HarmonizedVariable(BaseModel):
         missing_values: list[Any] | None = None,
         quantity_kind: str | QuantityKind | None = None,
         unit: str | UnitOfMeasure | None = None,
-    ) -> HarmonizedVariable:
-        """Instantiates HarmonizedVariable from a Polars or Pandas Series with optional value labels."""
+    ) -> Variable:
+        """Instantiates Variable from a Polars or Pandas Series with optional value labels."""
         name = getattr(series, "name", "series_var") or "series_var"
         var_label = label or name
 
@@ -811,8 +809,8 @@ class HarmonizedVariable(BaseModel):
         )
 
     @classmethod
-    def from_ddi_codebook(cls, var: Any) -> HarmonizedVariable:
-        """Instantiates HarmonizedVariable from a DDI-Codebook 2.6 varType instance or XML dictionary."""
+    def from_ddi_codebook(cls, var: Any) -> Variable:
+        """Instantiates Variable from a DDI-Codebook 2.6 varType instance or XML dictionary."""
         name = getattr(var, "name", None) or getattr(var, "ID", "unnamed_var")
 
         # Label
@@ -831,11 +829,11 @@ class HarmonizedVariable(BaseModel):
 
         # Value domain / Categories
         cat_list = getattr(var, "catgry", []) or []
-        vdomain: HarmonizedValueDomain | None = None
+        vdomain: ValueDomain | None = None
         dtype: DataType | None = None
 
         if cat_list:
-            code_items: list[HarmonizedCode] = []
+            code_items: list[Code] = []
             for cat in cat_list:
                 cat_val = ""
                 if hasattr(cat, "catValu") and cat.catValu:
@@ -852,15 +850,15 @@ class HarmonizedVariable(BaseModel):
                 is_miss = bool(getattr(cat, "is_missing", False) or str(getattr(cat, "missing", "")).upper() == "Y")
                 miss_type = getattr(cat, "missType", None)
 
-                cat_obj = HarmonizedCategory(
+                cat_obj = Category(
                     label=str(cat_lbl).strip(),
                     is_missing=is_miss,
                     sentinel_type=miss_type,
                 )
-                code_items.append(HarmonizedCode(value=str(cat_val).strip(), category=cat_obj))
+                code_items.append(Code(value=str(cat_val).strip(), category=cat_obj))
 
-            cl = HarmonizedCodeList(name=f"CL_{name}", codes=code_items)
-            vdomain = HarmonizedValueDomain(kind=ValueDomainKind.ENUMERATED, codelist=cl)
+            cl = CodeList(name=f"CL_{name}", codes=code_items)
+            vdomain = ValueDomain(kind=ValueDomainKind.ENUMERATED, codelist=cl)
             dtype = DataType(
                 name="categorical",
                 vocabulary=DataTypeVocabulary.DDI_CV,
@@ -890,8 +888,8 @@ class HarmonizedVariable(BaseModel):
                 min_f, max_f = None, None
 
             uom = UnitOfMeasure.from_symbol(u_str) if u_str else None
-            num_dom = HarmonizedNumericDomain(min_value=min_f, max_value=max_f, unit=uom)
-            vdomain = HarmonizedValueDomain(kind=ValueDomainKind.CONTINUOUS_NUMERIC, numeric_domain=num_dom)
+            num_dom = NumericDomain(min_value=min_f, max_value=max_f, unit=uom)
+            vdomain = ValueDomain(kind=ValueDomainKind.CONTINUOUS_NUMERIC, numeric_domain=num_dom)
 
         # Data Type fallback
         if dtype is None:
@@ -917,7 +915,7 @@ class HarmonizedVariable(BaseModel):
 
         # Question construct
         qstn_list = getattr(var, "qstn", []) or []
-        question_obj: HarmonizedQuestion | None = None
+        question_obj: Question | None = None
         if qstn_list:
             q = qstn_list[0]
             q_lit = getattr(q, "qstnLit", None)
@@ -933,7 +931,7 @@ class HarmonizedVariable(BaseModel):
             post_text = getattr(post, "content", None) or getattr(post, "value", None) or (str(post) if post else None)
 
             if q_text or ivu_text or pre_text or post_text:
-                question_obj = HarmonizedQuestion(
+                question_obj = Question(
                     question_text=str(q_text) if q_text else "Question prompt",
                     instructions=str(ivu_text) if ivu_text else None,
                     pre_question_text=str(pre_text) if pre_text else None,
@@ -942,21 +940,21 @@ class HarmonizedVariable(BaseModel):
 
         # Concept
         concept_list = getattr(var, "concept", []) or []
-        concept_obj: HarmonizedConcept | None = None
+        concept_obj: Concept | None = None
         if concept_list:
             c = concept_list[0]
             c_label = getattr(c, "content", None) or getattr(c, "value", None) or str(c)
             if c_label:
-                concept_obj = HarmonizedConcept(preferred_label=str(c_label))
+                concept_obj = Concept(preferred_label=str(c_label))
 
         # Universe
         univ_list = getattr(var, "universe", []) or []
-        univ_obj: HarmonizedUniverse | None = None
+        univ_obj: Universe | None = None
         if univ_list:
             u = univ_list[0]
             u_name = getattr(u, "content", None) or getattr(u, "value", None) or str(u)
             if u_name:
-                univ_obj = HarmonizedUniverse(name=str(u_name))
+                univ_obj = Universe(name=str(u_name))
 
         return cls(
             name=str(name),
@@ -971,8 +969,8 @@ class HarmonizedVariable(BaseModel):
         )
 
     @classmethod
-    def from_ddi_lifecycle(cls, var: Any) -> HarmonizedVariable:
-        """Instantiates HarmonizedVariable from a DDI-Lifecycle 3.3 / DDI 4.0 Variable model."""
+    def from_ddi_lifecycle(cls, var: Any) -> Variable:
+        """Instantiates Variable from a DDI-Lifecycle 3.3 / DDI 4.0 Variable model."""
         # Variable name
         var_names = getattr(var, "variable_name", []) or []
         name = "ddil_var"
@@ -998,30 +996,30 @@ class HarmonizedVariable(BaseModel):
 
         # Question
         questions = getattr(var, "question_reference", []) or []
-        question_obj: HarmonizedQuestion | None = None
+        question_obj: Question | None = None
         if questions:
             q_ref = questions[0]
             q_text = getattr(q_ref, "question_text", None) or getattr(q_ref, "name", None) or str(q_ref)
-            question_obj = HarmonizedQuestion(question_text=str(q_text))
+            question_obj = Question(question_text=str(q_text))
 
         # Concept
         concepts = getattr(var, "concept_reference", []) or []
-        concept_obj: HarmonizedConcept | None = None
+        concept_obj: Concept | None = None
         if concepts:
             c_ref = concepts[0]
             c_lbl = getattr(c_ref, "name", None) or getattr(c_ref, "label", None) or str(c_ref)
-            concept_obj = HarmonizedConcept(preferred_label=str(c_lbl))
+            concept_obj = Concept(preferred_label=str(c_lbl))
 
         # Universe
         universes = getattr(var, "universe_reference", []) or []
-        univ_obj: HarmonizedUniverse | None = None
+        univ_obj: Universe | None = None
         if universes:
             u_ref = universes[0]
             u_name = getattr(u_ref, "name", None) or getattr(u_ref, "description", None) or str(u_ref)
-            univ_obj = HarmonizedUniverse(name=str(u_name))
+            univ_obj = Universe(name=str(u_name))
 
         # Value domain
-        vdomain: HarmonizedValueDomain | None = None
+        vdomain: ValueDomain | None = None
         dtype = DataType(name="unknown", vocabulary=DataTypeVocabulary.DDI_CV, canonical_kind=CanonicalDataType.UNKNOWN)
 
         return cls(
@@ -1037,8 +1035,8 @@ class HarmonizedVariable(BaseModel):
         )
 
     @classmethod
-    def from_ddi_cdi(cls, var: Any, _dataset: Any = None) -> HarmonizedVariable:
-        """Instantiates HarmonizedVariable from a DDI-CDI InstanceVariable or RepresentedVariable."""
+    def from_ddi_cdi(cls, var: Any, _dataset: Any = None) -> Variable:
+        """Instantiates Variable from a DDI-CDI InstanceVariable or RepresentedVariable."""
         target = getattr(var, "resource", var)
 
         name = getattr(target, "name", None) or getattr(target, "display_label", "cdi_var") or "cdi_var"
@@ -1054,21 +1052,21 @@ class HarmonizedVariable(BaseModel):
                 dtype = DataType.from_ddi_cv(str(dt_name))
 
         # Concept & Universe
-        concept_obj: HarmonizedConcept | None = None
+        concept_obj: Concept | None = None
         concepts = getattr(target, "takes_concepts_from", None) or getattr(target, "concept", None)
         if concepts:
             c_first = concepts[0] if isinstance(concepts, list) else concepts
             c_res = getattr(c_first, "resource", c_first)
             c_lbl = getattr(c_res, "name", None) or getattr(c_res, "prefLabel", str(c_res))
-            concept_obj = HarmonizedConcept(preferred_label=str(c_lbl))
+            concept_obj = Concept(preferred_label=str(c_lbl))
 
-        univ_obj: HarmonizedUniverse | None = None
+        univ_obj: Universe | None = None
         universes = getattr(target, "takes_universe_from", None) or getattr(target, "universe", None)
         if universes:
             u_first = universes[0] if isinstance(universes, list) else universes
             u_res = getattr(u_first, "resource", u_first)
             u_name = getattr(u_res, "name", None) or getattr(u_res, "definition", str(u_res))
-            univ_obj = HarmonizedUniverse(name=str(u_name))
+            univ_obj = Universe(name=str(u_name))
 
         urn_val = getattr(target, "identifier", None) or getattr(target, "id", None) or getattr(target, "uri", None)
 

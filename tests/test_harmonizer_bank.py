@@ -8,22 +8,22 @@ import pytest
 
 from dartfx.ddi.harmonizer import (
     CaseBankLoader,
+    Category,
+    Code,
+    CodeList,
+    Concept,
     ExactComparator,
     HarmonizationRegistry,
-    HarmonizedCategory,
-    HarmonizedCode,
-    HarmonizedCodeList,
-    HarmonizedConcept,
-    HarmonizedQuestion,
-    HarmonizedVariable,
     HarmonizerTestCase,
     LevenshteinComparator,
     MatchType,
+    Question,
     SanitizerConfig,
     SemanticVectorComparator,
     SequenceMatcherComparator,
     TextNormalizer,
     TextSanitizer,
+    Variable,
     WeightedAttributeComparator,
     compare_variables,
 )
@@ -58,16 +58,16 @@ def test_harmonizer_use_case_from_bank(case: HarmonizerTestCase):
 
     # 2. Domain-specific execution
     if case.domain == "categorical":
-        reg: HarmonizationRegistry[HarmonizedCategory] = HarmonizationRegistry(
+        reg: HarmonizationRegistry[Category] = HarmonizationRegistry(
             comparator=comparator,
         )
-        cat_src = HarmonizedCategory(
+        cat_src = Category(
             label=case.source_resource["label"],
             value=str(case.source_resource.get("value", "")),
             is_missing=bool(case.source_resource.get("is_missing", False)),
             urn=case.source_resource.get("urn"),
         )
-        cat_cand = HarmonizedCategory(
+        cat_cand = Category(
             label=case.candidate_resource["label"],
             value=str(case.candidate_resource.get("value", "")),
             is_missing=bool(case.candidate_resource.get("is_missing", False)),
@@ -78,13 +78,13 @@ def test_harmonizer_use_case_from_bank(case: HarmonizerTestCase):
         match = reg.match(cat_cand, threshold=case.comparator_threshold)
 
     elif case.domain == "enumerated_list":
-        reg_cl: HarmonizationRegistry[HarmonizedCodeList] = HarmonizationRegistry(
+        reg_cl: HarmonizationRegistry[CodeList] = HarmonizationRegistry(
             comparator=comparator,
         )
         codes_src = [
-            HarmonizedCode(
+            Code(
                 value=str(c["value"]),
-                category=HarmonizedCategory(
+                category=Category(
                     label=c["label"],
                     value=str(c.get("category_value", "")),
                     is_missing=bool(c.get("is_missing", False)),
@@ -98,9 +98,9 @@ def test_harmonizer_use_case_from_bank(case: HarmonizerTestCase):
             for c in case.source_resource["codes"]
         ]
         codes_cand = [
-            HarmonizedCode(
+            Code(
                 value=str(c["value"]),
-                category=HarmonizedCategory(
+                category=Category(
                     label=c["label"],
                     value=str(c.get("category_value", "")),
                     is_missing=bool(c.get("is_missing", False)),
@@ -114,12 +114,12 @@ def test_harmonizer_use_case_from_bank(case: HarmonizerTestCase):
             for c in case.candidate_resource["codes"]
         ]
 
-        cl_src = HarmonizedCodeList(
+        cl_src = CodeList(
             name=case.source_resource["name"],
             codes=codes_src,
             urn=case.source_resource.get("urn"),
         )
-        cl_cand = HarmonizedCodeList(
+        cl_cand = CodeList(
             name=case.candidate_resource["name"],
             codes=codes_cand,
             urn=case.candidate_resource.get("urn"),
@@ -129,8 +129,8 @@ def test_harmonizer_use_case_from_bank(case: HarmonizerTestCase):
         match = reg_cl.match(cl_cand, threshold=case.comparator_threshold)
 
     elif case.domain == "question":
-        q_src = HarmonizedQuestion(**case.source_resource)
-        q_cand = HarmonizedQuestion(**case.candidate_resource)
+        q_src = Question(**case.source_resource)
+        q_cand = Question(**case.candidate_resource)
         assert q_src.question_text
         assert q_cand.question_text
 
@@ -146,7 +146,7 @@ def test_harmonizer_use_case_from_bank(case: HarmonizerTestCase):
             match_threshold=case.comparator_threshold,
         )
         if case.source_resource.get("urn") and case.source_resource.get("urn") == case.candidate_resource.get("urn"):
-            reg_q: HarmonizationRegistry[HarmonizedQuestion] = HarmonizationRegistry(
+            reg_q: HarmonizationRegistry[Question] = HarmonizationRegistry(
                 comparator=comparator,
             )
             reg_q.register(q_src)
@@ -171,8 +171,8 @@ def test_harmonizer_use_case_from_bank(case: HarmonizerTestCase):
             )()
 
     elif case.domain == "conceptual":
-        c_src = HarmonizedConcept(**case.source_resource)
-        c_cand = HarmonizedConcept(**case.candidate_resource)
+        c_src = Concept(**case.source_resource)
+        c_cand = Concept(**case.candidate_resource)
         assert c_src.preferred_label
         assert c_cand.preferred_label
 
@@ -182,7 +182,7 @@ def test_harmonizer_use_case_from_bank(case: HarmonizerTestCase):
             match_threshold=case.comparator_threshold,
         )
         if case.source_resource.get("urn") and case.source_resource.get("urn") == case.candidate_resource.get("urn"):
-            reg_c: HarmonizationRegistry[HarmonizedConcept] = HarmonizationRegistry(
+            reg_c: HarmonizationRegistry[Concept] = HarmonizationRegistry(
                 comparator=comparator,
             )
             reg_c.register(c_src)
@@ -202,8 +202,8 @@ def test_harmonizer_use_case_from_bank(case: HarmonizerTestCase):
                 },
             )()
     elif case.domain == "variable":
-        v_src = HarmonizedVariable.from_dict(case.source_resource)
-        v_cand = HarmonizedVariable.from_dict(case.candidate_resource)
+        v_src = Variable.from_dict(case.source_resource)
+        v_cand = Variable.from_dict(case.candidate_resource)
         comp_res = compare_variables(v_src, v_cand, threshold=case.comparator_threshold)
         match = type(
             "VariableMatchResult",

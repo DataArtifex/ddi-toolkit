@@ -4,19 +4,20 @@ from __future__ import annotations
 
 from dartfx.ddi.harmonizer import (
     AgentDecision,
+    Category,
+    Code,
+    CodeList,
+    Concept,
     CuratedCrosswalk,
+    DataType,
     ExactComparator,
     HarmonizationRegistry,
-    HarmonizedCategory,
-    HarmonizedCode,
-    HarmonizedCodeList,
-    HarmonizedConcept,
-    HarmonizedQuestion,
     HumanReviewQueue,
     IdentifierKind,
     LevenshteinComparator,
     MatchType,
     NormalizationPreset,
+    Question,
     QuestionComparator,
     ResourceFingerprinter,
     RuleBasedMockAgentComparator,
@@ -27,10 +28,13 @@ from dartfx.ddi.harmonizer import (
     TextNormalizer,
     TextSanitizer,
     TokenJaccardComparator,
+    ValueDomain,
+    Variable,
     WeightedAttributeComparator,
     compare_codelists,
     compare_questions,
     compare_resources,
+    compare_variables,
     parse_identifier,
 )
 
@@ -244,12 +248,12 @@ def test_weighted_attribute_comparator():
 # =============================================================================
 
 
-def test_harmonized_category_and_code():
-    cat1 = HarmonizedCategory(label="Strongly Agree", value="1", is_missing=False)
+def test_category_and_code():
+    cat1 = Category(label="Strongly Agree", value="1", is_missing=False)
     assert cat1.signature == "val=1|label=Strongly Agree|missing=False"
     assert len(cat1.category_hash) == 16
 
-    code1 = HarmonizedCode(value="1", category=cat1)
+    code1 = Code(value="1", category=cat1)
     assert code1.code == "1"
     assert code1.value_label == "1: Strongly Agree"
     assert code1.signature == "1=Strongly Agree"
@@ -259,12 +263,12 @@ def test_harmonized_category_and_code():
     assert len(code1.fingerprint.digest) == 16
 
 
-def test_harmonized_codelist():
-    c1 = HarmonizedCode(value="1", category=HarmonizedCategory(label="Yes", value="1"))
-    c2 = HarmonizedCode(value="2", category=HarmonizedCategory(label="No", value="2"))
+def test_codelist():
+    c1 = Code(value="1", category=Category(label="Yes", value="1"))
+    c2 = Code(value="2", category=Category(label="No", value="2"))
 
-    cl1 = HarmonizedCodeList(name="CL_YESNO", codes=[c1, c2])
-    cl2 = HarmonizedCodeList(name="CL_NOYES", codes=[c2, c1])
+    cl1 = CodeList(name="CL_YESNO", codes=[c1, c2])
+    cl2 = CodeList(name="CL_NOYES", codes=[c2, c1])
 
     assert cl1.member_count == 2
     assert cl1.signature == "1=Yes;2=No"
@@ -283,8 +287,8 @@ def test_harmonized_codelist():
     assert "value_set" in cl1.fingerprint.component_digests
 
 
-def test_harmonized_question():
-    q = HarmonizedQuestion(
+def test_question():
+    q = Question(
         pre_question_text="Thinking about the last 12 months:",
         question_text="Did you visit a physician?",
         post_question_text="Thank you.",
@@ -300,8 +304,8 @@ def test_harmonized_question():
     assert "intent" in fp.component_digests
 
 
-def test_harmonized_concept():
-    concept = HarmonizedConcept(
+def test_concept():
+    concept = Concept(
         preferred_label="Gross Domestic Product",
         definition="Monetary measure of market value of goods produced",
         notation="GDP",
@@ -317,11 +321,11 @@ def test_harmonized_concept():
 
 
 def test_registry_category_deduplication():
-    reg: HarmonizationRegistry[HarmonizedCategory] = HarmonizationRegistry()
+    reg: HarmonizationRegistry[Category] = HarmonizationRegistry()
 
-    cat1 = HarmonizedCategory(label="Female", value="2", is_missing=False)
-    cat2 = HarmonizedCategory(label="Female", value="2", is_missing=False)
-    cat3 = HarmonizedCategory(label="Male", value="1", is_missing=False)
+    cat1 = Category(label="Female", value="2", is_missing=False)
+    cat2 = Category(label="Female", value="2", is_missing=False)
+    cat3 = Category(label="Male", value="1", is_missing=False)
 
     canon1, match1 = reg.register(cat1)
     assert match1.matched
@@ -339,13 +343,13 @@ def test_registry_category_deduplication():
 
 
 def test_registry_codelist_permutation():
-    reg: HarmonizationRegistry[HarmonizedCodeList] = HarmonizationRegistry()
+    reg: HarmonizationRegistry[CodeList] = HarmonizationRegistry()
 
-    c_yes = HarmonizedCode(value="1", category=HarmonizedCategory(label="Yes", value="1"))
-    c_no = HarmonizedCode(value="2", category=HarmonizedCategory(label="No", value="2"))
+    c_yes = Code(value="1", category=Category(label="Yes", value="1"))
+    c_no = Code(value="2", category=Category(label="No", value="2"))
 
-    cl_ordered = HarmonizedCodeList(name="CL_1", codes=[c_yes, c_no])
-    cl_permuted = HarmonizedCodeList(name="CL_2", codes=[c_no, c_yes])
+    cl_ordered = CodeList(name="CL_1", codes=[c_yes, c_no])
+    cl_permuted = CodeList(name="CL_2", codes=[c_no, c_yes])
 
     reg.register(cl_ordered)
     assert len(reg) == 1
@@ -361,13 +365,13 @@ def test_registry_curated_crosswalk():
     crosswalk = CuratedCrosswalk(
         explicit_mappings={"cand_hash_99": "canon_hash_1"},
     )
-    reg: HarmonizationRegistry[HarmonizedCategory] = HarmonizationRegistry(curated_crosswalk=crosswalk)
+    reg: HarmonizationRegistry[Category] = HarmonizationRegistry(curated_crosswalk=crosswalk)
 
-    cat_canon = HarmonizedCategory(label="Unknown", value="99")
+    cat_canon = Category(label="Unknown", value="99")
     reg._by_digest["canon_hash_1"] = cat_canon
     reg._canonical_list.append(cat_canon)
 
-    cat_cand = HarmonizedCategory(label="Don't Know", value="88")
+    cat_cand = Category(label="Don't Know", value="88")
     reg.curated_crosswalk.explicit_mappings[cat_cand.fingerprint.digest] = "canon_hash_1"
     match = reg.match(cat_cand)
     assert match.matched is True
@@ -376,16 +380,16 @@ def test_registry_curated_crosswalk():
 
 def test_registry_review_queue():
     queue = HumanReviewQueue(borderline_range=(0.70, 0.90))
-    reg: HarmonizationRegistry[HarmonizedCategory] = HarmonizationRegistry(
+    reg: HarmonizationRegistry[Category] = HarmonizationRegistry(
         comparator=SequenceMatcherComparator(),
         review_queue=queue,
     )
 
-    cat1 = HarmonizedCategory(label="Strongly Agree", value="1")
+    cat1 = Category(label="Strongly Agree", value="1")
     reg.register(cat1)
 
     # Slightly similar candidate below threshold 0.95
-    cat_cand = HarmonizedCategory(label="Somewhat Agree", value="1")
+    cat_cand = Category(label="Somewhat Agree", value="1")
     match = reg.match(cat_cand, threshold=0.95)
     assert not match.matched
     # Should have been added to the review queue
@@ -394,11 +398,11 @@ def test_registry_review_queue():
 
 
 def test_sentinel_types_and_flags():
-    cat_subst = HarmonizedCategory(label="Employed full-time", value="1", is_missing=False)
+    cat_subst = Category(label="Employed full-time", value="1", is_missing=False)
     assert cat_subst.is_substantive is True
     assert cat_subst.sentinel_type is None
 
-    cat_sentinel = HarmonizedCategory(
+    cat_sentinel = Category(
         label="Refused / No Answer",
         value="99",
         is_missing=True,
@@ -410,7 +414,7 @@ def test_sentinel_types_and_flags():
     assert cat_sentinel.sentinel_type == SentinelType.REFUSED
     assert cat_sentinel.flags["obs_status"] == "M"
 
-    code_item = HarmonizedCode(
+    code_item = Code(
         value="99",
         category=cat_sentinel,
         flags={"user_missing": True},
@@ -420,31 +424,25 @@ def test_sentinel_types_and_flags():
     assert code_item.flags["user_missing"] is True
 
     # Test TOP_CODED and BOTTOM_CODED semi-missing / threshold sentinels
-    cat_top = HarmonizedCategory(
-        label="90 years or older", value="90", is_missing=True, sentinel_type=SentinelType.TOP_CODED
-    )
-    cat_bottom = HarmonizedCategory(
-        label="Under 18 years", value="0", is_missing=True, sentinel_type=SentinelType.BOTTOM_CODED
-    )
+    cat_top = Category(label="90 years or older", value="90", is_missing=True, sentinel_type=SentinelType.TOP_CODED)
+    cat_bottom = Category(label="Under 18 years", value="0", is_missing=True, sentinel_type=SentinelType.BOTTOM_CODED)
     assert cat_top.sentinel_type == SentinelType.TOP_CODED
     assert cat_bottom.sentinel_type == SentinelType.BOTTOM_CODED
 
 
 def test_codelist_substantive_partitioning_and_matching():
     # Survey A: Substantive 1=Male, 2=Female | Missing: 98=DK, 99=Refused
-    c_m_a = HarmonizedCode(value="1", category=HarmonizedCategory(label="Male", value="1"))
-    c_f_a = HarmonizedCode(value="2", category=HarmonizedCategory(label="Female", value="2"))
-    c_dk_a = HarmonizedCode(
+    c_m_a = Code(value="1", category=Category(label="Male", value="1"))
+    c_f_a = Code(value="2", category=Category(label="Female", value="2"))
+    c_dk_a = Code(
         value="98",
-        category=HarmonizedCategory(
-            label="Don't Know", value="98", is_missing=True, sentinel_type=SentinelType.DONT_KNOW
-        ),
+        category=Category(label="Don't Know", value="98", is_missing=True, sentinel_type=SentinelType.DONT_KNOW),
     )
-    c_ref_a = HarmonizedCode(
+    c_ref_a = Code(
         value="99",
-        category=HarmonizedCategory(label="Refused", value="99", is_missing=True, sentinel_type=SentinelType.REFUSED),
+        category=Category(label="Refused", value="99", is_missing=True, sentinel_type=SentinelType.REFUSED),
     )
-    cl_a = HarmonizedCodeList(name="CL_GENDER_A", codes=[c_m_a, c_f_a, c_dk_a, c_ref_a])
+    cl_a = CodeList(name="CL_GENDER_A", codes=[c_m_a, c_f_a, c_dk_a, c_ref_a])
 
     assert cl_a.substantive_count == 2
     assert cl_a.sentinel_count == 2
@@ -452,19 +450,17 @@ def test_codelist_substantive_partitioning_and_matching():
     assert len(cl_a.sentinel_items) == 2
 
     # Survey B: Substantive 1=Male, 2=Female | Missing: 8=DK, 9=Refused (different missing notation scheme)
-    c_m_b = HarmonizedCode(value="1", category=HarmonizedCategory(label="Male", value="1"))
-    c_f_b = HarmonizedCode(value="2", category=HarmonizedCategory(label="Female", value="2"))
-    c_dk_b = HarmonizedCode(
+    c_m_b = Code(value="1", category=Category(label="Male", value="1"))
+    c_f_b = Code(value="2", category=Category(label="Female", value="2"))
+    c_dk_b = Code(
         value="8",
-        category=HarmonizedCategory(
-            label="Don't Know", value="8", is_missing=True, sentinel_type=SentinelType.DONT_KNOW
-        ),
+        category=Category(label="Don't Know", value="8", is_missing=True, sentinel_type=SentinelType.DONT_KNOW),
     )
-    c_ref_b = HarmonizedCode(
+    c_ref_b = Code(
         value="9",
-        category=HarmonizedCategory(label="Refused", value="9", is_missing=True, sentinel_type=SentinelType.REFUSED),
+        category=Category(label="Refused", value="9", is_missing=True, sentinel_type=SentinelType.REFUSED),
     )
-    cl_b = HarmonizedCodeList(name="CL_GENDER_B", codes=[c_m_b, c_f_b, c_dk_b, c_ref_b])
+    cl_b = CodeList(name="CL_GENDER_B", codes=[c_m_b, c_f_b, c_dk_b, c_ref_b])
 
     # Substantive code sets and category sets must match 100%
     assert cl_a.substantive_code_set_digest == cl_b.substantive_code_set_digest
@@ -472,7 +468,7 @@ def test_codelist_substantive_partitioning_and_matching():
     # Full code sets must differ because 98/99 != 8/9
     assert cl_a.code_set_digest != cl_b.code_set_digest
 
-    reg: HarmonizationRegistry[HarmonizedCodeList] = HarmonizationRegistry()
+    reg: HarmonizationRegistry[CodeList] = HarmonizationRegistry()
     reg.register(cl_a)
 
     match = reg.match(cl_b)
@@ -555,13 +551,13 @@ def test_registry_urn_match_exact_content():
     """Identical URN + 100% identical content -> IDENTIFIER_EXACT_CONTENT_EXACT."""
     urn = "urn:ddi:us.census:CL_SEX:1.0"
     codes = [
-        HarmonizedCode(value="1", category=HarmonizedCategory(label="Male", value="1")),
-        HarmonizedCode(value="2", category=HarmonizedCategory(label="Female", value="2")),
+        Code(value="1", category=Category(label="Male", value="1")),
+        Code(value="2", category=Category(label="Female", value="2")),
     ]
-    canonical = HarmonizedCodeList(name="CL_SEX_CANON", urn=urn, codes=codes)
-    candidate = HarmonizedCodeList(name="CL_SEX_CAND", urn=urn, codes=codes)
+    canonical = CodeList(name="CL_SEX_CANON", urn=urn, codes=codes)
+    candidate = CodeList(name="CL_SEX_CAND", urn=urn, codes=codes)
 
-    reg: HarmonizationRegistry[HarmonizedCodeList] = HarmonizationRegistry()
+    reg: HarmonizationRegistry[CodeList] = HarmonizationRegistry()
     reg.register(canonical)
 
     match = reg.match(candidate)
@@ -578,19 +574,19 @@ def test_registry_urn_match_exact_content():
 def test_registry_urn_match_content_drift():
     """Identical URN + modified/translated content -> IDENTIFIER_EXACT_CONTENT_DRIFT."""
     urn = "urn:ddi:us.census:Q101:1.0"
-    canonical = HarmonizedQuestion(
+    canonical = Question(
         question_text="What is your current employment status?",
         instructions="Read all response options out loud to respondent.",
         urn=urn,
     )
     # Same URN in candidate, but instructions modified for self-administered web mode
-    candidate = HarmonizedQuestion(
+    candidate = Question(
         question_text="What is your current employment status?",
         instructions="Please select one option that best describes your situation.",
         urn=urn,
     )
 
-    reg: HarmonizationRegistry[HarmonizedQuestion] = HarmonizationRegistry()
+    reg: HarmonizationRegistry[Question] = HarmonizationRegistry()
     reg.register(canonical)
 
     match = reg.match(candidate)
@@ -608,21 +604,21 @@ def test_registry_urn_match_content_drift():
 def test_registry_content_exact_different_identifiers():
     """Different URNs + 100% identical content -> CONTENT_EXACT_DIFFERENT_IDENTIFIER."""
     codes = [
-        HarmonizedCode(value="1", category=HarmonizedCategory(label="Male", value="1")),
-        HarmonizedCode(value="2", category=HarmonizedCategory(label="Female", value="2")),
+        Code(value="1", category=Category(label="Male", value="1")),
+        Code(value="2", category=Category(label="Female", value="2")),
     ]
-    canonical = HarmonizedCodeList(
+    canonical = CodeList(
         name="CL_SEX_US",
         urn="urn:ddi:us.mpc:CL_SEX:2020",
         codes=codes,
     )
-    candidate = HarmonizedCodeList(
+    candidate = CodeList(
         name="CL_SEX_UK",
         urn="urn:ddi:uk.data:CL_GENDER:2021",
         codes=codes,
     )
 
-    reg: HarmonizationRegistry[HarmonizedCodeList] = HarmonizationRegistry()
+    reg: HarmonizationRegistry[CodeList] = HarmonizationRegistry()
     reg.register(canonical)
 
     match = reg.match(candidate)
@@ -637,7 +633,7 @@ def test_registry_content_exact_different_identifiers():
 def test_resource_guid_vs_assigned_urn_properties():
     # Resource with random GUID
     guid_str = "f47ac10b-58cc-4372-a567-0e02b2c3d479"
-    cat_guid = HarmonizedCategory(label="Sample Category", value="1", urn=guid_str)
+    cat_guid = Category(label="Sample Category", value="1", urn=guid_str)
     assert cat_guid.is_random_guid is True
     assert cat_guid.is_assigned_identifier is False
     assert cat_guid.identifier is not None
@@ -645,7 +641,7 @@ def test_resource_guid_vs_assigned_urn_properties():
 
     # Resource with assigned DDI URN
     urn_str = "urn:ddi:org.example:CAT_1:1.0"
-    cat_urn = HarmonizedCategory(label="Sample Category", value="1", urn=urn_str)
+    cat_urn = Category(label="Sample Category", value="1", urn=urn_str)
     assert cat_urn.is_random_guid is False
     assert cat_urn.is_assigned_identifier is True
     assert cat_urn.identifier is not None
@@ -664,11 +660,11 @@ def test_country_codelist_alpha2_vs_numeric3_harmonization():
         ("US", "840", "United States"),
     ]
 
-    codes_alpha = [HarmonizedCode(value=alpha, category=HarmonizedCategory(label=name)) for alpha, _, name in countries]
-    codes_numeric = [HarmonizedCode(value=num, category=HarmonizedCategory(label=name)) for _, num, name in countries]
+    codes_alpha = [Code(value=alpha, category=Category(label=name)) for alpha, _, name in countries]
+    codes_numeric = [Code(value=num, category=Category(label=name)) for _, num, name in countries]
 
-    cl_alpha = HarmonizedCodeList(name="CL_COUNTRY_G7_ALPHA2", codes=codes_alpha)
-    cl_numeric = HarmonizedCodeList(name="CL_COUNTRY_G7_NUMERIC3", codes=codes_numeric)
+    cl_alpha = CodeList(name="CL_COUNTRY_G7_ALPHA2", codes=codes_alpha)
+    cl_numeric = CodeList(name="CL_COUNTRY_G7_NUMERIC3", codes=codes_numeric)
 
     # 1. Semantic category set and sequence digests match 100%
     assert cl_alpha.category_set_digest == cl_numeric.category_set_digest
@@ -681,9 +677,7 @@ def test_country_codelist_alpha2_vs_numeric3_harmonization():
     assert cl_alpha.fingerprint.digest != cl_numeric.fingerprint.digest
 
     # 3. Registry exact category concept match (O(1) category set indexing)
-    reg: HarmonizationRegistry[HarmonizedCodeList] = HarmonizationRegistry(
-        comparator=SequenceMatcherComparator(threshold=0.75)
-    )
+    reg: HarmonizationRegistry[CodeList] = HarmonizationRegistry(comparator=SequenceMatcherComparator(threshold=0.75))
     reg.register(cl_alpha)
     match = reg.match(cl_numeric, threshold=0.75)
 
@@ -702,11 +696,11 @@ def test_country_codelist_alpha2_vs_numeric3_harmonization():
 
 def test_compare_questions_exact():
     """Verifies that identical questions return EXACT_IDENTICAL (1.0)."""
-    q1 = HarmonizedQuestion(
+    q1 = Question(
         question_text="What is your current employment status?",
         instructions="Show Card 4.",
     )
-    q2 = HarmonizedQuestion(
+    q2 = Question(
         question_text="What is your current employment status?",
         instructions="Show Card 4.",
     )
@@ -717,12 +711,12 @@ def test_compare_questions_exact():
 
 def test_compare_questions_partial_instruction_drift():
     """Verifies pairwise comparison when prompt matches but instructions vary across survey waves."""
-    q_wave1 = HarmonizedQuestion(
+    q_wave1 = Question(
         question_text="Did you consult a medical doctor or specialist?",
         instructions="Show Card C to respondent.",
         pre_question_text="During the last 12 months:",
     )
-    q_wave2 = HarmonizedQuestion(
+    q_wave2 = Question(
         question_text="Did you consult a medical doctor or specialist?",
         instructions="Select one option on the screen.",
         pre_question_text="During the last 12 months:",
@@ -738,8 +732,8 @@ def test_compare_questions_partial_instruction_drift():
 def test_question_comparator_class():
     """Verifies QuestionComparator instance configuration and attribute weights."""
     comp = QuestionComparator(match_threshold=0.90)
-    q1 = HarmonizedQuestion(question_text="Are you employed?", instructions="Show Card 1")
-    q2 = HarmonizedQuestion(question_text="Are you employed?", instructions="Show Card 2")
+    q1 = Question(question_text="Are you employed?", instructions="Show Card 1")
+    q2 = Question(question_text="Are you employed?", instructions="Show Card 2")
     res = comp.compare(q1, q2)
     assert res.score > 0.70
     assert "question_text" in res.sub_scores
@@ -747,21 +741,21 @@ def test_question_comparator_class():
 
 def test_compare_codelists_pairwise():
     """Verifies pairwise comparison of code lists across permutation and substantive partitioning."""
-    c_m = HarmonizedCode(value="1", category=HarmonizedCategory(label="Male", value="1"))
-    c_f = HarmonizedCode(value="2", category=HarmonizedCategory(label="Female", value="2"))
-    c_dk1 = HarmonizedCode(
+    c_m = Code(value="1", category=Category(label="Male", value="1"))
+    c_f = Code(value="2", category=Category(label="Female", value="2"))
+    c_dk1 = Code(
         value="98",
-        category=HarmonizedCategory(label="Don't Know", is_missing=True, sentinel_type=SentinelType.DONT_KNOW),
+        category=Category(label="Don't Know", is_missing=True, sentinel_type=SentinelType.DONT_KNOW),
     )
-    c_dk2 = HarmonizedCode(
+    c_dk2 = Code(
         value="8",
-        category=HarmonizedCategory(label="Don't Know", is_missing=True, sentinel_type=SentinelType.DONT_KNOW),
+        category=Category(label="Don't Know", is_missing=True, sentinel_type=SentinelType.DONT_KNOW),
     )
 
-    cl_ordered = HarmonizedCodeList(name="CL1", codes=[c_m, c_f])
-    cl_permuted = HarmonizedCodeList(name="CL2", codes=[c_f, c_m])
-    cl_subst1 = HarmonizedCodeList(name="CL3", codes=[c_m, c_f, c_dk1])
-    cl_subst2 = HarmonizedCodeList(name="CL4", codes=[c_m, c_f, c_dk2])
+    cl_ordered = CodeList(name="CL1", codes=[c_m, c_f])
+    cl_permuted = CodeList(name="CL2", codes=[c_f, c_m])
+    cl_subst1 = CodeList(name="CL3", codes=[c_m, c_f, c_dk1])
+    cl_subst2 = CodeList(name="CL4", codes=[c_m, c_f, c_dk2])
 
     # Exact
     res_exact = compare_codelists(cl_ordered, cl_ordered)
@@ -782,14 +776,65 @@ def test_compare_codelists_pairwise():
 def test_compare_resources_polymorphic():
     """Verifies polymorphic compare_resources across questions, code lists, concepts, and strings."""
     # Questions
-    q1 = HarmonizedQuestion(question_text="Total household income")
-    q2 = HarmonizedQuestion(question_text="Total household income")
+    q1 = Question(question_text="Total household income")
+    q2 = Question(question_text="Total household income")
     assert compare_resources(q1, q2).score == 1.0
 
     # Concepts
-    c1 = HarmonizedConcept(preferred_label="GDP", notation="B1GQ")
-    c2 = HarmonizedConcept(preferred_label="GDP", notation="B1GQ")
+    c1 = Concept(preferred_label="GDP", notation="B1GQ")
+    c2 = Concept(preferred_label="GDP", notation="B1GQ")
     assert compare_resources(c1, c2).score == 1.0
 
     # Raw strings
     assert compare_resources("Active Employment", "active employment").score == 1.0
+
+    # Raw strings
+    assert compare_resources("Active Employment", "active employment").score == 1.0
+
+
+def test_clean_domain_models_and_operations():
+    """Verifies that clean plain domain models function seamlessly across operations."""
+    # 1. Clean Natural Ingestion of Raw Input Items
+    cat_src = Category(label="Très satisfait / Straße", is_missing=False)
+    cat_cand = Category(label="Tres satisfait / Strasse", is_missing=False)
+    assert cat_src.label == "Très satisfait / Straße"
+    assert cat_src.is_substantive is True
+    assert compare_resources(cat_src, cat_cand).score == 1.0
+
+    # 2. Clean Code & CodeList Composition
+    code_1 = Code(value="1", category=cat_src)
+    code_2 = Code(value="2", category=Category(label="Insatisfait", is_missing=False))
+    cl = CodeList(name="CL_SATISFACTION", codes=[code_1, code_2])
+    assert cl.member_count == 2
+    assert cl.substantive_count == 2
+
+    # 4. Clean Question Comparison
+    q1 = Question(question_text="Are you currently employed?", instructions="Show card 1")
+    q2 = Question(question_text="Are you currently employed?", instructions="Select on screen")
+    q_res = compare_questions(q1, q2)
+    assert q_res.score > 0.80
+
+    # 5. Clean Variable & ValueDomain Composition & Comparison
+    var1 = Variable(
+        name="Q1_SAT",
+        label="Satisfaction with services",
+        data_type=DataType.from_ddi_cv("Integer"),
+        value_domain=ValueDomain(kind="enumerated", codelist=cl),
+    )
+    var2 = Variable(
+        name="Q1_SAT",
+        label="Satisfaction with services",
+        data_type=DataType.from_ddi_cv("Integer"),
+        value_domain=ValueDomain(kind="enumerated", codelist=cl),
+    )
+    var_res = compare_variables(var1, var2)
+    assert var_res.score == 1.0
+
+    var_case_diff = Variable(
+        name="q1_sat",
+        label="Satisfaction with services",
+        data_type=DataType.from_ddi_cv("Integer"),
+        value_domain=ValueDomain(kind="enumerated", codelist=cl),
+    )
+    diff_res = compare_variables(var1, var_case_diff)
+    assert diff_res.score >= 0.95

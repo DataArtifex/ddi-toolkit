@@ -6,7 +6,7 @@ real_world_context: Biomedical Health Data Integration (NLM MeSH to SNOMED Inter
 story: >
   Electronic Health Record (EHR) repositories and epidemiological research datasets classify clinical
   diagnoses using different standardized medical vocabularies (e.g., Medical Subject Headings / MeSH
-  vs SNOMED CT). HarmonizedConcept compares preferred labels, notation codes, and formal diagnostic definitions.
+  vs SNOMED CT). Concept comparison evaluates preferred labels, notation codes, and formal diagnostic definitions.
 learning_objective: >
   WeightedAttributeComparator balances preferred label, notation code, and formal definition in clinical ontologies.
 source_resource:

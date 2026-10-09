@@ -11,11 +11,9 @@ learning_objective: >
   NFKD Unicode decomposition ensures reproducible cross-language normalization.
 source_resource:
   label: "Très satisfait / Straße"
-  value: "1"
   is_missing: false
 candidate_resource:
   label: "Tres satisfait / Strasse"
-  value: "1"
   is_missing: false
 preset: STANDARD
 custom_typos: {}

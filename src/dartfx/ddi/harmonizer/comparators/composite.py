@@ -133,7 +133,7 @@ class QuestionComparator:
         source: Any,
         target: Any,
     ) -> ComparisonResult:
-        """Compares two questions (HarmonizedQuestion instances, dicts, or strings)."""
+        """Compares two questions (Question instances, dicts, or strings)."""
         # Case 1: Simple string comparison fallback
         if isinstance(source, str) and isinstance(target, str):
             return self.base_comparator.compare(source, target)
@@ -175,8 +175,8 @@ def compare_questions(
     """Convenience 1-liner function to compare two survey questions.
 
     Args:
-        question1: First question (HarmonizedQuestion, dictionary, or string prompt).
-        question2: Second question (HarmonizedQuestion, dictionary, or string prompt).
+        question1: First question (Question, dictionary, or string prompt).
+        question2: Second question (Question, dictionary, or string prompt).
         weights: Optional custom attribute weights.
         base_comparator: Optional string comparator (defaults to SequenceMatcherComparator).
         threshold: Match threshold for classifying similarity.
@@ -197,7 +197,7 @@ def compare_codelists(
     codelist2: Any,
     threshold: float = 0.85,
 ) -> ComparisonResult:
-    """Compares two HarmonizedCodeList instances returning cryptographic and semantic equivalence diagnostics.
+    """Compares two CodeList instances returning cryptographic and semantic equivalence diagnostics.
 
     Evaluates:
     - Exact sequence equality (code_sequence_digest)

@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A zero-dependency JavaScript utility and interactive studio for parsing, inspecting, and serializing JSON containing quoted or bare NaN, Infinity, and -Infinity values.">
+  <title>Scientific JSON Parser • IEEE-754 NaN & Infinity Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-surface: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --bg-card-hover: rgba(51, 65, 85, 0.8);
+      --border-color: rgba(148, 163, 184, 0.15);
+      --border-glow: rgba(99, 102, 241, 0.4);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-light: #818cf8;
+      --secondary: #ec4899;
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-purple: #a855f7;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --code-bg: #030712;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-display: 'Outfit', var(--font-sans);
+      --font-mono: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+      --glass-blur: blur(16px);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image:
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(236, 72, 153, 0.10) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.05) 0%, transparent 60%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      padding: 0;
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-dark);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px 32px;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0 32px 0;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 32px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Badges & Pills */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .pill-indigo {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--primary-light);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    .pill-emerald {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .pill-rose {
+      background: rgba(244, 63, 94, 0.15);
+      color: var(--accent-rose);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+
+    .pill-amber {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .pill-cyan {
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+
+    .pill-purple {
+      background: rgba(168, 85, 247, 0.15);
+      color: var(--accent-purple);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(30, 41, 59, 0.8);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+    .btn-secondary:hover {
+      background: rgba(51, 65, 85, 0.9);
+      border-color: rgba(148, 163, 184, 0.3);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+    }
+    .btn-ghost:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Preset Scenarios Strip */
+    .scenario-bar {
+      margin-bottom: 24px;
+    }
+
+    .scenario-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .preset-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .preset-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      color: var(--text-muted);
+      font-size: 0.84rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      backdrop-filter: var(--glass-blur);
+    }
+
+    .preset-btn:hover {
+      border-color: var(--primary-light);
+      color: var(--text-main);
+      background: rgba(45, 55, 72, 0.8);
+      transform: translateY(-1px);
+    }
+
+    .preset-btn.active {
+      background: rgba(99, 102, 241, 0.15);
+      border-color: var(--primary);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+    }
+
+    .preset-icon {
+      font-size: 1.1rem;
+    }
+
+    /* Main Grid Layout */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 1024px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      backdrop-filter: var(--glass-blur);
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+    }
+
+    /* Editor */
+    .editor-wrapper {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 14px;
+    }
+
+    .json-textarea {
+      width: 100%;
+      height: 320px;
+      background: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      color: #38bdf8;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s ease;
+      white-space: pre;
+    }
+
+    .json-textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+    }
+
+    /* Options Panel */
+    .options-group {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .options-title {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+    }
+
+    .custom-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .custom-checkbox input {
+      accent-color: var(--primary);
+      cursor: pointer;
+      width: 15px;
+      height: 15px;
+    }
+
+    .custom-checkbox:hover {
+      color: var(--text-main);
+    }
+
+    /* Action bar */
+    .editor-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      font-family: var(--font-mono);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 8px var(--accent-emerald);
+    }
+
+    .status-dot.error {
+      background: var(--accent-rose);
+      box-shadow: 0 0 8px var(--accent-rose);
+    }
+
+    /* Tabbed Inspector */
+    .tab-header {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 16px;
+    }
+
+    .tab-btn {
+      padding: 8px 16px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      color: var(--primary-light);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-pane {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .tab-pane.active {
+      display: flex;
+    }
+
+    /* Inspector Table */
+    .inspector-table-wrapper {
+      background: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      max-height: 440px;
+    }
+
+    .inspector-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      font-family: var(--font-mono);
+      text-align: left;
+    }
+
+    .inspector-table th {
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .inspector-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+      color: var(--text-main);
+    }
+
+    .inspector-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .token-nan {
+      color: var(--accent-rose);
+      font-weight: 700;
+      background: rgba(244, 63, 94, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .token-pos-inf {
+      color: var(--accent-cyan);
+      font-weight: 700;
+      background: rgba(6, 182, 212, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .token-neg-inf {
+      color: var(--accent-purple);
+      font-weight: 700;
+      background: rgba(168, 85, 247, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .token-finite {
+      color: var(--accent-emerald);
+      font-weight: 600;
+    }
+
+    /* Math Sandbox */
+    .sandbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+    }
+
+    .math-card {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .math-card-header {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .math-expr {
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      color: #a5b4fc;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 6px 10px;
+      border-radius: 4px;
+    }
+
+    .math-result {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #fff;
+    }
+
+    /* Roundtrip Comparison */
+    .roundtrip-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .roundtrip-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .roundtrip-box {
+      background: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .roundtrip-header {
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .roundtrip-code {
+      font-family: var(--font-mono);
+      font-size: 0.80rem;
+      color: var(--text-muted);
+      white-space: pre-wrap;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    /* Production Code Snippet Section */
+    .code-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      backdrop-filter: var(--glass-blur);
+      margin-bottom: 32px;
+    }
+
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .code-pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      font-family: var(--font-mono);
+      font-size: 0.86rem;
+      color: #e2e8f0;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+
+    .keyword { color: #f43f5e; font-weight: 600; }
+    .function { color: #38bdf8; font-weight: 600; }
+    .string { color: #34d399; }
+    .comment { color: #64748b; font-style: italic; }
+    .number { color: #f59e0b; }
+    .boolean { color: #a855f7; }
+
+    /* Guide & Specs Grid */
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .guide-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+    }
+
+    .guide-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      color: #fff;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .guide-card p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .guide-card ul {
+      list-style: none;
+      padding-left: 0;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .guide-card li::before {
+      content: "•";
+      color: var(--primary-light);
+      font-weight: bold;
+      display: inline-block;
+      width: 1em;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 24px 0;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.84rem;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--primary);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 9999;
+      backdrop-filter: blur(10px);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="brand-group">
+        <div class="brand-logo">&infin;</div>
+        <div>
+          <h1 class="brand-title">Scientific JSON Parser</h1>
+          <div class="brand-subtitle">Interactive Studio & Reference for Parsing Quoted and Bare IEEE-754 NaN & Infinity in JavaScript</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span class="pill pill-emerald" id="perfBadge">⚡ 0.04 ms</span>
+        <button class="btn btn-secondary" id="copySnippetHeaderBtn" onclick="copySnippetToClipboard()">
+          📋 Copy JS Module
+        </button>
+      </div>
+    </header>
+
+    <!-- Preset Scenarios -->
+    <div class="scenario-bar">
+      <div class="scenario-label">
+        <span>🔬 Select Pre-Configured Dataset Scenario</span>
+      </div>
+      <div class="preset-list" id="presetList">
+        <button class="preset-btn active" onclick="loadPreset('quoted_tokens', this)">
+          <span class="preset-icon">🏷️</span>
+          <span>Quoted IEEE Sentinels (Pandas/Polars/R)</span>
+        </button>
+        <button class="preset-btn" onclick="loadPreset('python_bare', this)">
+          <span class="preset-icon">🐍</span>
+          <span>Python Bare NaN / Infinity (allow_nan)</span>
+        </button>
+        <button class="preset-btn" onclick="loadPreset('census_stats', this)">
+          <span class="preset-icon">📊</span>
+          <span>Census & Survey Aggregations</span>
+        </button>
+        <button class="preset-btn" onclick="loadPreset('astrophysics', this)">
+          <span class="preset-icon">🔭</span>
+          <span>Astrophysics Orbit & Gravitation</span>
+        </button>
+        <button class="preset-btn" onclick="loadPreset('matrix_tensor', this)">
+          <span class="preset-icon">🧬</span>
+          <span>2D Matrix & Tensor Grids</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="main-grid">
+
+      <!-- Left Column: Editor & Options -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>📝 Input JSON Document</span>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.78rem;" onclick="formatInputJson()">✨ Prettify</button>
+            <button class="btn btn-ghost" style="padding: 4px 8px; font-size: 0.78rem;" onclick="resetCurrentPreset()">🔄 Reset</button>
+          </div>
+        </div>
+
+        <div class="editor-wrapper">
+          <textarea class="json-textarea" id="jsonInput" spellcheck="false" oninput="handleInputLive()"></textarea>
+
+          <!-- Options -->
+          <div class="options-group">
+            <div class="options-title">⚙️ Parser & Reviver Configuration</div>
+            <div class="options-grid">
+              <label class="custom-checkbox">
+                <input type="checkbox" id="optQuotedNaN" checked onchange="handleInputLive()">
+                <span>Parse <code>"NaN"</code> as <code>NaN</code></span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" id="optQuotedInf" checked onchange="handleInputLive()">
+                <span>Parse <code>"&plusmn;Infinity"</code> as <code>&plusmn;&infin;</code></span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" id="optSanitizeBare" checked onchange="handleInputLive()">
+                <span>Sanitize Bare Unquoted <code>NaN/Inf</code></span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" id="optCaseInsensitive" checked onchange="handleInputLive()">
+                <span>Case-Insensitive (<code>"nan"</code>, <code>"NAN"</code>)</span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" id="optQnan" checked onchange="handleInputLive()">
+                <span>Handle Windows <code>"1.#QNAN"</code></span>
+              </label>
+              <label class="custom-checkbox">
+                <input type="checkbox" id="optNullAsNan" onchange="handleInputLive()">
+                <span>Convert <code>null</code> &rarr; <code>NaN</code></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Action bar -->
+          <div class="editor-actions">
+            <div class="status-indicator">
+              <span class="status-dot" id="statusDot"></span>
+              <span id="statusText">Parser Status: Ready</span>
+            </div>
+            <button class="btn btn-primary" onclick="runBenchmark()">
+              <span>⚡ Benchmark (10,000 runs)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Inspector & Sandboxes -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🔍 IEEE-754 Live Value Inspector</span>
+          </div>
+          <span class="pill pill-indigo" id="parsedCountBadge">0 Fields Evaluated</span>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-header">
+          <button class="tab-btn active" onclick="switchTab('tab-inspector', this)">
+            <span>📊 Property Tree</span>
+          </button>
+          <button class="tab-btn" onclick="switchTab('tab-math', this)">
+            <span>🧮 Live Arithmetic Sandbox</span>
+          </button>
+          <button class="tab-btn" onclick="switchTab('tab-roundtrip', this)">
+            <span>🔄 Round-Trip Stringify</span>
+          </button>
+        </div>
+
+        <!-- Tab 1: Inspector Table -->
+        <div class="tab-pane active" id="tab-inspector">
+          <div class="inspector-table-wrapper">
+            <table class="inspector-table">
+              <thead>
+                <tr>
+                  <th>Property Key</th>
+                  <th>Original Token</th>
+                  <th>Parsed Value</th>
+                  <th>JavaScript Type</th>
+                  <th>IEEE-754 Classification</th>
+                </tr>
+              </thead>
+              <tbody id="inspectorTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 2: Math Sandbox -->
+        <div class="tab-pane" id="tab-math">
+          <p style="font-size:0.84rem; color:var(--text-muted);">
+            Proving that parsed tokens are genuine IEEE-754 64-bit floating point numbers by evaluating native JavaScript arithmetic operations in the live runtime engine:
+          </p>
+          <div class="sandbox-grid" id="mathSandboxGrid">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Tab 3: Round-Trip Serialization -->
+        <div class="tab-pane" id="tab-roundtrip">
+          <p style="font-size:0.84rem; color:var(--text-muted);">
+            Compare how standard <code>JSON.stringify</code> converts special values to <code>null</code> vs. using our custom scientific replacer to preserve quoted sentinels losslessly:
+          </p>
+          <div class="roundtrip-grid">
+            <div class="roundtrip-box">
+              <div class="roundtrip-header">
+                <span style="color:var(--accent-rose);">❌ Standard JSON.stringify()</span>
+                <span class="pill pill-rose">Loss of Data</span>
+              </div>
+              <pre class="roundtrip-code" id="standardStringifyOut"></pre>
+            </div>
+            <div class="roundtrip-box">
+              <div class="roundtrip-header">
+                <span style="color:var(--accent-emerald);">✔️ stringifyScientificJSON()</span>
+                <span class="pill pill-emerald">Faithfully Preserved</span>
+              </div>
+              <pre class="roundtrip-code" id="scientificStringifyOut"></pre>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Production Code Module Section -->
+    <div class="code-section">
+      <div class="code-header">
+        <div>
+          <h2 style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; color: #fff;">📦 Production-Ready JavaScript / TypeScript Implementation</h2>
+          <p style="font-size: 0.86rem; color: var(--text-muted); margin-top: 2px;">
+            Zero external dependencies. Fully compliant with RFC 8259 and IEEE 754. Drop into Node.js, Next.js, Cloudflare Workers, or browser frontends.
+          </p>
+        </div>
+        <button class="btn btn-primary" onclick="copySnippetToClipboard()">
+          📋 Copy Code
+        </button>
+      </div>
+
+      <pre class="code-pre" id="codeSnippetPre"><code><span class="comment">/**
+ * Scientific JSON Parser with IEEE-754 NaN &amp; Infinity Support
+ * Zero dependencies &bull; Native JSON.parse reviver architecture
+ */</span>
+
+<span class="comment">// 1. Parse JSON with support for quoted and bare NaN / Infinity</span>
+<span class="keyword">export function</span> <span class="function">parseScientificJSON</span>(jsonText, options = {}) {
+  <span class="keyword">const</span> {
+    parseQuotedNaN = <span class="boolean">true</span>,
+    parseQuotedInfinity = <span class="boolean">true</span>,
+    parseNullAsNaN = <span class="boolean">false</span>,
+    sanitizeBareTokens = <span class="boolean">true</span>,
+    caseInsensitive = <span class="boolean">true</span>,
+  } = options;
+
+  <span class="keyword">let</span> processed = jsonText;
+
+  <span class="comment">// Pre-process unquoted bare tokens (NaN, Infinity, -Infinity) if present</span>
+  <span class="keyword">if</span> (sanitizeBareTokens) {
+    processed = processed.replace(
+      <span class="string">/("(?:\\.|[^"\\])*")|(\bNaN\b|\b[+-]?Infinity\b|\b[+-]?inf\b)/gi</span>,
+      (match, quotedStr, bareToken) =&gt; {
+        <span class="keyword">if</span> (quotedStr) <span class="keyword">return</span> quotedStr;
+        <span class="keyword">if</span> (bareToken) {
+          <span class="keyword">const</span> low = bareToken.toLowerCase();
+          <span class="keyword">if</span> (low.includes(<span class="string">'nan'</span>)) <span class="keyword">return</span> <span class="string">'"NaN"'</span>;
+          <span class="keyword">if</span> (low.startsWith(<span class="string">'-'</span>)) <span class="keyword">return</span> <span class="string">'"-Infinity"'</span>;
+          <span class="keyword">return</span> <span class="string">'"Infinity"'</span>;
+        }
+        <span class="keyword">return</span> match;
+      }
+    );
+  }
+
+  <span class="comment">// Native reviver pass</span>
+  <span class="keyword">return</span> <span class="function">JSON.parse</span>(processed, (key, value) =&gt; {
+    <span class="keyword">if</span> (parseNullAsNaN &amp;&amp; value === <span class="keyword">null</span>) {
+      <span class="keyword">return</span> <span class="number">NaN</span>;
+    }
+
+    <span class="keyword">if</span> (<span class="keyword">typeof</span> value === <span class="string">'string'</span>) {
+      <span class="keyword">const</span> testVal = caseInsensitive ? value.toLowerCase().trim() : value.trim();
+
+      <span class="comment">// Check NaN patterns</span>
+      <span class="keyword">if</span> (parseQuotedNaN) {
+        <span class="keyword">if</span> (testVal === <span class="string">'nan'</span> || testVal === <span class="string">'1.#qnan'</span> || testVal === <span class="string">'1.#ind'</span>) {
+          <span class="keyword">return</span> <span class="number">NaN</span>;
+        }
+      }
+
+      <span class="comment">// Check Infinity patterns</span>
+      <span class="keyword">if</span> (parseQuotedInfinity) {
+        <span class="keyword">if</span> (testVal === <span class="string">'infinity'</span> || testVal === <span class="string">'+infinity'</span> || testVal === <span class="string">'inf'</span> || testVal === <span class="string">'+inf'</span>) {
+          <span class="keyword">return</span> <span class="number">Infinity</span>;
+        }
+        <span class="keyword">if</span> (testVal === <span class="string">'-infinity'</span> || testVal === <span class="string">'-inf'</span>) {
+          <span class="keyword">return</span> -<span class="number">Infinity</span>;
+        }
+      }
+    }
+
+    <span class="keyword">return</span> value;
+  });
+}
+
+<span class="comment">// 2. Lossless serializer preserving NaN &amp; Infinity as quoted tokens</span>
+<span class="keyword">export function</span> <span class="function">stringifyScientificJSON</span>(obj, replacer = <span class="keyword">null</span>, space = <span class="number">2</span>) {
+  <span class="keyword">return</span> <span class="function">JSON.stringify</span>(obj, (key, value) =&gt; {
+    <span class="keyword">if</span> (<span class="keyword">typeof</span> value === <span class="string">'number'</span>) {
+      <span class="keyword">if</span> (<span class="function">Number.isNaN</span>(value)) <span class="keyword">return</span> <span class="string">'NaN'</span>;
+      <span class="keyword">if</span> (value === <span class="number">Infinity</span>) <span class="keyword">return</span> <span class="string">'Infinity'</span>;
+      <span class="keyword">if</span> (value === -<span class="number">Infinity</span>) <span class="keyword">return</span> <span class="string">'-Infinity'</span>;
+    }
+    <span class="keyword">if</span> (<span class="keyword">typeof</span> replacer === <span class="string">'function'</span>) {
+      <span class="keyword">return</span> replacer(key, value);
+    }
+    <span class="keyword">return</span> value;
+  }, space);
+}</code></pre>
+    </div>
+
+    <!-- Guide Grid -->
+    <div class="guide-grid">
+      <div class="guide-card">
+        <h3><span>📐</span> RFC 8259 vs IEEE-754</h3>
+        <p>
+          The official JSON standard (RFC 8259) restricts numbers to finite decimal representation: <code>-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?</code>.
+        </p>
+        <ul>
+          <li>Bare <code>NaN</code>, <code>Infinity</code>, and <code>-Infinity</code> are invalid JSON grammar.</li>
+          <li>Standard <code>JSON.stringify()</code> coerces <code>NaN</code> &amp; <code>&plusmn;&infin;</code> to <code>null</code>.</li>
+          <li>Quoting special floats (<code>"NaN"</code>) guarantees 100% standards compliance across all HTTP gateways.</li>
+        </ul>
+      </div>
+
+      <div class="guide-card">
+        <h3><span>🐍</span> Python &amp; Data Science Ingestion</h3>
+        <p>
+          Common data engineering tools produce both quoted and unquoted representations:
+        </p>
+        <ul>
+          <li><strong>Python <code>json.dumps()</code></strong>: By default emits bare <code>NaN</code>, <code>Infinity</code> with <code>allow_nan=True</code>.</li>
+          <li><strong>Pandas / Polars <code>to_json()</code></strong>: Offers quoted sentinels or null conversions.</li>
+          <li><strong>PySpark &amp; R <code>jsonlite</code></strong>: Outputs string tokens like <code>"NA"</code>, <code>"NaN"</code>, <code>"Inf"</code>.</li>
+        </ul>
+      </div>
+
+      <div class="guide-card">
+        <h3><span>⚡</span> Performance &amp; Reviver Mechanics</h3>
+        <p>
+          The native <code>JSON.parse(text, reviver)</code> function traverses the parsed object tree bottom-up with zero intermediary allocations.
+        </p>
+        <ul>
+          <li>C++ V8 engine parsing speed (~500 MB/s).</li>
+          <li>Single-pass memory footprint.</li>
+          <li>Works seamlessly with typed arrays, nested dictionaries, and Web Workers.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>Data Artifex Toolkit &bull; Zero-Dependency JavaScript IEEE-754 JSON Suite</p>
+    </footer>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <span>✅</span>
+    <span id="toastMsg">Code copied to clipboard!</span>
+  </div>
+
+  <script>
+    // Preset Scenarios
+    const PRESETS = {
+      quoted_tokens: {
+        name: "Quoted IEEE Sentinels (Pandas/Polars/R)",
+        data: {
+          "status": "success",
+          "study_id": "SURVEY_2026_WAVE1",
+          "sample_size": 2500,
+          "response_rate": 0.874,
+          "outlier_zscore": "Infinity",
+          "attenuation_coefficient": "-Infinity",
+          "missing_income_imputed": "NaN",
+          "subgroup_ratios": [
+            1.24,
+            "Infinity",
+            0.65,
+            "NaN",
+            -0.42,
+            "-Infinity"
+          ],
+          "calibration_weights": {
+            "stratum_A": 1.054,
+            "stratum_B": "NaN",
+            "stratum_C": "+Infinity"
+          }
+        }
+      },
+      python_bare: {
+        name: "Python Bare NaN / Infinity",
+        raw: `{
+  "experiment": "particle_collision_event",
+  "luminosity": 1.42e34,
+  "decay_rate": NaN,
+  "cherenkov_angle": Infinity,
+  "retardation_potential": -Infinity,
+  "scattering_matrix": [
+    [1.0, 0.0, NaN],
+    [0.0, Infinity, 0.5],
+    [-Infinity, 0.25, 1.0]
+  ]
+}`
+      },
+      census_stats: {
+        name: "Census & Survey Aggregations",
+        data: {
+          "region": "Metropolitan District 04",
+          "total_population": 482910,
+          "median_age": 36.4,
+          "poverty_headcount_ratio": 0.128,
+          "zero_denominator_fertility_index": "Infinity",
+          "suppressed_cell_privacy_limit": "NaN",
+          "negative_wealth_growth_rate": "-Infinity",
+          "demographic_bins": [
+            { "bin": "18-24", "unemployment": 0.082, "growth": 1.05 },
+            { "bin": "25-34", "unemployment": 0.045, "growth": "Infinity" },
+            { "bin": "35-54", "unemployment": "NaN", "growth": 0.98 },
+            { "bin": "55+", "unemployment": 0.031, "growth": "-Infinity" }
+          ]
+        }
+      },
+      astrophysics: {
+        name: "Astrophysics Orbit & Gravitation",
+        data: {
+          "celestial_object": "Sgr A* Event Horizon Sim",
+          "schwarzschild_radius_km": 12690000.0,
+          "singularity_density": "Infinity",
+          "time_dilation_at_horizon": "Infinity",
+          "quantum_evaporation_temp": "NaN",
+          "gravitational_potential_well": "-Infinity",
+          "photon_sphere_stability": "NaN",
+          "velocity_vector": {
+            "vx_c": 0.42,
+            "vy_c": "NaN",
+            "vz_c": 0.89
+          }
+        }
+      },
+      matrix_tensor: {
+        name: "2D Matrix & Tensor Grids",
+        data: {
+          "tensor_shape": [4, 4],
+          "dtype": "float64",
+          "values": [
+            [1.0, 2.0, "NaN", 4.0],
+            ["Infinity", 5.0, 6.0, "-Infinity"],
+            [7.0, "NaN", "NaN", 8.0],
+            ["-Infinity", 9.0, 10.0, "Infinity"]
+          ]
+        }
+      }
+    };
+
+    let currentPresetKey = 'quoted_tokens';
+    let currentParsedObject = null;
+
+    // --- Core Scientific JSON Parser Implementation ---
+    function parseScientificJSON(jsonText, options = {}) {
+      const {
+        parseQuotedNaN = true,
+        parseQuotedInfinity = true,
+        parseNullAsNaN = false,
+        sanitizeBareTokens = true,
+        caseInsensitive = true,
+        handleQnan = true,
+      } = options;
+
+      let processed = jsonText;
+
+      // Handle Bare Unquoted NaN / Infinity
+      if (sanitizeBareTokens) {
+        processed = processed.replace(
+          /("(?:\\.|[^"\\])*")|(\bNaN\b|\b[+-]?Infinity\b|\b[+-]?inf\b)/gi,
+          (match, quotedStr, bareToken) => {
+            if (quotedStr) return quotedStr;
+            if (bareToken) {
+              const low = bareToken.toLowerCase();
+              if (low.includes('nan')) return '"NaN"';
+              if (low.startsWith('-')) return '"-Infinity"';
+              return '"Infinity"';
+            }
+            return match;
+          }
+        );
+      }
+
+      return JSON.parse(processed, (key, value) => {
+        if (parseNullAsNaN && value === null) {
+          return NaN;
+        }
+
+        if (typeof value === 'string') {
+          const testVal = caseInsensitive ? value.toLowerCase().trim() : value.trim();
+
+          if (parseQuotedNaN) {
+            if (testVal === 'nan' || (handleQnan && (testVal === '1.#qnan' || testVal === '1.#ind' || testVal === 'na'))) {
+              return NaN;
+            }
+          }
+
+          if (parseQuotedInfinity) {
+            if (testVal === 'infinity' || testVal === '+infinity' || testVal === 'inf' || testVal === '+inf') {
+              return Infinity;
+            }
+            if (testVal === '-infinity' || testVal === '-inf') {
+              return -Infinity;
+            }
+          }
+        }
+
+        return value;
+      });
+    }
+
+    // --- Lossless Serializer ---
+    function stringifyScientificJSON(obj, replacer = null, space = 2) {
+      return JSON.stringify(obj, (key, value) => {
+        if (typeof value === 'number') {
+          if (Number.isNaN(value)) return 'NaN';
+          if (value === Infinity) return 'Infinity';
+          if (value === -Infinity) return '-Infinity';
+        }
+        if (typeof replacer === 'function') {
+          return replacer(key, value);
+        }
+        return value;
+      }, space);
+    }
+
+    // --- UI Interactions & Live Engine ---
+
+    function loadPreset(key, btnElement) {
+      currentPresetKey = key;
+      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+      if (btnElement) btnElement.classList.add('active');
+
+      const preset = PRESETS[key];
+      const textarea = document.getElementById('jsonInput');
+      if (preset.raw) {
+        textarea.value = preset.raw;
+      } else {
+        textarea.value = JSON.stringify(preset.data, null, 2);
+      }
+      handleInputLive();
+    }
+
+    function resetCurrentPreset() {
+      const activeBtn = document.querySelector('.preset-btn.active');
+      loadPreset(currentPresetKey, activeBtn);
+    }
+
+    function formatInputJson() {
+      try {
+        if (currentParsedObject !== null) {
+          document.getElementById('jsonInput').value = stringifyScientificJSON(currentParsedObject, null, 2);
+          handleInputLive();
+        }
+      } catch (e) {}
+    }
+
+    function getParserOptions() {
+      return {
+        parseQuotedNaN: document.getElementById('optQuotedNaN').checked,
+        parseQuotedInfinity: document.getElementById('optQuotedInf').checked,
+        sanitizeBareTokens: document.getElementById('optSanitizeBare').checked,
+        caseInsensitive: document.getElementById('optCaseInsensitive').checked,
+        handleQnan: document.getElementById('optQnan').checked,
+        parseNullAsNaN: document.getElementById('optNullAsNan').checked,
+      };
+    }
+
+    function handleInputLive() {
+      const text = document.getElementById('jsonInput').value;
+      const opts = getParserOptions();
+      const statusDot = document.getElementById('statusDot');
+      const statusText = document.getElementById('statusText');
+      const perfBadge = document.getElementById('perfBadge');
+
+      const t0 = performance.now();
+      try {
+        currentParsedObject = parseScientificJSON(text, opts);
+        const t1 = performance.now();
+        const duration = (t1 - t0).toFixed(2);
+
+        statusDot.className = 'status-dot';
+        statusText.innerText = `Valid Document (${duration} ms)`;
+        perfBadge.innerText = `⚡ ${duration} ms`;
+
+        renderInspector(currentParsedObject);
+        renderMathSandbox(currentParsedObject);
+        renderRoundTrip(currentParsedObject);
+      } catch (err) {
+        currentParsedObject = null;
+        statusDot.className = 'status-dot error';
+        statusText.innerText = `SyntaxError: ${err.message}`;
+        perfBadge.innerText = `❌ Error`;
+        document.getElementById('inspectorTableBody').innerHTML = `
+          <tr>
+            <td colspan="5" style="color:var(--accent-rose); padding:20px; text-align:center;">
+              <strong>Invalid JSON Syntax:</strong> ${escapeHtml(err.message)}
+            </td>
+          </tr>
+        `;
+        document.getElementById('mathSandboxGrid').innerHTML = `
+          <div style="color:var(--text-muted); padding:16px;">Fix JSON syntax error to run live arithmetic sandbox.</div>
+        `;
+      }
+    }
+
+    // Traverse object and collect property paths & values
+    function collectProperties(obj, prefix = '') {
+      const results = [];
+      if (obj === null || obj === undefined) {
+        results.push({ path: prefix || '(root)', value: obj, orig: String(obj) });
+        return results;
+      }
+
+      if (typeof obj === 'object') {
+        if (Array.isArray(obj)) {
+          obj.forEach((item, idx) => {
+            const p = prefix ? `${prefix}[${idx}]` : `[${idx}]`;
+            if (typeof item === 'object' && item !== null) {
+              results.push(...collectProperties(item, p));
+            } else {
+              results.push({ path: p, value: item, orig: formatOrigToken(item) });
+            }
+          });
+        } else {
+          for (const [k, v] of Object.entries(obj)) {
+            const p = prefix ? `${prefix}.${k}` : k;
+            if (typeof v === 'object' && v !== null) {
+              results.push(...collectProperties(v, p));
+            } else {
+              results.push({ path: p, value: v, orig: formatOrigToken(v) });
+            }
+          }
+        }
+      } else {
+        results.push({ path: prefix || '(root)', value: obj, orig: formatOrigToken(obj) });
+      }
+      return results;
+    }
+
+    function formatOrigToken(v) {
+      if (Number.isNaN(v)) return '"NaN"';
+      if (v === Infinity) return '"Infinity"';
+      if (v === -Infinity) return '"-Infinity"';
+      if (typeof v === 'string') return `"${v}"`;
+      return String(v);
+    }
+
+    function renderInspector(obj) {
+      const items = collectProperties(obj);
+      document.getElementById('parsedCountBadge').innerText = `${items.length} Properties Analyzed`;
+
+      const tbody = document.getElementById('inspectorTableBody');
+      if (items.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-dim); padding:16px;">No primitive fields found</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = items.map(item => {
+        let valStr = String(item.value);
+        let badge = '';
+        let classToken = '';
+
+        if (typeof item.value === 'number') {
+          if (Number.isNaN(item.value)) {
+            valStr = 'NaN';
+            classToken = 'token-nan';
+            badge = '<span class="pill pill-rose">IEEE-754 NaN</span>';
+          } else if (item.value === Infinity) {
+            valStr = '+Infinity';
+            classToken = 'token-pos-inf';
+            badge = '<span class="pill pill-cyan">IEEE-754 +&infin;</span>';
+          } else if (item.value === -Infinity) {
+            valStr = '-Infinity';
+            classToken = 'token-neg-inf';
+            badge = '<span class="pill pill-purple">IEEE-754 -&infin;</span>';
+          } else {
+            classToken = 'token-finite';
+            badge = '<span class="pill pill-emerald">Finite Number</span>';
+          }
+        } else if (typeof item.value === 'string') {
+          classToken = '';
+          badge = '<span class="pill" style="background:rgba(255,255,255,0.06); color:#cbd5e1;">String</span>';
+        } else if (typeof item.value === 'boolean') {
+          badge = '<span class="pill pill-purple">Boolean</span>';
+        } else if (item.value === null) {
+          badge = '<span class="pill pill-amber">null</span>';
+        }
+
+        return `
+          <tr>
+            <td><strong style="color:#a5b4fc;">${escapeHtml(item.path)}</strong></td>
+            <td><code style="color:var(--text-muted);">${escapeHtml(item.orig)}</code></td>
+            <td><span class="${classToken}">${escapeHtml(valStr)}</span></td>
+            <td><code>typeof === "${typeof item.value}"</code></td>
+            <td>${badge}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderMathSandbox(obj) {
+      const items = collectProperties(obj).filter(i => typeof i.value === 'number');
+      const container = document.getElementById('mathSandboxGrid');
+
+      if (items.length === 0) {
+        container.innerHTML = `<div style="color:var(--text-dim); padding:16px;">No numeric IEEE-754 values available for mathematical evaluation.</div>`;
+        return;
+      }
+
+      // Pick up to 6 interesting items
+      const sample = items.slice(0, 6);
+      container.innerHTML = sample.map(item => {
+        const v = item.value;
+        const add10 = v + 10;
+        const inv = 1 / v;
+        const mult0 = v * 0;
+        const selfEq = (v === v);
+
+        return `
+          <div class="math-card">
+            <div class="math-card-header">
+              <span>Path: <strong>${escapeHtml(item.path)}</strong></span>
+              <span>Initial: <code>${Number.isNaN(v) ? 'NaN' : String(v)}</code></span>
+            </div>
+            <div class="math-expr">val + 10 = <span style="color:#fff;">${String(add10)}</span></div>
+            <div class="math-expr">1 / val = <span style="color:#fff;">${String(inv)}</span></div>
+            <div class="math-expr">val * 0 = <span style="color:#fff;">${String(mult0)}</span></div>
+            <div class="math-expr">val === val = <span style="color:${selfEq ? '#34d399' : '#f43f5e'}; font-weight:700;">${String(selfEq)}</span> (Self-Equality)</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderRoundTrip(obj) {
+      const stdOut = JSON.stringify(obj, null, 2);
+      const sciOut = stringifyScientificJSON(obj, null, 2);
+
+      document.getElementById('standardStringifyOut').textContent = stdOut;
+      document.getElementById('scientificStringifyOut').textContent = sciOut;
+    }
+
+    function switchTab(tabId, btnElement) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
+      btnElement.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function runBenchmark() {
+      const text = document.getElementById('jsonInput').value;
+      const opts = getParserOptions();
+      const iterations = 10000;
+
+      const t0 = performance.now();
+      for (let i = 0; i < iterations; i++) {
+        parseScientificJSON(text, opts);
+      }
+      const t1 = performance.now();
+      const totalMs = t1 - t0;
+      const perOpUs = ((totalMs / iterations) * 1000).toFixed(2);
+      const opsPerSec = Math.round((iterations / (totalMs / 1000))).toLocaleString();
+
+      showToast(`⚡ Benchmark: ${iterations.toLocaleString()} parses in ${totalMs.toFixed(1)}ms (${perOpUs} &mu;s/op &bull; ${opsPerSec} ops/sec)`);
+    }
+
+    function copySnippetToClipboard() {
+      const code = `/**
+ * Scientific JSON Parser with IEEE-754 NaN & Infinity Support
+ * Zero dependencies • Native JSON.parse reviver architecture
+ */
+
+// 1. Parse JSON with support for quoted and bare NaN / Infinity
+export function parseScientificJSON(jsonText, options = {}) {
+  const {
+    parseQuotedNaN = true,
+    parseQuotedInfinity = true,
+    parseNullAsNaN = false,
+    sanitizeBareTokens = true,
+    caseInsensitive = true,
+  } = options;
+
+  let processed = jsonText;
+
+  // Pre-process unquoted bare tokens (NaN, Infinity, -Infinity) if present
+  if (sanitizeBareTokens) {
+    processed = processed.replace(
+      /("(?:\\.|[^"\\\\])*")|(\\bNaN\\b|\\b[+-]?Infinity\\b|\\b[+-]?inf\\b)/gi,
+      (match, quotedStr, bareToken) => {
+        if (quotedStr) return quotedStr;
+        if (bareToken) {
+          const low = bareToken.toLowerCase();
+          if (low.includes('nan')) return '"NaN"';
+          if (low.startsWith('-')) return '"-Infinity"';
+          return '"Infinity"';
+        }
+        return match;
+      }
+    );
+  }
+
+  // Native reviver pass
+  return JSON.parse(processed, (key, value) => {
+    if (parseNullAsNaN && value === null) {
+      return NaN;
+    }
+
+    if (typeof value === 'string') {
+      const testVal = caseInsensitive ? value.toLowerCase().trim() : value.trim();
+
+      // Check NaN patterns
+      if (parseQuotedNaN) {
+        if (testVal === 'nan' || testVal === '1.#qnan' || testVal === '1.#ind' || testVal === 'na') {
+          return NaN;
+        }
+      }
+
+      // Check Infinity patterns
+      if (parseQuotedInfinity) {
+        if (testVal === 'infinity' || testVal === '+infinity' || testVal === 'inf' || testVal === '+inf') {
+          return Infinity;
+        }
+        if (testVal === '-infinity' || testVal === '-inf') {
+          return -Infinity;
+        }
+      }
+    }
+
+    return value;
+  });
+}
+
+// 2. Lossless serializer preserving NaN & Infinity as quoted tokens
+export function stringifyScientificJSON(obj, replacer = null, space = 2) {
+  return JSON.stringify(obj, (key, value) => {
+    if (typeof value === 'number') {
+      if (Number.isNaN(value)) return 'NaN';
+      if (value === Infinity) return 'Infinity';
+      if (value === -Infinity) return '-Infinity';
+    }
+    if (typeof replacer === 'function') {
+      return replacer(key, value);
+    }
+    return value;
+  }, space);
+}`;
+
+      navigator.clipboard.writeText(code).then(() => {
+        showToast("📋 Production JavaScript code copied to clipboard!");
+      }).catch(() => {
+        showToast("⚠️ Could not access clipboard. Please copy manually.");
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').innerHTML = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3500);
+    }
+
+    function escapeHtml(str) {
+      if (typeof str !== 'string') return String(str);
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadPreset('quoted_tokens');
+    });
+  </script>
+</body>
+</html>

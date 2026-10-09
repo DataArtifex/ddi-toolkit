@@ -6,7 +6,7 @@ real_world_context: World Bank World Development Indicators (WDI) vs IMF Financi
 story: >
   Multilateral development organizations publish national accounts statistics with distinct naming
   conventions for identical economic concepts (e.g. 'GDP per capita, PPP' vs 'Gross domestic product
-  per capita, PPP'). HarmonizedConcept reconciles the preferred labels, notation identifiers, and formal definitions.
+  per capita, PPP'). Concept comparison reconciles the preferred labels, notation identifiers, and formal definitions.
 learning_objective: >
   Demonstrates conceptual alignment where definitions are identical but notation schemes and title formats differ.
 source_resource:

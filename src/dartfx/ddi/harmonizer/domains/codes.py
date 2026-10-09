@@ -48,7 +48,7 @@ class SentinelType(StrEnum):
     OTHER = "OTHER"
 
 
-class HarmonizedCategory(BaseModel):
+class Category(BaseModel):
     """Generic category representation representing a qualitative response or concept."""
 
     model_config = ConfigDict(frozen=True)
@@ -123,13 +123,13 @@ class HarmonizedCategory(BaseModel):
         return self.fingerprint.digest
 
 
-class HarmonizedCode(BaseModel):
+class Code(BaseModel):
     """Generic code item associating a coded value (notation) with a Category."""
 
     model_config = ConfigDict(frozen=True)
 
     value: str = Field(description="The code value or notation (e.g. '1', '99', 'M', '.A')")
-    category: HarmonizedCategory = Field(description="The associated category concept/meaning")
+    category: Category = Field(description="The associated category concept/meaning")
     is_missing_override: bool | None = Field(
         default=None,
         description="Explicit code-level override of category missingness",
@@ -241,18 +241,14 @@ class HarmonizedCode(BaseModel):
         )
 
 
-# Alias for domain-agnostic collection ergonomics
-HarmonizedCodeItem = HarmonizedCode
-
-
-class HarmonizedCodeList(BaseModel):
+class CodeList(BaseModel):
     """Generic collection of code items representing an enumerated response domain."""
 
     model_config = ConfigDict(frozen=True)
 
     name: str = Field(description="Name or identifier of the code list")
     label: str | None = Field(default=None, description="Human-readable title or label")
-    codes: list[HarmonizedCode] = Field(default_factory=list, description="List of member code items")
+    codes: list[Code] = Field(default_factory=list, description="List of member code items")
     urn: str | None = Field(
         default=None,
         description="Optional URN, PID, GUID, or unique identifier",
@@ -275,7 +271,7 @@ class HarmonizedCodeList(BaseModel):
         return self.identifier.is_assigned if self.identifier else False
 
     @property
-    def items(self) -> list[HarmonizedCode]:
+    def items(self) -> list[Code]:
         """Alias for member code items."""
         return self.codes
 
@@ -286,12 +282,12 @@ class HarmonizedCodeList(BaseModel):
 
     # Substantive vs Sentinel Partitions
     @property
-    def substantive_items(self) -> list[HarmonizedCode]:
+    def substantive_items(self) -> list[Code]:
         """All member codes where is_missing is False."""
         return [c for c in self.codes if c.is_substantive]
 
     @property
-    def sentinel_items(self) -> list[HarmonizedCode]:
+    def sentinel_items(self) -> list[Code]:
         """All member codes where is_missing is True."""
         return [c for c in self.codes if c.is_missing]
 

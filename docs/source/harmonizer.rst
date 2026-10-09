@@ -282,10 +282,10 @@ Determines whether two survey questions represent the same measurement item, iso
 
 .. code-block:: python
 
-   from dartfx.ddi.harmonizer import HarmonizedQuestion, compare_questions
+   from dartfx.ddi.harmonizer import Question, compare_questions
 
    # Wave 1: In-person CAPI interview
-   q_capi = HarmonizedQuestion(
+   q_capi = Question(
        pre_question_text="Thinking about the last 12 months:",
        question_text="Did you consult a medical doctor or specialist?",
        instructions="Show Card C to respondent. Single response only.",
@@ -293,7 +293,7 @@ Determines whether two survey questions represent the same measurement item, iso
    )
 
    # Wave 2: Self-administered CAWI web survey
-   q_cawi = HarmonizedQuestion(
+   q_cawi = Question(
        pre_question_text="Thinking about the last 12 months:",
        question_text="Did you consult a medical doctor or specialist?",
        instructions="Please select one option on the screen.",
@@ -324,32 +324,32 @@ Evaluates whether two response code lists are identical in sequence, permuted in
 .. code-block:: python
 
    from dartfx.ddi.harmonizer import (
-       HarmonizedCategory,
-       HarmonizedCode,
-       HarmonizedCodeList,
+       Category,
+       Code,
+       CodeList,
        SentinelType,
        compare_codelists,
    )
 
    # Survey A: 1=Male, 2=Female, 98=DK, 99=Refused
-   cl_a = HarmonizedCodeList(
+   cl_a = CodeList(
        name="CL_GENDER_A",
        codes=[
-           HarmonizedCode(value="1", category=HarmonizedCategory(label="Male")),
-           HarmonizedCode(value="2", category=HarmonizedCategory(label="Female")),
-           HarmonizedCode(value="98", category=HarmonizedCategory(label="DK", is_missing=True, sentinel_type=SentinelType.DONT_KNOW)),
-           HarmonizedCode(value="99", category=HarmonizedCategory(label="Refused", is_missing=True, sentinel_type=SentinelType.REFUSED)),
+           Code(value="1", category=Category(label="Male")),
+           Code(value="2", category=Category(label="Female")),
+           Code(value="98", category=Category(label="DK", is_missing=True, sentinel_type=SentinelType.DONT_KNOW)),
+           Code(value="99", category=Category(label="Refused", is_missing=True, sentinel_type=SentinelType.REFUSED)),
        ],
    )
 
    # Survey B: 1=Male, 2=Female, 8=DK, 9=Refused
-   cl_b = HarmonizedCodeList(
+   cl_b = CodeList(
        name="CL_GENDER_B",
        codes=[
-           HarmonizedCode(value="1", category=HarmonizedCategory(label="Male")),
-           HarmonizedCode(value="2", category=HarmonizedCategory(label="Female")),
-           HarmonizedCode(value="8", category=HarmonizedCategory(label="DK", is_missing=True, sentinel_type=SentinelType.DONT_KNOW)),
-           HarmonizedCode(value="9", category=HarmonizedCategory(label="Refused", is_missing=True, sentinel_type=SentinelType.REFUSED)),
+           Code(value="1", category=Category(label="Male")),
+           Code(value="2", category=Category(label="Female")),
+           Code(value="8", category=Category(label="DK", is_missing=True, sentinel_type=SentinelType.DONT_KNOW)),
+           Code(value="9", category=Category(label="Refused", is_missing=True, sentinel_type=SentinelType.REFUSED)),
        ],
    )
 
@@ -372,7 +372,7 @@ A flexible entry point that automatically inspects input types (questions, code 
 Dynamic Multi-Attribute Weighting (Unpopulated Attributes Ignored)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-When evaluating multi-attribute resources like ``HarmonizedQuestion`` or ``HarmonizedConcept`` with ``WeightedAttributeComparator`` or ``QuestionComparator``:
+When evaluating multi-attribute resources like ``Question`` or ``Concept`` with ``WeightedAttributeComparator`` or ``QuestionComparator``:
 
 * Attributes that are ``None``, empty ``""``, or omitted in **both** resources are **completely ignored** and not counted as artificial empty matches.
 * Weights are dynamically re-normalized over the active populated attributes.
@@ -391,22 +391,24 @@ The ``HarmonizationRegistry[T]`` acts as the high-performance repository contain
 Domain Resource Models
 ----------------------
 
+The framework provides clean, strongly-typed Pydantic domain models to represent un-harmonized raw metadata resources before comparison, fingerprinting, and alignment: ``Category``, ``Code``, ``CodeList``, ``Question``, ``Concept``, ``Variable``, ``ValueDomain``, ``NumericDomain``, ``TextDomain``, and ``Universe``.
+
 Codes & Categories
 ~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
    from dartfx.ddi.harmonizer.domains import (
-       HarmonizedCategory,
-       HarmonizedCode,
-       HarmonizedCodeList,
+       Category,
+       Code,
+       CodeList,
        SentinelType,
    )
 
    # 1. Categories with substantive and sentinel typing
-   cat_male = HarmonizedCategory(label="Male", value="1", is_missing=False)
-   cat_female = HarmonizedCategory(label="Female", value="2", is_missing=False)
-   cat_dk = HarmonizedCategory(
+   cat_male = Category(label="Male", value="1", is_missing=False)
+   cat_female = Category(label="Female", value="2", is_missing=False)
+   cat_dk = Category(
        label="Don't Know",
        value="98",
        is_missing=True,
@@ -414,12 +416,12 @@ Codes & Categories
    )
 
    # 2. Codes linking values to categories
-   code_male = HarmonizedCode(value="1", category=cat_male)
-   code_female = HarmonizedCode(value="2", category=cat_female)
-   code_dk = HarmonizedCode(value="98", category=cat_dk)
+   code_male = Code(value="1", category=cat_male)
+   code_female = Code(value="2", category=cat_female)
+   code_dk = Code(value="98", category=cat_dk)
 
    # 3. CodeList with granular Merkle sub-digests
-   cl = HarmonizedCodeList(name="CL_GENDER", codes=[code_male, code_female, code_dk])
+   cl = CodeList(name="CL_GENDER", codes=[code_male, code_female, code_dk])
 
    print("Code Sequence Digest:        ", cl.code_sequence_digest)
    print("Substantive Code Set Digest: ", cl.substantive_code_set_digest)
@@ -428,14 +430,14 @@ Codes & Categories
 Questions
 ~~~~~~~~~
 
-The ``HarmonizedQuestion`` model captures all structural facets of a survey question construct:
+The ``Question`` model captures all structural facets of a survey question construct:
 
 .. code-block:: python
 
-   from dartfx.ddi.harmonizer import HarmonizedQuestion, compare_questions
+   from dartfx.ddi.harmonizer import Question, compare_questions
 
    # 1. Instantiate structured question construct
-   q1 = HarmonizedQuestion(
+   q1 = Question(
        pre_question_text="Thinking about the past 12 months:",
        question_text="Did you visit a medical doctor or specialist?",
        post_question_text="Thank you. Now moving to the next section.",
@@ -447,7 +449,7 @@ The ``HarmonizedQuestion`` model captures all structural facets of a survey ques
    print("Component Digests:       ", fp.component_digests)
 
    # 2. Directly compare with another question instance (e.g. cross-wave web mode)
-   q2 = HarmonizedQuestion(
+   q2 = Question(
        pre_question_text="Thinking about the past 12 months:",
        question_text="Did you visit a medical doctor or specialist?",
        instructions="Select one option on the screen.",
@@ -465,9 +467,9 @@ Concepts
 
 .. code-block:: python
 
-   from dartfx.ddi.harmonizer.domains import HarmonizedConcept
+   from dartfx.ddi.harmonizer.domains import Concept
 
-   concept = HarmonizedConcept(
+   concept = Concept(
        preferred_label="Gross Domestic Product",
        definition="Monetary measure of the market value of all final goods produced.",
        notation="GDP",
@@ -497,7 +499,7 @@ The two-stage pipeline cleans punctuation, fixes the typo via substitution dicti
 .. code-block:: python
 
    from dartfx.ddi.harmonizer.comparators import ExactComparator
-   from dartfx.ddi.harmonizer.domains import HarmonizedCategory
+   from dartfx.ddi.harmonizer.domains import Category
    from dartfx.ddi.harmonizer.models import MatchType
    from dartfx.ddi.harmonizer.normalizer import NormalizationPreset, TextNormalizer
    from dartfx.ddi.harmonizer.registry import HarmonizationRegistry
@@ -507,10 +509,10 @@ The two-stage pipeline cleans punctuation, fixes the typo via substitution dicti
    normalizer = TextNormalizer.from_preset(NormalizationPreset.STANDARD)
    normalizer.sanitizer = sanitizer
 
-   cat_a = HarmonizedCategory(label="D’accord (fortement)", value="1")
-   cat_b = HarmonizedCategory(label="  daccord (fortement)  ", value="1")
+   cat_a = Category(label="D’accord (fortement)", value="1")
+   cat_b = Category(label="  daccord (fortement)  ", value="1")
 
-   registry = HarmonizationRegistry[HarmonizedCategory](comparator=ExactComparator(normalizer=normalizer))
+   registry = HarmonizationRegistry[Category](comparator=ExactComparator(normalizer=normalizer))
    registry.register(cat_a)
    match = registry.match(cat_b)
 
@@ -534,20 +536,20 @@ The framework computes an **Unordered Multiset Digest** (``SET::...``) that sort
 
 .. code-block:: python
 
-   from dartfx.ddi.harmonizer.domains import HarmonizedCategory, HarmonizedCode, HarmonizedCodeList
+   from dartfx.ddi.harmonizer.domains import Category, Code, CodeList
    from dartfx.ddi.harmonizer.models import MatchType
    from dartfx.ddi.harmonizer.registry import HarmonizationRegistry
 
-   c_f = HarmonizedCode(value="1", category=HarmonizedCategory(label="Female", value="1"))
-   c_m = HarmonizedCode(value="2", category=HarmonizedCategory(label="Male", value="2"))
+   c_f = Code(value="1", category=Category(label="Female", value="1"))
+   c_m = Code(value="2", category=Category(label="Male", value="2"))
 
-   cl_a = HarmonizedCodeList(name="CL_SEX_A", codes=[c_f, c_m])
-   cl_b = HarmonizedCodeList(name="CL_SEX_B", codes=[c_m, c_f])
+   cl_a = CodeList(name="CL_SEX_A", codes=[c_f, c_m])
+   cl_b = CodeList(name="CL_SEX_B", codes=[c_m, c_f])
 
    assert cl_a.code_sequence_digest != cl_b.code_sequence_digest
    assert cl_a.code_set_digest == cl_b.code_set_digest
 
-   registry = HarmonizationRegistry[HarmonizedCodeList]()
+   registry = HarmonizationRegistry[CodeList]()
    registry.register(cl_a)
    match = registry.match(cl_b)
 
@@ -572,40 +574,40 @@ The framework partitions items and matches on ``substantive_code_set_digest``:
 .. code-block:: python
 
    from dartfx.ddi.harmonizer.domains import (
-       HarmonizedCategory,
-       HarmonizedCode,
-       HarmonizedCodeList,
+       Category,
+       Code,
+       CodeList,
        SentinelType,
    )
    from dartfx.ddi.harmonizer.models import MatchType
    from dartfx.ddi.harmonizer.registry import HarmonizationRegistry
 
    # Survey A: 1=Male, 2=Female | 98=DK, 99=Refused
-   cl_a = HarmonizedCodeList(
+   cl_a = CodeList(
        name="CL_A",
        codes=[
-           HarmonizedCode(value="1", category=HarmonizedCategory(label="Male")),
-           HarmonizedCode(value="2", category=HarmonizedCategory(label="Female")),
-           HarmonizedCode(value="98", category=HarmonizedCategory(label="Don't Know", is_missing=True, sentinel_type=SentinelType.DONT_KNOW)),
-           HarmonizedCode(value="99", category=HarmonizedCategory(label="Refused", is_missing=True, sentinel_type=SentinelType.REFUSED)),
+           Code(value="1", category=Category(label="Male")),
+           Code(value="2", category=Category(label="Female")),
+           Code(value="98", category=Category(label="Don't Know", is_missing=True, sentinel_type=SentinelType.DONT_KNOW)),
+           Code(value="99", category=Category(label="Refused", is_missing=True, sentinel_type=SentinelType.REFUSED)),
        ],
    )
 
    # Survey B: 1=Male, 2=Female | 8=DK, 9=Refused
-   cl_b = HarmonizedCodeList(
+   cl_b = CodeList(
        name="CL_B",
        codes=[
-           HarmonizedCode(value="1", category=HarmonizedCategory(label="Male")),
-           HarmonizedCode(value="2", category=HarmonizedCategory(label="Female")),
-           HarmonizedCode(value="8", category=HarmonizedCategory(label="Don't Know", is_missing=True, sentinel_type=SentinelType.DONT_KNOW)),
-           HarmonizedCode(value="9", category=HarmonizedCategory(label="Refused", is_missing=True, sentinel_type=SentinelType.REFUSED)),
+           Code(value="1", category=Category(label="Male")),
+           Code(value="2", category=Category(label="Female")),
+           Code(value="8", category=Category(label="Don't Know", is_missing=True, sentinel_type=SentinelType.DONT_KNOW)),
+           Code(value="9", category=Category(label="Refused", is_missing=True, sentinel_type=SentinelType.REFUSED)),
        ],
    )
 
    assert cl_a.code_set_digest != cl_b.code_set_digest
    assert cl_a.substantive_code_set_digest == cl_b.substantive_code_set_digest
 
-   registry = HarmonizationRegistry[HarmonizedCodeList]()
+   registry = HarmonizationRegistry[CodeList]()
    registry.register(cl_a)
    match = registry.match(cl_b)
 
@@ -697,7 +699,7 @@ The framework computes granular Merkle category digests (``category_set_digest``
 
 .. code-block:: python
 
-   from dartfx.ddi.harmonizer.domains import HarmonizedCategory, HarmonizedCode, HarmonizedCodeList
+   from dartfx.ddi.harmonizer.domains import Category, Code, CodeList
    from dartfx.ddi.harmonizer.models import MatchType
    from dartfx.ddi.harmonizer.registry import HarmonizationRegistry
 
@@ -711,13 +713,13 @@ The framework computes granular Merkle category digests (``category_set_digest``
        ("US", "840", "United States"),
    ]
 
-   cl_alpha = HarmonizedCodeList(
+   cl_alpha = CodeList(
        name="CL_COUNTRY_G7_ALPHA2",
-       codes=[HarmonizedCode(value=a, category=HarmonizedCategory(label=name)) for a, _, name in countries],
+       codes=[Code(value=a, category=Category(label=name)) for a, _, name in countries],
    )
-   cl_numeric = HarmonizedCodeList(
+   cl_numeric = CodeList(
        name="CL_COUNTRY_G7_NUMERIC3",
-       codes=[HarmonizedCode(value=n, category=HarmonizedCategory(label=name)) for _, n, name in countries],
+       codes=[Code(value=n, category=Category(label=name)) for _, n, name in countries],
    )
 
    # Semantic category concept digests match 100%
@@ -729,7 +731,7 @@ The framework computes granular Merkle category digests (``category_set_digest``
    assert cl_alpha.value_set_digest != cl_numeric.value_set_digest
    assert cl_alpha.code_set_digest != cl_numeric.code_set_digest
 
-   registry = HarmonizationRegistry[HarmonizedCodeList]()
+   registry = HarmonizationRegistry[CodeList]()
    registry.register(cl_alpha)
    match = registry.match(cl_numeric)
 
@@ -742,7 +744,7 @@ The framework computes granular Merkle category digests (``category_set_digest``
 Variable Comparison & Harmonization
 -----------------------------------
 
-The framework provides a dedicated, multi-tiered **Variable Comparison and Harmonization Engine** (``HarmonizedVariable``, ``VariableComparator``, ``compare_variables``) that bridges simple tabular data wrangling with advanced statistical metadata standards (GSIM, DDI-CDI, DDI-Lifecycle, and ISO/IEC 11179).
+The framework provides a dedicated, multi-tiered **Variable Comparison and Harmonization Engine** (``Variable``, ``VariableComparator``, ``compare_variables``) that bridges simple tabular data wrangling with advanced statistical metadata standards (GSIM, DDI-CDI, DDI-Lifecycle, and ISO/IEC 11179).
 
 Core Identity Anchors & Multi-Tier Decomposition
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -751,10 +753,10 @@ Variables are structured across two operational tiers:
 
 1. **Lightweight Operational Anchors**: For fast tabular matching, variables are anchored primarily by ``name`` (mnemonic / column alias), ``label`` (human-readable title), and ``data_type``.
 2. **Advanced GSIM / DDI-CDI Conceptual Decomposition**:
-   * **Conceptual Variable**: Associates a ``HarmonizedConcept`` (e.g., *"Gross Income"*, *"Body Mass"*) with a target ``HarmonizedUniverse`` (e.g., *"Adults aged 18+"*).
-   * **Represented Variable**: Defines the ``HarmonizedValueDomain`` (Categorical CodeList, Continuous Numeric, Textual, or Temporal) along with physical metrology dimensions.
+   * **Conceptual Variable**: Associates a ``Concept`` (e.g., *"Gross Income"*, *"Body Mass"*) with a target ``Universe`` (e.g., *"Adults aged 18+"*).
+   * **Represented Variable**: Defines the ``ValueDomain`` (Categorical CodeList, Continuous Numeric, Textual, or Temporal) along with physical metrology dimensions.
    * **Instance Variable**: Specific dataset manifestation with physical data type representations and column identifiers.
-   * **Source Instrument**: Direct association with a ``HarmonizedQuestion`` (literal questionnaire prompt, interviewer instructions, and mode).
+   * **Source Instrument**: Direct association with a ``Question`` (literal questionnaire prompt, interviewer instructions, and mode).
 
 Standard Data Type Controlled Vocabularies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -787,8 +789,8 @@ Variables can be ingested seamlessly from Python dictionaries, JSON Schema prope
 
    from dartfx.ddi.harmonizer import (
        ComparisonProfile,
-       HarmonizedVariable,
        TransformationAction,
+       Variable,
        compare_variables,
    )
 
@@ -827,7 +829,7 @@ Variables can be ingested seamlessly from Python dictionaries, JSON Schema prope
        "minimum": 0,
        "maximum": 1000000,
    }
-   var_json = HarmonizedVariable.from_json_schema(
+   var_json = Variable.from_json_schema(
        json_schema,
        name="hh_income",
        quantity_kind="Currency",
@@ -914,7 +916,7 @@ When integrating multiple datasets or harmonizing across survey waves, ``Dataset
     # Output columns: weight_kg (converted from lbs), sex (recoded 1->M, 2->F)
 
 The ``DatasetHarmonizer`` accepts inputs across multiple formats seamlessly:
-* Lists of ``HarmonizedVariable`` instances.
+* Lists of ``Variable`` instances.
 * In-memory ``polars.DataFrame`` instances.
 * JSON Schema root documents (``{"type": "object", "properties": {...}}``).
 * DDI CodeBook 2.6 ``CodeBook`` objects.
