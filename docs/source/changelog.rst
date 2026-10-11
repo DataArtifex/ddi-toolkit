@@ -3,8 +3,37 @@ Changelog
 
 All notable changes to this project will be documented in this file.
 
-Version 0.3.0 (Current)
+Version 0.4.0 (Current)
 -----------------------
+
+Resource Harmonization, Variable Comparison & Dataset Crosswalks
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Cleaned Up Domain Models**: Removed ``Harmonized`` prefix across all domain classes for cleaner naming and developer ergonomics (``Category``, ``Code``, ``CodeList``, ``Question``, ``Concept``, ``Universe``, ``Variable``, ``DataType``, ``UnitOfMeasure``, ``QuantityKind``, ``NumericDomain``, ``Dataset``, ``DatasetHarmonizer``, ``DatasetCrosswalk``).
+- **Compound Variable Comparator (``VariableComparator``, ``compare_variables``)**: Added multi-attribute similarity scoring across variable labels (40%), names (10%), physical data type compatibility (20%), metrology & unit scaling (10%), value domains (20%), survey question constructs, conceptual representations, and target universes.
+- **Metrology & Unit Conversion Engine**: Added QUDT unit symbol lookup and linear scaling factor derivation (e.g. pounds to kilograms, USD to CAD) with automatic generation of ``CONVERT_UNIT`` transformation advice.
+- **Categorical Value Recoding Alignment**: Added ``CATEGORIES_EXACT_CODES_DIFFERENT`` match type to identify when semantic category concepts match 100% across differing physical code notation schemes (e.g., numeric ``1/2/9`` to ISO ``M/F/U``, or ISO alpha-2 to numeric-3 country codes) with synthesized ``RECODE_VALUES`` mapping dictionaries.
+- **Dataset Schema Harmonization (``DatasetHarmonizer``, ``DatasetCrosswalk``)**: Added automated schema alignment across tables, surveys, and JSON schema documents using greedy bipartite column pairing with 1-to-1 matching constraints.
+- **Automated Polars Execution Pipeline**: Added ``crosswalk.apply_to_polars(df)`` to execute column renaming, unit scaling factors, and categorical value recoding directly on in-memory Polars DataFrames in a single chained pipeline.
+- **Polymorphic Comparison Entry Point (``compare_resources``)**: Added single unified comparison function that dynamically inspects input resource types and delegates to the appropriate specialized comparator.
+- **Benchmark Test Case Bank (``CaseBankLoader``)**: Added comprehensive suite of real-world test cases across categorical, enumerated list, survey question, conceptual indicator, and variable domains with difficulty levels, narrative stories, learning objectives, and expected match types.
+
+Interactive HTML Harmonization Workbench (``dartfx-ddi harmonizer explore``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Interactive Standalone Workbench**: Added zero-dependency, self-contained interactive HTML/CSS/JS application for visual scenario exploration, debugging, and live experimentation.
+- **Redesigned Left-Hand Navigator**: Card list featuring full-width titles and dedicated metadata slug lines displaying ``<domain> | <difficulty> | <verdict>`` with semantic color-tinted status pills.
+- **Normalization Pipeline Inspector**: Step-by-step intermediate string rendering and hash inspection across raw input, Unicode NFKD de-accenting, punctuation stripping, case folding, typo correction, and stopword removal with convergence status badges (``CONVERGED AT THIS STEP!``, ``100% IDENTICAL``, ``MODIFIED``, ``DISCREPANT``).
+- **Multi-Stage Decision & Reasoning Trace**: Transparent 4-gate audit trace explaining the harmonizer's reasoning:
+  - *Gate 1: Identifier & URN Resolution* (Merkle root equality vs. identifier drift).
+  - *Gate 2: Merkle Tree & Structural Invariants* (sequence digests, permutation equivalence, substantive core partitions, and category concept sets).
+  - *Gate 3: Attribute & Facet Weight Decomposition* (sub-score breakdown across weighted dimensions).
+  - *Gate 4: Transformation Advisory Pipeline* (trigger rationale for recoding, unit conversions, data type casting, and column renames).
+- **Dual Source & Candidate Merkle Tree Inspector**: Side-by-side inspection of cryptographic roots, substantive vs. sentinel sub-digests, category set digests, and assigned URN vs. random GUID badges.
+- **Live Harmonization Playground**: Interactive JSON/text editor with live similarity gauges, normalizer preset switches, typo replacement overrides, and reproducible Python reproduction code generation.
+
+Version 0.3.0
+-------------
 
 DDI-Lifecycle Resource Profile & Topology Analysis
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

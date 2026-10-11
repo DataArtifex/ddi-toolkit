@@ -215,3 +215,138 @@ Connecting, Querying, and Multi-Format Reporting
        inventory = l3_qm.get_fragment_inventory("surveys")
        for item in inventory:
            print(f"{item['type']}: {item['count']} fragments")
+
+Resource Harmonization & Dataset Crosswalks
+--------------------------------------------
+
+Pairwise Variable Comparison with Metrology & Unit Conversion
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import (
+       Variable,
+       NumericDomain,
+       UnitOfMeasure,
+       compare_variables,
+       ComparisonProfile,
+   )
+
+   # Variable 1: Body weight measured in pounds (lbs)
+   v_src = Variable(
+       name="WEIGHT_LBS",
+       label="Participant Body Weight",
+       data_type="DECIMAL",
+       value_domain={
+           "numeric_domain": NumericDomain(
+               min_value=80.0,
+               max_value=350.0,
+               unit=UnitOfMeasure.from_symbol("lbs"),
+           )
+       },
+   )
+
+   # Variable 2: Body weight measured in kilograms (kg)
+   v_cand = Variable(
+       name="body_weight_kg",
+       label="Body Weight (Kilograms)",
+       data_type="DECIMAL",
+       value_domain={
+           "numeric_domain": NumericDomain(
+               min_value=36.0,
+               max_value=160.0,
+               unit=UnitOfMeasure.from_symbol("kg"),
+           )
+       },
+   )
+
+   # Compare using the LIGHTWEIGHT profile
+   result = compare_variables(v_src, v_cand, profile=ComparisonProfile.LIGHTWEIGHT)
+
+   print(f"Match Type: {result.match_type.value}")
+   print(f"Composite Score: {result.score:.1%}")
+   print(f"Sub-Scores: {result.sub_scores}")
+
+   for advice in result.transformation_advice:
+       print(f"Advice Action: {advice.action.value}")
+       print(f"Description: {advice.description}")
+       print(f"Parameters: {advice.parameters}")
+
+Categorical Value Recoding Alignment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import Variable, CodeList, Code, Category, compare_variables
+
+   # Source: Demographic survey using numeric codes
+   v_num = Variable(
+       name="GENDER_NUM",
+       label="Respondent Gender",
+       data_type="INTEGER",
+       value_domain={
+           "codelist": CodeList(
+               name="GenderNumeric",
+               codes=[
+                   Code(value="1", category=Category(label="Male")),
+                   Code(value="2", category=Category(label="Female")),
+                   Code(value="9", category=Category(label="Unknown", is_missing=True)),
+               ],
+           )
+       },
+   )
+
+   # Target: Central administrative system using ISO 5218 alphanumeric codes
+   v_iso = Variable(
+       name="sex_iso",
+       label="Respondent Gender",
+       data_type="STRING",
+       value_domain={
+           "codelist": CodeList(
+               name="SexIso",
+               codes=[
+                   Code(value="M", category=Category(label="Male")),
+                   Code(value="F", category=Category(label="Female")),
+                   Code(value="U", category=Category(label="Unknown", is_missing=True)),
+               ],
+           )
+       },
+   )
+
+   res = compare_variables(v_num, v_iso)
+   print(f"Match: {res.match_type.value}")  # CATEGORIES_EXACT_CODES_DIFFERENT
+   for advice in res.transformation_advice:
+       if advice.mapping:
+           print(f"Recode Map: {advice.mapping}")  # {'1': 'M', '2': 'F', '9': 'U'}
+
+Dataset Schema Harmonization & Polars Execution
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   import polars as pl
+   from dartfx.ddi.harmonizer import DatasetHarmonizer
+
+   # Source registry dataframe
+   source_df = pl.DataFrame({
+       "PATIENT_ID": [101, 102, 103],
+       "WEIGHT_LBS": [154.0, 198.0, 220.0],
+       "GENDER_NUM": [1, 2, 1],
+   })
+
+   # Target canonical schema dataframe
+   target_df = pl.DataFrame({
+       "subject_id": [1, 2],
+       "body_weight_kg": [70.0, 90.0],
+       "sex_iso": ["M", "F"],
+   })
+
+   # Harmonize schemas using optimal bipartite matching
+   crosswalk = DatasetHarmonizer.from_dataframes(source_df, target_df)
+
+   # Display Markdown documentation table
+   print(crosswalk.to_markdown())
+
+   # Execute the end-to-end transformation on source data
+   harmonized_df = crosswalk.apply_to_polars(source_df)
+   print(harmonized_df)

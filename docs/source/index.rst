@@ -32,7 +32,7 @@ Key Features
 * **Assistant Framework**: Streamlined resource creation, automated DDI identifier management, and method proxying for DDI-CDI.
 * **RDF Integration**: Generate and validate RDF representations using the `DataArtifex RDF Toolkit <https://github.com/DataArtifex/rdf-toolkit>`_.
 * **Cross-Format Conversion**: Transform between DDI-Codebook and DDI-CDI formats aligned with the CDIF profile.
-* **Generic Resource Harmonization Framework**: Domain-agnostic, extensible deduplication, hierarchical Merkle fingerprinting, syntactic/semantic/AI comparison, and reconciliation engine for codes, categories, questions, and concepts.
+* **Resource Harmonization, Variable & Dataset Comparison**: Multi-attribute compound variable comparison, metrology & unit conversion scaling, categorical value recoding, schema crosswalks with automated Polars pipeline execution, and an interactive standalone HTML Harmonization Workbench (``dartfx-ddi harmonizer explore``).
 * **BaseX XML Database & Reporting** *(Experimental, Optional)*: Connect to BaseX servers over REST, query collections, and generate publication-ready reports (Markdown, HTML, JSON, CSV, Polars DataFrames).
 
 Quick Start
@@ -87,17 +87,18 @@ DDI-CDI & Assistant Framework usage::
    # Serialize to RDF
    graph = dataset.to_rdf_graph()
 
-Pairwise Resource Comparison & Harmonization usage::
+Pairwise Resource Comparison & Variable Harmonization usage::
 
-   from dartfx.ddi.harmonizer import Question, compare_questions
+   from dartfx.ddi.harmonizer import Variable, NumericDomain, UnitOfMeasure, compare_variables
 
-   # Compare two survey questions (isolating prompts from mode instructions)
-   q1 = Question(question_text="Are you currently employed?", instructions="Show Card 4.")
-   q2 = Question(question_text="Are you currently employed?", instructions="Select one on screen.")
+   # Compare two continuous variables with unit differences
+   v1 = Variable(name="WEIGHT_LBS", label="Weight", value_domain={"numeric_domain": NumericDomain(unit=UnitOfMeasure.from_symbol("lbs"))})
+   v2 = Variable(name="weight_kg", label="Weight", value_domain={"numeric_domain": NumericDomain(unit=UnitOfMeasure.from_symbol("kg"))})
 
-   result = compare_questions(q1, q2)
-   print(f"Similarity: {result.score:.1%} | Match: {result.match_type}")
-   print(f"Sub-scores: {result.sub_scores}")
+   result = compare_variables(v1, v2)
+   print(f"Similarity: {result.score:.1%} | Match: {result.match_type.value}")
+   for advice in result.transformation_advice:
+       print(f"Advice: {advice.description}")
 
 
 .. toctree::

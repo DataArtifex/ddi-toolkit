@@ -219,49 +219,64 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       border-color: var(--primary);
       background-color: rgba(99, 102, 241, 0.12);
     }
-    .case-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 4px;
-    }
     .case-title {
       font-size: 0.88rem;
       font-weight: 600;
       line-height: 1.3;
+      color: var(--text-main);
+    }
+    .case-slugs {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.68rem;
+      line-height: 1.2;
+    }
+    .case-slug-sep {
+      color: var(--text-muted);
+      opacity: 0.4;
+      font-weight: 400;
+      font-size: 0.70rem;
+      user-select: none;
     }
     .tag {
-      font-size: 0.68rem;
-      padding: 2px 6px;
+      font-size: 0.65rem;
+      padding: 1px 6px;
       border-radius: 4px;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+      text-transform: lowercase;
+      letter-spacing: 0.02em;
     }
     .tag-categorical { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
     .tag-enumerated_list { background: rgba(16, 185, 129, 0.2); color: #34d399; }
     .tag-question { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
     .tag-conceptual { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
     .tag-variable { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
-    .case-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-      align-items: center;
-      justify-content: flex-end;
-    }
     .tag-diff {
-      font-size: 0.62rem;
-      padding: 1px 5px;
+      font-size: 0.65rem;
+      padding: 1px 6px;
       border-radius: 4px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+      font-weight: 600;
+      text-transform: lowercase;
+      letter-spacing: 0.02em;
     }
     .tag-diff-basic { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); }
     .tag-diff-intermediate { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.35); }
     .tag-diff-advanced { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
     .tag-diff-edge_case { background: rgba(236, 72, 153, 0.15); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.35); }
+    .tag-verdict {
+      font-size: 0.65rem;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      text-transform: lowercase;
+      letter-spacing: 0.02em;
+    }
+    .tag-verdict-match { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .tag-verdict-similar { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.3); }
+    .tag-verdict-notice { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .tag-verdict-distinct { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
     .sort-bar {
       display: flex;
       align-items: center;
@@ -1579,6 +1594,15 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       renderCaseList();
     }
 
+    function getVerdictTagClass(matchType) {
+      if (!matchType) return 'tag-verdict-similar';
+      const m = String(matchType).toUpperCase();
+      if (m.includes('EXACT') || m.includes('IDENTICAL') || m === 'SUBSTANTIVE_EXACT') return 'tag-verdict-match';
+      if (m.includes('PERMUTATION') || m.includes('RECODE') || m.includes('UNIT_CONVERSION') || m.includes('CODES_DIFFERENT')) return 'tag-verdict-notice';
+      if (m.includes('DISTINCT') || m.includes('DRIFT') || m.includes('INCOMPATIBLE')) return 'tag-verdict-distinct';
+      return 'tag-verdict-similar';
+    }
+
     function renderCaseList() {
       const query = (document.getElementById('caseSearch').value || '').toLowerCase();
       const sortMode = document.getElementById('caseSortSelect') ? document.getElementById('caseSortSelect').value : 'complexity_asc';
@@ -1618,14 +1642,19 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         const card = document.createElement('div');
         card.className = 'case-card' + (currentCase && currentCase.id === c.id ? ' active' : '');
         card.onclick = () => loadCase(c.id);
-        const diffLabel = (c.difficulty || 'basic').replace('_', ' ');
+        const diffLabel = (c.difficulty || 'basic').replace(/_/g, ' ');
+        const verdictRaw = c.expected_match_type || '';
+        const verdictLabel = verdictRaw.toLowerCase().replace(/_/g, ' ');
+        const verdictClass = getVerdictTagClass(verdictRaw);
+
         card.innerHTML = `
-          <div class="case-header">
-            <div class="case-title">${escapeHtml(c.title)}</div>
-            <div class="case-tags">
-              <span class="tag tag-${c.domain}">${c.domain.replace('_', ' ')}</span>
-              <span class="tag-diff tag-diff-${c.difficulty || 'basic'}">${diffLabel}</span>
-            </div>
+          <div class="case-title">${escapeHtml(c.title)}</div>
+          <div class="case-slugs">
+            <span class="tag tag-${c.domain}">${escapeHtml(c.domain.replace(/_/g, ' '))}</span>
+            <span class="case-slug-sep">|</span>
+            <span class="tag-diff tag-diff-${c.difficulty || 'basic'}">${escapeHtml(diffLabel)}</span>
+            <span class="case-slug-sep">|</span>
+            <span class="tag-verdict ${verdictClass}">${escapeHtml(verdictLabel)}</span>
           </div>
           <div class="case-desc">${escapeHtml(c.story)}</div>
         `;

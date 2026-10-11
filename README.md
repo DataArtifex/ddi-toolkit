@@ -1,15 +1,15 @@
 # Data Artifex DDI Toolkit
 
 [![Development Status](https://img.shields.io/badge/status-early%20release-orange.svg)](https://github.com/DataArtifex/ddi-toolkit)
-[![Documentation](https://img.shields.io/badge/docs-blue)](https://www.dataartifex.org/docs/ddi-toolkit/)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/DataArtifex/ddi-toolkit)
+[![Documentation](https://img.shields.io/badge/docs-blue)](https://www.dataartifex.org/ddi-toolkit/)
+[![Ask DeepWiki](https://img.shields.io/badge/Ask%20DeepWiki-AI%20Docs-5C54E5)](https://deepwiki.com/DataArtifex/ddi-toolkit)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![Package Status](https://img.shields.io/badge/PyPI-not%20published-lightgrey)](https://github.com/DataArtifex/ddi-toolkit)
 [![CI](https://github.com/DataArtifex/ddi-toolkit/actions/workflows/test.yml/badge.svg)](https://github.com/DataArtifex/ddi-toolkit/actions/workflows/test.yml)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Code style: Ruff](https://img.shields.io/badge/code%20style-ruff-261230.svg?logo=ruff&logoColor=D7FF64)](https://github.com/astral-sh/ruff)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
-[![License](https://img.shields.io/github/license/DataArtifex/ddi-toolkit.svg)](https://github.com/DataArtifex/ddi-toolkit/blob/main/LICENSE.txt)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.txt)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
 
 **This project is in its early development stages, so stability is not guaranteed, and documentation is limited. We welcome your feedback and contributions as we refine and expand this project together!**
@@ -268,26 +268,46 @@ dartfx-ddi basex create-db surveys --input ./xml_files/
 dartfx-ddi basex report surveys --type ddic-dictionary --format html -o dictionary.html
 ```
 
-### Resource Harmonization & Pairwise Comparison
+### Resource Harmonization, Variable & Dataset Comparison
 
-Compare two resources directly (e.g., determining if two survey questions are equivalent across interview modes) or deduplicate large collections via hierarchical Merkle fingerprints:
+Compare resources directly (survey questions, code lists, concepts, variables, or entire dataset schemas), generate transformation advice, and execute automated Polars harmonization pipelines:
 
 ```python
-from dartfx.ddi.harmonizer import Question, compare_questions
-
-# Pairwise Question Comparison
-q1 = Question(
-    question_text="Did you consult a medical doctor or specialist?",
-    instructions="Show Card C to respondent.",
+from dartfx.ddi.harmonizer import (
+    Variable,
+    NumericDomain,
+    UnitOfMeasure,
+    compare_variables,
+    DatasetHarmonizer,
 )
-q2 = Question(
-    question_text="Did you consult a medical doctor or specialist?",
-    instructions="Select one option on the screen.",
+import polars as pl
+
+# 1. Variable Comparison with Metrology & Unit Conversion Scaling
+v1 = Variable(
+    name="WEIGHT_LBS",
+    label="Participant Body Weight",
+    data_type="DECIMAL",
+    value_domain={"numeric_domain": NumericDomain(unit=UnitOfMeasure.from_symbol("lbs"))},
+)
+v2 = Variable(
+    name="body_weight_kg",
+    label="Subject Body Weight",
+    data_type="DECIMAL",
+    value_domain={"numeric_domain": NumericDomain(unit=UnitOfMeasure.from_symbol("kg"))},
 )
 
-result = compare_questions(q1, q2)
-print(f"Similarity Score: {result.score:.1%}")
-print(f"Match Classification: {result.match_type}")
+res = compare_variables(v1, v2)
+print(f"Similarity: {res.score:.1%} | Match: {res.match_type.value}")
+for advice in res.transformation_advice:
+    print(f"Advice [{advice.action.value}]: {advice.description}")
+
+# 2. Automated Dataset Schema Crosswalk & Polars Pipeline Execution
+src_df = pl.DataFrame({"WEIGHT_LBS": [154.0, 198.0], "GENDER_NUM": [1, 2]})
+tgt_df = pl.DataFrame({"body_weight_kg": [70.0, 90.0], "sex_iso": ["M", "F"]})
+
+crosswalk = DatasetHarmonizer.from_dataframes(src_df, tgt_df)
+harmonized_df = crosswalk.apply_to_polars(src_df)
+print(harmonized_df)
 ```
 
 Launch the interactive Harmonization Workbench:

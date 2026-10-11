@@ -198,16 +198,63 @@ CLI usage:
    # Generate study summary report
    dartfx-ddi basex report surveys --type ddic-summary --format md
 
-Resource Harmonization & Pairwise Comparison
----------------------------------------------
+Resource Harmonization, Variable & Dataset Comparison
+------------------------------------------------------
 
-Compare two resources directly (e.g., determining if two survey questions are equivalent across interview modes) or deduplicate large collections via hierarchical Merkle fingerprints:
+Compare resources directly (survey questions, code lists, concepts, variables, or entire dataset schemas) and generate automated transformation advisories:
+
+Pairwise Variable Comparison & Transformation Advisories:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import Variable, NumericDomain, UnitOfMeasure, compare_variables
+
+   # Compare continuous measurement variables with unit differences
+   v1 = Variable(
+       name="BODY_WEIGHT_LBS",
+       label="Participant Body Weight",
+       data_type="DECIMAL",
+       value_domain={"numeric_domain": NumericDomain(unit=UnitOfMeasure.from_symbol("lbs"))},
+   )
+   v2 = Variable(
+       name="weight_kg",
+       label="Subject Body Weight",
+       data_type="DECIMAL",
+       value_domain={"numeric_domain": NumericDomain(unit=UnitOfMeasure.from_symbol("kg"))},
+   )
+
+   result = compare_variables(v1, v2)
+   print(f"Similarity: {result.score:.1%} | Match: {result.match_type.value}")
+   for advice in result.transformation_advice:
+       print(f"Advisory [{advice.action.value}]: {advice.description}")
+
+Dataset Schema Harmonization & Polars Execution:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   import polars as pl
+   from dartfx.ddi.harmonizer import DatasetHarmonizer
+
+   source_df = pl.DataFrame({"weight_lbs": [150.0, 180.0], "sex_num": [1, 2]})
+   target_df = pl.DataFrame({"weight_kg": [68.0, 81.6], "gender_iso": ["M", "F"]})
+
+   # Generate optimal bipartite schema crosswalk
+   crosswalk = DatasetHarmonizer.from_dataframes(source_df, target_df)
+   print(crosswalk.to_markdown())
+
+   # Execute automated transformation pipeline directly on Polars DataFrame
+   harmonized_df = crosswalk.apply_to_polars(source_df)
+   print(harmonized_df)
+
+Pairwise Survey Question Comparison:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
    from dartfx.ddi.harmonizer import Question, compare_questions
 
-   # Pairwise Question Comparison
    q1 = Question(
        question_text="Did you consult a medical doctor or specialist?",
        instructions="Show Card C to respondent.",
@@ -219,10 +266,11 @@ Compare two resources directly (e.g., determining if two survey questions are eq
 
    result = compare_questions(q1, q2)
    print(f"Similarity Score: {result.score:.1%}")
-   print(f"Match Classification: {result.match_type}")
+   print(f"Match Classification: {result.match_type.value}")
    print(f"Sub-Scores: {result.sub_scores}")
 
 CLI exploration workbench:
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
