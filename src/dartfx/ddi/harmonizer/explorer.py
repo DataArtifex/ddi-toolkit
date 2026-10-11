@@ -680,6 +680,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       gap: 6px;
     }
     .verdict-match { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .verdict-similar { background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4); }
+    .verdict-notice { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
     .verdict-permutation { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
     .verdict-distinct { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
     .score-meter {
@@ -1594,13 +1596,22 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       renderCaseList();
     }
 
+    function classifyVerdictType(verdict) {
+      if (!verdict) return 'similar';
+      const m = String(verdict).toUpperCase();
+      if (m.includes('DISTINCT') || m.includes('INCOMPATIBLE')) return 'distinct';
+      if (m.includes('PERMUTATION') || m.includes('RECODE') || m.includes('UNIT_CONVERSION') || m.includes('CODES_DIFFERENT') || m.includes('DRIFT') || m.includes('TRANSFORMATION')) return 'notice';
+      if (m.includes('EXACT') || m.includes('IDENTICAL') || m === 'SUBSTANTIVE_EXACT') return 'match';
+      if (m.includes('SIMILAR')) return 'similar';
+      return 'similar';
+    }
+
     function getVerdictTagClass(matchType) {
-      if (!matchType) return 'tag-verdict-similar';
-      const m = String(matchType).toUpperCase();
-      if (m.includes('EXACT') || m.includes('IDENTICAL') || m === 'SUBSTANTIVE_EXACT') return 'tag-verdict-match';
-      if (m.includes('PERMUTATION') || m.includes('RECODE') || m.includes('UNIT_CONVERSION') || m.includes('CODES_DIFFERENT')) return 'tag-verdict-notice';
-      if (m.includes('DISTINCT') || m.includes('DRIFT') || m.includes('INCOMPATIBLE')) return 'tag-verdict-distinct';
-      return 'tag-verdict-similar';
+      return 'tag-verdict-' + classifyVerdictType(matchType);
+    }
+
+    function getVerdictBadgeClass(verdict) {
+      return 'verdict-' + classifyVerdictType(verdict);
     }
 
     function renderCaseList() {
@@ -1923,11 +1934,20 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       }
 
       if (document.getElementById('optDeaccent').checked) {
+        text = text.replace(/ß/g, 'ss').replace(/ẞ/g, 'SS')
+                   .replace(/æ/g, 'ae').replace(/Æ/g, 'AE')
+                   .replace(/œ/g, 'oe').replace(/Œ/g, 'OE')
+                   .replace(/ﬁ/g, 'fi').replace(/ﬂ/g, 'fl')
+                   .replace(/ﬀ/g, 'ff').replace(/ﬃ/g, 'ffi').replace(/ﬄ/g, 'ffl')
+                   .replace(/ﬅ/g, 'st').replace(/ﬆ/g, 'st')
+                   .replace(/ø/g, 'o').replace(/Ø/g, 'O')
+                   .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+                   .replace(/ł/g, 'l').replace(/Ł/g, 'L');
         text = text.normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
       }
 
       if (document.getElementById('optCasefold').checked) {
-        text = text.toLowerCase();
+        text = text.replace(/ß/g, 'ss').replace(/ẞ/g, 'ss').toLowerCase();
       }
 
       if (document.getElementById('optPunctuation').checked) {
@@ -2346,11 +2366,28 @@ Execution:        Completed in 0.42ms with zero allocations.`;
           }
         }
       } else if (domain === 'question' && parsedSrc && parsedCand) {
-        const qScore = computeSimilarity(parsedSrc.question_text || '', parsedCand.question_text || '', method);
-        const iScore = computeSimilarity(parsedSrc.instructions || '', parsedCand.instructions || '', method);
-        const preScore = computeSimilarity(parsedSrc.pre_question_text || '', parsedCand.pre_question_text || '', method);
-        const intScore = computeSimilarity(parsedSrc.intent || '', parsedCand.intent || '', method);
-        score = (qScore * 0.65) + (iScore * 0.15) + (preScore * 0.10) + (intScore * 0.10);
+        let weighted_sum = 0.0;
+        let total_weight = 0.0;
+
+        const weights = { question_text: 0.65, instructions: 0.15, pre_question_text: 0.10, post_question_text: 0.05, intent: 0.05 };
+        for (const [attr, weight] of Object.entries(weights)) {
+          const sVal = parsedSrc[attr];
+          const tVal = parsedCand[attr];
+          const sEmpty = sVal === undefined || sVal === null || String(sVal).trim() === '';
+          const tEmpty = tVal === undefined || tVal === null || String(tVal).trim() === '';
+          if (sEmpty && tEmpty) continue;
+
+          let subScore = 0.0;
+          if (sEmpty || tEmpty) {
+            subScore = 0.0;
+          } else {
+            subScore = computeSimilarity(String(sVal).trim(), String(tVal).trim(), method);
+          }
+          weighted_sum += subScore * weight;
+          total_weight += weight;
+        }
+
+        score = total_weight > 0 ? (weighted_sum / total_weight) : 0.0;
 
         srcDigest = simpleHash(normalizeText(parsedSrc.question_text || ''));
         candDigest = simpleHash(normalizeText(parsedCand.question_text || ''));
@@ -2359,23 +2396,41 @@ Execution:        Completed in 0.42ms with zero allocations.`;
           verdict = 'IDENTIFIER_EXACT_CONTENT_DRIFT';
           badgeClass = 'verdict-match';
         } else if (score >= threshold) {
-          verdict = score === 1.0 ? 'EXACT_IDENTICAL' : 'SYNTACTIC_SIMILAR';
+          verdict = (srcDigest === candDigest) ? 'EXACT_IDENTICAL' : (score === 1.0 ? 'NORMALIZED_EXACT' : 'SYNTACTIC_SIMILAR');
           badgeClass = 'verdict-match';
         } else {
           verdict = 'DISTINCT';
           badgeClass = 'verdict-distinct';
         }
       } else if (domain === 'conceptual' && parsedSrc && parsedCand) {
-        const lblScore = computeSimilarity(parsedSrc.preferred_label || '', parsedCand.preferred_label || '', method);
-        const notScore = (parsedSrc.notation && parsedCand.notation && parsedSrc.notation === parsedCand.notation) ? 1.0 : (parsedSrc.notation || parsedCand.notation ? 0.0 : 1.0);
-        const defScore = computeSimilarity(parsedSrc.definition || '', parsedCand.definition || '', method);
-        score = (lblScore * 0.50) + (notScore * 0.20) + (defScore * 0.30);
+        let weighted_sum = 0.0;
+        let total_weight = 0.0;
 
-        srcDigest = simpleHash(normalizeText((parsedSrc.preferred_label || '') + '|' + (parsedSrc.definition || '')));
-        candDigest = simpleHash(normalizeText((parsedCand.preferred_label || '') + '|' + (parsedCand.definition || '')));
+        const weights = { preferred_label: 0.60, definition: 0.30, notation: 0.10 };
+        for (const [attr, weight] of Object.entries(weights)) {
+          const sVal = parsedSrc[attr];
+          const tVal = parsedCand[attr];
+          const sEmpty = sVal === undefined || sVal === null || String(sVal).trim() === '';
+          const tEmpty = tVal === undefined || tVal === null || String(tVal).trim() === '';
+          if (sEmpty && tEmpty) continue;
+
+          let subScore = 0.0;
+          if (sEmpty || tEmpty) {
+            subScore = 0.0;
+          } else {
+            subScore = computeSimilarity(String(sVal).trim(), String(tVal).trim(), method);
+          }
+          weighted_sum += subScore * weight;
+          total_weight += weight;
+        }
+
+        score = total_weight > 0 ? (weighted_sum / total_weight) : 0.0;
+
+        srcDigest = simpleHash(normalizeText((parsedSrc.preferred_label || '') + '|' + (parsedSrc.definition || '') + '|' + (parsedSrc.notation || '')));
+        candDigest = simpleHash(normalizeText((parsedCand.preferred_label || '') + '|' + (parsedCand.definition || '') + '|' + (parsedCand.notation || '')));
 
         if (score >= threshold) {
-          verdict = score === 1.0 ? 'EXACT_IDENTICAL' : 'SYNTACTIC_SIMILAR';
+          verdict = (srcDigest === candDigest) ? 'EXACT_IDENTICAL' : (score === 1.0 ? 'NORMALIZED_EXACT' : 'SYNTACTIC_SIMILAR');
           badgeClass = 'verdict-match';
         } else {
           verdict = 'DISTINCT';
@@ -2395,7 +2450,7 @@ Execution:        Completed in 0.42ms with zero allocations.`;
         score = computeSimilarity(srcLabel, candLabel, method);
 
         if (srcNorm === candNorm) {
-          verdict = 'NORMALIZED_EXACT';
+          verdict = (srcLabel === candLabel) ? 'EXACT_IDENTICAL' : 'NORMALIZED_EXACT';
           score = 1.0;
           badgeClass = 'verdict-match';
         } else if (score >= threshold) {
@@ -2415,7 +2470,7 @@ Execution:        Completed in 0.42ms with zero allocations.`;
       document.getElementById('scoreBar').style.width = scorePct + '%';
 
       const badge = document.getElementById('verdictBadge');
-      badge.className = 'verdict-badge ' + badgeClass;
+      badge.className = 'verdict-badge ' + getVerdictBadgeClass(verdict);
       badge.innerText = verdict;
 
       // Render Decision & Reasoning Trace (Audit Log)
@@ -2534,15 +2589,24 @@ Execution:        Completed in 0.42ms with zero allocations.`;
       });
       current = step2;
 
-      // Step 3: Unicode NFKD & De-accenting
+      // Step 3: Unicode NFKD, Ligatures & De-accenting
       let step3 = current;
       if (document.getElementById('optDeaccent').checked) {
+        step3 = step3.replace(/ß/g, 'ss').replace(/ẞ/g, 'SS')
+                     .replace(/æ/g, 'ae').replace(/Æ/g, 'AE')
+                     .replace(/œ/g, 'oe').replace(/Œ/g, 'OE')
+                     .replace(/ﬁ/g, 'fi').replace(/ﬂ/g, 'fl')
+                     .replace(/ﬀ/g, 'ff').replace(/ﬃ/g, 'ffi').replace(/ﬄ/g, 'ffl')
+                     .replace(/ﬅ/g, 'st').replace(/ﬆ/g, 'st')
+                     .replace(/ø/g, 'o').replace(/Ø/g, 'O')
+                     .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+                     .replace(/ł/g, 'l').replace(/Ł/g, 'L');
         step3 = step3.normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
       }
       steps.push({
-        name: 'Step 3: Unicode NFKD & De-accenting',
+        name: 'Step 3: Unicode NFKD, Ligatures & De-accenting',
         text: step3,
-        note: document.getElementById('optDeaccent').checked ? 'Decomposed Unicode glyphs and stripped combining diacritics' : 'De-accenting disabled',
+        note: document.getElementById('optDeaccent').checked ? 'Decomposed Unicode glyphs, mapped ligatures/Eszett, and stripped combining diacritics' : 'De-accenting disabled',
         modified: step3 !== current
       });
       current = step3;
@@ -2550,12 +2614,12 @@ Execution:        Completed in 0.42ms with zero allocations.`;
       // Step 4: Case-folding
       let step4 = current;
       if (document.getElementById('optCasefold').checked) {
-        step4 = step4.toLowerCase();
+        step4 = step4.replace(/ß/g, 'ss').replace(/ẞ/g, 'ss').toLowerCase();
       }
       steps.push({
         name: 'Step 4: Case-folding',
         text: step4,
-        note: document.getElementById('optCasefold').checked ? 'Converted characters to lowercase for case-insensitivity' : 'Case-folding disabled',
+        note: document.getElementById('optCasefold').checked ? 'Converted characters to lowercase with full Unicode case-folding' : 'Case-folding disabled',
         modified: step4 !== current
       });
       current = step4;
@@ -2828,19 +2892,21 @@ Execution:        Completed in 0.42ms with zero allocations.`;
         facets.push({ name: 'Metrology / Unit', weight: '10%', score: Math.round(unitScore * 100) });
         facets.push({ name: 'Value Domain', weight: '20%', score: vdScoreFacet });
       } else if (domain === 'question' && parsedSrc) {
-        const qScore = computeSimilarity(parsedSrc.question_text || '', parsedCand.question_text || '', method);
-        const iScore = computeSimilarity(parsedSrc.instructions || '', parsedCand.instructions || '', method);
-        const preScore = computeSimilarity(parsedSrc.pre_question_text || '', parsedCand.pre_question_text || '', method);
+        const qScore = computeSimilarity(parsedSrc.question_text || '', (parsedCand && parsedCand.question_text) || '', method);
+        const iScore = computeSimilarity(parsedSrc.instructions || '', (parsedCand && parsedCand.instructions) || '', method);
+        const preScore = computeSimilarity(parsedSrc.pre_question_text || '', (parsedCand && parsedCand.pre_question_text) || '', method);
+        const intScore = computeSimilarity(parsedSrc.intent || '', (parsedCand && parsedCand.intent) || '', method);
         facets.push({ name: 'Question Text', weight: '65%', score: Math.round(qScore * 100) });
         facets.push({ name: 'Instructions', weight: '15%', score: Math.round(iScore * 100) });
         facets.push({ name: 'Pre-Question', weight: '10%', score: Math.round(preScore * 100) });
-        facets.push({ name: 'Intent', weight: '10%', score: 100 });
+        facets.push({ name: 'Intent', weight: '10%', score: Math.round(intScore * 100) });
       } else if (domain === 'conceptual' && parsedSrc) {
-        const lblScore = computeSimilarity(parsedSrc.preferred_label || '', parsedCand.preferred_label || '', method);
-        const defScore = computeSimilarity(parsedSrc.definition || '', parsedCand.definition || '', method);
-        facets.push({ name: 'Preferred Label', weight: '50%', score: Math.round(lblScore * 100) });
+        const lblScore = computeSimilarity(parsedSrc.preferred_label || '', (parsedCand && parsedCand.preferred_label) || '', method);
+        const defScore = computeSimilarity(parsedSrc.definition || '', (parsedCand && parsedCand.definition) || '', method);
+        const notScore = computeSimilarity(parsedSrc.notation || '', (parsedCand && parsedCand.notation) || '', method);
+        facets.push({ name: 'Preferred Label', weight: '60%', score: Math.round(lblScore * 100) });
         facets.push({ name: 'Definition', weight: '30%', score: Math.round(defScore * 100) });
-        facets.push({ name: 'Notation', weight: '20%', score: (parsedSrc.notation === (parsedCand && parsedCand.notation)) ? 100 : 0 });
+        facets.push({ name: 'Notation', weight: '10%', score: Math.round(notScore * 100) });
       } else {
         facets.push({ name: 'Category Label', weight: '70%', score: scorePct });
         facets.push({ name: 'Sentinel / Missing', weight: '30%', score: (parsedSrc && parsedCand && parsedSrc.is_missing === parsedCand.is_missing) ? 100 : 80 });
@@ -2871,7 +2937,9 @@ Execution:        Completed in 0.42ms with zero allocations.`;
         g4Html = `Score (${scorePct}%) below threshold (${Math.round(threshold * 100)}%). Resources classified as <strong>DISTINCT</strong>.`;
       }
 
-      document.getElementById('gate4StatusPill').className = `badge-pill ${scorePct >= Math.round(threshold * 100) ? 'badge-success' : 'badge-danger'}`;
+      const vType = classifyVerdictType(verdict);
+      const gate4PillClass = vType === 'match' ? 'badge-success' : (vType === 'notice' ? 'badge-warning' : (vType === 'distinct' ? 'badge-danger' : 'badge-primary'));
+      document.getElementById('gate4StatusPill').className = `badge-pill ${gate4PillClass}`;
       document.getElementById('gate4StatusPill').innerText = verdict;
       document.getElementById('gate4Desc').innerHTML = g4Html;
     }
