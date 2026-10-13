@@ -1003,6 +1003,9 @@ def ddil324(
         context = _Context()
         first_json = True
         if format_lower == "xml":
+            ET.register_namespace("", TARGET_NAMESPACE)
+            ET.register_namespace("xsi", XSI_NAMESPACE)
+            ET.register_namespace("xml", XML_NAMESPACE)
             out_f.write('<?xml version="1.0" encoding="utf-8"?>\n')
             out_f.write(f'<ItemContainer xmlns="{TARGET_NAMESPACE}">\n')
         elif format_lower == "json":
