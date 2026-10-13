@@ -350,3 +350,113 @@ Dataset Schema Harmonization & Polars Execution
    # Execute the end-to-end transformation on source data
    harmonized_df = crosswalk.apply_to_polars(source_df)
    print(harmonized_df)
+
+Resource Bank Batch Ingestion with Candidate Blocking and Lineage Tracking
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import LineageRelation, Question, ResourceBank
+
+   # Initialize bank with automated TokenBlocker candidate filtering
+   bank = ResourceBank[Question](name="central_question_bank")
+
+   # Batch of incoming survey questions across multiple survey waves
+   incoming = [
+       Question(
+           urn="urn:ddi:agency:Q_INC_V1",
+           question_text="What was your total household income before taxes in the past 12 months?",
+       ),
+       Question(
+           urn="urn:ddi:agency:Q_INC_V2",
+           question_text="What was your total household income before taxes in the past 12 months?",
+           instructions="Please consult your W-2 or tax return if available.",
+       ),
+   ]
+
+   report = bank.ingest_batch(incoming)
+   print(f"Batch processed: {report.total_processed}")
+   print(f"Reuse rate: {report.reuse_rate:.1%}")
+
+   # Ingestion audit log in Polars
+   df_log = report.to_polars()
+   print(df_log)
+
+   # Track lineage between versions
+   bank.record_lineage(
+       source_urn="urn:ddi:agency:Q_INC_V1",
+       target_urn="urn:ddi:agency:Q_INC_V2",
+       relation=LineageRelation.REVISED_VERSION,
+       notes="Wave 2 added tax return consulting instructions",
+   )
+
+   lineage = bank.get_lineage("urn:ddi:agency:Q_INC_V1")
+   for entry in lineage:
+       print(f"Relation: {entry.relation.value} -> {entry.target_urn}")
+
+Multilingual Survey Question Matching with Cached Translation Bridge
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import (
+       CachedTranslationBridge,
+       DictionaryTranslationBridge,
+       HarmonizationRegistry,
+       Question,
+   )
+
+   base_translator = DictionaryTranslationBridge({
+       ("de", "en", "Wie besorgt sind Sie über den Klimawandel?"): "How concerned are you about climate change?",
+       ("fr", "en", "Dans quelle mesure êtes-vous préoccupé par le changement climatique?"): "How concerned are you about climate change?",
+   })
+
+   # Wrap translator with SHA-256 caching
+   cached_bridge = CachedTranslationBridge(base_translator)
+
+   reg = HarmonizationRegistry[Question]()
+   reg.register(Question(
+       urn="urn:ddi:agency:Q_CLIMATE_EN",
+       question_text="How concerned are you about climate change?",
+       language="en",
+   ))
+
+   # German question translated to English pivot
+   q_de = Question(
+       urn="urn:ddi:agency:Q_CLIMATE_DE",
+       question_text="Wie besorgt sind Sie über den Klimawandel?",
+       language="de",
+   )
+   q_de_pivot = q_de.with_pivot_translation(cached_bridge, target_lang="en")
+
+   # O(1) collision on pivot_literal Merkle facet
+   match = reg.match(q_de_pivot)
+   print(f"Canonical URN: {match.canonical_urn}")
+   print(f"Match Type: {match.match_type.value}")  # FACET_EXACT
+
+PostgreSQL Database Persistence & Multi-Tier Indexing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import (
+       Question,
+       generate_bank_schema_ddl,
+       generate_tiered_matching_cte_query,
+   )
+
+   # 1. Generate schema DDL with expression B-Tree & GIN trigram indexes
+   ddl = generate_bank_schema_ddl("survey_bank", json_column="attributes", id_column="urn")
+   print("Generated PostgreSQL DDL:")
+   print(ddl[:300] + "...")
+
+   # 2. Generate tiered matching query
+   query = generate_tiered_matching_cte_query("survey_bank", json_column="attributes", id_column="urn")
+   print("Tiered matching query:")
+   print(query[:300] + "...")
+
+   # 3. Export question hashes payload for inserting into JSONB 'attributes.hashes' column
+   q = Question(question_text="How satisfied are you with public transport?")
+   hashes_payload = q.hashes.model_dump()
+   print(f"Root Hash: {hashes_payload['root']}")
+   print(f"Facets: {list(hashes_payload['facets'].keys())}")

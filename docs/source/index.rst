@@ -26,6 +26,7 @@ Key Features
 ------------
 
 * **DDI-Codebook XML Processing**: Load, parse, extract structured metadata, and validate DDI-Codebook documents with JSON and Markdown reports.
+* **Multilingual DDI-Codebook Merging**: Assess translation discrepancies, generate review plans, and merge bilingual DDI-Codebook documents with safety gates via Python API (``ddicodebook.i18n``) or the ``dartfx-ddi ddici18nmerge`` CLI.
 * **DDI-Lifecycle Fragment Streaming**: Stream and parse DDI 3.3 XML documents fragment-by-fragment into DDI 4.0 RC1 models via Python or CLI.
 * **DDI-Lifecycle Reference Graph & Path Analysis**: Dual-pass streaming reference analyzer, multi-hop pathfinding, multiplicity metrics, and export to interactive Vis.js HTML, Markdown, JSON, Mermaid, Graphviz DOT, Turtle RDF, and NetworkX.
 * **DDI-CDI Model Classes**: Work with definitive Pydantic-based classes representing the full DDI-CDI specification.
@@ -33,6 +34,9 @@ Key Features
 * **RDF Integration**: Generate and validate RDF representations using the `DataArtifex RDF Toolkit <https://github.com/DataArtifex/rdf-toolkit>`_.
 * **Cross-Format Conversion**: Transform between DDI-Codebook and DDI-CDI formats aligned with the CDIF profile.
 * **Resource Harmonization, Variable & Dataset Comparison**: Multi-attribute compound variable comparison, metrology & unit conversion scaling, categorical value recoding, schema crosswalks with automated Polars pipeline execution, and an interactive standalone HTML Harmonization Workbench (``dartfx-ddi harmonizer explore``).
+* **Resource Banks, Sub-Linear Candidate Blocking & Batch Ingestion**: Institutional catalog management (``ResourceBank``), token & :math:`n`-gram candidate blocking (``TokenBlocker``), batch ingestion audit reporting (``BatchIngestionReport`` with Polars and Markdown export), and revision lineage tracking (``ResourceLineageEntry``).
+* **Multilingual Harmonization & Pivot Hashing**: Cross-lingual Merkle facet collisions via canonical pivot translation (``pivot_literal``), cached translation bridges (``CachedTranslationBridge``), and multilingual agent comparators.
+* **Database Persistence & SQL Generation**: Production-ready PostgreSQL DDL (``generate_bank_schema_ddl``) and tiered matching CTE query generators (``generate_tiered_matching_cte_query``) leveraging expression B-Tree and GIN trigram indexes.
 * **BaseX XML Database & Reporting** *(Experimental, Optional)*: Connect to BaseX servers over REST, query collections, and generate publication-ready reports (Markdown, HTML, JSON, CSV, Polars DataFrames).
 
 Quick Start
@@ -59,6 +63,16 @@ Basic DDI-Codebook usage::
    if my_codebook.dataDscr:
        for var in my_codebook.dataDscr.var:
            print(f"Variable: {var.name}, Label: {var.labl.content if var.labl else 'No label'}")
+
+Multilingual DDI-Codebook merging::
+
+   from dartfx.ddi.ddicodebook.i18n import assess_merge, execute_merge
+
+   # Assess translation discrepancies and generate merge plan
+   plan = assess_merge("survey_en.xml", "survey_fi.xml", lang_canonical="en", lang_translated="fi")
+
+   # Execute merge to produce unified bilingual document
+   merged = execute_merge("survey_en.xml", "survey_fi.xml", plan=plan, output_path="survey_bilingual.xml")
 
 DDI-Lifecycle streaming and resource profile analysis::
 
@@ -99,6 +113,17 @@ Pairwise Resource Comparison & Variable Harmonization usage::
    print(f"Similarity: {result.score:.1%} | Match: {result.match_type.value}")
    for advice in result.transformation_advice:
        print(f"Advice: {advice.description}")
+
+Resource Bank Ingestion & Sub-Linear Candidate Blocking::
+
+   from dartfx.ddi.harmonizer import Question, ResourceBank
+
+   bank = ResourceBank[Question](name="question_bank")
+   report = bank.ingest_batch([
+       Question(question_text="What is your annual income?"),
+       Question(question_text="What is your annual household income?"),
+   ])
+   print(f"Reuse Rate: {report.reuse_rate:.1%} | Canonical items: {report.canonical_count}")
 
 
 .. toctree::

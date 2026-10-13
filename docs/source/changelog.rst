@@ -59,6 +59,32 @@ Interactive HTML Harmonization Workbench (``dartfx-ddi harmonizer explore``)
 - **Dual Source & Candidate Merkle Tree Inspector**: Side-by-side inspection of cryptographic roots, substantive vs. sentinel sub-digests, category set digests, and assigned URN vs. random GUID badges.
 - **Live Harmonization Playground**: Interactive JSON/text editor with live similarity gauges, normalizer preset switches, typo replacement overrides, and reproducible Python reproduction code generation.
 
+Resource Banks, Sub-Linear Candidate Blocking & Catalog Ingestion
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Terminology Formalization (Comparable vs. Harmonized)**: Enforced rigorous conceptual separation between Phase 1 Comparability (measurement/assessment via ``ComparableResource``, ``ContentComparator``, ``ComparisonResult``) and Phase 2 Harmonization (reconciliation/governance via ``HarmonizationRegistry``, ``ResourceBank``, ``DatasetHarmonizer``). Completely removed legacy ``HarmonizableResource`` alias.
+- **Sub-Linear Candidate Blocking (``TokenBlocker``)**: Added inverted token and character :math:`n`-gram blocker index to prune candidate search spaces before invoking expensive fuzzy/vector comparators.
+- **Multi-Candidate Ranked Search (``HarmonizationRegistry.find_candidates``)**: Added top-:math:`K` candidate ranking returning scored candidate matches above a minimum threshold.
+- **Resource Bank Facade (``ResourceBank``)**: Added catalog management facade integrating the registry, candidate blocker, and derivation lineage tracking.
+- **Batch Ingestion Audit Reporting (``BatchIngestionReport``)**: Added structured batch ingestion reports tracking incoming, registered, reused, and drifted counts, reuse percentage rates, with export to Polars DataFrames (``.to_polars()``) and GitHub-flavored Markdown tables (``.to_markdown()``).
+- **Revision Lineage Tracking (``ResourceLineageEntry``, ``LineageRelation``)**: Added graph lineage tracking across versions and derived items (``REVISED_VERSION``, ``DERIVED_FROM``, ``TRANSLATION_OF``, ``CANONICAL_EQUIVALENT``).
+- **Built-in DDI Domain Extraction Adapters**: Added ``from_ddi_codebook()`` and ``from_ddi_lifecycle()`` factory methods on ``Question`` and ``CodeList`` for instant ingestion of DDI-C (2.6) and DDI-L (3.3 / 4.0) XML elements or Pydantic models.
+
+Multilingual Harmonization & Pivot Hashing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Canonical Pivot Hashing**: Added multilingual support to ``Question`` (``language``, ``pivot_text``) and Merkle tree generation, enabling :math:`O(1)` cryptographic collision matching via the ``pivot_literal`` facet when foreign-language questions are translated into a common pivot language.
+- **Translation Bridges (``TranslationService``, ``DictionaryTranslationBridge``)**: Added pluggable translation protocol and dictionary translation bridge.
+- **SHA-256 Translation Caching (``CachedTranslationBridge``)**: Added caching decorator for translation calls to prevent duplicate external translation overhead.
+- **Multilingual Agent Comparator (``MultilingualAgentComparator``)**: Added comparator integrating translation bridges with fallback lexical scoring.
+
+PostgreSQL Database Persistence & Multi-Tier Indexing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Database Persistence Architecture**: Documented enterprise PostgreSQL pattern storing resources with URN primary keys and dedicated JSONB ``hashes`` column populated directly from ``ComparableResource.hashes``.
+- **Schema DDL Generator (``generate_bank_schema_ddl``)**: Generates production-ready PostgreSQL DDL with expression B-Tree indexes on root Merkle hashes and sub-facets, plus GIN ``pg_trgm`` trigram index on text signatures.
+- **Tiered Matching Query Generator (``generate_tiered_matching_cte_query``)**: Generates high-performance multi-tier matching SQL CTE queries (Exact Root Digest :math:`\to` Facet Collisions :math:`\to` Fuzzy Trigram Similarity).
+
 Version 0.3.0
 -------------
 

@@ -269,6 +269,63 @@ Pairwise Survey Question Comparison:
    print(f"Match Classification: {result.match_type.value}")
    print(f"Sub-Scores: {result.sub_scores}")
 
+Resource Bank Ingestion & Sub-Linear Candidate Blocking:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import Question, ResourceBank
+
+   bank = ResourceBank[Question](name="survey_question_bank")
+
+   # Ingest a batch of survey questions with sub-linear token blocking
+   report = bank.ingest_batch([
+       Question(question_text="What is your annual household income?"),
+       Question(question_text="Please indicate your annual household income."),
+   ])
+
+   print(f"Total Processed: {report.total_processed}")
+   print(f"Reuse Rate: {report.reuse_rate:.1%}")
+
+   # Export audit report to Polars DataFrame or Markdown
+   df_audit = report.to_polars()
+   print(report.to_markdown())
+
+Multilingual Question Matching via Pivot Hashing:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import DictionaryTranslationBridge, HarmonizationRegistry, Question
+
+   translator = DictionaryTranslationBridge({
+       ("es", "en", "¿Cuál es su ingreso familiar anual?"): "What is your annual household income?",
+   })
+
+   reg = HarmonizationRegistry[Question]()
+   reg.register(Question(question_text="What is your annual household income?", language="en"))
+
+   # Spanish candidate translated to English pivot
+   q_es = Question(question_text="¿Cuál es su ingreso familiar anual?", language="es")
+   q_es_pivot = q_es.with_pivot_translation(translator, target_lang="en")
+
+   # Matches English canonical via O(1) pivot_literal Merkle facet collision
+   match = reg.match(q_es_pivot)
+   print(f"Matched: {match.matched} | Match Type: {match.match_type.value}")
+
+PostgreSQL Bank Schema & Tiered Query Generation:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import generate_bank_schema_ddl, generate_tiered_matching_cte_query
+
+   # Generate PostgreSQL DDL with expression B-Tree & GIN trigram indexes
+   ddl = generate_bank_schema_ddl("survey_bank")
+
+   # Generate tiered matching SQL query (Merkle root -> facet collision -> trigram similarity)
+   query = generate_tiered_matching_cte_query("survey_bank")
+
 CLI exploration workbench:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

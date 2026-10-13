@@ -45,6 +45,9 @@ There are three major flavors of DDI. This package currently supports:
 - **RDF Serialization**: Built-in support for serializing CDI models to RDF graphs.
 - **Cross-Format Conversion**: Transform DDI-Codebook metadata into DDI-CDI resources via the CDIF profile.
 - **Resource Harmonization & Deduplication**: Cryptographic Merkle fingerprinting, order-independent permutation matching, substantive vs sentinel code list partitioning, multi-attribute weighted question comparison, and Polars dataset schema crosswalks with automated transformation execution.
+- **Resource Banks & Sub-Linear Candidate Blocking**: Institutional catalog management (`ResourceBank`), inverted token and $n$-gram candidate blocking (`TokenBlocker`), batch ingestion audit reports (`BatchIngestionReport` with Polars and Markdown export), and revision lineage tracking (`ResourceLineageEntry`).
+- **Multilingual Harmonization & Pivot Hashing**: Cross-lingual Merkle facet collisions via canonical pivot translation (`pivot_literal`), cached translation bridges (`CachedTranslationBridge`), and multilingual agent comparison.
+- **PostgreSQL Persistence & Multi-Tier SQL Generation**: Production-ready schema DDL (`generate_bank_schema_ddl`) with expression B-Tree and GIN trigram indexes, and multi-tier matching SQL CTE query generation (`generate_tiered_matching_cte_query`).
 - **Validation Reporting**: Validate DDI-Codebook XML documents and generate machine-friendly JSON or human-readable Markdown reports.
 - **BaseX XML Database & Reporting** *(Experimental, Optional)*: Connect to BaseX servers over REST, load and query DDI-C/DDI-L collections, and generate publication-ready reports (Markdown, HTML, JSON, CSV, Polars DataFrames).
 
@@ -343,6 +346,30 @@ tgt_df = pl.DataFrame({"body_weight_kg": [70.0, 90.0], "sex_iso": ["M", "F"]})
 crosswalk = DatasetHarmonizer.from_dataframes(src_df, tgt_df)
 harmonized_df = crosswalk.apply_to_polars(src_df)
 print(harmonized_df)
+
+# 3. Resource Bank Batch Ingestion with Sub-Linear Candidate Blocking
+from dartfx.ddi.harmonizer import Question, ResourceBank
+
+bank = ResourceBank[Question](name="question_bank")
+report = bank.ingest_batch([
+    Question(question_text="What is your annual household income?"),
+    Question(question_text="Please indicate your annual household income."),
+])
+print(f"Reuse Rate: {report.reuse_rate:.1%} | Canonical Count: {report.canonical_count}")
+
+# 4. Multilingual Question Matching via Canonical Pivot Translation
+from dartfx.ddi.harmonizer import DictionaryTranslationBridge, HarmonizationRegistry
+
+translator = DictionaryTranslationBridge({
+    ("es", "en", "¿Cuál es su ingreso familiar anual?"): "What is your annual household income?",
+})
+reg = HarmonizationRegistry[Question]()
+reg.register(Question(question_text="What is your annual household income?", language="en"))
+
+q_es = Question(question_text="¿Cuál es su ingreso familiar anual?", language="es")
+q_es_pivot = q_es.with_pivot_translation(translator, target_lang="en")
+match = reg.match(q_es_pivot)
+print(f"Matched: {match.matched} | Match Type: {match.match_type.value}")
 ```
 
 Launch the interactive Harmonization Workbench:
@@ -370,7 +397,7 @@ classes = cdi_spec.get_ucmis_classes()
 ```
 ddi-toolkit/
 ├── src/dartfx/ddi/
-│   ├── harmonizer/             # Resource Harmonization & Comparison engine (zero-DDI dependency)
+│   ├── harmonizer/             # Resource Harmonization, Bank Ingestion, Blocking, Multilingual & SQL (zero-DDI core)
 │   ├── ddicodebook/            # DDI-Codebook subpackage (models, validation & i18n merge)
 │   │   ├── model.py            # DDI-Codebook 2.6 models & XML serializer
 │   │   ├── utils.py            # Codebook utilities (validation, CDIF mapping)

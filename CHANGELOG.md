@@ -31,6 +31,15 @@ All notable changes to this project are documented in this file.
   - Added XML serialization methods on `baseElementType`: `to_xml_element()` maintaining XML Schema sequence ordering and XML namespace prefixes (`xml:lang`).
   - Added `to_xml_string()` and `savexml()` on `codeBookType` for exporting in-memory codebook models to valid XML strings or files.
   - Fixed `from_xml_element` attribute parsing to normalize `{http://www.w3.org/XML/1998/namespace}lang` to `xml:lang`.
+- **Resource Harmonization, Variable Comparison & Dataset Crosswalks (`dartfx.ddi.harmonizer`)**:
+  - **Terminology Formalization (Comparable vs. Harmonized)**: Enforced strict taxonomy separating Phase 1 Comparability (`ComparableResource`, `ContentComparator`, `ComparisonResult`) from Phase 2 Harmonization (`HarmonizationRegistry`, `ResourceBank`, `DatasetHarmonizer`). Cleanly removed legacy `HarmonizableResource` alias.
+  - **Resource Banks & Sub-Linear Candidate Blocking (`TokenBlocker`, `ResourceBank`)**: Sub-linear inverted token and $n$-gram blocking index to prune candidate search spaces before fuzzy or semantic evaluation, multi-candidate top-$K$ ranked querying (`HarmonizationRegistry.find_candidates`).
+  - **Batch Ingestion Audit Reporting (`BatchIngestionReport`)**: Structured ingestion audits tracking reuse rates, total processed, new canonical additions, and content drift, with export to Polars DataFrames (`.to_polars()`) and GitHub-flavored Markdown (`.to_markdown()`).
+  - **Revision Lineage Tracking (`ResourceLineageEntry`, `LineageRelation`)**: Graph lineage tracking across versions and derived items (`REVISED_VERSION`, `DERIVED_FROM`, `TRANSLATION_OF`, `CANONICAL_EQUIVALENT`).
+  - **Multilingual Harmonization & Pivot Hashing**: Cross-lingual Merkle facet collisions via canonical pivot translation (`pivot_literal`), pluggable translation protocols (`TranslationService`, `DictionaryTranslationBridge`), SHA-256 translation caching (`CachedTranslationBridge`), and multilingual agent comparator (`MultilingualAgentComparator`).
+  - **PostgreSQL Database Persistence & Multi-Tier Indexing**: Automated DDL generator (`generate_bank_schema_ddl`) with expression B-Tree indexes on root Merkle digests and sub-facets plus GIN `pg_trgm` trigram index, and multi-tier matching SQL CTE query generator (`generate_tiered_matching_cte_query`).
+  - **DDI Domain Extraction Adapters**: Built-in factory methods on `Question` and `CodeList` (`from_ddi_codebook`, `from_ddi_lifecycle`) for zero-boilerplate ingestion from DDI-C (2.6) and DDI-L (3.3 / 4.0) XML elements or Pydantic models.
+  - **Interactive HTML Harmonization Workbench (`dartfx-ddi harmonizer explore`)**: Zero-dependency standalone HTML/CSS/JS application featuring a 19-scenario browser, intermediate normalization pipeline inspector, 4-gate reasoning audit trace, dual Merkle tree inspector, and live harmonization playground.
 
 ## [0.3.0] - 2026-09-18
 
