@@ -96,7 +96,7 @@ Discrepancies are categorized into distinct types:
      - Description & Governance Rule
    * - ``TRANSLATION_MISSING``
      - Non-blocking
-     - The canonical document has an element or text, but the translated document omits it. If ``default_fallback_to_canonical=True`` is configured, the merge copies the canonical text to avoid empty secondary tags.
+     - The canonical document has an element or text, but the translated document omits it. By default (``on_missing_translation="keep_canonical_only"``), the canonical element is preserved with its canonical language tag and no synthetic target language element is generated. Optionally, ``use_canonical`` can be configured to duplicate canonical text as a fallback.
    * - ``UNMATCHED_TRANSLATION``
      - Review Recommended
      - The translated document contains an element (e.g., an obsolete variable) that does not exist in the canonical document. By default, unmatched translated elements are skipped to preserve canonical structural integrity.
@@ -121,7 +121,8 @@ A merge plan (``MergePlan``) records all detected discrepancies, their proposed 
 Resolution Types
 ~~~~~~~~~~~~~~~~
 
-* **``use_canonical``**: Uses the canonical content for the primary language and applies canonical fallback content if secondary language is absent.
+* **``keep_canonical_only``** *(Default)*: Preserves the canonical element as-is with its language tag and does not generate fallback or synthetic translated elements.
+* **``use_canonical``**: Replicates the canonical text as a secondary fallback tagged with the translated language.
 * **``accept_translated``**: Injects the translated text alongside the canonical text with proper ``xml:lang`` tagging.
 * **``skip``**: Omits the discrepant element from the merged output.
 * **``manual_review``**: Flags the item as requiring explicit human confirmation before execution can proceed.

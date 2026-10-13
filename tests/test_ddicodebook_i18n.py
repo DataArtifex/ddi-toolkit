@@ -128,6 +128,35 @@ def test_missing_translation_fallback_use_canonical():
     assert fr_labl.content == "Satisfaction score"
 
 
+def test_missing_translation_default_keep_canonical_only():
+    """Verify that by default, missing translations are kept canonical only without replicating text."""
+    xml_can = """<?xml version="1.0" encoding="utf-8"?>
+<codeBook version="2.6" ID="CB_CAN" xml:lang="en" xmlns="ddi:codebook:2_6">
+  <dataDscr>
+    <var ID="V1" name="Q1">
+      <labl>Satisfaction score</labl>
+    </var>
+  </dataDscr>
+</codeBook>"""
+
+    xml_tra = """<?xml version="1.0" encoding="utf-8"?>
+<codeBook version="2.6" ID="CB_TRA" xml:lang="fr" xmlns="ddi:codebook:2_6">
+  <dataDscr>
+    <var ID="V1" name="Q1">
+    </var>
+  </dataDscr>
+</codeBook>"""
+
+    strategy = MergeStrategy(canonical_language="en", translated_language="fr")
+    assert strategy.on_missing_translation == "keep_canonical_only"
+
+    plan = assess_merge(xml_can, xml_tra, strategy=strategy)
+    merged = execute_merge(plan)
+    v1 = merged.dataDscr[0].var[0]
+    v1_langs = [lbl.xml_lang for lbl in v1.labl]
+    assert v1_langs == ["en"]
+
+
 def test_stats_and_freqs_divergence_blocks_merge():
     """Verify that stats and frequencies divergence are flagged and block merge without approval."""
     xml_can = """<?xml version="1.0" encoding="utf-8"?>

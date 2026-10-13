@@ -84,8 +84,8 @@ class MergeStrategy(BaseModel):
     translated_language: str = "fi"
     enforce_iso_codes: bool = True
 
-    # Translation fallbacks
-    on_missing_translation: str = "use_canonical"  # use_canonical | keep_canonical_only | placeholder | flag_warning
+    # Translation fallbacks: keep_canonical_only | use_canonical | placeholder | flag_warning
+    on_missing_translation: str = "keep_canonical_only"
     placeholder_template: str = "[Untranslated ({lang_c}): {text}]"
 
     # Orphan handling
