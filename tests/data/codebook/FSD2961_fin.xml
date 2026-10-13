@@ -1,0 +1,1451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<codeBook xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="ddi:codebook:2_5" version="2.5" xsi:schemaLocation="ddi:codebook:2_5 http://www.ddialliance.org/Specification/DDI-Codebook/2.5/XMLSchema/codebook.xsd" xml:lang="fi">
+  <docDscr>
+    <citation>
+      <titlStmt>
+        <titl>DDI-kuvailu: Suomalaisten näkemyksiä valosaasteesta 2011-2012</titl>
+        <parTitl xml:lang="en">DDI description: Finnish Perspectives on Light Pollution 2011-2012</parTitl>
+        <IDNo agency="FSD">2961</IDNo>
+      </titlStmt>
+      <prodStmt>
+        <producer abbr="FSD">Yhteiskuntatieteellinen tietoarkisto</producer>
+        <copyright>Yhteiskuntatieteellinen tietoarkisto</copyright>
+        <prodPlac>Yhteiskuntatieteellinen tietoarkisto</prodPlac>
+      </prodStmt>
+      <verStmt>
+        <version date="2014-11-12" type="mef_fin">1.0.0</version>
+      </verStmt>
+      <biblCit>Suomalaisten näkemyksiä valosaasteesta 2011-2012 [metadata]. Metadataversio 1.0.0 (2014-11-12). Yhteiskuntatieteellinen tietoarkisto [tuottaja ja jakaja]. DOI: https://doi.org/10.60686/t-fsd2961; URN: https://urn.fi/urn:nbn:fi:fsd:T-FSD2961</biblCit>
+      <holdings location="Yhteiskuntatieteellinen tietoarkisto FSD" URI="https://urn.fi/urn:nbn:fi:fsd:T-FSD2961" />
+    </citation>
+    <notes xml:lang="fi">FSD:n aineistokuvailut (FSD metadata records), joiden tekijä on Suomen yhteiskuntatieteellinen tietoarkisto (Finnish Social Science Data Archive), on lisensoitu Creative Commons 1.0 Yleismaailmallinen (CC0 1.0) -lisenssillä.
+      <ExtLink URI="https://creativecommons.org/publicdomain/zero/1.0/deed.fi" />
+    </notes>
+    <notes xml:lang="en">FSD:n aineistokuvailut (FSD metadata records) by Suomen yhteiskuntatieteellinen tietoarkisto (Finnish Social Science Data Archive) are licensed under a Creative Commons 1.0 Universal (CC0 1.0) license.
+      <ExtLink URI="https://creativecommons.org/publicdomain/zero/1.0/deed.en" />
+    </notes>
+    <notes xml:lang="sv">FSD:n aineistokuvailut (FSD metadata records) av Finlands samhällsvetenskapliga dataarkiv (Finnish Social Science Data Archive) är licensierade under en Creative Commons 1.0 Universiell (CC0 1.0) licens.
+      <ExtLink URI="https://creativecommons.org/publicdomain/zero/1.0/deed.sv" />
+    </notes>
+  </docDscr>
+  <stdyDscr>
+    <citation>
+      <titlStmt>
+        <titl>Suomalaisten näkemyksiä valosaasteesta 2011-2012</titl>
+        <parTitl xml:lang="en">Finnish Perspectives on Light Pollution 2011-2012</parTitl>
+        <IDNo agency="FSD">2961</IDNo>
+        <IDNo agency="URN">urn:nbn:fi:fsd:T-FSD2961</IDNo>
+        <IDNo agency="DOI">10.60686/t-fsd2961</IDNo>
+      </titlStmt>
+      <rspStmt>
+        <AuthEnty affiliation="Suomen ympäristökeskus (SYKE)">Lyytimäki, Jari
+          <ExtLink URI="https://orcid.org/0000-0003-3308-5234" role="PID" title="ORCID">0000-0003-3308-5234</ExtLink>
+        </AuthEnty>
+        <AuthEnty affiliation="Suomen ympäristökeskus (SYKE)">Rinne, Janne
+          <ExtLink URI="https://orcid.org/0000-0003-1168-7138" role="PID" title="ORCID">0000-0003-1168-7138</ExtLink>
+        </AuthEnty>
+      </rspStmt>
+      <prodStmt>
+        <producer abbr="SYKE">Suomen ympäristökeskus</producer>
+        <copyright>Tietoarkiston ja aineiston luovuttajan tekemän sopimuksen mukaisesti.</copyright>
+      </prodStmt>
+      <distStmt>
+        <distrbtr abbr="FSD" URI="https://www.fsd.tuni.fi/">Yhteiskuntatieteellinen tietoarkisto</distrbtr>
+        <distDate date="2014-11-24" />
+      </distStmt>
+      <serStmt ID="S8" URI="https://services.fsd.tuni.fi/catalogue/series/8?lang=fi">
+        <serName>Aineistot, jotka eivät kuulu sarjaan</serName>
+        <serInfo>
+          <p>Yksittäiset aineistot, jotka eivät kuulu mihinkään sarjaan.</p>
+        </serInfo>
+      </serStmt>
+      <verStmt>
+        <version date="2014-11-12" type="main_data">1.0</version>
+      </verStmt>
+      <biblCit>Lyytimäki, Jari (Suomen ympäristökeskus (SYKE)) &amp; Rinne, Janne (Suomen ympäristökeskus (SYKE)): Suomalaisten näkemyksiä valosaasteesta 2011-2012 [data]. Dataversio 1.0 (2014-11-12). Yhteiskuntatieteellinen tietoarkisto [jakaja]. DOI: https://doi.org/10.60686/t-fsd2961; URN: https://urn.fi/urn:nbn:fi:fsd:T-FSD2961</biblCit>
+      <holdings location="Yhteiskuntatieteellinen tietoarkisto FSD" URI="https://urn.fi/urn:nbn:fi:fsd:T-FSD2961" />
+    </citation>
+    <stdyInfo>
+      <subject>
+        <keyword vocab="YSO" vocabURI="http://www.yso.fi/onto/yso/">valosaaste</keyword>
+        <keyword vocab="YSO" vocabURI="http://www.yso.fi/onto/yso/">ympäristöhaitat</keyword>
+        <keyword vocab="YSO" vocabURI="http://www.yso.fi/onto/yso/">valaistus</keyword>
+        <keyword vocab="YSO" vocabURI="http://www.yso.fi/onto/yso/">keinovalo</keyword>
+        <keyword vocab="YSO" vocabURI="http://www.yso.fi/onto/yso/">valo</keyword>
+        <keyword vocab="YSO" vocabURI="http://www.yso.fi/onto/yso/">pimeys</keyword>
+        <keyword vocab="YSO" vocabURI="http://www.yso.fi/onto/yso/">valomainokset</keyword>
+        <topcClas vocab="OKM" vocabURI="http://www.yso.fi/onto/okm-tieteenala/conceptscheme">Yhteiskuntatieteet</topcClas>
+        <topcClas vocab="OKM" vocabURI="http://www.yso.fi/onto/okm-tieteenala/conceptscheme">Luonnontieteet</topcClas>
+        <topcClas vocab="CESSDA Topic Classification" vocabURI="https://vocabularies.cessda.eu/urn/urn:ddi:int.cessda.cv:TopicClassification:4.2.3">Ympäristönsuojelu ja ympäristöongelmat</topcClas>
+      </subject>
+      <abstract>
+        <p>Kyselyssä tarkasteltiin suhtautumista valosaasteeseen ja keinovalon käyttöön. Aluksi vastaajilta tiedusteltiin mielipiteitä keinovalaistuksesta erilaisin väittämiin. Väittämät koskivat esimerkiksi koettua valosaasteen määrää ja haittoja, valaistuksen ja keinovalon tärkeyttä eri ympäristöissä ja keinoja valosaasteen vähentämiseen. Seuraavaksi vastaajia pyydettiin kuvaamaan, milloin he olivat kokeneet valosaasteen erityisen häiritseväksi ja milloin pimeyden tai luontaisen hämäryyden miellyttäväksi. Tämän jälkeen tiedusteltiin, oliko vastaaja itse yrittänyt vähentää valosaasteen syntymistä tai häiritsevälle valolle altistumista ja miten.</p>
+        <p>Lopuksi kartoitettiin taustatietoja, kuten syntymävuotta, sukupuolta, asuinkuntaa ja -aluetta, koulutusta sekä sitä, harrastiko vastaaja tähtitiedettä tai oliko hän luonto- tai ympäristöjärjestön jäsen.</p>
+      </abstract>
+      <sumDscr>
+        <timePrd event="start" date="2011" />
+        <timePrd event="end" date="2012" />
+        <collDate event="start" date="2011-11-04" />
+        <collDate event="end" date="2012-02-29" />
+        <nation abbr="FI">Suomi</nation>
+        <geogCover>Suomi</geogCover>
+        <anlyUnit>Henkilö
+          <concept vocab="DDI Analysis Unit" vocabURI="https://vocabularies.cessda.eu/urn/urn:ddi:int.ddi.cv:AnalysisUnit:2.1.3">Individual</concept>
+        </anlyUnit>
+        <universe clusion="I">Suomalaiset</universe>
+        <dataKind>Kvantitatiivinen</dataKind>
+      </sumDscr>
+    </stdyInfo>
+    <method>
+      <dataColl>
+        <timeMeth>Poikkileikkausaineisto
+          <concept vocab="DDI Time Method" vocabURI="https://vocabularies.cessda.eu/urn/urn:ddi:int.ddi.cv:TimeMethod:1.2.3">CrossSection</concept>
+        </timeMeth>
+        <dataCollector abbr="SYKE" affiliation="Suomen ympäristökeskus">Lyytimäki, Jari</dataCollector>
+        <dataCollector abbr="SYKE" affiliation="Suomen ympäristökeskus">Rinne, Janne</dataCollector>
+        <sampProc>Ei-todennäköisyysotanta: itsestään muotoutunut näyte
+          <concept vocab="DDI Sampling Procedure" vocabURI="https://vocabularies.cessda.eu/urn/urn:ddi:int.ddi.cv:SamplingProcedure:2.0.2">Nonprobability.Availability</concept>
+        </sampProc>
+        <sampProc>
+          <p>Kysely toteutettiin verkkokyselynä siten, että siihen saattoivat osallistua kaikki halukkaat. Kyselystä tiedotettiin laajasti erilaisissa medioissa ja Suomen ympäristökeskus julkaisi kyselystä tiedotteen sekä suomeksi että ruotsiksi.</p>
+        </sampProc>
+        <collMode>Itsetäytettävä lomake: verkkolomake
+          <concept vocab="DDI Mode of Collection" vocabURI="https://vocabularies.cessda.eu/urn/urn:ddi:int.ddi.cv:ModeOfCollection:5.0.1">SelfAdministeredQuestionnaire.CAWI</concept>
+        </collMode>
+        <resInstru>Strukturoitu lomake
+          <concept vocab="DDI Type of Instrument" vocabURI="https://vocabularies.cessda.eu/urn/urn:ddi:int.ddi.cv:TypeOfInstrument:1.1.2">Questionnaire.Structured</concept>
+        </resInstru>
+        <weight>Aineisto ei sisällä painomuuttujia.</weight>
+      </dataColl>
+      <anlyInfo>
+        <dataAppr>Aineiston avovastausmuuttujista on anonymisoitu vastaajien henkilöllisyyttä, yhteystietoja sekä tarkkaa asuinpaikkaa koskevat tiedot.</dataAppr>
+      </anlyInfo>
+      <stdyClas type="A">Aineisto on kuvailtu mahdollisimman kattavasti suomeksi ja englanniksi. Aineisto on tarkistettu ja muokattu yksityiskohtaisesti. Tarvittaessa aineistosta on poistettu tunnisteita.</stdyClas>
+    </method>
+    <dataAccs>
+      <setAvail>
+        <accsPlac URI="https://www.fsd.tuni.fi/">Yhteiskuntatieteellinen tietoarkisto</accsPlac>
+      </setAvail>
+      <useStmt>
+        <specPerm ID="fin_common_specPerm_19-FSD2961">Jatkokäyttäjien tulee lähettää Suomen ympäristökeskukseen (SYKE) yksi kappale kaikista julkaisuista, joissa ovat käyttäneet tätä aineistoa. Julkaisujen postitusosoite on: Suomen ympäristökeskus (SYKE) PL 140, 00251 Helsinki.</specPerm>
+        <restrctn>Aineisto on käytettävissä (B) tutkimukseen, opetukseen ja opiskeluun.</restrctn>
+        <citReq>Aineistoon ja sen tekijöihin tulee viitata asianmukaisesti kaikissa julkaisuissa ja esityksissä, joissa aineistoa käytetään. Tietoarkiston antaman malliviittaustiedon voi merkitä lähdeluetteloon sellaisenaan tai sitä voi muokata julkaisun käytäntöjen mukaisesti.</citReq>
+        <deposReq>Viitetiedot julkaisuista, joissa aineistoa on käytetty, toimitetaan Tietoarkiston asiakaspalveluun asiakaspalvelu.fsd@tuni.fi.</deposReq>
+        <disclaimer>Aineiston alkuperäiset tekijät ja Tietoarkisto eivät ole vastuussa aineiston jatkokäytössä tuotetuista tuloksista ja tulkinnoista.</disclaimer>
+      </useStmt>
+    </dataAccs>
+    <othrStdyMat>
+      <relMat>Lyytimäki, Jari &amp; Rinne, Janne (2012) Vaivaako valosaaste? Verkkokyselyn tulosten yhteenveto. Helsinki: Suomen ympäristökeskus. Suomen ympäristökeskuksen raportteja 24/2012.</relMat>
+      <relPubl xml:lang="fi">Henttu, Joel (2024). Valosaaste ja vähenevä luonnonpimeys: suomalaisten kokema valosaaste luonnonpimeyden arvojen näkökulmasta. Tampereen yliopisto. Johtamisen ja talouden tiedekunta. Pro gradu -tutkielma
+        <citation>
+          <titlStmt>
+            <titl>Valosaaste ja vähenevä luonnonpimeys: suomalaisten kokema valosaaste luonnonpimeyden arvojen näkökulmasta</titl>
+            <IDNo agency="URN">URN:NBN:fi:tuni-2024110810059</IDNo>
+          </titlStmt>
+          <distStmt>
+            <distDate date="2024" />
+          </distStmt>
+          <holdings URI="https://urn.fi/URN:NBN:fi:tuni-2024110810059" />
+        </citation>
+      </relPubl>
+      <relPubl xml:lang="en">Lyytimäki Jari (2015). Avoiding overly bright future: The systems intelligence perspective on the management of light pollution. Environmental Development. Doi: 10.1016/j.envdev.2015.06.009
+        <citation>
+          <titlStmt>
+            <titl>Avoiding overly bright future: The systems intelligence perspective on the management of light pollution.</titl>
+            <IDNo agency="DOI">10.1016/j.envdev.2015.06.009</IDNo>
+          </titlStmt>
+          <distStmt>
+            <distDate date="2015" />
+          </distStmt>
+          <holdings URI="https://doi.org/10.1016/j.envdev.2015.06.009" />
+        </citation>
+      </relPubl>
+      <relPubl xml:lang="fi">Lyytimäki, Jari &amp; Rinne, Janne (2012) Vaivaako valosaaste? Verkkokyselyn tulosten yhteenveto. Helsinki: Suomen ympäristökeskus. Suomen ympäristökeskuksen raportteja 24/2012.
+        <citation>
+          <titlStmt>
+            <titl>Vaivaako valosaaste? Verkkokyselyn tulosten yhteenveto</titl>
+          </titlStmt>
+          <distStmt>
+            <distDate date="2012" />
+          </distStmt>
+        </citation>
+      </relPubl>
+      <relPubl xml:lang="fi">Lyytimäki, Jari &amp; Rinne, Janne (2013). Ei diskovaloja parvekkeelle - kansalaisten näkemyksiä valosaasteen hallintakeinoista. Ympäristö &amp; Terveys 44(1), 4-60.
+        <citation>
+          <titlStmt>
+            <titl>Ei diskovaloja parvekkeelle - kansalaisten näkemyksiä valosaasteen hallintakeinoista</titl>
+          </titlStmt>
+          <distStmt>
+            <distDate date="2013" />
+          </distStmt>
+        </citation>
+      </relPubl>
+      <relPubl xml:lang="fi">Lyytimäki, Jari &amp; Rinne, Janne (2013). Haittavalo hallintaan. Ympäristö 27(7), 12-15.
+        <citation>
+          <titlStmt>
+            <titl>Haittavalo hallintaan</titl>
+          </titlStmt>
+          <distStmt>
+            <distDate date="2013" />
+          </distStmt>
+        </citation>
+      </relPubl>
+      <relPubl xml:lang="fi">Lyytimäki, Jari &amp; Rinne, Janne (2013). Valon varjopuolet - Valosaaste ympäristöongelmana. Helsinki: Gaudeamus.
+        <citation>
+          <titlStmt>
+            <titl>Valon varjopuolet - Valosaaste ympäristöongelmana</titl>
+          </titlStmt>
+          <distStmt>
+            <distDate date="2013" />
+          </distStmt>
+        </citation>
+      </relPubl>
+      <relPubl xml:lang="en">Lyytimäki, Jari &amp; Rinne, Janne (2013). Voices for the darkness: Online survey on public perceptions on light pollution as an environmental problem. Journal of Integrative Environmental Sciences 10(2): 127-139. doi:10.1080/1943815X.2013.824487
+        <citation>
+          <titlStmt>
+            <titl>Voices for the darkness: Online survey on public perceptions on light pollution as an environmental problem</titl>
+            <IDNo agency="DOI">10.1080/1943815X.2013.824487</IDNo>
+          </titlStmt>
+          <distStmt>
+            <distDate date="2013" />
+          </distStmt>
+          <holdings URI="https://doi.org/10.1080/1943815X.2013.824487" />
+        </citation>
+      </relPubl>
+      <relPubl xml:lang="en">Lyytimäki, Jari (2015). Towards a bright future? The systems intelligent perspective on the management of light pollution [online]. In: Hatakka, Aino &amp; Vehmas, Jarmo (eds.) Sustainable Futures in a Changing Climate. Proceedings of the Conference "Sustainable Futures in a Changing Climate", 11-12 June 2014, Helsinki, Finland. FFRC eBOOK 2/2015. Finland Futures Research Centre, University of Turku, Pp. 66-74. http://www.utu.fi/fi/yksikot/ffrc/julkaisut/e-tutu/Documents/FFRC-eBook_2-2015.pdf [cited 28.11.2015]
+        <citation>
+          <titlStmt>
+            <titl>Towards a bright future? The systems intelligent perspective on the management of light pollution</titl>
+          </titlStmt>
+          <distStmt>
+            <distDate date="2015" />
+          </distStmt>
+        </citation>
+      </relPubl>
+    </othrStdyMat>
+  </stdyDscr>
+  <fileDscr>
+    <fileTxt>
+      <fileName ID="FSD2961_file_1">daF2961.por</fileName>
+      <dimensns>
+      <caseQnty>2053</caseQnty>
+      <varQnty>34</varQnty>
+      </dimensns>
+      <fileType>SPSS Portable</fileType>
+    </fileTxt>
+  </fileDscr>
+  <dataDscr>
+    <varGrp ID="FSD2961_varGrp_1" var="FSD2961_Q1_1_var FSD2961_Q1_2_var FSD2961_Q1_3_var FSD2961_Q1_4_var FSD2961_Q1_5_var FSD2961_Q1_6_var FSD2961_Q1_7_var FSD2961_Q1_8_var FSD2961_Q1_9_var FSD2961_Q1_10_var FSD2961_Q1_11_var FSD2961_Q1_12_var FSD2961_Q1_13_var FSD2961_Q1_14_var FSD2961_Q1_15_var FSD2961_Q1_16_var FSD2961_Q1_17_var FSD2961_Q1_18_var FSD2961_Q1_19_var FSD2961_Q1_20_var">
+      <txt>Mitä mieltä olet alla olevista väittämistä?</txt>
+    </varGrp>
+    <var ID="FSD2961_FSD_NO_var" dcml="0" intrvl="contin" name="FSD_NO">
+      <labl>[fsd_no] Aineistonumero (lisätty FSD:ssä)</labl>
+      <qstn ID="FSD2961_FSD_NO_qstn">
+        <qstnLit>Aineistonumero (lisätty FSD:ssä)</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="2961" min="2961" />
+      </valrng>
+      <sumStat type="vald">2053</sumStat>
+      <sumStat type="min">2961</sumStat>
+      <sumStat type="max">2961</sumStat>
+      <sumStat type="mean">2961.00</sumStat>
+      <sumStat type="stdev">.000</sumStat>
+    </var>
+    <var ID="FSD2961_FSD_VR_var" dcml="1" intrvl="contin" name="FSD_VR">
+      <labl>[fsd_vr] Aineistoversio (lisätty FSD:ssä)</labl>
+      <qstn ID="FSD2961_FSD_VR_qstn">
+        <qstnLit>Aineistoversio (lisätty FSD:ssä)</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="1.0" min="1.0" />
+      </valrng>
+      <sumStat type="vald">2053</sumStat>
+      <sumStat type="min">1.0</sumStat>
+      <sumStat type="max">1.0</sumStat>
+      <sumStat type="mean">1.000</sumStat>
+      <sumStat type="stdev">.0000</sumStat>
+    </var>
+    <var ID="FSD2961_FSD_ID_var" dcml="0" intrvl="contin" name="FSD_ID">
+      <labl>[fsd_id] Havaintotunnus (lisätty FSD:ssä)</labl>
+      <qstn ID="FSD2961_FSD_ID_qstn">
+        <qstnLit>Havaintotunnus (lisätty FSD:ssä)</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="2053" min="1" />
+      </valrng>
+      <sumStat type="vald">2053</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">2053</sumStat>
+      <sumStat type="mean">1027.00</sumStat>
+      <sumStat type="stdev">592.794</sumStat>
+    </var>
+    <var ID="FSD2961_BV1_var" dcml="0" intrvl="discrete" name="BV1">
+      <labl>[bv1] Vastausaika</labl>
+      <qstn ID="FSD2961_BV1_qstn">
+        <qstnLit>Vastausaika</qstnLit>
+      </qstn>
+    </var>
+    <var ID="FSD2961_Q1_1_var" dcml="0" intrvl="discrete" name="Q1_1">
+      <labl>[q1_1] Mitä mieltä olet alla olevista väittämistä: Keinovalaistuksen aiheuttama valosaaste on levinnyt liian laajalle</labl>
+      <qstn ID="FSD2961_Q1_1_qstn">
+        <qstnLit>Keinovalaistuksen aiheuttama valosaaste on levinnyt liian laajalle</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2046</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">4.34</sumStat>
+      <sumStat type="stdev">1.089</sumStat>
+      <catgry ID="FSD2961_Q1_1_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>78</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_1_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>124</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_1_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>109</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_1_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>476</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_1_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>1226</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_1_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>33</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_1_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>7</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_2_var" dcml="0" intrvl="discrete" name="Q1_2">
+      <labl>[q1_2] Mitä mieltä olet alla olevista väittämistä: Jokaisen pitäisi pystyä näkemään kirkas tähtitaivas ja Linnunrata asuinpaikaltaan</labl>
+      <qstn ID="FSD2961_Q1_2_qstn">
+        <qstnLit>Jokaisen pitäisi pystyä näkemään kirkas tähtitaivas ja Linnunrata asuinpaikaltaan</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2048</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">3.82</sumStat>
+      <sumStat type="stdev">1.235</sumStat>
+      <catgry ID="FSD2961_Q1_2_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>121</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_2_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>253</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_2_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>273</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_2_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>631</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_2_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>757</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_2_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>13</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_2_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>5</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_3_var" dcml="0" intrvl="discrete" name="Q1_3">
+      <labl>[q1_3] Mitä mieltä olet alla olevista väittämistä: Tievalaistus on välttämätöntä autoilijoille</labl>
+      <qstn ID="FSD2961_Q1_3_qstn">
+        <qstnLit>Tievalaistus on välttämätöntä autoilijoille</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2046</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">3.25</sumStat>
+      <sumStat type="stdev">1.347</sumStat>
+      <catgry ID="FSD2961_Q1_3_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>242</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_3_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>463</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_3_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>324</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_3_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>596</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_3_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>395</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_3_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>26</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_3_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>7</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_4_var" dcml="0" intrvl="discrete" name="Q1_4">
+      <labl>[q1_4] Mitä mieltä olet alla olevista väittämistä: Yöllinen valaistus lisää turvallisuutta asuinalueilla</labl>
+      <qstn ID="FSD2961_Q1_4_qstn">
+        <qstnLit>Yöllinen valaistus lisää turvallisuutta asuinalueilla</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2043</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">3.65</sumStat>
+      <sumStat type="stdev">1.216</sumStat>
+      <catgry ID="FSD2961_Q1_4_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>132</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_4_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>285</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_4_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>312</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_4_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>778</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_4_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>506</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_4_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>30</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_4_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>10</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_5_var" dcml="0" intrvl="discrete" name="Q1_5">
+      <labl>[q1_5] Mitä mieltä olet alla olevista väittämistä: Valosaaste aiheuttaa merkittäviä haittoja luonnolle</labl>
+      <qstn ID="FSD2961_Q1_5_qstn">
+        <qstnLit>Valosaaste aiheuttaa merkittäviä haittoja luonnolle</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2039</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">4.13</sumStat>
+      <sumStat type="stdev">1.286</sumStat>
+      <catgry ID="FSD2961_Q1_5_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>72</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_5_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>183</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_5_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>308</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_5_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>589</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_5_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>610</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_5_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>277</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_5_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>14</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_6_var" dcml="0" intrvl="discrete" name="Q1_6">
+      <labl>[q1_6] Mitä mieltä olet alla olevista väittämistä: Valosaaste aiheuttaa merkittäviä terveyshaittoja ihmisille</labl>
+      <qstn ID="FSD2961_Q1_6_qstn">
+        <qstnLit>Valosaaste aiheuttaa merkittäviä terveyshaittoja ihmisille</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2039</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">3.78</sumStat>
+      <sumStat type="stdev">1.387</sumStat>
+      <catgry ID="FSD2961_Q1_6_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>141</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_6_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>250</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_6_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>389</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_6_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>631</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_6_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>385</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_6_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>243</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_6_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>14</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_7_var" dcml="0" intrvl="discrete" name="Q1_7">
+      <labl>[q1_7] Mitä mieltä olet alla olevista väittämistä: Luonnonsuojelualueilla ei saa olla yhtään keinovaloa</labl>
+      <qstn ID="FSD2961_Q1_7_qstn">
+        <qstnLit>Luonnonsuojelualueilla ei saa olla yhtään keinovaloa</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2044</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">3.93</sumStat>
+      <sumStat type="stdev">1.259</sumStat>
+      <catgry ID="FSD2961_Q1_7_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>76</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_7_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>295</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_7_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>276</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_7_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>528</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_7_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>789</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_7_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>80</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_7_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>9</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_8_var" dcml="0" intrvl="discrete" name="Q1_8">
+      <labl>[q1_8] Mitä mieltä olet alla olevista väittämistä: Hämärät puistot ovat pelottavia öisin</labl>
+      <qstn ID="FSD2961_Q1_8_qstn">
+        <qstnLit>Hämärät puistot ovat pelottavia öisin</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2041</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">3.12</sumStat>
+      <sumStat type="stdev">1.419</sumStat>
+      <catgry ID="FSD2961_Q1_8_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>347</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_8_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>433</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_8_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>316</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_8_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>539</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_8_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>375</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_8_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>31</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_8_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>12</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_9_var" dcml="0" intrvl="discrete" name="Q1_9">
+      <labl>[q1_9] Mitä mieltä olet alla olevista väittämistä: Koristevalot pihoissa ja parvekkeilla ovat häiritseviä</labl>
+      <qstn ID="FSD2961_Q1_9_qstn">
+        <qstnLit>Koristevalot pihoissa ja parvekkeilla ovat häiritseviä</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2046</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">3.25</sumStat>
+      <sumStat type="stdev">1.292</sumStat>
+      <catgry ID="FSD2961_Q1_9_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>204</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_9_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>465</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_9_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>420</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_9_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>553</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_9_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>386</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_9_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>18</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_9_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>7</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_10_var" dcml="0" intrvl="discrete" name="Q1_10">
+      <labl>[q1_10] Mitä mieltä olet alla olevista väittämistä: Asuinalueeni viihtyvyys kärsii liiallisesta keinovalosta</labl>
+      <qstn ID="FSD2961_Q1_10_qstn">
+        <qstnLit>Asuinalueeni viihtyvyys kärsii liiallisesta keinovalosta</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2040</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">3.47</sumStat>
+      <sumStat type="stdev">1.437</sumStat>
+      <catgry ID="FSD2961_Q1_10_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>272</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_10_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>329</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_10_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>292</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_10_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>492</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_10_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>630</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_10_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>25</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_10_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>13</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_11_var" dcml="0" intrvl="discrete" name="Q1_11">
+      <labl>[q1_11] Mitä mieltä olet alla olevista väittämistä: Matkapuhelinverkon tukiasemien valot pilaavat maisemaa</labl>
+      <qstn ID="FSD2961_Q1_11_qstn">
+        <qstnLit>Matkapuhelinverkon tukiasemien valot pilaavat maisemaa</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2043</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">3.17</sumStat>
+      <sumStat type="stdev">1.462</sumStat>
+      <catgry ID="FSD2961_Q1_11_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>290</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_11_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>454</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_11_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>483</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_11_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>403</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_11_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>262</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_11_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>151</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_11_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>10</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_12_var" dcml="0" intrvl="discrete" name="Q1_12">
+      <labl>[q1_12] Mitä mieltä olet alla olevista väittämistä: Ulkotilojen mainosvalot ovat häiritseviä</labl>
+      <qstn ID="FSD2961_Q1_12_qstn">
+        <qstnLit>Ulkotilojen mainosvalot ovat häiritseviä</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2044</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">4.07</sumStat>
+      <sumStat type="stdev">1.150</sumStat>
+      <catgry ID="FSD2961_Q1_12_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>77</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_12_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>198</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_12_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>210</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_12_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>611</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_12_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>926</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_12_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>22</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_12_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>9</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_13_var" dcml="0" intrvl="discrete" name="Q1_13">
+      <labl>[q1_13] Mitä mieltä olet alla olevista väittämistä: Viranomaiset suhtautuvat valosaasteeseen vähätellen</labl>
+      <qstn ID="FSD2961_Q1_13_qstn">
+        <qstnLit>Viranomaiset suhtautuvat valosaasteeseen vähätellen</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2047</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">4.49</sumStat>
+      <sumStat type="stdev">1.117</sumStat>
+      <catgry ID="FSD2961_Q1_13_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>52</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_13_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>57</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_13_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>246</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_13_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>461</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_13_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>939</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_13_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>292</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_13_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>6</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_14_var" dcml="0" intrvl="discrete" name="Q1_14">
+      <labl>[q1_14] Mitä mieltä olet alla olevista väittämistä: Vältän itse aina turhaa valon käyttöä</labl>
+      <qstn ID="FSD2961_Q1_14_qstn">
+        <qstnLit>Vältän itse aina turhaa valon käyttöä</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2044</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">4.19</sumStat>
+      <sumStat type="stdev">.973</sumStat>
+      <catgry ID="FSD2961_Q1_14_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>42</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_14_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>112</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_14_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>211</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_14_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>742</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_14_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>926</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_14_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>11</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_14_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>9</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_15_var" dcml="0" intrvl="discrete" name="Q1_15">
+      <labl>[q1_15] Mitä mieltä olet alla olevista väittämistä: Mielialani laskee voimakkaasti pimeänä vuodenaikana</labl>
+      <qstn ID="FSD2961_Q1_15_qstn">
+        <qstnLit>Mielialani laskee voimakkaasti pimeänä vuodenaikana</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2049</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">2.75</sumStat>
+      <sumStat type="stdev">1.419</sumStat>
+      <catgry ID="FSD2961_Q1_15_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>539</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_15_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>438</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_15_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>374</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_15_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>422</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_15_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>249</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_15_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>27</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_15_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>4</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_16_var" dcml="0" intrvl="discrete" name="Q1_16">
+      <labl>[q1_16] Mitä mieltä olet alla olevista väittämistä: Mahdollisuus luonnollisen pimeyden kokemiseen on minulle tärkeä</labl>
+      <qstn ID="FSD2961_Q1_16_qstn">
+        <qstnLit>Mahdollisuus luonnollisen pimeyden kokemiseen on minulle tärkeä</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2044</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">4.33</sumStat>
+      <sumStat type="stdev">1.102</sumStat>
+      <catgry ID="FSD2961_Q1_16_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>90</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_16_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>101</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_16_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>154</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_16_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>425</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_16_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>1256</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_16_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>18</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_16_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>9</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_17_var" dcml="0" intrvl="discrete" name="Q1_17">
+      <labl>[q1_17] Mitä mieltä olet alla olevista väittämistä: Valistus ja tiedotus ovat tehokkaita keinoja valosaasteen vähentämiseen</labl>
+      <qstn ID="FSD2961_Q1_17_qstn">
+        <qstnLit>Valistus ja tiedotus ovat tehokkaita keinoja valosaasteen vähentämiseen</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2045</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">4.05</sumStat>
+      <sumStat type="stdev">1.173</sumStat>
+      <catgry ID="FSD2961_Q1_17_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>62</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_17_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>184</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_17_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>293</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_17_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>709</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_17_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>652</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_17_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>145</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_17_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>8</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_18_var" dcml="0" intrvl="discrete" name="Q1_18">
+      <labl>[q1_18] Mitä mieltä olet alla olevista väittämistä: Lainsäädännön tiukentaminen on tehokas keino valosaasteen vähentämiseen</labl>
+      <qstn ID="FSD2961_Q1_18_qstn">
+        <qstnLit>Lainsäädännön tiukentaminen on tehokas keino valosaasteen vähentämiseen</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2046</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">4.08</sumStat>
+      <sumStat type="stdev">1.235</sumStat>
+      <catgry ID="FSD2961_Q1_18_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>98</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_18_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>175</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_18_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>234</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_18_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>640</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_18_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>760</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_18_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>139</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_18_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>7</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_19_var" dcml="0" intrvl="discrete" name="Q1_19">
+      <labl>[q1_19] Mitä mieltä olet alla olevista väittämistä: Valaistustekniikan kehittäminen on tehokas keino valosaasteen vähentämiseen</labl>
+      <qstn ID="FSD2961_Q1_19_qstn">
+        <qstnLit>Valaistustekniikan kehittäminen on tehokas keino valosaasteen vähentämiseen</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2040</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">4.39</sumStat>
+      <sumStat type="stdev">.959</sumStat>
+      <catgry ID="FSD2961_Q1_19_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>42</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_19_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>65</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_19_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>158</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_19_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>647</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_19_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>1039</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_19_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>89</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_19_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>13</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q1_20_var" dcml="0" intrvl="discrete" name="Q1_20">
+      <labl>[q1_20] Mitä mieltä olet alla olevista väittämistä: Sähkön hinnan korottaminen on tehokas keino valosaasteen vähentämiseen</labl>
+      <qstn ID="FSD2961_Q1_20_qstn">
+        <qstnLit>Sähkön hinnan korottaminen on tehokas keino valosaasteen vähentämiseen</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="6" min="1" />
+      </valrng>
+      <sumStat type="vald">2044</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">6</sumStat>
+      <sumStat type="mean">2.99</sumStat>
+      <sumStat type="stdev">1.523</sumStat>
+      <catgry ID="FSD2961_Q1_20_catgry_1">
+        <catValu>1</catValu>
+        <labl>Täysin eri mieltä</labl>
+        <catStat>444</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_20_catgry_2">
+        <catValu>2</catValu>
+        <labl>Jokseenkin eri mieltä</labl>
+        <catStat>447</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_20_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ei samaa eikä eri mieltä</labl>
+        <catStat>343</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_20_catgry_4">
+        <catValu>4</catValu>
+        <labl>Jokseenkin samaa mieltä</labl>
+        <catStat>409</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_20_catgry_5">
+        <catValu>5</catValu>
+        <labl>Täysin samaa mieltä</labl>
+        <catStat>300</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_20_catgry_6">
+        <catValu>6</catValu>
+        <labl>En osaa sanoa</labl>
+        <catStat>101</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q1_20_catgry_7" missing="Y">
+        <catValu>SYSMISS</catValu>
+        <catStat>9</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q2_var" dcml="0" intrvl="discrete" name="Q2">
+      <labl>[q2] Missä ja milloin olet kokenut valosaasteen erityisen häiritseväksi? Mistä keinovalo on ollut peräisin? (Avokysymys)</labl>
+      <qstn ID="FSD2961_Q2_qstn">
+        <qstnLit>Missä ja milloin olet kokenut valosaasteen erityisen häiritseväksi? Mistä keinovalo on ollut peräisin?</qstnLit>
+      </qstn>
+    </var>
+    <var ID="FSD2961_Q3_var" dcml="0" intrvl="discrete" name="Q3">
+      <labl>[q3] Millaisissa paikoissa olet kokenut pimeyden tai luontaisen hämäryyden miellyttäväksi? (Avokysymys)</labl>
+      <qstn ID="FSD2961_Q3_qstn">
+        <qstnLit>Millaisissa paikoissa olet kokenut pimeyden tai luontaisen hämäryyden miellyttäväksi?</qstnLit>
+      </qstn>
+    </var>
+    <var ID="FSD2961_Q4_var" dcml="0" intrvl="discrete" name="Q4">
+      <labl>[q4] Oletko itse yrittänyt vähentää valosaasteen syntymistä tai häiritsevälle valolle altistumista? Miten? (Avokysymys)</labl>
+      <qstn ID="FSD2961_Q4_qstn">
+        <qstnLit>Oletko itse yrittänyt vähentää valosaasteen syntymistä tai häiritsevälle valolle altistumista? Miten?</qstnLit>
+      </qstn>
+    </var>
+    <var ID="FSD2961_Q5_var" dcml="0" intrvl="contin" name="Q5">
+      <labl>[q5] Syntymävuosi</labl>
+      <qstn ID="FSD2961_Q5_qstn">
+        <qstnLit>Syntymävuosi</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="2001" min="1927" />
+      </valrng>
+      <sumStat type="vald">2053</sumStat>
+      <sumStat type="min">1927</sumStat>
+      <sumStat type="max">2001</sumStat>
+      <sumStat type="mean">1969.22</sumStat>
+      <sumStat type="stdev">14.003</sumStat>
+    </var>
+    <var ID="FSD2961_Q6_var" dcml="0" intrvl="discrete" name="Q6">
+      <labl>[q6] Sukupuoli</labl>
+      <qstn ID="FSD2961_Q6_qstn">
+        <qstnLit>Sukupuoli</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="2" min="1" />
+      </valrng>
+      <sumStat type="vald">2053</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">2</sumStat>
+      <sumStat type="mean">1.55</sumStat>
+      <sumStat type="stdev">.498</sumStat>
+      <catgry ID="FSD2961_Q6_catgry_1">
+        <catValu>1</catValu>
+        <labl>Nainen</labl>
+        <catStat>931</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q6_catgry_2">
+        <catValu>2</catValu>
+        <labl>Mies</labl>
+        <catStat>1122</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q7_var" dcml="0" intrvl="contin" name="Q7">
+      <labl>[q7] Asuinkunta</labl>
+      <qstn ID="FSD2961_Q7_qstn">
+        <qstnLit>Asuinkunta (jos ei listassa, valitse Muu ja kirjoita kunta laatikkoon)</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="338" min="2" />
+      </valrng>
+      <sumStat type="vald">2053</sumStat>
+      <sumStat type="min">2</sumStat>
+      <sumStat type="max">338</sumStat>
+      <sumStat type="mean">143.17</sumStat>
+      <sumStat type="stdev">110.833</sumStat>
+    </var>
+    <var ID="FSD2961_Q8_var" dcml="0" intrvl="discrete" name="Q8">
+      <labl>[q8] Asuinalue</labl>
+      <qstn ID="FSD2961_Q8_qstn">
+        <qstnLit>Asuinalue</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="4" min="1" />
+      </valrng>
+      <sumStat type="vald">2053</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">4</sumStat>
+      <sumStat type="mean">2.51</sumStat>
+      <sumStat type="stdev">.969</sumStat>
+      <catgry ID="FSD2961_Q8_catgry_1">
+        <catValu>1</catValu>
+        <labl>Kaupunkikeskusta</labl>
+        <catStat>368</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q8_catgry_2">
+        <catValu>2</catValu>
+        <labl>Kerrostaloalue</labl>
+        <catStat>602</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q8_catgry_3">
+        <catValu>3</catValu>
+        <labl>Pientaloalue</labl>
+        <catStat>744</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q8_catgry_4">
+        <catValu>4</catValu>
+        <labl>Haja-asutusalue</labl>
+        <catStat>339</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q9_var" dcml="0" intrvl="discrete" name="Q9">
+      <labl>[q9] Koulutus</labl>
+      <qstn ID="FSD2961_Q9_qstn">
+        <qstnLit>Koulutus (jos ei listassa, valitse Muu ja kirjoita koulutus laatikkoon)</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="7" min="1" />
+      </valrng>
+      <sumStat type="vald">2053</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">7</sumStat>
+      <sumStat type="mean">4.54</sumStat>
+      <sumStat type="stdev">1.653</sumStat>
+      <catgry ID="FSD2961_Q9_catgry_1">
+        <catValu>1</catValu>
+        <labl>Kansakoulu tai peruskoulu</labl>
+        <catStat>109</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q9_catgry_2">
+        <catValu>2</catValu>
+        <labl>Lukio</labl>
+        <catStat>224</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q9_catgry_3">
+        <catValu>3</catValu>
+        <labl>Ammattikoulu</labl>
+        <catStat>256</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q9_catgry_4">
+        <catValu>4</catValu>
+        <labl>Opisto</labl>
+        <catStat>260</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q9_catgry_5">
+        <catValu>5</catValu>
+        <labl>Ammattikorkeakoulu</labl>
+        <catStat>287</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q9_catgry_6">
+        <catValu>6</catValu>
+        <labl>Korkeakoulu tai yliopisto</labl>
+        <catStat>892</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q9_catgry_7">
+        <catValu>7</catValu>
+        <labl>Muu</labl>
+        <catStat>25</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q10_var" dcml="0" intrvl="discrete" name="Q10">
+      <labl>[q10] Harrastatko aktiivisesti tähtitiedettä?</labl>
+      <qstn ID="FSD2961_Q10_qstn">
+        <qstnLit>Harrastatko aktiivisesti tähtitiedettä?</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="2" min="1" />
+      </valrng>
+      <sumStat type="vald">2053</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">2</sumStat>
+      <sumStat type="mean">1.68</sumStat>
+      <sumStat type="stdev">.465</sumStat>
+      <catgry ID="FSD2961_Q10_catgry_1">
+        <catValu>1</catValu>
+        <labl>Kyllä</labl>
+        <catStat>647</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q10_catgry_2">
+        <catValu>2</catValu>
+        <labl>En</labl>
+        <catStat>1406</catStat>
+      </catgry>
+    </var>
+    <var ID="FSD2961_Q11_var" dcml="0" intrvl="discrete" name="Q11">
+      <labl>[q11] Oletko luonto- tai ympäristöjärjestön jäsen?</labl>
+      <qstn ID="FSD2961_Q11_qstn">
+        <qstnLit>Oletko luonto- tai ympäristöjärjestön jäsen?</qstnLit>
+      </qstn>
+      <valrng>
+        <range max="2" min="1" />
+      </valrng>
+      <sumStat type="vald">2053</sumStat>
+      <sumStat type="min">1</sumStat>
+      <sumStat type="max">2</sumStat>
+      <sumStat type="mean">1.76</sumStat>
+      <sumStat type="stdev">.428</sumStat>
+      <catgry ID="FSD2961_Q11_catgry_1">
+        <catValu>1</catValu>
+        <labl>Kyllä</labl>
+        <catStat>495</catStat>
+      </catgry>
+      <catgry ID="FSD2961_Q11_catgry_2">
+        <catValu>2</catValu>
+        <labl>En</labl>
+        <catStat>1558</catStat>
+      </catgry>
+    </var>
+  </dataDscr>
+</codeBook>

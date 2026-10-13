@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<codeBook xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="ddi:codebook:2_5" version="2.5" xsi:schemaLocation="ddi:codebook:2_5 http://www.ddialliance.org/Specification/DDI-Codebook/2.5/XMLSchema/codebook.xsd" xml:lang="en">
+  <docDscr>
+    <citation>
+      <titlStmt>
+        <titl>DDI description: Finnish Perspectives on Light Pollution 2011-2012</titl>
+        <parTitl xml:lang="fi">DDI-kuvailu: Suomalaisten näkemyksiä valosaasteesta 2011-2012</parTitl>
+        <IDNo agency="FSD">2961</IDNo>
+      </titlStmt>
+      <prodStmt>
+        <producer abbr="FSD">Finnish Social Science Data Archive</producer>
+        <copyright>Finnish Social Science Data Archive</copyright>
+        <prodPlac>Finnish Social Science Data Archive</prodPlac>
+      </prodStmt>
+      <verStmt>
+        <version date="2014-11-12" type="mef_eng">1.0.0</version>
+      </verStmt>
+      <biblCit>Finnish Perspectives on Light Pollution 2011-2012 [metadata]. Metadata version 1.0.0 (2014-11-12). Finnish Social Science Data Archive [producer and distributor]. DOI: https://doi.org/10.60686/t-fsd2961; URN: https://urn.fi/urn:nbn:fi:fsd:T-FSD2961</biblCit>
+      <holdings location="Finnish Social Science Data Archive FSD" URI="https://urn.fi/urn:nbn:fi:fsd:T-FSD2961" />
+    </citation>
+    <notes xml:lang="fi">FSD:n aineistokuvailut (FSD metadata records), joiden tekijä on Suomen yhteiskuntatieteellinen tietoarkisto (Finnish Social Science Data Archive), on lisensoitu Creative Commons 1.0 Yleismaailmallinen (CC0 1.0) -lisenssillä.
+      <ExtLink URI="https://creativecommons.org/publicdomain/zero/1.0/deed.fi" />
+    </notes>
+    <notes xml:lang="en">FSD:n aineistokuvailut (FSD metadata records) by Suomen yhteiskuntatieteellinen tietoarkisto (Finnish Social Science Data Archive) are licensed under a Creative Commons 1.0 Universal (CC0 1.0) license.
+      <ExtLink URI="https://creativecommons.org/publicdomain/zero/1.0/deed.en" />
+    </notes>
+    <notes xml:lang="sv">FSD:n aineistokuvailut (FSD metadata records) av Finlands samhällsvetenskapliga dataarkiv (Finnish Social Science Data Archive) är licensierade under en Creative Commons 1.0 Universiell (CC0 1.0) licens.
+      <ExtLink URI="https://creativecommons.org/publicdomain/zero/1.0/deed.sv" />
+    </notes>
+  </docDscr>
+  <stdyDscr>
+    <citation>
+      <titlStmt>
+        <titl>Finnish Perspectives on Light Pollution 2011-2012</titl>
+        <parTitl xml:lang="fi">Suomalaisten näkemyksiä valosaasteesta 2011-2012</parTitl>
+        <IDNo agency="FSD">2961</IDNo>
+        <IDNo agency="URN">urn:nbn:fi:fsd:T-FSD2961</IDNo>
+        <IDNo agency="DOI">10.60686/t-fsd2961</IDNo>
+      </titlStmt>
+      <rspStmt>
+        <AuthEnty affiliation="Finnish Environment Institute (SYKE)">Lyytimäki, Jari
+          <ExtLink URI="https://orcid.org/0000-0003-3308-5234" role="PID" title="ORCID">0000-0003-3308-5234</ExtLink>
+        </AuthEnty>
+        <AuthEnty affiliation="Finnish Environment Institute (SYKE)">Rinne, Janne
+          <ExtLink URI="https://orcid.org/0000-0003-1168-7138" role="PID" title="ORCID">0000-0003-1168-7138</ExtLink>
+        </AuthEnty>
+      </rspStmt>
+      <prodStmt>
+        <producer abbr="SYKE">Finnish Environment Institute</producer>
+        <copyright>In accordance with the agreement between FSD and the depositor.</copyright>
+      </prodStmt>
+      <distStmt>
+        <distrbtr abbr="FSD" URI="https://www.fsd.tuni.fi/">Finnish Social Science Data Archive</distrbtr>
+        <distDate date="2015-07-06" />
+      </distStmt>
+      <serStmt ID="S8" URI="https://services.fsd.tuni.fi/catalogue/series/8?lang=en">
+        <serName>Individual datasets</serName>
+        <serInfo>
+          <p>Individual datasets that do not belong to any series.</p>
+        </serInfo>
+      </serStmt>
+      <verStmt>
+        <version date="2014-11-12" type="main_data">1.0</version>
+      </verStmt>
+      <biblCit>Lyytimäki, Jari (Finnish Environment Institute (SYKE)) &amp; Rinne, Janne (Finnish Environment Institute (SYKE)): Finnish Perspectives on Light Pollution 2011-2012 [dataset]. Data version 1.0 (2014-11-12). Finnish Social Science Data Archive [distributor]. DOI: https://doi.org/10.60686/t-fsd2961; URN: https://urn.fi/urn:nbn:fi:fsd:T-FSD2961</biblCit>
+      <holdings location="Finnish Social Science Data Archive FSD" URI="https://urn.fi/urn:nbn:fi:fsd:T-FSD2961" />
+    </citation>
+    <stdyInfo>
+      <subject>
+        <keyword vocab="ELSST" vocabURI="https://elsst.cessda.eu/id">electric lighting</keyword>
+        <keyword vocab="ELSST" vocabURI="https://elsst.cessda.eu/id">human environment</keyword>
+        <keyword vocab="ELSST" vocabURI="https://elsst.cessda.eu/id">lighting</keyword>
+        <keyword>light pollution</keyword>
+        <topcClas vocab="OKM" vocabURI="http://www.yso.fi/onto/okm-tieteenala/conceptscheme">Social sciences</topcClas>
+        <topcClas vocab="OKM" vocabURI="http://www.yso.fi/onto/okm-tieteenala/conceptscheme">Natural sciences</topcClas>
+        <topcClas vocab="CESSDA Topic Classification" vocabURI="https://vocabularies.cessda.eu/urn/urn:ddi:int.cessda.cv:TopicClassification:4.2.3">Environment and conservation</topcClas>
+      </subject>
+      <abstract>
+        <p>The survey charted opinions on light pollution and the use of artificial lighting. The respondents were asked to indicate to what extent they agreed with several statements relating to artificial lighting, darkness, and light pollution (e.g. "Lighting at night increases the safety of neighbourhoods", "Light pollution causes people significant health problems", "Possibility to experience natural darkness is important to me", "Increasing the price of electricity is an effective way to decrease light pollution").</p>
+        <p>Background variables included the respondent's year of birth, gender, municipality of residence, and education as well as type of neighbourhood of residence, whether R was actively involved in astronomy, and whether R was a member of enivronmental organisation.</p>
+      </abstract>
+      <sumDscr>
+        <timePrd event="start" date="2011" />
+        <timePrd event="end" date="2012" />
+        <collDate event="start" date="2011-11-04" />
+        <collDate event="end" date="2012-02-29" />
+        <nation abbr="FI">Finland</nation>
+        <geogCover>Finland</geogCover>
+        <anlyUnit>Individual
+          <concept vocab="DDI Analysis Unit" vocabURI="https://vocabularies.cessda.eu/urn/urn:ddi:int.ddi.cv:AnalysisUnit:2.1.3">Individual</concept>
+        </anlyUnit>
+        <universe clusion="I">Finnish people</universe>
+        <dataKind>Quantitative</dataKind>
+      </sumDscr>
+    </stdyInfo>
+    <method>
+      <dataColl>
+        <timeMeth>Cross-section
+          <concept vocab="DDI Time Method" vocabURI="https://vocabularies.cessda.eu/urn/urn:ddi:int.ddi.cv:TimeMethod:1.2.3">CrossSection</concept>
+        </timeMeth>
+        <dataCollector abbr="SYKE" affiliation="Finnish Environment Institute">Lyytimäki, Jari</dataCollector>
+        <dataCollector abbr="SYKE" affiliation="Finnish Environment Institute">Rinne, Janne</dataCollector>
+        <sampProc>Non-probability: Availability
+          <concept vocab="DDI Sampling Procedure" vocabURI="https://vocabularies.cessda.eu/urn/urn:ddi:int.ddi.cv:SamplingProcedure:2.0.2">Nonprobability.Availability</concept>
+        </sampProc>
+        <sampProc>
+          <p>The survey was conducted as an online survey which was available for anyone interested in participating. The survey was widely advertised in different media and the Finnish Environment Institute released an announcement about the survey in Finnish and Swedish.</p>
+        </sampProc>
+        <collMode>Self-administered questionnaire: Web-based (CAWI)
+          <concept vocab="DDI Mode of Collection" vocabURI="https://vocabularies.cessda.eu/urn/urn:ddi:int.ddi.cv:ModeOfCollection:5.0.1">SelfAdministeredQuestionnaire.CAWI</concept>
+        </collMode>
+        <resInstru>Structured questionnaire
+          <concept vocab="DDI Type of Instrument" vocabURI="https://vocabularies.cessda.eu/urn/urn:ddi:int.ddi.cv:TypeOfInstrument:1.1.2">Questionnaire.Structured</concept>
+        </resInstru>
+        <weight>There are no weight variables in the data.</weight>
+      </dataColl>
+      <anlyInfo>
+        <dataAppr>Information on the identity, contact details and place of residence given by the respondents in open-ended questions have been anonymised. (Open-ended questions are only available in Finnish.)</dataAppr>
+      </anlyInfo>
+      <stdyClas type="A">Detailed and specific data description in Finnish and English. The data are checked and processed in detail. If necessary, the data are anonymised.</stdyClas>
+    </method>
+    <dataAccs>
+      <setAvail>
+        <accsPlac URI="https://www.fsd.tuni.fi/">Finnish Social Science Data Archive</accsPlac>
+      </setAvail>
+      <useStmt>
+        <specPerm ID="eng_common_specPerm_19-FSD2961">Users of the data shall send the Finnish Environment Institute (SYKE) a copy of all publications based on or using the data. The copies shall be sent to the mail address: Suomen ympäristökeskus (SYKE) PL 140, 00251 Helsinki, Finland.</specPerm>
+        <restrctn>The dataset is (B) available for research, teaching and study.</restrctn>
+        <citReq>The data and its creators shall be cited in all publications and presentations for which the data have been used. The bibliographic citation may be in the form suggested by the archive or in the form required by the publication.</citReq>
+        <deposReq>Notify FSD of all publications where you have used the data by sending the citation information to user-services.fsd@tuni.fi.</deposReq>
+        <disclaimer>The original data creators and the archive bear no responsibility for any results or interpretations arising from the reuse of the data.</disclaimer>
+      </useStmt>
+    </dataAccs>
+    <othrStdyMat>
+      <relMat>Lyytimäki, Jari &amp; Rinne, Janne (2012) Vaivaako valosaaste? Verkkokyselyn tulosten yhteenveto. Helsinki: Suomen ympäristökeskus. Suomen ympäristökeskuksen raportteja 24/2012.</relMat>
+      <relPubl xml:lang="fi">Henttu, Joel (2024). Valosaaste ja vähenevä luonnonpimeys: suomalaisten kokema valosaaste luonnonpimeyden arvojen näkökulmasta. Tampereen yliopisto. Johtamisen ja talouden tiedekunta. Pro gradu -tutkielma
+        <citation>
+          <titlStmt>
+            <titl>Valosaaste ja vähenevä luonnonpimeys: suomalaisten kokema valosaaste luonnonpimeyden arvojen näkökulmasta</titl>
+            <IDNo agency="URN">URN:NBN:fi:tuni-2024110810059</IDNo>
+          </titlStmt>
+          <distStmt>
+            <distDate date="2024" />
+          </distStmt>
+          <holdings URI="https://urn.fi/URN:NBN:fi:tuni-2024110810059" />
+        </citation>
+      </relPubl>
+      <relPubl xml:lang="en">Lyytimäki Jari (2015). Avoiding overly bright future: The systems intelligence perspective on the management of light pollution. Environmental Development. Doi: 10.1016/j.envdev.2015.06.009
+        <citation>
+          <titlStmt>
+            <titl>Avoiding overly bright future: The systems intelligence perspective on the management of light pollution.</titl>
+            <IDNo agency="DOI">10.1016/j.envdev.2015.06.009</IDNo>
+          </titlStmt>
+          <distStmt>
+            <distDate date="2015" />
+          </distStmt>
+          <holdings URI="https://doi.org/10.1016/j.envdev.2015.06.009" />
+        </citation>
+      </relPubl>
+      <relPubl xml:lang="fi">Lyytimäki, Jari &amp; Rinne, Janne (2012) Vaivaako valosaaste? Verkkokyselyn tulosten yhteenveto. Helsinki: Suomen ympäristökeskus. Suomen ympäristökeskuksen raportteja 24/2012.
+        <citation>
+          <titlStmt>
+            <titl>Vaivaako valosaaste? Verkkokyselyn tulosten yhteenveto</titl>
+          </titlStmt>
+          <distStmt>
+            <distDate date="2012" />
+          </distStmt>
+        </citation>
+      </relPubl>
+      <relPubl xml:lang="fi">Lyytimäki, Jari &amp; Rinne, Janne (2013). Ei diskovaloja parvekkeelle - kansalaisten näkemyksiä valosaasteen hallintakeinoista. Ympäristö &amp; Terveys 44(1), 4-60.
+        <citation>
+          <titlStmt>
+            <titl>Ei diskovaloja parvekkeelle - kansalaisten näkemyksiä valosaasteen hallintakeinoista</titl>
+          </titlStmt>
+          <distStmt>
+            <distDate date="2013" />
+          </distStmt>
+        </citation>
+      </relPubl>
+      <relPubl xml:lang="fi">Lyytimäki, Jari &amp; Rinne, Janne (2013). Haittavalo hallintaan. Ympäristö 27(7), 12-15.
+        <citation>
+          <titlStmt>
+            <titl>Haittavalo hallintaan</titl>
+          </titlStmt>
+          <distStmt>
+            <distDate date="2013" />
+          </distStmt>
+        </citation>
+      </relPubl>
+      <relPubl xml:lang="fi">Lyytimäki, Jari &amp; Rinne, Janne (2013). Valon varjopuolet - Valosaaste ympäristöongelmana. Helsinki: Gaudeamus.
+        <citation>
+          <titlStmt>
+            <titl>Valon varjopuolet - Valosaaste ympäristöongelmana</titl>
+          </titlStmt>
+          <distStmt>
+            <distDate date="2013" />
+          </distStmt>
+        </citation>
+      </relPubl>
+      <relPubl xml:lang="en">Lyytimäki, Jari &amp; Rinne, Janne (2013). Voices for the darkness: Online survey on public perceptions on light pollution as an environmental problem. Journal of Integrative Environmental Sciences 10(2): 127-139. doi:10.1080/1943815X.2013.824487
+        <citation>
+          <titlStmt>
+            <titl>Voices for the darkness: Online survey on public perceptions on light pollution as an environmental problem</titl>
+            <IDNo agency="DOI">10.1080/1943815X.2013.824487</IDNo>
+          </titlStmt>
+          <distStmt>
+            <distDate date="2013" />
+          </distStmt>
+          <holdings URI="https://doi.org/10.1080/1943815X.2013.824487" />
+        </citation>
+      </relPubl>
+      <relPubl xml:lang="en">Lyytimäki, Jari (2015). Towards a bright future? The systems intelligent perspective on the management of light pollution [online]. In: Hatakka, Aino &amp; Vehmas, Jarmo (eds.) Sustainable Futures in a Changing Climate. Proceedings of the Conference "Sustainable Futures in a Changing Climate", 11-12 June 2014, Helsinki, Finland. FFRC eBOOK 2/2015. Finland Futures Research Centre, University of Turku, Pp. 66-74. http://www.utu.fi/fi/yksikot/ffrc/julkaisut/e-tutu/Documents/FFRC-eBook_2-2015.pdf [cited 28.11.2015]
+        <citation>
+          <titlStmt>
+            <titl>Towards a bright future? The systems intelligent perspective on the management of light pollution</titl>
+          </titlStmt>
+          <distStmt>
+            <distDate date="2015" />
+          </distStmt>
+        </citation>
+      </relPubl>
+    </othrStdyMat>
+  </stdyDscr>
+</codeBook>

@@ -50,6 +50,7 @@ import logging
 import os
 import re
 import xml.etree.ElementTree as ET
+from pathlib import Path
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -79,6 +80,24 @@ def loadxmlstring(xmlstring) -> codeBookType:
     ddicodebook = codeBookType()  # type: ignore
     ddicodebook.from_xml_element(root)
     return ddicodebook
+
+
+def savexml(
+    codebook: codeBookType,
+    file: str | Path,
+    pretty: bool = True,
+    encoding: str = "utf-8",
+    xml_declaration: bool = True,
+    default_namespace: str = "ddi:codebook:2_6",
+) -> None:
+    """Saves a DDI codebook to an XML file."""
+    codebook.savexml(
+        file=file,
+        pretty=pretty,
+        encoding=encoding,
+        xml_declaration=xml_declaration,
+        default_namespace=default_namespace,
+    )
 
 
 def get_mixed_content(element) -> str:
@@ -203,20 +222,25 @@ class baseElementType(BaseModel):
 
         # Add attributes
         for attrib, value in element.attrib.items():
-            # Map XML attribute to model field
-            # simple mapping: check if field exists with alias match
+            attrib_norm = attrib
+            if attrib.startswith("{http://www.w3.org/XML/1998/namespace}"):
+                attrib_norm = f"xml:{attrib.split('}', 1)[1]}"
+            elif "}" in attrib:
+                attrib_norm = attrib.split("}", 1)[1]
+
             field_found = False
-            for field_name, field_info in self.model_fields.items():
-                if field_info.alias == attrib or field_name == attrib:
+            for field_name, field_info in type(self).model_fields.items():
+                if (
+                    field_info.alias == attrib
+                    or field_info.alias == attrib_norm
+                    or field_name == attrib
+                    or field_name == attrib_norm
+                ):
                     setattr(self, field_name, value)
                     field_found = True
                     break
 
             if not field_found and attrib != "xsi:schemaLocation":  # ignore schema location
-                # Dynamic attribute handling not explicitly defined in model is discarded by default logic above
-                # unless we store them in extra fields. But the original code restricted to _valid_attributes
-                # For Pydantic, we rely on fields. If it's not a field, it's ignored (or warned).
-                # logging.warn(f"Attribute {attrib} ignored on {self.__class__.__name__}")
                 pass
 
         # Add children
@@ -226,12 +250,11 @@ class baseElementType(BaseModel):
             if base_name in cls_annotations:
                 # get the annotated type
                 property_annotation = cls_annotations[base_name]
-                # print(property_annotation)
                 if property_annotation:
                     if property_annotation["is_ddi_element"]:
                         # create the object instance based on the type/class
                         instance_cls = globals()[property_annotation["type"]]
-                        instance = instance_cls()  # options=self._options
+                        instance = instance_cls()
 
                         # parse the XML element
                         instance.from_xml_element(child)
@@ -245,22 +268,101 @@ class baseElementType(BaseModel):
                             # set the non-repeatable element value
                             setattr(self, base_name, instance)
                     else:
-                        # annotated but does not appear to have an associated class
                         logging.warning(f"No DDI class found for element {base_name} in {self.__class__.__name__}")
                 else:
-                    # this element in not annotated (likely a bug)
                     logging.warning(
                         f"No type annotation found for child element {base_name} in {self.__class__.__name__}"
                     )
             else:
-                # don't know this element
                 logging.warning(f"Child element {base_name} ignored on {self.__class__.__name__}")
 
         # Parse text content - special handling for abstractTextType etc
-        # Rely on subclasses overriding mixed content logic or default here
         if not list(element):  # if no children, take text
             if element.text and element.text.strip():
                 self.content = element.text.strip()
+
+    def to_xml_element(
+        self,
+        tag_name: str | None = None,
+        default_namespace: str | None = None,
+    ) -> ET.Element:
+        """Serializes the model instance to an xml.etree.ElementTree.Element."""
+        cls = type(self)
+        if tag_name:
+            tag = tag_name
+        elif cls.__name__.endswith("Type"):
+            tag = cls.__name__[:-4]
+        else:
+            tag = cls.__name__
+
+        qtag = f"{{{default_namespace}}}{tag}" if default_namespace and not tag.startswith("{") else tag
+        element = ET.Element(qtag)
+
+        cls_annotations = self.get_annotations()
+
+        # 1. Attributes
+        for field_name, field_info in cls.model_fields.items():
+            if field_name in ["content", "model_config"]:
+                continue
+            prop_ann = cls_annotations.get(field_name)
+            if prop_ann and prop_ann.get("is_ddi_element"):
+                continue
+
+            val = getattr(self, field_name, None)
+            if val is not None:
+                alias = field_info.alias or field_name
+                if alias == "xml:lang" or field_name == "xml_lang":
+                    element.set("{http://www.w3.org/XML/1998/namespace}lang", str(val))
+                elif alias == "ID" or field_name == "id":
+                    element.set("ID", str(val))
+                elif not alias.startswith("_"):
+                    element.set(alias, str(val))
+
+        # Root element attributes for codeBook
+        if cls.__name__ == "codeBookType":
+            if not getattr(self, "version", None):
+                element.set("version", "2.6")
+            if default_namespace:
+                element.set(
+                    "{http://www.w3.org/2001/XMLSchema-instance}schemaLocation",
+                    f"{default_namespace} https://ddialliance.org/Specification/DDI-Codebook/2.6/XMLSchema/codebook.xsd",
+                )
+
+        # 2. Text content
+        if self.content is not None and str(self.content).strip():
+            text_str = str(self.content).strip()
+            if "<" in text_str and ">" in text_str:
+                try:
+                    wrapped = f"<wrapper>{text_str}</wrapper>"
+                    wrapper_elem = ET.fromstring(wrapped)
+                    element.text = wrapper_elem.text
+                    for child in wrapper_elem:
+                        element.append(child)
+                except Exception:
+                    element.text = text_str
+            else:
+                element.text = text_str
+
+        # 3. Children elements (in schema / model_fields sequence order)
+        for field_name in cls.model_fields:
+            prop_ann = cls_annotations.get(field_name)
+            if not prop_ann or not prop_ann.get("is_ddi_element"):
+                continue
+
+            child_val = getattr(self, field_name, None)
+            if child_val is None:
+                continue
+
+            if isinstance(child_val, list):
+                for item in child_val:
+                    if isinstance(item, baseElementType):
+                        child_elem = item.to_xml_element(tag_name=field_name, default_namespace=default_namespace)
+                        element.append(child_elem)
+            elif isinstance(child_val, baseElementType):
+                child_elem = child_val.to_xml_element(tag_name=field_name, default_namespace=default_namespace)
+                element.append(child_elem)
+
+        return element
 
     def get_annotations(self):
         """Helper function to parse annotated class properties.
@@ -605,6 +707,42 @@ class codeBookType(baseElementType):
     version: str | None = None
     codeBookAgency: str | None = None
     access: str | None = None  # DDI 2.6
+
+    def to_xml_string(
+        self,
+        pretty: bool = True,
+        encoding: str = "utf-8",
+        xml_declaration: bool = True,
+        default_namespace: str = "ddi:codebook:2_6",
+    ) -> str:
+        """Serializes the codebook to a formatted XML string."""
+        if default_namespace:
+            ET.register_namespace("", default_namespace)
+        ET.register_namespace("xml", "http://www.w3.org/XML/1998/namespace")
+        ET.register_namespace("xsi", "http://www.w3.org/2001/XMLSchema-instance")
+
+        elem = self.to_xml_element(tag_name="codeBook", default_namespace=default_namespace)
+        if pretty:
+            ET.indent(elem, space="  ")
+        raw_bytes = ET.tostring(elem, encoding=encoding, xml_declaration=xml_declaration)
+        return raw_bytes.decode(encoding)
+
+    def savexml(
+        self,
+        file: str | Path,
+        pretty: bool = True,
+        encoding: str = "utf-8",
+        xml_declaration: bool = True,
+        default_namespace: str = "ddi:codebook:2_6",
+    ) -> None:
+        """Saves the codebook to an XML file."""
+        xml_str = self.to_xml_string(
+            pretty=pretty,
+            encoding=encoding,
+            xml_declaration=xml_declaration,
+            default_namespace=default_namespace,
+        )
+        Path(file).write_text(xml_str, encoding=encoding)
 
     # HELPERS
     def get_abstract(self) -> str:

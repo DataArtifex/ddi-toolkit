@@ -9,16 +9,17 @@ Generic container supporting:
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 
+from .blocker import TokenBlocker
 from .comparators.base import ContentComparator
 from .comparators.syntactic import SequenceMatcherComparator
-from .models import HarmonizableResource, HarmonizationMatch, MatchType
+from .models import ComparableResource, HarmonizationMatch, MatchType
 from .review import CuratedCrosswalk, HumanReviewQueue
 
 
-class HarmonizationRegistry[T: HarmonizableResource]:
-    """Central registry and matching engine for harmonizable resources."""
+class HarmonizationRegistry[T: ComparableResource]:
+    """Central registry and matching engine for comparable and harmonizable resources."""
 
     def __init__(
         self,
@@ -26,6 +27,8 @@ class HarmonizationRegistry[T: HarmonizableResource]:
         curated_crosswalk: CuratedCrosswalk | None = None,
         review_queue: HumanReviewQueue | None = None,
         signature_getter: Callable[[T], str] | None = None,
+        blocker: TokenBlocker[T] | None = None,
+        enable_blocking: bool = False,
     ) -> None:
         """Initializes the HarmonizationRegistry.
 
@@ -34,11 +37,16 @@ class HarmonizationRegistry[T: HarmonizableResource]:
             curated_crosswalk: Optional explicit approved/blocked mappings.
             review_queue: Optional queue for enqueuing borderline matches.
             signature_getter: Optional extractor function for resource signature.
+            blocker: Optional pre-configured TokenBlocker for candidate filtering.
+            enable_blocking: If True and blocker is None, automatically instantiates a default TokenBlocker.
         """
         self.comparator = comparator or SequenceMatcherComparator()
         self.curated_crosswalk = curated_crosswalk or CuratedCrosswalk()
         self.review_queue = review_queue
         self.signature_getter = signature_getter
+        self.blocker: TokenBlocker[T] | None = (
+            blocker if blocker is not None else (TokenBlocker[T]() if enable_blocking else None)
+        )
 
         # Primary indexing
         self._by_urn: dict[str, T] = {}
@@ -49,6 +57,7 @@ class HarmonizationRegistry[T: HarmonizableResource]:
         self._by_category_set: dict[str, T] = {}
         self._by_category_seq: dict[str, T] = {}
         self._by_signature: dict[str, T] = {}
+        self._by_facet: dict[str, dict[str, list[T]]] = {}
         self._canonical_list: list[T] = []
 
     def __len__(self) -> int:
@@ -86,7 +95,7 @@ class HarmonizationRegistry[T: HarmonizableResource]:
             canon_sig = self._get_sig(canonical)
 
             # Check whether content matches bit-for-bit or has drifted
-            if cand_fp.digest == canon_fp.digest or cand_sig == canon_sig:
+            if cand_fp.digest == canon_fp.digest or cand_fp.signature == canon_fp.signature:
                 return HarmonizationMatch(
                     matched=True,
                     canonical_resource=canonical,
@@ -306,15 +315,50 @@ class HarmonizationRegistry[T: HarmonizableResource]:
                 reason=reason,
             )
 
+        # 7.5. Generalized Sub-Facet Match (e.g. Question literal, atomic triple, pivot translation)
+        if threshold < 1.0:
+            for facet_name, cand_facet in cand_fp.component_digests.items():
+                if cand_facet and facet_name in self._by_facet and cand_facet in self._by_facet[facet_name]:
+                    matching_canonicals = self._by_facet[facet_name][cand_facet]
+                    for canonical in matching_canonicals:
+                        canon_fp = canonical.fingerprint
+                        if self.curated_crosswalk.is_blocked(cand_fp.digest, canon_fp.digest):
+                            continue
+                        comp_res = self.comparator.compare(cand_sig, self._get_sig(canonical))
+                        facet_score = max(comp_res.score, 0.90)
+                        if facet_score >= threshold:
+                            canon_urn = getattr(canonical, "urn", None)
+                            id_matched = bool(cand_urn and canon_urn and cand_urn == canon_urn)
+                            return HarmonizationMatch(
+                                matched=True,
+                                canonical_resource=canonical,
+                                candidate_resource=candidate,
+                                score=comp_res.score if comp_res.score > 0.0 else facet_score,
+                                match_type=MatchType.FACET_EXACT,
+                                identifier_matched=id_matched,
+                                content_matched=False,
+                                identifier_kind=cand_ident_kind,
+                                is_random_guid=cand_is_guid,
+                                attribute_scores={**comp_res.sub_scores, f"facet_{facet_name}": 1.0},
+                                reason=f"Matched via exact Merkle sub-facet '{facet_name}'",
+                                metadata={"matched_facet": facet_name},
+                            )
+
         # 8. Comparator search across canonical items
         if self._canonical_list:
+            search_pool: Sequence[T]
+            if self.blocker is not None and len(self._canonical_list) > 10:
+                search_pool = self.blocker.get_candidates(candidate, min_shared_tokens=1)
+            else:
+                search_pool = self._canonical_list
+
             best_match: T | None = None
             best_score = 0.0
             best_reason = ""
             best_sub_scores: dict[str, float] = {}
             best_match_type = MatchType.DISTINCT
 
-            for canonical in self._canonical_list:
+            for canonical in search_pool:
                 canon_fp = canonical.fingerprint
                 if self.curated_crosswalk.is_blocked(cand_fp.digest, canon_fp.digest):
                     continue
@@ -412,6 +456,18 @@ class HarmonizationRegistry[T: HarmonizableResource]:
             if cat_seq:
                 self._by_category_seq[cat_seq] = resource
 
+        # Index all Merkle sub-facets
+        for facet_name, facet_digest in fp.component_digests.items():
+            if facet_digest:
+                if facet_name not in self._by_facet:
+                    self._by_facet[facet_name] = {}
+                if facet_digest not in self._by_facet[facet_name]:
+                    self._by_facet[facet_name][facet_digest] = []
+                self._by_facet[facet_name][facet_digest].append(resource)
+
+        if self.blocker is not None:
+            self.blocker.add(resource)
+
         self._canonical_list.append(resource)
 
         cand_ident = getattr(resource, "identifier", None)
@@ -448,3 +504,103 @@ class HarmonizationRegistry[T: HarmonizableResource]:
     def get_by_category_set(self, category_set_digest: str) -> T | None:
         """Retrieves canonical resource by category set digest."""
         return self._by_category_set.get(category_set_digest)
+
+    def get_by_facet(self, facet_name: str, facet_digest: str) -> list[T]:
+        """Retrieves canonical resources sharing a specific Merkle sub-facet digest."""
+        return list(self._by_facet.get(facet_name, {}).get(facet_digest, []))
+
+    def get_first_by_facet(self, facet_name: str, facet_digest: str) -> T | None:
+        """Retrieves the first canonical resource matching a specific Merkle sub-facet digest."""
+        matches = self.get_by_facet(facet_name, facet_digest)
+        return matches[0] if matches else None
+
+    def find_candidates(
+        self,
+        candidate: T,
+        top_k: int = 5,
+        min_threshold: float = 0.70,
+    ) -> list[HarmonizationMatch[T]]:
+        """Finds and ranks top-K matching canonical resources above min_threshold."""
+        cand_fp = candidate.fingerprint
+        cand_sig = self._get_sig(candidate)
+        cand_urn = getattr(candidate, "urn", None)
+        cand_ident = getattr(candidate, "identifier", None)
+        cand_ident_kind = cand_ident.kind.value if cand_ident else None
+        cand_is_guid = cand_ident.is_random_guid if cand_ident else None
+
+        # First check if there is an exact match
+        exact_match = self.match(candidate, threshold=1.0)
+        if exact_match.matched and exact_match.canonical_resource is not None and exact_match.score == 1.0:
+            return [exact_match]
+
+        # Collect candidate pool
+        seen_digests: set[str] = set()
+        ranked_matches: list[HarmonizationMatch[T]] = []
+
+        # 1. Facet collisions (high-confidence sub-component matches)
+        for facet_name, cand_facet in cand_fp.component_digests.items():
+            if cand_facet and facet_name in self._by_facet and cand_facet in self._by_facet[facet_name]:
+                for canon in self._by_facet[facet_name][cand_facet]:
+                    c_fp = canon.fingerprint
+                    if c_fp.digest in seen_digests:
+                        continue
+                    seen_digests.add(c_fp.digest)
+                    comp_res = self.comparator.compare(cand_sig, self._get_sig(canon))
+                    canon_urn = getattr(canon, "urn", None)
+                    id_matched = bool(cand_urn and canon_urn and cand_urn == canon_urn)
+                    score = max(comp_res.score, 0.85)
+                    if score >= min_threshold:
+                        ranked_matches.append(
+                            HarmonizationMatch(
+                                matched=True,
+                                canonical_resource=canon,
+                                candidate_resource=candidate,
+                                score=comp_res.score if comp_res.score > 0.0 else score,
+                                match_type=MatchType.FACET_EXACT,
+                                identifier_matched=id_matched,
+                                content_matched=False,
+                                identifier_kind=cand_ident_kind,
+                                is_random_guid=cand_is_guid,
+                                attribute_scores={**comp_res.sub_scores, f"facet_{facet_name}": 1.0},
+                                reason=f"Matched via exact Merkle sub-facet '{facet_name}'",
+                                metadata={"matched_facet": facet_name},
+                            )
+                        )
+
+        # 2. General comparator search across remaining canonicals
+        search_pool: Sequence[T]
+        if self.blocker is not None and len(self._canonical_list) > 10:
+            search_pool = self.blocker.get_candidates(candidate, min_shared_tokens=1, top_k=top_k * 5)
+        else:
+            search_pool = self._canonical_list
+
+        for canonical in search_pool:
+            c_fp = canonical.fingerprint
+            if c_fp.digest in seen_digests:
+                continue
+            if self.curated_crosswalk.is_blocked(cand_fp.digest, c_fp.digest):
+                continue
+
+            res = self.comparator.compare(cand_sig, self._get_sig(canonical))
+            if res.score >= min_threshold:
+                seen_digests.add(c_fp.digest)
+                canon_urn = getattr(canonical, "urn", None)
+                id_matched = bool(cand_urn and canon_urn and cand_urn == canon_urn)
+                ranked_matches.append(
+                    HarmonizationMatch(
+                        matched=True,
+                        canonical_resource=canonical,
+                        candidate_resource=candidate,
+                        score=res.score,
+                        match_type=res.match_type,
+                        identifier_matched=id_matched,
+                        content_matched=False,
+                        identifier_kind=cand_ident_kind,
+                        is_random_guid=cand_is_guid,
+                        attribute_scores=res.sub_scores,
+                        reason=res.rationale,
+                    )
+                )
+
+        ranked_matches.sort(key=lambda m: m.score, reverse=True)
+        return ranked_matches[:top_k]

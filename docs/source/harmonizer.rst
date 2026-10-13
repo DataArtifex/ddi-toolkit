@@ -40,6 +40,26 @@ To solve these challenges, the framework delivers:
 In production deployment within the DDI-Codebook to DDI-Lifecycle conversion pipeline, the engine achieved a **94.1% reduction in duplicate categories** and a **92.3% reduction in redundant code lists**, operating with sub-millisecond overhead.
 
 
+Terminology: Comparable vs. Harmonized
+--------------------------------------
+
+To maintain conceptual rigor across metadata catalogs, banks, and pipelines, the framework establishes a strict taxonomy distinguishing **Comparable Resources** from **Harmonized Resources**:
+
+.. list-table::
+   :widths: 25 35 40
+   :header-rows: 1
+
+   * - Stage & Concept
+     - Primary Classes & Protocols
+     - Operational Meaning
+   * - **Phase 1: Comparability (Assessment)**
+     - ``ComparableResource``, ``ContentComparator``, ``ComparisonResult``, ``ContentFingerprint``, ``HashesPayload``
+     - Measures raw degree of similarity, equivalence, or difference between two items. A resource is *comparable* when it implements the protocol to be fingerprinted, hashed, and compared. No alteration, alignment, or consensus has taken place yet.
+   * - **Phase 2: Harmonization (Reconciliation)**
+     - ``HarmonizationRegistry``, ``HarmonizationMatch``, ``ResourceBank``, ``DatasetHarmonizer``, ``CuratedCrosswalk``, ``TransformationAdvice``
+     - The operational act of resolving discrepancy, asserting canonical equivalence, aligning variables across datasets, establishing lineage, or applying schema recoding. Two comparable items become *harmonized* when a registry or curator agrees to reuse an existing canonical or maps one into the other.
+
+
 Architecture & Framework Design
 -------------------------------
 
@@ -927,6 +947,176 @@ Key Crosswalk Features:
 * **Optimal Bipartite Matching**: Automatically pairs source and target variables using greedy score ranking with strict 1-to-1 matching constraints (or optional many-to-one mapping).
 * **Cross-Format Exporters**: Export crosswalks directly to Polars DataFrames (``.to_polars()``), Pandas DataFrames (``.to_pandas()``), JSON dictionaries (``.to_dict()``), and Markdown summary tables (``.to_markdown()``).
 * **Automated Polars Pipeline Execution**: ``crosswalk.apply_to_polars(df)`` applies unit scaling, category recoding via ``replace()``, and column renames in a single chained pipeline.
+
+
+Resource Banks, Catalogs & Batch Ingestion
+------------------------------------------
+
+When ingesting survey metadata into large institutional banks (e.g., Question Banks, Variable Catalogs, or Concept Vocabularies), comparing each newly ingested item against all existing records naively produces an unsustainable :math:`O(N^2)` bottleneck. The harmonizer provides dedicated bank abstractions, candidate blocking, and lineage tracking.
+
+Sub-Linear Candidate Blocking (``TokenBlocker``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``TokenBlocker`` indexes canonical resources into an inverted token and character :math:`n`-gram index. When matching a new candidate, it retrieves only the small fraction of records sharing lexical tokens or :math:`n`-grams, pruning the search space before running expensive string comparators or semantic vector models:
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import Question, TokenBlocker
+
+   blocker = TokenBlocker[Question](min_token_length=3)
+   blocker.add(Question(question_text="What is your annual household income?"))
+   blocker.add(Question(question_text="How concerned are you about climate change?"))
+
+   # Retrieves only the income question, completely skipping the unrelated climate record
+   candidates = blocker.get_candidates(
+       Question(question_text="Please indicate your annual income"),
+       min_shared_tokens=1
+   )
+
+Multi-Candidate Ranked Queries (``find_candidates``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``HarmonizationRegistry.find_candidates`` queries the catalog and returns the top-:math:`K` candidates above a minimum similarity threshold, sorted by match confidence:
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import HarmonizationRegistry, Question
+
+   reg = HarmonizationRegistry[Question](enable_blocking=True)
+   # ... register resources ...
+
+   top_matches = reg.find_candidates(candidate_question, top_k=5, min_threshold=0.70)
+   for match in top_matches:
+       print(f"Canonical: {match.canonical_resource.urn} | Score: {match.score:.2f} | Reason: {match.reason}")
+
+Resource Bank Facade & Ingestion Audit (``ResourceBank``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``ResourceBank`` provides a high-level catalog facade combining the registry, blocker, lineage tracking, and batch ingestion reporting:
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import Question, ResourceBank
+
+   bank = ResourceBank[Question](name="question_bank")
+
+   # Ingest a batch of survey questions
+   report = bank.ingest_batch(incoming_questions)
+
+   print(f"Processed: {report.total_processed}")
+   print(f"Reuse Rate: {report.reuse_rate:.1%}")
+
+   # Export ingestion log to Polars DataFrame for downstream analytics
+   df_audit = report.to_polars()
+
+   # Generate a GitHub-flavored Markdown audit report
+   print(report.to_markdown())
+
+   # Query full revision and derivation lineage for any URN
+   lineage = bank.get_lineage("urn:ddi:agency:Q_EMP_2")
+
+DDI Extraction Adapters
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Domain models provide built-in factory methods to ingest directly from DDI-Codebook (2.6) and DDI-Lifecycle (3.3 / 4.0) XML elements or converted models:
+
+* ``Question.from_ddi_codebook(xml_or_model)``: Extracts question literals (``<qstnLit>``) and interviewer instructions (``<ivuInstr>``).
+* ``Question.from_ddi_lifecycle(xml_or_model)``: Extracts literals (``<d:LiteralText>``), intent (``<d:QuestionIntent>``), and instructions (``<d:Instruction>``).
+* ``CodeList.from_ddi_codebook(xml_or_model)``: Extracts response categories (``<catgry>``) with missing flags.
+* ``CodeList.from_ddi_lifecycle(xml_or_model)``: Extracts codes (``<l:Code>``) and category references.
+
+
+Multilingual Harmonization & Pivot Hashing
+------------------------------------------
+
+International survey programs (e.g., ESS, ISSP, WVS) administer identical constructs in multiple languages. Naive cross-lingual hashing fails because literals in different languages yield completely different SHA-256 hashes. The harmonizer implements a multi-tier cross-lingual architecture.
+
+Canonical Pivot Hashing
+~~~~~~~~~~~~~~~~~~~~~~~
+
+When foreign-language questions are translated into a canonical pivot language (defaulting to English), the translated prompt produces an identical **``pivot_literal``** Merkle facet:
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import DictionaryTranslationBridge, HarmonizationRegistry, Question
+
+   translator = DictionaryTranslationBridge({
+       ("es", "en", "¿Cuál es su ingreso familiar anual?"): "What is your annual household income?",
+   })
+
+   reg = HarmonizationRegistry[Question]()
+   reg.register(Question(question_text="What is your annual household income?", language="en"))
+
+   # Spanish candidate question translated to pivot
+   q_es = Question(question_text="¿Cuál es su ingreso familiar anual?", language="es")
+   q_es_pivot = q_es.with_pivot_translation(translator, target_lang="en")
+
+   # Matches the English canonical immediately via O(1) Merkle facet collision!
+   match = reg.match(q_es_pivot, threshold=0.90)
+   assert match.matched is True
+   assert match.match_type.value == "FACET_EXACT"
+
+Translation Bridges & Caching (``CachedTranslationBridge``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To prevent redundant and costly translation calls, ``CachedTranslationBridge`` wraps any ``TranslationService`` with SHA-256 caching:
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import CachedTranslationBridge, MultilingualAgentComparator
+
+   cached_bridge = CachedTranslationBridge(translator)
+   comparator = MultilingualAgentComparator(translation_bridge=cached_bridge, pivot_language="en")
+
+
+PostgreSQL & Database Persistence Reference
+-------------------------------------------
+
+For enterprise applications storing metadata banks in PostgreSQL, resources can be stored with URN as primary key and a dedicated JSONB ``hashes`` column populated directly from ``resource.hashes.model_dump()``.
+
+PostgreSQL Schema & Indexing Architecture
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To achieve sub-millisecond retrieval across millions of records, PostgreSQL utilizes expression B-Tree indexes on Merkle root hashes and sub-facets, combined with a ``pg_trgm`` GIN index on normalized signatures:
+
+.. code-block:: sql
+
+   CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+   CREATE TABLE resource_bank (
+       urn TEXT PRIMARY KEY,
+       resource_type VARCHAR(64) NOT NULL,
+       canonical_urn TEXT REFERENCES resource_bank(urn) ON DELETE SET NULL,
+       payload JSONB NOT NULL DEFAULT '{}'::jsonb,
+       hashes JSONB NOT NULL DEFAULT '{}'::jsonb,
+       created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+   );
+
+   -- 1. Exact Merkle Root Digest lookup: O(1) B-Tree deduplication
+   CREATE INDEX idx_resource_bank_hash_root ON resource_bank (((hashes->>'root')));
+
+   -- 2. Expression B-Tree indexes on core Merkle sub-facets
+   CREATE INDEX idx_resource_bank_facet_literal ON resource_bank (((hashes->'facets'->>'literal')))
+   WHERE hashes->'facets'->>'literal' IS NOT NULL;
+
+   CREATE INDEX idx_resource_bank_facet_pivot_literal ON resource_bank (((hashes->'facets'->>'pivot_literal')))
+   WHERE hashes->'facets'->>'pivot_literal' IS NOT NULL;
+
+   -- 3. GIN Trigram Index on normalized text signature for fuzzy fallback
+   CREATE INDEX idx_resource_bank_sig_trgm ON resource_bank USING gin (((hashes->>'signature')) gin_trgm_ops);
+
+Automated SQL Generation (``sql.py``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The toolkit provides utility functions to generate production-ready DDL and tiered matching queries:
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import generate_bank_schema_ddl, generate_tiered_matching_cte_query
+
+   ddl = generate_bank_schema_ddl("survey_question_bank")
+   query = generate_tiered_matching_cte_query("survey_question_bank")
+
 
 Interactive HTML Harmonization Workbench
 ----------------------------------------

@@ -1,25 +1,34 @@
-"""Comprehensive unit tests for generic, domain-agnostic resource harmonization framework."""
-
 from __future__ import annotations
+
+import xml.etree.ElementTree as ET
 
 from dartfx.ddi.harmonizer import (
     AgentDecision,
+    BatchIngestionReport,
+    CachedTranslationBridge,
     Category,
     Code,
     CodeList,
+    ComparableResource,
     Concept,
     CuratedCrosswalk,
     DataType,
+    DictionaryTranslationBridge,
     ExactComparator,
     HarmonizationRegistry,
+    HashesPayload,
     HumanReviewQueue,
     IdentifierKind,
     LevenshteinComparator,
+    LineageRelation,
     MatchType,
+    MultilingualAgentComparator,
     NormalizationPreset,
     Question,
     QuestionComparator,
+    ResourceBank,
     ResourceFingerprinter,
+    ResourceLineageEntry,
     RuleBasedMockAgentComparator,
     SanitizerConfig,
     SemanticVectorComparator,
@@ -27,7 +36,9 @@ from dartfx.ddi.harmonizer import (
     SequenceMatcherComparator,
     TextNormalizer,
     TextSanitizer,
+    TokenBlocker,
     TokenJaccardComparator,
+    TranslationService,
     ValueDomain,
     Variable,
     WeightedAttributeComparator,
@@ -35,6 +46,8 @@ from dartfx.ddi.harmonizer import (
     compare_questions,
     compare_resources,
     compare_variables,
+    generate_bank_schema_ddl,
+    generate_tiered_matching_cte_query,
     parse_identifier,
 )
 
@@ -838,3 +851,415 @@ def test_clean_domain_models_and_operations():
     )
     diff_res = compare_variables(var1, var_case_diff)
     assert diff_res.score >= 0.95
+
+
+def test_hashes_payload_and_comparable_resource_properties():
+    """Verifies that domain models satisfy ComparableResource protocol and export valid HashesPayload."""
+    # 1. Question
+    q = Question(
+        question_text="How many hours did you work last week?",
+        instructions="Include all paid overtime.",
+        urn="urn:ddi:agency:Q_HOURS:1.0",
+    )
+    assert isinstance(q, ComparableResource)
+    h_q = q.hashes
+    assert isinstance(h_q, HashesPayload)
+    assert h_q.root == q.fingerprint.digest
+    assert "literal" in h_q.facets
+    assert "instructions" in h_q.facets
+    assert len(h_q.tokens) > 0
+
+    # 2. Variable
+    v = Variable(
+        name="WRK_HRS",
+        label="Total Weekly Work Hours",
+        data_type=DataType.from_xsd("xs:integer"),
+    )
+    assert isinstance(v, ComparableResource)
+    h_v = v.hashes
+    assert isinstance(h_v, HashesPayload)
+    assert h_v.root == v.fingerprint.digest
+    assert "atomic" in h_v.facets
+    assert "label" in h_v.facets
+
+    # 3. CodeList & Category
+    cat = Category(label="Employed", value="1")
+    assert isinstance(cat, ComparableResource)
+    assert isinstance(cat.hashes, HashesPayload)
+
+    cl = CodeList(name="EMP_STAT", codes=[Code(value="1", category=cat)])
+    assert isinstance(cl, ComparableResource)
+    assert isinstance(cl.hashes, HashesPayload)
+    assert "code_set" in cl.hashes.facets
+
+
+def test_registry_generalized_facet_indexing_and_matching():
+    """Verifies that HarmonizationRegistry indexes sub-facets and matches on facet collisions."""
+    reg: HarmonizationRegistry[Question] = HarmonizationRegistry()
+
+    # Canonical question in CAPI mode (face-to-face)
+    canonical = Question(
+        question_text="What is your highest completed level of education?",
+        instructions="Show Card E and ask respondent to point.",
+        urn="urn:ddi:agency:Q_EDU:1.0",
+    )
+    reg.register(canonical)
+
+    # Candidate question in CAWI mode (web self-completion) with exact same prompt wording
+    candidate = Question(
+        question_text="What is your highest completed level of education?",
+        instructions="Please select one option from the drop-down list below.",
+        urn="urn:ddi:agency:Q_EDU_WEB:2.0",
+    )
+
+    # 1. Direct facet lookup
+    literal_digest = candidate.fingerprint.component_digests["literal"]
+    facet_matches = reg.get_by_facet("literal", literal_digest)
+    assert len(facet_matches) == 1
+    assert facet_matches[0] is canonical
+
+    # 2. Match with threshold < 1.0 resolves via FACET_EXACT
+    match = reg.match(candidate, threshold=0.85)
+    assert match.matched is True
+    assert match.match_type == MatchType.FACET_EXACT
+    assert match.canonical_resource is canonical
+    assert match.metadata.get("matched_facet") == "literal"
+
+
+def test_registry_find_candidates_ranking():
+    """Verifies find_candidates ranks multiple potential matches."""
+    reg: HarmonizationRegistry[Question] = HarmonizationRegistry(
+        comparator=SequenceMatcherComparator(threshold=0.50),
+    )
+
+    q1 = Question(
+        question_text="What is your total annual household income before taxes?",
+        instructions="Include all sources of revenue.",
+        urn="urn:ddi:agency:Q_INC_1",
+    )
+    q2 = Question(
+        question_text="What is your approximate annual household income?",
+        instructions="Best estimate is acceptable.",
+        urn="urn:ddi:agency:Q_INC_2",
+    )
+    q3 = Question(
+        question_text="What is your age in completed years?",
+        urn="urn:ddi:agency:Q_AGE",
+    )
+
+    reg.register(q1)
+    reg.register(q2)
+    reg.register(q3)
+
+    # Candidate with same prompt literal as q1
+    cand = Question(
+        question_text="What is your total annual household income before taxes?",
+        instructions="Read out response brackets.",
+        urn="urn:ddi:agency:Q_INC_CAND",
+    )
+
+    candidates = reg.find_candidates(cand, top_k=5, min_threshold=0.50)
+    assert len(candidates) >= 2
+    # Top match should be q1 (facet collision on literal)
+    assert candidates[0].canonical_resource is q1
+    assert candidates[0].match_type == MatchType.FACET_EXACT
+    # Second match should be q2 (similar income question)
+    assert candidates[1].canonical_resource is q2
+    # q3 (age) should not appear or should be ranked last below income questions
+
+
+def test_token_blocker_direct() -> None:
+    """Verifies that TokenBlocker correctly indexes resources and filters candidates sub-linearly."""
+    blocker = TokenBlocker[Question](min_token_length=3)
+
+    q_income = Question(
+        question_text="What is your total annual household income?",
+        urn="urn:ddi:agency:Q_INC",
+    )
+    q_salary = Question(
+        question_text="What is your annual salary before taxes?",
+        urn="urn:ddi:agency:Q_SAL",
+    )
+    q_climate = Question(
+        question_text="How concerned are you about global climate change?",
+        urn="urn:ddi:agency:Q_CLIM",
+    )
+
+    blocker.add(q_income)
+    blocker.add(q_salary)
+    blocker.add(q_climate)
+
+    assert len(blocker) == 3
+
+    # Query for income-related question
+    q_query = Question(
+        question_text="Please indicate your annual household income bracket",
+        urn="urn:ddi:agency:Q_QUERY",
+    )
+    candidates = blocker.get_candidates(q_query, min_shared_tokens=1)
+    # Income and salary share 'annual', income shares 'annual', 'household', 'income'
+    assert q_income in candidates
+    assert q_climate not in candidates
+
+    # Top candidate should be q_income due to higher token overlap
+    assert candidates[0] is q_income
+
+    # Test removing resource
+    blocker.remove(q_income)
+    assert len(blocker) == 2
+    candidates_after_remove = blocker.get_candidates(q_query, min_shared_tokens=1)
+    assert q_income not in candidates_after_remove
+
+
+def test_registry_with_token_blocker() -> None:
+    """Verifies that HarmonizationRegistry with enable_blocking uses TokenBlocker for pruning."""
+    reg = HarmonizationRegistry[Question](enable_blocking=True)
+    assert reg.blocker is not None
+
+    # Register 12 items (surpassing the >10 threshold for blocker activation)
+    # 6 income questions and 6 climate questions
+    for i in range(6):
+        reg.register(
+            Question(
+                question_text=f"Survey respondent annual household income metric variation {i}",
+                urn=f"urn:ddi:agency:Q_INC_{i}",
+            )
+        )
+    for j in range(6):
+        reg.register(
+            Question(
+                question_text=f"Survey respondent attitude towards global atmospheric warming and climate {j}",
+                urn=f"urn:ddi:agency:Q_CLIM_{j}",
+            )
+        )
+
+    assert len(reg) == 12
+
+    cand_climate = Question(
+        question_text="What is your opinion regarding atmospheric warming and climate trends?",
+        urn="urn:ddi:agency:Q_CLIM_NEW",
+    )
+
+    # find_candidates with blocker pruning
+    candidates = reg.find_candidates(cand_climate, top_k=5, min_threshold=0.40)
+    assert len(candidates) > 0
+    # Every returned candidate should be one of the climate questions, none should be income questions
+    for match in candidates:
+        assert match.canonical_resource is not None
+        assert "climate" in match.canonical_resource.question_text.lower()
+
+
+def test_translation_bridges_and_caching() -> None:
+    """Verifies DictionaryTranslationBridge, CachedTranslationBridge, and MultilingualAgentComparator."""
+    dict_bridge = DictionaryTranslationBridge(
+        {
+            ("es", "en", "¿Cuál es su edad?"): "What is your age?",
+            ("de", "en", "Wie alt sind Sie?"): "What is your age?",
+            ("fr", "en", "Quel âge avez-vous?"): "What is your age?",
+        }
+    )
+
+    assert isinstance(dict_bridge, TranslationService)
+    assert dict_bridge.translate("¿Cuál es su edad?", source_lang="es", target_lang="en") == "What is your age?"
+    assert dict_bridge.translate("Wie alt sind Sie?", source_lang="de", target_lang="en") == "What is your age?"
+
+    # Cached translation bridge
+    cached = CachedTranslationBridge(dict_bridge)
+    assert cached.cache_size == 0
+    t1 = cached.translate("¿Cuál es su edad?", source_lang="es", target_lang="en")
+    assert t1 == "What is your age?"
+    assert cached.cache_size == 1
+
+    # Second call hits cache
+    t2 = cached.translate("¿Cuál es su edad?", source_lang="es", target_lang="en")
+    assert t2 == "What is your age?"
+    assert cached.cache_size == 1
+
+    # MultilingualAgentComparator
+    multi_comp = MultilingualAgentComparator(
+        translation_bridge=cached,
+        pivot_language="en",
+    )
+    res = multi_comp.compare("¿Cuál es su edad?", "What is your age?", source_lang="es", target_lang="en")
+    assert res.score >= 0.99
+    assert res.match_type == MatchType.SEMANTIC_SIMILAR
+    assert "Cross-lingual match via pivot language 'en'" in res.rationale
+
+
+def test_multilingual_question_pivot_matching() -> None:
+    """Verifies that foreign-language questions translate to English pivot and match via Merkle facet collision."""
+    dict_bridge = DictionaryTranslationBridge(
+        {
+            ("es", "en", "¿Cuál es su ingreso familiar anual?"): "What is your annual household income?",
+        }
+    )
+
+    reg = HarmonizationRegistry[Question]()
+
+    q_en = Question(
+        question_text="What is your annual household income?",
+        language="en",
+        urn="urn:ddi:agency:Q_INC_EN",
+    )
+    reg.register(q_en)
+
+    q_es_raw = Question(
+        question_text="¿Cuál es su ingreso familiar anual?",
+        language="es",
+        urn="urn:ddi:agency:Q_INC_ES",
+    )
+    # Apply pivot translation
+    q_es = q_es_raw.with_pivot_translation(dict_bridge, target_lang="en")
+
+    assert q_es.pivot_text == "What is your annual household income?"
+    assert q_es.hashes.facets["pivot_literal"] == q_en.hashes.facets["literal"]
+
+    # Match in registry using threshold < 1.0 (checking facet collision)
+    match = reg.match(q_es, threshold=0.90)
+    assert match.matched is True
+    assert match.canonical_resource is q_en
+    assert match.match_type == MatchType.FACET_EXACT
+    assert "pivot_literal" in match.reason or "facet" in match.reason
+
+
+def test_ddi_adapters_questions_and_codelists() -> None:
+    """Verifies extraction adapters from DDI-Codebook and DDI-Lifecycle XML and models."""
+    # 1. Question from DDI-Codebook XML
+    xml_cb = ET.fromstring("""
+        <var ID="V1" name="AGE" urn="urn:ddi:agency:AGE">
+            <qstn ID="Q1">
+                <qstnLit>What is your age in completed years?</qstnLit>
+                <ivuInstr>Record integer only.</ivuInstr>
+            </qstn>
+        </var>
+    """)
+    q_from_cb = Question.from_ddi_codebook(xml_cb)
+    assert q_from_cb.question_text == "What is your age in completed years?"
+    assert q_from_cb.instructions == "Record integer only."
+    assert q_from_cb.urn == "urn:ddi:agency:AGE"
+
+    # 2. Question from DDI-Lifecycle XML
+    xml_l = ET.fromstring("""
+        <d:QuestionItem xmlns:d="ddi:datacollection:3_3" xmlns:r="ddi:reusable:3_3">
+            <r:URN>urn:ddi:agency:QI_SEX:1</r:URN>
+            <d:QuestionText>
+                <d:LiteralText>
+                    <d:Text>What is your biological sex?</d:Text>
+                </d:LiteralText>
+            </d:QuestionText>
+            <d:QuestionIntent>Demographic core attribute</d:QuestionIntent>
+        </d:QuestionItem>
+    """)
+    q_from_l = Question.from_ddi_lifecycle(xml_l)
+    assert q_from_l.question_text == "What is your biological sex?"
+    assert q_from_l.intent == "Demographic core attribute"
+    assert q_from_l.urn == "urn:ddi:agency:QI_SEX:1"
+
+    # 3. CodeList from DDI-Codebook XML
+    xml_cat = ET.fromstring("""
+        <var name="SEX_VAR" urn="urn:ddi:agency:CL_SEX">
+            <catgry missing="N">
+                <catVal>1</catVal>
+                <labl>Male</labl>
+            </catgry>
+            <catgry missing="N">
+                <catVal>2</catVal>
+                <labl>Female</labl>
+            </catgry>
+            <catgry missing="Y">
+                <catVal>9</catVal>
+                <labl>Refused</labl>
+            </catgry>
+        </var>
+    """)
+    cl_from_cb = CodeList.from_ddi_codebook(xml_cat)
+    assert cl_from_cb.member_count == 3
+    assert cl_from_cb.substantive_count == 2
+    assert cl_from_cb.sentinel_count == 1
+    assert cl_from_cb.codes[0].value == "1"
+    assert cl_from_cb.codes[0].category.label == "Male"
+    assert cl_from_cb.codes[2].is_missing is True
+
+    # 4. CodeList from DDI-Lifecycle XML
+    xml_cl_l = ET.fromstring("""
+        <l:CodeList xmlns:l="ddi:logicalproduct:3_3" xmlns:r="ddi:reusable:3_3" id="CL_YN">
+            <r:URN>urn:ddi:agency:CL_YN:1</r:URN>
+            <l:Code>
+                <l:Value>1</l:Value>
+                <l:CategoryReference><r:ID>Yes</r:ID></l:CategoryReference>
+            </l:Code>
+            <l:Code>
+                <l:Value>2</l:Value>
+                <l:CategoryReference><r:ID>No</r:ID></l:CategoryReference>
+            </l:Code>
+        </l:CodeList>
+    """)
+    cl_from_l = CodeList.from_ddi_lifecycle(xml_cl_l)
+    assert cl_from_l.member_count == 2
+    assert cl_from_l.codes[0].value == "1"
+    assert cl_from_l.codes[0].category.label == "Yes"
+    assert cl_from_l.urn == "urn:ddi:agency:CL_YN:1"
+
+
+def test_resource_bank_batch_ingestion_and_lineage() -> None:
+    """Verifies ResourceBank, BatchIngestionReport, Polars export, and Lineage tracking."""
+    bank = ResourceBank[Question](name="survey_question_bank")
+
+    q1 = Question(
+        question_text="What is your current employment status?",
+        urn="urn:ddi:agency:Q_EMP_1",
+    )
+    q2 = Question(
+        question_text="What is your current employment status?",
+        urn="urn:ddi:agency:Q_EMP_2",  # Duplicate content with new URN
+    )
+    q3 = Question(
+        question_text="How many hours do you work per week?",
+        urn="urn:ddi:agency:Q_HOURS",
+    )
+
+    report = bank.ingest_batch([q1, q2, q3])
+
+    assert isinstance(report, BatchIngestionReport)
+    assert report.total_processed == 3
+    assert report.new_canonical_created == 2  # q1 and q3
+    assert report.exact_reused == 1  # q2 matched q1
+    assert report.reuse_rate == 1 / 3
+
+    # Check lineage entry was registered for q2 -> q1
+    lineage = bank.get_lineage("urn:ddi:agency:Q_EMP_2")
+    assert len(lineage) == 1
+    assert isinstance(lineage[0], ResourceLineageEntry)
+    assert lineage[0].source_urn == "urn:ddi:agency:Q_EMP_2"
+    assert lineage[0].target_urn == "urn:ddi:agency:Q_EMP_1"
+    assert lineage[0].relation == LineageRelation.EXACT_REVISION
+
+    # Test Polars DataFrame conversion
+    df = report.to_polars()
+    assert df.height == 3
+    assert "urn" in df.columns
+    assert "action" in df.columns
+    assert "score" in df.columns
+
+    # Test Markdown summary generation
+    md = report.to_markdown()
+    assert "# Batch Ingestion Audit Report" in md
+    assert "Total Processed" in md
+    assert "REUSED_EXACT" in md
+
+
+def test_sql_generators() -> None:
+    """Verifies PostgreSQL DDL and 4-tier CTE matching query generators."""
+    ddl = generate_bank_schema_ddl("custom_question_bank")
+    assert "CREATE EXTENSION IF NOT EXISTS pg_trgm;" in ddl
+    assert "CREATE TABLE IF NOT EXISTS custom_question_bank" in ddl
+    assert "idx_custom_question_bank_hash_root" in ddl
+    assert "idx_custom_question_bank_sig_trgm" in ddl
+    assert "idx_custom_question_bank_facet_pivot_literal" in ddl
+
+    cte = generate_tiered_matching_cte_query("custom_question_bank")
+    assert "WITH tier1_urn AS" in cte
+    assert "tier2_root_exact AS" in cte
+    assert "tier3_facet_exact AS" in cte
+    assert "tier4_fuzzy_trgm AS" in cte
+    assert "FROM custom_question_bank" in cte

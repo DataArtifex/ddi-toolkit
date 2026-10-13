@@ -2,6 +2,36 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.4.0] - 2026-10-13
+
+### Added
+- **DDI-Codebook Multilingual Assessment, Planning & Merging Engine (`ddicodebook.i18n`)**:
+  - Two-stage workflow for assessing, planning, and merging canonical and translated DDI-Codebook 2.6 XML documents into a unified bilingual DDI-C file.
+  - **Assessment Engine (`assess_merge`)**:
+    - Discrepancy detection across `docDscr`, `stdyDscr`, `fileDscr`, and `dataDscr` (`varGrp`, `var`, `catgry`).
+    - Detects missing translations (`TRANSLATION_MISSING`), unmatched elements (`UNMATCHED_TRANSLATION`), and structural mismatches.
+    - Rigorous language-agnostic drift detection: flags summary statistics discrepancies (`STATS_DIVERGENCE`), category frequency discrepancies (`FREQS_DIVERGENCE`), and missing value definition differences (`MISSING_ATTR_DIVERGENCE`).
+  - **Merge Planning & Human Governance (`MergePlan`, `MergeStrategy`)**:
+    - Machine-readable YAML merge plans (`.merge.plan.{lang_c}_{lang_t}.yaml`) and formatted Markdown assessment reports (`.merge.plan.{lang_c}_{lang_t}.md`).
+    - Explicit available resolutions per discrepancy item (e.g. `use_canonical`, `manual_review`, `accept_translated`, `skip`).
+    - Strict safety gate: execution blocks and raises error if unresolved pending review items exist without approval.
+  - **Merging Engine (`execute_merge`)**:
+    - Clones canonical document as baseline structural backbone.
+    - Tags existing elements with `xml:lang` for canonical language.
+    - Injects translated siblings with `xml:lang` for translated language.
+    - Automatically maps secondary study titles to `<parTitl xml:lang="...">`.
+    - Merges repeatable text fields (`abstract`, `notes`, `universe`, etc.) and variable metadata (`labl`, `txt`, `qstn`, `catgry`).
+    - Supports `use_canonical` fallback strategy so secondary language elements receive fallback content instead of being left empty.
+  - **Unified CLI Subcommand (`dartfx-ddi ddici18nmerge`)**:
+    - Required positional inputs: `dartfx-ddi ddici18nmerge <canonical> <translated> [options]`.
+    - Supports `--strategy` / `-s`, `--plan` / `-p`, `--output` / `-o`, `--lang-canonical`, `--lang-translated`, `--refresh`, `--auto-approve`, and `--validate`.
+    - Automatically derives standard output paths: `{canonical_base}.merge.plan.{lang_c}_{lang_t}.yaml` and `{canonical_base}.merged.{lang_c}_{lang_t}.xml`.
+    - Caches and reuses existing merge plans unless `--refresh` is passed.
+- **DDI-Codebook XML Serialization**:
+  - Added XML serialization methods on `baseElementType`: `to_xml_element()` maintaining XML Schema sequence ordering and XML namespace prefixes (`xml:lang`).
+  - Added `to_xml_string()` and `savexml()` on `codeBookType` for exporting in-memory codebook models to valid XML strings or files.
+  - Fixed `from_xml_element` attribute parsing to normalize `{http://www.w3.org/XML/1998/namespace}lang` to `xml:lang`.
+
 ## [0.3.0] - 2026-09-18
 
 ### Added

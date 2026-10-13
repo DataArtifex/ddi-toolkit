@@ -6,6 +6,33 @@ All notable changes to this project will be documented in this file.
 Version 0.4.0 (Current)
 -----------------------
 
+DDI-Codebook Multilingual Assessment, Planning & Merging (``ddicodebook.i18n``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Two-Stage Workflow**: Added assessment, planning, and merging engine for reconciling canonical and translated DDI-Codebook 2.6 XML files into unified bilingual documents.
+- **Assessment Engine (``assess_merge``)**:
+  - Discrepancy detection across document descriptions (``docDscr``), study descriptions (``stdyDscr``), file descriptions (``fileDscr``), and data descriptions (``dataDscr`` / ``varGrp``, ``var``, ``catgry``).
+  - Flags missing translations (``TRANSLATION_MISSING``), unmatched translated elements (``UNMATCHED_TRANSLATION``), and structural divergences.
+  - Detects language-agnostic data drift: summary statistics divergences (``STATS_DIVERGENCE``), frequency divergences (``FREQS_DIVERGENCE``), and missing value attribute discrepancies (``MISSING_ATTR_DIVERGENCE``).
+- **Merge Planning & Human Governance (``MergePlan``, ``MergeStrategy``)**:
+  - Generates machine-readable YAML plans (``.merge.plan.{lang_c}_{lang_t}.yaml``) and human-readable Markdown reports (``.merge.plan.{lang_c}_{lang_t}.md``).
+  - Explicit available resolutions per item with automatic resolution assignment.
+  - Strict review gate: stops merge execution if unapproved pending items remain.
+- **Merging Engine (``execute_merge``)**:
+  - Clones canonical document as baseline structural backbone.
+  - Injects ``xml:lang`` attributes on canonical and translated elements.
+  - Injects translated siblings with automatic mapping of secondary titles to ``<parTitl xml:lang="...">``.
+  - Merges repeatable text fields and variable metadata (``labl``, ``txt``, ``qstn``, ``catgry``).
+  - Supports ``use_canonical`` fallback strategy for empty translations.
+- **Unified CLI Command (``dartfx-ddi ddici18nmerge``)**:
+  - Required positional file inputs (``canonical`` and ``translated``).
+  - Automatic standard filename derivation and plan caching (reused unless ``--refresh`` is specified).
+  - Flags for strategy overrides, custom plan/output paths, language tagging, auto-approval, and post-merge schema validation.
+- **DDI-Codebook XML Serialization**:
+  - Added ``to_xml_element()`` on ``baseElementType`` maintaining XML Schema sequence ordering and ``xml:lang`` namespace mapping.
+  - Added ``to_xml_string()`` and ``savexml()`` on ``codeBookType`` for full round-trip export to XML.
+  - Normalized ``xml:lang`` attribute parsing in ``from_xml_element()``.
+
 Resource Harmonization, Variable Comparison & Dataset Crosswalks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

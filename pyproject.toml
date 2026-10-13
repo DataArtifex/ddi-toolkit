@@ -24,6 +24,7 @@ dependencies = [
   "rdflib>=7.1.0",
   "pyshacl",
   "typer",
+  "pyyaml>=6.0",
 ]
 
 [project.optional-dependencies]

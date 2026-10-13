@@ -6,7 +6,7 @@ This module is 100% domain-agnostic and free from any DDI specification dependen
 from __future__ import annotations
 
 from enum import StrEnum
-from typing import Any, Protocol
+from typing import Any, Protocol, runtime_checkable
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -48,6 +48,9 @@ class MatchType(StrEnum):
     )
     DIMENSION_INCOMPATIBLE = "DIMENSION_INCOMPATIBLE"  # Conflicting quantity kinds (e.g. Mass vs Currency)
     TYPE_INCOMPATIBLE = "TYPE_INCOMPATIBLE"  # Structurally incompatible data types (e.g. Boolean vs DateTime)
+    FACET_EXACT = (
+        "FACET_EXACT"  # Exact sub-component Merkle facet collision (e.g. Question literal or Variable atomic triple)
+    )
     DISTINCT = "DISTINCT"  # Below match threshold
 
 
@@ -83,12 +86,30 @@ class ContentFingerprint(BaseModel):
     )
 
 
-class HarmonizableResource(Protocol):
-    """Protocol satisfied by domain resources that can be harmonized and fingerprinted."""
+class HashesPayload(BaseModel):
+    """Complete serialized representation of resource fingerprints for database storage and indexing."""
+
+    model_config = ConfigDict(frozen=True)
+
+    root: str = Field(description="Primary Merkle root digest of the resource")
+    signature: str = Field(description="Canonical normalized text signature used to generate digest")
+    unordered: str | None = Field(default=None, description="Order-independent set digest for collections")
+    facets: dict[str, str] = Field(default_factory=dict, description="Merkle sub-facet component digests")
+    tokens: list[str] = Field(default_factory=list, description="Extracted lexical tokens for indexing")
+
+
+@runtime_checkable
+class ComparableResource(Protocol):
+    """Protocol satisfied by domain resources that can be fingerprinted, compared, and harmonized."""
 
     @property
     def fingerprint(self) -> ContentFingerprint:
         """Returns the cryptographic fingerprint of the resource."""
+        ...
+
+    @property
+    def hashes(self) -> HashesPayload:
+        """Returns the serialized HashesPayload for database storage and indexing."""
         ...
 
 

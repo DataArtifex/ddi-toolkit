@@ -19,7 +19,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from ..fingerprinter import ResourceFingerprinter
 from ..identifiers import ResourceIdentifier, parse_identifier
-from ..models import ContentFingerprint
+from ..models import ContentFingerprint, HashesPayload
 from .codes import Category, Code, CodeList
 from .concepts import Concept
 from .questions import Question
@@ -551,6 +551,20 @@ class Variable(BaseModel):
     def variable_hash(self) -> str:
         """16-character hexadecimal Merkle root hash."""
         return self.fingerprint.digest
+
+    @property
+    def hashes(self) -> HashesPayload:
+        """Serialized hashes and sub-facets for database storage and indexing."""
+        fp = self.fingerprint
+        sig = fp.signature
+        tokens = [t for t in f"{self.name} {self.label}".split() if t]
+        return HashesPayload(
+            root=fp.digest,
+            signature=sig,
+            unordered=fp.unordered_digest,
+            facets=dict(fp.component_digests),
+            tokens=tokens,
+        )
 
     # =========================================================================
     # 5. Ingestion Adapters

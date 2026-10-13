@@ -18,7 +18,15 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from ..fingerprinter import ResourceFingerprinter
 from ..identifiers import ResourceIdentifier, parse_identifier
-from ..models import ContentFingerprint
+from ..models import ContentFingerprint, HashesPayload
+
+
+def _find_first_element(source: Any, *paths: str) -> Any:
+    for path in paths:
+        el = source.find(path)
+        if el is not None:
+            return el
+    return None
 
 
 class SentinelType(StrEnum):
@@ -121,6 +129,20 @@ class Category(BaseModel):
     def category_hash(self) -> str:
         """Convenience property for 16-character hexadecimal hash."""
         return self.fingerprint.digest
+
+    @property
+    def hashes(self) -> HashesPayload:
+        """Serialized hashes and sub-facets for database storage and indexing."""
+        fp = self.fingerprint
+        sig = self.signature
+        tokens = [t for t in self.label.split() if t]
+        return HashesPayload(
+            root=fp.digest,
+            signature=sig,
+            unordered=fp.unordered_digest,
+            facets=dict(fp.component_digests),
+            tokens=tokens,
+        )
 
 
 class Code(BaseModel):
@@ -427,3 +449,126 @@ class CodeList(BaseModel):
     def codelist_hash(self) -> str:
         """Convenience property for 16-character hexadecimal hash."""
         return self.fingerprint.digest
+
+    @property
+    def hashes(self) -> HashesPayload:
+        """Serialized hashes and sub-facets for database storage and indexing."""
+        fp = self.fingerprint
+        sig = self.signature
+        tokens = [t for t in sig.split() if t]
+        return HashesPayload(
+            root=fp.digest,
+            signature=sig,
+            unordered=fp.unordered_digest,
+            facets=dict(fp.component_digests),
+            tokens=tokens,
+        )
+
+    @classmethod
+    def from_ddi_codebook(cls, source: Any, name: str = "CodeList") -> CodeList:
+        """Extracts a CodeList from DDI-Codebook (XML Element or model with catgry items)."""
+        if isinstance(source, cls):
+            return source
+
+        codes: list[Code] = []
+        if hasattr(source, "findall"):
+            cat_els = source.findall(".//{*}catgry")
+            if not cat_els:
+                cat_els = source.findall(".//catgry")
+
+            var_name = source.attrib.get("name") or source.attrib.get("ID") or name
+            urn = source.attrib.get("urn") or source.attrib.get("ID")
+
+            for cat_el in cat_els:
+                val_el = _find_first_element(cat_el, ".//{*}catVal", ".//catVal")
+                val_str = val_el.text.strip() if val_el is not None and val_el.text else ""
+
+                labl_el = _find_first_element(cat_el, ".//{*}labl", ".//labl")
+                labl_str = labl_el.text.strip() if labl_el is not None and labl_el.text else val_str
+
+                is_missing = cat_el.attrib.get("missing", "").lower() in ("y", "true", "1")
+                codes.append(
+                    Code(
+                        value=val_str,
+                        category=Category(
+                            label=labl_str,
+                            value=val_str,
+                            is_missing=is_missing,
+                        ),
+                        is_missing=is_missing,
+                    )
+                )
+
+            return cls(name=var_name, codes=codes, urn=urn)
+
+        if isinstance(source, dict):
+            raw_codes_val = source.get("codes")
+            if raw_codes_val is None:
+                raw_codes_val = source.get("categories")
+            raw_codes = raw_codes_val if isinstance(raw_codes_val, list) else []
+            cl_name = source.get("name", name)
+            urn = source.get("urn", source.get("id"))
+            code_objs = []
+            for item in raw_codes:
+                if isinstance(item, Code):
+                    code_objs.append(item)
+                elif isinstance(item, dict):
+                    v = str(item.get("value", ""))
+                    lbl = str(item.get("label", v))
+                    miss = bool(item.get("is_missing", False))
+                    code_objs.append(
+                        Code(
+                            value=v,
+                            category=Category(label=lbl, value=v, is_missing=miss),
+                            is_missing=miss,
+                        )
+                    )
+            return cls(name=cl_name, codes=code_objs, urn=urn)
+
+        raise ValueError(f"Cannot extract CodeList from unsupported source: {type(source)}")
+
+    @classmethod
+    def from_ddi_lifecycle(cls, source: Any, name: str = "CodeList") -> CodeList:
+        """Extracts a CodeList from DDI-Lifecycle (XML Element or model)."""
+        if isinstance(source, cls):
+            return source
+
+        codes: list[Code] = []
+        if hasattr(source, "findall"):
+            code_els = source.findall(".//{*}Code") or source.findall(".//Code")
+            cl_name = source.attrib.get("name") or source.attrib.get("id") or source.attrib.get("ID") or name
+            urn_el = _find_first_element(source, ".//{*}URN", ".//URN")
+            urn = urn_el.text.strip() if urn_el is not None and urn_el.text else source.attrib.get("urn")
+
+            for code_el in code_els:
+                val_el = _find_first_element(code_el, ".//{*}Value", ".//Value")
+                val_str = val_el.text.strip() if val_el is not None and val_el.text else ""
+
+                cat_ref = _find_first_element(
+                    code_el,
+                    ".//{*}CategoryReference/{*}ID",
+                    ".//CategoryReference/ID",
+                    ".//{*}Label",
+                    ".//Label",
+                )
+                labl_str = cat_ref.text.strip() if cat_ref is not None and cat_ref.text else val_str
+                is_missing = code_el.attrib.get("isDiscrete", "").lower() == "false" or "missing" in labl_str.lower()
+
+                codes.append(
+                    Code(
+                        value=val_str,
+                        category=Category(
+                            label=labl_str,
+                            value=val_str,
+                            is_missing=is_missing,
+                        ),
+                        is_missing=is_missing,
+                    )
+                )
+
+            return cls(name=cl_name, codes=codes, urn=urn)
+
+        if isinstance(source, dict):
+            return cls.from_ddi_codebook(source, name=name)
+
+        raise ValueError(f"Cannot extract CodeList from unsupported source: {type(source)}")

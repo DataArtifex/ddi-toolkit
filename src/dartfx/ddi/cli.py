@@ -342,6 +342,150 @@ def ddicvalidate(
         raise typer.Exit(code=1)
 
 
+@app.command(no_args_is_help=True)
+def ddici18nmerge(
+    canonical: Annotated[
+        Path,
+        typer.Argument(help="Canonical/reference DDI Codebook XML file", exists=True, dir_okay=False),
+    ],
+    translated: Annotated[
+        Path,
+        typer.Argument(help="Translated/secondary DDI Codebook XML file", exists=True, dir_okay=False),
+    ],
+    lang_c: Annotated[
+        str | None,
+        typer.Option("--lang-c", help="Canonical language code (auto-detected from file if omitted)"),
+    ] = None,
+    lang_t: Annotated[
+        str | None,
+        typer.Option("--lang-t", help="Translated language code (auto-detected from file if omitted)"),
+    ] = None,
+    strategy: Annotated[
+        Path | None,
+        typer.Option("--strategy", help="Optional path to custom strategy YAML file", exists=True, dir_okay=False),
+    ] = None,
+    plan: Annotated[
+        Path | None,
+        typer.Option(
+            "--plan",
+            help="Path to merging plan YAML file (defaults to {canonical_base}.merge.plan.{lang_c}_{lang_t}.yaml)",
+        ),
+    ] = None,
+    output: Annotated[
+        Path | None,
+        typer.Option(
+            "--output",
+            "-o",
+            help="Path to merged output XML file (defaults to {canonical_base}.merged.{lang_c}_{lang_t}.xml)",
+        ),
+    ] = None,
+    refresh: Annotated[
+        bool,
+        typer.Option("--refresh", help="Force recalculation and regeneration of merging plan even if plan YAML exists"),
+    ] = False,
+    auto_approve: Annotated[
+        bool,
+        typer.Option(
+            "--auto-approve",
+            help="Auto-approve all pending issues according to strategy rules without halting",
+        ),
+    ] = False,
+    validate: Annotated[
+        bool,
+        typer.Option("--validate/--no-validate", help="Validate merged XML against DDI-Codebook rules"),
+    ] = True,
+    loglevel: Annotated[LogLevel, typer.Option(help="Log level")] = LogLevel.info,
+):
+    """
+    Assesses and merges two DDI-Codebook XML files in different languages into a single multilingual codebook.
+    """
+    setup_logging(loglevel)
+    from rich.console import Console
+
+    from dartfx.ddi.ddicodebook import (
+        MergePlan,
+        MergeStrategy,
+        assess_merge,
+        derive_merged_xml_path,
+        derive_plan_md_path,
+        derive_plan_yaml_path,
+        execute_merge,
+        loadxml,
+    )
+    from dartfx.ddi.ddicodebook import utils as cb_utils
+
+    console = Console()
+
+    # Load documents to determine languages if not explicitly passed
+    cb_can = loadxml(str(canonical))
+    cb_tra = loadxml(str(translated))
+
+    strat: MergeStrategy
+    if strategy:
+        strat = MergeStrategy.from_yaml(strategy)
+    else:
+        strat = MergeStrategy()
+
+    effective_lang_c = lang_c or cb_can.xml_lang or strat.canonical_language
+    effective_lang_t = lang_t or cb_tra.xml_lang or strat.translated_language
+
+    strat.canonical_language = effective_lang_c
+    strat.translated_language = effective_lang_t
+
+    plan_yaml_path = plan or derive_plan_yaml_path(canonical, effective_lang_c, effective_lang_t)
+    plan_md_path = (
+        plan_yaml_path.with_suffix(".md")
+        if plan
+        else derive_plan_md_path(canonical, effective_lang_c, effective_lang_t)
+    )
+    merged_output_path = output or derive_merged_xml_path(canonical, effective_lang_c, effective_lang_t)
+
+    plan_obj: MergePlan
+    if plan_yaml_path.exists() and not refresh:
+        logging.info(f"Loading existing merge plan from {plan_yaml_path}")
+        plan_obj = MergePlan.from_yaml(plan_yaml_path)
+    else:
+        logging.info("Assessing files and generating merge plan...")
+        plan_obj = assess_merge(
+            canonical_input=cb_can,
+            translated_input=cb_tra,
+            strategy=strat,
+            canonical_file_path=str(canonical),
+            translated_file_path=str(translated),
+        )
+        plan_obj.save_yaml(plan_yaml_path)
+        plan_obj.save_markdown(plan_md_path)
+        logging.info(f"Merge plan written to {plan_yaml_path}")
+        logging.info(f"Merge report written to {plan_md_path}")
+
+    # Safety gate check
+    if not plan_obj.is_ready_to_merge() and not auto_approve:
+        pending_cnt = plan_obj.summary.pending_review_count
+        console.print(f"[bold red]Merge halted:[/bold red] {pending_cnt} pending issue(s) require human review.")
+        console.print(f"  • Review report: [bold]{plan_md_path}[/bold]")
+        console.print(f"  • Edit plan decisions: [bold]{plan_yaml_path}[/bold]")
+        console.print(
+            "Set [bold]approved: true[/bold] in the plan YAML or re-run with [bold]--auto-approve[/bold] to proceed."
+        )
+        raise typer.Exit(code=1)
+
+    # Execute merge
+    logging.info("Executing multilingual merge...")
+    merged_cb = execute_merge(plan_obj, auto_approve=auto_approve)
+    merged_cb.savexml(merged_output_path, pretty=True)
+    console.print(
+        f"[bold green]Success:[/bold green] Merged multilingual codebook saved to [bold]{merged_output_path}[/bold]"
+    )
+
+    if validate:
+        is_valid, report = cb_utils.validate_codebook_xml(merged_output_path)
+        if is_valid:
+            console.print("[green]✓ Merged XML validated successfully against DDI-Codebook rules.[/green]")
+        else:
+            err_count = report["summary"]["error_count"]
+            console.print(f"[yellow]⚠ Validation found {err_count} schema/business rule error(s).[/yellow]")
+
+
 @app.command(name="ddil324", no_args_is_help=True)
 def ddil324(
     xmlfile: Annotated[

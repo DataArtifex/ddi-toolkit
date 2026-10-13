@@ -1,11 +1,11 @@
 DDI-Codebook Processing
 =======================
 
-The ``ddicodebook`` subpackage provides functionality for reading and processing DDI-Codebook 2.6 XML documents in Python. It is backward compatible with DDI-Codebook 2.5 and earlier versions.
+The ``ddicodebook`` subpackage provides functionality for reading, validating, manipulating, serializing, and multilingual merging of DDI-Codebook 2.6 XML documents in Python. It is backward compatible with DDI-Codebook 2.5 and earlier versions.
 
-The subpackage is designed to be flexible and accommodate various versions of DDI-Codebook, including slightly invalid DDI documents that are sometimes found in practice. The package is primarily intended for reading and processing existing DDI documents, not for creating new DDI-XML.
+The subpackage is designed to be flexible and accommodate various versions of DDI-Codebook, including slightly invalid DDI documents that are sometimes found in practice. It supports bidirectional workflows: loading existing XML files into strongly typed Pydantic models, modifying them, and exporting them back to valid DDI-Codebook XML.
 
-It also provides lightweight validation utilities that combine XML parsing and business-rule checks, with report output in JSON or Markdown.
+It also provides lightweight validation utilities that combine XML parsing and business-rule checks, as well as a comprehensive multilingual assessment and merging engine (`ddicodebook.i18n`).
 
 Overview
 --------
@@ -24,6 +24,12 @@ Load a DDI-Codebook document::
 
    # Load from XML string
    my_codebook = ddicodebook.loadxmlstring(xml_content)
+
+   # Export back to XML file
+   my_codebook.savexml('output_codebook.xml', pretty_print=True)
+
+   # Or obtain XML string
+   xml_str = my_codebook.to_xml_string(pretty_print=True)
 
 Accessing Study Metadata
 ------------------------
@@ -118,6 +124,50 @@ Generate a Markdown validation report from the same payload::
 
 The validator currently focuses on parseability and key DDI-Codebook business rules used by conversion utilities.
 Invalid ``@ID`` values are warnings by default and become errors in strict mode.
+
+Multilingual Assessment & Merging
+---------------------------------
+
+The ``dartfx.ddi.ddicodebook.i18n`` module reconciles two DDI-Codebook documents describing the same survey in different languages (a canonical baseline and a translated version):
+
+1. **Stage 1 (Assessment & Planning)**: Scans ``docDscr``, ``stdyDscr``, ``fileDscr``, and ``dataDscr`` (variables, category codes, and variable groups) to detect translation gaps, structural divergences, and language-agnostic data drift (differences in summary statistics, frequencies, or missing value attributes). It outputs a machine-actionable YAML merge plan (``.merge.plan.{lang_c}_{lang_t}.yaml``) and a human-readable Markdown report (``.merge.plan.{lang_c}_{lang_t}.md``).
+2. **Stage 2 (Merging)**: Clones the canonical document as the structural backbone, tags canonical elements with ``xml:lang``, injects translated elements with corresponding ``xml:lang`` attributes, maps secondary titles to ``<parTitl xml:lang="...">``, and applies strategies like ``use_canonical`` when translations are absent. If unapproved pending items remain, merge execution halts cleanly.
+
+Python API Usage::
+
+   from dartfx.ddi.ddicodebook.i18n import assess_merge, execute_merge, MergeStrategy
+
+   # Stage 1: Assess discrepancies and generate merge plan
+   plan = assess_merge(
+       canonical="survey_en.xml",
+       translated="survey_fi.xml",
+       lang_canonical="en",
+       lang_translated="fi",
+       strategy=MergeStrategy(default_fallback_to_canonical=True),
+   )
+   print(f"Pending review items: {plan.pending_review_count}")
+
+   # Stage 2: Execute merge (blocks if pending review items exist without approval)
+   merged_codebook = execute_merge(
+       canonical="survey_en.xml",
+       translated="survey_fi.xml",
+       plan=plan,
+       output_path="survey.merged.en_fi.xml",
+   )
+
+CLI Usage::
+
+   # Basic merge (generates plan and executes merge if clean)
+   dartfx-ddi ddici18nmerge survey_en.xml survey_fi.xml
+
+   # Auto-approve minor discrepancies and validate output against schema
+   dartfx-ddi ddici18nmerge survey_en.xml survey_fi.xml --auto-approve --validate
+
+   # Specify custom languages and strategy fallback
+   dartfx-ddi ddici18nmerge survey_en.xml survey_fi.xml \
+       --lang-canonical en \
+       --lang-translated fi \
+       --strategy custom_strategy.yaml
 
 Implementation Notes
 --------------------

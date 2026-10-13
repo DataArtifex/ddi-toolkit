@@ -36,7 +36,8 @@ There are three major flavors of DDI. This package currently supports:
 
 ## Key Features
 
-- **DDI-Codebook XML Processing**: Load, parse, extract structured metadata, and validate DDI-Codebook documents with JSON and Markdown reports.
+- **DDI-Codebook XML Processing**: Load, parse, extract structured metadata, serialize back to XML, and validate DDI-Codebook documents with JSON and Markdown reports.
+- **Multilingual DDI-Codebook Merging**: Assess translation discrepancies, generate review plans, and merge bilingual DDI-Codebook documents with safety gates via Python API or the `dartfx-ddi ddici18nmerge` CLI.
 - **DDI-Lifecycle XML Streaming**: Stream and parse DDI 3.3 XML documents fragment-by-fragment into DDI 4.0 RC1 models via Python or CLI.
 - **DDI-Lifecycle Resource Profile & Topology Analysis**: Dual-pass streaming profile analyzer, referencing mechanism intelligence, multi-hop pathfinding, multiplicity metrics (cardinality, target reuse, node roles), and export to interactive Vis.js HTML, Markdown, JSON, Mermaid, Graphviz DOT, Turtle RDF, and NetworkX.
 - **DDI-CDI Model (v1.1.0)**: Use definitive, spec-generated Pydantic classes for the full DDI-CDI implementation.
@@ -229,6 +230,40 @@ markdown_report = cb_utils.validation_report_to_markdown(report)
 print(markdown_report)
 ```
 
+### Multilingual DDI-Codebook Merging (i18n)
+
+Assess translation discrepancies and merge canonical and translated DDI-Codebook files:
+
+```python
+from dartfx.ddi.ddicodebook.i18n import assess_merge, execute_merge
+
+# 1. Assess differences, detect data drift, and create merge plan
+plan = assess_merge(
+    canonical="survey_en.xml",
+    translated="survey_fi.xml",
+    lang_canonical="en",
+    lang_translated="fi",
+)
+
+# 2. Execute merge (respects review gates)
+merged_cb = execute_merge(
+    canonical="survey_en.xml",
+    translated="survey_fi.xml",
+    plan=plan,
+    output_path="survey.merged.en_fi.xml",
+)
+```
+
+Or via CLI:
+
+```bash
+# Assess and merge
+dartfx-ddi ddici18nmerge survey_en.xml survey_fi.xml
+
+# Auto-approve non-blocking discrepancies and validate against DDI-C schema
+dartfx-ddi ddici18nmerge survey_en.xml survey_fi.xml --auto-approve --validate
+```
+
 ### BaseX XML Database & Reporting (Experimental, Optional)
 
 > **Note:** The BaseX integration is an optional, experimental extension requiring `pip install "dartfx-ddi[basex]"`.
@@ -336,9 +371,10 @@ classes = cdi_spec.get_ucmis_classes()
 ddi-toolkit/
 ├── src/dartfx/ddi/
 │   ├── harmonizer/             # Resource Harmonization & Comparison engine (zero-DDI dependency)
-│   ├── ddicodebook/            # DDI-Codebook subpackage (models & validation)
-│   │   ├── model.py            # DDI-Codebook 2.6 models
-│   │   └── utils.py            # Codebook utilities (validation, CDIF mapping)
+│   ├── ddicodebook/            # DDI-Codebook subpackage (models, validation & i18n merge)
+│   │   ├── model.py            # DDI-Codebook 2.6 models & XML serializer
+│   │   ├── utils.py            # Codebook utilities (validation, CDIF mapping)
+│   │   └── i18n/               # Multilingual assessment, planning & merging engine
 │   ├── ddilifecycle/           # DDI-Lifecycle & DDI 4.0 subpackage
 │   │   ├── model_4_0_rc1.py    # DDI 4.0 RC1 Pydantic models
 │   │   └── utils.py            # Streaming XML crosswalks & Reference Graph engine

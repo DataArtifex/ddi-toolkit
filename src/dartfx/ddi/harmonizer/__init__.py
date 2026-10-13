@@ -8,6 +8,13 @@ Provides:
 - Domain models for Categories, Codes, CodeLists, Questions, and Concepts
 """
 
+from .bank import (
+    BatchIngestionReport,
+    LineageRelation,
+    ResourceBank,
+    ResourceLineageEntry,
+)
+from .blocker import TokenBlocker
 from .comparators import (
     AgentComparator,
     AgentComparisonResult,
@@ -69,10 +76,11 @@ from .identifiers import (
     parse_identifier,
 )
 from .models import (
+    ComparableResource,
     ContentFingerprint,
     ContentSignature,
-    HarmonizableResource,
     HarmonizationMatch,
+    HashesPayload,
     MatchType,
 )
 from .normalizer import (
@@ -84,6 +92,13 @@ from .normalizer import (
 from .registry import HarmonizationRegistry
 from .review import CuratedCrosswalk, HumanReviewQueue, ReviewItem
 from .sanitizer import SanitizerConfig, TextSanitizer
+from .sql import generate_bank_schema_ddl, generate_tiered_matching_cte_query
+from .translation import (
+    CachedTranslationBridge,
+    DictionaryTranslationBridge,
+    MultilingualAgentComparator,
+    TranslationService,
+)
 
 __all__ = [
     # Comparators & Algorithms
@@ -136,15 +151,29 @@ __all__ = [
     "SentinelType",
     "UnitOfMeasure",
     "ValueDomainKind",
+    # Bank, Lineage & Reporting
+    "BatchIngestionReport",
+    "LineageRelation",
+    "ResourceBank",
+    "ResourceLineageEntry",
+    # Translation & Multilingual
+    "CachedTranslationBridge",
+    "DictionaryTranslationBridge",
+    "MultilingualAgentComparator",
+    "TranslationService",
+    # SQL Generators
+    "generate_bank_schema_ddl",
+    "generate_tiered_matching_cte_query",
     # Registry & Core
     "CaseBankLoader",
+    "ComparableResource",
     "ContentFingerprint",
     "ContentSignature",
     "CuratedCrosswalk",
-    "HarmonizableResource",
     "HarmonizationMatch",
     "HarmonizationRegistry",
     "HarmonizerTestCase",
+    "HashesPayload",
     "HumanReviewQueue",
     "IdentifierKind",
     "MatchType",
@@ -156,6 +185,7 @@ __all__ = [
     "SanitizerConfig",
     "TextNormalizer",
     "TextSanitizer",
+    "TokenBlocker",
     "UnicodeForm",
     "generate_harmonizer_explorer_html",
     "launch_explorer",
