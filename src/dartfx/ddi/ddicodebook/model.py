@@ -1508,7 +1508,7 @@ class prodStmtType(baseElementType):
     producer: list[producerType] = Field(default_factory=list)
     copyright: list[simpleTextType] = Field(default_factory=list)
     prodDate: list[simpleTextAndDateType] = Field(default_factory=list)
-    prodPlace: list[simpleTextType] = Field(default_factory=list)
+    prodPlac: list[simpleTextType] = Field(default_factory=list)
     software: list[softwareType] = Field(default_factory=list)
     fundAg: list[fundAgType] = Field(default_factory=list)
     grantNo: list[grantNoType] = Field(default_factory=list)
@@ -1740,7 +1740,7 @@ class studyDevelopmentType(baseElementType):
 
 class subjectType(baseElementType):
     keyword: list[keywordType] = Field(default_factory=list)
-    topcClass: list[topcClasType] = Field(default_factory=list)
+    topcClas: list[topcClasType] = Field(default_factory=list)
 
 
 class sumDscrType(baseElementType):
