@@ -133,6 +133,7 @@ Resource Bank Ingestion & Sub-Linear Candidate Blocking::
    installation
    quickstart
    examples
+   codebook_i18n_merge
    codebook_to_cdi_mappings
    codebook_to_lifecycle_mappings
    harmonizer

@@ -133,6 +133,9 @@ The ``dartfx.ddi.ddicodebook.i18n`` module reconciles two DDI-Codebook documents
 1. **Stage 1 (Assessment & Planning)**: Scans ``docDscr``, ``stdyDscr``, ``fileDscr``, and ``dataDscr`` (variables, category codes, and variable groups) to detect translation gaps, structural divergences, and language-agnostic data drift (differences in summary statistics, frequencies, or missing value attributes). It outputs a machine-actionable YAML merge plan (``.merge.plan.{lang_c}_{lang_t}.yaml``) and a human-readable Markdown report (``.merge.plan.{lang_c}_{lang_t}.md``).
 2. **Stage 2 (Merging)**: Clones the canonical document as the structural backbone, tags canonical elements with ``xml:lang``, injects translated elements with corresponding ``xml:lang`` attributes, maps secondary titles to ``<parTitl xml:lang="...">``, and applies strategies like ``use_canonical`` when translations are absent. If unapproved pending items remain, merge execution halts cleanly.
 
+.. seealso::
+   See the comprehensive :doc:`codebook_i18n_merge` User Guide for full architectural workflow diagrams, discrepancy taxonomy, silent data drift rules, and merge planning governance.
+
 Python API Usage::
 
    from dartfx.ddi.ddicodebook.i18n import assess_merge, execute_merge, MergeStrategy

@@ -379,7 +379,7 @@ Next Steps
 ----------
 
 * Learn about the core :doc:`ddicdi` implementation.
-* Explore the :doc:`ddicodebook` API reference.
+* Explore the :doc:`ddicodebook` API reference and the :doc:`codebook_i18n_merge` User Guide.
 * Learn about :doc:`ddilifecycle` fragment streaming, DDI 4.0 models, and resource profile analysis.
 * Read the comprehensive :doc:`harmonizer` framework documentation.
 * Explore the optional :doc:`basex` XML database and reporting extension.
