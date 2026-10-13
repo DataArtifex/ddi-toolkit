@@ -21,20 +21,56 @@ Basic Metadata Extraction
        title = cb.studyDscr.citation.titlStmt.titl.content
        print(f"Title: {title}")
 
-   Validation with JSON and Markdown Reports
-   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Validation with JSON and Markdown Reports
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   .. code-block:: python
+.. code-block:: python
 
-      from dartfx.ddi.ddicodebook import utils as cb_utils
+   from dartfx.ddi.ddicodebook import utils as cb_utils
 
-      is_valid, report = cb_utils.validate_codebook_xml('survey_data.xml')
+   is_valid, report = cb_utils.validate_codebook_xml('survey_data.xml')
 
-      print(f"Valid: {is_valid}")
-      print(report['summary'])
+   print(f"Valid: {is_valid}")
+   print(report['summary'])
 
-      markdown_report = cb_utils.validation_report_to_markdown(report)
-      print(markdown_report)
+   markdown_report = cb_utils.validation_report_to_markdown(report)
+   print(markdown_report)
+
+Multilingual Codebook Assessment, Planning & Merging
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from dartfx.ddi.ddicodebook.i18n import assess_merge, execute_merge, MergeStrategy
+
+   # 1. Assess translation discrepancies, detect data drift, and create plan
+   plan = assess_merge(
+       canonical="survey_en.xml",
+       translated="survey_fi.xml",
+       lang_canonical="en",
+       lang_translated="fi",
+       strategy=MergeStrategy(default_fallback_to_canonical=True),
+   )
+
+   print(f"Total discrepancies: {plan.summary.total_discrepancies}")
+   print(f"Pending review: {plan.pending_review_count}")
+
+   # 2. Inspect generated Markdown assessment report
+   # (Also written to survey_en.merge.plan.en_fi.md)
+   print(plan.to_markdown())
+
+   # 3. Execute merge into a unified bilingual DDI-Codebook document
+   merged_codebook = execute_merge(
+       canonical="survey_en.xml",
+       translated="survey_fi.xml",
+       plan=plan,
+       output_path="survey_bilingual.xml",
+   )
+
+   # Verify bilingual variables and labels
+   if merged_codebook.dataDscr and merged_codebook.dataDscr.var:
+       var = merged_codebook.dataDscr.var[0]
+       print(f"Merged Variable: {var.name}")
 
 DDI-CDI Assistant Framework
 ---------------------------

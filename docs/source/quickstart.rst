@@ -62,6 +62,44 @@ CLI usage:
 By default, invalid ``@ID`` values (not valid NCName / ``xs:ID``) are reported as warnings.
 Use ``--strict`` to escalate these warnings into validation errors.
 
+Multilingual DDI-Codebook Merging (i18n)
+----------------------------------------
+
+Reconcile and merge canonical and translated DDI-Codebook documents into a unified bilingual document with safety gates:
+
+Python API:
+
+.. code-block:: python
+
+   from dartfx.ddi.ddicodebook.i18n import assess_merge, execute_merge
+
+   # 1. Assess differences, detect data drift, and create merge plan
+   plan = assess_merge(
+       canonical="survey_en.xml",
+       translated="survey_fi.xml",
+       lang_canonical="en",
+       lang_translated="fi",
+   )
+   print(f"Pending review items: {plan.pending_review_count}")
+
+   # 2. Execute merge (respects review gates)
+   merged_cb = execute_merge(
+       canonical="survey_en.xml",
+       translated="survey_fi.xml",
+       plan=plan,
+       output_path="survey.merged.en_fi.xml",
+   )
+
+CLI usage:
+
+.. code-block:: bash
+
+   # Assess and merge
+   dartfx-ddi ddici18nmerge survey_en.xml survey_fi.xml
+
+   # Auto-approve non-blocking items and validate against DDI-C schema
+   dartfx-ddi ddici18nmerge survey_en.xml survey_fi.xml --auto-approve --validate
+
 DDI-CDI & Assistant Framework
 -----------------------------
 
