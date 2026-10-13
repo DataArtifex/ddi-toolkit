@@ -164,7 +164,8 @@ def execute_merge(
                 if not lbl.xml_lang:
                     lbl.xml_lang = lang_can
 
-            tra_vg = tra_vargrp_map.get(vg.id or getattr(vg, "name", None))
+            vg_key = vg.id or getattr(vg, "name", None)
+            tra_vg = tra_vargrp_map.get(vg_key) if vg_key else None
             if tra_vg and tra_vg.labl:
                 for tl in tra_vg.labl:
                     new_l = copy.deepcopy(tl)
@@ -200,7 +201,8 @@ def execute_merge(
                     tra_var_map[v.id] = v
 
         for v in can_vars:
-            tra_v = tra_var_map.get(v.name or v.id)
+            var_key = v.name or v.id
+            tra_v = tra_var_map.get(var_key) if var_key else None
 
             # 5a. Variable Labels
             for lbl in v.labl:
