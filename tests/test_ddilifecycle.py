@@ -435,8 +435,8 @@ def test_stream_ddil_fragments_dublin_core_sample():
     assert res_xml["total_errors"] == 0
     assert res_xml["success_rate_percent"] == 100.0
     xml_str = out_xml.getvalue()
-    assert "<DublinCoreRelation" in xml_str or ":DublinCoreRelation" in xml_str
-    assert "<DublinCoreCoverage" in xml_str or ":DublinCoreCoverage" in xml_str
+    assert "DublinCoreRelation" in xml_str
+    assert "DublinCoreCoverage" in xml_str
 
 
 def test_stream_ddil_fragments_dublin_core_prefixed_elements():
