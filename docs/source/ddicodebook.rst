@@ -83,6 +83,33 @@ Working with Files
            if hasattr(file_desc, 'fileCont') and file_desc.fileCont:
                print(f"Records: {file_desc.fileCont.dimensns.caseQnty}")
 
+Working with Related Materials and Citations
+--------------------------------------------
+
+DDI-Codebook allows related publications (``relPubl``), related materials (``relMat``), and other references (``othRefs``) to contain both narrative bibliographic text and structured DDI ``<citation>`` elements::
+
+   if my_codebook.stdyDscr and my_codebook.stdyDscr[0].othrStdyMat:
+       mat = my_codebook.stdyDscr[0].othrStdyMat[0]
+
+       # Iterate over related publications
+       for pub in mat.relPubl:
+           # Narrative text
+           print(f"Citation Text: {pub.content}")
+
+           # Structured DDI citation (if present)
+           if pub.citation:
+               for cit in pub.citation:
+                   if cit.titlStmt and cit.titlStmt.titl:
+                       print(f"  Title: {cit.titlStmt.titl.content}")
+                   if cit.holdings:
+                       print(f"  URI: {cit.holdings[0].URI}")
+
+       # Related materials with attributes
+       for rm in mat.relMat:
+           print(f"Material: {rm.label} (type={rm.type}, media={rm.media})")
+           if rm.citation:
+               print(f"  Citation: {rm.citation[0].titlStmt.titl.content}")
+
 Error Handling
 --------------
 

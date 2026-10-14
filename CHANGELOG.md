@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented in this file.
 
+## [Unreleased]
+
+### Added
+- **DDI-Codebook 2.6 `materialReferenceType` & Structured Citation Support**:
+  - Added structured `citation: list[citationType]` support to `materialReferenceType`, `relMatType`, and `othRefsType`, allowing `<relPubl>`, `<relMat>`, and `<othRefs>` to model both narrative citation text and formal DDI `<citation>` trees simultaneously.
+  - Added formal `othRefsType` inheriting from `materialReferenceType` to mirror the DDI 2.6 schema.
+  - Added schema attributes (`callno`, `label`, `media`, `type`) to `relMatType`.
+  - Added selective exclusion of mapped DDI child tags in `get_mixed_content` and `abstractTextType.from_xml_element`, ensuring narrative text is preserved in `.content` without duplicate `<citation>` XML tags upon export.
+  - Preserved inline markup tags (PHRASE group: `ExtLink`, `Link`; FORM group: `p`, `div`, `emph`, `hi`, `head`, `list`, `itm`, `label`; and XHTML 1.1 elements) in `abstractTextType.content` without raising spurious parser warnings or validation errors.
+
+### Fixed
+- **Inherited DDI Property Discovery Across Class MRO**:
+  - Updated `baseElementType.get_annotations()` to traverse the class MRO (`__mro__`), ensuring derived classes (`relMatType`, `anlyUnitType`, `timeMethType`, `notesType`, etc.) inherit DDI child element annotations declared on base types.
+
 ## [0.4.0] - 2026-10-13
 
 ### Added
