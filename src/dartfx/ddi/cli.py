@@ -379,6 +379,16 @@ def ddici18nmerge(
             help="Path to merging plan YAML file (defaults to {canonical_base}.merge.plan.{lang_c}_{lang_t}.yaml)",
         ),
     ] = None,
+    html: Annotated[
+        Path | None,
+        typer.Option(
+            "--html",
+            help=(
+                "Path to side-by-side HTML comparison report "
+                "(defaults to {canonical_base}.merged.{lang_c}_{lang_t}.html)"
+            ),
+        ),
+    ] = None,
     output: Annotated[
         Path | None,
         typer.Option(
@@ -415,6 +425,7 @@ def ddici18nmerge(
         MergeStrategy,
         assess_merge,
         derive_merged_xml_path,
+        derive_plan_html_path,
         derive_plan_md_path,
         derive_plan_yaml_path,
         execute_merge,
@@ -447,11 +458,22 @@ def ddici18nmerge(
         else derive_plan_md_path(canonical, effective_lang_c, effective_lang_t)
     )
     merged_output_path = output or derive_merged_xml_path(canonical, effective_lang_c, effective_lang_t)
+    plan_html_path = (
+        html
+        if html
+        else (
+            merged_output_path.with_suffix(".html")
+            if output
+            else derive_plan_html_path(canonical, effective_lang_c, effective_lang_t)
+        )
+    )
 
     plan_obj: MergePlan
     if plan_yaml_path.exists() and not refresh:
         logging.info(f"Loading existing merge plan from {plan_yaml_path}")
         plan_obj = MergePlan.from_yaml(plan_yaml_path)
+        plan_obj._cb_canonical = cb_can
+        plan_obj._cb_translated = cb_tra
     else:
         logging.info("Assessing files and generating merge plan...")
         plan_obj = assess_merge(
@@ -463,14 +485,21 @@ def ddici18nmerge(
         )
         plan_obj.save_yaml(plan_yaml_path)
         plan_obj.save_markdown(plan_md_path)
+        plan_obj.save_html(plan_html_path)
         logging.info(f"Merge plan written to {plan_yaml_path}")
         logging.info(f"Merge report written to {plan_md_path}")
+        logging.info(f"Side-by-side HTML comparison written to {plan_html_path}")
+
+    # Ensure HTML report exists even when loaded from cached YAML
+    if not plan_html_path.exists():
+        plan_obj.save_html(plan_html_path)
 
     # Safety gate check
     if not plan_obj.is_ready_to_merge() and not auto_approve:
         pending_cnt = plan_obj.summary.pending_review_count
         console.print(f"[bold red]Merge halted:[/bold red] {pending_cnt} pending issue(s) require human review.")
-        console.print(f"  • Review report: [bold]{plan_md_path}[/bold]")
+        console.print(f"  • Side-by-side HTML report: [bold]{plan_html_path}[/bold]")
+        console.print(f"  • Markdown report: [bold]{plan_md_path}[/bold]")
         console.print(f"  • Edit plan decisions: [bold]{plan_yaml_path}[/bold]")
         console.print(
             "Set [bold]approved: true[/bold] in the plan YAML or re-run with [bold]--auto-approve[/bold] to proceed."
@@ -484,6 +513,8 @@ def ddici18nmerge(
     console.print(
         f"[bold green]Success:[/bold green] Merged multilingual codebook saved to [bold]{merged_output_path}[/bold]"
     )
+    console.print(f"  • Side-by-side HTML report: [bold]{plan_html_path}[/bold]")
+    console.print(f"  • Markdown report: [bold]{plan_md_path}[/bold]")
 
     if validate:
         is_valid, report = cb_utils.validate_codebook_xml(merged_output_path)

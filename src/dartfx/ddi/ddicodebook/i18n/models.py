@@ -41,6 +41,16 @@ def derive_plan_md_path(canonical_path: Path | str, lang_c: str, lang_t: str) ->
     return p.parent / f"{base}.merge.plan.{lang_c}_{lang_t}.md"
 
 
+def derive_plan_html_path(canonical_path: Path | str, lang_c: str, lang_t: str) -> Path:
+    """Derives standard HTML comparison report path: {canonical_base}.merged.{lang_c}_{lang_t}.html"""
+    p = Path(canonical_path)
+    base = p.stem
+    return p.parent / f"{base}.merged.{lang_c}_{lang_t}.html"
+
+
+derive_merged_html_path = derive_plan_html_path
+
+
 def derive_strategy_path(canonical_path: Path | str, lang_c: str, lang_t: str) -> Path:
     """Derives standard strategy YAML path: {canonical_base}.merge.strategy.{lang_c}_{lang_t}.yaml"""
     p = Path(canonical_path)
@@ -105,6 +115,7 @@ class MergeStrategy(BaseModel):
     study_title_mapping: str = "parTitl"  # parTitl | altTitl
 
     auto_approve_if_no_errors: bool = True
+    merge_secondary_metadata: bool = True
 
     def model_post_init(self, __context: Any) -> None:
         if self.enforce_iso_codes:
@@ -236,70 +247,21 @@ class MergePlan(BaseModel):
         return cls.model_validate(data)
 
     def to_markdown(self) -> str:
-        """Generates a human-readable Markdown report summarizing findings and decisions."""
-        lines: list[str] = []
-        lines.append(f"# DDI-Codebook Multilingual Merge Report: `{self.plan_id}`")
-        lines.append("")
-        lines.append(f"**Generated:** {self.created_at}  ")
-        lines.append(f"**Status:** `{self.summary.status}`  ")
-        lines.append(f"**Approved:** `{'Yes' if self.review_gate.approved else 'No'}`  ")
-        lines.append("")
+        """Generates a human-readable Markdown report summarizing findings, decisions, and side-by-side comparisons."""
+        from .report import generate_markdown_report
 
-        lines.append("## 1. Input Metadata")
-        lines.append("| Role | File | Language | Detected Lang | Variables | Files |")
-        lines.append("|---|---|---|---|---|---|")
-        c = self.metadata.canonical
-        t = self.metadata.translated
-        c_lang = c.detected_lang_attribute or "None"
-        t_lang = t.detected_lang_attribute or "None"
-        lines.append(f"| **Canonical** | `{c.file}` | `{c.language}` | `{c_lang}` | {c.var_count} | {c.file_count} |")
-        lines.append(f"| **Translated** | `{t.file}` | `{t.language}` | `{t_lang}` | {t.var_count} | {t.file_count} |")
-        lines.append("")
-
-        lines.append("## 2. Assessment Summary")
-        lines.append("| Metric | Count |")
-        lines.append("|---|---|")
-        lines.append(f"| Total Elements Compared | {self.summary.total_elements_compared} |")
-        lines.append(f"| Exact Matches | {self.summary.exact_matches} |")
-        lines.append(f"| Missing Translations | {self.summary.translation_missing_count} |")
-        lines.append(f"| Statistics Divergences (`sumStat`) | {self.summary.stats_divergence_count} |")
-        lines.append(f"| Frequency Divergences (`catStat`) | {self.summary.freqs_divergence_count} |")
-        lines.append(f"| Missing Value Attr Discrepancies | {self.summary.missing_attr_divergence_count} |")
-        lines.append(f"| Unmatched Canonical Items | {self.summary.unmatched_canonical_count} |")
-        lines.append(f"| Unmatched Translated Items (Orphans) | {self.summary.unmatched_translation_count} |")
-        lines.append(f"| **Pending Human Review Items** | **{self.summary.pending_review_count}** |")
-        lines.append("")
-
-        if self.summary.stats_divergence_count > 0 or self.summary.freqs_divergence_count > 0:
-            lines.append("> [!WARNING]")
-            lines.append("> **Data File Version Drift Alert**: Summary statistics and/or category frequencies diverge.")
-            lines.append(
-                "> Because statistics are language-agnostic numbers, this indicates the canonical and translated files"
-            )
-            lines.append("> document different versions or processing states of the underlying dataset.")
-            lines.append("")
-
-        if self.discrepancies:
-            lines.append("## 3. Discrepancies & Resolutions Manifest")
-            lines.append("| ID | Target Element | Issue | Selected Resolution | Status | Requires Approval |")
-            lines.append("|---|---|---|---|---|---|")
-            for disc in self.discrepancies:
-                req = "⚠️ **YES**" if disc.resolution.requires_human_approval else "No"
-                res_act = disc.resolution.action
-                res_stat = disc.resolution.status
-                lines.append(
-                    f"| `{disc.id}` | `{disc.target}` | `{disc.detected_issue}` | `{res_act}` | `{res_stat}` | {req} |"
-                )
-            lines.append("")
-        else:
-            lines.append("## 3. Discrepancies & Resolutions Manifest")
-            lines.append("No discrepancies detected. The files match completely!")
-            lines.append("")
-
-        lines.append("---")
-        lines.append("*Report generated by Data Artifex DDI Toolkit (`dartfx-ddi`).*")
-        return "\n".join(lines)
+        return generate_markdown_report(self)
 
     def save_markdown(self, path: Path | str) -> None:
         """Writes the Markdown summary report to a file."""
         Path(path).write_text(self.to_markdown(), encoding="utf-8")
+
+    def to_html(self) -> str:
+        """Renders an interactive, standalone HTML5 side-by-side comparison report."""
+        from .report import generate_html_report
+
+        return generate_html_report(self)
+
+    def save_html(self, path: Path | str) -> None:
+        """Writes the HTML comparison report to a file."""
+        Path(path).write_text(self.to_html(), encoding="utf-8")

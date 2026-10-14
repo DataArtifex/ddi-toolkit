@@ -10,6 +10,9 @@ from dartfx.ddi.ddicodebook import (
     MergePlan,
     MergeStrategy,
     assess_merge,
+    derive_merged_html_path,
+    derive_merged_xml_path,
+    derive_plan_html_path,
     execute_merge,
     loadxml,
     loadxmlstring,
@@ -51,6 +54,13 @@ def test_fsd2961_assessment_and_merge():
     assert plan.metadata.translated.language == "fi"
     assert plan.is_ready_to_merge() is True
 
+    # Test default HTML path follows the same pattern as output XML
+    expected_xml = derive_merged_xml_path(eng_path, "en", "fi")
+    assert expected_xml.name == "FSD2961_eng.merged.en_fi.xml"
+    assert derive_merged_html_path(eng_path, "en", "fi").name == "FSD2961_eng.merged.en_fi.html"
+    assert derive_plan_html_path(eng_path, "en", "fi").name == "FSD2961_eng.merged.en_fi.html"
+    assert derive_merged_html_path(eng_path, "en", "fi") == expected_xml.with_suffix(".html")
+
     # Test YAML and Markdown roundtrip
     yaml_text = plan.to_yaml()
     reloaded_plan = MergePlan.from_yaml(yaml_text)
@@ -60,6 +70,16 @@ def test_fsd2961_assessment_and_merge():
     md_report = plan.to_markdown()
     assert "# DDI-Codebook Multilingual Merge Report" in md_report
     assert "FSD2961_eng.xml" in md_report
+    assert "Side-by-Side Study & Document Metadata" in md_report
+    assert "Finnish Perspectives on Light Pollution" in md_report
+    assert "Suomalaisten näkemyksiä valosaasteesta" in md_report
+
+    html_report = plan.to_html()
+    assert "<!DOCTYPE html>" in html_report
+    assert "Finnish Perspectives on Light Pollution" in html_report
+    assert "Suomalaisten näkemyksiä valosaasteesta" in html_report
+    assert "valosaaste" in html_report
+    assert "filterVariables" in html_report
 
     # Execute merge
     merged_cb = execute_merge(plan)
@@ -74,6 +94,22 @@ def test_fsd2961_assessment_and_merge():
     par_titles = [pt for pt in titl_stmt.parTitl if pt.xml_lang == "fi"]
     assert len(par_titles) >= 1
     assert "Suomalaisten näkemyksiä valosaasteesta" in par_titles[0].content
+
+    # Check that study subjects (keywords and topics) are merged with their language tags
+    subj = merged_cb.stdyDscr[0].stdyInfo[0].subject[0]
+    en_keywords = [kw for kw in subj.keyword if kw.xml_lang == "en"]
+    fi_keywords = [kw for kw in subj.keyword if kw.xml_lang == "fi"]
+    assert len(en_keywords) == 4
+    assert len(fi_keywords) == 7
+    assert any("electric lighting" in str(kw.content) for kw in en_keywords)
+    assert any("valosaaste" in str(kw.content) for kw in fi_keywords)
+
+    en_topics = [tc for tc in subj.topcClas if tc.xml_lang == "en"]
+    fi_topics = [tc for tc in subj.topcClas if tc.xml_lang == "fi"]
+    assert len(en_topics) == 3
+    assert len(fi_topics) == 3
+    assert any("Social sciences" in str(tc.content) for tc in en_topics)
+    assert any("Yhteiskuntatieteet" in str(tc.content) for tc in fi_topics)
 
 
 def test_missing_translation_fallback_use_canonical():
@@ -299,6 +335,16 @@ def test_cli_ddici18nmerge():
         assert merged_xml.exists()
         assert "Success: Merged multilingual codebook saved" in result.stdout
 
+        # Verify side-by-side HTML comparison was automatically created following merged XML pattern
+        merged_html = merged_xml.with_suffix(".html")
+        assert merged_html.exists()
+        html_text = merged_html.read_text(encoding="utf-8")
+        assert "<!DOCTYPE html>" in html_text
+        assert (
+            "Side-by-Side Variables &amp; Categories Comparison" in html_text or "Side-by-Side Variables" in html_text
+        )
+        assert "Finnish Perspectives on Light Pollution" in html_text
+
         # 2. Re-run without --refresh: should load existing plan
         result_cached = runner.invoke(
             app,
@@ -315,3 +361,165 @@ def test_cli_ddici18nmerge():
             ],
         )
         assert result_cached.exit_code == 0
+
+        # 3. Run with explicit --html option
+        custom_html = tmp / "explicit_comparison.html"
+        result_html = runner.invoke(
+            app,
+            [
+                "ddici18nmerge",
+                eng_path,
+                fin_path,
+                "--html",
+                str(custom_html),
+                "--auto-approve",
+                "--no-validate",
+            ],
+        )
+        assert result_html.exit_code == 0
+        assert custom_html.exists()
+        assert "<!DOCTYPE html>" in custom_html.read_text(encoding="utf-8")
+
+
+def test_merge_secondary_metadata_when_absent_in_canonical():
+    """Verify that metadata elements existing in secondary document but absent in canonical
+
+    (e.g. stdyInfo/subject, sumDscr, docDscr, othrStdyMat) are merged in and tagged with lang_tra.
+    """
+    # Canonical has no docDscr, and stdyInfo only has abstract (no subject, sumDscr, or othrStdyMat)
+    xml_can = """<?xml version="1.0" encoding="utf-8"?>
+<codeBook version="2.6" ID="CB_CAN" xml:lang="en" xmlns="ddi:codebook:2_6">
+  <stdyDscr>
+    <citation>
+      <titlStmt><titl>Health Survey 2020</titl></titlStmt>
+    </citation>
+    <stdyInfo>
+      <abstract>English abstract text.</abstract>
+    </stdyInfo>
+  </stdyDscr>
+  <dataDscr>
+    <var ID="V1" name="AGE"><labl>Age</labl></var>
+  </dataDscr>
+</codeBook>"""
+
+    # Translated document has docDscr, subject (keywords and topics), sumDscr, and othrStdyMat
+    xml_tra = """<?xml version="1.0" encoding="utf-8"?>
+<codeBook version="2.6" ID="CB_TRA" xml:lang="fr" xmlns="ddi:codebook:2_6">
+  <docDscr>
+    <citation>
+      <titlStmt><titl>Description DDI</titl></titlStmt>
+    </citation>
+    <notes>Notes de documentation</notes>
+  </docDscr>
+  <stdyDscr>
+    <citation>
+      <titlStmt><titl>Enquête sur la santé 2020</titl></titlStmt>
+    </citation>
+    <stdyInfo>
+      <subject>
+        <keyword vocab="MESH">santé publique</keyword>
+        <topcClas vocab="CESSDA">Santé</topcClas>
+      </subject>
+      <abstract>Texte du résumé en français.</abstract>
+      <sumDscr>
+        <nation abbr="FR">France</nation>
+        <geogCover>France métropolitaine</geogCover>
+      </sumDscr>
+    </stdyInfo>
+    <othrStdyMat>
+      <relPubl>Rapport d'enquête 2020</relPubl>
+    </othrStdyMat>
+  </stdyDscr>
+  <dataDscr>
+    <var ID="V1" name="AGE"><labl>Âge</labl></var>
+  </dataDscr>
+</codeBook>"""
+
+    cb_can = loadxmlstring(xml_can)
+    cb_tra = loadxmlstring(xml_tra)
+
+    merged = execute_merge(cb_can, cb_tra, auto_approve=True)
+
+    # 1. Verify docDscr was merged in and tagged with fr
+    assert len(merged.docDscr) == 1
+    doc_cit = merged.docDscr[0].citation
+    assert doc_cit is not None
+    assert doc_cit.titlStmt is not None
+    assert doc_cit.titlStmt.titl is not None
+    assert doc_cit.titlStmt.titl.content == "Description DDI"
+    assert doc_cit.titlStmt.titl.xml_lang == "fr"
+    assert len(merged.docDscr[0].notes) == 1
+    assert merged.docDscr[0].notes[0].content == "Notes de documentation"
+    assert merged.docDscr[0].notes[0].xml_lang == "fr"
+
+    # 2. Verify stdyInfo/subject was merged in and tagged with fr
+    assert len(merged.stdyDscr[0].stdyInfo[0].subject) == 1
+    subj = merged.stdyDscr[0].stdyInfo[0].subject[0]
+    assert len(subj.keyword) == 1
+    assert subj.keyword[0].content == "santé publique"
+    assert subj.keyword[0].xml_lang == "fr"
+    assert subj.keyword[0].vocab == "MESH"
+
+    assert len(subj.topcClas) == 1
+    assert subj.topcClas[0].content == "Santé"
+    assert subj.topcClas[0].xml_lang == "fr"
+    assert subj.topcClas[0].vocab == "CESSDA"
+
+    # 3. Verify sumDscr was merged in and tagged with fr
+    assert len(merged.stdyDscr[0].stdyInfo[0].sumDscr) == 1
+    sd = merged.stdyDscr[0].stdyInfo[0].sumDscr[0]
+    assert len(sd.nation) == 1
+    assert sd.nation[0].content == "France"
+    assert sd.nation[0].xml_lang == "fr"
+    assert len(sd.geogCover) == 1
+    assert sd.geogCover[0].content == "France métropolitaine"
+    assert sd.geogCover[0].xml_lang == "fr"
+
+    # 4. Verify othrStdyMat was merged in and tagged with fr
+    assert len(merged.stdyDscr[0].othrStdyMat) == 1
+    assert len(merged.stdyDscr[0].othrStdyMat[0].relPubl) == 1
+    assert merged.stdyDscr[0].othrStdyMat[0].relPubl[0].content == "Rapport d'enquête 2020"
+    assert merged.stdyDscr[0].othrStdyMat[0].relPubl[0].xml_lang == "fr"
+
+    # 5. Verify roundtrip to XML string works cleanly
+    xml_out = merged.to_xml_string(pretty=True)
+    assert 'xml:lang="fr"' in xml_out
+    assert "santé publique" in xml_out
+    assert "Description DDI" in xml_out
+
+
+def test_merge_metadata_disabled_by_strategy():
+    """Verify that setting merge_secondary_metadata=False skips secondary docDscr and stdyDscr enrichment."""
+    xml_can = """<?xml version="1.0" encoding="utf-8"?>
+<codeBook version="2.6" ID="CB_CAN" xml:lang="en" xmlns="ddi:codebook:2_6">
+  <stdyDscr>
+    <citation><titlStmt><titl>Health Survey 2020</titl></titlStmt></citation>
+  </stdyDscr>
+</codeBook>"""
+
+    xml_tra = """<?xml version="1.0" encoding="utf-8"?>
+<codeBook version="2.6" ID="CB_TRA" xml:lang="fr" xmlns="ddi:codebook:2_6">
+  <docDscr>
+    <citation><titlStmt><titl>Description DDI</titl></titlStmt></citation>
+  </docDscr>
+  <stdyDscr>
+    <citation><titlStmt><titl>Enquête 2020</titl></titlStmt></citation>
+    <stdyInfo>
+      <subject><keyword>santé</keyword></subject>
+    </stdyInfo>
+  </stdyDscr>
+</codeBook>"""
+
+    cb_can = loadxmlstring(xml_can)
+    cb_tra = loadxmlstring(xml_tra)
+
+    strat = MergeStrategy(merge_secondary_metadata=False, canonical_language="en", translated_language="fr")
+    merged = execute_merge(cb_can, cb_tra, strategy=strat, auto_approve=True)
+
+    # docDscr should not have been copied
+    assert len(merged.docDscr) == 0
+    # stdyInfo should not have been copied
+    assert len(merged.stdyDscr[0].stdyInfo) == 0
+    # but parallel title should still be created
+    par_titles = [pt for pt in merged.stdyDscr[0].citation[0].titlStmt.parTitl if pt.xml_lang == "fr"]
+    assert len(par_titles) == 1
