@@ -71,6 +71,7 @@ class CodebookToLifecycleConverter:
             version=self.context.version,
             urn=self.context.make_urn(self.context.codebook_id),
             study_unit=study_unit,
+            language=self.context.language,
             questions=questions,
             categories=categories,
             codelists=codelists,

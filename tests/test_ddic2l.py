@@ -488,3 +488,84 @@ def test_harmonization_user_attribute_hashes():
     cl_json = cl4.to_json()
     assert "harmonization:codelist_hash" in cl_json
     assert "harmonization:member_count" in cl_json
+
+
+def test_codebook_to_lifecycle_multilingual():
+    """Verify that multilingual DDI-C codebooks preserve language tags across DDI 4.0 and DDI 3.3."""
+    xml_multi = """<?xml version="1.0" encoding="utf-8"?>
+<codeBook version="2.6" ID="CB_MULTI" xml:lang="en" xmlns="ddi:codebook:2_6">
+  <stdyDscr>
+    <citation>
+      <titlStmt>
+        <titl xml:lang="en">English Study Title</titl>
+        <parTitl xml:lang="fr">Titre d'étude en français</parTitl>
+      </titlStmt>
+    </citation>
+    <stdyInfo>
+      <abstract xml:lang="en">English abstract description</abstract>
+      <abstract xml:lang="fr">Description de résumé en français</abstract>
+    </stdyInfo>
+  </stdyDscr>
+  <dataDscr>
+    <var ID="V1" name="Q1">
+      <labl xml:lang="en">English Question Label</labl>
+      <labl xml:lang="fr">Libellé en français</labl>
+      <txt xml:lang="en">English variable description text</txt>
+      <txt xml:lang="fr">Texte de description en français</txt>
+      <catgry ID="C1">
+        <catValu>1</catValu>
+        <labl xml:lang="en">Yes</labl>
+        <labl xml:lang="fr">Oui</labl>
+      </catgry>
+      <catgry ID="C2">
+        <catValu>2</catValu>
+        <labl xml:lang="en">No</labl>
+        <labl xml:lang="fr">Non</labl>
+      </catgry>
+    </var>
+  </dataDscr>
+</codeBook>"""
+
+    cb = ddicodebook.loadxmlstring(xml_multi)
+    converter = cb_utils.codebook_to_lifecycle(cb)
+
+    # 1. DDI 4.0 RC1 Model checks
+    ddi4 = converter.to_ddi4()
+    # Titles
+    titles = [(ls.language, ls.value) for ls in ddi4.citation.title]
+    assert ("en", "English Study Title") in titles
+    assert ("fr", "Titre d'étude en français") in titles
+
+    # Abstracts
+    abstracts = [(ls.language, ls.value) for ls in ddi4.abstract]
+    assert ("en", "English abstract description") in abstracts
+    assert ("fr", "Description de résumé en français") in abstracts
+
+    # Variables
+    lp = ddi4.logical_product_reference[0]
+    var4 = lp.variable_scheme_reference[0].variable_reference[0]
+    var_labels = [(ls.language, ls.value) for ls in var4.label]
+    assert ("en", "English Question Label") in var_labels
+    assert ("fr", "Libellé en français") in var_labels
+
+    var_descs = [(ls.language, ls.value) for ls in var4.description]
+    assert ("en", "English variable description text") in var_descs
+    assert ("fr", "Texte de description en français") in var_descs
+
+    # Categories
+    cs = lp.category_scheme_reference[0]
+    cat_labels_all = {cat.id: [(ls.language, ls.value) for ls in cat.label] for cat in cs.category_reference}
+    # Check that both 'Yes' and 'Oui' are present in one category
+    yes_cat = next(labels for labels in cat_labels_all.values() if ("en", "Yes") in labels)
+    assert ("fr", "Oui") in yes_cat
+
+    # 2. DDI 3.3 XML checks
+    xml_33 = converter.to_ddi33_xml()
+    assert 'xml:lang="en"' in xml_33
+    assert 'xml:lang="fr"' in xml_33
+    assert "English Study Title" in xml_33
+    assert "Titre d'étude en français" in xml_33
+    assert "English Question Label" in xml_33
+    assert "Libellé en français" in xml_33
+    assert "Oui" in xml_33
+    assert "Non" in xml_33

@@ -67,6 +67,7 @@ class ConversionContext:
     version: str = field(init=False)
     codebook_id: str = field(init=False)
     strategy: IdStrategy = field(init=False)
+    language: str = field(init=False)
 
     # Reference indices: maps DDI-C IDs / objects to synthesized DDI-L IDs and URNs
     variable_id_map: dict[str, str] = field(default_factory=dict)
@@ -90,6 +91,7 @@ class ConversionContext:
         self.agency = self._resolve_agency()
         self.version = self._resolve_version()
         self.codebook_id = self._resolve_codebook_id()
+        self.language = getattr(self.codebook, "xml_lang", None) or "en"
 
     def _resolve_agency(self) -> str:
         # 1. Explicit parameter

@@ -76,15 +76,59 @@ class Ddi33XmlBuilder:
             v_el = ET.SubElement(uap_el, f"{{{NS_REUSABLE}}}AttributeValue")
             v_el.text = value
 
-    def _add_lang_string(self, parent: ET.Element, tag: str, value: str, lang: str = "en") -> ET.Element:
+    def _add_lang_strings(
+        self,
+        parent: ET.Element,
+        tag: str,
+        pairs: list[tuple[str, str]] | None,
+        fallback_val: str | None = None,
+    ) -> ET.Element | None:
+        items = [(lang, val) for lang, val in pairs if val] if pairs else []
+        if not items and fallback_val:
+            items = [(self.doc.language or "en", fallback_val)]
+        if not items:
+            return None
         el = ET.SubElement(parent, tag)
-        str_el = ET.SubElement(el, f"{{{NS_REUSABLE}}}String", {"{http://www.w3.org/XML/1998/namespace}lang": lang})
+        for lang, val in items:
+            str_el = ET.SubElement(el, f"{{{NS_REUSABLE}}}String", {"{http://www.w3.org/XML/1998/namespace}lang": lang})
+            str_el.text = val
+        return el
+
+    def _add_content_strings(
+        self,
+        parent: ET.Element,
+        tag: str,
+        pairs: list[tuple[str, str]] | None,
+        fallback_val: str | None = None,
+    ) -> ET.Element | None:
+        items = [(lang, val) for lang, val in pairs if val] if pairs else []
+        if not items and fallback_val:
+            items = [(self.doc.language or "en", fallback_val)]
+        if not items:
+            return None
+        el = ET.SubElement(parent, tag)
+        for lang, val in items:
+            cnt_el = ET.SubElement(
+                el, f"{{{NS_REUSABLE}}}Content", {"{http://www.w3.org/XML/1998/namespace}lang": lang}
+            )
+            cnt_el.text = val
+        return el
+
+    def _add_lang_string(self, parent: ET.Element, tag: str, value: str, lang: str | None = None) -> ET.Element:
+        actual_lang = lang or self.doc.language or "en"
+        el = ET.SubElement(parent, tag)
+        str_el = ET.SubElement(
+            el, f"{{{NS_REUSABLE}}}String", {"{http://www.w3.org/XML/1998/namespace}lang": actual_lang}
+        )
         str_el.text = value
         return el
 
-    def _add_content_string(self, parent: ET.Element, tag: str, value: str, lang: str = "en") -> ET.Element:
+    def _add_content_string(self, parent: ET.Element, tag: str, value: str, lang: str | None = None) -> ET.Element:
+        actual_lang = lang or self.doc.language or "en"
         el = ET.SubElement(parent, tag)
-        cnt_el = ET.SubElement(el, f"{{{NS_REUSABLE}}}Content", {"{http://www.w3.org/XML/1998/namespace}lang": lang})
+        cnt_el = ET.SubElement(
+            el, f"{{{NS_REUSABLE}}}Content", {"{http://www.w3.org/XML/1998/namespace}lang": actual_lang}
+        )
         cnt_el.text = value
         return el
 
@@ -95,11 +139,11 @@ class Ddi33XmlBuilder:
 
         # Citation
         cit_el = ET.SubElement(su_el, f"{{{NS_REUSABLE}}}Citation")
-        self._add_content_string(cit_el, f"{{{NS_REUSABLE}}}Title", su.title)
-        if su.sub_title:
-            self._add_content_string(cit_el, f"{{{NS_REUSABLE}}}SubTitle", su.sub_title)
-        if su.alt_title:
-            self._add_content_string(cit_el, f"{{{NS_REUSABLE}}}AlternateTitle", su.alt_title)
+        self._add_content_strings(cit_el, f"{{{NS_REUSABLE}}}Title", su.titles, su.title)
+        if su.sub_titles or su.sub_title:
+            self._add_content_strings(cit_el, f"{{{NS_REUSABLE}}}SubTitle", su.sub_titles, su.sub_title)
+        if su.alt_titles or su.alt_title:
+            self._add_content_strings(cit_el, f"{{{NS_REUSABLE}}}AlternateTitle", su.alt_titles, su.alt_title)
 
         for creator in su.creators:
             cr_el = ET.SubElement(cit_el, f"{{{NS_REUSABLE}}}Creator")
@@ -114,8 +158,8 @@ class Ddi33XmlBuilder:
             self._add_content_string(dist_el, f"{{{NS_REUSABLE}}}DistributorName", dist)
 
         # Abstract
-        if su.abstract:
-            self._add_content_string(su_el, f"{{{NS_STUDYUNIT}}}Abstract", su.abstract)
+        if su.abstracts or su.abstract:
+            self._add_content_strings(su_el, f"{{{NS_STUDYUNIT}}}Abstract", su.abstracts, su.abstract)
 
         # Coverage
         if su.spatial_coverage or su.temporal_coverage:
@@ -177,15 +221,24 @@ class Ddi33XmlBuilder:
                 for q in self.doc.questions:
                     qi_el = ET.SubElement(qs_el, f"{{{NS_DATACOLL}}}QuestionItem", {"isUniversallyUnique": "true"})
                     self._add_ident(qi_el, q.agency, q.id, q.version, q.urn)
-                    self._add_lang_string(qi_el, f"{{{NS_DATACOLL}}}QuestionItemName", q.question_name)
-                    if q.question_text:
+                    self._add_lang_strings(
+                        qi_el, f"{{{NS_DATACOLL}}}QuestionItemName", q.question_names, q.question_name
+                    )
+                    q_items = [(lang, val) for lang, val in q.question_texts if val] if q.question_texts else []
+                    if not q_items and q.question_text:
+                        q_items = [(self.doc.language or "en", q.question_text)]
+                    if q_items:
                         q_txt_el = ET.SubElement(qi_el, f"{{{NS_DATACOLL}}}QuestionText")
-                        lit_el = ET.SubElement(q_txt_el, f"{{{NS_DATACOLL}}}LiteralText")
-                        txt_el = ET.SubElement(lit_el, f"{{{NS_DATACOLL}}}Text")
-                        txt_el.text = q.question_text
-                    if q.interviewer_instruction:
-                        self._add_content_string(
-                            qi_el, f"{{{NS_DATACOLL}}}InterviewerInstruction", q.interviewer_instruction
+                        for _lang, val in q_items:
+                            lit_el = ET.SubElement(q_txt_el, f"{{{NS_DATACOLL}}}LiteralText")
+                            txt_el = ET.SubElement(lit_el, f"{{{NS_DATACOLL}}}Text")
+                            txt_el.text = val
+                    if q.interviewer_instructions or q.interviewer_instruction:
+                        self._add_content_strings(
+                            qi_el,
+                            f"{{{NS_DATACOLL}}}InterviewerInstruction",
+                            q.interviewer_instructions,
+                            q.interviewer_instruction,
                         )
 
         # LogicalProduct
@@ -207,9 +260,9 @@ class Ddi33XmlBuilder:
                 self._add_ident(c_el, cat.agency, cat.id, cat.version, cat.urn)
                 if cat.user_attributes:
                     self._add_user_attributes(c_el, cat.user_attributes)
-                self._add_content_string(c_el, f"{{{NS_REUSABLE}}}Label", cat.label)
-                if cat.description:
-                    self._add_content_string(c_el, f"{{{NS_REUSABLE}}}Description", cat.description)
+                self._add_content_strings(c_el, f"{{{NS_REUSABLE}}}Label", cat.labels, cat.label)
+                if cat.descriptions or cat.description:
+                    self._add_content_strings(c_el, f"{{{NS_REUSABLE}}}Description", cat.descriptions, cat.description)
 
         # CodeListScheme
         if self.doc.codelists:
@@ -224,8 +277,8 @@ class Ddi33XmlBuilder:
                 self._add_ident(cl_el, cl.agency, cl.id, cl.version, cl.urn)
                 if cl.user_attributes:
                     self._add_user_attributes(cl_el, cl.user_attributes)
-                self._add_lang_string(cl_el, f"{{{NS_LOGICAL}}}CodeListName", cl.name)
-                self._add_content_string(cl_el, f"{{{NS_REUSABLE}}}Label", cl.label)
+                self._add_lang_strings(cl_el, f"{{{NS_LOGICAL}}}CodeListName", cl.names, cl.name)
+                self._add_content_strings(cl_el, f"{{{NS_REUSABLE}}}Label", cl.labels, cl.label)
 
                 for code in cl.codes:
                     attrs = {"isDiscrete": "true"}
@@ -258,9 +311,9 @@ class Ddi33XmlBuilder:
             v_el = ET.SubElement(vs_el, f"{{{NS_LOGICAL}}}Variable", {"isUniversallyUnique": "true"})
             self._add_ident(v_el, v.agency, v.id, v.version, v.urn)
             self._add_lang_string(v_el, f"{{{NS_LOGICAL}}}VariableName", v.name)
-            self._add_content_string(v_el, f"{{{NS_REUSABLE}}}Label", v.label)
-            if v.description:
-                self._add_content_string(v_el, f"{{{NS_REUSABLE}}}Description", v.description)
+            self._add_content_strings(v_el, f"{{{NS_REUSABLE}}}Label", v.labels, v.label)
+            if v.descriptions or v.description:
+                self._add_content_strings(v_el, f"{{{NS_REUSABLE}}}Description", v.descriptions, v.description)
 
             # Question reference
             if v.question_id:
@@ -326,7 +379,7 @@ class Ddi33XmlBuilder:
             grp_el = ET.SubElement(vs_el, f"{{{NS_LOGICAL}}}VariableGroup", {"isUniversallyUnique": "true"})
             self._add_ident(grp_el, grp.agency, grp.id, grp.version, grp.urn)
             self._add_lang_string(grp_el, f"{{{NS_LOGICAL}}}VariableGroupName", grp.name)
-            self._add_content_string(grp_el, f"{{{NS_REUSABLE}}}Label", grp.label)
+            self._add_content_strings(grp_el, f"{{{NS_REUSABLE}}}Label", grp.labels, grp.label)
             for v_id in grp.variable_ids:
                 self._add_reference(
                     grp_el,

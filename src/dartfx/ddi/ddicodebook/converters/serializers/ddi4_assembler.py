@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import Any
 
 from dartfx.ddi.ddilifecycle import model_4_0_rc1 as m4
-from dartfx.ddi.ddilifecycle.model_4_0_rc1 import LangString
 
 from ..models import ConvertedLifecycleDocument
 
@@ -13,6 +12,17 @@ class Ddi4ModelAssembler:
 
     def __init__(self, doc: ConvertedLifecycleDocument) -> None:
         self.doc = doc
+
+    def _to_lang_strings(
+        self,
+        pairs: list[tuple[str, str]] | None,
+        fallback_val: str | None = None,
+    ) -> list[m4.LangString]:
+        if pairs:
+            return [m4.LangString(language=lang, value=val) for lang, val in pairs if val]
+        if fallback_val:
+            return [m4.LangString(language=self.doc.language or "en", value=fallback_val)]
+        return []
 
     def assemble(self) -> m4.StudyUnit:
         # 1. Categories
@@ -30,8 +40,8 @@ class Ddi4ModelAssembler:
                 agency=cat.agency,
                 version=cat.version,
                 urn=cat.urn,
-                label=[LangString(language="en", value=cat.label)],
-                description=[LangString(language="en", value=cat.description)] if cat.description else [],
+                label=self._to_lang_strings(cat.labels, cat.label),
+                description=self._to_lang_strings(cat.descriptions, cat.description),
                 user_attribute_pair=cat_uaps,
             )
             m4_categories[cat.id] = m4_cat
@@ -44,7 +54,7 @@ class Ddi4ModelAssembler:
             agency=self.doc.agency,
             version=self.doc.version,
             urn=cs_urn,
-            category_scheme_name=[LangString(language="en", value=f"Category Scheme for {self.doc.id}")],
+            category_scheme_name=self._to_lang_strings(None, f"Category Scheme for {self.doc.id}"),
             category_reference=list(m4_categories.values()),
         )
 
@@ -75,8 +85,8 @@ class Ddi4ModelAssembler:
                 agency=cl.agency,
                 version=cl.version,
                 urn=cl.urn,
-                code_list_name=[LangString(language="en", value=cl.name)],
-                label=[LangString(language="en", value=cl.label)],
+                code_list_name=self._to_lang_strings(cl.names, cl.name),
+                label=self._to_lang_strings(cl.labels, cl.label),
                 category_scheme_reference=m4_category_scheme,
                 code=m4_codes,
                 user_attribute_pair=cl_uaps,
@@ -91,7 +101,7 @@ class Ddi4ModelAssembler:
             agency=self.doc.agency,
             version=self.doc.version,
             urn=cls_urn,
-            code_list_scheme_name=[LangString(language="en", value=f"CodeList Scheme for {self.doc.id}")],
+            code_list_scheme_name=self._to_lang_strings(None, f"CodeList Scheme for {self.doc.id}"),
             code_list_reference=list(m4_codelists.values()),
         )
 
@@ -99,19 +109,16 @@ class Ddi4ModelAssembler:
         m4_questions: dict[str, m4.QuestionItem] = {}
         for q in self.doc.questions:
             q_text_elements = []
-            if q.question_text:
-                q_text_elements.append(
-                    m4.DynamicTextType(
-                        text_content=[m4.LiteralTextType(text=[LangString(language="en", value=q.question_text)])]
-                    )
-                )
+            q_lang_strings = self._to_lang_strings(q.question_texts, q.question_text)
+            if q_lang_strings:
+                q_text_elements.append(m4.DynamicTextType(text_content=[m4.LiteralTextType(text=q_lang_strings)]))
 
             m4_q = m4.QuestionItem(
                 id=q.id,
                 agency=q.agency,
                 version=q.version,
                 urn=q.urn,
-                question_item_name=[LangString(language="en", value=q.question_name)],
+                question_item_name=self._to_lang_strings(q.question_names, q.question_name),
                 question_text=q_text_elements,
             )
             m4_questions[q.id] = m4_q
@@ -127,7 +134,7 @@ class Ddi4ModelAssembler:
                 agency=self.doc.agency,
                 version=self.doc.version,
                 urn=qs_urn,
-                question_scheme_name=[LangString(language="en", value=f"Question Scheme for {self.doc.id}")],
+                question_scheme_name=self._to_lang_strings(None, f"Question Scheme for {self.doc.id}"),
                 question_item_reference=list(m4_questions.values()),
             )
 
@@ -138,7 +145,7 @@ class Ddi4ModelAssembler:
                 agency=self.doc.agency,
                 version=self.doc.version,
                 urn=dc_urn,
-                data_collection_module_name=[LangString(language="en", value=f"Data Collection for {self.doc.id}")],
+                data_collection_module_name=self._to_lang_strings(None, f"Data Collection for {self.doc.id}"),
                 question_scheme_reference=[m4_question_scheme],
             )
 
@@ -174,9 +181,9 @@ class Ddi4ModelAssembler:
                 agency=v.agency,
                 version=v.version,
                 urn=v.urn,
-                variable_name=[LangString(language="en", value=v.name)],
-                label=[LangString(language="en", value=v.label)],
-                description=[LangString(language="en", value=v.description)] if v.description else [],
+                variable_name=self._to_lang_strings(None, v.name),
+                label=self._to_lang_strings(v.labels, v.label),
+                description=self._to_lang_strings(v.descriptions, v.description),
                 variable_representation=var_rep,
                 question_reference=q_ref_list,
             )
@@ -191,8 +198,8 @@ class Ddi4ModelAssembler:
                 agency=grp.agency,
                 version=grp.version,
                 urn=grp.urn,
-                variable_group_name=[LangString(language="en", value=grp.name)],
-                label=[LangString(language="en", value=grp.label)],
+                variable_group_name=self._to_lang_strings(None, grp.name),
+                label=self._to_lang_strings(grp.labels, grp.label),
                 variable_reference=linked_vars,
             )
             m4_groups.append(m4_grp)
@@ -205,7 +212,7 @@ class Ddi4ModelAssembler:
             agency=self.doc.agency,
             version=self.doc.version,
             urn=vs_urn,
-            variable_scheme_name=[LangString(language="en", value=f"Variable Scheme for {self.doc.id}")],
+            variable_scheme_name=self._to_lang_strings(None, f"Variable Scheme for {self.doc.id}"),
             variable_reference=list(m4_variables.values()),
             variable_group_reference=m4_groups,
         )
@@ -240,35 +247,31 @@ class Ddi4ModelAssembler:
 
         # 7. StudyUnit Citation & Coverage
         cit_creators = [
-            m4.CreatorType(creator_name=m4.BibliographicNameType(name=[LangString(language="en", value=c)]))
+            m4.CreatorType(creator_name=m4.BibliographicNameType(name=self._to_lang_strings(None, c)))
             for c in self.doc.study_unit.creators
         ]
         cit_publishers = [
-            m4.PublisherType(publisher_name=m4.BibliographicNameType(name=[LangString(language="en", value=p)]))
+            m4.PublisherType(publisher_name=m4.BibliographicNameType(name=self._to_lang_strings(None, p)))
             for p in self.doc.study_unit.publishers
         ]
 
+        su = self.doc.study_unit
         m4_citation = m4.CitationType(
-            title=[LangString(language="en", value=self.doc.study_unit.title)],
-            sub_title=[LangString(language="en", value=self.doc.study_unit.sub_title)]
-            if self.doc.study_unit.sub_title
-            else [],
-            alternate_title=[LangString(language="en", value=self.doc.study_unit.alt_title)]
-            if self.doc.study_unit.alt_title
-            else [],
+            title=self._to_lang_strings(su.titles, su.title),
+            sub_title=self._to_lang_strings(su.sub_titles, su.sub_title),
+            alternate_title=self._to_lang_strings(su.alt_titles, su.alt_title),
             creator=cit_creators,
             publisher=cit_publishers,
         )
 
         # StudyUnit
-        su = self.doc.study_unit
         m4_study_unit = m4.StudyUnit(
             id=su.id,
             agency=su.agency,
             version=su.version,
             urn=su.urn,
             citation=m4_citation,
-            abstract=[LangString(language="en", value=su.abstract)] if su.abstract else [],
+            abstract=self._to_lang_strings(su.abstracts, su.abstract),
             data_collection_reference=[m4_data_collection] if m4_data_collection else [],
             logical_product_reference=[m4_logical_product],
             physical_instance_reference=m4_phys_instances,

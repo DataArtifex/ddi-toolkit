@@ -62,14 +62,22 @@ def map_questions(codebook: codeBookType, context: ConversionContext) -> list[Co
 
             q_name = raw_q_id
             q_text = ""
+            q_texts: list[tuple[str, str]] = []
             if qstn.qstnLit and qstn.qstnLit.content:
                 q_text = qstn.qstnLit.content.strip()
+                q_texts.append((qstn.qstnLit.xml_lang or qstn.xml_lang or context.language, q_text))
             elif qstn.content:
                 q_text = qstn.content.strip()
+                q_texts.append((qstn.xml_lang or context.language, q_text))
 
             ivu_instr = None
+            ivu_instrs: list[tuple[str, str]] = []
             if qstn.ivuInstr and qstn.ivuInstr.content:
                 ivu_instr = qstn.ivuInstr.content.strip()
+                ivu_instrs.append((qstn.ivuInstr.xml_lang or qstn.xml_lang or context.language, ivu_instr))
+
+            if not q_texts and q_text:
+                q_texts.append((context.language, q_text))
 
             q_urn = context.make_urn(q_id)
             context.question_id_map[raw_q_id] = q_id
@@ -85,6 +93,8 @@ def map_questions(codebook: codeBookType, context: ConversionContext) -> list[Co
                     question_name=q_name,
                     question_text=q_text,
                     interviewer_instruction=ivu_instr,
+                    question_texts=q_texts,
+                    interviewer_instructions=ivu_instrs,
                 )
             )
 
@@ -117,10 +127,23 @@ def map_variables_and_codes(
 
         var_name = var.get_name() or var.id or raw_var_id
         var_label = var.get_label() or var_name
+        var_labels: list[tuple[str, str]] = []
+        if var.labl:
+            for lbl in var.labl:
+                if lbl.content:
+                    var_labels.append((lbl.xml_lang or context.language, lbl.content.strip()))
+        if not var_labels:
+            var_labels.append((context.language, var_label))
 
         var_desc = None
-        if var.txt and var.txt[0].content:
-            var_desc = var.txt[0].content.strip()
+        var_descriptions: list[tuple[str, str]] = []
+        if var.txt:
+            for t in var.txt:
+                if t.content:
+                    t_txt = t.content.strip()
+                    if var_desc is None:
+                        var_desc = t_txt
+                    var_descriptions.append((t.xml_lang or context.language, t_txt))
 
         # Questions association
         q_id = None
@@ -131,12 +154,24 @@ def map_variables_and_codes(
 
         # Concept & Universe
         concept_val = None
-        if var.concept and var.concept[0].content:
-            concept_val = var.concept[0].content.strip()
+        var_concepts: list[tuple[str, str]] = []
+        if var.concept:
+            for c in var.concept:
+                if c.content:
+                    c_txt = c.content.strip()
+                    if concept_val is None:
+                        concept_val = c_txt
+                    var_concepts.append((c.xml_lang or context.language, c_txt))
 
         universe_val = None
-        if var.universe and var.universe[0].content:
-            universe_val = var.universe[0].content.strip()
+        var_universes: list[tuple[str, str]] = []
+        if var.universe:
+            for u in var.universe:
+                if u.content:
+                    u_txt = u.content.strip()
+                    if universe_val is None:
+                        universe_val = u_txt
+                    var_universes.append((u.xml_lang or context.language, u_txt))
 
         # Physical location
         file_id = var.files or default_file_id
@@ -180,7 +215,9 @@ def map_variables_and_codes(
 
         if var.n_catgry > 0:
             rep_type = "code"
-            var_code_entries: list[tuple[str, str, str | None, bool, int]] = []
+            var_code_entries: list[
+                tuple[str, str, str | None, bool, int, list[tuple[str, str]], list[tuple[str, str]]]
+            ] = []
 
             for idx, catgry in enumerate(var.catgry, start=1):
                 raw_val = ""
@@ -190,21 +227,44 @@ def map_variables_and_codes(
                     raw_val = catgry.content.strip()
 
                 cat_label = raw_val
-                if catgry.labl and catgry.labl[0].content:
-                    cat_label = catgry.labl[0].content.strip()
+                cat_labels: list[tuple[str, str]] = []
+                if catgry.labl:
+                    for lbl in catgry.labl:
+                        if lbl.content:
+                            cat_labels.append((lbl.xml_lang or context.language, lbl.content.strip()))
+                if cat_labels:
+                    cat_label = cat_labels[0][1]
+                else:
+                    cat_labels.append((context.language, raw_val))
 
                 cat_desc = None
-                if catgry.txt and catgry.txt[0].content:
-                    cat_desc = catgry.txt[0].content.strip()
+                cat_descriptions: list[tuple[str, str]] = []
+                if catgry.txt:
+                    for t in catgry.txt:
+                        if t.content:
+                            t_txt = t.content.strip()
+                            if cat_desc is None:
+                                cat_desc = t_txt
+                            cat_descriptions.append((t.xml_lang or context.language, t_txt))
 
-                var_code_entries.append((raw_val, cat_label, cat_desc, catgry.is_missing, idx))
+                var_code_entries.append(
+                    (raw_val, cat_label, cat_desc, catgry.is_missing, idx, cat_labels, cat_descriptions)
+                )
 
             if context.harmonize_codes:
                 # 1. Harmonized Categories
                 cl_codes: list[ConvertedCode] = []
                 harm_codes: list[Code] = []
 
-                for raw_val, cat_label, cat_desc, is_missing, idx in var_code_entries:
+                for (
+                    raw_val,
+                    cat_label,
+                    cat_desc,
+                    is_missing,
+                    idx,
+                    cat_labels,
+                    cat_descriptions,
+                ) in var_code_entries:
                     raw_val_clean = raw_val.strip()
                     cat_label_clean = cat_label.strip()
 
@@ -224,6 +284,16 @@ def map_variables_and_codes(
                     cat_hash = canon_cat.category_hash
                     if cat_hash in cat_obj_map:
                         cat_obj = cat_obj_map[cat_hash]
+                        existing_lbl_langs = {lng for lng, _ in cat_obj.labels}
+                        for lang, text in cat_labels:
+                            if lang not in existing_lbl_langs:
+                                cat_obj.labels.append((lang, text))
+                                existing_lbl_langs.add(lang)
+                        existing_desc_langs = {lng for lng, _ in cat_obj.descriptions}
+                        for lang, text in cat_descriptions:
+                            if lang not in existing_desc_langs:
+                                cat_obj.descriptions.append((lang, text))
+                                existing_desc_langs.add(lang)
                     else:
                         cat_id = context.make_item_id("category", cat_slug, "categories")
                         cat_urn = context.make_urn(cat_id)
@@ -234,6 +304,8 @@ def map_variables_and_codes(
                             urn=cat_urn,
                             label=cat_label,
                             description=cat_desc,
+                            labels=list(cat_labels),
+                            descriptions=list(cat_descriptions),
                             user_attributes=[
                                 ("harmonization:category_hash", cat_hash),
                                 ("harmonization:signature", canon_cat.signature),
@@ -253,6 +325,7 @@ def map_variables_and_codes(
                             category_id=cat_obj.id,
                             category_urn=cat_obj.urn,
                             label=cat_label,
+                            labels=list(cat_labels),
                             is_missing=is_missing,
                         )
                     )
@@ -283,6 +356,7 @@ def map_variables_and_codes(
                         name=f"CL_{var_name}",
                         label=var_label,
                         codes=cl_codes,
+                        labels=list(var_labels),
                         user_attributes=[
                             ("harmonization:codelist_hash", cl_hash),
                             ("harmonization:member_count", str(canon_cl.member_count)),
@@ -299,7 +373,15 @@ def map_variables_and_codes(
                 context.codelist_id_map[raw_var_id] = cl_id
 
                 cl_codes = []
-                for raw_val, cat_label, cat_desc, is_missing, idx in var_code_entries:
+                for (
+                    raw_val,
+                    cat_label,
+                    cat_desc,
+                    is_missing,
+                    idx,
+                    cat_labels,
+                    cat_descriptions,
+                ) in var_code_entries:
                     code_raw = raw_val if raw_val else f"blank_{idx}"
                     code_uid = urllib.parse.quote_plus(code_raw.replace(" ", "_"))
                     cat_id = context.make_item_id("category", f"{raw_var_id}_{code_uid}", "categories")
@@ -315,6 +397,8 @@ def map_variables_and_codes(
                                 urn=cat_urn,
                                 label=cat_label,
                                 description=cat_desc,
+                                labels=list(cat_labels),
+                                descriptions=list(cat_descriptions),
                             )
                         )
 
@@ -326,6 +410,7 @@ def map_variables_and_codes(
                             category_id=cat_id,
                             category_urn=cat_urn,
                             label=cat_label,
+                            labels=list(cat_labels),
                             is_missing=is_missing,
                         )
                     )
@@ -339,6 +424,7 @@ def map_variables_and_codes(
                         name=var_name,
                         label=var_label,
                         codes=cl_codes,
+                        labels=list(var_labels),
                     )
                 )
         else:
@@ -392,6 +478,10 @@ def map_variables_and_codes(
                 end_pos=end_pos,
                 width=width,
                 rec_seg_no=rec_seg_no,
+                labels=var_labels,
+                descriptions=var_descriptions,
+                concepts=var_concepts,
+                universes=var_universes,
             )
         )
 
@@ -412,8 +502,15 @@ def map_variable_groups(codebook: codeBookType, context: ConversionContext) -> l
 
             grp_name = getattr(grp, "name", None) or raw_grp_id
             grp_label = grp_name
-            if grp.labl and grp.labl[0].content:
-                grp_label = grp.labl[0].content.strip()
+            grp_labels: list[tuple[str, str]] = []
+            if grp.labl:
+                for lbl in grp.labl:
+                    if lbl.content:
+                        grp_labels.append((lbl.xml_lang or context.language, lbl.content.strip()))
+            if grp_labels:
+                grp_label = grp_labels[0][1]
+            else:
+                grp_labels.append((context.language, grp_label))
 
             grp_type = getattr(grp, "type", None)
 
@@ -433,6 +530,7 @@ def map_variable_groups(codebook: codeBookType, context: ConversionContext) -> l
                     label=grp_label,
                     group_type=grp_type,
                     variable_ids=var_ids,
+                    labels=grp_labels,
                 )
             )
 

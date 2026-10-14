@@ -17,6 +17,10 @@ def map_study_unit(codebook: codeBookType, context: ConversionContext) -> Conver
     sub_title = None
     alt_title = None
     abstract = None
+    titles: list[tuple[str, str]] = []
+    sub_titles: list[tuple[str, str]] = []
+    alt_titles: list[tuple[str, str]] = []
+    abstracts: list[tuple[str, str]] = []
     creators: list[str] = []
     publishers: list[str] = []
     distributors: list[str] = []
@@ -36,10 +40,26 @@ def map_study_unit(codebook: codeBookType, context: ConversionContext) -> Conver
             if cit.titlStmt:
                 if cit.titlStmt.titl and cit.titlStmt.titl.content:
                     title = cit.titlStmt.titl.content.strip()
-                if cit.titlStmt.subTitl and cit.titlStmt.subTitl[0].content:
-                    sub_title = cit.titlStmt.subTitl[0].content.strip()
-                if cit.titlStmt.altTitl and cit.titlStmt.altTitl[0].content:
-                    alt_title = cit.titlStmt.altTitl[0].content.strip()
+                    titles.append((cit.titlStmt.titl.xml_lang or context.language, title))
+                if cit.titlStmt.parTitl:
+                    for pt in cit.titlStmt.parTitl:
+                        if pt.content:
+                            pt_txt = pt.content.strip()
+                            titles.append((pt.xml_lang or context.language, pt_txt))
+                if cit.titlStmt.subTitl:
+                    for st in cit.titlStmt.subTitl:
+                        if st.content:
+                            st_txt = st.content.strip()
+                            if sub_title is None:
+                                sub_title = st_txt
+                            sub_titles.append((st.xml_lang or context.language, st_txt))
+                if cit.titlStmt.altTitl:
+                    for at in cit.titlStmt.altTitl:
+                        if at.content:
+                            at_txt = at.content.strip()
+                            if alt_title is None:
+                                alt_title = at_txt
+                            alt_titles.append((at.xml_lang or context.language, at_txt))
 
             if cit.rspStmt and cit.rspStmt.AuthEnty:
                 for auth in cit.rspStmt.AuthEnty:
@@ -59,8 +79,13 @@ def map_study_unit(codebook: codeBookType, context: ConversionContext) -> Conver
         # Study info
         stdy_info = stdy_dscr.stdyInfo[0] if getattr(stdy_dscr, "stdyInfo", None) else None
         if stdy_info:
-            if stdy_info.abstract and stdy_info.abstract[0].content:
-                abstract = stdy_info.abstract[0].content.strip()
+            if stdy_info.abstract:
+                for ab in stdy_info.abstract:
+                    if ab.content:
+                        ab_txt = ab.content.strip()
+                        if abstract is None:
+                            abstract = ab_txt
+                        abstracts.append((ab.xml_lang or context.language, ab_txt))
 
             sum_dscr = stdy_info.sumDscr[0] if getattr(stdy_info, "sumDscr", None) else None
             if sum_dscr:
@@ -111,6 +136,10 @@ def map_study_unit(codebook: codeBookType, context: ConversionContext) -> Conver
             doc_cit = doc_dscr.citation if getattr(doc_dscr, "citation", None) else None
             if doc_cit and doc_cit.titlStmt and doc_cit.titlStmt.titl and doc_cit.titlStmt.titl.content:
                 title = doc_cit.titlStmt.titl.content.strip()
+                titles.append((doc_cit.titlStmt.titl.xml_lang or context.language, title))
+
+    if not titles:
+        titles.append((context.language, title))
 
     return ConvertedStudyUnit(
         id=su_id,
@@ -131,4 +160,8 @@ def map_study_unit(codebook: codeBookType, context: ConversionContext) -> Conver
         methodology=methodology,
         sampling_procedure=sampling_procedure,
         collection_mode=collection_mode,
+        titles=titles,
+        sub_titles=sub_titles,
+        alt_titles=alt_titles,
+        abstracts=abstracts,
     )

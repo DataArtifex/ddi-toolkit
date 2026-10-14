@@ -18,6 +18,7 @@ class ConvertedCode:
     category_urn: str
     label: str
     is_missing: bool = False
+    labels: list[tuple[str, str]] = field(default_factory=list)
 
 
 @dataclass
@@ -28,6 +29,8 @@ class ConvertedCategory:
     urn: str
     label: str
     description: str | None = None
+    labels: list[tuple[str, str]] = field(default_factory=list)
+    descriptions: list[tuple[str, str]] = field(default_factory=list)
     user_attributes: list[tuple[str, str]] = field(default_factory=list)
 
 
@@ -40,6 +43,8 @@ class ConvertedCodeList:
     name: str
     label: str
     codes: list[ConvertedCode] = field(default_factory=list)
+    labels: list[tuple[str, str]] = field(default_factory=list)
+    names: list[tuple[str, str]] = field(default_factory=list)
     user_attributes: list[tuple[str, str]] = field(default_factory=list)
 
 
@@ -52,6 +57,9 @@ class ConvertedQuestionItem:
     question_name: str
     question_text: str
     interviewer_instruction: str | None = None
+    question_names: list[tuple[str, str]] = field(default_factory=list)
+    question_texts: list[tuple[str, str]] = field(default_factory=list)
+    interviewer_instructions: list[tuple[str, str]] = field(default_factory=list)
 
 
 @dataclass
@@ -82,6 +90,10 @@ class ConvertedVariable:
     end_pos: int | None = None
     width: int | None = None
     rec_seg_no: int | None = None
+    labels: list[tuple[str, str]] = field(default_factory=list)
+    descriptions: list[tuple[str, str]] = field(default_factory=list)
+    concepts: list[tuple[str, str]] = field(default_factory=list)
+    universes: list[tuple[str, str]] = field(default_factory=list)
 
 
 @dataclass
@@ -94,6 +106,7 @@ class ConvertedVariableGroup:
     label: str
     group_type: str | None = None
     variable_ids: list[str] = field(default_factory=list)
+    labels: list[tuple[str, str]] = field(default_factory=list)
 
 
 @dataclass
@@ -131,6 +144,10 @@ class ConvertedStudyUnit:
     methodology: str | None = None
     sampling_procedure: str | None = None
     collection_mode: str | None = None
+    titles: list[tuple[str, str]] = field(default_factory=list)
+    sub_titles: list[tuple[str, str]] = field(default_factory=list)
+    alt_titles: list[tuple[str, str]] = field(default_factory=list)
+    abstracts: list[tuple[str, str]] = field(default_factory=list)
 
 
 @dataclass
@@ -140,6 +157,7 @@ class ConvertedLifecycleDocument:
     version: str
     urn: str
     study_unit: ConvertedStudyUnit
+    language: str = "en"
     questions: list[ConvertedQuestionItem] = field(default_factory=list)
     categories: list[ConvertedCategory] = field(default_factory=list)
     codelists: list[ConvertedCodeList] = field(default_factory=list)
