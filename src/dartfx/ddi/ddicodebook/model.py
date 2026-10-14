@@ -171,7 +171,11 @@ def get_mixed_content(element, exclude_tags: set[str] | None = None) -> str:
     """
     content = ""
     if element.text:
-        content += element.text.strip()
+        stripped = element.text.strip()
+        if stripped:
+            content += stripped
+            if element.text.endswith((" ", "\t", "\n")):
+                content += " "
     for child in element:
         tag_base = get_xml_base_name(child.tag)
         if exclude_tags and tag_base in exclude_tags:
@@ -181,14 +185,27 @@ def get_mixed_content(element, exclude_tags: set[str] | None = None) -> str:
                 content += child.tail.strip()
             continue
 
-        content += f"<{child.tag}>"
-        content += get_mixed_content(child, exclude_tags=exclude_tags)
-        content += f"</{child.tag}>"
-        if child.tail and child.tail.strip():
-            if content and not content.endswith(" "):
-                content += " "
-            content += child.tail.strip()
-    return content
+        attrs: list[str] = []
+        for k, v in child.attrib.items():
+            if k == "{http://www.w3.org/XML/1998/namespace}lang":
+                attrs.append(f'xml:lang="{v}"')
+            else:
+                attr_name = get_xml_base_name(k)
+                attrs.append(f'{attr_name}="{v}"')
+        attr_str = (" " + " ".join(attrs)) if attrs else ""
+
+        child_content = get_mixed_content(child, exclude_tags=exclude_tags)
+        content += f"<{tag_base}{attr_str}>{child_content}</{tag_base}>"
+
+        if child.tail:
+            t_stripped = child.tail.strip()
+            if t_stripped:
+                if child.tail[:1].isspace() and content and not content.endswith(" "):
+                    content += " "
+                content += t_stripped
+                if child.tail[-1:].isspace():
+                    content += " "
+    return content.strip()
 
 
 class XmlAttribute:
@@ -414,6 +431,11 @@ class baseElementType(BaseModel):
         # 2. Text content
         if self.content is not None and str(self.content).strip():
             text_str = str(self.content).strip()
+            # Clean any legacy Clark notation or escaped Clark notation in mixed content tags
+            if "{" in text_str and "}" in text_str:
+                text_str = re.sub(r"<(/)?\{[^}]+\}([^>]+)>", r"<\1\2>", text_str)
+                text_str = re.sub(r"&lt;(/)?\{[^}]+\}([^&]+)&gt;", r"<\1\2>", text_str)
+
             if "<" in text_str and ">" in text_str:
                 try:
                     wrapped = f"<wrapper>{text_str}</wrapper>"

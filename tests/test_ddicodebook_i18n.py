@@ -523,3 +523,48 @@ def test_merge_metadata_disabled_by_strategy():
     # but parallel title should still be created
     par_titles = [pt for pt in merged.stdyDscr[0].citation[0].titlStmt.parTitl if pt.xml_lang == "fr"]
     assert len(par_titles) == 1
+
+
+def test_mixed_content_paragraph_elements_preserved_without_escaped_namespaces():
+    """Verify that <p> elements in mixed content (e.g. serInfo, abstract) are preserved as real XML tags."""
+    xml_can = """<?xml version="1.0" encoding="utf-8"?>
+<codeBook version="2.5" ID="CB_CAN" xml:lang="en" xmlns="ddi:codebook:2_5">
+  <stdyDscr>
+    <citation>
+      <titlStmt><titl>Election Study</titl></titlStmt>
+      <serStmt>
+        <serName>Elections</serName>
+        <serInfo><p>The Finnish Voter Barometer surveys.</p><p>Collected annually.</p></serInfo>
+      </serStmt>
+    </citation>
+  </stdyDscr>
+</codeBook>"""
+
+    xml_tra = """<?xml version="1.0" encoding="utf-8"?>
+<codeBook version="2.5" ID="CB_TRA" xml:lang="fi" xmlns="ddi:codebook:2_5">
+  <stdyDscr>
+    <citation>
+      <titlStmt><titl>Vaalitutkimus</titl></titlStmt>
+      <serStmt>
+        <serName>Vaalit</serName>
+        <serInfo><p>Puolueiden ajankohtaistutkimukset.</p><p>Tehty vuosittain.</p></serInfo>
+      </serStmt>
+    </citation>
+  </stdyDscr>
+</codeBook>"""
+
+    cb_can = loadxmlstring(xml_can)
+    cb_tra = loadxmlstring(xml_tra)
+
+    merged = execute_merge(cb_can, cb_tra, auto_approve=True)
+    xml_output = merged.to_xml_string()
+
+    # Ensure no escaped Clark notation appears in the output XML
+    assert "{ddi:codebook" not in xml_output
+    assert "&lt;{ddi:codebook" not in xml_output
+    assert "&lt;p&gt;" not in xml_output
+    assert "&lt;/p&gt;" not in xml_output
+
+    # Ensure genuine <p> elements exist in both language-tagged serInfo elements
+    assert "<p>The Finnish Voter Barometer surveys.</p>" in xml_output
+    assert "<p>Puolueiden ajankohtaistutkimukset.</p>" in xml_output
