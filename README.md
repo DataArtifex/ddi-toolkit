@@ -63,18 +63,38 @@ The project uses `hatch` as the build backend. For faster package management and
 git clone https://github.com/DataArtifex/ddi-toolkit.git
 cd ddi-toolkit
 
-# Install core dependencies using uv
-uv pip install -e .
+# Sync dependencies and create local virtual environment (.venv)
+uv sync
 
 # Or install with the optional experimental BaseX extension
-uv pip install -e ".[basex]"
+uv sync --extra basex
+
+# Or using uv pip in an existing environment:
+uv pip install -e .
 ```
 
 ### Development Installation
 
 ```bash
-uv pip install -e .[dev]
+uv sync --all-extras --group dev
 ```
+
+> [!TIP]
+> **Running the CLI (`dartfx-ddi`) & Virtual Environments**
+>
+> When installing with `uv`, executables are placed in the local `.venv/bin` directory. If you run `dartfx-ddi` directly and encounter `command not found: dartfx-ddi` or `fish: Unknown command: dartfx-ddi`:
+>
+> - **Use `uv run` (Recommended)**: Runs inside the project environment without needing manual activation:
+>   ```bash
+>   uv run dartfx-ddi --help
+>   ```
+> - **Or activate the virtual environment in your shell**:
+>   - **Bash / Zsh**: `source .venv/bin/activate`
+>   - **Fish**: `source .venv/bin/activate.fish`
+> - **Or install globally as a tool**:
+>   ```bash
+>   uv tool install --editable .
+>   ```
 
 ## Usage
 
@@ -134,7 +154,7 @@ print(graph.serialize(format="turtle"))
 
 #### Command Line Interface
 
-The toolkit provides a CLI utility `dartfx-ddi` to perform conversions and other operations directly from the terminal.
+The toolkit provides a CLI utility `dartfx-ddi` to perform conversions and other operations directly from the terminal (use `uv run dartfx-ddi` if your virtual environment is not activated):
 
 ```bash
 # Convert DDI-Codebook to CDI (default: Turtle output)
