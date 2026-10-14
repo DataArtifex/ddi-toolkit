@@ -306,6 +306,14 @@ def ddicvalidate(
         ValidationReportFormat,
         typer.Option("--report-format", "-f", help="Validation report format"),
     ] = ValidationReportFormat.md,
+    profile: Annotated[
+        str,
+        typer.Option(
+            "--profile",
+            "-p",
+            help="Validation profile: 'recommended' (default), 'schema', 'cdif', or path to a custom YAML profile file",
+        ),
+    ] = "recommended",
     output: Annotated[
         Path | None,
         typer.Option("--output", "-o", help="Write validation report to file (default: stdout)"),
@@ -325,7 +333,7 @@ def ddicvalidate(
     setup_logging(loglevel)
     from dartfx.ddi.ddicodebook import utils as cb_utils
 
-    is_valid, report = cb_utils.validate_codebook_xml(ddifile, strict=strict)
+    is_valid, report = cb_utils.validate_codebook_xml(ddifile, strict=strict, profile=profile)
 
     if report_format == ValidationReportFormat.md:
         rendered = cb_utils.validation_report_to_markdown(report)

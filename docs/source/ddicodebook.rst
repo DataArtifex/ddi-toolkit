@@ -129,28 +129,90 @@ The module is designed to be robust when dealing with incomplete or slightly mal
    except Exception as e:
        print(f"Error loading codebook: {e}")
 
-Validation Utility
-------------------
+Validation & Profile Engine
+---------------------------
 
-Validate a codebook document and inspect the JSON report::
+The DDI-Codebook validation engine decouples base XML Schema conformance from community and workflow-specific profiling rules. In the DDI-Codebook 2.6 schema, almost all attributes and major elements (including ``@ID`` and ``fileDscr``) are optional. Validation profiles allow archives and pipelines to enforce custom rules and recommendations without misclassifying valid XML documents as invalid schema errors.
+
+Built-in Profiles
+^^^^^^^^^^^^^^^^^
+
+The toolkit ships with three built-in profiles:
+
+* **``recommended``** (*Default*): Archival and FAIR discovery best practices. Missing ``@ID`` attributes on ``<codeBook>`` or ``<fileDscr>`` are flagged as **warnings**, allowing schema-valid documents to pass validation (``valid: True``).
+* **``cdif``**: Readiness checks for conversion to DDI-CDI / CDIF RDF. Flags missing ``@ID`` or missing ``fileDscr`` as **errors** because the CDIF dataset and resource URI generation processes strictly require them.
+* **``schema``**: Pure W3C XML Schema (XSD) conformance. Validates XML well-formedness, tag hierarchy, and data types without extra profile rules.
+
+Python API Usage::
 
     from dartfx.ddi.ddicodebook import utils as cb_utils
 
+    # Default validation with 'recommended' profile (missing @ID is a warning)
     is_valid, report = cb_utils.validate_codebook_xml('mycodebook.xml')
     print(report['summary'])
 
-Enable strict validation when you want structural warnings (including invalid ``@ID`` / ``xs:ID`` NCName violations) to fail validation::
+    # Validate readiness for CDIF / DDI-CDI export (missing @ID is an error)
+    is_valid_cdif, report_cdif = cb_utils.validate_codebook_xml('mycodebook.xml', profile='cdif')
 
+    # Pure XML Schema validation without opinionated rules
+    is_valid_schema, report_schema = cb_utils.validate_codebook_xml('mycodebook.xml', profile='schema')
+
+    # Strict mode escalates all profile and NCName warnings to errors
     strict_valid, strict_report = cb_utils.validate_codebook_xml('mycodebook.xml', strict=True)
-    print(strict_report['summary'])
 
-Generate a Markdown validation report from the same payload::
-
+    # Render a Markdown report
     markdown_report = cb_utils.validation_report_to_markdown(report)
     print(markdown_report)
 
-The validator currently focuses on parseability and key DDI-Codebook business rules used by conversion utilities.
-Invalid ``@ID`` values are warnings by default and become errors in strict mode.
+Command Line Interface (CLI)::
+
+    # Default profile ('recommended')
+    dartfx ddicvalidate mycodebook.xml
+
+    # Readiness for CDIF export
+    dartfx ddicvalidate mycodebook.xml --profile cdif
+
+    # Pure schema validation
+    dartfx ddicvalidate mycodebook.xml --profile schema
+
+    # Custom YAML profile
+    dartfx ddicvalidate mycodebook.xml --profile ./my_archive_profile.yaml
+
+Custom Declarative YAML Profiles
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Institutions and repositories can author custom profiles in declarative YAML. Rules support repeating context scopes (``context``) and conditional evaluation guards (``when``):
+
+.. code-block:: yaml
+
+    profile:
+      id: custom-archive
+      name: Institutional Archive Profile
+      description: Custom preservation constraints for internal deposits.
+      version: "1.0"
+      target_standard: "DDI-C 2.6"
+
+    rules:
+      - id: archive.study_title
+        target: codeBook/stdyDscr/citation/titlStmt/titl
+        rule: required
+        severity: error
+        message: "Study title is mandatory for deposit."
+
+      - id: archive.file_id
+        context: codeBook/fileDscr
+        target: "@ID"
+        rule: required
+        severity: warning
+        message: "Data files should have persistent identifiers."
+
+      - id: archive.category_labels
+        context: codeBook/dataDscr/var/catgry
+        when: "catValu"
+        target: "labl"
+        rule: required
+        severity: warning
+        message: "Categories with values should define descriptive labels."
 
 Multilingual Assessment & Merging
 ---------------------------------

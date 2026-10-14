@@ -52,16 +52,86 @@ def test_validate_codebook_xml_malformed_string():
     assert report["errors"][0]["code"] == "xml.parse_error"
 
 
-def test_validate_codebook_xml_business_rule_errors():
+def test_validate_codebook_xml_cdif_profile_errors():
     cb = ddicodebook.codeBookType.model_validate({"ID": "TEST_CB", "xml:lang": "en"})
 
-    is_valid, report = cb_utils.validate_codebook_xml(cb)
+    is_valid, report = cb_utils.validate_codebook_xml(cb, profile="cdif")
 
     assert is_valid is False
     assert report["valid"] is False
 
     error_codes = {issue["code"] for issue in report["errors"]}
     assert "codebook.missing_filedscr" in error_codes
+
+
+def test_validate_codebook_xml_recommended_profile_warns():
+    # Documents without @ID or fileDscr are valid under recommended profile, reporting warnings
+    cb = ddicodebook.codeBookType.model_validate({"xml:lang": "en"})
+
+    is_valid, report = cb_utils.validate_codebook_xml(cb, profile="recommended")
+
+    assert is_valid is True
+    assert report["valid"] is True
+    assert report["summary"]["error_count"] == 0
+
+    warning_codes = {issue["code"] for issue in report["warnings"]}
+    assert "codebook.missing_id" in warning_codes
+    assert "codebook.missing_filedscr" in warning_codes
+
+
+def test_validate_codebook_xml_schema_profile():
+    # Under pure schema profile, no profile rules are evaluated
+    cb = ddicodebook.codeBookType.model_validate({"xml:lang": "en"})
+
+    is_valid, report = cb_utils.validate_codebook_xml(cb, profile="schema")
+
+    assert is_valid is True
+    assert report["valid"] is True
+    assert len(report["errors"]) == 0
+    assert len(report["warnings"]) == 0
+
+
+def test_validate_codebook_filedscr_missing_id_warning_and_error():
+    # When fileDscr exists but has no ID
+    xml = '<codeBook ID="CB1" xml:lang="en"><fileDscr/></codeBook>'
+
+    # Recommended profile: warning
+    is_valid_rec, report_rec = cb_utils.validate_codebook_xml(xml, profile="recommended")
+    assert is_valid_rec is True
+    warning_codes = {issue["code"] for issue in report_rec["warnings"]}
+    assert "codebook.filedscr.missing_id" in warning_codes
+
+    # CDIF profile: error
+    is_valid_cdif, report_cdif = cb_utils.validate_codebook_xml(xml, profile="cdif")
+    assert is_valid_cdif is False
+    error_codes = {issue["code"] for issue in report_cdif["errors"]}
+    assert "codebook.filedscr.missing_id" in error_codes
+
+
+def test_validate_codebook_xml_custom_yaml_profile(tmp_path):
+    custom_yaml = tmp_path / "custom_profile.yaml"
+    custom_yaml.write_text(
+        """profile:
+  id: custom-archive
+  name: Custom Archive Profile
+  version: "1.0"
+rules:
+  - id: custom.title_required
+    target: codeBook/stdyDscr/citation/titlStmt/titl
+    rule: required
+    severity: error
+    message: "Study title is mandatory in our archive"
+""",
+        encoding="utf-8",
+    )
+
+    cb = ddicodebook.codeBookType.model_validate({"ID": "CB1", "xml:lang": "en"})
+    is_valid, report = cb_utils.validate_codebook_xml(cb, profile=custom_yaml)
+
+    assert is_valid is False
+    error_codes = {issue["code"] for issue in report["errors"]}
+    assert "custom.title_required" in error_codes
+    assert report["metadata"]["profile"] == "custom-archive"
 
 
 def test_validate_codebook_xml_unexpected_child_is_error():

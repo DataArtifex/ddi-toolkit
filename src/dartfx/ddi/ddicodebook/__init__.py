@@ -19,6 +19,16 @@ from .i18n import (
     validate_language_code,
 )
 from .model import *  # noqa: F403
+from .profiles import (
+    ProfileDefinition,
+    ProfileMetadata,
+    ProfileRule,
+    ValidationProfile,
+    ValidationSeverity,
+    get_builtin_profile,
+    load_profile,
+    run_profile_rules,
+)
 
 __all__ = [
     "AvailableResolution",
@@ -29,14 +39,22 @@ __all__ = [
     "MergeStrategy",
     "PlanMetadata",
     "PlanSummary",
+    "ProfileDefinition",
+    "ProfileMetadata",
+    "ProfileRule",
     "ResolutionAction",
     "ResolutionBlock",
     "ReviewGate",
+    "ValidationProfile",
+    "ValidationSeverity",
     "assess_merge",
     "derive_merged_xml_path",
     "derive_plan_md_path",
     "derive_plan_yaml_path",
     "derive_strategy_path",
     "execute_merge",
+    "get_builtin_profile",
+    "load_profile",
+    "run_profile_rules",
     "validate_language_code",
 ]

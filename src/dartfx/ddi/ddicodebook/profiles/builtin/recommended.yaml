@@ -1,0 +1,37 @@
+# SPDX-FileCopyrightText: 2026 Data Artifex
+# SPDX-License-Identifier: MIT
+
+profile:
+  id: recommended
+  name: DDI-C Archival Best Practices
+  description: Recommended practices for preservation, indexing, and FAIR data discovery.
+  version: "1.0"
+  target_standard: "DDI-C 2.6"
+
+rules:
+  - id: codebook.missing_id
+    target: codeBook/@ID
+    rule: required
+    severity: warning
+    message: "Codebook has no @ID attribute"
+
+  - id: codebook.missing_filedscr
+    target: codeBook/fileDscr
+    rule: min_count
+    min_count: 1
+    severity: warning
+    message: "Codebook has no FileDscr element"
+
+  - id: codebook.filedscr.missing_id
+    context: codeBook/fileDscr
+    target: "@ID"
+    rule: required
+    severity: warning
+    message: "FileDscr element has no @ID attribute"
+
+  - id: codebook.no_variables
+    target: codeBook/dataDscr/var
+    rule: min_count
+    min_count: 1
+    severity: warning
+    message: "Codebook has no variables"

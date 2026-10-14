@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: 2026 Data Artifex
+# SPDX-License-Identifier: MIT
+
+profile:
+  id: schema
+  name: Base DDI-C 2.6 Schema Conformance
+  description: Pure XML Schema (XSD) conformance without additional profile rules.
+  version: "1.0"
+  target_standard: "DDI-C 2.6"
+
+rules: []

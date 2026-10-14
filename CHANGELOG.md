@@ -5,6 +5,15 @@ All notable changes to this project are documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Declarative Validation Profile Engine for DDI-Codebook (`ddicodebook.profiles`)**:
+  - Decoupled strict XML Schema conformance from community and workflow profiling rules.
+  - Implemented declarative YAML profile engine supporting repeating context scopes (``context``), conditional guards (``when``), path targets, and severity tiers (``error``, ``warning``, ``info``).
+  - Shipped built-in profiles:
+    - ``recommended`` (*Default*): Archival and FAIR discovery best practices; flags missing ``codeBook/@ID``, ``fileDscr/@ID``, and variables as advisory **warnings**, allowing schema-valid documents without IDs to pass validation (``valid: True``).
+    - ``cdif``: Readiness profile for DDI-CDI / CDIF RDF conversion; enforces required identifiers and dataset structures as **errors**.
+    - ``schema``: Pure W3C XML Schema (XSD) conformance without extra opinionated rules.
+  - Added ``--profile`` / ``-p`` CLI option to ``ddicvalidate`` command, supporting built-in profile names or custom user-provided YAML files.
+  - Added support for loading custom YAML profile files directly into ``validate_codebook_xml(data, profile="path/to/profile.yaml")``.
 - **DDI-Codebook 2.6 `materialReferenceType` & Structured Citation Support**:
   - Added structured `citation: list[citationType]` support to `materialReferenceType`, `relMatType`, and `othRefsType`, allowing `<relPubl>`, `<relMat>`, and `<othRefs>` to model both narrative citation text and formal DDI `<citation>` trees simultaneously.
   - Added formal `othRefsType` inheriting from `materialReferenceType` to mirror the DDI 2.6 schema.

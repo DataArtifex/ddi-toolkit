@@ -148,48 +148,12 @@ def _parse_codebook_input(
 
 
 def _validate_codebook_business_rules(codebook: codeBookType) -> tuple[list[dict[str, str]], list[dict[str, str]], int]:
-    errors: list[dict[str, str]] = []
-    warnings: list[dict[str, str]] = []
+    """Legacy helper executing CDIF conversion readiness rules."""
+    from .profiles import load_profile, run_profile_rules
 
-    if not codebook.id:
-        errors.append(
-            _build_issue(
-                "codebook.missing_id",
-                "Codebook has no @ID attribute",
-                "codeBook/@ID",
-            )
-        )
-
-    if not codebook.fileDscr:
-        errors.append(
-            _build_issue(
-                "codebook.missing_filedscr",
-                "Codebook has no FileDscr element",
-                "codeBook/fileDscr",
-            )
-        )
-    else:
-        for index, file_dscr in enumerate(codebook.fileDscr, start=1):
-            if not file_dscr.id:
-                errors.append(
-                    _build_issue(
-                        "codebook.filedscr.missing_id",
-                        "FileDscr element has no @ID attribute",
-                        f"codeBook/fileDscr[{index}]/@ID",
-                    )
-                )
-
-    variable_count = len(codebook.search_variables())
-    if variable_count == 0:
-        warnings.append(
-            _build_issue(
-                "codebook.no_variables",
-                "Codebook has no variables",
-                "codeBook/dataDscr",
-            )
-        )
-
-    return errors, warnings, variable_count
+    profile = load_profile("cdif")
+    errs, warns, _, _ = run_profile_rules(codebook, profile)
+    return errs, warns, len(codebook.search_variables())
 
 
 def _render_issue_section(title: str, issues: list[dict[str, Any]]) -> list[str]:
@@ -205,33 +169,43 @@ def _render_issue_section(title: str, issues: list[dict[str, Any]]) -> list[str]
     return lines
 
 
-def validate_codebook_xml(data: codeBookType | Path | str, strict: bool = False) -> tuple[bool, dict[str, Any]]:
+def validate_codebook_xml(
+    data: codeBookType | Path | str,
+    strict: bool = False,
+    profile: str | Path | Any | None = "recommended",
+) -> tuple[bool, dict[str, Any]]:
     """Validates a DDI-Codebook document and returns a JSON-serializable report.
 
     The validator reuses the existing XML-to-Pydantic parsing and applies
-    additional business-rule checks expected by conversion utilities.
+    declarative rules from the selected validation profile ('recommended',
+    'cdif', 'schema', or a custom YAML profile file).
     """
+    from .profiles import load_profile, run_profile_rules
+
     errors: list[dict[str, str]] = []
     warnings: list[dict[str, str]] = []
+    infos: list[dict[str, str]] = []
     checked_rules = [
         "xml.parseable",
         "xml.structure.valid",
-        "codebook.id.present",
         "codebook.id.ncname",
-        "codebook.fileDscr.present",
-        "codebook.fileDscr.id.present",
     ]
+
+    active_profile = load_profile(profile)
 
     codebook: codeBookType | None = None
     metadata: dict[str, Any] = {
         "input_type": "unknown",
         "generated_at": datetime.now(tz=UTC).isoformat(),
+        "profile": active_profile.profile.id,
+        "profile_name": active_profile.profile.name,
     }
     parser_warning_handler = _ParserWarningCapture()
     root_logger = logging.getLogger()
     root_logger.addHandler(parser_warning_handler)
     try:
-        codebook, metadata, errors = _parse_codebook_input(data)
+        codebook, parsed_meta, errors = _parse_codebook_input(data)
+        metadata.update(parsed_meta)
     except ET.ParseError as exc:
         errors.append(_build_issue("xml.parse_error", str(exc), "xml"))
     except Exception as exc:  # pragma: no cover - defensive fallback
@@ -248,10 +222,18 @@ def validate_codebook_xml(data: codeBookType | Path | str, strict: bool = False)
         else:
             warnings.extend(ncname_warnings)
 
-        business_errors, business_warnings, variable_count = _validate_codebook_business_rules(codebook)
-        errors.extend(business_errors)
-        warnings.extend(business_warnings)
-        metadata["variable_count"] = variable_count
+        prof_errors, prof_warnings, prof_infos, prof_checked = run_profile_rules(codebook, active_profile)
+        checked_rules.extend(prof_checked)
+
+        if strict:
+            errors.extend(prof_errors)
+            errors.extend(prof_warnings)
+        else:
+            errors.extend(prof_errors)
+            warnings.extend(prof_warnings)
+
+        infos.extend(prof_infos)
+        metadata["variable_count"] = len(codebook.search_variables())
         metadata["strict"] = strict
 
     is_valid = len(errors) == 0
@@ -261,11 +243,13 @@ def validate_codebook_xml(data: codeBookType | Path | str, strict: bool = False)
         "summary": {
             "error_count": len(errors),
             "warning_count": len(warnings),
+            "info_count": len(infos),
             "checked_rule_count": len(checked_rules),
         },
         "checked_rules": checked_rules,
         "errors": errors,
         "warnings": warnings,
+        "infos": infos,
         "metadata": metadata,
     }
     return is_valid, report
@@ -276,6 +260,7 @@ def validation_report_to_markdown(report: dict[str, Any]) -> str:
     summary = report.get("summary", {})
     errors = report.get("errors", [])
     warnings = report.get("warnings", [])
+    infos = report.get("infos", [])
     metadata = report.get("metadata", {})
     checked_rules = report.get("checked_rules", [])
 
@@ -285,6 +270,7 @@ def validation_report_to_markdown(report: dict[str, Any]) -> str:
         "# DDI-Codebook Validation Report",
         "",
         f"- Status: **{status}**",
+        f"- Profile: **{metadata.get('profile_name', 'n/a')}** ({metadata.get('profile', 'n/a')})",
         f"- Errors: {summary.get('error_count', 0)}",
         f"- Warnings: {summary.get('warning_count', 0)}",
         f"- Checked rules: {summary.get('checked_rule_count', 0)}",
@@ -306,6 +292,8 @@ def validation_report_to_markdown(report: dict[str, Any]) -> str:
 
     lines.extend(_render_issue_section("## Errors", errors))
     lines.extend(_render_issue_section("## Warnings", warnings))
+    if infos:
+        lines.extend(_render_issue_section("## Info", infos))
 
     return "\n".join(lines)
 
