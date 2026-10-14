@@ -100,20 +100,93 @@ def savexml(
     )
 
 
-def get_mixed_content(element) -> str:
+_MIXED_CONTENT_INLINE_TAGS = {
+    # PHRASE group
+    "ExtLink",
+    "Link",
+    # FORM group
+    "p",
+    "div",
+    "emph",
+    "head",
+    "hi",
+    "list",
+    "itm",
+    "label",
+    # blkNoForm.mix / inline xhtml
+    "a",
+    "abbr",
+    "acronym",
+    "address",
+    "b",
+    "big",
+    "blockquote",
+    "br",
+    "caption",
+    "cite",
+    "code",
+    "dd",
+    "dfn",
+    "dl",
+    "dt",
+    "em",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "hr",
+    "i",
+    "img",
+    "kbd",
+    "li",
+    "ol",
+    "pre",
+    "q",
+    "samp",
+    "small",
+    "span",
+    "strong",
+    "sub",
+    "sup",
+    "table",
+    "tbody",
+    "td",
+    "tfoot",
+    "th",
+    "thead",
+    "tr",
+    "tt",
+    "ul",
+    "var",
+}
+
+
+def get_mixed_content(element, exclude_tags: set[str] | None = None) -> str:
     """Returns the mixed content of an XML element as a concatenated and potentially multiline string.
 
-    This is to avoid having to implement/parse various text
-    formatting options supported by DDI-C such as XHTML or forms.
+    This captures text formatting options supported by DDI-C such as XHTML or forms,
+    while optionally excluding structured DDI child elements (e.g. citation).
     """
     content = ""
     if element.text:
         content += element.text.strip()
     for child in element:
+        tag_base = get_xml_base_name(child.tag)
+        if exclude_tags and tag_base in exclude_tags:
+            if child.tail and child.tail.strip():
+                if content and not content.endswith(" "):
+                    content += " "
+                content += child.tail.strip()
+            continue
+
         content += f"<{child.tag}>"
-        content += get_mixed_content(child)
+        content += get_mixed_content(child, exclude_tags=exclude_tags)
         content += f"</{child.tag}>"
-        if child.tail:
+        if child.tail and child.tail.strip():
+            if content and not content.endswith(" "):
+                content += " "
             content += child.tail.strip()
     return content
 
@@ -274,6 +347,16 @@ class baseElementType(BaseModel):
                         f"No type annotation found for child element {base_name} in {self.__class__.__name__}"
                     )
             else:
+                abstract_cls = globals().get("abstractTextType")
+                if (
+                    abstract_cls
+                    and isinstance(self, abstract_cls)
+                    and (
+                        base_name in _MIXED_CONTENT_INLINE_TAGS
+                        or child.tag.startswith("{http://www.w3.org/1999/xhtml}")
+                    )
+                ):
+                    continue
                 logging.warning(f"Child element {base_name} ignored on {self.__class__.__name__}")
 
         # Parse text content - special handling for abstractTextType etc
@@ -368,11 +451,18 @@ class baseElementType(BaseModel):
         """Helper function to parse annotated class properties.
         REIMPLEMENTED for Pydantic fields
         """
-        annotations_info = {}
-        # Use type_hints to get forward refs resolved if possible, but fallback to manual parsing
-        # because globals() might be needed and strict Pydantic inspection is sometimes tricky with forward refs
+        annotations_info: dict[str, Any] = {}
+        all_annotations: dict[str, Any] = {}
+        for base_cls in reversed(self.__class__.__mro__):
+            if base_cls in (object, BaseModel):
+                continue
+            try:
+                ann = inspect.get_annotations(base_cls)
+                all_annotations.update(ann)
+            except Exception:
+                pass
 
-        for property, annotation in inspect.get_annotations(self.__class__).items():
+        for property, annotation in all_annotations.items():
             # Ignore internal pydantic fields/methods
             if property.startswith("_") or property in ["model_config", "model_fields"]:
                 continue
@@ -439,10 +529,16 @@ class abstractTextType(baseElementType):
     translationSourceLanguage: str | None = None
 
     def from_xml_element(self, element: ET.Element):
-        """Override method to stop driling down and capture underlying mixed content as text"""
-        super().from_xml_element(element)  # process attributes
-        # but explicitly capture mixed content
-        self.content = get_mixed_content(element)
+        """Override method to parse attributes, DDI children, and capture mixed content."""
+        super().from_xml_element(element)  # process attributes and recognized DDI children
+        # capture mixed content excluding child tags that are mapped as DDI element fields
+        cls_annotations = self.get_annotations()
+        exclude_tags = {prop for prop, info in cls_annotations.items() if info.get("is_ddi_element")}
+        mixed = get_mixed_content(element, exclude_tags=exclude_tags if exclude_tags else None)
+        if mixed.strip():
+            self.content = mixed.strip()
+        elif not list(element) and element.text and element.text.strip():
+            self.content = element.text.strip()
 
 
 class dateType(abstractTextType):
@@ -1340,9 +1436,12 @@ class locMapType(baseElementType):
 
 
 class materialReferenceType(abstractTextType):
-    # TODO: This element requires special handlinas it
-    # allows mixed content and Citation elements
-    # citation: List["citationType"]
+    citation: list[citationType] = Field(default_factory=list)
+
+
+class othRefsType(materialReferenceType):
+    """Corresponds to DDI 2.6 schema othRefsType (identical structure to materialReferenceType)."""
+
     pass
 
 
@@ -1459,9 +1558,7 @@ class othrStdyMatType(baseElementType):
     relMat: list[relMatType] = Field(default_factory=list)
     relStdy: list[materialReferenceType] = Field(default_factory=list)
     relPubl: list[materialReferenceType] = Field(default_factory=list)
-    othRefs: list[materialReferenceType] = Field(
-        default_factory=list
-    )  # the schema defines othRefsType but it's the same as materialReferenceType
+    othRefs: list[othRefsType] = Field(default_factory=list)
 
 
 class othIdType(simpleTextType):
@@ -1592,6 +1689,10 @@ class recGrpType(baseElementType):
 
 
 class relMatType(materialReferenceType):
+    callno: str | None = None
+    label: str | None = None
+    media: str | None = None
+    type: str | None = None
     sdatrefs: str | None = None
 
 
