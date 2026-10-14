@@ -3,9 +3,11 @@
 
 """Pydantic models for DDI validation profiles."""
 
+from __future__ import annotations
+
 from enum import StrEnum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class ValidationSeverity(StrEnum):
@@ -45,7 +47,10 @@ class ProfileRule(BaseModel):
     )
     rule: str = Field(
         default="required",
-        description="Rule check type: 'required', 'min_count', 'ncname', 'pattern', or 'prohibited'",
+        description=(
+            "Rule check type: 'required' (mandatory), 'recommended', 'optional', "
+            "'min_count', 'ncname', 'pattern', or 'prohibited'"
+        ),
     )
     min_count: int | None = Field(default=None, description="Minimum count for 'min_count' rules")
     pattern: str | None = Field(default=None, description="Regex pattern for 'pattern' rules")
@@ -53,11 +58,23 @@ class ProfileRule(BaseModel):
         default=None,
         description="Optional guard condition on context item; rule is only checked if this target is truthy",
     )
-    severity: ValidationSeverity = Field(
-        default=ValidationSeverity.WARNING,
-        description="Issue severity: 'error', 'warning', or 'info'",
+    severity: ValidationSeverity | None = Field(
+        default=None,
+        description="Issue severity: 'error', 'warning', or 'info' (auto-assigned based on rule if omitted)",
     )
     message: str = Field(description="Human-readable issue message when rule condition is violated")
+
+    @model_validator(mode="after")
+    def _apply_default_severity(self) -> ProfileRule:
+        if self.severity is None:
+            rule_norm = self.rule.strip().lower()
+            if rule_norm == "recommended":
+                self.severity = ValidationSeverity.WARNING
+            elif rule_norm == "optional":
+                self.severity = ValidationSeverity.INFO
+            else:
+                self.severity = ValidationSeverity.ERROR
+        return self
 
 
 class ProfileDefinition(BaseModel):

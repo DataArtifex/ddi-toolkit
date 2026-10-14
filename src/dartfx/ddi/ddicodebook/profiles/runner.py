@@ -211,7 +211,8 @@ def run_profile_rules(
             for target_val, target_loc in target_results:
                 violation = False
 
-                if rule.rule == "required":
+                rule_type = rule.rule.strip().lower()
+                if rule_type in ("required", "mandatory", "recommended", "optional"):
                     if _is_value_missing(target_val):
                         violation = True
 

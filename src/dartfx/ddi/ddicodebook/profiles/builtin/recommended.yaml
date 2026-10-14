@@ -11,8 +11,7 @@ profile:
 rules:
   - id: codebook.missing_id
     target: codeBook/@ID
-    rule: required
-    severity: warning
+    rule: recommended
     message: "Codebook has no @ID attribute"
 
   - id: codebook.missing_filedscr
@@ -25,8 +24,7 @@ rules:
   - id: codebook.filedscr.missing_id
     context: codeBook/fileDscr
     target: "@ID"
-    rule: required
-    severity: warning
+    rule: recommended
     message: "FileDscr element has no @ID attribute"
 
   - id: codebook.no_variables

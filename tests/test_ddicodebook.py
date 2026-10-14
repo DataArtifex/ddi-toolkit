@@ -134,6 +134,47 @@ rules:
     assert report["metadata"]["profile"] == "custom-archive"
 
 
+def test_validate_codebook_xml_required_recommended_optional_tiers(tmp_path):
+    custom_yaml = tmp_path / "tiers_profile.yaml"
+    custom_yaml.write_text(
+        """profile:
+  id: tiers-test
+  name: Tiers Test Profile
+  version: "1.0"
+rules:
+  - id: rule.mandatory_titl
+    target: codeBook/stdyDscr/citation/titlStmt/titl
+    rule: required
+    message: "Title is required"
+
+  - id: rule.recommended_id
+    target: codeBook/@ID
+    rule: recommended
+    message: "ID is recommended"
+
+  - id: rule.optional_abstract
+    target: codeBook/stdyDscr/stdyInfo/abstract
+    rule: optional
+    message: "Abstract is optional"
+""",
+        encoding="utf-8",
+    )
+
+    cb = ddicodebook.codeBookType.model_validate({"xml:lang": "en"})
+    is_valid, report = cb_utils.validate_codebook_xml(cb, profile=custom_yaml)
+
+    assert is_valid is False
+    assert report["valid"] is False
+
+    error_codes = {issue["code"] for issue in report["errors"]}
+    warning_codes = {issue["code"] for issue in report["warnings"]}
+    info_codes = {issue["code"] for issue in report["infos"]}
+
+    assert "rule.mandatory_titl" in error_codes
+    assert "rule.recommended_id" in warning_codes
+    assert "rule.optional_abstract" in info_codes
+
+
 def test_validate_codebook_xml_unexpected_child_is_error():
     xml = '<codeBook ID="TEST_CB" xml:lang="en"><caseQnt>1</caseQnt></codeBook>'
 

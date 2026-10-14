@@ -181,7 +181,11 @@ Command Line Interface (CLI)::
 Custom Declarative YAML Profiles
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Institutions and repositories can author custom profiles in declarative YAML. Rules support repeating context scopes (``context``) and conditional evaluation guards (``when``):
+Institutions and repositories can author custom profiles in declarative YAML. Rules directly support standard metadata requirement levels (``required``, ``recommended``, and ``optional``), repeating context scopes (``context``), and conditional evaluation guards (``when``):
+
+* **``required``** (or ``mandatory``): Element/attribute must be present; missing values produce an **error**.
+* **``recommended``**: Best-practice requirement; missing values produce an advisory **warning** (the document remains valid).
+* **``optional``**: Supported metadata field; missing values produce an informational **info** notice (useful for metadata completeness auditing).
 
 .. code-block:: yaml
 
@@ -193,25 +197,31 @@ Institutions and repositories can author custom profiles in declarative YAML. Ru
       target_standard: "DDI-C 2.6"
 
     rules:
+      # Mandatory: missing study title fails validation
       - id: archive.study_title
         target: codeBook/stdyDscr/citation/titlStmt/titl
         rule: required
-        severity: error
         message: "Study title is mandatory for deposit."
 
+      # Recommended: missing file ID raises a warning
       - id: archive.file_id
         context: codeBook/fileDscr
         target: "@ID"
-        rule: required
-        severity: warning
+        rule: recommended
         message: "Data files should have persistent identifiers."
 
+      # Optional: missing abstract produces an informational notice
+      - id: archive.abstract
+        target: codeBook/stdyDscr/stdyInfo/abstract
+        rule: optional
+        message: "Study abstract is optional but recommended for discoverability."
+
+      # Conditional rule: "If Foo, then Bar"
       - id: archive.category_labels
         context: codeBook/dataDscr/var/catgry
         when: "catValu"
         target: "labl"
-        rule: required
-        severity: warning
+        rule: recommended
         message: "Categories with values should define descriptive labels."
 
 Multilingual Assessment & Merging
