@@ -138,7 +138,7 @@ If a ``MergePlan`` contains any items with ``status: pending_review``, ``execute
 Command Line Interface Guide
 ----------------------------
 
-The toolkit provides a dedicated CLI command, ``dartfx-ddi ddici18nmerge``:
+The toolkit provides a dedicated CLI command, ``dartfx-ddi ddic-i18nmerge``:
 
 Basic Ingestion & Automated Merging
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -146,7 +146,7 @@ Basic Ingestion & Automated Merging
 .. code-block:: bash
 
    # Analyze differences and execute merge if clean
-   dartfx-ddi ddici18nmerge survey_en.xml survey_fi.xml
+   dartfx-ddi ddic-i18nmerge survey_en.xml survey_fi.xml
 
 By default, the command automatically derives the standard plan and output file names:
 * Plan file: ``survey_en.merge.plan.en_fi.yaml``
@@ -160,14 +160,14 @@ For automated ETL pipelines where minor missing translations should not block ex
 
 .. code-block:: bash
 
-   dartfx-ddi ddici18nmerge survey_en.xml survey_fi.xml --auto-approve --validate
+   dartfx-ddi ddic-i18nmerge survey_en.xml survey_fi.xml --auto-approve --validate
 
 Specifying Language Tags & Custom Output Path
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: bash
 
-   dartfx-ddi ddici18nmerge baseline.xml spanish.xml \
+   dartfx-ddi ddic-i18nmerge baseline.xml spanish.xml \
        --lang-canonical en \
        --lang-translated es \
        --output bilingual_study.xml \
@@ -180,7 +180,7 @@ When the CLI detects an existing ``.merge.plan.yaml`` file, it reuses the curato
 
 .. code-block:: bash
 
-   dartfx-ddi ddici18nmerge survey_en.xml survey_fi.xml --refresh
+   dartfx-ddi ddic-i18nmerge survey_en.xml survey_fi.xml --refresh
 
 Python API Guide
 ----------------

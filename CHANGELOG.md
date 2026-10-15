@@ -12,7 +12,7 @@ All notable changes to this project are documented in this file.
     - ``recommended`` (*Default*): Archival and FAIR discovery best practices; flags missing ``codeBook/@ID``, ``fileDscr/@ID``, and variables as advisory **warnings**, allowing schema-valid documents without IDs to pass validation (``valid: True``).
     - ``cdif``: Readiness profile for DDI-CDI / CDIF RDF conversion; enforces required identifiers and dataset structures as **errors**.
     - ``schema``: Pure W3C XML Schema (XSD) conformance without extra opinionated rules.
-  - Added ``--profile`` / ``-p`` CLI option to ``ddicvalidate`` command, supporting built-in profile names or custom user-provided YAML files.
+  - Added ``--profile`` / ``-p`` CLI option to ``ddic-validate`` command, supporting built-in profile names or custom user-provided YAML files.
   - Added support for loading custom YAML profile files directly into ``validate_codebook_xml(data, profile="path/to/profile.yaml")``.
 - **DDI-Codebook 2.6 `materialReferenceType` & Structured Citation Support**:
   - Added structured `citation: list[citationType]` support to `materialReferenceType`, `relMatType`, and `othRefsType`, allowing `<relPubl>`, `<relMat>`, and `<othRefs>` to model both narrative citation text and formal DDI `<citation>` trees simultaneously.
@@ -20,6 +20,9 @@ All notable changes to this project are documented in this file.
   - Added schema attributes (`callno`, `label`, `media`, `type`) to `relMatType`.
   - Added selective exclusion of mapped DDI child tags in `get_mixed_content` and `abstractTextType.from_xml_element`, ensuring narrative text is preserved in `.content` without duplicate `<citation>` XML tags upon export.
   - Preserved inline markup tags (PHRASE group: `ExtLink`, `Link`; FORM group: `p`, `div`, `emph`, `hi`, `head`, `list`, `itm`, `label`; and XHTML 1.1 elements) in `abstractTextType.content` without raising spurious parser warnings or validation errors.
+
+### Changed
+- Renamed CLI commands for consistent hyphenation: `ddici18nmerge` to `ddic-i18nmerge` and `ddicvalidate` to `ddic-validate`.
 
 ### Fixed
 - **Inherited DDI Property Discovery Across Class MRO**:
@@ -45,8 +48,8 @@ All notable changes to this project are documented in this file.
     - Automatically maps secondary study titles to `<parTitl xml:lang="...">`.
     - Merges repeatable text fields (`abstract`, `notes`, `universe`, etc.) and variable metadata (`labl`, `txt`, `qstn`, `catgry`).
     - Supports `use_canonical` fallback strategy so secondary language elements receive fallback content instead of being left empty.
-  - **Unified CLI Subcommand (`dartfx-ddi ddici18nmerge`)**:
-    - Required positional inputs: `dartfx-ddi ddici18nmerge <canonical> <translated> [options]`.
+  - **Unified CLI Subcommand (`dartfx-ddi ddic-i18nmerge`)**:
+    - Required positional inputs: `dartfx-ddi ddic-i18nmerge <canonical> <translated> [options]`.
     - Supports `--strategy` / `-s`, `--plan` / `-p`, `--output` / `-o`, `--lang-canonical`, `--lang-translated`, `--refresh`, `--auto-approve`, and `--validate`.
     - Automatically derives standard output paths: `{canonical_base}.merge.plan.{lang_c}_{lang_t}.yaml` and `{canonical_base}.merged.{lang_c}_{lang_t}.xml`.
     - Caches and reuses existing merge plans unless `--refresh` is passed.
@@ -103,8 +106,8 @@ All notable changes to this project are documented in this file.
 ### Added
 - DDI-Codebook validation utility `validate_codebook_xml` with JSON-serializable output.
 - Markdown reporting utility `validation_report_to_markdown` generated from validation JSON payloads.
-- CLI command `dartfx-ddi ddicvalidate` with `md` and `json` report formats (`md` default).
-- CLI option `--strict` for `dartfx-ddi ddicvalidate` to escalate structural warnings into validation errors.
+- CLI command `dartfx-ddi ddic-validate` with `md` and `json` report formats (`md` default).
+- CLI option `--strict` for `dartfx-ddi ddic-validate` to escalate structural warnings into validation errors.
 - Unit tests for validation success, malformed XML handling, and business-rule failures.
 
 ### Changed

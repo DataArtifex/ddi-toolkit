@@ -303,8 +303,8 @@ def test_vargrp_multilingual_merge():
     assert "fr" in vg_langs
 
 
-def test_cli_ddici18nmerge():
-    """Verify ddici18nmerge CLI execution with required inputs, plan caching, and validation."""
+def test_cli_ddic_i18nmerge():
+    """Verify ddic-i18nmerge CLI execution with required inputs, plan caching, and validation."""
     runner = CliRunner()
     eng_path = str(data_dir() / "FSD2961_eng.xml")
     fin_path = str(data_dir() / "FSD2961_fin.xml")
@@ -318,7 +318,7 @@ def test_cli_ddici18nmerge():
         result = runner.invoke(
             app,
             [
-                "ddici18nmerge",
+                "ddic-i18nmerge",
                 eng_path,
                 fin_path,
                 "--plan",
@@ -349,7 +349,7 @@ def test_cli_ddici18nmerge():
         result_cached = runner.invoke(
             app,
             [
-                "ddici18nmerge",
+                "ddic-i18nmerge",
                 eng_path,
                 fin_path,
                 "--plan",
@@ -367,7 +367,7 @@ def test_cli_ddici18nmerge():
         result_html = runner.invoke(
             app,
             [
-                "ddici18nmerge",
+                "ddic-i18nmerge",
                 eng_path,
                 fin_path,
                 "--html",

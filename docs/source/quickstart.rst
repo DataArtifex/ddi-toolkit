@@ -45,19 +45,19 @@ CLI usage:
 .. code-block:: bash
 
    # Markdown report (default)
-   dartfx-ddi ddicvalidate path/to/codebook.xml
+   dartfx-ddi ddic-validate path/to/codebook.xml
 
    # Markdown report (explicit)
-   dartfx-ddi ddicvalidate path/to/codebook.xml --report-format md
+   dartfx-ddi ddic-validate path/to/codebook.xml --report-format md
 
    # Save report to file
-   dartfx-ddi ddicvalidate path/to/codebook.xml --report-format md --output validation_report.md
+   dartfx-ddi ddic-validate path/to/codebook.xml --report-format md --output validation_report.md
 
    # JSON report
-   dartfx-ddi ddicvalidate path/to/codebook.xml --report-format json
+   dartfx-ddi ddic-validate path/to/codebook.xml --report-format json
 
    # Strict mode: structural warnings (including invalid xs:ID/NCName) become errors
-   dartfx-ddi ddicvalidate path/to/codebook.xml --strict
+   dartfx-ddi ddic-validate path/to/codebook.xml --strict
 
 By default, invalid ``@ID`` values (not valid NCName / ``xs:ID``) are reported as warnings.
 Use ``--strict`` to escalate these warnings into validation errors.
@@ -95,10 +95,10 @@ CLI usage:
 .. code-block:: bash
 
    # Assess and merge
-   dartfx-ddi ddici18nmerge survey_en.xml survey_fi.xml
+   dartfx-ddi ddic-i18nmerge survey_en.xml survey_fi.xml
 
    # Auto-approve non-blocking items and validate against DDI-C schema
-   dartfx-ddi ddici18nmerge survey_en.xml survey_fi.xml --auto-approve --validate
+   dartfx-ddi ddic-i18nmerge survey_en.xml survey_fi.xml --auto-approve --validate
 
 DDI-CDI & Assistant Framework
 -----------------------------

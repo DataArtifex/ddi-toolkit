@@ -26,7 +26,7 @@ Key Features
 ------------
 
 * **DDI-Codebook XML Processing**: Load, parse, extract structured metadata, and validate DDI-Codebook documents with JSON and Markdown reports.
-* **Multilingual DDI-Codebook Merging**: Assess translation discrepancies, generate review plans, and merge bilingual DDI-Codebook documents with safety gates via Python API (``ddicodebook.i18n``) or the ``dartfx-ddi ddici18nmerge`` CLI.
+* **Multilingual DDI-Codebook Merging**: Assess translation discrepancies, generate review plans, and merge bilingual DDI-Codebook documents with safety gates via Python API (``ddicodebook.i18n``) or the ``dartfx-ddi ddic-i18nmerge`` CLI.
 * **DDI-Lifecycle Fragment Streaming**: Stream and parse DDI 3.3 XML documents fragment-by-fragment into DDI 4.0 RC1 models via Python or CLI.
 * **DDI-Lifecycle Reference Graph & Path Analysis**: Dual-pass streaming reference analyzer, multi-hop pathfinding, multiplicity metrics, and export to interactive Vis.js HTML, Markdown, JSON, Mermaid, Graphviz DOT, Turtle RDF, and NetworkX.
 * **DDI-CDI Model Classes**: Work with definitive Pydantic-based classes representing the full DDI-CDI specification.

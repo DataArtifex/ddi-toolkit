@@ -243,16 +243,16 @@ def test_cli_no_args_displays_help():
     assert "ping" in res_sub.stdout
 
     # Command with required args without arguments
-    res_cmd = runner.invoke(app, ["ddicvalidate"])
+    res_cmd = runner.invoke(app, ["ddic-validate"])
     assert res_cmd.exit_code == 2
     assert "Usage: " in res_cmd.stdout
     assert "Arguments" in res_cmd.stdout
 
 
-def test_cli_ddicvalidate_profiles(tmp_path):
+def test_cli_ddic_validate_profiles(tmp_path):
     # Valid complete codebook with recommended profile
     cb_path = os.path.join(data_dir(), "codebook/NES1948.xml")
-    res = runner.invoke(app, ["ddicvalidate", cb_path, "--profile", "recommended"])
+    res = runner.invoke(app, ["ddic-validate", cb_path, "--profile", "recommended"])
     assert res.exit_code == 0
     assert "VALID" in res.stdout
     assert "recommended" in res.stdout
@@ -262,11 +262,11 @@ def test_cli_ddicvalidate_profiles(tmp_path):
     no_id_xml.write_text('<codeBook version="2.6" xml:lang="en" xmlns="ddi:codebook:2_6"/>', encoding="utf-8")
 
     # Under schema profile: valid (0 errors)
-    res_schema = runner.invoke(app, ["ddicvalidate", str(no_id_xml), "--profile", "schema"])
+    res_schema = runner.invoke(app, ["ddic-validate", str(no_id_xml), "--profile", "schema"])
     assert res_schema.exit_code == 0
     assert "VALID" in res_schema.stdout
 
     # Under CDIF profile: invalid (missing @ID is an error)
-    res_cdif = runner.invoke(app, ["ddicvalidate", str(no_id_xml), "--profile", "cdif"])
+    res_cdif = runner.invoke(app, ["ddic-validate", str(no_id_xml), "--profile", "cdif"])
     assert res_cdif.exit_code == 1
     assert "INVALID" in res_cdif.stdout

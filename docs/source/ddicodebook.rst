@@ -167,16 +167,16 @@ Python API Usage::
 Command Line Interface (CLI)::
 
     # Default profile ('recommended')
-    dartfx ddicvalidate mycodebook.xml
+    dartfx-ddi ddic-validate mycodebook.xml
 
     # Readiness for CDIF export
-    dartfx ddicvalidate mycodebook.xml --profile cdif
+    dartfx-ddi ddic-validate mycodebook.xml --profile cdif
 
     # Pure schema validation
-    dartfx ddicvalidate mycodebook.xml --profile schema
+    dartfx-ddi ddic-validate mycodebook.xml --profile schema
 
     # Custom YAML profile
-    dartfx ddicvalidate mycodebook.xml --profile ./my_archive_profile.yaml
+    dartfx-ddi ddic-validate mycodebook.xml --profile ./my_archive_profile.yaml
 
 Custom Declarative YAML Profiles
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -260,13 +260,13 @@ Python API Usage::
 CLI Usage::
 
    # Basic merge (generates plan and executes merge if clean)
-   dartfx-ddi ddici18nmerge survey_en.xml survey_fi.xml
+   dartfx-ddi ddic-i18nmerge survey_en.xml survey_fi.xml
 
    # Auto-approve minor discrepancies and validate output against schema
-   dartfx-ddi ddici18nmerge survey_en.xml survey_fi.xml --auto-approve --validate
+   dartfx-ddi ddic-i18nmerge survey_en.xml survey_fi.xml --auto-approve --validate
 
    # Specify custom languages and strategy fallback
-   dartfx-ddi ddici18nmerge survey_en.xml survey_fi.xml \
+   dartfx-ddi ddic-i18nmerge survey_en.xml survey_fi.xml \
        --lang-canonical en \
        --lang-translated fi \
        --strategy custom_strategy.yaml

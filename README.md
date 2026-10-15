@@ -37,7 +37,7 @@ There are three major flavors of DDI. This package currently supports:
 ## Key Features
 
 - **DDI-Codebook XML Processing**: Load, parse, extract structured metadata, serialize back to XML, and validate DDI-Codebook documents with JSON and Markdown reports.
-- **Multilingual DDI-Codebook Merging**: Assess translation discrepancies, generate review plans, and merge bilingual DDI-Codebook documents with safety gates via Python API or the `dartfx-ddi ddici18nmerge` CLI.
+- **Multilingual DDI-Codebook Merging**: Assess translation discrepancies, generate review plans, and merge bilingual DDI-Codebook documents with safety gates via Python API or the `dartfx-ddi ddic-i18nmerge` CLI.
 - **DDI-Lifecycle XML Streaming**: Stream and parse DDI 3.3 XML documents fragment-by-fragment into DDI 4.0 RC1 models via Python or CLI.
 - **DDI-Lifecycle Resource Profile & Topology Analysis**: Dual-pass streaming profile analyzer, referencing mechanism intelligence, multi-hop pathfinding, multiplicity metrics (cardinality, target reuse, node roles), and export to interactive Vis.js HTML, Markdown, JSON, Mermaid, Graphviz DOT, Turtle RDF, and NetworkX.
 - **DDI-CDI Model (v1.1.0)**: Use definitive, spec-generated Pydantic classes for the full DDI-CDI implementation.
@@ -164,19 +164,19 @@ dartfx-ddi ddic2cdi my_codebook.xml
 dartfx-ddi ddic2cdi my_codebook.xml --format xml
 
 # Validate a DDI-Codebook document (Markdown report to stdout by default)
-dartfx-ddi ddicvalidate my_codebook.xml
+dartfx-ddi ddic-validate my_codebook.xml
 
 # Validate and emit a Markdown report
-dartfx-ddi ddicvalidate my_codebook.xml --report-format md
+dartfx-ddi ddic-validate my_codebook.xml --report-format md
 
 # Write validation report to a file
-dartfx-ddi ddicvalidate my_codebook.xml --report-format md --output validation_report.md
+dartfx-ddi ddic-validate my_codebook.xml --report-format md --output validation_report.md
 
 # Emit JSON report explicitly
-dartfx-ddi ddicvalidate my_codebook.xml --report-format json
+dartfx-ddi ddic-validate my_codebook.xml --report-format json
 
 # Strict mode: escalate structural warnings (including invalid xs:ID/NCName) to errors
-dartfx-ddi ddicvalidate my_codebook.xml --strict
+dartfx-ddi ddic-validate my_codebook.xml --strict
 
 # Convert DDI-Lifecycle 3.x FragmentInstance XML to DDI 4.0 JSON (automatically names output my_study.ddi40.json)
 dartfx-ddi ddil324 my_study.ddi33.xml
@@ -203,7 +203,7 @@ dartfx-ddi ddil-profile my_study.ddi33.xml --between QuestionItem,OutParameter -
 dartfx-ddi ddil-profile my_study.ddi33.xml --refresh --format html
 ```
 
-By default, `ddicvalidate` records invalid `@ID` values (non-NCName / non-`xs:ID`) as warnings.
+By default, `ddic-validate` records invalid `@ID` values (non-NCName / non-`xs:ID`) as warnings.
 Use `--strict` to treat those warnings as validation errors.
 
 ### DDI-Lifecycle Processing & Resource Profiling in Python
@@ -281,10 +281,10 @@ Or via CLI:
 
 ```bash
 # Assess and merge
-dartfx-ddi ddici18nmerge survey_en.xml survey_fi.xml
+dartfx-ddi ddic-i18nmerge survey_en.xml survey_fi.xml
 
 # Auto-approve non-blocking discrepancies and validate against DDI-C schema
-dartfx-ddi ddici18nmerge survey_en.xml survey_fi.xml --auto-approve --validate
+dartfx-ddi ddic-i18nmerge survey_en.xml survey_fi.xml --auto-approve --validate
 ```
 
 ### BaseX XML Database & Reporting (Experimental, Optional)

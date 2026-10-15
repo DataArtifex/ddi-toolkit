@@ -24,7 +24,7 @@ DDI-Codebook Multilingual Assessment, Planning & Merging (``ddicodebook.i18n``)
   - Injects translated siblings with automatic mapping of secondary titles to ``<parTitl xml:lang="...">``.
   - Merges repeatable text fields and variable metadata (``labl``, ``txt``, ``qstn``, ``catgry``).
   - Supports ``use_canonical`` fallback strategy for empty translations.
-- **Unified CLI Command (``dartfx-ddi ddici18nmerge``)**:
+- **Unified CLI Command (``dartfx-ddi ddic-i18nmerge``)**:
   - Required positional file inputs (``canonical`` and ``translated``).
   - Automatic standard filename derivation and plan caching (reused unless ``--refresh`` is specified).
   - Flags for strategy overrides, custom plan/output paths, language tagging, auto-approval, and post-merge schema validation.
@@ -130,8 +130,8 @@ DDI-Codebook Validation and Reporting
 
 - Added ``validate_codebook_xml`` utility for DDI-Codebook validation with JSON-serializable output.
 - Added ``validation_report_to_markdown`` utility for human-readable Markdown validation reports.
-- Added CLI command ``dartfx-ddi ddicvalidate`` with report formats ``md`` and ``json``.
-- Added CLI option ``--strict`` for ``dartfx-ddi ddicvalidate`` to escalate structural warnings to validation errors.
+- Added CLI command ``dartfx-ddi ddic-validate`` with report formats ``md`` and ``json``.
+- Added CLI option ``--strict`` for ``dartfx-ddi ddic-validate`` to escalate structural warnings to validation errors.
 - Added tests for valid, malformed, and business-rule validation scenarios.
 - Updated documentation with Python and CLI examples for validation and reporting.
 - Updated the DDI-CDI Assistant framework to default to ``model_1_1_0``.
@@ -179,7 +179,7 @@ Features
 - Support for filtering variables by type
 - Validate DDI-Codebook XML with JSON report output
 - Generate Markdown validation reports from JSON payloads
-- CLI validation command: ``dartfx-ddi ddicvalidate`` with ``md`` and ``json`` report formats
+- CLI validation command: ``dartfx-ddi ddic-validate`` with ``md`` and ``json`` report formats
 
 **DDI-CDI Support (Experimental):**
 

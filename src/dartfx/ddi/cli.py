@@ -299,8 +299,8 @@ def ddic2sql(
     logging.error("ddic2sql not implemented")
 
 
-@app.command(no_args_is_help=True)
-def ddicvalidate(
+@app.command(name="ddic-validate", no_args_is_help=True)
+def ddic_validate(
     ddifile: Annotated[Path, typer.Argument(help="DDI Codebook 2.6 XML file", exists=True, dir_okay=False)],
     report_format: Annotated[
         ValidationReportFormat,
@@ -350,8 +350,8 @@ def ddicvalidate(
         raise typer.Exit(code=1)
 
 
-@app.command(no_args_is_help=True)
-def ddici18nmerge(
+@app.command(name="ddic-i18nmerge", no_args_is_help=True)
+def ddic_i18nmerge(
     canonical: Annotated[
         Path,
         typer.Argument(help="Canonical/reference DDI Codebook XML file", exists=True, dir_okay=False),
@@ -523,6 +523,11 @@ def ddici18nmerge(
         else:
             err_count = report["summary"]["error_count"]
             console.print(f"[yellow]⚠ Validation found {err_count} schema/business rule error(s).[/yellow]")
+
+
+# Backward compatibility aliases for python imports
+ddicvalidate = ddic_validate
+ddici18nmerge = ddic_i18nmerge
 
 
 @app.command(name="ddil324", no_args_is_help=True)
