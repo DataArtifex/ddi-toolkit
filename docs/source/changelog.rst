@@ -104,13 +104,13 @@ DDI-Lifecycle Resource Profile & Topology Analysis
 - Added canonical JSON caching (``<stem>.profile.json``) with automatic reuse and instant loading for repeated queries.
 - Added CLI subcommand ``dartfx-ddi ddil-profile`` with full argument suite (``--format``, ``--between``, ``--from``, ``--to``, ``--max-hops``, ``--directed``, ``--include``, ``--exclude``, ``--min-count``, ``--output``, ``--output-dir``, ``--title``, ``--refresh``, ``--mermaid``, ``--progress``).
 
-DDI-Lifecycle Fragment Streaming & Polymorphic Serialization
+DDI-Lifecycle Resource Streaming & Polymorphic Serialization
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Added ``ddilifecycle`` subpackage for streaming and parsing DDI-Lifecycle 3.3 XML documents fragment-by-fragment into DDI 4.0 RC1 Pydantic models.
-- Added Python utility function ``ddilifecycle.ddil324(...)`` for programmatic document-level transformation from DDI-Lifecycle 3.x FragmentInstance XML to DDI 4.0 ``ItemContainer`` JSON (``{"items": [...]}``) or XML (``<ItemContainer>...``) with statistics collection.
-- Added CLI subcommand ``dartfx-ddi ddil324`` to transform DDI-Lifecycle 3.x FragmentInstance XML documents to DDI 4.0 ``ItemContainer`` output files (JSON/XML) with automatic output filename mapping (e.g. ``.ddi33.xml`` -> ``.ddi40.json``), live progress bar (``--progress`` / ``--no-progress``), pretty-printing (``--pretty`` / ``-p``), resource filtering (``--filter``), performance statistics (``--stats`` / ``--no-stats``), error statistics grouped by error type and resource type, and default unlimited streaming.
-- Added ``on_error`` and ``on_progress`` callback hooks to ``stream_ddil_fragments`` for real-time progress and non-spammy error tracking.
+- Added ``ddilifecycle`` subpackage for streaming and parsing DDI-Lifecycle 3.x XML documents (both FragmentInstance and hierarchical DDIInstance) resource-by-resource into DDI 4.0 RC1 Pydantic models with ``stream_ddil``.
+- Added Python utility function ``ddilifecycle.ddil324(...)`` for programmatic document-level transformation from DDI-Lifecycle 3.x XML to DDI 4.0 ``ItemContainer`` JSON (``{"items": [...]}``) or XML (``<ItemContainer>...``) with statistics collection.
+- Added CLI subcommand ``dartfx-ddi ddil324`` to transform DDI-Lifecycle 3.x XML documents to DDI 4.0 ``ItemContainer`` output files (JSON/XML) with automatic output filename mapping (e.g. ``.ddi33.xml`` -> ``.ddi40.json``), live progress bar (``--progress`` / ``--no-progress``), pretty-printing (``--pretty`` / ``-p``), resource filtering (``--filter``), performance statistics (``--stats`` / ``--no-stats``), error statistics grouped by error type and resource type, and default unlimited streaming.
+- Added ``on_error`` and ``on_progress`` callback hooks to ``stream_ddil`` for real-time progress and non-spammy error tracking.
 - Annotated polymorphic substitution fields in COGS PythonPydantic publisher and generated models (``model_4_0_rc1.py``) with ``SerializeAsAny`` to preserve subclass properties (``LiteralTextType.text``, ``CodeDomainType.code_list_reference``, etc.) in JSON output.
 - Fixed XML text wrapping for numeric and statistic elements (``StatisticDoubleType``).
 - Fixed ``BibliographicNameType`` child ``<String>`` elements in ``CreatorName``, ``ContributorName``, and ``PublisherName`` by automatically mapping them to ``<Name>``.

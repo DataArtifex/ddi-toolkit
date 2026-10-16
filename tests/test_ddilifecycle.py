@@ -11,7 +11,7 @@ def data_dir():
     return os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
 
 
-def test_stream_ddil_fragments_all():
+def test_stream_ddil_all():
     xml_path = os.path.join(
         data_dir(),
         "lifecycle/metadataddi.cso.ie/cso.ie_f39bf88a-e677-48c9-9c94-0e4bd654aecb_33.ddi33.xml",
@@ -21,7 +21,7 @@ def test_stream_ddil_fragments_all():
     category = None
     question_construct = None
 
-    for frag in ddilifecycle.stream_ddil_fragments(xml_path):
+    for frag in ddilifecycle.stream_ddil(xml_path):
         if concept is None and isinstance(frag, model.Concept) and frag.id == "70e54c52-883c-44dc-afe6-0224db77c592":
             concept = frag
         elif category is None and isinstance(frag, model.Category):
@@ -49,27 +49,27 @@ def test_stream_ddil_fragments_all():
     assert category.urn is not None
 
 
-def test_stream_ddil_fragments_filter():
+def test_stream_ddil_filter():
     xml_path = os.path.join(
         data_dir(),
         "lifecycle/metadataddi.cso.ie/cso.ie_f39bf88a-e677-48c9-9c94-0e4bd654aecb_33.ddi33.xml",
     )
 
     # Filter only Concept resource types
-    fragments = list(ddilifecycle.stream_ddil_fragments(xml_path, resource_types=["Concept"]))
+    fragments = list(ddilifecycle.stream_ddil(xml_path, resource_types=["Concept"]))
 
     assert len(fragments) > 0
     for f in fragments:
         assert isinstance(f, model.Concept)
 
     # Filter with comma-separated string
-    fragments_csv = list(ddilifecycle.stream_ddil_fragments(xml_path, resource_types="Concept, Category"))
+    fragments_csv = list(ddilifecycle.stream_ddil(xml_path, resource_types="Concept, Category"))
     assert len(fragments_csv) > len(fragments)
     types_found = {type(f).__name__ for f in fragments_csv}
     assert types_found == {"Concept", "Category"}
 
 
-def test_stream_ddil_fragments_on_error():
+def test_stream_ddil_on_error():
     xml_path = os.path.join(
         data_dir(),
         "lifecycle/metadataddi.cso.ie/cso.ie_f39bf88a-e677-48c9-9c94-0e4bd654aecb_33.ddi33.xml",
@@ -79,11 +79,11 @@ def test_stream_ddil_fragments_on_error():
     def handle_error(rtype, exc):
         errors.append((rtype, str(exc)))
 
-    fragments = list(ddilifecycle.stream_ddil_fragments(xml_path, on_error=handle_error))
+    fragments = list(ddilifecycle.stream_ddil(xml_path, on_error=handle_error))
     assert len(fragments) > 0
 
 
-def test_stream_ddil_fragments_on_progress():
+def test_stream_ddil_on_progress():
     xml_path = os.path.join(
         data_dir(),
         "lifecycle/metadataddi.cso.ie/cso.ie_f39bf88a-e677-48c9-9c94-0e4bd654aecb_33.ddi33.xml",
@@ -93,7 +93,7 @@ def test_stream_ddil_fragments_on_progress():
     def handle_progress(bytes_read: int, total_bytes: int | None):
         progress_updates.append((bytes_read, total_bytes))
 
-    fragments = list(ddilifecycle.stream_ddil_fragments(xml_path, on_progress=handle_progress))
+    fragments = list(ddilifecycle.stream_ddil(xml_path, on_progress=handle_progress))
     assert len(fragments) > 0
     assert len(progress_updates) > 0
     last_bytes, total = progress_updates[-1]
@@ -146,7 +146,7 @@ def test_ddil324_utility_xml(tmp_path):
     assert len(container.items) == 3
 
 
-def test_stream_ddil_fragments_bibliographic_name(tmp_path):
+def test_stream_ddil_bibliographic_name(tmp_path):
     input_xml = tmp_path / "study_creator.ddi33.xml"
     input_xml.write_text(
         '<FragmentInstance xmlns="ddi:instance:3_3">'
@@ -180,7 +180,7 @@ def test_stream_ddil_fragments_bibliographic_name(tmp_path):
         encoding="utf-8",
     )
 
-    fragments = list(ddilifecycle.stream_ddil_fragments(input_xml))
+    fragments = list(ddilifecycle.stream_ddil(input_xml))
     assert len(fragments) == 1
     su = fragments[0]
     assert isinstance(su, model.StudyUnit)
@@ -205,7 +205,7 @@ def test_stream_ddil_fragments_bibliographic_name(tmp_path):
     assert publisher.publisher_name.name[0].value == "University Press"
 
 
-def test_stream_ddil_fragments_interviewer_instruction_reference(tmp_path):
+def test_stream_ddil_interviewer_instruction_reference(tmp_path):
     input_xml = tmp_path / "question_instruction.ddi33.xml"
     input_xml.write_text(
         '<FragmentInstance xmlns="ddi:instance:3_3">'
@@ -243,7 +243,7 @@ def test_stream_ddil_fragments_interviewer_instruction_reference(tmp_path):
         encoding="utf-8",
     )
 
-    fragments = list(ddilifecycle.stream_ddil_fragments(input_xml))
+    fragments = list(ddilifecycle.stream_ddil(input_xml))
     assert len(fragments) == 2
     qi, qg = fragments
 
@@ -260,7 +260,7 @@ def test_stream_ddil_fragments_interviewer_instruction_reference(tmp_path):
     assert att_qg.interviewer_instruction_reference.id == "ins2"
 
 
-def test_stream_ddil_fragments_nan_statistics(tmp_path):
+def test_stream_ddil_nan_statistics(tmp_path):
     import io
     import math
 
@@ -298,7 +298,7 @@ def test_stream_ddil_fragments_nan_statistics(tmp_path):
         encoding="utf-8",
     )
 
-    fragments = list(ddilifecycle.stream_ddil_fragments(input_xml))
+    fragments = list(ddilifecycle.stream_ddil(input_xml))
     assert len(fragments) == 1
     vs = fragments[0]
     assert isinstance(vs, model.VariableStatistics)
@@ -335,7 +335,7 @@ def test_stream_ddil_fragments_nan_statistics(tmp_path):
     assert "-INF" in xml_str
 
 
-def test_stream_ddil_fragments_sample_special_values():
+def test_stream_ddil_sample_special_values():
     import io
 
     xml_path = os.path.join(
@@ -343,7 +343,7 @@ def test_stream_ddil_fragments_sample_special_values():
         "lifecycle/samples/variable_statistics_special_values.ddi33.xml",
     )
 
-    fragments = list(ddilifecycle.stream_ddil_fragments(xml_path))
+    fragments = list(ddilifecycle.stream_ddil(xml_path))
     assert len(fragments) == 2
     var, vs = fragments
     assert isinstance(var, model.Variable)
@@ -371,7 +371,7 @@ def test_stream_ddil_fragments_sample_special_values():
     assert "-INF" in xml_str
 
 
-def test_stream_ddil_fragments_dublin_core_sample():
+def test_stream_ddil_dublin_core_sample():
     import io
 
     xml_path = os.path.join(
@@ -384,7 +384,7 @@ def test_stream_ddil_fragments_dublin_core_sample():
     def handle_error(rtype, exc):
         errors.append((rtype, str(exc)))
 
-    fragments = list(ddilifecycle.stream_ddil_fragments(xml_path, on_error=handle_error))
+    fragments = list(ddilifecycle.stream_ddil(xml_path, on_error=handle_error))
     assert len(errors) == 0, f"Encountered unexpected parsing errors: {errors}"
     assert len(fragments) == 2
 
@@ -439,7 +439,7 @@ def test_stream_ddil_fragments_dublin_core_sample():
     assert "DublinCoreCoverage" in xml_str
 
 
-def test_stream_ddil_fragments_dublin_core_prefixed_elements():
+def test_stream_ddil_dublin_core_prefixed_elements():
     import io
 
     xml_content = """<?xml version="1.0" encoding="utf-8"?>
@@ -470,7 +470,7 @@ def test_stream_ddil_fragments_dublin_core_prefixed_elements():
 """
     errors = []
     fragments = list(
-        ddilifecycle.stream_ddil_fragments(
+        ddilifecycle.stream_ddil(
             io.BytesIO(xml_content.encode("utf-8")),
             on_error=lambda r, e: errors.append((r, e)),
         )
@@ -487,7 +487,7 @@ def test_stream_ddil_fragments_dublin_core_prefixed_elements():
     assert study.citation.dublin_core_modified[0].value == "2026-09-01"
 
 
-def test_stream_ddil_fragments_question_item_code_domain():
+def test_stream_ddil_question_item_code_domain():
     import io
     import json
 
@@ -501,7 +501,7 @@ def test_stream_ddil_fragments_question_item_code_domain():
     def handle_error(rtype, exc):
         errors.append((rtype, str(exc)))
 
-    fragments = list(ddilifecycle.stream_ddil_fragments(xml_path, on_error=handle_error))
+    fragments = list(ddilifecycle.stream_ddil(xml_path, on_error=handle_error))
     assert len(errors) == 0, f"Encountered unexpected parsing errors: {errors}"
     assert len(fragments) == 1
     qi = fragments[0]

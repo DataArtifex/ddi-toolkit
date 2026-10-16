@@ -78,9 +78,9 @@ DDI-Lifecycle streaming and resource profile analysis::
 
    from dartfx.ddi import ddilifecycle
 
-   # Stream fragments
-   for fragment in ddilifecycle.stream_ddil_fragments("my_study.ddi33.xml", resource_types=["QuestionItem"]):
-       print(f"Fragment: {type(fragment).__name__}, URN: {fragment.urn}")
+   # Stream resources
+   for resource in ddilifecycle.stream_ddil("my_study.ddi33.xml", resource_types=["QuestionItem"]):
+       print(f"Resource: {type(resource).__name__}, URN: {resource.urn}")
 
    # Analyze resource profile & export to interactive HTML explorer
    profile = ddilifecycle.analyze_ddil_profile("my_study.ddi33.xml")

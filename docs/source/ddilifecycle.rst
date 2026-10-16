@@ -21,7 +21,7 @@ The ``ddilifecycle`` subpackage uses XML element-by-element streaming (via ``xml
 DDI 3.3 to 4.0 Crosswalk & Adjustment Reference
 -----------------------------------------------
 
-Under the hood, ``stream_ddil_fragments`` normalizes differences between DDI-Lifecycle 3.3 and DDI 4.0 RC1 / COGS models before deserializing into Pydantic model instances. The adjustments include:
+Under the hood, ``stream_ddil`` normalizes differences between DDI-Lifecycle 3.3 and DDI 4.0 RC1 / COGS models before deserializing into Pydantic model instances. The adjustments include:
 
 .. list-table::
    :widths: 22 28 50
@@ -33,6 +33,9 @@ Under the hood, ``stream_ddil_fragments`` normalizes differences between DDI-Lif
    * - **Namespace Unification**
      - Modular versioned namespaces (``ddi:instance:3_3``, ``ddi:reusable:3_3``, ``ddi:datacollection:3_3``, etc.)
      - Recursively mapped to the unified DDI 4.0 namespace: ``https://ddialliance.org/ddi``.
+   * - **Container Children Flattening**
+     - Hierarchical nested child definitions inside container schemes or instances (e.g. ``<Category>`` in ``<CategoryScheme>``, ``<Variable>`` in ``<VariableScheme>``, ``<StudyUnit>`` in ``<DDIInstance>``)
+     - Streams each child as an independent top-level resource and synthesizes corresponding typed item references on the parent container (``CategoryReference``, ``VariableReference``, etc.) to comply with DDI 4.0 RC1 schemas.
    * - **Interviewer Instructions**
      - ``<InterviewerInstructionReference>`` placed directly inside ``<QuestionItem>``, ``<QuestionGrid>``, ``<QuestionBlock>``, or ``<QuestionConstruct>``
      - Automatically wrapped inside a parent ``<InterviewerInstructionAttachment>`` element with child ``interviewer_instruction_reference``.
@@ -51,14 +54,14 @@ Under the hood, ``stream_ddil_fragments`` normalizes differences between DDI-Lif
    * - **Attribute-to-Element Promotion**
      - Schema flags expressed as XML attributes (e.g. ``@isCharacteristic``, ``@isOrdered``, ``@isUniversallyUnique``)
      - Matching attributes are converted to child XML elements matching Pydantic class fields.
-   * - **Reference URN Synthesis**
-     - References containing ``<Agency>``, ``<ID>``, and ``<Version>`` without an explicit ``<URN>``
-     - Synthesizes a canonical URN (``urn:ddi:<Agency>:<ID>:<Version>``) to ensure reference resolution succeeds.
+   * - **Reference URN & Agency/ID Synchronization**
+     - Elements or references with canonical URNs missing `<Agency>`, `<ID>`, `<Version>` (or vice versa)
+     - Decomposes URN into agency, id, version, and synthesizes missing canonical URNs bidirectionally to ensure full model validity.
    * - **Strict Attribute Cleanup**
      - Non-schema XML attributes (e.g. schemaLocations, unused prefixes)
      - Stripped during element normalization to prevent Pydantic extra-attribute errors.
 
-Fragment Streaming & Transformation API
+Resource Streaming & Transformation API
 ---------------------------------------
 
 Transform an entire DDI-Lifecycle 3.x document to DDI 4.0 (JSON or XML) programmatically::
@@ -72,25 +75,25 @@ Transform an entire DDI-Lifecycle 3.x document to DDI 4.0 (JSON or XML) programm
    # Transform to DDI 4.0 XML (wrapped in ItemContainer)
    stats_xml = ddilifecycle.ddil324("my_study.ddi33.xml", "my_study.ddi40.xml", format="xml", pretty=True)
 
-Stream fragments in memory from a DDI 3.3 XML file::
+Stream resources in memory from a DDI 3.x XML file (supporting FragmentInstance and DDIInstance)::
 
-   for fragment in ddilifecycle.stream_ddil_fragments("my_study.ddi33.xml"):
-       print(f"Fragment type: {type(fragment).__name__}, ID: {fragment.id}")
+   for resource in ddilifecycle.stream_ddil("my_study.ddi33.xml"):
+       print(f"Resource type: {type(resource).__name__}, ID: {resource.id}")
 
 Filter by specific resource types::
 
-   for fragment in ddilifecycle.stream_ddil_fragments(
+   for resource in ddilifecycle.stream_ddil(
        "my_study.ddi33.xml",
        resource_types=["QuestionItem", "Variable"]
    ):
-       print(f"Question/Variable ID: {fragment.id}")
+       print(f"Question/Variable ID: {resource.id}")
 
 Handle parsing errors cleanly with a custom error callback::
 
    def log_error(tag_name: str, exc: Exception):
        print(f"Failed to parse {tag_name}: {exc}")
 
-   for fragment in ddilifecycle.stream_ddil_fragments(
+   for resource in ddilifecycle.stream_ddil(
        "my_study.ddi33.xml",
        on_error=log_error
    ):
@@ -99,7 +102,7 @@ Handle parsing errors cleanly with a custom error callback::
 CLI Transformation (`dartfx-ddi ddil324`)
 -----------------------------------------
 
-The toolkit provides the ``ddil324`` command to convert DDI-Lifecycle 3.x FragmentInstance XML documents to DDI 4.0 JSON or XML output directly from the terminal.
+The toolkit provides the ``ddil324`` command to convert DDI-Lifecycle 3.x XML documents (FragmentInstance or DDIInstance) to DDI 4.0 JSON or XML output directly from the terminal.
 
 Convert to a default `.ddi40.json` file in the same directory:
 

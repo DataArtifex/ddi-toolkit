@@ -1094,14 +1094,14 @@ def _is_ddil_resource(elem: ET.Element) -> bool:
     return False
 
 
-def stream_ddil_fragments(
+def stream_ddil(
     source: str | os.PathLike[str] | IO[bytes],
     resource_types: Iterable[str] | str | None = None,
     on_error: Callable[[str, Exception], None] | None = None,
     on_progress: Callable[[int, int | None], None] | None = None,
     as_elements: bool = False,
 ) -> Generator[Any, None, None]:
-    """Streams a DDI-L XML file holding FragmentInstance -> Fragment elements,
+    """Streams a DDI-Lifecycle 3.x XML file (supporting both FragmentInstance and hierarchical DDIInstance documents),
 
     parsing resources of interest using the DDI 4.0 RC1 models under the hood (or yielding raw elements).
 
@@ -1109,9 +1109,9 @@ def stream_ddil_fragments(
         source: Path to the XML file, or a binary file-like object.
         resource_types: Optional list or set of resource types (e.g. ['Concept', 'Category'])
                         to parse and yield. If None, all supported resource types are yielded.
-        on_error: Optional callback `(resource_type, exception)` invoked when a fragment fails to parse.
+        on_error: Optional callback `(resource_type, exception)` invoked when a resource fails to parse.
         on_progress: Optional callback `(bytes_read, total_bytes)` invoked during streaming.
-        as_elements: If True, yields raw XML `ET.Element` fragments instead of Pydantic model instances.
+        as_elements: If True, yields raw XML `ET.Element` resources instead of Pydantic model instances.
 
     Yields:
         Parsed Pydantic instances from model_4_0_rc1, or raw `ET.Element` if `as_elements=True`.
@@ -1375,11 +1375,6 @@ def stream_ddil_fragments(
             file_obj.close()
 
 
-# Aliases for explicit DDI 3.3 -> 4.0 crosswalk fragment streaming
-stream_ddil33_fragments = stream_ddil_fragments
-ddistream_ddil33_fragments = stream_ddil_fragments
-
-
 def ddil324(
     input_file: str | os.PathLike[str] | IO[bytes],
     output_file: str | os.PathLike[str] | IO[str] | None = None,
@@ -1392,7 +1387,7 @@ def ddil324(
     on_error: Callable[[str, Exception], None] | None = None,
     on_progress: Callable[[int, int | None], None] | None = None,
 ) -> dict[str, Any]:
-    """Transforms DDI-Lifecycle 3.x FragmentInstance XML documents into DDI 4.0 RC1 (JSON or XML).
+    """Transforms DDI-Lifecycle 3.x XML documents (FragmentInstance or DDIInstance) into DDI 4.0 RC1 (JSON or XML).
 
     Args:
         input_file: Path to the DDI-Lifecycle 3.x XML file, or binary file-like object.
@@ -1401,7 +1396,7 @@ def ddil324(
         json_style: JSON format style ('ddi40' for standard DDI 4.0 RC1 format, or 'substitutions' for
             concrete substitution element keyed format). Defaults to 'ddi40'.
         resource_types: Optional resource types to filter (repeatable or comma-separated string/iterable).
-        limit: Maximum number of fragments to write (default: 0 / unlimited).
+        limit: Maximum number of resources to write (default: 0 / unlimited).
         pretty: Pretty-print formatted JSON or XML. Defaults to False.
         on_error: Optional callback `(resource_type, exception)` invoked on parsing errors.
         on_progress: Optional callback `(bytes_read, total_bytes)` invoked during streaming.
@@ -1482,24 +1477,24 @@ def ddil324(
         elif format_lower == "json":
             out_f.write('{\n  "items": [\n' if pretty else '{"items":[')
 
-        for fragment in stream_ddil_fragments(
+        for resource in stream_ddil(
             input_file,
             resource_types=resource_types,
             on_error=_handle_error,
             on_progress=on_progress,
         ):
-            r_type = type(fragment).__name__
+            r_type = type(resource).__name__
             counts[r_type] += 1
             processed_count += 1
 
             if limit <= 0 or processed_count <= limit:
                 if format_lower == "json":
-                    if hasattr(fragment, "_to_dict_with_context"):
-                        data = fragment._to_dict_with_context(context)
+                    if hasattr(resource, "_to_dict_with_context"):
+                        data = resource._to_dict_with_context(context)
                     else:
                         data = {"$type": r_type}
                         data.update(
-                            fragment.model_dump(mode="json", by_alias=True, exclude_none=True, exclude_defaults=True)
+                            resource.model_dump(mode="json", by_alias=True, exclude_none=True, exclude_defaults=True)
                         )
                     if json_style_lower in ("substitutions", "substitution", "elements", "element"):
                         data = transform_to_substitution_json(data)
@@ -1516,10 +1511,10 @@ def ddil324(
                     else:
                         out_f.write(_json_dump_value(data))
                 elif format_lower == "xml":
-                    if hasattr(fragment, "_to_element_with_context"):
-                        elem = fragment._to_element_with_context(r_type, context)
-                    elif hasattr(fragment, "to_element"):
-                        elem = fragment.to_element()
+                    if hasattr(resource, "_to_element_with_context"):
+                        elem = resource._to_element_with_context(r_type, context)
+                    elif hasattr(resource, "to_element"):
+                        elem = resource.to_element()
                     else:
                         elem = ET.Element(f"{{{TARGET_NAMESPACE}}}{r_type}")
 
@@ -6146,7 +6141,7 @@ def analyze_ddil_profile(
 ) -> DdiLifecycleProfile:
     """Analyzes a DDI-Lifecycle XML document and profiles resource classes and reference topologies.
 
-    Uses the streaming parser (`stream_ddil_fragments`) to traverse fragments
+    Uses the streaming parser (`stream_ddil`) to traverse resources
     and construct a comprehensive class-level profile graph.
 
     Args:
@@ -6191,7 +6186,7 @@ def analyze_ddil_profile(
         else:
             if hasattr(source, "seek"):
                 source.seek(0)
-            yield from stream_ddil_fragments(source, as_elements=True, on_progress=pass_progress)
+            yield from stream_ddil(source, as_elements=True, on_progress=pass_progress)
 
     def _pass1_progress(bytes_read: int, total_bytes: int | None) -> None:
         if on_pass_progress is not None:

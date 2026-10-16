@@ -13,8 +13,7 @@ from .utils import (
     UserAttributeProfile,
     analyze_ddil_profile,
     ddil324,
-    stream_ddil33_fragments,
-    stream_ddil_fragments,
+    stream_ddil,
     to_dict,
     to_json,
 )
@@ -34,8 +33,7 @@ __all__ = [
     "analyze_ddil_profile",
     "ddil324",
     "model",
-    "stream_ddil33_fragments",
-    "stream_ddil_fragments",
+    "stream_ddil",
     "to_dict",
     "to_json",
 ]

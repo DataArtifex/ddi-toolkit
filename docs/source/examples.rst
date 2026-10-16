@@ -184,9 +184,9 @@ Streaming and Converting Fragments to DDI 4.0
    stats = ddilifecycle.ddil324("survey.ddi33.xml", format="json", pretty=True)
    print(f"Converted {stats['total_resources']} resources in {stats['elapsed_seconds']:.2f}s")
 
-   # Stream only QuestionItem and Variable fragments
-   for fragment in ddilifecycle.stream_ddil_fragments("survey.ddi33.xml", resource_types=["QuestionItem", "Variable"]):
-       print(f"{type(fragment).__name__}: {fragment.id}")
+   # Stream only QuestionItem and Variable resources
+   for resource in ddilifecycle.stream_ddil("survey.ddi33.xml", resource_types=["QuestionItem", "Variable"]):
+       print(f"{type(resource).__name__}: {resource.id}")
 
 Resource Profile Analysis & Interactive HTML Explorer
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

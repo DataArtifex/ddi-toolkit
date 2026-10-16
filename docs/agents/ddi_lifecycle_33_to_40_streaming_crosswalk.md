@@ -10,7 +10,7 @@ The reader ingests DDI 3.2/3.3 XML files (such as those exported from Colectica 
 
 ## 1. Streaming Reader Features & Architecture
 
-The streaming reader `stream_ddil_fragments` (and `stream_ddil33_fragments`) utilizes Python's `xml.etree.ElementTree.iterparse` to process XML documents iteratively:
+The streaming reader `stream_ddil` utilizes Python's `xml.etree.ElementTree.iterparse` to process XML documents iteratively (supporting both `FragmentInstance` envelopes and hierarchical `DDIInstance` documents):
 
 - **Memory Efficiency**: Clears parsed XML element subtrees (`elem.clear()`) after yielding each fragment, allowing processing of multi-gigabyte XML files within minimal RAM bounds.
 - **Resource Filtering**: Accepts an optional `resource_types` filter (e.g. `["QuestionItem", "Concept"]`) to parse and yield only specified fragment classes, skipping unrequested branches.
@@ -82,14 +82,13 @@ Similarly, `_json_dump_value` in `model_4_0_rc1.py` strictly raises `ValueError`
 
 ---
 
-## 4. Evaluation of Function Naming: `stream_ddil_fragments` vs `stream_ddil33_fragments`
+## 4. Evaluation of Function Naming: `stream_ddil`
 
-### Recommendation: **Provide `stream_ddil33_fragments` as the explicit implementation and alias `stream_ddil_fragments`**
+### Primary Function: `stream_ddil`
 
 #### Rationale:
-1. **Explicit Intent**: The input XML being parsed is structurally DDI-Lifecycle 3.2/3.3 (exported by tools like Colectica). Calling the function `stream_ddil33_fragments` makes it explicit to developers that the function performs a DDI 3.3 -> 4.0 crosswalk.
-2. **Future-Proofing**: If a native DDI 4.0 XML instance reader (which will not require DDI 3.3 crosswalk transforms) is introduced later, `stream_ddil_fragments` can serve as an intelligent dispatcher or generic entry point.
-3. **Backward Compatibility**: Exposing both `stream_ddil33_fragments` and `stream_ddil_fragments` in `src/dartfx/ddi/ddilifecycle/__init__.py` and `utils.py` ensures seamless integration for existing code while providing clear versioned naming.
+1. **Scope Generalization**: The streaming engine processes both DDI-Lifecycle 3.x `FragmentInstance` envelope documents and hierarchical monolithic `DDIInstance` / `<StudyUnit>` XML documents. Calling the function `stream_ddil` reflects that it streams DDI-Lifecycle resources generally rather than being limited to fragment wrappers.
+2. **Conciseness & Ergonomics**: `stream_ddil` provides a concise, memorable API aligned with package naming conventions across the toolkit.
 
 ---
 
@@ -232,15 +231,15 @@ To accommodate both strict DDI 4.0 RC1 compliance and R&D / domain-specific work
 ```python
 from dartfx.ddi import ddilifecycle
 
-fragment = list(ddilifecycle.stream_ddil_fragments("sample.ddi33.xml"))[0]
+resource = list(ddilifecycle.stream_ddil("sample.ddi33.xml"))[0]
 
 # 1. Standard DDI 4.0 JSON format (Default)
-json_std = ddilifecycle.to_json(fragment, style="ddi40", indent=2)
-dict_std = ddilifecycle.to_dict(fragment, style="ddi40")
+json_std = ddilifecycle.to_json(resource, style="ddi40", indent=2)
+dict_std = ddilifecycle.to_dict(resource, style="ddi40")
 
 # 2. Substitution-keyed R&D JSON format
-json_subst = ddilifecycle.to_json(fragment, style="substitutions", indent=2)
-dict_subst = ddilifecycle.to_dict(fragment, style="substitutions")
+json_subst = ddilifecycle.to_json(resource, style="substitutions", indent=2)
+dict_subst = ddilifecycle.to_dict(resource, style="substitutions")
 
 # 3. File streaming and batch conversion via ddil324
 ddilifecycle.ddil324(

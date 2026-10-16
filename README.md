@@ -215,9 +215,9 @@ from dartfx.ddi import ddilifecycle
 stats = ddilifecycle.ddil324("my_study.ddi33.xml", format="json", pretty=True)
 print(f"Processed {stats['total_resources']} resources in {stats['elapsed_seconds']:.2f}s")
 
-# 2. Stream DDI 3.3 fragments crosswalked to DDI 4.0 RC1 Pydantic models
-for fragment in ddilifecycle.stream_ddil_fragments("my_study.ddi33.xml", resource_types=["QuestionItem"]):
-    print(f"Type: {type(fragment).__name__}, ID: {fragment.id}, Agency: {fragment.agency}")
+# 2. Stream DDI 3.x resources (from FragmentInstance or DDIInstance) crosswalked to DDI 4.0 RC1 models
+for resource in ddilifecycle.stream_ddil("my_study.ddi33.xml", resource_types=["QuestionItem"]):
+    print(f"Type: {type(resource).__name__}, ID: {resource.id}, Agency: {resource.agency}")
 
 # 3. Analyze resource profile, referencing mechanisms & compute topology metrics
 profile = ddilifecycle.analyze_ddil_profile("my_study.ddi33.xml", title="Survey Resource Profile")

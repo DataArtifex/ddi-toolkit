@@ -789,11 +789,11 @@ def ddil324(
     ] = None,
     limit: Annotated[
         int,
-        typer.Option("--limit", "-l", help="Maximum number of fragments to output (default: 0 / unlimited)"),
+        typer.Option("--limit", "-l", help="Maximum number of resources to output (default: 0 / unlimited)"),
     ] = 0,
     format: Annotated[
         StreamOutputFormat,
-        typer.Option("--format", "-fmt", help="Output format for parsed fragments (json or xml)"),
+        typer.Option("--format", "-fmt", help="Output format for parsed resources (json or xml)"),
     ] = StreamOutputFormat.json,
     json_style: Annotated[
         JsonStyle,
@@ -832,12 +832,12 @@ def ddil324(
     from dartfx.ddi.ddilifecycle import utils as lc_utils
 
     if output is not None:
-        logging.info(f"Streaming fragments from {xmlfile} to {output}")
+        logging.info(f"Streaming resources from {xmlfile} to {output}")
     else:
-        logging.info(f"Streaming fragments from {xmlfile}")
+        logging.info(f"Streaming resources from {xmlfile}")
 
     file_size_bytes = xmlfile.stat().st_size
-    fragment_counter = [0]
+    resource_error_counter = [0]
 
     with Progress(
         SpinnerColumn(),
@@ -854,11 +854,11 @@ def ddil324(
         prog_task = progress_bar.add_task("Streaming", total=file_size_bytes, errors=0)
 
         def handle_progress(bytes_read: int, _total: int | None) -> None:
-            progress_bar.update(prog_task, completed=bytes_read, errors=fragment_counter[0])
+            progress_bar.update(prog_task, completed=bytes_read, errors=resource_error_counter[0])
 
         def handle_error(_r_type: str, _exc: Exception) -> None:
-            fragment_counter[0] += 1
-            progress_bar.update(prog_task, errors=fragment_counter[0])
+            resource_error_counter[0] += 1
+            progress_bar.update(prog_task, errors=resource_error_counter[0])
 
         result = lc_utils.ddil324(
             input_file=xmlfile,

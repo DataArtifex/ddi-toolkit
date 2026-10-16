@@ -158,9 +158,9 @@ Stream DDI-Lifecycle 3.3 fragments crosswalked directly into DDI 4.0 RC1 Pydanti
    # 1. Transform whole document to DDI 4.0 JSON
    stats = ddilifecycle.ddil324("my_study.ddi33.xml", format="json", pretty=True)
 
-   # 2. Stream individual fragments
-   for fragment in ddilifecycle.stream_ddil_fragments("my_study.ddi33.xml", resource_types=["QuestionItem"]):
-       print(f"Question ID: {fragment.id}")
+   # 2. Stream resources
+   for resource in ddilifecycle.stream_ddil("my_study.ddi33.xml", resource_types=["QuestionItem"]):
+       print(f"Question ID: {resource.id}")
 
 CLI transformation:
 
