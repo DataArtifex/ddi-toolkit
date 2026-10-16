@@ -801,93 +801,141 @@ class _ProgressFileReader:
         return getattr(self._file, name)
 
 
-_DDIL_NON_RESOURCE_TAGS = {
-    "URN",
-    "urn",
-    "ID",
-    "id",
-    "Agency",
-    "agency",
-    "Version",
-    "version",
-    "VersionResponsibility",
-    "VersionRationale",
-    "RationaleDescription",
-    "Citation",
-    "Title",
-    "SubTitle",
-    "String",
-    "Content",
-    "Text",
-    "Label",
-    "Description",
-    "UserID",
-    "UserAttributePair",
-    "AttributeKey",
-    "AttributeValue",
-    "NumericRepresentation",
-    "TextRepresentation",
-    "DateTimeRepresentation",
-    "CodeRepresentation",
-    "NumericTypeCode",
-    "TextDomain",
-    "NumericDomain",
-    "DateTimeDomain",
-    "Value",
-    "ResponseCardinality",
+# Structural sub-elements: identifiable XML elements in DDI-L schemas (often inheriting
+# from IdentifiableType) that serve as internal building blocks of a parent resource rather
+# than independent graph nodes (e.g. Code in a CodeList, DataItem in a RecordLayout).
+_DDIL_STRUCTURAL_SUB_ELEMENTS = {
+    "Code",
+    "DataItem",
+    "Dimension",
+    "Coordinate",
+    "Point",
+    "Polygon",
+    "Command",
+    "CommandCode",
+    "CommandContent",
     "Binding",
-    "QuestionText",
+    "StandardWeight",
+    "ResponseCardinality",
     "InterviewerInstruction",
     "Instruction",
-    "InstructionName",
-    "ParameterName",
-    "Alias",
-    "VariablesInRecord",
-    "Low",
-    "High",
-    "NumberRange",
-    "MeasurementUnit",
-    "TypeOfUnit",
-    "ProgramLanguage",
-    "LogicalRecordName",
-    "LogicalProductName",
-    "CategorySchemeName",
-    "CodeListSchemeName",
-    "VariableSchemeName",
-    "ConceptSchemeName",
-    "UniverseSchemeName",
-    "QuestionSchemeName",
-    "MeasurementSchemeName",
-    "InstrumentSchemeName",
-    "ControlConstructSchemeName",
-    "ProcessingInstructionSchemeName",
-    "QuestionItemName",
-    "QuestionGroupName",
-    "VariableName",
-    "ConceptName",
-    "UniverseName",
-    "InstrumentName",
-    "MeasurementItemName",
-    "MeasurementItemIntent",
-    "Code",
+    "Default",
+}
+
+# Identity primitive and reference typing elements
+_DDIL_IDENTITY_TAGS = {
+    "urn",
+    "id",
+    "agency",
+    "version",
+    "versionresponsibility",
+    "versionrationale",
+    "rationaledescription",
+    "typeofobject",
+    "basedonobject",
+}
+
+# Property, value, and textual metadata containers
+_DDIL_PROPERTY_TAGS = {
+    "citation",
+    "title",
+    "subtitle",
+    "label",
+    "description",
+    "content",
+    "string",
+    "text",
+    "userid",
+    "userattributepair",
+    "attributekey",
+    "attributevalue",
+    "numberrange",
+    "low",
+    "high",
+    "value",
+    "measurementunit",
+    "typeofunit",
+    "programlanguage",
+    "recommendeddatatype",
+    "datetypecode",
+    "variablesinrecord",
+    "typeofvariablegroup",
+    "measurementitemintent",
+    "questiontext",
+    "alias",
 }
 
 
 def _is_ddil_resource(elem: ET.Element) -> bool:
-    """Determines if an XML element represents a distinct identifiable/maintainable DDI-L resource."""
+    """Determines if an XML element represents a distinct identifiable/maintainable DDI-L resource.
+
+    Applies schema-grounded classification:
+    1. Rejects references (*Reference, *Ref, TypeOfObject).
+    2. Rejects name elements (*Name, e.g. VariableName, CategorySchemeName).
+    3. Rejects identity primitives (URN, ID, Agency, Version).
+    4. Rejects structural sub-elements (e.g. Code in CodeList, DataItem in RecordLayout).
+    5. Rejects property/value containers and unmanaged inline representations/domains.
+    6. Confirms positive DDI identity (URN, ID+Agency, or isUniversallyUnique/isMaintainable/isVersionable).
+    """
     tag = elem.tag.rsplit("}", 1)[-1]
+    tag_lower = tag.lower()
+
+    # Disqualify reference elements
     if tag.endswith("Reference") or tag.endswith("Ref"):
         return False
-    if tag in _DDIL_NON_RESOURCE_TAGS:
+
+    # Disqualify name containers (r:NameType elements such as VariableName, QuestionItemName)
+    if tag.endswith("Name"):
         return False
+
+    # Disqualify identity primitives
+    if tag_lower in _DDIL_IDENTITY_TAGS:
+        return False
+
+    # Disqualify structural sub-elements of parent resources
+    if tag in _DDIL_STRUCTURAL_SUB_ELEMENTS:
+        return False
+
+    # Disqualify property and primitive value containers
+    if tag_lower in _DDIL_PROPERTY_TAGS:
+        return False
+
+    # Disqualify unmanaged inline representations and domains (ManagedRepresentationScheme items are preserved)
+    if (tag.endswith("Representation") and not tag.startswith("Managed")) or tag.endswith("Domain"):
+        return False
+
+    # References embed TypeOfObject
     for c in elem:
-        ctag = c.tag.rsplit("}", 1)[-1]
-        if ctag in ("TypeOfObject", "typeofobject"):
+        ctag = c.tag.rsplit("}", 1)[-1].lower()
+        if ctag == "typeofobject":
             return False
-        if ctag in ("URN", "urn", "ID", "id") and c.text and c.text.strip():
-            return True
-    if "isUniversallyUnique" in elem.attrib or "id" in elem.attrib:
+
+    # Positive identity requirements
+    has_urn = False
+    has_id = False
+    has_agency = False
+    for c in elem:
+        ctag = c.tag.rsplit("}", 1)[-1].lower()
+        if ctag == "urn" and c.text and c.text.strip():
+            has_urn = True
+            break
+        elif ctag == "id" and c.text and c.text.strip():
+            has_id = True
+        elif ctag == "agency" and c.text and c.text.strip():
+            has_agency = True
+
+    if has_urn or (has_id and has_agency):
         return True
+
+    # DDI identity attributes (strict boolean match)
+    attrib = elem.attrib
+    if (
+        attrib.get("isUniversallyUnique") in ("true", "1")
+        or attrib.get("isMaintainable") in ("true", "1")
+        or attrib.get("isVersionable") in ("true", "1")
+    ):
+        return True
+
     return False
 
 
