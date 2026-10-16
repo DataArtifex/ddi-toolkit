@@ -10,12 +10,39 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
 
 from .model import codeBookType, loadxml, loadxmlstring
+from .profiler import (
+    CoverageTreeNode,
+    DdiCodebookProfile,
+    XmlStructureNode,
+    analyze_ddic_profile,
+    build_xml_structure_tree,
+    calculate_quality_grade,
+)
 
 if TYPE_CHECKING:
     from rdflib import Graph
 
     from ..ddicdi.assistants import CdiAssistant
     from .converters import CodebookToLifecycleConverter
+
+__all__ = [
+    "CoverageTreeNode",
+    "DdiCodebookProfile",
+    "XmlStructureNode",
+    "analyze_ddic_profile",
+    "build_xml_structure_tree",
+    "calculate_quality_grade",
+    "codebook_to_cdif",
+    "codebook_to_cdif_graph",
+    "codebook_to_ddi33_fragments",
+    "codebook_to_ddi33_xml",
+    "codebook_to_ddi4",
+    "codebook_to_ddi4_json",
+    "codebook_to_ddi4_xml",
+    "codebook_to_lifecycle",
+    "validate_codebook_xml",
+    "validation_report_to_markdown",
+]
 
 _NCNAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_.-]*$")
 

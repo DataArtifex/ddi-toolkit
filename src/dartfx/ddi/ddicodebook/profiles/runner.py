@@ -137,25 +137,37 @@ def _resolve_target_values(obj: Any, target_path: str, base_loc: str) -> list[tu
 
     for token in tokens:
         next_step: list[tuple[Any, str]] = []
-        is_attr = token.startswith("@")
+        loc_token = token
+
         for curr_obj, curr_loc in current:
+            if isinstance(curr_obj, list):
+                # Intermediate or collection of objects from a prior step
+                sub_items: list[Any] = []
+                for sub_obj in curr_obj:
+                    field = _get_field_name_for_token(sub_obj, token)
+                    if field:
+                        val = getattr(sub_obj, field, None)
+                        if isinstance(val, list):
+                            sub_items.extend(val)
+                        elif val is not None:
+                            sub_items.append(val)
+                    elif token.lower() in ("var", "variable") and hasattr(sub_obj, "search_variables"):
+                        sub_items.extend(sub_obj.search_variables())
+                next_step.append((sub_items, f"{curr_loc}/{loc_token}"))
+                continue
+
             field = _get_field_name_for_token(curr_obj, token)
             if not field:
                 # Special convenience: variables search
                 if token.lower() in ("var", "variable") and hasattr(curr_obj, "search_variables"):
                     vars_found = curr_obj.search_variables()
-                    next_step.append((vars_found, f"{curr_loc}/dataDscr"))
+                    next_step.append((vars_found, f"{curr_loc}/{loc_token}"))
                     continue
-                next_step.append((None, f"{curr_loc}/{token}"))
+                next_step.append((None, f"{curr_loc}/{loc_token}"))
                 continue
 
             val = getattr(curr_obj, field, None)
-            loc_token = token if is_attr else token
-            if isinstance(val, list):
-                # When reaching leaf or intermediate list
-                next_step.append((val, f"{curr_loc}/{loc_token}"))
-            else:
-                next_step.append((val, f"{curr_loc}/{loc_token}"))
+            next_step.append((val, f"{curr_loc}/{loc_token}"))
         current = next_step
 
     return current
@@ -198,6 +210,30 @@ def run_profile_rules(
         else:
             contexts = [(codebook, "codeBook")]
 
+        # Handle aggregate min_coverage rules across context items
+        if rule.rule == "min_coverage" and rule.min_coverage is not None:
+            total_ctx = len(contexts)
+            matching_ctx = 0
+            for ctx_obj, ctx_loc in contexts:
+                target_results = _resolve_target_values(ctx_obj, rule.target, ctx_loc)
+                if any(not _is_value_missing(tv[0]) for tv in target_results):
+                    matching_ctx += 1
+            pct = round((matching_ctx / total_ctx) * 100.0, 1) if total_ctx > 0 else 0.0
+            if pct < rule.min_coverage:
+                msg = f"{rule.message} ({pct}% < {rule.min_coverage}%)"
+                issue = {
+                    "code": rule.id,
+                    "message": msg,
+                    "location": rule.context or "codeBook",
+                }
+                if rule.severity == ValidationSeverity.ERROR:
+                    errors.append(issue)
+                elif rule.severity == ValidationSeverity.WARNING:
+                    warnings.append(issue)
+                else:
+                    infos.append(issue)
+            continue
+
         for ctx_obj, ctx_loc in contexts:
             # Check conditional guard 'when' if specified
             if rule.when:
@@ -238,9 +274,28 @@ def run_profile_rules(
                         violation = True
 
                 if violation:
+                    msg = rule.message
+                    if rule.id == "codebook.filedscr.missing_id":
+                        fn_id: str | None = None
+                        if hasattr(ctx_obj, "fileTxt") and ctx_obj.fileTxt:
+                            for ft in ctx_obj.fileTxt:
+                                for fn in getattr(ft, "fileName", []):
+                                    cid = getattr(fn, "id", None) or getattr(fn, "ID", None)
+                                    if cid:
+                                        fn_id = str(cid)
+                                        break
+                                if fn_id:
+                                    break
+                                cid = getattr(ft, "id", None) or getattr(ft, "ID", None)
+                                if cid:
+                                    fn_id = str(cid)
+                                    break
+                        if fn_id:
+                            msg = f"{rule.message} (note: @ID '{fn_id}' is defined on child fileName)"
+
                     issue = {
                         "code": rule.id,
-                        "message": rule.message,
+                        "message": msg,
                         "location": target_loc,
                     }
                     if rule.severity == ValidationSeverity.ERROR:

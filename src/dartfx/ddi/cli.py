@@ -350,6 +350,237 @@ def ddic_validate(
         raise typer.Exit(code=1)
 
 
+@app.command(name="ddic-profile", no_args_is_help=True)
+def ddic_profile(
+    xmlfile: Annotated[
+        Path,
+        typer.Argument(help="DDI-Codebook 2.5 or 2.6 XML file", exists=True, dir_okay=False),
+    ],
+    format: Annotated[
+        list[str] | None,
+        typer.Option(
+            "--format",
+            "-f",
+            help="Output format: 'md', 'json', 'html', or 'all'. Repeatable / comma-separated.",
+        ),
+    ] = None,
+    profile: Annotated[
+        str,
+        typer.Option(
+            "--profile",
+            "-p",
+            help="Validation profile: 'recommended' (default), 'cdif', 'schema', custom YAML path, or 'none'",
+        ),
+    ] = "recommended",
+    output: Annotated[
+        Path | None,
+        typer.Option("--output", "-o", help="Write report to output file path (or base prefix for multi-format)"),
+    ] = None,
+    output_dir: Annotated[
+        Path | None,
+        typer.Option(
+            "--output-dir",
+            "-od",
+            help="Directory where reports will be saved (<stem>.profile.md, .json, .html)",
+        ),
+    ] = None,
+    title: Annotated[
+        str | None,
+        typer.Option("--title", help="Custom title for the profile report"),
+    ] = None,
+    refresh: Annotated[
+        bool,
+        typer.Option(
+            "--refresh",
+            help="Force re-parsing XML and refresh cached JSON profile (default: False)",
+        ),
+    ] = False,
+    detailed: Annotated[
+        bool,
+        typer.Option(
+            "--detailed/--summary",
+            help="Include detailed variable inventory in report (default: detailed)",
+        ),
+    ] = True,
+    strict: Annotated[
+        bool,
+        typer.Option(
+            "--strict/--no-strict",
+            help="Treat validation warnings as errors",
+        ),
+    ] = False,
+    xml_tree: Annotated[
+        bool,
+        typer.Option(
+            "--xml-tree",
+            help="Print only the BaseX-style XML structural tree analysis to console",
+        ),
+    ] = False,
+    min_grade: Annotated[
+        str | None,
+        typer.Option(
+            "--min-grade",
+            help="Minimum required quality grade (e.g. 'A', 'B', 'C'). Exits with code 1 if failed.",
+        ),
+    ] = None,
+    loglevel: Annotated[LogLevel, typer.Option(help="Log level")] = LogLevel.info,
+):
+    """Profiles a DDI-Codebook document with data dictionary analytics and quality assurance assessment."""
+    setup_logging(loglevel)
+    from dartfx.ddi.ddicodebook import utils as cb_utils
+
+    # Parse requested formats
+    requested_formats: list[str] = []
+    if not format:
+        requested_formats = ["md"]
+    else:
+        for item in format:
+            for piece in item.split(","):
+                p = piece.strip().lower()
+                if p == "all":
+                    requested_formats.extend(["md", "json", "html"])
+                elif p in ("md", "json", "html", "htm", "xml-tree", "tree"):
+                    norm = "html" if p == "htm" else ("xml-tree" if p == "tree" else p)
+                    requested_formats.append(norm)
+                elif p:
+                    raise typer.BadParameter(f"Unsupported format '{p}'. Choose from md, json, html, xml-tree, all.")
+
+    # Deduplicate while preserving order
+    seen: set[str] = set()
+    deduped_formats: list[str] = []
+    for f in requested_formats:
+        if f not in seen:
+            seen.add(f)
+            deduped_formats.append(f)
+    requested_formats = deduped_formats or ["md"]
+
+    # Determine canonical JSON cache location
+    if output_dir is not None:
+        cache_path = output_dir / f"{xmlfile.stem}.profile.json"
+    elif output is not None:
+        if output.is_dir():
+            cache_path = output / f"{xmlfile.stem}.profile.json"
+        elif output.suffix.lower() == ".json":
+            cache_path = output
+        else:
+            cache_path = output.parent / f"{xmlfile.stem}.profile.json"
+    else:
+        cache_path = xmlfile.parent / f"{xmlfile.stem}.profile.json"
+
+    sibling_cache_path = xmlfile.parent / f"{xmlfile.stem}.profile.json"
+
+    existing_cache: Path | None = None
+    if not refresh:
+        if cache_path.exists() and cache_path.is_file():
+            existing_cache = cache_path
+        elif sibling_cache_path.exists() and sibling_cache_path.is_file():
+            existing_cache = sibling_cache_path
+
+    if existing_cache is not None:
+        logging.info(f"Loading full profile from cache: {existing_cache}")
+        full_profile = cb_utils.DdiCodebookProfile.from_json(existing_cache)
+        if title:
+            full_profile.title = title
+        if not full_profile.source_file:
+            full_profile.source_file = xmlfile.name
+        if full_profile.quality:
+            recomputed_grade, recomputed_status = cb_utils.calculate_quality_grade(full_profile.quality.overall_score)
+            full_profile.quality.grade = recomputed_grade
+            full_profile.quality.status = recomputed_status
+            if full_profile.summary:
+                full_profile.summary.quality_grade = recomputed_grade
+        # Backfill xml_structure if cache was created before it was supported
+        if full_profile.xml_structure is None and xmlfile.exists():
+            try:
+                import xml.etree.ElementTree as ET
+
+                tree = ET.parse(xmlfile)
+                full_profile.xml_structure = cb_utils.build_xml_structure_tree(tree.getroot(), doc_count=1)
+                cache_path.write_text(full_profile.to_json(indent=2), encoding="utf-8")
+                logging.info(f"[JSON] Backfilled xml_structure into cache {cache_path}")
+            except Exception as err:
+                logging.debug(f"Could not backfill xml_structure into cache: {err}")
+        if cache_path != existing_cache and not cache_path.exists():
+            try:
+                cache_path.parent.mkdir(parents=True, exist_ok=True)
+                cache_path.write_text(full_profile.to_json(indent=2), encoding="utf-8")
+                logging.info(f"[JSON] Cached profile saved to {cache_path}")
+            except OSError as err:
+                logging.debug(f"Could not save JSON cache to {cache_path}: {err}")
+    else:
+        logging.info(f"Analyzing DDI-Codebook profile: {xmlfile}")
+        full_profile = cb_utils.analyze_ddic_profile(
+            xmlfile,
+            profile=profile,
+            strict=strict,
+            source_file=xmlfile.name,
+            title=title,
+            detailed_variables=detailed,
+        )
+        try:
+            cache_path.parent.mkdir(parents=True, exist_ok=True)
+            cache_path.write_text(full_profile.to_json(indent=2), encoding="utf-8")
+            logging.info(f"[JSON] Full profile cached to {cache_path}")
+        except OSError as err:
+            logging.debug(f"Could not write cache file to {cache_path}: {err}")
+
+    # Early console output if user specifically requested --xml-tree
+    if xml_tree:
+        tree_text = full_profile.xml_tree_text or (
+            full_profile.xml_structure.to_text() if full_profile.xml_structure else ""
+        )
+        typer.echo(tree_text or "No XML structural tree available.")
+        return
+
+    # Rendering helpers
+    def _render(fmt_name: str) -> tuple[str, str]:
+        if fmt_name == "json":
+            return full_profile.to_json(indent=2), ".json"
+        elif fmt_name == "html":
+            return full_profile.to_html(detailed_variables=detailed), ".html"
+        elif fmt_name in ("xml-tree", "tree"):
+            tree_text = full_profile.xml_tree_text or (
+                full_profile.xml_structure.to_text() if full_profile.xml_structure else ""
+            )
+            return tree_text, ".xml-tree.txt"
+        return full_profile.to_markdown(detailed_variables=detailed), ".md"
+
+    # Single-format stdout when output and output_dir are omitted
+    if output is None and output_dir is None and len(requested_formats) == 1:
+        content, _ = _render(requested_formats[0])
+        typer.echo(content)
+    else:
+        for f in requested_formats:
+            content, ext = _render(f)
+            if output_dir is not None:
+                output_dir.mkdir(parents=True, exist_ok=True)
+                dest = output_dir / f"{xmlfile.stem}.profile{ext}"
+            elif output is not None:
+                if output.is_dir():
+                    output.mkdir(parents=True, exist_ok=True)
+                    dest = output / f"{xmlfile.stem}.profile{ext}"
+                elif len(requested_formats) == 1 and output.suffix.lower() == ext:
+                    output.parent.mkdir(parents=True, exist_ok=True)
+                    dest = output
+                else:
+                    base = output.parent / output.stem
+                    dest = Path(f"{base}{ext}")
+            else:
+                dest = xmlfile.parent / f"{xmlfile.stem}.profile{ext}"
+
+            dest.write_text(content, encoding="utf-8")
+            logging.info(f"[{f.upper()}] Report written to {dest}")
+
+    # Quality Gate check
+    if min_grade:
+        target_grade = min_grade.strip().upper()
+        grade_order = {"A": 5, "B": 4, "C": 3, "D": 2, "F": 1}
+        actual_grade = full_profile.quality.grade.upper()
+        if grade_order.get(actual_grade, 0) < grade_order.get(target_grade, 0):
+            logging.error(f"Quality gate failed: document grade '{actual_grade}' < required '{target_grade}'")
+            raise typer.Exit(code=1)
+
+
 @app.command(name="ddic-i18nmerge", no_args_is_help=True)
 def ddic_i18nmerge(
     canonical: Annotated[

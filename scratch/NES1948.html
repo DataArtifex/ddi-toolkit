@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ANES 1948 Time Series Study - DDI-Codebook Profile</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #38bdf8;
+      --grade-color: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.5; padding: 24px;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    header {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
+    }
+    .title-group h1 { font-size: 1.5rem; font-weight: 700; color: #fff; }
+    .title-group p { color: var(--text-muted); font-size: 0.875rem; }
+    .grade-badge {
+      background: var(--card-bg); border: 2px solid var(--grade-color);
+      padding: 10px 20px; border-radius: 12px; text-align: center;
+    }
+    .grade-val { font-size: 2rem; font-weight: 800; color: var(--grade-color); line-height: 1; }
+    .grade-sub { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+    .metrics-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;
+    }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+    .card-label {
+      font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;
+    }
+    .card-val { font-size: 1.5rem; font-weight: 700; color: #fff; }
+    .tabs {
+      display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      background: transparent; border: none; color: var(--text-muted);
+      padding: 8px 16px; font-size: 0.875rem; font-weight: 600; cursor: pointer; border-radius: 6px;
+      white-space: nowrap;
+    }
+    .tab-btn.active { background: var(--primary); color: #0f172a; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.875rem; }
+    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+    th { background: #162032; color: var(--text-muted); font-weight: 600; }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+    .progress-bar {
+      width: 100%; height: 8px; background: #334155; border-radius: 4px; overflow: hidden; margin-top: 4px;
+    }
+    .progress-fill { height: 100%; background: var(--primary); border-radius: 4px; }
+    .search-box {
+      width: 100%; padding: 10px 14px; background: #162032; border: 1px solid var(--border);
+      border-radius: 8px; color: #fff; font-size: 0.875rem; margin-bottom: 12px;
+    }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+    .badge-pass { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .badge-warn { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    .badge-fail { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .cov-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .cov-card {
+      background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid var(--border);
+    }
+    .cov-card-header { display: flex; justify-content: space-between; font-size: 0.875rem; }
+    .cov-card-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+    .json-view {
+      width: 100%; height: 500px; background: #0b1120; color: #38bdf8;
+      font-family: monospace; padding: 12px; border-radius: 6px; border: 1px solid var(--border); font-size: 0.75rem;
+    }
+    .tree-container {
+      background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border);
+      border-radius: 8px; padding: 16px; margin-top: 12px;
+    }
+    .tree-details {
+      margin: 6px 0; border-left: 1px dashed rgba(255, 255, 255, 0.12); padding-left: 12px;
+    }
+    .tree-summary, .tree-leaf-header {
+      display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border);
+      border-radius: 6px; cursor: pointer; font-size: 0.875rem; transition: background 0.15s ease;
+    }
+    .tree-leaf-header { cursor: default; }
+    .tree-summary:hover, .tree-leaf-header:hover { background: rgba(255, 255, 255, 0.05); }
+    .tree-summary::-webkit-details-marker { display: none; }
+    .tree-icon { font-size: 1rem; }
+    .tree-name { font-weight: 600; color: #f1f5f9; }
+    .tree-tag {
+      font-size: 0.75rem; background: #1e293b; color: #38bdf8;
+      padding: 2px 6px; border-radius: 4px; font-family: monospace;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+    .tree-metrics { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    .tree-progress { width: 70px; height: 6px; background: #334155; border-radius: 3px; overflow: hidden; }
+    .tree-count { font-size: 0.75rem; color: var(--text-muted); min-width: 60px; text-align: right; }
+    .tree-insights { margin: 6px 0 6px 28px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .insight-pill {
+      font-size: 0.72rem; padding: 3px 8px; background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; color: var(--text-muted);
+    }
+    .insight-pill strong { color: #e2e8f0; }
+    .tree-children { margin-left: 8px; }
+    .tree-leaf { margin: 6px 0; padding-left: 12px; border-left: 1px dashed rgba(255, 255, 255, 0.08); }
+    .tree-toolbar { display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 12px; }
+    .tree-btn {
+      padding: 4px 10px; background: #1e293b; border: 1px solid var(--border);
+      border-radius: 4px; color: #cbd5e1; font-size: 0.75rem; cursor: pointer;
+    }
+    .tree-btn:hover { background: #334155; }
+    .back-to-top {
+      position: fixed; bottom: 24px; right: 24px;
+      background: var(--card-bg); border: 1px solid var(--border);
+      color: var(--primary); padding: 8px 14px; border-radius: 20px;
+      font-size: 0.8rem; font-weight: 600; cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); transition: all 0.2s ease;
+      z-index: 100;
+    }
+    .back-to-top:hover {
+      background: var(--primary); color: #0f172a; transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body id="top">
+  <div class="container">
+    <header>
+      <div class="title-group">
+        <h1>ANES 1948 Time Series Study</h1>
+        <p>Standard: <strong>DDI-Codebook 2.5</strong> &bull; Agency: <strong>us.mtna</strong></p>
+      </div>
+      <div class="grade-badge">
+        <div class="grade-val">D</div>
+        <div class="grade-sub">67.3 / 100</div>
+      </div>
+    </header>
+
+    <div class="metrics-grid">
+      <div class="card">
+        <div class="card-label">Total Variables</div>
+        <div class="card-val">67</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Data Files</div>
+        <div class="card-val">1</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Categories</div>
+        <div class="card-val">896</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Variable Groups</div>
+        <div class="card-val">0</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Completeness</div>
+        <div class="card-val">17%</div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="tree" onclick="switchTab('tree')">Coverage &amp; Completeness Tree</button>
+      <button class="tab-btn" data-tab="qa" onclick="switchTab('qa')">Quality Assurance</button>
+      <button class="tab-btn" data-tab="dict" onclick="switchTab('dict')">Data Dictionary</button>
+      <button class="tab-btn" data-tab="files" onclick="switchTab('files')">Files &amp; Groups</button>
+      <button class="tab-btn" data-tab="study" onclick="switchTab('study')">Study Metadata</button>
+      <button class="tab-btn" data-tab="xml" data-tab="xml" onclick="switchTab('xml')">XML Structural Tree (BaseX)</button>
+      <button class="tab-btn" data-tab="raw" onclick="switchTab('raw')">Raw JSON</button>
+    </div>
+
+    <div id="tab-tree" class="tab-content active">
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+          <div>
+            <h3 style="margin-bottom: 4px;">Metadata Coverage &amp; Completeness Tree</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">
+              Hierarchical view of DDI-Codebook elements and child-level insights.
+            </p>
+          </div>
+          <div class="tree-toolbar">
+            <button class="tree-btn" onclick="toggleAllTree(true)">Expand All</button>
+            <button class="tree-btn" onclick="toggleAllTree(false)">Collapse All</button>
+          </div>
+        </div>
+        <div style="margin-bottom: 16px; padding: 10px 14px; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <span style="font-size: 0.82rem; color: #cbd5e1;">
+            Showing <strong>Metadata Coverage Tree</strong> (DDI elements &amp; quality). Looking for the physical BaseX-style XML element &amp; attribute path index?
+          </span>
+          <button class="tree-btn" style="background: #38bdf8; color: #0f172a; font-weight: 600;" onclick="switchTab('xml')">
+            View XML Structural Tree &rarr;
+          </button>
+        </div>
+        <div class="tree-container" id="coverageTree">
+          <details class="tree-details" open>
+          <summary class="tree-summary">
+            <span class="tree-icon">📁</span>
+            <span class="tree-name">DDI-Codebook Document</span>
+            <span class="tree-tag">codeBook</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 100.0%;"></div></div>
+              <span class="tree-count">4 of 4</span>
+              <span class="badge badge-pass">100.0%</span>
+            </div>
+          </summary>
+          <div class="tree-insights"><span class="insight-pill"><strong>Standard:</strong> DDI-Codebook</span><span class="insight-pill"><strong>Version:</strong> 2.5</span><span class="insight-pill"><strong>Total Variables:</strong> 67</span><span class="insight-pill"><strong>Total Categories:</strong> 896</span><span class="insight-pill"><strong>Total Files:</strong> 1</span></div>
+          <div class="tree-children">
+            <div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Document Description</span>
+            <span class="tree-tag">docDscr</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 100.0%;"></div></div>
+              <span class="tree-count">1 of 1</span>
+              <span class="badge badge-pass">100.0%</span>
+            </div>
+          </div>
+
+        </div>
+<details class="tree-details" open>
+          <summary class="tree-summary">
+            <span class="tree-icon">📁</span>
+            <span class="tree-name">Study Description</span>
+            <span class="tree-tag">stdyDscr</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 16.7%;"></div></div>
+              <span class="tree-count">2 of 12</span>
+              <span class="badge badge-fail">16.7%</span>
+            </div>
+          </summary>
+          <div class="tree-insights"><span class="insight-pill"><strong>Completeness Score:</strong> 16.7</span><span class="insight-pill"><strong>Study Title:</strong> ANES 1948 Time Series Study</span><span class="insight-pill"><strong>Study Id:</strong> N/A</span></div>
+          <div class="tree-children">
+            <details class="tree-details" open>
+          <summary class="tree-summary">
+            <span class="tree-icon">📁</span>
+            <span class="tree-name">Citation</span>
+            <span class="tree-tag">citation</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 25.0%;"></div></div>
+              <span class="tree-count">1 of 4</span>
+              <span class="badge badge-fail">25.0%</span>
+            </div>
+          </summary>
+
+          <div class="tree-children">
+            <div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Title Statement</span>
+            <span class="tree-tag">titlStmt</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 100.0%;"></div></div>
+              <span class="tree-count">1 of 1</span>
+              <span class="badge badge-pass">100.0%</span>
+            </div>
+          </div>
+          <div class="tree-insights"><span class="insight-pill"><strong>Title:</strong> ANES 1948 Time Series Study</span><span class="insight-pill"><strong>Study Id:</strong> N/A</span></div>
+        </div>
+<div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Bibliographic Citation</span>
+            <span class="tree-tag">biblCit</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 0.0%;"></div></div>
+              <span class="tree-count">0 of 1</span>
+              <span class="badge badge-fail">0.0%</span>
+            </div>
+          </div>
+
+        </div>
+<div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Production Statement</span>
+            <span class="tree-tag">prodStmt</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 0.0%;"></div></div>
+              <span class="tree-count">0 of 1</span>
+              <span class="badge badge-fail">0.0%</span>
+            </div>
+          </div>
+
+        </div>
+<div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Distribution Statement</span>
+            <span class="tree-tag">distStmt</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 0.0%;"></div></div>
+              <span class="tree-count">0 of 1</span>
+              <span class="badge badge-fail">0.0%</span>
+            </div>
+          </div>
+
+        </div>
+          </div>
+        </details>
+<details class="tree-details" open>
+          <summary class="tree-summary">
+            <span class="tree-icon">📁</span>
+            <span class="tree-name">Study Scope &amp; Information</span>
+            <span class="tree-tag">stdyInfo</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 20.0%;"></div></div>
+              <span class="tree-count">1 of 5</span>
+              <span class="badge badge-fail">20.0%</span>
+            </div>
+          </summary>
+
+          <div class="tree-children">
+            <div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Abstract</span>
+            <span class="tree-tag">abstract</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 100.0%;"></div></div>
+              <span class="tree-count">1 of 1</span>
+              <span class="badge badge-pass">100.0%</span>
+            </div>
+          </div>
+
+        </div>
+<div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Subject &amp; Keywords</span>
+            <span class="tree-tag">subject</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 0.0%;"></div></div>
+              <span class="tree-count">0 of 1</span>
+              <span class="badge badge-fail">0.0%</span>
+            </div>
+          </div>
+          <div class="tree-insights"><span class="insight-pill"><strong>Keywords:</strong> 0</span><span class="insight-pill"><strong>Topic Classifications:</strong> 0</span></div>
+        </div>
+<div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Summary Description</span>
+            <span class="tree-tag">sumDscr</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 0.0%;"></div></div>
+              <span class="tree-count">0 of 4</span>
+              <span class="badge badge-fail">0.0%</span>
+            </div>
+          </div>
+          <div class="tree-insights"><span class="insight-pill"><strong>Time Period:</strong> False</span><span class="insight-pill"><strong>Geographic Coverage:</strong> False</span><span class="insight-pill"><strong>Universe:</strong> False</span><span class="insight-pill"><strong>Analysis Unit:</strong> False</span></div>
+        </div>
+          </div>
+        </details>
+<div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Methodology</span>
+            <span class="tree-tag">method</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 0.0%;"></div></div>
+              <span class="tree-count">0 of 2</span>
+              <span class="badge badge-fail">0.0%</span>
+            </div>
+          </div>
+          <div class="tree-insights"><span class="insight-pill"><strong>Collection Mode:</strong> False</span><span class="insight-pill"><strong>Sampling Procedure:</strong> False</span></div>
+        </div>
+<div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Data Access</span>
+            <span class="tree-tag">dataAccs</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 0.0%;"></div></div>
+              <span class="tree-count">0 of 1</span>
+              <span class="badge badge-fail">0.0%</span>
+            </div>
+          </div>
+
+        </div>
+          </div>
+        </details>
+<details class="tree-details" open>
+          <summary class="tree-summary">
+            <span class="tree-icon">📁</span>
+            <span class="tree-name">Data Files</span>
+            <span class="tree-tag">fileDscr</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 100.0%;"></div></div>
+              <span class="tree-count">1 of 1</span>
+              <span class="badge badge-pass">100.0%</span>
+            </div>
+          </summary>
+          <div class="tree-insights"><span class="insight-pill"><strong>Total Files:</strong> 1</span><span class="insight-pill"><strong>Total Cases:</strong> 662</span><span class="insight-pill"><strong>Total Variables:</strong> 67</span></div>
+          <div class="tree-children">
+            <div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">NES1948.dta</span>
+            <span class="tree-tag">fileTxt</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 100.0%;"></div></div>
+              <span class="tree-count">1 of 1</span>
+              <span class="badge badge-pass">100.0%</span>
+            </div>
+          </div>
+          <div class="tree-insights"><span class="insight-pill"><strong>File Id:</strong> F1</span><span class="insight-pill"><strong>File Name:</strong> NES1948.dta</span><span class="insight-pill"><strong>File Type:</strong> [fileTypeType(id=None, xml_lang=None, elementVersion=None, elementVersionDate=None, ddiLifecycleUrn=None, ddiCodebookUrn=None, content=&#x27;Stata&#x27;, isTranslatable=None, isTranslated=None, translationDate=None, translationSourceLanguage=None, charset=None)]</span><span class="insight-pill"><strong>Case Count:</strong> 662</span><span class="insight-pill"><strong>Variable Count:</strong> 67</span><span class="insight-pill"><strong>Mapped Variables:</strong> 67</span></div>
+        </div>
+          </div>
+        </details>
+<details class="tree-details" open>
+          <summary class="tree-summary">
+            <span class="tree-icon">📁</span>
+            <span class="tree-name">Variable Description</span>
+            <span class="tree-tag">dataDscr</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 100.0%;"></div></div>
+              <span class="tree-count">67 of 67</span>
+              <span class="badge badge-pass">100.0%</span>
+            </div>
+          </summary>
+          <div class="tree-insights"><span class="insight-pill"><strong>Total Variables:</strong> 67</span><span class="insight-pill"><strong>Total Groups:</strong> 0</span><span class="insight-pill"><strong>Categorical Variables:</strong> 63</span><span class="insight-pill"><strong>Numeric Variables:</strong> 3</span><span class="insight-pill"><strong>Character Variables:</strong> 1</span><span class="insight-pill"><strong>Datetime Variables:</strong> 0</span></div>
+          <div class="tree-children">
+            <div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Variable Groups</span>
+            <span class="tree-tag">varGrp</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 100%; background: #475569;"></div></div>
+              <span class="tree-count">0 present</span>
+              <span class="badge" style="background: rgba(148, 163, 184, 0.2); color: #94a3b8;">INFO</span>
+            </div>
+          </div>
+          <div class="tree-insights"><span class="insight-pill"><strong>Total Groups:</strong> 0</span><span class="insight-pill"><strong>Groups Documented:</strong> 0</span><span class="insight-pill"><strong>Groups With Labels:</strong> 0</span><span class="insight-pill"><strong>Groups With Text:</strong> 0</span><span class="insight-pill"><strong>Groups With Definitions:</strong> 0</span></div>
+        </div>
+<details class="tree-details" open>
+          <summary class="tree-summary">
+            <span class="tree-icon">📁</span>
+            <span class="tree-name">Variables</span>
+            <span class="tree-tag">var</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 100.0%;"></div></div>
+              <span class="tree-count">67 of 67</span>
+              <span class="badge badge-pass">100.0%</span>
+            </div>
+          </summary>
+          <div class="tree-insights"><span class="insight-pill"><strong>Total Variables:</strong> 67</span><span class="insight-pill"><strong>Numeric:</strong> 3</span><span class="insight-pill"><strong>Categorical:</strong> 63</span><span class="insight-pill"><strong>Character:</strong> 1</span><span class="insight-pill"><strong>Weighted:</strong> 0</span></div>
+          <div class="tree-children">
+            <div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Variable Labels</span>
+            <span class="tree-tag">labl</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 100.0%;"></div></div>
+              <span class="tree-count">67 of 67</span>
+              <span class="badge badge-pass">100.0%</span>
+            </div>
+          </div>
+
+        </div>
+<div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Questions</span>
+            <span class="tree-tag">qstn</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 0.0%;"></div></div>
+              <span class="tree-count">0 of 67</span>
+              <span class="badge badge-fail">0.0%</span>
+            </div>
+          </div>
+
+        </div>
+<details class="tree-details" open>
+          <summary class="tree-summary">
+            <span class="tree-icon">📁</span>
+            <span class="tree-name">Categories &amp; Codes</span>
+            <span class="tree-tag">catgry</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 94.0%;"></div></div>
+              <span class="tree-count">63 of 67</span>
+              <span class="badge badge-pass">94.0%</span>
+            </div>
+          </summary>
+          <div class="tree-insights"><span class="insight-pill"><strong>Total Categories:</strong> 896</span><span class="insight-pill"><strong>Categories With Values:</strong> 896</span><span class="insight-pill"><strong>Categories With Labels:</strong> 896</span><span class="insight-pill"><strong>Categories With Stats:</strong> 0</span><span class="insight-pill"><strong>Missing Categories:</strong> 0</span><span class="insight-pill"><strong>Avg Categories Per Var:</strong> 14.22</span><span class="insight-pill"><strong>Max Categories:</strong> 91</span></div>
+          <div class="tree-children">
+            <div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Category Values</span>
+            <span class="tree-tag">catValu</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 100.0%;"></div></div>
+              <span class="tree-count">896 of 896</span>
+              <span class="badge badge-pass">100.0%</span>
+            </div>
+          </div>
+
+        </div>
+<div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Category Labels</span>
+            <span class="tree-tag">labl</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 100.0%;"></div></div>
+              <span class="tree-count">896 of 896</span>
+              <span class="badge badge-pass">100.0%</span>
+            </div>
+          </div>
+
+        </div>
+<div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Category Frequencies &amp; Stats</span>
+            <span class="tree-tag">catStat</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 100%; background: #475569;"></div></div>
+              <span class="tree-count">0 present</span>
+              <span class="badge" style="background: rgba(148, 163, 184, 0.2); color: #94a3b8;">INFO</span>
+            </div>
+          </div>
+
+        </div>
+          </div>
+        </details>
+<div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Format Specifications</span>
+            <span class="tree-tag">varFormat</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 100.0%;"></div></div>
+              <span class="tree-count">67 of 67</span>
+              <span class="badge badge-pass">100.0%</span>
+            </div>
+          </div>
+          <div class="tree-insights"><span class="insight-pill"><strong>Numeric:</strong> 66</span><span class="insight-pill"><strong>Character:</strong> 1</span></div>
+        </div>
+<div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Missing Values Defined</span>
+            <span class="tree-tag">invalrng</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 100%; background: #475569;"></div></div>
+              <span class="tree-count">0 present</span>
+              <span class="badge" style="background: rgba(148, 163, 184, 0.2); color: #94a3b8;">INFO</span>
+            </div>
+          </div>
+          <div class="tree-insights"><span class="insight-pill"><strong>Variables With Missing Definitions:</strong> 0</span></div>
+        </div>
+<div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Concepts</span>
+            <span class="tree-tag">concept</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 0.0%;"></div></div>
+              <span class="tree-count">0 of 67</span>
+              <span class="badge badge-fail">0.0%</span>
+            </div>
+          </div>
+
+        </div>
+<div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Universes</span>
+            <span class="tree-tag">universe</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 0.0%;"></div></div>
+              <span class="tree-count">0 of 67</span>
+              <span class="badge badge-fail">0.0%</span>
+            </div>
+          </div>
+
+        </div>
+<div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Summary Statistics</span>
+            <span class="tree-tag">sumStat</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 100%; background: #475569;"></div></div>
+              <span class="tree-count">0 present</span>
+              <span class="badge" style="background: rgba(148, 163, 184, 0.2); color: #94a3b8;">INFO</span>
+            </div>
+          </div>
+
+        </div>
+<div class="tree-leaf">
+          <div class="tree-leaf-header">
+            <span class="tree-icon">📄</span>
+            <span class="tree-name">Physical Location</span>
+            <span class="tree-tag">location</span>
+            <div class="tree-metrics">
+              <div class="tree-progress"><div class="progress-fill" style="width: 100.0%;"></div></div>
+              <span class="tree-count">67 of 67</span>
+              <span class="badge badge-pass">100.0%</span>
+            </div>
+          </div>
+
+        </div>
+          </div>
+        </details>
+          </div>
+        </details>
+          </div>
+        </details>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-qa" class="tab-content">
+      <div class="card" style="margin-bottom: 16px;">
+        <h3 style="margin-bottom: 8px;">Quality Dimensions (DDI-C Archival Best Practices)</h3>
+        <table>
+          <thead>
+            <tr><th>Dimension</th><th>Score</th><th>Status</th><th>Passed</th><th>Coverage</th></tr>
+          </thead>
+          <tbody><tr>
+              <td><strong>Study Identification &amp; Scope</strong></td>
+              <td>16.7%</td>
+              <td><span class="badge badge-fail">ACTION_NEEDED</span></td>
+              <td>2 / 12</td>
+              <td style="width: 250px;">
+                <div class="progress-bar"><div class="progress-fill" style="width: 16.7%;"></div></div>
+              </td>
+            </tr>
+<tr>
+              <td><strong>Data Files Description</strong></td>
+              <td>100.0%</td>
+              <td><span class="badge badge-pass">PASS</span></td>
+              <td>1 / 1</td>
+              <td style="width: 250px;">
+                <div class="progress-bar"><div class="progress-fill" style="width: 100.0%;"></div></div>
+              </td>
+            </tr>
+<tr>
+              <td><strong>Variable Documentation</strong></td>
+              <td>60.0%</td>
+              <td><span class="badge badge-warn">REVIEW</span></td>
+              <td>2 / 3</td>
+              <td style="width: 250px;">
+                <div class="progress-bar"><div class="progress-fill" style="width: 60.0%;"></div></div>
+              </td>
+            </tr>
+<tr>
+              <td><strong>Category &amp; Code Documentation</strong></td>
+              <td>100.0%</td>
+              <td><span class="badge badge-pass">PASS</span></td>
+              <td>1 / 1</td>
+              <td style="width: 250px;">
+                <div class="progress-bar"><div class="progress-fill" style="width: 100.0%;"></div></div>
+              </td>
+            </tr></tbody>
+        </table>
+      </div>
+      <div class="card"><h3 style="margin-bottom: 8px;">Findings (1)</h3><table>
+          <thead><tr><th>Severity</th><th>Rule</th><th>Message</th><th>Location</th></tr></thead>
+          <tbody><tr>
+              <td><span class="badge badge-warn">WARNING</span></td>
+              <td><code>codebook.no_variables</code></td>
+              <td>Codebook has no variables</td>
+              <td><code>codeBook/dataDscr/var</code></td>
+            </tr></tbody>
+        </table></div>
+    </div>
+
+    <div id="tab-dict" class="tab-content">
+      <div class="card" style="margin-bottom: 16px;">
+        <h3 style="margin-bottom: 12px;">Metadata Coverage &amp; Completeness</h3>
+        <div class="cov-grid"><div class="cov-card">
+            <div class="cov-card-header"><span>Variable Labels </span><strong>67 (100.0%)</strong></div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 100.0%;"></div></div>
+            <div class="cov-card-sub">67 of 67 variables</div>
+          </div>
+<div class="cov-card">
+            <div class="cov-card-header"><span>Question Texts </span><strong>0 (0.0%)</strong></div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 0.0%;"></div></div>
+            <div class="cov-card-sub">0 of 67 variables</div>
+          </div>
+<div class="cov-card">
+            <div class="cov-card-header"><span>Missing Values Defined <span class="badge" style="background: rgba(148, 163, 184, 0.2); color: #94a3b8; font-size: 0.65rem; margin-left: 6px;">INFO</span></span><strong>0 (0.0%)</strong></div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 100%; background: #475569;"></div></div>
+            <div class="cov-card-sub">0 variables define missing codes</div>
+          </div>
+<div class="cov-card">
+            <div class="cov-card-header"><span>Format Specifications </span><strong>67 (100.0%)</strong></div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 100.0%;"></div></div>
+            <div class="cov-card-sub">67 of 67 variables</div>
+          </div>
+<div class="cov-card">
+            <div class="cov-card-header"><span>Concepts Defined </span><strong>0 (0.0%)</strong></div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 0.0%;"></div></div>
+            <div class="cov-card-sub">0 of 67 variables</div>
+          </div>
+<div class="cov-card">
+            <div class="cov-card-header"><span>Summary Statistics <span class="badge" style="background: rgba(148, 163, 184, 0.2); color: #94a3b8; font-size: 0.65rem; margin-left: 6px;">INFO</span></span><strong>0 (0.0%)</strong></div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 100%; background: #475569;"></div></div>
+            <div class="cov-card-sub">0 variables have statistics</div>
+          </div></div>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom: 12px;">Variables Inventory</h3>
+        <input type="text" id="varSearch" class="search-box" placeholder="Filter variables..."
+               onkeyup="filterVariables()"/>
+        <table id="varsTable">
+          <thead>
+            <tr><th>Name</th><th>Label</th><th>Type</th><th>Categories</th><th>Question</th><th>Missing</th></tr>
+          </thead>
+          <tbody id="varsTbody"><tr>
+              <td><code>VVERSION</code></td>
+              <td>NES VERSION NUMBER</td>
+              <td>numeric</td>
+              <td>0</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>VDSETNO</code></td>
+              <td>NES DATASET NUMBER</td>
+              <td>character</td>
+              <td>0</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480001</code></td>
+              <td>ICPSR ARCHIVE NUMBER</td>
+              <td>numeric</td>
+              <td>0</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480002</code></td>
+              <td>INTERVIEW NUMBER</td>
+              <td>numeric</td>
+              <td>0</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480003</code></td>
+              <td>POP CLASSIFICATION</td>
+              <td>categorical</td>
+              <td>3</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480004</code></td>
+              <td>CODER</td>
+              <td>categorical</td>
+              <td>5</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480005</code></td>
+              <td>NUMBER OF CALLS TO R</td>
+              <td>categorical</td>
+              <td>10</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480006</code></td>
+              <td>R REMEMBER PREVIOUS INT</td>
+              <td>categorical</td>
+              <td>3</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480007</code></td>
+              <td>INTR INTERVIEW THIS R</td>
+              <td>categorical</td>
+              <td>3</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480008</code></td>
+              <td>PRVS PRE-ELCTN R REINT</td>
+              <td>categorical</td>
+              <td>6</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480009</code></td>
+              <td>R INT IN PRE/POSTELCTN</td>
+              <td>categorical</td>
+              <td>5</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480010</code></td>
+              <td>RENT CNTRL KEPT/DROPPED</td>
+              <td>categorical</td>
+              <td>6</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480011</code></td>
+              <td>GOVT CONTROL PRICES</td>
+              <td>categorical</td>
+              <td>7</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480012</code></td>
+              <td>WHAT TO DO W TFT-HT ACT</td>
+              <td>categorical</td>
+              <td>10</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480013</code></td>
+              <td>PRESLELCTN OTCM SURPRISE</td>
+              <td>categorical</td>
+              <td>21</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480014a</code></td>
+              <td>WHY PPL VTD FOR TRUMAN 1</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480014b</code></td>
+              <td>WHY PPL VTD FOR TRUMAN 2</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480015a</code></td>
+              <td>WHY PPL VTD AGNST TRUMAN 1</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480015b</code></td>
+              <td>WHY PPL VTD AGNST TRUMAN 2</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480016a</code></td>
+              <td>WHY PPL VTD FOR DEWEY 1</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480016b</code></td>
+              <td>WHY PPL VTD FOR DEWEY 2</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480017a</code></td>
+              <td>WHY PPL VTD AGNST DEWEY 1</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480017b</code></td>
+              <td>WHY PPL VTD AGNST DEWEY 2</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480018</code></td>
+              <td>DID R VOTE/FOR WHOM</td>
+              <td>categorical</td>
+              <td>7</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480019</code></td>
+              <td>WN DECIDE FOR WHOM TO VT</td>
+              <td>categorical</td>
+              <td>8</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480020</code></td>
+              <td>CNSD VT FOR SOMEONE ELSE</td>
+              <td>categorical</td>
+              <td>15</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480021a</code></td>
+              <td>XWHY DID NOT VT FOR HIM 1</td>
+              <td>categorical</td>
+              <td>10</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480021b</code></td>
+              <td>XWHY DID NOT VT FOR HIM 2</td>
+              <td>categorical</td>
+              <td>10</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480022a</code></td>
+              <td>WHY VT THE WAY YOU DID 1</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480022b</code></td>
+              <td>WHY VT THE WAY YOU DID 2</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480023</code></td>
+              <td>VOTED STRAIGHT TICKET</td>
+              <td>categorical</td>
+              <td>10</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480024</code></td>
+              <td>R NOT VT-IF VT,FOR WHOM</td>
+              <td>categorical</td>
+              <td>7</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480025a</code></td>
+              <td>R NOT VT-WHY DID NOT VT 1</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480025b</code></td>
+              <td>R NOT VT-WHY DID NOT VT 2</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480026</code></td>
+              <td>R NOT VT-WAS R REG TO VT</td>
+              <td>categorical</td>
+              <td>5</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480027</code></td>
+              <td>VTD IN PRVS PRESL ELCTN</td>
+              <td>categorical</td>
+              <td>8</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480028</code></td>
+              <td>VTD FOR WHOM IN 1944</td>
+              <td>categorical</td>
+              <td>7</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480029</code></td>
+              <td>OCCUPATION OF HEAD</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480030</code></td>
+              <td>HEAD BELONG TO LBR UN</td>
+              <td>categorical</td>
+              <td>4</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480031a</code></td>
+              <td>GRPS IDENTIFIED W TRUMAN 1</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480031b</code></td>
+              <td>GRPS IDENTIFIED W TRUMAN 2</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480031c</code></td>
+              <td>GRPS IDENTIFIED W TRUMAN 3</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480032a</code></td>
+              <td>GRPS IDENTIFIED W DEWEY 1</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480032b</code></td>
+              <td>GRPS IDENTIFIED W DEWEY 2</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480032c</code></td>
+              <td>GRPS IDENTIFIED W DEWEY 3</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480033a</code></td>
+              <td>ISSUES CONNECTED W TRMN 1</td>
+              <td>categorical</td>
+              <td>91</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480033b</code></td>
+              <td>ISSUES CONNECTED W TRMN 2</td>
+              <td>categorical</td>
+              <td>91</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480034a</code></td>
+              <td>ISSUES CONNECTED W DEWEY 1</td>
+              <td>categorical</td>
+              <td>91</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480034b</code></td>
+              <td>ISSUES CONNECTED W DEWEY 2</td>
+              <td>categorical</td>
+              <td>91</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480035a</code></td>
+              <td>PERSONAL ATTRIBUTE TRMN 1</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480035b</code></td>
+              <td>PERSONAL ATTRIBUTE TRMN 2</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480036a</code></td>
+              <td>PERSONAL ATTRIBUTE DEWEY 1</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480036b</code></td>
+              <td>PERSONAL ATTRIBUTE DEWEY 2</td>
+              <td>categorical</td>
+              <td>12</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480037</code></td>
+              <td>CMPN INCIDENTS MENTIONED</td>
+              <td>categorical</td>
+              <td>7</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480038</code></td>
+              <td>41-PRESLELCTN PLAN TO VT</td>
+              <td>categorical</td>
+              <td>5</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480039</code></td>
+              <td>41-PLAN TO VT REP/DEM</td>
+              <td>categorical</td>
+              <td>8</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480040</code></td>
+              <td>41-USA&#x27;S CNCRN W OTHERS</td>
+              <td>categorical</td>
+              <td>7</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480041</code></td>
+              <td>41-SATISD USA TWRD RUSS</td>
+              <td>categorical</td>
+              <td>7</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480042</code></td>
+              <td>41-INFORMATION LEVEL</td>
+              <td>categorical</td>
+              <td>5</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480043</code></td>
+              <td>41-USA GV IN,AGRT RUSS</td>
+              <td>categorical</td>
+              <td>8</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480044</code></td>
+              <td>41-USA-RUSS AGRT VIA U.N</td>
+              <td>categorical</td>
+              <td>7</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480045</code></td>
+              <td>SEX OF RESPONDENT</td>
+              <td>categorical</td>
+              <td>3</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480046</code></td>
+              <td>RACE OF RESPONDENT</td>
+              <td>categorical</td>
+              <td>4</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480047</code></td>
+              <td>AGE OF RESPONDENT</td>
+              <td>categorical</td>
+              <td>7</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480048</code></td>
+              <td>EDUCATION OF RESPONDENT</td>
+              <td>categorical</td>
+              <td>4</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480049</code></td>
+              <td>TOTAL 1948 INCOME</td>
+              <td>categorical</td>
+              <td>8</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+<tr>
+              <td><code>V480050</code></td>
+              <td>RELIGIOUS PREFERENCE</td>
+              <td>categorical</td>
+              <td>6</td>
+              <td>—</td>
+              <td>—</td>
+            </tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="tab-files" class="tab-content">
+      <div class="card" style="margin-bottom: 16px;">
+        <h3 style="margin-bottom: 12px;">Data Files (`fileDscr`)</h3>
+        <table>
+          <thead>
+            <tr><th>ID</th><th>File Name</th><th>Type</th><th>Cases</th><th>Vars</th><th>Mapped</th></tr>
+          </thead>
+          <tbody><tr>
+              <td><code>F1</code></td>
+              <td>NES1948.dta</td>
+              <td>[fileTypeType(id=None, xml_lang=None, elementVersion=None, elementVersionDate=None, ddiLifecycleUrn=None, ddiCodebookUrn=None, content=&#x27;Stata&#x27;, isTranslatable=None, isTranslated=None, translationDate=None, translationSourceLanguage=None, charset=None)]</td>
+              <td>662</td>
+              <td>67</td>
+              <td><strong>67</strong></td>
+            </tr></tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom: 12px;">Variable Groups (`varGrp`)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Group ID</th>
+              <th>Name / Label</th>
+              <th>Description / Text (<code>txt</code>)</th>
+              <th>Type</th>
+              <th>Variables Count</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="tab-study" class="tab-content">
+      <div class="card">
+        <h3 style="margin-bottom: 12px;">Study Completeness Checklist (17%)</h3>
+        <table><thead><tr><th>Element</th><th>Present</th></tr></thead><tbody><tr><td>Study Title (`titl`)</td><td><span class="badge badge-pass">YES</span></td></tr>
+<tr><td>Abstract (`abstract`)</td><td><span class="badge badge-pass">YES</span></td></tr>
+<tr><td>Producers (`producer`)</td><td><span class="badge badge-fail">NO</span></td></tr>
+<tr><td>Distributors (`distrbtr`)</td><td><span class="badge badge-fail">NO</span></td></tr>
+<tr><td>Bibliographic Citation (`biblCit`)</td><td><span class="badge badge-fail">NO</span></td></tr>
+<tr><td>Time Period (`timePrd`)</td><td><span class="badge badge-fail">NO</span></td></tr>
+<tr><td>Geographic Coverage (`geogCover`/`nation`)</td><td><span class="badge badge-fail">NO</span></td></tr>
+<tr><td>Universe (`universe`)</td><td><span class="badge badge-fail">NO</span></td></tr>
+<tr><td>Unit of Analysis (`anlyUnit`)</td><td><span class="badge badge-fail">NO</span></td></tr>
+<tr><td>Collection Mode (`collMode`)</td><td><span class="badge badge-fail">NO</span></td></tr>
+<tr><td>Sampling Procedure (`sampProc`)</td><td><span class="badge badge-fail">NO</span></td></tr>
+<tr><td>Access Conditions (`dataAccs`)</td><td><span class="badge badge-fail">NO</span></td></tr></tbody></table>
+      </div>
+    </div>
+
+    <div id="tab-xml" class="tab-content">
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 style="margin-bottom: 4px;">XML Structural Tree Analysis (BaseX-Style)</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">
+              Data guide path index showing element occurrences, attribute distributions, and value types.
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <span class="badge badge-pass">2980 Elements</span>
+            <span class="badge badge-warn">1640 Attributes</span>
+            <button class="tree-btn" onclick="copyXmlTree()">Copy Tree</button>
+          </div>
+        </div>
+        <pre class="json-view" id="xmlTreeText" style="height: 600px; font-family: monospace; font-size: 0.8rem; line-height: 1.4; color: #cbd5e1; background: #0b1120; overflow: auto; white-space: pre;"><code>doc(): 1x
+  codeBook: 1x
+    @version: 1x, double [2.5, 2.5], leaf
+    @ID: 1x, string, leaf
+    @codeBookAgency: 1x, string, leaf
+    @elementVersion: 1x, string, leaf
+    docDscr: 1x
+      citation: 1x
+        titlStmt: 1x
+          titl: 1x, leaf
+            text(): 1x, string, leaf
+        prodStmt: 1x
+          prodDate: 1x, leaf
+            @date: 1x, string, leaf
+            text(): 1x, string, leaf
+          software: 1x, leaf
+            @version: 1x, string, leaf
+            text(): 1x, string, leaf
+    stdyDscr: 1x
+      citation: 1x
+        titlStmt: 1x
+          titl: 1x, leaf
+            text(): 1x, string, leaf
+          altTitl: 1x, leaf
+            text(): 1x, string, leaf
+        prodStmt: 1x, leaf
+      stdyInfo: 1x
+        abstract: 1x, leaf
+          text(): 1x, string, leaf
+    fileDscr: 1x
+      @ID: 1x, string, leaf
+      fileTxt: 1x
+        fileName: 1x, leaf
+          text(): 1x, string, leaf
+        dimensns: 1x
+          caseQnty: 1x, leaf
+            text(): 1x, integer [662, 662], leaf
+          varQnty: 1x, leaf
+            text(): 1x, integer [67, 67], leaf
+        fileType: 1x, leaf
+          text(): 1x, string, leaf
+    dataDscr: 1x
+      var: 67x
+        @ID: 67x, strings, leaf
+        @name: 67x, strings, leaf
+        @files: 67x, string, leaf
+        @dcml: 67x, integer [0, 0], leaf
+        location: 67x, leaf
+          @width: 67x, 20 distinct integers [8, 43], leaf
+          @StartPos: 67x, integers [1, 2068], leaf
+          @EndPos: 67x, integers [9, 2080], leaf
+        labl: 67x, leaf
+          @xml-lang: 67x, string, leaf
+          text(): 67x, strings, leaf
+        varFormat: 67x, leaf
+          @type: 67x, 2 distinct strings, leaf
+          @schema: 67x, string, leaf
+          @formatname: 67x, 3 distinct strings, leaf
+          text(): 67x, 21 distinct strings, leaf
+        catgry: 896x
+          catValu: 896x, leaf
+            text(): 896x, integers [0, 99], leaf
+          labl: 896x, leaf
+            @xml-lang: 896x, string, leaf
+            text(): 896x, strings, leaf</code></pre>
+      </div>
+    </div>
+
+    <div id="tab-raw" class="tab-content">
+      <div class="card">
+        <h3 style="margin-bottom: 8px;">Machine-Actionable Profile (JSON)</h3>
+        <textarea class="json-view" readonly>{&quot;schema_version&quot;: &quot;1.0.0&quot;, &quot;ddi_standard&quot;: &quot;DDI-Codebook&quot;, &quot;standard_version&quot;: &quot;2.5&quot;, &quot;title&quot;: &quot;ANES 1948 Time Series Study&quot;, &quot;study_id&quot;: &quot;ANES1948&quot;, &quot;source_file&quot;: &quot;NES1948.xml&quot;, &quot;generated_at&quot;: &quot;2026-10-15T18:18:30.426988+00:00&quot;, &quot;summary&quot;: {&quot;ddi_standard&quot;: &quot;DDI-Codebook&quot;, &quot;standard_version&quot;: &quot;2.5&quot;, &quot;title&quot;: &quot;ANES 1948 Time Series Study&quot;, &quot;study_id&quot;: &quot;ANES1948&quot;, &quot;agency&quot;: &quot;us.mtna&quot;, &quot;total_elements&quot;: 2980, &quot;total_unique_tags&quot;: 26, &quot;total_variables&quot;: 67, &quot;total_categories&quot;: 896, &quot;total_files&quot;: 1, &quot;total_variable_groups&quot;: 0, &quot;sections_present&quot;: [&quot;docDscr&quot;, &quot;stdyDscr&quot;, &quot;fileDscr&quot;, &quot;dataDscr&quot;], &quot;languages&quot;: {}, &quot;quality_score&quot;: 67.3, &quot;quality_grade&quot;: &quot;D&quot;}, &quot;study&quot;: {&quot;title&quot;: &quot;ANES 1948 Time Series Study&quot;, &quot;has_title&quot;: true, &quot;has_abstract&quot;: true, &quot;has_producers&quot;: false, &quot;has_distributors&quot;: false, &quot;has_biblcit&quot;: false, &quot;has_time_period&quot;: false, &quot;has_geographic_coverage&quot;: false, &quot;has_universe&quot;: false, &quot;has_analysis_unit&quot;: false, &quot;has_collection_mode&quot;: false, &quot;has_sampling_procedure&quot;: false, &quot;has_access_conditions&quot;: false, &quot;keywords_count&quot;: 0, &quot;topic_classifications_count&quot;: 0, &quot;other_materials_count&quot;: 0, &quot;completeness_score&quot;: 16.7}, &quot;files&quot;: [{&quot;file_id&quot;: &quot;F1&quot;, &quot;file_name&quot;: &quot;NES1948.dta&quot;, &quot;file_type&quot;: &quot;[fileTypeType(id=None, xml_lang=None, elementVersion=None, elementVersionDate=None, ddiLifecycleUrn=None, ddiCodebookUrn=None, content=&#x27;Stata&#x27;, isTranslatable=None, isTranslated=None, translationDate=None, translationSourceLanguage=None, charset=None)]&quot;, &quot;case_count&quot;: 662, &quot;variable_count&quot;: 67, &quot;mapped_variable_count&quot;: 67, &quot;fingerprints&quot;: []}], &quot;data_dictionary&quot;: {&quot;total_variables&quot;: 67, &quot;numeric_variables&quot;: 3, &quot;character_variables&quot;: 1, &quot;categorical_variables&quot;: 63, &quot;datetime_variables&quot;: 0, &quot;unspecified_variables&quot;: 0, &quot;weighted_variables_count&quot;: 0, &quot;weight_variable_ids&quot;: [], &quot;derived_variables_count&quot;: 0, &quot;labels_coverage&quot;: {&quot;count&quot;: 67, &quot;total&quot;: 67, &quot;percentage&quot;: 100.0}, &quot;questions_coverage&quot;: {&quot;count&quot;: 0, &quot;total&quot;: 67, &quot;percentage&quot;: 0.0}, &quot;concepts_coverage&quot;: {&quot;count&quot;: 0, &quot;total&quot;: 67, &quot;percentage&quot;: 0.0}, &quot;universes_coverage&quot;: {&quot;count&quot;: 0, &quot;total&quot;: 67, &quot;percentage&quot;: 0.0}, &quot;missing_defined_coverage&quot;: {&quot;count&quot;: 0, &quot;total&quot;: 67, &quot;percentage&quot;: 0.0}, &quot;sumstats_coverage&quot;: {&quot;count&quot;: 0, &quot;total&quot;: 67, &quot;percentage&quot;: 0.0}, &quot;format_coverage&quot;: {&quot;count&quot;: 67, &quot;total&quot;: 67, &quot;percentage&quot;: 100.0}, &quot;location_coverage&quot;: {&quot;count&quot;: 67, &quot;total&quot;: 67, &quot;percentage&quot;: 100.0}, &quot;total_categories&quot;: 896, &quot;avg_categories_per_categorical_var&quot;: 14.22, &quot;median_categories_per_categorical_var&quot;: 10.0, &quot;max_categories&quot;: 91, &quot;labeled_categories_pct&quot;: 100.0, &quot;top_categorical_variables&quot;: [{&quot;name&quot;: &quot;V480033a&quot;, &quot;label&quot;: &quot;ISSUES CONNECTED W TRMN 1&quot;, &quot;categories_count&quot;: 91}, {&quot;name&quot;: &quot;V480033b&quot;, &quot;label&quot;: &quot;ISSUES CONNECTED W TRMN 2&quot;, &quot;categories_count&quot;: 91}, {&quot;name&quot;: &quot;V480034a&quot;, &quot;label&quot;: &quot;ISSUES CONNECTED W DEWEY 1&quot;, &quot;categories_count&quot;: 91}, {&quot;name&quot;: &quot;V480034b&quot;, &quot;label&quot;: &quot;ISSUES CONNECTED W DEWEY 2&quot;, &quot;categories_count&quot;: 91}, {&quot;name&quot;: &quot;V480013&quot;, &quot;label&quot;: &quot;PRESLELCTN OTCM SURPRISE&quot;, &quot;categories_count&quot;: 21}, {&quot;name&quot;: &quot;V480020&quot;, &quot;label&quot;: &quot;CNSD VT FOR SOMEONE ELSE&quot;, &quot;categories_count&quot;: 15}, {&quot;name&quot;: &quot;V480014a&quot;, &quot;label&quot;: &quot;WHY PPL VTD FOR TRUMAN 1&quot;, &quot;categories_count&quot;: 12}, {&quot;name&quot;: &quot;V480014b&quot;, &quot;label&quot;: &quot;WHY PPL VTD FOR TRUMAN 2&quot;, &quot;categories_count&quot;: 12}, {&quot;name&quot;: &quot;V480015a&quot;, &quot;label&quot;: &quot;WHY PPL VTD AGNST TRUMAN 1&quot;, &quot;categories_count&quot;: 12}, {&quot;name&quot;: &quot;V480015b&quot;, &quot;label&quot;: &quot;WHY PPL VTD AGNST TRUMAN 2&quot;, &quot;categories_count&quot;: 12}], &quot;sumstat_types_distribution&quot;: {}}, &quot;variable_groups&quot;: [], &quot;vocabularies&quot;: [], &quot;languages&quot;: {}, &quot;integrity&quot;: {&quot;unassigned_variables_count&quot;: 0, &quot;unassigned_variable_names&quot;: [], &quot;dangling_file_references&quot;: [], &quot;dangling_weight_references&quot;: [], &quot;dangling_group_references&quot;: [], &quot;duplicate_variable_names&quot;: [], &quot;is_clean&quot;: true}, &quot;quality&quot;: {&quot;profile_id&quot;: &quot;recommended&quot;, &quot;profile_name&quot;: &quot;DDI-C Archival Best Practices&quot;, &quot;overall_score&quot;: 67.3, &quot;grade&quot;: &quot;D&quot;, &quot;status&quot;: &quot;warning&quot;, &quot;total_rules_checked&quot;: 4, &quot;errors_count&quot;: 0, &quot;warnings_count&quot;: 1, &quot;infos_count&quot;: 0, &quot;dimensions&quot;: {&quot;study_identification&quot;: {&quot;dimension&quot;: &quot;study_identification&quot;, &quot;label&quot;: &quot;Study Identification &amp; Scope&quot;, &quot;score&quot;: 16.7, &quot;status&quot;: &quot;action_needed&quot;, &quot;passed_checks&quot;: 2, &quot;total_checks&quot;: 12}, &quot;data_files&quot;: {&quot;dimension&quot;: &quot;data_files&quot;, &quot;label&quot;: &quot;Data Files Description&quot;, &quot;score&quot;: 100.0, &quot;status&quot;: &quot;pass&quot;, &quot;passed_checks&quot;: 1, &quot;total_checks&quot;: 1}, &quot;variable_documentation&quot;: {&quot;dimension&quot;: &quot;variable_documentation&quot;, &quot;label&quot;: &quot;Variable Documentation&quot;, &quot;score&quot;: 60.0, &quot;status&quot;: &quot;review&quot;, &quot;passed_checks&quot;: 2, &quot;total_checks&quot;: 3}, &quot;category_documentation&quot;: {&quot;dimension&quot;: &quot;category_documentation&quot;, &quot;label&quot;: &quot;Category &amp; Code Documentation&quot;, &quot;score&quot;: 100.0, &quot;status&quot;: &quot;pass&quot;, &quot;passed_checks&quot;: 1, &quot;total_checks&quot;: 1}}, &quot;findings&quot;: [{&quot;rule_id&quot;: &quot;codebook.no_variables&quot;, &quot;message&quot;: &quot;Codebook has no variables&quot;, &quot;severity&quot;: &quot;warning&quot;, &quot;location&quot;: &quot;codeBook/dataDscr/var&quot;, &quot;remediation&quot;: &quot;Add recommended metadata elements to improve discovery and reuse.&quot;}]}, &quot;variables_detail&quot;: [{&quot;id&quot;: &quot;fNuMk40jV2vQBozK&quot;, &quot;name&quot;: &quot;VVERSION&quot;, &quot;label&quot;: &quot;NES VERSION NUMBER&quot;, &quot;type&quot;: &quot;numeric&quot;, &quot;categories_count&quot;: 0, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;jnLsUiIP87qGQC8v&quot;, &quot;name&quot;: &quot;VDSETNO&quot;, &quot;label&quot;: &quot;NES DATASET NUMBER&quot;, &quot;type&quot;: &quot;character&quot;, &quot;categories_count&quot;: 0, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;gzTZpbJPg6fZmaYC&quot;, &quot;name&quot;: &quot;V480001&quot;, &quot;label&quot;: &quot;ICPSR ARCHIVE NUMBER&quot;, &quot;type&quot;: &quot;numeric&quot;, &quot;categories_count&quot;: 0, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;ud5xKvfsm8dCRCp3&quot;, &quot;name&quot;: &quot;V480002&quot;, &quot;label&quot;: &quot;INTERVIEW NUMBER&quot;, &quot;type&quot;: &quot;numeric&quot;, &quot;categories_count&quot;: 0, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;M39SPjTQlxKgsei6&quot;, &quot;name&quot;: &quot;V480003&quot;, &quot;label&quot;: &quot;POP CLASSIFICATION&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 3, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;PLhFsrK3gTo1kCsw&quot;, &quot;name&quot;: &quot;V480004&quot;, &quot;label&quot;: &quot;CODER&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 5, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;yNn4OeQEhOBq43P4&quot;, &quot;name&quot;: &quot;V480005&quot;, &quot;label&quot;: &quot;NUMBER OF CALLS TO R&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 10, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;hFdQufzfDGnrqJdk&quot;, &quot;name&quot;: &quot;V480006&quot;, &quot;label&quot;: &quot;R REMEMBER PREVIOUS INT&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 3, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;uKO9M1obtpU2AwfY&quot;, &quot;name&quot;: &quot;V480007&quot;, &quot;label&quot;: &quot;INTR INTERVIEW THIS R&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 3, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;V7AhoKccjuAC3qsS&quot;, &quot;name&quot;: &quot;V480008&quot;, &quot;label&quot;: &quot;PRVS PRE-ELCTN R REINT&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 6, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;aSKnFgMNwO1Yi176&quot;, &quot;name&quot;: &quot;V480009&quot;, &quot;label&quot;: &quot;R INT IN PRE/POSTELCTN&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 5, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;U1nVKPbem6ptHtji&quot;, &quot;name&quot;: &quot;V480010&quot;, &quot;label&quot;: &quot;RENT CNTRL KEPT/DROPPED&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 6, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;jLu7hyXuj3MEFm1N&quot;, &quot;name&quot;: &quot;V480011&quot;, &quot;label&quot;: &quot;GOVT CONTROL PRICES&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 7, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;BOqtA6XUt8VWPqSo&quot;, &quot;name&quot;: &quot;V480012&quot;, &quot;label&quot;: &quot;WHAT TO DO W TFT-HT ACT&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 10, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;iKgHmRbO6YuttcrH&quot;, &quot;name&quot;: &quot;V480013&quot;, &quot;label&quot;: &quot;PRESLELCTN OTCM SURPRISE&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 21, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;rcsG2EF3VGWuz974&quot;, &quot;name&quot;: &quot;V480014a&quot;, &quot;label&quot;: &quot;WHY PPL VTD FOR TRUMAN 1&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;RUNXH6OTXoPLhQKP&quot;, &quot;name&quot;: &quot;V480014b&quot;, &quot;label&quot;: &quot;WHY PPL VTD FOR TRUMAN 2&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;WY4wwpGnFnLkrKRU&quot;, &quot;name&quot;: &quot;V480015a&quot;, &quot;label&quot;: &quot;WHY PPL VTD AGNST TRUMAN 1&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;mOpsrEUsuEU67C2E&quot;, &quot;name&quot;: &quot;V480015b&quot;, &quot;label&quot;: &quot;WHY PPL VTD AGNST TRUMAN 2&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;vvnJiPTnsdtSBFym&quot;, &quot;name&quot;: &quot;V480016a&quot;, &quot;label&quot;: &quot;WHY PPL VTD FOR DEWEY 1&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;aVRO14OPEI64SQ6Z&quot;, &quot;name&quot;: &quot;V480016b&quot;, &quot;label&quot;: &quot;WHY PPL VTD FOR DEWEY 2&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;l7JGVGQKgUOwfvtw&quot;, &quot;name&quot;: &quot;V480017a&quot;, &quot;label&quot;: &quot;WHY PPL VTD AGNST DEWEY 1&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;roCXPpNyPcYD5wAp&quot;, &quot;name&quot;: &quot;V480017b&quot;, &quot;label&quot;: &quot;WHY PPL VTD AGNST DEWEY 2&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;LEkUxN10A1kVj9zl&quot;, &quot;name&quot;: &quot;V480018&quot;, &quot;label&quot;: &quot;DID R VOTE/FOR WHOM&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 7, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;xKBPVsGQYw84e2cE&quot;, &quot;name&quot;: &quot;V480019&quot;, &quot;label&quot;: &quot;WN DECIDE FOR WHOM TO VT&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 8, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;xZjBurCq3q23Tdsv&quot;, &quot;name&quot;: &quot;V480020&quot;, &quot;label&quot;: &quot;CNSD VT FOR SOMEONE ELSE&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 15, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;V8CpcohsWGhDC2q6&quot;, &quot;name&quot;: &quot;V480021a&quot;, &quot;label&quot;: &quot;XWHY DID NOT VT FOR HIM 1&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 10, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;tg5AwZfSWlQS6AUz&quot;, &quot;name&quot;: &quot;V480021b&quot;, &quot;label&quot;: &quot;XWHY DID NOT VT FOR HIM 2&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 10, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;ZyImivToEiTkKzK7&quot;, &quot;name&quot;: &quot;V480022a&quot;, &quot;label&quot;: &quot;WHY VT THE WAY YOU DID 1&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;LoKaEMEq6Tum91t0&quot;, &quot;name&quot;: &quot;V480022b&quot;, &quot;label&quot;: &quot;WHY VT THE WAY YOU DID 2&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;byBegeHZGUMm7mFv&quot;, &quot;name&quot;: &quot;V480023&quot;, &quot;label&quot;: &quot;VOTED STRAIGHT TICKET&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 10, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;Z8KiL02qz9xyiwGO&quot;, &quot;name&quot;: &quot;V480024&quot;, &quot;label&quot;: &quot;R NOT VT-IF VT,FOR WHOM&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 7, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;Ej0cxm2Y7vKw1Nxs&quot;, &quot;name&quot;: &quot;V480025a&quot;, &quot;label&quot;: &quot;R NOT VT-WHY DID NOT VT 1&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;j46wvcGt0xD79WvT&quot;, &quot;name&quot;: &quot;V480025b&quot;, &quot;label&quot;: &quot;R NOT VT-WHY DID NOT VT 2&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;nrbS3Tktv7HQS6Cj&quot;, &quot;name&quot;: &quot;V480026&quot;, &quot;label&quot;: &quot;R NOT VT-WAS R REG TO VT&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 5, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;mR4Set0azVMk3hTv&quot;, &quot;name&quot;: &quot;V480027&quot;, &quot;label&quot;: &quot;VTD IN PRVS PRESL ELCTN&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 8, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;JJfpWr0pVMatcYER&quot;, &quot;name&quot;: &quot;V480028&quot;, &quot;label&quot;: &quot;VTD FOR WHOM IN 1944&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 7, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;MVtZvjXRxdVzc3iM&quot;, &quot;name&quot;: &quot;V480029&quot;, &quot;label&quot;: &quot;OCCUPATION OF HEAD&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;XRQSkkIJbD4kpFwV&quot;, &quot;name&quot;: &quot;V480030&quot;, &quot;label&quot;: &quot;HEAD BELONG TO LBR UN&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 4, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;Xza08qQXIcfWsD1W&quot;, &quot;name&quot;: &quot;V480031a&quot;, &quot;label&quot;: &quot;GRPS IDENTIFIED W TRUMAN 1&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;PBxsPl0LtwBnaM0d&quot;, &quot;name&quot;: &quot;V480031b&quot;, &quot;label&quot;: &quot;GRPS IDENTIFIED W TRUMAN 2&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;ObV3l8D6UKRSYR9k&quot;, &quot;name&quot;: &quot;V480031c&quot;, &quot;label&quot;: &quot;GRPS IDENTIFIED W TRUMAN 3&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;f4lSXrcQvdBxyNQz&quot;, &quot;name&quot;: &quot;V480032a&quot;, &quot;label&quot;: &quot;GRPS IDENTIFIED W DEWEY 1&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;B9Z1fQ5GwbiPC02w&quot;, &quot;name&quot;: &quot;V480032b&quot;, &quot;label&quot;: &quot;GRPS IDENTIFIED W DEWEY 2&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;F2qndEXT5ofhwoSk&quot;, &quot;name&quot;: &quot;V480032c&quot;, &quot;label&quot;: &quot;GRPS IDENTIFIED W DEWEY 3&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;yQYBvlDshfH6f28U&quot;, &quot;name&quot;: &quot;V480033a&quot;, &quot;label&quot;: &quot;ISSUES CONNECTED W TRMN 1&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 91, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;Hgd8118J8vjFXeZE&quot;, &quot;name&quot;: &quot;V480033b&quot;, &quot;label&quot;: &quot;ISSUES CONNECTED W TRMN 2&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 91, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;Ld8mN90tcCcNuYJd&quot;, &quot;name&quot;: &quot;V480034a&quot;, &quot;label&quot;: &quot;ISSUES CONNECTED W DEWEY 1&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 91, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;QTchKaa3zFwl53of&quot;, &quot;name&quot;: &quot;V480034b&quot;, &quot;label&quot;: &quot;ISSUES CONNECTED W DEWEY 2&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 91, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;z2n5DGrKYnSdPSYK&quot;, &quot;name&quot;: &quot;V480035a&quot;, &quot;label&quot;: &quot;PERSONAL ATTRIBUTE TRMN 1&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;iLKoB7Ut3T1zMcdS&quot;, &quot;name&quot;: &quot;V480035b&quot;, &quot;label&quot;: &quot;PERSONAL ATTRIBUTE TRMN 2&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;gPanJ9rlIdky1Aye&quot;, &quot;name&quot;: &quot;V480036a&quot;, &quot;label&quot;: &quot;PERSONAL ATTRIBUTE DEWEY 1&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;F2YQJwzqDdwXZIW0&quot;, &quot;name&quot;: &quot;V480036b&quot;, &quot;label&quot;: &quot;PERSONAL ATTRIBUTE DEWEY 2&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 12, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;CGxAutwAdQJb9M8L&quot;, &quot;name&quot;: &quot;V480037&quot;, &quot;label&quot;: &quot;CMPN INCIDENTS MENTIONED&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 7, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;x4HCiUOAtiZYuBe8&quot;, &quot;name&quot;: &quot;V480038&quot;, &quot;label&quot;: &quot;41-PRESLELCTN PLAN TO VT&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 5, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;BNXSoKrf50UkX7oe&quot;, &quot;name&quot;: &quot;V480039&quot;, &quot;label&quot;: &quot;41-PLAN TO VT REP/DEM&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 8, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;priIBrqnlAxZy7Fd&quot;, &quot;name&quot;: &quot;V480040&quot;, &quot;label&quot;: &quot;41-USA&#x27;S CNCRN W OTHERS&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 7, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;IyLn0KNsuzdeCgdG&quot;, &quot;name&quot;: &quot;V480041&quot;, &quot;label&quot;: &quot;41-SATISD USA TWRD RUSS&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 7, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;dO3PNET1ZbXg8Hst&quot;, &quot;name&quot;: &quot;V480042&quot;, &quot;label&quot;: &quot;41-INFORMATION LEVEL&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 5, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;Jx3IZXZirdpl5pzP&quot;, &quot;name&quot;: &quot;V480043&quot;, &quot;label&quot;: &quot;41-USA GV IN,AGRT RUSS&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 8, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;QtFhO0Y8WZ4c4vEr&quot;, &quot;name&quot;: &quot;V480044&quot;, &quot;label&quot;: &quot;41-USA-RUSS AGRT VIA U.N&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 7, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;wr3nFxu0ZraeazFE&quot;, &quot;name&quot;: &quot;V480045&quot;, &quot;label&quot;: &quot;SEX OF RESPONDENT&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 3, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;ho1CMy2AYE4Fkp01&quot;, &quot;name&quot;: &quot;V480046&quot;, &quot;label&quot;: &quot;RACE OF RESPONDENT&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 4, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;VU2nS3zAEmSjJqNA&quot;, &quot;name&quot;: &quot;V480047&quot;, &quot;label&quot;: &quot;AGE OF RESPONDENT&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 7, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;o7TYGE92lQXXVhBV&quot;, &quot;name&quot;: &quot;V480048&quot;, &quot;label&quot;: &quot;EDUCATION OF RESPONDENT&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 4, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;dbn1fBSZlQsVrEqW&quot;, &quot;name&quot;: &quot;V480049&quot;, &quot;label&quot;: &quot;TOTAL 1948 INCOME&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 8, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}, {&quot;id&quot;: &quot;emPyiXTeYB4WcxtW&quot;, &quot;name&quot;: &quot;V480050&quot;, &quot;label&quot;: &quot;RELIGIOUS PREFERENCE&quot;, &quot;type&quot;: &quot;categorical&quot;, &quot;categories_count&quot;: 6, &quot;has_question&quot;: false, &quot;has_missing&quot;: false, &quot;has_concept&quot;: false, &quot;file&quot;: &quot;F1&quot;}], &quot;coverage_tree&quot;: {&quot;name&quot;: &quot;DDI-Codebook Document&quot;, &quot;tag&quot;: &quot;codeBook&quot;, &quot;count&quot;: 4, &quot;total&quot;: 4, &quot;percentage&quot;: 100.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;good&quot;, &quot;insights&quot;: {&quot;standard&quot;: &quot;DDI-Codebook&quot;, &quot;version&quot;: &quot;2.5&quot;, &quot;total_variables&quot;: 67, &quot;total_categories&quot;: 896, &quot;total_files&quot;: 1}, &quot;children&quot;: [{&quot;name&quot;: &quot;Document Description&quot;, &quot;tag&quot;: &quot;docDscr&quot;, &quot;count&quot;: 1, &quot;total&quot;: 1, &quot;percentage&quot;: 100.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;good&quot;, &quot;insights&quot;: {}, &quot;children&quot;: []}, {&quot;name&quot;: &quot;Study Description&quot;, &quot;tag&quot;: &quot;stdyDscr&quot;, &quot;count&quot;: 2, &quot;total&quot;: 12, &quot;percentage&quot;: 16.7, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;low&quot;, &quot;insights&quot;: {&quot;completeness_score&quot;: 16.7, &quot;study_title&quot;: &quot;ANES 1948 Time Series Study&quot;, &quot;study_id&quot;: &quot;N/A&quot;}, &quot;children&quot;: [{&quot;name&quot;: &quot;Citation&quot;, &quot;tag&quot;: &quot;citation&quot;, &quot;count&quot;: 1, &quot;total&quot;: 4, &quot;percentage&quot;: 25.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;low&quot;, &quot;insights&quot;: {}, &quot;children&quot;: [{&quot;name&quot;: &quot;Title Statement&quot;, &quot;tag&quot;: &quot;titlStmt&quot;, &quot;count&quot;: 1, &quot;total&quot;: 1, &quot;percentage&quot;: 100.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;good&quot;, &quot;insights&quot;: {&quot;title&quot;: &quot;ANES 1948 Time Series Study&quot;, &quot;study_id&quot;: &quot;N/A&quot;}, &quot;children&quot;: []}, {&quot;name&quot;: &quot;Bibliographic Citation&quot;, &quot;tag&quot;: &quot;biblCit&quot;, &quot;count&quot;: 0, &quot;total&quot;: 1, &quot;percentage&quot;: 0.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;empty&quot;, &quot;insights&quot;: {}, &quot;children&quot;: []}, {&quot;name&quot;: &quot;Production Statement&quot;, &quot;tag&quot;: &quot;prodStmt&quot;, &quot;count&quot;: 0, &quot;total&quot;: 1, &quot;percentage&quot;: 0.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;empty&quot;, &quot;insights&quot;: {}, &quot;children&quot;: []}, {&quot;name&quot;: &quot;Distribution Statement&quot;, &quot;tag&quot;: &quot;distStmt&quot;, &quot;count&quot;: 0, &quot;total&quot;: 1, &quot;percentage&quot;: 0.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;empty&quot;, &quot;insights&quot;: {}, &quot;children&quot;: []}]}, {&quot;name&quot;: &quot;Study Scope &amp; Information&quot;, &quot;tag&quot;: &quot;stdyInfo&quot;, &quot;count&quot;: 1, &quot;total&quot;: 5, &quot;percentage&quot;: 20.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;low&quot;, &quot;insights&quot;: {}, &quot;children&quot;: [{&quot;name&quot;: &quot;Abstract&quot;, &quot;tag&quot;: &quot;abstract&quot;, &quot;count&quot;: 1, &quot;total&quot;: 1, &quot;percentage&quot;: 100.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;good&quot;, &quot;insights&quot;: {}, &quot;children&quot;: []}, {&quot;name&quot;: &quot;Subject &amp; Keywords&quot;, &quot;tag&quot;: &quot;subject&quot;, &quot;count&quot;: 0, &quot;total&quot;: 1, &quot;percentage&quot;: 0.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;empty&quot;, &quot;insights&quot;: {&quot;keywords&quot;: 0, &quot;topic_classifications&quot;: 0}, &quot;children&quot;: []}, {&quot;name&quot;: &quot;Summary Description&quot;, &quot;tag&quot;: &quot;sumDscr&quot;, &quot;count&quot;: 0, &quot;total&quot;: 4, &quot;percentage&quot;: 0.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;empty&quot;, &quot;insights&quot;: {&quot;time_period&quot;: false, &quot;geographic_coverage&quot;: false, &quot;universe&quot;: false, &quot;analysis_unit&quot;: false}, &quot;children&quot;: []}]}, {&quot;name&quot;: &quot;Methodology&quot;, &quot;tag&quot;: &quot;method&quot;, &quot;count&quot;: 0, &quot;total&quot;: 2, &quot;percentage&quot;: 0.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;empty&quot;, &quot;insights&quot;: {&quot;collection_mode&quot;: false, &quot;sampling_procedure&quot;: false}, &quot;children&quot;: []}, {&quot;name&quot;: &quot;Data Access&quot;, &quot;tag&quot;: &quot;dataAccs&quot;, &quot;count&quot;: 0, &quot;total&quot;: 1, &quot;percentage&quot;: 0.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;empty&quot;, &quot;insights&quot;: {}, &quot;children&quot;: []}]}, {&quot;name&quot;: &quot;Data Files&quot;, &quot;tag&quot;: &quot;fileDscr&quot;, &quot;count&quot;: 1, &quot;total&quot;: 1, &quot;percentage&quot;: 100.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;good&quot;, &quot;insights&quot;: {&quot;total_files&quot;: 1, &quot;total_cases&quot;: 662, &quot;total_variables&quot;: 67}, &quot;children&quot;: [{&quot;name&quot;: &quot;NES1948.dta&quot;, &quot;tag&quot;: &quot;fileTxt&quot;, &quot;count&quot;: 1, &quot;total&quot;: 1, &quot;percentage&quot;: 100.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;good&quot;, &quot;insights&quot;: {&quot;file_id&quot;: &quot;F1&quot;, &quot;file_name&quot;: &quot;NES1948.dta&quot;, &quot;file_type&quot;: &quot;[fileTypeType(id=None, xml_lang=None, elementVersion=None, elementVersionDate=None, ddiLifecycleUrn=None, ddiCodebookUrn=None, content=&#x27;Stata&#x27;, isTranslatable=None, isTranslated=None, translationDate=None, translationSourceLanguage=None, charset=None)]&quot;, &quot;case_count&quot;: 662, &quot;variable_count&quot;: 67, &quot;mapped_variables&quot;: 67}, &quot;children&quot;: []}]}, {&quot;name&quot;: &quot;Variable Description&quot;, &quot;tag&quot;: &quot;dataDscr&quot;, &quot;count&quot;: 67, &quot;total&quot;: 67, &quot;percentage&quot;: 100.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;good&quot;, &quot;insights&quot;: {&quot;total_variables&quot;: 67, &quot;total_groups&quot;: 0, &quot;categorical_variables&quot;: 63, &quot;numeric_variables&quot;: 3, &quot;character_variables&quot;: 1, &quot;datetime_variables&quot;: 0}, &quot;children&quot;: [{&quot;name&quot;: &quot;Variable Groups&quot;, &quot;tag&quot;: &quot;varGrp&quot;, &quot;count&quot;: 0, &quot;total&quot;: 0, &quot;percentage&quot;: 0.0, &quot;is_informational&quot;: true, &quot;status&quot;: &quot;info&quot;, &quot;insights&quot;: {&quot;total_groups&quot;: 0, &quot;groups_documented&quot;: 0, &quot;groups_with_labels&quot;: 0, &quot;groups_with_text&quot;: 0, &quot;groups_with_definitions&quot;: 0}, &quot;children&quot;: []}, {&quot;name&quot;: &quot;Variables&quot;, &quot;tag&quot;: &quot;var&quot;, &quot;count&quot;: 67, &quot;total&quot;: 67, &quot;percentage&quot;: 100.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;good&quot;, &quot;insights&quot;: {&quot;total_variables&quot;: 67, &quot;numeric&quot;: 3, &quot;categorical&quot;: 63, &quot;character&quot;: 1, &quot;weighted&quot;: 0}, &quot;children&quot;: [{&quot;name&quot;: &quot;Variable Labels&quot;, &quot;tag&quot;: &quot;labl&quot;, &quot;count&quot;: 67, &quot;total&quot;: 67, &quot;percentage&quot;: 100.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;good&quot;, &quot;insights&quot;: {}, &quot;children&quot;: []}, {&quot;name&quot;: &quot;Questions&quot;, &quot;tag&quot;: &quot;qstn&quot;, &quot;count&quot;: 0, &quot;total&quot;: 67, &quot;percentage&quot;: 0.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;empty&quot;, &quot;insights&quot;: {}, &quot;children&quot;: []}, {&quot;name&quot;: &quot;Categories &amp; Codes&quot;, &quot;tag&quot;: &quot;catgry&quot;, &quot;count&quot;: 63, &quot;total&quot;: 67, &quot;percentage&quot;: 94.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;good&quot;, &quot;insights&quot;: {&quot;total_categories&quot;: 896, &quot;categories_with_values&quot;: 896, &quot;categories_with_labels&quot;: 896, &quot;categories_with_stats&quot;: 0, &quot;missing_categories&quot;: 0, &quot;avg_categories_per_var&quot;: 14.22, &quot;max_categories&quot;: 91}, &quot;children&quot;: [{&quot;name&quot;: &quot;Category Values&quot;, &quot;tag&quot;: &quot;catValu&quot;, &quot;count&quot;: 896, &quot;total&quot;: 896, &quot;percentage&quot;: 100.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;good&quot;, &quot;insights&quot;: {}, &quot;children&quot;: []}, {&quot;name&quot;: &quot;Category Labels&quot;, &quot;tag&quot;: &quot;labl&quot;, &quot;count&quot;: 896, &quot;total&quot;: 896, &quot;percentage&quot;: 100.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;good&quot;, &quot;insights&quot;: {}, &quot;children&quot;: []}, {&quot;name&quot;: &quot;Category Frequencies &amp; Stats&quot;, &quot;tag&quot;: &quot;catStat&quot;, &quot;count&quot;: 0, &quot;total&quot;: 896, &quot;percentage&quot;: 0.0, &quot;is_informational&quot;: true, &quot;status&quot;: &quot;info&quot;, &quot;insights&quot;: {}, &quot;children&quot;: []}]}, {&quot;name&quot;: &quot;Format Specifications&quot;, &quot;tag&quot;: &quot;varFormat&quot;, &quot;count&quot;: 67, &quot;total&quot;: 67, &quot;percentage&quot;: 100.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;good&quot;, &quot;insights&quot;: {&quot;numeric&quot;: 66, &quot;character&quot;: 1}, &quot;children&quot;: []}, {&quot;name&quot;: &quot;Missing Values Defined&quot;, &quot;tag&quot;: &quot;invalrng&quot;, &quot;count&quot;: 0, &quot;total&quot;: 67, &quot;percentage&quot;: 0.0, &quot;is_informational&quot;: true, &quot;status&quot;: &quot;info&quot;, &quot;insights&quot;: {&quot;variables_with_missing_definitions&quot;: 0}, &quot;children&quot;: []}, {&quot;name&quot;: &quot;Concepts&quot;, &quot;tag&quot;: &quot;concept&quot;, &quot;count&quot;: 0, &quot;total&quot;: 67, &quot;percentage&quot;: 0.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;empty&quot;, &quot;insights&quot;: {}, &quot;children&quot;: []}, {&quot;name&quot;: &quot;Universes&quot;, &quot;tag&quot;: &quot;universe&quot;, &quot;count&quot;: 0, &quot;total&quot;: 67, &quot;percentage&quot;: 0.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;empty&quot;, &quot;insights&quot;: {}, &quot;children&quot;: []}, {&quot;name&quot;: &quot;Summary Statistics&quot;, &quot;tag&quot;: &quot;sumStat&quot;, &quot;count&quot;: 0, &quot;total&quot;: 67, &quot;percentage&quot;: 0.0, &quot;is_informational&quot;: true, &quot;status&quot;: &quot;info&quot;, &quot;insights&quot;: {}, &quot;children&quot;: []}, {&quot;name&quot;: &quot;Physical Location&quot;, &quot;tag&quot;: &quot;location&quot;, &quot;count&quot;: 67, &quot;total&quot;: 67, &quot;percentage&quot;: 100.0, &quot;is_informational&quot;: false, &quot;status&quot;: &quot;good&quot;, &quot;insights&quot;: {}, &quot;children&quot;: []}]}]}]}, &quot;xml_structure&quot;: {&quot;name&quot;: &quot;doc()&quot;, &quot;node_type&quot;: &quot;doc&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: false, &quot;children&quot;: [{&quot;name&quot;: &quot;codeBook&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: false, &quot;children&quot;: [{&quot;name&quot;: &quot;@version&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;double&quot;, &quot;distinct_count&quot;: 1, &quot;min_value&quot;: 2.5, &quot;max_value&quot;: 2.5, &quot;type_summary&quot;: &quot;double [2.5, 2.5], leaf&quot;, &quot;children&quot;: []}, {&quot;name&quot;: &quot;@ID&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;string&quot;, &quot;distinct_count&quot;: 1, &quot;type_summary&quot;: &quot;string, leaf&quot;, &quot;children&quot;: []}, {&quot;name&quot;: &quot;@codeBookAgency&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;string&quot;, &quot;distinct_count&quot;: 1, &quot;type_summary&quot;: &quot;string, leaf&quot;, &quot;children&quot;: []}, {&quot;name&quot;: &quot;@elementVersion&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;string&quot;, &quot;distinct_count&quot;: 1, &quot;type_summary&quot;: &quot;string, leaf&quot;, &quot;children&quot;: []}, {&quot;name&quot;: &quot;docDscr&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: false, &quot;children&quot;: [{&quot;name&quot;: &quot;citation&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: false, &quot;children&quot;: [{&quot;name&quot;: &quot;titlStmt&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: false, &quot;children&quot;: [{&quot;name&quot;: &quot;titl&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;children&quot;: [{&quot;name&quot;: &quot;text()&quot;, &quot;node_type&quot;: &quot;text&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;string&quot;, &quot;distinct_count&quot;: 1, &quot;type_summary&quot;: &quot;string, leaf&quot;, &quot;children&quot;: []}]}]}, {&quot;name&quot;: &quot;prodStmt&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: false, &quot;children&quot;: [{&quot;name&quot;: &quot;prodDate&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;children&quot;: [{&quot;name&quot;: &quot;@date&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;string&quot;, &quot;distinct_count&quot;: 1, &quot;type_summary&quot;: &quot;string, leaf&quot;, &quot;children&quot;: []}, {&quot;name&quot;: &quot;text()&quot;, &quot;node_type&quot;: &quot;text&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;string&quot;, &quot;distinct_count&quot;: 1, &quot;type_summary&quot;: &quot;string, leaf&quot;, &quot;children&quot;: []}]}, {&quot;name&quot;: &quot;software&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;children&quot;: [{&quot;name&quot;: &quot;@version&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;string&quot;, &quot;distinct_count&quot;: 1, &quot;type_summary&quot;: &quot;string, leaf&quot;, &quot;children&quot;: []}, {&quot;name&quot;: &quot;text()&quot;, &quot;node_type&quot;: &quot;text&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;string&quot;, &quot;distinct_count&quot;: 1, &quot;type_summary&quot;: &quot;string, leaf&quot;, &quot;children&quot;: []}]}]}]}]}, {&quot;name&quot;: &quot;stdyDscr&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: false, &quot;children&quot;: [{&quot;name&quot;: &quot;citation&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: false, &quot;children&quot;: [{&quot;name&quot;: &quot;titlStmt&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: false, &quot;children&quot;: [{&quot;name&quot;: &quot;titl&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;children&quot;: [{&quot;name&quot;: &quot;text()&quot;, &quot;node_type&quot;: &quot;text&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;string&quot;, &quot;distinct_count&quot;: 1, &quot;type_summary&quot;: &quot;string, leaf&quot;, &quot;children&quot;: []}]}, {&quot;name&quot;: &quot;altTitl&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;children&quot;: [{&quot;name&quot;: &quot;text()&quot;, &quot;node_type&quot;: &quot;text&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;string&quot;, &quot;distinct_count&quot;: 1, &quot;type_summary&quot;: &quot;string, leaf&quot;, &quot;children&quot;: []}]}]}, {&quot;name&quot;: &quot;prodStmt&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;children&quot;: []}]}, {&quot;name&quot;: &quot;stdyInfo&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: false, &quot;children&quot;: [{&quot;name&quot;: &quot;abstract&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;children&quot;: [{&quot;name&quot;: &quot;text()&quot;, &quot;node_type&quot;: &quot;text&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;string&quot;, &quot;distinct_count&quot;: 1, &quot;type_summary&quot;: &quot;string, leaf&quot;, &quot;children&quot;: []}]}]}]}, {&quot;name&quot;: &quot;fileDscr&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: false, &quot;children&quot;: [{&quot;name&quot;: &quot;@ID&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;string&quot;, &quot;distinct_count&quot;: 1, &quot;type_summary&quot;: &quot;string, leaf&quot;, &quot;children&quot;: []}, {&quot;name&quot;: &quot;fileTxt&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: false, &quot;children&quot;: [{&quot;name&quot;: &quot;fileName&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;children&quot;: [{&quot;name&quot;: &quot;text()&quot;, &quot;node_type&quot;: &quot;text&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;string&quot;, &quot;distinct_count&quot;: 1, &quot;type_summary&quot;: &quot;string, leaf&quot;, &quot;children&quot;: []}]}, {&quot;name&quot;: &quot;dimensns&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: false, &quot;children&quot;: [{&quot;name&quot;: &quot;caseQnty&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;children&quot;: [{&quot;name&quot;: &quot;text()&quot;, &quot;node_type&quot;: &quot;text&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;integer&quot;, &quot;distinct_count&quot;: 1, &quot;min_value&quot;: 662, &quot;max_value&quot;: 662, &quot;type_summary&quot;: &quot;integer [662, 662], leaf&quot;, &quot;children&quot;: []}]}, {&quot;name&quot;: &quot;varQnty&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;children&quot;: [{&quot;name&quot;: &quot;text()&quot;, &quot;node_type&quot;: &quot;text&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;integer&quot;, &quot;distinct_count&quot;: 1, &quot;min_value&quot;: 67, &quot;max_value&quot;: 67, &quot;type_summary&quot;: &quot;integer [67, 67], leaf&quot;, &quot;children&quot;: []}]}]}, {&quot;name&quot;: &quot;fileType&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;children&quot;: [{&quot;name&quot;: &quot;text()&quot;, &quot;node_type&quot;: &quot;text&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;string&quot;, &quot;distinct_count&quot;: 1, &quot;type_summary&quot;: &quot;string, leaf&quot;, &quot;children&quot;: []}]}]}]}, {&quot;name&quot;: &quot;dataDscr&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 1, &quot;is_leaf&quot;: false, &quot;children&quot;: [{&quot;name&quot;: &quot;var&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 67, &quot;is_leaf&quot;: false, &quot;children&quot;: [{&quot;name&quot;: &quot;@ID&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 67, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;strings&quot;, &quot;distinct_count&quot;: 67, &quot;type_summary&quot;: &quot;strings, leaf&quot;, &quot;children&quot;: []}, {&quot;name&quot;: &quot;@name&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 67, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;strings&quot;, &quot;distinct_count&quot;: 67, &quot;type_summary&quot;: &quot;strings, leaf&quot;, &quot;children&quot;: []}, {&quot;name&quot;: &quot;@files&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 67, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;string&quot;, &quot;distinct_count&quot;: 1, &quot;type_summary&quot;: &quot;string, leaf&quot;, &quot;children&quot;: []}, {&quot;name&quot;: &quot;@dcml&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 67, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;integer&quot;, &quot;distinct_count&quot;: 1, &quot;min_value&quot;: 0, &quot;max_value&quot;: 0, &quot;type_summary&quot;: &quot;integer [0, 0], leaf&quot;, &quot;children&quot;: []}, {&quot;name&quot;: &quot;location&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 67, &quot;is_leaf&quot;: true, &quot;children&quot;: [{&quot;name&quot;: &quot;@width&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 67, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;integers&quot;, &quot;distinct_count&quot;: 20, &quot;min_value&quot;: 8, &quot;max_value&quot;: 43, &quot;type_summary&quot;: &quot;20 distinct integers [8, 43], leaf&quot;, &quot;children&quot;: []}, {&quot;name&quot;: &quot;@StartPos&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 67, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;integers&quot;, &quot;distinct_count&quot;: 67, &quot;min_value&quot;: 1, &quot;max_value&quot;: 2068, &quot;type_summary&quot;: &quot;integers [1, 2068], leaf&quot;, &quot;children&quot;: []}, {&quot;name&quot;: &quot;@EndPos&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 67, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;integers&quot;, &quot;distinct_count&quot;: 67, &quot;min_value&quot;: 9, &quot;max_value&quot;: 2080, &quot;type_summary&quot;: &quot;integers [9, 2080], leaf&quot;, &quot;children&quot;: []}]}, {&quot;name&quot;: &quot;labl&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 67, &quot;is_leaf&quot;: true, &quot;children&quot;: [{&quot;name&quot;: &quot;@xml-lang&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 67, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;string&quot;, &quot;distinct_count&quot;: 1, &quot;type_summary&quot;: &quot;string, leaf&quot;, &quot;children&quot;: []}, {&quot;name&quot;: &quot;text()&quot;, &quot;node_type&quot;: &quot;text&quot;, &quot;count&quot;: 67, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;strings&quot;, &quot;distinct_count&quot;: 67, &quot;type_summary&quot;: &quot;strings, leaf&quot;, &quot;children&quot;: []}]}, {&quot;name&quot;: &quot;varFormat&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 67, &quot;is_leaf&quot;: true, &quot;children&quot;: [{&quot;name&quot;: &quot;@type&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 67, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;strings&quot;, &quot;distinct_count&quot;: 2, &quot;type_summary&quot;: &quot;2 distinct strings, leaf&quot;, &quot;children&quot;: []}, {&quot;name&quot;: &quot;@schema&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 67, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;string&quot;, &quot;distinct_count&quot;: 1, &quot;type_summary&quot;: &quot;string, leaf&quot;, &quot;children&quot;: []}, {&quot;name&quot;: &quot;@formatname&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 67, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;strings&quot;, &quot;distinct_count&quot;: 3, &quot;type_summary&quot;: &quot;3 distinct strings, leaf&quot;, &quot;children&quot;: []}, {&quot;name&quot;: &quot;text()&quot;, &quot;node_type&quot;: &quot;text&quot;, &quot;count&quot;: 67, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;strings&quot;, &quot;distinct_count&quot;: 21, &quot;type_summary&quot;: &quot;21 distinct strings, leaf&quot;, &quot;children&quot;: []}]}, {&quot;name&quot;: &quot;catgry&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 896, &quot;is_leaf&quot;: false, &quot;children&quot;: [{&quot;name&quot;: &quot;catValu&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 896, &quot;is_leaf&quot;: true, &quot;children&quot;: [{&quot;name&quot;: &quot;text()&quot;, &quot;node_type&quot;: &quot;text&quot;, &quot;count&quot;: 896, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;integers&quot;, &quot;distinct_count&quot;: 96, &quot;min_value&quot;: 0, &quot;max_value&quot;: 99, &quot;type_summary&quot;: &quot;integers [0, 99], leaf&quot;, &quot;children&quot;: []}]}, {&quot;name&quot;: &quot;labl&quot;, &quot;node_type&quot;: &quot;element&quot;, &quot;count&quot;: 896, &quot;is_leaf&quot;: true, &quot;children&quot;: [{&quot;name&quot;: &quot;@xml-lang&quot;, &quot;node_type&quot;: &quot;attribute&quot;, &quot;count&quot;: 896, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;string&quot;, &quot;distinct_count&quot;: 1, &quot;type_summary&quot;: &quot;string, leaf&quot;, &quot;children&quot;: []}, {&quot;name&quot;: &quot;text()&quot;, &quot;node_type&quot;: &quot;text&quot;, &quot;count&quot;: 896, &quot;is_leaf&quot;: true, &quot;data_type&quot;: &quot;strings&quot;, &quot;distinct_count&quot;: 377, &quot;type_summary&quot;: &quot;strings, leaf&quot;, &quot;children&quot;: []}]}]}]}]}]}]}}</textarea>
+      </div>
+    </div>
+  </div>
+
+  <button class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+          title="Back to Top">&uarr; Top</button>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      const btn = document.querySelector('.tab-btn[data-tab="' + tabId + '"]');
+      if (btn) btn.classList.add('active');
+      const panel = document.getElementById('tab-' + tabId);
+      if (panel) panel.classList.add('active');
+    }
+    function filterVariables() {
+      const query = document.getElementById('varSearch').value.toLowerCase();
+      const rows = document.querySelectorAll('#varsTbody tr');
+      rows.forEach(r => {
+        const text = r.textContent.toLowerCase();
+        r.style.display = text.includes(query) ? '' : 'none';
+      });
+    }
+    function toggleAllTree(expand) {
+      document.querySelectorAll('#coverageTree details').forEach(d => d.open = expand);
+    }
+    function copyXmlTree() {
+      const text = document.getElementById('xmlTreeText').innerText;
+      navigator.clipboard.writeText(text).then(() => alert('XML tree copied to clipboard!'));
+    }
+  </script>
+</body>
+</html>

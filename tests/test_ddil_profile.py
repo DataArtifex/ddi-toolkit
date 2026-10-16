@@ -1590,3 +1590,93 @@ def test_markdown_toc_and_languages_ordering_and_skipping():
     md_no_lang = prof_no_lang.to_markdown()
     assert "Metadata Languages Profile" not in md_no_lang
     assert "Language Usage by Resource Class" not in md_no_lang
+
+
+def test_analyze_ddil_profile_hierarchical_file():
+    """Verifies that hierarchical DDI-Lifecycle documents (without <Fragment> wrappers) profile successfully."""
+    xml_path = Path("tests/outputs/ddic2l/simple_yndk.ddi33.xml")
+    assert xml_path.exists(), f"Missing test fixture: {xml_path}"
+
+    profile = analyze_ddil_profile(xml_path)
+
+    assert profile.summary.total_resources == 12
+    assert profile.summary.total_classes == 10
+    assert profile.summary.total_reference_instances == 4
+    assert profile.summary.resolution_rate == 1.0
+
+    # Key resource classes must be present
+    assert "Variable" in profile.nodes
+    assert "CodeList" in profile.nodes
+    assert "Category" in profile.nodes
+    assert "StudyUnit" in profile.nodes
+    assert "LogicalProduct" in profile.nodes
+
+    # Reference paths from Variable -> CodeList and CodeList -> Category must exist
+    var_to_cl = [e for e in profile.edges if e.source_class == "Variable" and e.target_class == "CodeList"]
+    assert len(var_to_cl) == 1
+    assert var_to_cl[0].count == 1
+
+    cl_to_cat = [e for e in profile.edges if e.source_class == "CodeList" and e.target_class == "Category"]
+    assert len(cl_to_cat) == 1
+    assert cl_to_cat[0].count == 3
+
+
+def test_analyze_ddil_profile_hierarchical_in_memory_element():
+    """Verifies in-memory ElementTree parsing for hierarchical DDIInstance documents."""
+    xml_content = """<?xml version="1.0" encoding="utf-8"?>
+    <ddi:DDIInstance
+      xmlns:ddi="ddi:instance:3_3"
+      xmlns:l="ddi:logicalproduct:3_3"
+      xmlns:r="ddi:reusable:3_3"
+      xmlns:s="ddi:studyunit:3_3"
+      isUniversallyUnique="true">
+      <r:URN>urn:ddi:ex:inst:1.0</r:URN>
+      <s:StudyUnit isUniversallyUnique="true">
+        <r:URN>urn:ddi:ex:study:1.0</r:URN>
+        <l:LogicalProduct isUniversallyUnique="true">
+          <r:URN>urn:ddi:ex:lp:1.0</r:URN>
+          <l:VariableScheme isUniversallyUnique="true">
+            <r:URN>urn:ddi:ex:vars:1.0</r:URN>
+            <l:Variable isUniversallyUnique="true">
+              <r:URN>urn:ddi:ex:v1:1.0</r:URN>
+              <l:Representation>
+                <l:CodeRepresentation>
+                  <r:CodeListReference>
+                    <r:URN>urn:ddi:ex:cl1:1.0</r:URN>
+                    <r:TypeOfObject>CodeList</r:TypeOfObject>
+                  </r:CodeListReference>
+                </l:CodeRepresentation>
+              </l:Representation>
+            </l:Variable>
+          </l:VariableScheme>
+          <l:CodeListScheme isUniversallyUnique="true">
+            <r:URN>urn:ddi:ex:cls:1.0</r:URN>
+            <l:CodeList isUniversallyUnique="true">
+              <r:URN>urn:ddi:ex:cl1:1.0</r:URN>
+              <l:Code>
+                <r:CategoryReference>
+                  <r:URN>urn:ddi:ex:cat1:1.0</r:URN>
+                  <r:TypeOfObject>Category</r:TypeOfObject>
+                </r:CategoryReference>
+              </l:Code>
+            </l:CodeList>
+          </l:CodeListScheme>
+          <l:CategoryScheme isUniversallyUnique="true">
+            <r:URN>urn:ddi:ex:cats:1.0</r:URN>
+            <l:Category isUniversallyUnique="true">
+              <r:URN>urn:ddi:ex:cat1:1.0</r:URN>
+              <r:Label><r:Content xml:lang="en">Test Category</r:Content></r:Label>
+            </l:Category>
+          </l:CategoryScheme>
+        </l:LogicalProduct>
+      </s:StudyUnit>
+    </ddi:DDIInstance>
+    """
+    root = ET.fromstring(xml_content)
+    profile = analyze_ddil_profile(root)
+
+    assert profile.summary.total_resources == 9
+    assert "Variable" in profile.nodes
+    assert "CodeList" in profile.nodes
+    assert "Category" in profile.nodes
+    assert profile.summary.resolution_rate == 1.0

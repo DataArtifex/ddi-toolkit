@@ -49,10 +49,13 @@ class ProfileRule(BaseModel):
         default="required",
         description=(
             "Rule check type: 'required' (mandatory), 'recommended', 'optional', "
-            "'min_count', 'ncname', 'pattern', or 'prohibited'"
+            "'min_count', 'min_coverage', 'ncname', 'pattern', or 'prohibited'"
         ),
     )
     min_count: int | None = Field(default=None, description="Minimum count for 'min_count' rules")
+    min_coverage: float | None = Field(
+        default=None, description="Minimum coverage percentage (0.0 to 100.0) across context items"
+    )
     pattern: str | None = Field(default=None, description="Regex pattern for 'pattern' rules")
     when: str | None = Field(
         default=None,

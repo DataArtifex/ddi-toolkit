@@ -1,0 +1,1992 @@
+{
+  "schema_version": "1.0.0",
+  "ddi_standard": "DDI-Codebook",
+  "standard_version": "2.5",
+  "title": "ANES 1948 Time Series Study",
+  "study_id": "ANES1948",
+  "source_file": "NES1948.xml",
+  "generated_at": "2026-10-15T18:18:30.426988+00:00",
+  "summary": {
+    "ddi_standard": "DDI-Codebook",
+    "standard_version": "2.5",
+    "title": "ANES 1948 Time Series Study",
+    "study_id": "ANES1948",
+    "agency": "us.mtna",
+    "total_elements": 2980,
+    "total_unique_tags": 26,
+    "total_variables": 67,
+    "total_categories": 896,
+    "total_files": 1,
+    "total_variable_groups": 0,
+    "sections_present": [
+      "docDscr",
+      "stdyDscr",
+      "fileDscr",
+      "dataDscr"
+    ],
+    "languages": {},
+    "quality_score": 67.3,
+    "quality_grade": "D"
+  },
+  "study": {
+    "title": "ANES 1948 Time Series Study",
+    "has_title": true,
+    "has_abstract": true,
+    "has_producers": false,
+    "has_distributors": false,
+    "has_biblcit": false,
+    "has_time_period": false,
+    "has_geographic_coverage": false,
+    "has_universe": false,
+    "has_analysis_unit": false,
+    "has_collection_mode": false,
+    "has_sampling_procedure": false,
+    "has_access_conditions": false,
+    "keywords_count": 0,
+    "topic_classifications_count": 0,
+    "other_materials_count": 0,
+    "completeness_score": 16.7
+  },
+  "files": [
+    {
+      "file_id": "F1",
+      "file_name": "NES1948.dta",
+      "file_type": "[fileTypeType(id=None, xml_lang=None, elementVersion=None, elementVersionDate=None, ddiLifecycleUrn=None, ddiCodebookUrn=None, content='Stata', isTranslatable=None, isTranslated=None, translationDate=None, translationSourceLanguage=None, charset=None)]",
+      "case_count": 662,
+      "variable_count": 67,
+      "mapped_variable_count": 67,
+      "fingerprints": []
+    }
+  ],
+  "data_dictionary": {
+    "total_variables": 67,
+    "numeric_variables": 3,
+    "character_variables": 1,
+    "categorical_variables": 63,
+    "datetime_variables": 0,
+    "unspecified_variables": 0,
+    "weighted_variables_count": 0,
+    "weight_variable_ids": [],
+    "derived_variables_count": 0,
+    "labels_coverage": {
+      "count": 67,
+      "total": 67,
+      "percentage": 100.0
+    },
+    "questions_coverage": {
+      "count": 0,
+      "total": 67,
+      "percentage": 0.0
+    },
+    "concepts_coverage": {
+      "count": 0,
+      "total": 67,
+      "percentage": 0.0
+    },
+    "universes_coverage": {
+      "count": 0,
+      "total": 67,
+      "percentage": 0.0
+    },
+    "missing_defined_coverage": {
+      "count": 0,
+      "total": 67,
+      "percentage": 0.0
+    },
+    "sumstats_coverage": {
+      "count": 0,
+      "total": 67,
+      "percentage": 0.0
+    },
+    "format_coverage": {
+      "count": 67,
+      "total": 67,
+      "percentage": 100.0
+    },
+    "location_coverage": {
+      "count": 67,
+      "total": 67,
+      "percentage": 100.0
+    },
+    "total_categories": 896,
+    "avg_categories_per_categorical_var": 14.22,
+    "median_categories_per_categorical_var": 10.0,
+    "max_categories": 91,
+    "labeled_categories_pct": 100.0,
+    "top_categorical_variables": [
+      {
+        "name": "V480033a",
+        "label": "ISSUES CONNECTED W TRMN 1",
+        "categories_count": 91
+      },
+      {
+        "name": "V480033b",
+        "label": "ISSUES CONNECTED W TRMN 2",
+        "categories_count": 91
+      },
+      {
+        "name": "V480034a",
+        "label": "ISSUES CONNECTED W DEWEY 1",
+        "categories_count": 91
+      },
+      {
+        "name": "V480034b",
+        "label": "ISSUES CONNECTED W DEWEY 2",
+        "categories_count": 91
+      },
+      {
+        "name": "V480013",
+        "label": "PRESLELCTN OTCM SURPRISE",
+        "categories_count": 21
+      },
+      {
+        "name": "V480020",
+        "label": "CNSD VT FOR SOMEONE ELSE",
+        "categories_count": 15
+      },
+      {
+        "name": "V480014a",
+        "label": "WHY PPL VTD FOR TRUMAN 1",
+        "categories_count": 12
+      },
+      {
+        "name": "V480014b",
+        "label": "WHY PPL VTD FOR TRUMAN 2",
+        "categories_count": 12
+      },
+      {
+        "name": "V480015a",
+        "label": "WHY PPL VTD AGNST TRUMAN 1",
+        "categories_count": 12
+      },
+      {
+        "name": "V480015b",
+        "label": "WHY PPL VTD AGNST TRUMAN 2",
+        "categories_count": 12
+      }
+    ],
+    "sumstat_types_distribution": {}
+  },
+  "variable_groups": [],
+  "vocabularies": [],
+  "languages": {},
+  "integrity": {
+    "unassigned_variables_count": 0,
+    "unassigned_variable_names": [],
+    "dangling_file_references": [],
+    "dangling_weight_references": [],
+    "dangling_group_references": [],
+    "duplicate_variable_names": [],
+    "is_clean": true
+  },
+  "quality": {
+    "profile_id": "recommended",
+    "profile_name": "DDI-C Archival Best Practices",
+    "overall_score": 67.3,
+    "grade": "D",
+    "status": "warning",
+    "total_rules_checked": 4,
+    "errors_count": 0,
+    "warnings_count": 1,
+    "infos_count": 0,
+    "dimensions": {
+      "study_identification": {
+        "dimension": "study_identification",
+        "label": "Study Identification & Scope",
+        "score": 16.7,
+        "status": "action_needed",
+        "passed_checks": 2,
+        "total_checks": 12
+      },
+      "data_files": {
+        "dimension": "data_files",
+        "label": "Data Files Description",
+        "score": 100.0,
+        "status": "pass",
+        "passed_checks": 1,
+        "total_checks": 1
+      },
+      "variable_documentation": {
+        "dimension": "variable_documentation",
+        "label": "Variable Documentation",
+        "score": 60.0,
+        "status": "review",
+        "passed_checks": 2,
+        "total_checks": 3
+      },
+      "category_documentation": {
+        "dimension": "category_documentation",
+        "label": "Category & Code Documentation",
+        "score": 100.0,
+        "status": "pass",
+        "passed_checks": 1,
+        "total_checks": 1
+      }
+    },
+    "findings": [
+      {
+        "rule_id": "codebook.no_variables",
+        "message": "Codebook has no variables",
+        "severity": "warning",
+        "location": "codeBook/dataDscr/var",
+        "remediation": "Add recommended metadata elements to improve discovery and reuse."
+      }
+    ]
+  },
+  "variables_detail": [
+    {
+      "id": "fNuMk40jV2vQBozK",
+      "name": "VVERSION",
+      "label": "NES VERSION NUMBER",
+      "type": "numeric",
+      "categories_count": 0,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "jnLsUiIP87qGQC8v",
+      "name": "VDSETNO",
+      "label": "NES DATASET NUMBER",
+      "type": "character",
+      "categories_count": 0,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "gzTZpbJPg6fZmaYC",
+      "name": "V480001",
+      "label": "ICPSR ARCHIVE NUMBER",
+      "type": "numeric",
+      "categories_count": 0,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "ud5xKvfsm8dCRCp3",
+      "name": "V480002",
+      "label": "INTERVIEW NUMBER",
+      "type": "numeric",
+      "categories_count": 0,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "M39SPjTQlxKgsei6",
+      "name": "V480003",
+      "label": "POP CLASSIFICATION",
+      "type": "categorical",
+      "categories_count": 3,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "PLhFsrK3gTo1kCsw",
+      "name": "V480004",
+      "label": "CODER",
+      "type": "categorical",
+      "categories_count": 5,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "yNn4OeQEhOBq43P4",
+      "name": "V480005",
+      "label": "NUMBER OF CALLS TO R",
+      "type": "categorical",
+      "categories_count": 10,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "hFdQufzfDGnrqJdk",
+      "name": "V480006",
+      "label": "R REMEMBER PREVIOUS INT",
+      "type": "categorical",
+      "categories_count": 3,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "uKO9M1obtpU2AwfY",
+      "name": "V480007",
+      "label": "INTR INTERVIEW THIS R",
+      "type": "categorical",
+      "categories_count": 3,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "V7AhoKccjuAC3qsS",
+      "name": "V480008",
+      "label": "PRVS PRE-ELCTN R REINT",
+      "type": "categorical",
+      "categories_count": 6,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "aSKnFgMNwO1Yi176",
+      "name": "V480009",
+      "label": "R INT IN PRE/POSTELCTN",
+      "type": "categorical",
+      "categories_count": 5,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "U1nVKPbem6ptHtji",
+      "name": "V480010",
+      "label": "RENT CNTRL KEPT/DROPPED",
+      "type": "categorical",
+      "categories_count": 6,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "jLu7hyXuj3MEFm1N",
+      "name": "V480011",
+      "label": "GOVT CONTROL PRICES",
+      "type": "categorical",
+      "categories_count": 7,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "BOqtA6XUt8VWPqSo",
+      "name": "V480012",
+      "label": "WHAT TO DO W TFT-HT ACT",
+      "type": "categorical",
+      "categories_count": 10,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "iKgHmRbO6YuttcrH",
+      "name": "V480013",
+      "label": "PRESLELCTN OTCM SURPRISE",
+      "type": "categorical",
+      "categories_count": 21,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "rcsG2EF3VGWuz974",
+      "name": "V480014a",
+      "label": "WHY PPL VTD FOR TRUMAN 1",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "RUNXH6OTXoPLhQKP",
+      "name": "V480014b",
+      "label": "WHY PPL VTD FOR TRUMAN 2",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "WY4wwpGnFnLkrKRU",
+      "name": "V480015a",
+      "label": "WHY PPL VTD AGNST TRUMAN 1",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "mOpsrEUsuEU67C2E",
+      "name": "V480015b",
+      "label": "WHY PPL VTD AGNST TRUMAN 2",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "vvnJiPTnsdtSBFym",
+      "name": "V480016a",
+      "label": "WHY PPL VTD FOR DEWEY 1",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "aVRO14OPEI64SQ6Z",
+      "name": "V480016b",
+      "label": "WHY PPL VTD FOR DEWEY 2",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "l7JGVGQKgUOwfvtw",
+      "name": "V480017a",
+      "label": "WHY PPL VTD AGNST DEWEY 1",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "roCXPpNyPcYD5wAp",
+      "name": "V480017b",
+      "label": "WHY PPL VTD AGNST DEWEY 2",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "LEkUxN10A1kVj9zl",
+      "name": "V480018",
+      "label": "DID R VOTE/FOR WHOM",
+      "type": "categorical",
+      "categories_count": 7,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "xKBPVsGQYw84e2cE",
+      "name": "V480019",
+      "label": "WN DECIDE FOR WHOM TO VT",
+      "type": "categorical",
+      "categories_count": 8,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "xZjBurCq3q23Tdsv",
+      "name": "V480020",
+      "label": "CNSD VT FOR SOMEONE ELSE",
+      "type": "categorical",
+      "categories_count": 15,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "V8CpcohsWGhDC2q6",
+      "name": "V480021a",
+      "label": "XWHY DID NOT VT FOR HIM 1",
+      "type": "categorical",
+      "categories_count": 10,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "tg5AwZfSWlQS6AUz",
+      "name": "V480021b",
+      "label": "XWHY DID NOT VT FOR HIM 2",
+      "type": "categorical",
+      "categories_count": 10,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "ZyImivToEiTkKzK7",
+      "name": "V480022a",
+      "label": "WHY VT THE WAY YOU DID 1",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "LoKaEMEq6Tum91t0",
+      "name": "V480022b",
+      "label": "WHY VT THE WAY YOU DID 2",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "byBegeHZGUMm7mFv",
+      "name": "V480023",
+      "label": "VOTED STRAIGHT TICKET",
+      "type": "categorical",
+      "categories_count": 10,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "Z8KiL02qz9xyiwGO",
+      "name": "V480024",
+      "label": "R NOT VT-IF VT,FOR WHOM",
+      "type": "categorical",
+      "categories_count": 7,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "Ej0cxm2Y7vKw1Nxs",
+      "name": "V480025a",
+      "label": "R NOT VT-WHY DID NOT VT 1",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "j46wvcGt0xD79WvT",
+      "name": "V480025b",
+      "label": "R NOT VT-WHY DID NOT VT 2",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "nrbS3Tktv7HQS6Cj",
+      "name": "V480026",
+      "label": "R NOT VT-WAS R REG TO VT",
+      "type": "categorical",
+      "categories_count": 5,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "mR4Set0azVMk3hTv",
+      "name": "V480027",
+      "label": "VTD IN PRVS PRESL ELCTN",
+      "type": "categorical",
+      "categories_count": 8,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "JJfpWr0pVMatcYER",
+      "name": "V480028",
+      "label": "VTD FOR WHOM IN 1944",
+      "type": "categorical",
+      "categories_count": 7,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "MVtZvjXRxdVzc3iM",
+      "name": "V480029",
+      "label": "OCCUPATION OF HEAD",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "XRQSkkIJbD4kpFwV",
+      "name": "V480030",
+      "label": "HEAD BELONG TO LBR UN",
+      "type": "categorical",
+      "categories_count": 4,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "Xza08qQXIcfWsD1W",
+      "name": "V480031a",
+      "label": "GRPS IDENTIFIED W TRUMAN 1",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "PBxsPl0LtwBnaM0d",
+      "name": "V480031b",
+      "label": "GRPS IDENTIFIED W TRUMAN 2",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "ObV3l8D6UKRSYR9k",
+      "name": "V480031c",
+      "label": "GRPS IDENTIFIED W TRUMAN 3",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "f4lSXrcQvdBxyNQz",
+      "name": "V480032a",
+      "label": "GRPS IDENTIFIED W DEWEY 1",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "B9Z1fQ5GwbiPC02w",
+      "name": "V480032b",
+      "label": "GRPS IDENTIFIED W DEWEY 2",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "F2qndEXT5ofhwoSk",
+      "name": "V480032c",
+      "label": "GRPS IDENTIFIED W DEWEY 3",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "yQYBvlDshfH6f28U",
+      "name": "V480033a",
+      "label": "ISSUES CONNECTED W TRMN 1",
+      "type": "categorical",
+      "categories_count": 91,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "Hgd8118J8vjFXeZE",
+      "name": "V480033b",
+      "label": "ISSUES CONNECTED W TRMN 2",
+      "type": "categorical",
+      "categories_count": 91,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "Ld8mN90tcCcNuYJd",
+      "name": "V480034a",
+      "label": "ISSUES CONNECTED W DEWEY 1",
+      "type": "categorical",
+      "categories_count": 91,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "QTchKaa3zFwl53of",
+      "name": "V480034b",
+      "label": "ISSUES CONNECTED W DEWEY 2",
+      "type": "categorical",
+      "categories_count": 91,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "z2n5DGrKYnSdPSYK",
+      "name": "V480035a",
+      "label": "PERSONAL ATTRIBUTE TRMN 1",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "iLKoB7Ut3T1zMcdS",
+      "name": "V480035b",
+      "label": "PERSONAL ATTRIBUTE TRMN 2",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "gPanJ9rlIdky1Aye",
+      "name": "V480036a",
+      "label": "PERSONAL ATTRIBUTE DEWEY 1",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "F2YQJwzqDdwXZIW0",
+      "name": "V480036b",
+      "label": "PERSONAL ATTRIBUTE DEWEY 2",
+      "type": "categorical",
+      "categories_count": 12,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "CGxAutwAdQJb9M8L",
+      "name": "V480037",
+      "label": "CMPN INCIDENTS MENTIONED",
+      "type": "categorical",
+      "categories_count": 7,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "x4HCiUOAtiZYuBe8",
+      "name": "V480038",
+      "label": "41-PRESLELCTN PLAN TO VT",
+      "type": "categorical",
+      "categories_count": 5,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "BNXSoKrf50UkX7oe",
+      "name": "V480039",
+      "label": "41-PLAN TO VT REP/DEM",
+      "type": "categorical",
+      "categories_count": 8,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "priIBrqnlAxZy7Fd",
+      "name": "V480040",
+      "label": "41-USA'S CNCRN W OTHERS",
+      "type": "categorical",
+      "categories_count": 7,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "IyLn0KNsuzdeCgdG",
+      "name": "V480041",
+      "label": "41-SATISD USA TWRD RUSS",
+      "type": "categorical",
+      "categories_count": 7,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "dO3PNET1ZbXg8Hst",
+      "name": "V480042",
+      "label": "41-INFORMATION LEVEL",
+      "type": "categorical",
+      "categories_count": 5,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "Jx3IZXZirdpl5pzP",
+      "name": "V480043",
+      "label": "41-USA GV IN,AGRT RUSS",
+      "type": "categorical",
+      "categories_count": 8,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "QtFhO0Y8WZ4c4vEr",
+      "name": "V480044",
+      "label": "41-USA-RUSS AGRT VIA U.N",
+      "type": "categorical",
+      "categories_count": 7,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "wr3nFxu0ZraeazFE",
+      "name": "V480045",
+      "label": "SEX OF RESPONDENT",
+      "type": "categorical",
+      "categories_count": 3,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "ho1CMy2AYE4Fkp01",
+      "name": "V480046",
+      "label": "RACE OF RESPONDENT",
+      "type": "categorical",
+      "categories_count": 4,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "VU2nS3zAEmSjJqNA",
+      "name": "V480047",
+      "label": "AGE OF RESPONDENT",
+      "type": "categorical",
+      "categories_count": 7,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "o7TYGE92lQXXVhBV",
+      "name": "V480048",
+      "label": "EDUCATION OF RESPONDENT",
+      "type": "categorical",
+      "categories_count": 4,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "dbn1fBSZlQsVrEqW",
+      "name": "V480049",
+      "label": "TOTAL 1948 INCOME",
+      "type": "categorical",
+      "categories_count": 8,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    },
+    {
+      "id": "emPyiXTeYB4WcxtW",
+      "name": "V480050",
+      "label": "RELIGIOUS PREFERENCE",
+      "type": "categorical",
+      "categories_count": 6,
+      "has_question": false,
+      "has_missing": false,
+      "has_concept": false,
+      "file": "F1"
+    }
+  ],
+  "coverage_tree": {
+    "name": "DDI-Codebook Document",
+    "tag": "codeBook",
+    "count": 4,
+    "total": 4,
+    "percentage": 100.0,
+    "is_informational": false,
+    "status": "good",
+    "insights": {
+      "standard": "DDI-Codebook",
+      "version": "2.5",
+      "total_variables": 67,
+      "total_categories": 896,
+      "total_files": 1
+    },
+    "children": [
+      {
+        "name": "Document Description",
+        "tag": "docDscr",
+        "count": 1,
+        "total": 1,
+        "percentage": 100.0,
+        "is_informational": false,
+        "status": "good",
+        "insights": {},
+        "children": []
+      },
+      {
+        "name": "Study Description",
+        "tag": "stdyDscr",
+        "count": 2,
+        "total": 12,
+        "percentage": 16.7,
+        "is_informational": false,
+        "status": "low",
+        "insights": {
+          "completeness_score": 16.7,
+          "study_title": "ANES 1948 Time Series Study",
+          "study_id": "N/A"
+        },
+        "children": [
+          {
+            "name": "Citation",
+            "tag": "citation",
+            "count": 1,
+            "total": 4,
+            "percentage": 25.0,
+            "is_informational": false,
+            "status": "low",
+            "insights": {},
+            "children": [
+              {
+                "name": "Title Statement",
+                "tag": "titlStmt",
+                "count": 1,
+                "total": 1,
+                "percentage": 100.0,
+                "is_informational": false,
+                "status": "good",
+                "insights": {
+                  "title": "ANES 1948 Time Series Study",
+                  "study_id": "N/A"
+                },
+                "children": []
+              },
+              {
+                "name": "Bibliographic Citation",
+                "tag": "biblCit",
+                "count": 0,
+                "total": 1,
+                "percentage": 0.0,
+                "is_informational": false,
+                "status": "empty",
+                "insights": {},
+                "children": []
+              },
+              {
+                "name": "Production Statement",
+                "tag": "prodStmt",
+                "count": 0,
+                "total": 1,
+                "percentage": 0.0,
+                "is_informational": false,
+                "status": "empty",
+                "insights": {},
+                "children": []
+              },
+              {
+                "name": "Distribution Statement",
+                "tag": "distStmt",
+                "count": 0,
+                "total": 1,
+                "percentage": 0.0,
+                "is_informational": false,
+                "status": "empty",
+                "insights": {},
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Study Scope & Information",
+            "tag": "stdyInfo",
+            "count": 1,
+            "total": 5,
+            "percentage": 20.0,
+            "is_informational": false,
+            "status": "low",
+            "insights": {},
+            "children": [
+              {
+                "name": "Abstract",
+                "tag": "abstract",
+                "count": 1,
+                "total": 1,
+                "percentage": 100.0,
+                "is_informational": false,
+                "status": "good",
+                "insights": {},
+                "children": []
+              },
+              {
+                "name": "Subject & Keywords",
+                "tag": "subject",
+                "count": 0,
+                "total": 1,
+                "percentage": 0.0,
+                "is_informational": false,
+                "status": "empty",
+                "insights": {
+                  "keywords": 0,
+                  "topic_classifications": 0
+                },
+                "children": []
+              },
+              {
+                "name": "Summary Description",
+                "tag": "sumDscr",
+                "count": 0,
+                "total": 4,
+                "percentage": 0.0,
+                "is_informational": false,
+                "status": "empty",
+                "insights": {
+                  "time_period": false,
+                  "geographic_coverage": false,
+                  "universe": false,
+                  "analysis_unit": false
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Methodology",
+            "tag": "method",
+            "count": 0,
+            "total": 2,
+            "percentage": 0.0,
+            "is_informational": false,
+            "status": "empty",
+            "insights": {
+              "collection_mode": false,
+              "sampling_procedure": false
+            },
+            "children": []
+          },
+          {
+            "name": "Data Access",
+            "tag": "dataAccs",
+            "count": 0,
+            "total": 1,
+            "percentage": 0.0,
+            "is_informational": false,
+            "status": "empty",
+            "insights": {},
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Data Files",
+        "tag": "fileDscr",
+        "count": 1,
+        "total": 1,
+        "percentage": 100.0,
+        "is_informational": false,
+        "status": "good",
+        "insights": {
+          "total_files": 1,
+          "total_cases": 662,
+          "total_variables": 67
+        },
+        "children": [
+          {
+            "name": "NES1948.dta",
+            "tag": "fileTxt",
+            "count": 1,
+            "total": 1,
+            "percentage": 100.0,
+            "is_informational": false,
+            "status": "good",
+            "insights": {
+              "file_id": "F1",
+              "file_name": "NES1948.dta",
+              "file_type": "[fileTypeType(id=None, xml_lang=None, elementVersion=None, elementVersionDate=None, ddiLifecycleUrn=None, ddiCodebookUrn=None, content='Stata', isTranslatable=None, isTranslated=None, translationDate=None, translationSourceLanguage=None, charset=None)]",
+              "case_count": 662,
+              "variable_count": 67,
+              "mapped_variables": 67
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Variable Description",
+        "tag": "dataDscr",
+        "count": 67,
+        "total": 67,
+        "percentage": 100.0,
+        "is_informational": false,
+        "status": "good",
+        "insights": {
+          "total_variables": 67,
+          "total_groups": 0,
+          "categorical_variables": 63,
+          "numeric_variables": 3,
+          "character_variables": 1,
+          "datetime_variables": 0
+        },
+        "children": [
+          {
+            "name": "Variable Groups",
+            "tag": "varGrp",
+            "count": 0,
+            "total": 0,
+            "percentage": 0.0,
+            "is_informational": true,
+            "status": "info",
+            "insights": {
+              "total_groups": 0,
+              "groups_documented": 0,
+              "groups_with_labels": 0,
+              "groups_with_text": 0,
+              "groups_with_definitions": 0
+            },
+            "children": []
+          },
+          {
+            "name": "Variables",
+            "tag": "var",
+            "count": 67,
+            "total": 67,
+            "percentage": 100.0,
+            "is_informational": false,
+            "status": "good",
+            "insights": {
+              "total_variables": 67,
+              "numeric": 3,
+              "categorical": 63,
+              "character": 1,
+              "weighted": 0
+            },
+            "children": [
+              {
+                "name": "Variable Labels",
+                "tag": "labl",
+                "count": 67,
+                "total": 67,
+                "percentage": 100.0,
+                "is_informational": false,
+                "status": "good",
+                "insights": {},
+                "children": []
+              },
+              {
+                "name": "Questions",
+                "tag": "qstn",
+                "count": 0,
+                "total": 67,
+                "percentage": 0.0,
+                "is_informational": false,
+                "status": "empty",
+                "insights": {},
+                "children": []
+              },
+              {
+                "name": "Categories & Codes",
+                "tag": "catgry",
+                "count": 63,
+                "total": 67,
+                "percentage": 94.0,
+                "is_informational": false,
+                "status": "good",
+                "insights": {
+                  "total_categories": 896,
+                  "categories_with_values": 896,
+                  "categories_with_labels": 896,
+                  "categories_with_stats": 0,
+                  "missing_categories": 0,
+                  "avg_categories_per_var": 14.22,
+                  "max_categories": 91
+                },
+                "children": [
+                  {
+                    "name": "Category Values",
+                    "tag": "catValu",
+                    "count": 896,
+                    "total": 896,
+                    "percentage": 100.0,
+                    "is_informational": false,
+                    "status": "good",
+                    "insights": {},
+                    "children": []
+                  },
+                  {
+                    "name": "Category Labels",
+                    "tag": "labl",
+                    "count": 896,
+                    "total": 896,
+                    "percentage": 100.0,
+                    "is_informational": false,
+                    "status": "good",
+                    "insights": {},
+                    "children": []
+                  },
+                  {
+                    "name": "Category Frequencies & Stats",
+                    "tag": "catStat",
+                    "count": 0,
+                    "total": 896,
+                    "percentage": 0.0,
+                    "is_informational": true,
+                    "status": "info",
+                    "insights": {},
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "name": "Format Specifications",
+                "tag": "varFormat",
+                "count": 67,
+                "total": 67,
+                "percentage": 100.0,
+                "is_informational": false,
+                "status": "good",
+                "insights": {
+                  "numeric": 66,
+                  "character": 1
+                },
+                "children": []
+              },
+              {
+                "name": "Missing Values Defined",
+                "tag": "invalrng",
+                "count": 0,
+                "total": 67,
+                "percentage": 0.0,
+                "is_informational": true,
+                "status": "info",
+                "insights": {
+                  "variables_with_missing_definitions": 0
+                },
+                "children": []
+              },
+              {
+                "name": "Concepts",
+                "tag": "concept",
+                "count": 0,
+                "total": 67,
+                "percentage": 0.0,
+                "is_informational": false,
+                "status": "empty",
+                "insights": {},
+                "children": []
+              },
+              {
+                "name": "Universes",
+                "tag": "universe",
+                "count": 0,
+                "total": 67,
+                "percentage": 0.0,
+                "is_informational": false,
+                "status": "empty",
+                "insights": {},
+                "children": []
+              },
+              {
+                "name": "Summary Statistics",
+                "tag": "sumStat",
+                "count": 0,
+                "total": 67,
+                "percentage": 0.0,
+                "is_informational": true,
+                "status": "info",
+                "insights": {},
+                "children": []
+              },
+              {
+                "name": "Physical Location",
+                "tag": "location",
+                "count": 67,
+                "total": 67,
+                "percentage": 100.0,
+                "is_informational": false,
+                "status": "good",
+                "insights": {},
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "xml_structure": {
+    "name": "doc()",
+    "node_type": "doc",
+    "count": 1,
+    "is_leaf": false,
+    "children": [
+      {
+        "name": "codeBook",
+        "node_type": "element",
+        "count": 1,
+        "is_leaf": false,
+        "children": [
+          {
+            "name": "@version",
+            "node_type": "attribute",
+            "count": 1,
+            "is_leaf": true,
+            "data_type": "double",
+            "distinct_count": 1,
+            "min_value": 2.5,
+            "max_value": 2.5,
+            "type_summary": "double [2.5, 2.5], leaf",
+            "children": []
+          },
+          {
+            "name": "@ID",
+            "node_type": "attribute",
+            "count": 1,
+            "is_leaf": true,
+            "data_type": "string",
+            "distinct_count": 1,
+            "type_summary": "string, leaf",
+            "children": []
+          },
+          {
+            "name": "@codeBookAgency",
+            "node_type": "attribute",
+            "count": 1,
+            "is_leaf": true,
+            "data_type": "string",
+            "distinct_count": 1,
+            "type_summary": "string, leaf",
+            "children": []
+          },
+          {
+            "name": "@elementVersion",
+            "node_type": "attribute",
+            "count": 1,
+            "is_leaf": true,
+            "data_type": "string",
+            "distinct_count": 1,
+            "type_summary": "string, leaf",
+            "children": []
+          },
+          {
+            "name": "docDscr",
+            "node_type": "element",
+            "count": 1,
+            "is_leaf": false,
+            "children": [
+              {
+                "name": "citation",
+                "node_type": "element",
+                "count": 1,
+                "is_leaf": false,
+                "children": [
+                  {
+                    "name": "titlStmt",
+                    "node_type": "element",
+                    "count": 1,
+                    "is_leaf": false,
+                    "children": [
+                      {
+                        "name": "titl",
+                        "node_type": "element",
+                        "count": 1,
+                        "is_leaf": true,
+                        "children": [
+                          {
+                            "name": "text()",
+                            "node_type": "text",
+                            "count": 1,
+                            "is_leaf": true,
+                            "data_type": "string",
+                            "distinct_count": 1,
+                            "type_summary": "string, leaf",
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "prodStmt",
+                    "node_type": "element",
+                    "count": 1,
+                    "is_leaf": false,
+                    "children": [
+                      {
+                        "name": "prodDate",
+                        "node_type": "element",
+                        "count": 1,
+                        "is_leaf": true,
+                        "children": [
+                          {
+                            "name": "@date",
+                            "node_type": "attribute",
+                            "count": 1,
+                            "is_leaf": true,
+                            "data_type": "string",
+                            "distinct_count": 1,
+                            "type_summary": "string, leaf",
+                            "children": []
+                          },
+                          {
+                            "name": "text()",
+                            "node_type": "text",
+                            "count": 1,
+                            "is_leaf": true,
+                            "data_type": "string",
+                            "distinct_count": 1,
+                            "type_summary": "string, leaf",
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "name": "software",
+                        "node_type": "element",
+                        "count": 1,
+                        "is_leaf": true,
+                        "children": [
+                          {
+                            "name": "@version",
+                            "node_type": "attribute",
+                            "count": 1,
+                            "is_leaf": true,
+                            "data_type": "string",
+                            "distinct_count": 1,
+                            "type_summary": "string, leaf",
+                            "children": []
+                          },
+                          {
+                            "name": "text()",
+                            "node_type": "text",
+                            "count": 1,
+                            "is_leaf": true,
+                            "data_type": "string",
+                            "distinct_count": 1,
+                            "type_summary": "string, leaf",
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "stdyDscr",
+            "node_type": "element",
+            "count": 1,
+            "is_leaf": false,
+            "children": [
+              {
+                "name": "citation",
+                "node_type": "element",
+                "count": 1,
+                "is_leaf": false,
+                "children": [
+                  {
+                    "name": "titlStmt",
+                    "node_type": "element",
+                    "count": 1,
+                    "is_leaf": false,
+                    "children": [
+                      {
+                        "name": "titl",
+                        "node_type": "element",
+                        "count": 1,
+                        "is_leaf": true,
+                        "children": [
+                          {
+                            "name": "text()",
+                            "node_type": "text",
+                            "count": 1,
+                            "is_leaf": true,
+                            "data_type": "string",
+                            "distinct_count": 1,
+                            "type_summary": "string, leaf",
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "name": "altTitl",
+                        "node_type": "element",
+                        "count": 1,
+                        "is_leaf": true,
+                        "children": [
+                          {
+                            "name": "text()",
+                            "node_type": "text",
+                            "count": 1,
+                            "is_leaf": true,
+                            "data_type": "string",
+                            "distinct_count": 1,
+                            "type_summary": "string, leaf",
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "prodStmt",
+                    "node_type": "element",
+                    "count": 1,
+                    "is_leaf": true,
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "name": "stdyInfo",
+                "node_type": "element",
+                "count": 1,
+                "is_leaf": false,
+                "children": [
+                  {
+                    "name": "abstract",
+                    "node_type": "element",
+                    "count": 1,
+                    "is_leaf": true,
+                    "children": [
+                      {
+                        "name": "text()",
+                        "node_type": "text",
+                        "count": 1,
+                        "is_leaf": true,
+                        "data_type": "string",
+                        "distinct_count": 1,
+                        "type_summary": "string, leaf",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "fileDscr",
+            "node_type": "element",
+            "count": 1,
+            "is_leaf": false,
+            "children": [
+              {
+                "name": "@ID",
+                "node_type": "attribute",
+                "count": 1,
+                "is_leaf": true,
+                "data_type": "string",
+                "distinct_count": 1,
+                "type_summary": "string, leaf",
+                "children": []
+              },
+              {
+                "name": "fileTxt",
+                "node_type": "element",
+                "count": 1,
+                "is_leaf": false,
+                "children": [
+                  {
+                    "name": "fileName",
+                    "node_type": "element",
+                    "count": 1,
+                    "is_leaf": true,
+                    "children": [
+                      {
+                        "name": "text()",
+                        "node_type": "text",
+                        "count": 1,
+                        "is_leaf": true,
+                        "data_type": "string",
+                        "distinct_count": 1,
+                        "type_summary": "string, leaf",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "name": "dimensns",
+                    "node_type": "element",
+                    "count": 1,
+                    "is_leaf": false,
+                    "children": [
+                      {
+                        "name": "caseQnty",
+                        "node_type": "element",
+                        "count": 1,
+                        "is_leaf": true,
+                        "children": [
+                          {
+                            "name": "text()",
+                            "node_type": "text",
+                            "count": 1,
+                            "is_leaf": true,
+                            "data_type": "integer",
+                            "distinct_count": 1,
+                            "min_value": 662,
+                            "max_value": 662,
+                            "type_summary": "integer [662, 662], leaf",
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "name": "varQnty",
+                        "node_type": "element",
+                        "count": 1,
+                        "is_leaf": true,
+                        "children": [
+                          {
+                            "name": "text()",
+                            "node_type": "text",
+                            "count": 1,
+                            "is_leaf": true,
+                            "data_type": "integer",
+                            "distinct_count": 1,
+                            "min_value": 67,
+                            "max_value": 67,
+                            "type_summary": "integer [67, 67], leaf",
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "fileType",
+                    "node_type": "element",
+                    "count": 1,
+                    "is_leaf": true,
+                    "children": [
+                      {
+                        "name": "text()",
+                        "node_type": "text",
+                        "count": 1,
+                        "is_leaf": true,
+                        "data_type": "string",
+                        "distinct_count": 1,
+                        "type_summary": "string, leaf",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "dataDscr",
+            "node_type": "element",
+            "count": 1,
+            "is_leaf": false,
+            "children": [
+              {
+                "name": "var",
+                "node_type": "element",
+                "count": 67,
+                "is_leaf": false,
+                "children": [
+                  {
+                    "name": "@ID",
+                    "node_type": "attribute",
+                    "count": 67,
+                    "is_leaf": true,
+                    "data_type": "strings",
+                    "distinct_count": 67,
+                    "type_summary": "strings, leaf",
+                    "children": []
+                  },
+                  {
+                    "name": "@name",
+                    "node_type": "attribute",
+                    "count": 67,
+                    "is_leaf": true,
+                    "data_type": "strings",
+                    "distinct_count": 67,
+                    "type_summary": "strings, leaf",
+                    "children": []
+                  },
+                  {
+                    "name": "@files",
+                    "node_type": "attribute",
+                    "count": 67,
+                    "is_leaf": true,
+                    "data_type": "string",
+                    "distinct_count": 1,
+                    "type_summary": "string, leaf",
+                    "children": []
+                  },
+                  {
+                    "name": "@dcml",
+                    "node_type": "attribute",
+                    "count": 67,
+                    "is_leaf": true,
+                    "data_type": "integer",
+                    "distinct_count": 1,
+                    "min_value": 0,
+                    "max_value": 0,
+                    "type_summary": "integer [0, 0], leaf",
+                    "children": []
+                  },
+                  {
+                    "name": "location",
+                    "node_type": "element",
+                    "count": 67,
+                    "is_leaf": true,
+                    "children": [
+                      {
+                        "name": "@width",
+                        "node_type": "attribute",
+                        "count": 67,
+                        "is_leaf": true,
+                        "data_type": "integers",
+                        "distinct_count": 20,
+                        "min_value": 8,
+                        "max_value": 43,
+                        "type_summary": "20 distinct integers [8, 43], leaf",
+                        "children": []
+                      },
+                      {
+                        "name": "@StartPos",
+                        "node_type": "attribute",
+                        "count": 67,
+                        "is_leaf": true,
+                        "data_type": "integers",
+                        "distinct_count": 67,
+                        "min_value": 1,
+                        "max_value": 2068,
+                        "type_summary": "integers [1, 2068], leaf",
+                        "children": []
+                      },
+                      {
+                        "name": "@EndPos",
+                        "node_type": "attribute",
+                        "count": 67,
+                        "is_leaf": true,
+                        "data_type": "integers",
+                        "distinct_count": 67,
+                        "min_value": 9,
+                        "max_value": 2080,
+                        "type_summary": "integers [9, 2080], leaf",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "name": "labl",
+                    "node_type": "element",
+                    "count": 67,
+                    "is_leaf": true,
+                    "children": [
+                      {
+                        "name": "@xml-lang",
+                        "node_type": "attribute",
+                        "count": 67,
+                        "is_leaf": true,
+                        "data_type": "string",
+                        "distinct_count": 1,
+                        "type_summary": "string, leaf",
+                        "children": []
+                      },
+                      {
+                        "name": "text()",
+                        "node_type": "text",
+                        "count": 67,
+                        "is_leaf": true,
+                        "data_type": "strings",
+                        "distinct_count": 67,
+                        "type_summary": "strings, leaf",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "name": "varFormat",
+                    "node_type": "element",
+                    "count": 67,
+                    "is_leaf": true,
+                    "children": [
+                      {
+                        "name": "@type",
+                        "node_type": "attribute",
+                        "count": 67,
+                        "is_leaf": true,
+                        "data_type": "strings",
+                        "distinct_count": 2,
+                        "type_summary": "2 distinct strings, leaf",
+                        "children": []
+                      },
+                      {
+                        "name": "@schema",
+                        "node_type": "attribute",
+                        "count": 67,
+                        "is_leaf": true,
+                        "data_type": "string",
+                        "distinct_count": 1,
+                        "type_summary": "string, leaf",
+                        "children": []
+                      },
+                      {
+                        "name": "@formatname",
+                        "node_type": "attribute",
+                        "count": 67,
+                        "is_leaf": true,
+                        "data_type": "strings",
+                        "distinct_count": 3,
+                        "type_summary": "3 distinct strings, leaf",
+                        "children": []
+                      },
+                      {
+                        "name": "text()",
+                        "node_type": "text",
+                        "count": 67,
+                        "is_leaf": true,
+                        "data_type": "strings",
+                        "distinct_count": 21,
+                        "type_summary": "21 distinct strings, leaf",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "name": "catgry",
+                    "node_type": "element",
+                    "count": 896,
+                    "is_leaf": false,
+                    "children": [
+                      {
+                        "name": "catValu",
+                        "node_type": "element",
+                        "count": 896,
+                        "is_leaf": true,
+                        "children": [
+                          {
+                            "name": "text()",
+                            "node_type": "text",
+                            "count": 896,
+                            "is_leaf": true,
+                            "data_type": "integers",
+                            "distinct_count": 96,
+                            "min_value": 0,
+                            "max_value": 99,
+                            "type_summary": "integers [0, 99], leaf",
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "name": "labl",
+                        "node_type": "element",
+                        "count": 896,
+                        "is_leaf": true,
+                        "children": [
+                          {
+                            "name": "@xml-lang",
+                            "node_type": "attribute",
+                            "count": 896,
+                            "is_leaf": true,
+                            "data_type": "string",
+                            "distinct_count": 1,
+                            "type_summary": "string, leaf",
+                            "children": []
+                          },
+                          {
+                            "name": "text()",
+                            "node_type": "text",
+                            "count": 896,
+                            "is_leaf": true,
+                            "data_type": "strings",
+                            "distinct_count": 377,
+                            "type_summary": "strings, leaf",
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

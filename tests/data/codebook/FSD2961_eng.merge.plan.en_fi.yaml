@@ -1,0 +1,731 @@
+schema_version: 1.0.0
+plan_id: plan-f2aa9509
+created_at: '2026-10-15T18:19:38.460597+00:00'
+metadata:
+  canonical:
+    file: /Users/pascal/Library/CloudStorage/Dropbox/git-dartfx/ddi-toolkit/tests/data/codebook/FSD2961_eng.xml
+    language: en
+    detected_lang_attribute: en
+    study_id: null
+    var_count: 0
+    file_count: 0
+  translated:
+    file: /Users/pascal/Library/CloudStorage/Dropbox/git-dartfx/ddi-toolkit/tests/data/codebook/FSD2961_fin.xml
+    language: fi
+    detected_lang_attribute: fi
+    study_id: null
+    var_count: 34
+    file_count: 1
+summary:
+  total_elements_compared: 1
+  exact_matches: 1
+  translation_missing_count: 0
+  stats_divergence_count: 0
+  freqs_divergence_count: 0
+  missing_attr_divergence_count: 0
+  unmatched_canonical_count: 0
+  unmatched_translation_count: 34
+  pending_review_count: 0
+  status: APPROVED
+strategy:
+  strategy_name: default_multilingual_strategy
+  canonical_language: en
+  translated_language: fi
+  enforce_iso_codes: true
+  on_missing_translation: keep_canonical_only
+  placeholder_template: '[Untranslated ({lang_c}): {text}]'
+  on_unmatched_translation: drop
+  on_stats_divergence: use_canonical_with_warning
+  on_freqs_divergence: use_canonical_with_warning
+  on_missing_attr_divergence: use_canonical
+  variable_key: name
+  vargrp_key: id_or_name
+  category_key: catValu
+  study_title_mapping: parTitl
+  auto_approve_if_no_errors: true
+  merge_secondary_metadata: true
+review_gate:
+  approved: false
+  approved_by: null
+  approval_timestamp: null
+discrepancies:
+- id: disc-001
+  target: dataDscr/var[@name='FSD_NO']
+  item_type: var.orphan
+  parent_id: null
+  var_name: FSD_NO
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: FSD_NO
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-002
+  target: dataDscr/var[@name='FSD_VR']
+  item_type: var.orphan
+  parent_id: null
+  var_name: FSD_VR
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: FSD_VR
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-003
+  target: dataDscr/var[@name='FSD_ID']
+  item_type: var.orphan
+  parent_id: null
+  var_name: FSD_ID
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: FSD_ID
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-004
+  target: dataDscr/var[@name='BV1']
+  item_type: var.orphan
+  parent_id: null
+  var_name: BV1
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: BV1
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-005
+  target: dataDscr/var[@name='Q1_1']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_1
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_1
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-006
+  target: dataDscr/var[@name='Q1_2']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_2
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_2
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-007
+  target: dataDscr/var[@name='Q1_3']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_3
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_3
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-008
+  target: dataDscr/var[@name='Q1_4']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_4
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_4
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-009
+  target: dataDscr/var[@name='Q1_5']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_5
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_5
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-010
+  target: dataDscr/var[@name='Q1_6']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_6
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_6
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-011
+  target: dataDscr/var[@name='Q1_7']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_7
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_7
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-012
+  target: dataDscr/var[@name='Q1_8']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_8
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_8
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-013
+  target: dataDscr/var[@name='Q1_9']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_9
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_9
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-014
+  target: dataDscr/var[@name='Q1_10']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_10
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_10
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-015
+  target: dataDscr/var[@name='Q1_11']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_11
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_11
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-016
+  target: dataDscr/var[@name='Q1_12']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_12
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_12
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-017
+  target: dataDscr/var[@name='Q1_13']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_13
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_13
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-018
+  target: dataDscr/var[@name='Q1_14']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_14
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_14
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-019
+  target: dataDscr/var[@name='Q1_15']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_15
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_15
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-020
+  target: dataDscr/var[@name='Q1_16']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_16
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_16
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-021
+  target: dataDscr/var[@name='Q1_17']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_17
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_17
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-022
+  target: dataDscr/var[@name='Q1_18']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_18
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_18
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-023
+  target: dataDscr/var[@name='Q1_19']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_19
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_19
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-024
+  target: dataDscr/var[@name='Q1_20']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q1_20
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q1_20
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-025
+  target: dataDscr/var[@name='Q2']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q2
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q2
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-026
+  target: dataDscr/var[@name='Q3']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q3
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q3
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-027
+  target: dataDscr/var[@name='Q4']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q4
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q4
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-028
+  target: dataDscr/var[@name='Q5']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q5
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q5
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-029
+  target: dataDscr/var[@name='Q6']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q6
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q6
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-030
+  target: dataDscr/var[@name='Q7']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q7
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q7
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-031
+  target: dataDscr/var[@name='Q8']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q8
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q8
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-032
+  target: dataDscr/var[@name='Q9']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q9
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q9
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-033
+  target: dataDscr/var[@name='Q10']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q10
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q10
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
+- id: disc-034
+  target: dataDscr/var[@name='Q11']
+  item_type: var.orphan
+  parent_id: null
+  var_name: Q11
+  cat_value: null
+  detected_issue: UNMATCHED_TRANSLATION
+  canonical_value: null
+  translated_value: Q11
+  warning: null
+  available_resolutions:
+  - action: drop
+    description: Drop orphan translated variable
+  - action: keep_canonical_only
+    description: Do not include in merged output
+  resolution:
+    action: drop
+    custom_text: null
+    status: RESOLVED
+    requires_human_approval: false
