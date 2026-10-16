@@ -460,22 +460,29 @@ REFERENCE_TYPE_RENAMES = {
 }
 
 
-def _ensure_urn_on_reference(element: ET.Element, expected_type: str | None = None) -> None:
-    """Constructs and appends a URN child element to reference objects if missing.
+def _sync_element_identification(
+    element: ET.Element,
+    is_reference: bool = False,
+    expected_type: str | None = None,
+) -> None:
+    """Synchronizes identification fields (URN, Agency, ID, Version) bidirectionally on an element.
 
-    Also handles mapping renamed item types (e.g. DataCollectionMethodology -> DataCollectionMethodologyType)
-    in the TypeOfObject element, and corrects assignability mismatches (e.g. Organization -> Individual).
+    If URN is present, decomposes it into missing Agency, ID, and Version children.
+    If Agency, ID, and Version are present, synthesizes missing URN.
+    If is_reference=True, also handles TypeOfObject mapping and reference child element ordering.
     """
-    has_urn = False
-    agency_el = None
-    id_el = None
-    version_el = None
-    typeofobject_el = None
+    from .model_4_0_rc1 import ITEM_TYPE_REGISTRY, TARGET_NAMESPACE
+
+    agency_el: ET.Element | None = None
+    id_el: ET.Element | None = None
+    version_el: ET.Element | None = None
+    typeofobject_el: ET.Element | None = None
+    urn_el: ET.Element | None = None
 
     for child in element:
         local_name = child.tag.rsplit("}", 1)[-1]
         if local_name == "URN":
-            has_urn = True
+            urn_el = child
         elif local_name == "Agency":
             agency_el = child
         elif local_name == "ID":
@@ -485,9 +492,7 @@ def _ensure_urn_on_reference(element: ET.Element, expected_type: str | None = No
         elif local_name == "TypeOfObject":
             typeofobject_el = child
 
-    from .model_4_0_rc1 import ITEM_TYPE_REGISTRY
-
-    if typeofobject_el is not None and typeofobject_el.text:
+    if is_reference and typeofobject_el is not None and typeofobject_el.text:
         type_val = typeofobject_el.text.strip()
         # 1. Apply explicit type renames
         if type_val in REFERENCE_TYPE_RENAMES:
@@ -514,21 +519,74 @@ def _ensure_urn_on_reference(element: ET.Element, expected_type: str | None = No
             if type_val + "Type" in ITEM_TYPE_REGISTRY:
                 typeofobject_el.text = type_val + "Type"
 
-    if not has_urn and agency_el is not None and id_el is not None and version_el is not None:
-        agency = (agency_el.text or "").strip()
-        id_val = (id_el.text or "").strip()
-        version = (version_el.text or "").strip()
-        if agency and id_val and version:
-            urn_text = f"urn:ddi:{agency}:{id_val}:{version}"
-            urn_el = ET.Element(f"{{{TARGET_NAMESPACE}}}URN")
-            urn_el.text = urn_text
-            element.append(urn_el)
+    urn_text = (urn_el.text or "").strip() if urn_el is not None and urn_el.text else None
+    agency = (
+        (agency_el.text or "").strip() if agency_el is not None and agency_el.text else element.attrib.get("agency")
+    )
+    id_val = (id_el.text or "").strip() if id_el is not None and id_el.text else element.attrib.get("id")
+    version = (
+        (version_el.text or "").strip() if version_el is not None and version_el.text else element.attrib.get("version")
+    )
 
-    ref_order = {"URN": 0, "Agency": 1, "ID": 2, "Version": 3, "TypeOfObject": 4}
-    children = list(element)
-    children.sort(key=lambda c: ref_order.get(c.tag.rsplit("}", 1)[-1], 99))
-    del element[:]
-    element.extend(children)
+    # 1. Decompose URN into Agency, ID, Version if any are missing
+    if urn_text and urn_text.startswith("urn:ddi:"):
+        parts = urn_text.split(":")
+        if not agency and len(parts) >= 3:
+            agency = parts[2]
+        if not id_val and len(parts) >= 4:
+            if len(parts) in (4, 5):
+                id_val = parts[3]
+            else:
+                id_val = ":".join(parts[3:-1])
+        if not version:
+            if len(parts) >= 5:
+                version = parts[-1]
+            elif "version" in element.attrib:
+                version = element.attrib["version"].strip()
+            else:
+                version = "1.0.0"
+
+    # 2. Synthesize URN if missing
+    if not urn_text and agency and id_val and version:
+        urn_text = f"urn:ddi:{agency}:{id_val}:{version}"
+
+    if urn_el is None and urn_text:
+        urn_el = ET.Element(f"{{{TARGET_NAMESPACE}}}URN")
+        urn_el.text = urn_text
+        element.append(urn_el)
+    elif urn_el is not None and urn_text and not urn_el.text:
+        urn_el.text = urn_text
+
+    if agency_el is None and agency:
+        agency_el = ET.Element(f"{{{TARGET_NAMESPACE}}}Agency")
+        agency_el.text = agency
+        element.append(agency_el)
+    elif agency_el is not None and agency and not agency_el.text:
+        agency_el.text = agency
+
+    if id_el is None and id_val:
+        id_el = ET.Element(f"{{{TARGET_NAMESPACE}}}ID")
+        id_el.text = id_val
+        element.append(id_el)
+    elif id_el is not None and id_val and not id_el.text:
+        id_el.text = id_val
+
+    if version_el is None and version:
+        version_el = ET.Element(f"{{{TARGET_NAMESPACE}}}Version")
+        version_el.text = version
+        element.append(version_el)
+    elif version_el is not None and version and not version_el.text:
+        version_el.text = version
+
+    if is_reference:
+        ref_order = {"URN": 0, "Agency": 1, "ID": 2, "Version": 3, "TypeOfObject": 4}
+        children = list(element)
+        children.sort(key=lambda c: ref_order.get(c.tag.rsplit("}", 1)[-1], 99))
+        del element[:]
+        element.extend(children)
+
+
+_ensure_urn_on_reference = _sync_element_identification
 
 
 def _convert_attributes_to_elements(element: ET.Element, cls: type[CogsValue], current_lang: str = "en") -> None:
@@ -753,6 +811,17 @@ def _prepare_element_for_model(element: ET.Element, cls: type[CogsValue]) -> Non
     to the target DDI 4.0 RC1 representation.
     """
     _map_namespaces(element, TARGET_NAMESPACE)
+
+    from .model_4_0_rc1 import CogsItem
+
+    if issubclass(cls, CogsItem):
+        _sync_element_identification(element, is_reference=False)
+
+    for desc in element.iter():
+        if desc is not element:
+            dtag = desc.tag.rsplit("}", 1)[-1]
+            if dtag.endswith("Reference") or dtag.endswith("Ref"):
+                _sync_element_identification(desc, is_reference=True)
 
     # Establish root current_lang
     lang_key = f"{{{XML_NAMESPACE}}}lang"

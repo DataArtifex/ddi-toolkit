@@ -1,0 +1,905 @@
+{
+  "schema_version": "1.0.0",
+  "ddi_standard": "DDI-Codebook",
+  "standard_version": "2.5",
+  "title": "A simple codebook",
+  "study_id": "simple_yndk",
+  "source_file": "simple_yndk.xml",
+  "generated_at": "2026-10-16T17:59:16.479441+00:00",
+  "summary": {
+    "ddi_standard": "DDI-Codebook",
+    "standard_version": "2.5",
+    "title": "A simple codebook",
+    "study_id": "simple_yndk",
+    "agency": "int.dartfx",
+    "total_elements": 22,
+    "total_unique_tags": 15,
+    "total_variables": 1,
+    "total_categories": 3,
+    "total_files": 1,
+    "total_variable_groups": 0,
+    "sections_present": [
+      "stdyDscr",
+      "fileDscr",
+      "dataDscr"
+    ],
+    "languages": {},
+    "quality_score": 62.7,
+    "quality_grade": "C"
+  },
+  "study": {
+    "title": "A simple codebook",
+    "has_title": true,
+    "has_abstract": false,
+    "has_producers": false,
+    "has_distributors": false,
+    "has_biblcit": false,
+    "has_time_period": false,
+    "has_geographic_coverage": false,
+    "has_universe": false,
+    "has_analysis_unit": false,
+    "has_collection_mode": false,
+    "has_sampling_procedure": false,
+    "has_access_conditions": false,
+    "keywords_count": 0,
+    "topic_classifications_count": 0,
+    "other_materials_count": 0,
+    "completeness_score": 8.3
+  },
+  "files": [
+    {
+      "file_id": "F1",
+      "file_name": "F1.dat",
+      "mapped_variable_count": 1,
+      "fingerprints": []
+    }
+  ],
+  "data_dictionary": {
+    "total_variables": 1,
+    "numeric_variables": 0,
+    "character_variables": 0,
+    "categorical_variables": 1,
+    "datetime_variables": 0,
+    "unspecified_variables": 0,
+    "weighted_variables_count": 0,
+    "weight_variable_ids": [],
+    "derived_variables_count": 0,
+    "labels_coverage": {
+      "count": 1,
+      "total": 1,
+      "percentage": 100.0
+    },
+    "questions_coverage": {
+      "count": 0,
+      "total": 1,
+      "percentage": 0.0
+    },
+    "concepts_coverage": {
+      "count": 0,
+      "total": 1,
+      "percentage": 0.0
+    },
+    "universes_coverage": {
+      "count": 0,
+      "total": 1,
+      "percentage": 0.0
+    },
+    "missing_defined_coverage": {
+      "count": 1,
+      "total": 1,
+      "percentage": 100.0
+    },
+    "sumstats_coverage": {
+      "count": 0,
+      "total": 1,
+      "percentage": 0.0
+    },
+    "format_coverage": {
+      "count": 1,
+      "total": 1,
+      "percentage": 100.0
+    },
+    "location_coverage": {
+      "count": 0,
+      "total": 1,
+      "percentage": 0.0
+    },
+    "total_categories": 3,
+    "avg_categories_per_categorical_var": 3.0,
+    "median_categories_per_categorical_var": 3.0,
+    "max_categories": 3,
+    "labeled_categories_pct": 100.0,
+    "top_categorical_variables": [
+      {
+        "name": "yesnodk",
+        "label": "Yes / No / Dont' know",
+        "categories_count": 3
+      }
+    ],
+    "sumstat_types_distribution": {}
+  },
+  "variable_groups": [],
+  "vocabularies": [],
+  "languages": {},
+  "integrity": {
+    "unassigned_variables_count": 0,
+    "unassigned_variable_names": [],
+    "dangling_file_references": [],
+    "dangling_weight_references": [],
+    "dangling_group_references": [],
+    "duplicate_variable_names": [],
+    "is_clean": true
+  },
+  "quality": {
+    "profile_id": "recommended",
+    "profile_name": "DDI-C Archival Best Practices",
+    "overall_score": 62.7,
+    "grade": "C",
+    "status": "warning",
+    "total_rules_checked": 4,
+    "errors_count": 0,
+    "warnings_count": 0,
+    "infos_count": 0,
+    "dimensions": {
+      "study_identification": {
+        "dimension": "study_identification",
+        "label": "Study Identification & Scope",
+        "score": 8.3,
+        "status": "action_needed",
+        "passed_checks": 0,
+        "total_checks": 12
+      },
+      "data_files": {
+        "dimension": "data_files",
+        "label": "Data Files Description",
+        "score": 75.0,
+        "status": "action_needed",
+        "passed_checks": 0,
+        "total_checks": 1
+      },
+      "variable_documentation": {
+        "dimension": "variable_documentation",
+        "label": "Variable Documentation",
+        "score": 60.0,
+        "status": "review",
+        "passed_checks": 2,
+        "total_checks": 3
+      },
+      "category_documentation": {
+        "dimension": "category_documentation",
+        "label": "Category & Code Documentation",
+        "score": 100.0,
+        "status": "pass",
+        "passed_checks": 1,
+        "total_checks": 1
+      }
+    },
+    "findings": []
+  },
+  "variables_detail": [
+    {
+      "id": "V1",
+      "name": "yesnodk",
+      "label": "Yes / No / Dont' know",
+      "type": "categorical",
+      "categories_count": 3,
+      "has_question": false,
+      "has_missing": true,
+      "has_concept": false,
+      "file": "F1"
+    }
+  ],
+  "coverage_tree": {
+    "name": "DDI-Codebook Document",
+    "tag": "codeBook",
+    "count": 3,
+    "total": 4,
+    "percentage": 75.0,
+    "is_informational": false,
+    "status": "good",
+    "insights": {
+      "standard": "DDI-Codebook",
+      "version": "2.5",
+      "total_variables": 1,
+      "total_categories": 3,
+      "total_files": 1
+    },
+    "children": [
+      {
+        "name": "Study Description",
+        "tag": "stdyDscr",
+        "count": 1,
+        "total": 12,
+        "percentage": 8.3,
+        "is_informational": false,
+        "status": "low",
+        "insights": {
+          "completeness_score": 8.3,
+          "study_title": "A simple codebook",
+          "study_id": "N/A"
+        },
+        "children": [
+          {
+            "name": "Citation",
+            "tag": "citation",
+            "count": 1,
+            "total": 4,
+            "percentage": 25.0,
+            "is_informational": false,
+            "status": "low",
+            "insights": {},
+            "children": [
+              {
+                "name": "Title Statement",
+                "tag": "titlStmt",
+                "count": 1,
+                "total": 1,
+                "percentage": 100.0,
+                "is_informational": false,
+                "status": "good",
+                "insights": {
+                  "title": "A simple codebook",
+                  "study_id": "N/A"
+                },
+                "children": []
+              },
+              {
+                "name": "Bibliographic Citation",
+                "tag": "biblCit",
+                "count": 0,
+                "total": 1,
+                "percentage": 0.0,
+                "is_informational": false,
+                "status": "empty",
+                "insights": {},
+                "children": []
+              },
+              {
+                "name": "Production Statement",
+                "tag": "prodStmt",
+                "count": 0,
+                "total": 1,
+                "percentage": 0.0,
+                "is_informational": false,
+                "status": "empty",
+                "insights": {},
+                "children": []
+              },
+              {
+                "name": "Distribution Statement",
+                "tag": "distStmt",
+                "count": 0,
+                "total": 1,
+                "percentage": 0.0,
+                "is_informational": false,
+                "status": "empty",
+                "insights": {},
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Study Scope & Information",
+            "tag": "stdyInfo",
+            "count": 0,
+            "total": 5,
+            "percentage": 0.0,
+            "is_informational": false,
+            "status": "empty",
+            "insights": {},
+            "children": [
+              {
+                "name": "Abstract",
+                "tag": "abstract",
+                "count": 0,
+                "total": 1,
+                "percentage": 0.0,
+                "is_informational": false,
+                "status": "empty",
+                "insights": {},
+                "children": []
+              },
+              {
+                "name": "Subject & Keywords",
+                "tag": "subject",
+                "count": 0,
+                "total": 1,
+                "percentage": 0.0,
+                "is_informational": false,
+                "status": "empty",
+                "insights": {
+                  "keywords": 0,
+                  "topic_classifications": 0
+                },
+                "children": []
+              },
+              {
+                "name": "Summary Description",
+                "tag": "sumDscr",
+                "count": 0,
+                "total": 4,
+                "percentage": 0.0,
+                "is_informational": false,
+                "status": "empty",
+                "insights": {
+                  "time_period": false,
+                  "geographic_coverage": false,
+                  "universe": false,
+                  "analysis_unit": false
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "name": "Methodology",
+            "tag": "method",
+            "count": 0,
+            "total": 2,
+            "percentage": 0.0,
+            "is_informational": false,
+            "status": "empty",
+            "insights": {
+              "collection_mode": false,
+              "sampling_procedure": false
+            },
+            "children": []
+          },
+          {
+            "name": "Data Access",
+            "tag": "dataAccs",
+            "count": 0,
+            "total": 1,
+            "percentage": 0.0,
+            "is_informational": false,
+            "status": "empty",
+            "insights": {},
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Data Files",
+        "tag": "fileDscr",
+        "count": 1,
+        "total": 1,
+        "percentage": 100.0,
+        "is_informational": false,
+        "status": "good",
+        "insights": {
+          "total_files": 1,
+          "total_cases": null,
+          "total_variables": null
+        },
+        "children": [
+          {
+            "name": "F1.dat",
+            "tag": "fileTxt",
+            "count": 1,
+            "total": 1,
+            "percentage": 100.0,
+            "is_informational": false,
+            "status": "good",
+            "insights": {
+              "file_id": "F1",
+              "file_name": "F1.dat",
+              "file_type": "N/A",
+              "case_count": null,
+              "variable_count": null,
+              "mapped_variables": 1
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Variable Description",
+        "tag": "dataDscr",
+        "count": 1,
+        "total": 1,
+        "percentage": 100.0,
+        "is_informational": false,
+        "status": "good",
+        "insights": {
+          "total_variables": 1,
+          "total_groups": 0,
+          "categorical_variables": 1,
+          "numeric_variables": 0,
+          "character_variables": 0,
+          "datetime_variables": 0
+        },
+        "children": [
+          {
+            "name": "Variable Groups",
+            "tag": "varGrp",
+            "count": 0,
+            "total": 0,
+            "percentage": 0.0,
+            "is_informational": true,
+            "status": "info",
+            "insights": {
+              "total_groups": 0,
+              "groups_documented": 0,
+              "groups_with_labels": 0,
+              "groups_with_text": 0,
+              "groups_with_definitions": 0
+            },
+            "children": []
+          },
+          {
+            "name": "Variables",
+            "tag": "var",
+            "count": 1,
+            "total": 1,
+            "percentage": 100.0,
+            "is_informational": false,
+            "status": "good",
+            "insights": {
+              "total_variables": 1,
+              "numeric": 0,
+              "categorical": 1,
+              "character": 0,
+              "weighted": 0
+            },
+            "children": [
+              {
+                "name": "Variable Labels",
+                "tag": "labl",
+                "count": 1,
+                "total": 1,
+                "percentage": 100.0,
+                "is_informational": false,
+                "status": "good",
+                "insights": {},
+                "children": []
+              },
+              {
+                "name": "Questions",
+                "tag": "qstn",
+                "count": 0,
+                "total": 1,
+                "percentage": 0.0,
+                "is_informational": false,
+                "status": "empty",
+                "insights": {},
+                "children": []
+              },
+              {
+                "name": "Categories & Codes",
+                "tag": "catgry",
+                "count": 1,
+                "total": 1,
+                "percentage": 100.0,
+                "is_informational": false,
+                "status": "good",
+                "insights": {
+                  "total_categories": 3,
+                  "categories_with_values": 3,
+                  "categories_with_labels": 3,
+                  "categories_with_stats": 0,
+                  "missing_categories": 1,
+                  "avg_categories_per_var": 3.0,
+                  "max_categories": 3
+                },
+                "children": [
+                  {
+                    "name": "Category Values",
+                    "tag": "catValu",
+                    "count": 3,
+                    "total": 3,
+                    "percentage": 100.0,
+                    "is_informational": false,
+                    "status": "good",
+                    "insights": {},
+                    "children": []
+                  },
+                  {
+                    "name": "Category Labels",
+                    "tag": "labl",
+                    "count": 3,
+                    "total": 3,
+                    "percentage": 100.0,
+                    "is_informational": false,
+                    "status": "good",
+                    "insights": {},
+                    "children": []
+                  },
+                  {
+                    "name": "Category Frequencies & Stats",
+                    "tag": "catStat",
+                    "count": 0,
+                    "total": 3,
+                    "percentage": 0.0,
+                    "is_informational": true,
+                    "status": "info",
+                    "insights": {},
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "name": "Format Specifications",
+                "tag": "varFormat",
+                "count": 1,
+                "total": 1,
+                "percentage": 100.0,
+                "is_informational": false,
+                "status": "good",
+                "insights": {
+                  "character": 1
+                },
+                "children": []
+              },
+              {
+                "name": "Missing Values Defined",
+                "tag": "invalrng",
+                "count": 1,
+                "total": 1,
+                "percentage": 100.0,
+                "is_informational": true,
+                "status": "info",
+                "insights": {
+                  "variables_with_missing_definitions": 1
+                },
+                "children": []
+              },
+              {
+                "name": "Concepts",
+                "tag": "concept",
+                "count": 0,
+                "total": 1,
+                "percentage": 0.0,
+                "is_informational": false,
+                "status": "empty",
+                "insights": {},
+                "children": []
+              },
+              {
+                "name": "Universes",
+                "tag": "universe",
+                "count": 0,
+                "total": 1,
+                "percentage": 0.0,
+                "is_informational": false,
+                "status": "empty",
+                "insights": {},
+                "children": []
+              },
+              {
+                "name": "Summary Statistics",
+                "tag": "sumStat",
+                "count": 0,
+                "total": 1,
+                "percentage": 0.0,
+                "is_informational": true,
+                "status": "info",
+                "insights": {},
+                "children": []
+              },
+              {
+                "name": "Physical Location",
+                "tag": "location",
+                "count": 0,
+                "total": 1,
+                "percentage": 0.0,
+                "is_informational": false,
+                "status": "empty",
+                "insights": {},
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "xml_structure": {
+    "name": "doc()",
+    "node_type": "doc",
+    "count": 1,
+    "is_leaf": false,
+    "children": [
+      {
+        "name": "codeBook",
+        "node_type": "element",
+        "count": 1,
+        "is_leaf": false,
+        "children": [
+          {
+            "name": "@version",
+            "node_type": "attribute",
+            "count": 1,
+            "is_leaf": true,
+            "data_type": "double",
+            "distinct_count": 1,
+            "min_value": 2.5,
+            "max_value": 2.5,
+            "type_summary": "double [2.5, 2.5], leaf",
+            "children": []
+          },
+          {
+            "name": "@ID",
+            "node_type": "attribute",
+            "count": 1,
+            "is_leaf": true,
+            "data_type": "string",
+            "distinct_count": 1,
+            "type_summary": "string, leaf",
+            "children": []
+          },
+          {
+            "name": "@codeBookAgency",
+            "node_type": "attribute",
+            "count": 1,
+            "is_leaf": true,
+            "data_type": "string",
+            "distinct_count": 1,
+            "type_summary": "string, leaf",
+            "children": []
+          },
+          {
+            "name": "@elementVersion",
+            "node_type": "attribute",
+            "count": 1,
+            "is_leaf": true,
+            "data_type": "string",
+            "distinct_count": 1,
+            "type_summary": "string, leaf",
+            "children": []
+          },
+          {
+            "name": "stdyDscr",
+            "node_type": "element",
+            "count": 1,
+            "is_leaf": false,
+            "children": [
+              {
+                "name": "citation",
+                "node_type": "element",
+                "count": 1,
+                "is_leaf": false,
+                "children": [
+                  {
+                    "name": "titlStmt",
+                    "node_type": "element",
+                    "count": 1,
+                    "is_leaf": false,
+                    "children": [
+                      {
+                        "name": "titl",
+                        "node_type": "element",
+                        "count": 1,
+                        "is_leaf": true,
+                        "children": [
+                          {
+                            "name": "text()",
+                            "node_type": "text",
+                            "count": 1,
+                            "is_leaf": true,
+                            "data_type": "string",
+                            "distinct_count": 1,
+                            "type_summary": "string, leaf",
+                            "children": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "name": "prodStmt",
+                    "node_type": "element",
+                    "count": 1,
+                    "is_leaf": true,
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "fileDscr",
+            "node_type": "element",
+            "count": 1,
+            "is_leaf": false,
+            "children": [
+              {
+                "name": "@ID",
+                "node_type": "attribute",
+                "count": 1,
+                "is_leaf": true,
+                "data_type": "string",
+                "distinct_count": 1,
+                "type_summary": "string, leaf",
+                "children": []
+              },
+              {
+                "name": "fileTxt",
+                "node_type": "element",
+                "count": 1,
+                "is_leaf": false,
+                "children": [
+                  {
+                    "name": "fileName",
+                    "node_type": "element",
+                    "count": 1,
+                    "is_leaf": true,
+                    "children": [
+                      {
+                        "name": "text()",
+                        "node_type": "text",
+                        "count": 1,
+                        "is_leaf": true,
+                        "data_type": "string",
+                        "distinct_count": 1,
+                        "type_summary": "string, leaf",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "dataDscr",
+            "node_type": "element",
+            "count": 1,
+            "is_leaf": false,
+            "children": [
+              {
+                "name": "var",
+                "node_type": "element",
+                "count": 1,
+                "is_leaf": false,
+                "children": [
+                  {
+                    "name": "@ID",
+                    "node_type": "attribute",
+                    "count": 1,
+                    "is_leaf": true,
+                    "data_type": "string",
+                    "distinct_count": 1,
+                    "type_summary": "string, leaf",
+                    "children": []
+                  },
+                  {
+                    "name": "@name",
+                    "node_type": "attribute",
+                    "count": 1,
+                    "is_leaf": true,
+                    "data_type": "string",
+                    "distinct_count": 1,
+                    "type_summary": "string, leaf",
+                    "children": []
+                  },
+                  {
+                    "name": "@files",
+                    "node_type": "attribute",
+                    "count": 1,
+                    "is_leaf": true,
+                    "data_type": "string",
+                    "distinct_count": 1,
+                    "type_summary": "string, leaf",
+                    "children": []
+                  },
+                  {
+                    "name": "labl",
+                    "node_type": "element",
+                    "count": 1,
+                    "is_leaf": true,
+                    "children": [
+                      {
+                        "name": "@xml-lang",
+                        "node_type": "attribute",
+                        "count": 1,
+                        "is_leaf": true,
+                        "data_type": "string",
+                        "distinct_count": 1,
+                        "type_summary": "string, leaf",
+                        "children": []
+                      },
+                      {
+                        "name": "text()",
+                        "node_type": "text",
+                        "count": 1,
+                        "is_leaf": true,
+                        "data_type": "string",
+                        "distinct_count": 1,
+                        "type_summary": "string, leaf",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "name": "catgry",
+                    "node_type": "element",
+                    "count": 3,
+                    "is_leaf": false,
+                    "children": [
+                      {
+                        "name": "catValu",
+                        "node_type": "element",
+                        "count": 3,
+                        "is_leaf": true,
+                        "children": [
+                          {
+                            "name": "text()",
+                            "node_type": "text",
+                            "count": 3,
+                            "is_leaf": true,
+                            "data_type": "integers",
+                            "distinct_count": 3,
+                            "min_value": 1,
+                            "max_value": 9,
+                            "type_summary": "3 distinct integers [1, 9], leaf",
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "name": "labl",
+                        "node_type": "element",
+                        "count": 3,
+                        "is_leaf": true,
+                        "children": [
+                          {
+                            "name": "@xml-lang",
+                            "node_type": "attribute",
+                            "count": 3,
+                            "is_leaf": true,
+                            "data_type": "string",
+                            "distinct_count": 1,
+                            "type_summary": "string, leaf",
+                            "children": []
+                          },
+                          {
+                            "name": "text()",
+                            "node_type": "text",
+                            "count": 3,
+                            "is_leaf": true,
+                            "data_type": "strings",
+                            "distinct_count": 3,
+                            "type_summary": "3 distinct strings, leaf",
+                            "children": []
+                          }
+                        ]
+                      },
+                      {
+                        "name": "@missing",
+                        "node_type": "attribute",
+                        "count": 1,
+                        "is_leaf": true,
+                        "data_type": "string",
+                        "distinct_count": 1,
+                        "type_summary": "string, leaf",
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "name": "varFormat",
+                    "node_type": "element",
+                    "count": 1,
+                    "is_leaf": true,
+                    "children": [
+                      {
+                        "name": "@type",
+                        "node_type": "attribute",
+                        "count": 1,
+                        "is_leaf": true,
+                        "data_type": "string",
+                        "distinct_count": 1,
+                        "type_summary": "string, leaf",
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
