@@ -637,6 +637,22 @@ def _convert_attributes_to_elements(element: ET.Element, cls: type[CogsValue], c
             child.tag = f"{ns}Name"
             child_local = "Name"
 
+        # Remap Representation to VariableRepresentation when needed
+        if child_local == "Representation" and "Representation" not in by_wire and "VariableRepresentation" in by_wire:
+            ns = child.tag.rsplit("}", 1)[0] + "}" if "}" in child.tag else ""
+            child.tag = f"{ns}VariableRepresentation"
+            child_local = "VariableRepresentation"
+
+        # Remap MeasurementReference to MeasurementItemReference when needed
+        if (
+            child_local == "MeasurementReference"
+            and "MeasurementReference" not in by_wire
+            and "MeasurementItemReference" in by_wire
+        ):
+            ns = child.tag.rsplit("}", 1)[0] + "}" if "}" in child.tag else ""
+            child.tag = f"{ns}MeasurementItemReference"
+            child_local = "MeasurementItemReference"
+
         if child_local not in by_wire and child_local in XML_SUBSTITUTIONS:
             mapped_local, xsi_type = XML_SUBSTITUTIONS[child_local]
             if mapped_local in by_wire:
@@ -651,6 +667,76 @@ def _convert_attributes_to_elements(element: ET.Element, cls: type[CogsValue], c
                 ns = child.tag.rsplit("}", 1)[0] + "}" if "}" in child.tag else ""
                 child.tag = f"{ns}{mapped_dc}"
                 child_local = mapped_dc
+
+        # Flatten inline resource children of containers/schemes to Item References
+        if child_local not in by_wire:
+            ref_field_name = None
+            if (child_local + "Reference") in by_wire:
+                ref_field_name = child_local + "Reference"
+            elif (
+                child_local
+                in (
+                    "Sequence",
+                    "IfThenElse",
+                    "Loop",
+                    "ComputationItem",
+                    "StatementItem",
+                    "QuestionConstruct",
+                    "MeasurementConstruct",
+                )
+                and "ControlConstructReference" in by_wire
+            ):
+                ref_field_name = "ControlConstructReference"
+            elif (
+                child_local in ("GenerationInstruction", "GeneralInstruction")
+                and "ProcessingInstructionReference" in by_wire
+            ):
+                ref_field_name = "ProcessingInstructionReference"
+
+            if ref_field_name:
+                _sync_element_identification(child, is_reference=False)
+                urn, agency, id_val, version = None, None, None, None
+                for sub in child:
+                    stag = sub.tag.rsplit("}", 1)[-1]
+                    if stag == "URN":
+                        urn = sub.text
+                    elif stag == "Agency":
+                        agency = sub.text
+                    elif stag == "ID":
+                        id_val = sub.text
+                    elif stag == "Version":
+                        version = sub.text
+                if urn or (agency and id_val and version):
+                    ref_el = ET.Element(f"{{{TARGET_NAMESPACE}}}{ref_field_name}")
+                    ref_el.attrib["isReference"] = "true"
+                    if urn:
+                        u_el = ET.Element(f"{{{TARGET_NAMESPACE}}}URN")
+                        u_el.text = urn
+                        ref_el.append(u_el)
+                    if agency:
+                        a_el = ET.Element(f"{{{TARGET_NAMESPACE}}}Agency")
+                        a_el.text = agency
+                        ref_el.append(a_el)
+                    if id_val:
+                        i_el = ET.Element(f"{{{TARGET_NAMESPACE}}}ID")
+                        i_el.text = id_val
+                        ref_el.append(i_el)
+                    if version:
+                        v_el = ET.Element(f"{{{TARGET_NAMESPACE}}}Version")
+                        v_el.text = version
+                        ref_el.append(v_el)
+                    t_el = ET.Element(f"{{{TARGET_NAMESPACE}}}TypeOfObject")
+                    t_el.text = child_local
+                    ref_el.append(t_el)
+
+                    idx = list(element).index(child)
+                    element.remove(child)
+                    element.insert(idx, ref_el)
+                    continue
+            elif (child_local.endswith("Scheme") or child_local in ("LogicalRecord",)) and child_local not in by_wire:
+                # Remove nested maintainable schemes or records that are packaging artifacts in DDI 3.x containers
+                element.remove(child)
+                continue
 
     # Strip TypeOfObject if it is not in by_wire of the class (occurs when reference is parsed as inline object)
     if "TypeOfObject" not in by_wire:
@@ -1062,109 +1148,30 @@ def stream_ddil_fragments(
         root_tag = root.tag.rsplit("}", 1)[-1]
         is_fragment_container = root_tag in ("FragmentInstance", "Fragment")
 
+        stack: list[ET.Element] = [root]
         for event, elem in context:
-            if event == "end":
-                if is_fragment_container:
-                    if elem.tag.rsplit("}", 1)[-1] == "Fragment":
-                        children = list(elem)
-                        if children:
-                            child = children[0]
-                            local_tag = child.tag.rsplit("}", 1)[-1]
+            if event == "start":
+                stack.append(elem)
+                continue
+            if stack and stack[-1] is elem:
+                stack.pop()
+            parent = stack[-1] if stack else None
 
-                            if filter_set is None or local_tag.lower() in filter_set:
-                                if as_elements:
-                                    yield child
-                                else:
-                                    cls = TYPE_REGISTRY.get(local_tag)
-                                    if cls:
-                                        frag_urn = None
-                                        for sub in child:
-                                            sub_tag = sub.tag.rsplit("}", 1)[-1]
-                                            if sub_tag in ("URN", "urn") and sub.text:
-                                                frag_urn = sub.text.strip()
-                                                break
-                                            elif sub_tag in ("ID", "id") and sub.text and frag_urn is None:
-                                                frag_urn = sub.text.strip()
+            if is_fragment_container:
+                if elem.tag.rsplit("}", 1)[-1] == "Fragment":
+                    children = list(elem)
+                    if children:
+                        child = children[0]
+                        local_tag = child.tag.rsplit("}", 1)[-1]
 
-                                        _prepare_element_for_model(child, cls)
-                                        try:
-                                            instance = cls.from_element(child)
-                                            yield instance
-                                        except Exception as e:
-                                            urn_info = f" (URN: {frag_urn})" if frag_urn else ""
-                                            if on_error:
-                                                on_error(local_tag, e)
-                                            if logger.isEnabledFor(logging.DEBUG):
-                                                logger.debug(
-                                                    "Error parsing fragment of type %s%s: %s",
-                                                    local_tag,
-                                                    urn_info,
-                                                    e,
-                                                    exc_info=True,
-                                                )
-                                            elif not on_error:
-                                                logger.error(
-                                                    "Error parsing fragment of type %s%s: %s",
-                                                    local_tag,
-                                                    urn_info,
-                                                    e,
-                                                )
-                        elem.clear()
-                else:
-                    if elem.tag.rsplit("}", 1)[-1] == "Fragment":
-                        is_fragment_container = True
-                        children = list(elem)
-                        if children:
-                            child = children[0]
-                            local_tag = child.tag.rsplit("}", 1)[-1]
-                            if filter_set is None or local_tag.lower() in filter_set:
-                                if as_elements:
-                                    yield child
-                                else:
-                                    cls = TYPE_REGISTRY.get(local_tag)
-                                    if cls:
-                                        frag_urn = None
-                                        for sub in child:
-                                            sub_tag = sub.tag.rsplit("}", 1)[-1]
-                                            if sub_tag in ("URN", "urn") and sub.text:
-                                                frag_urn = sub.text.strip()
-                                                break
-                                            elif sub_tag in ("ID", "id") and sub.text and frag_urn is None:
-                                                frag_urn = sub.text.strip()
-                                        _prepare_element_for_model(child, cls)
-                                        try:
-                                            instance = cls.from_element(child)
-                                            yield instance
-                                        except Exception as e:
-                                            urn_info = f" (URN: {frag_urn})" if frag_urn else ""
-                                            if on_error:
-                                                on_error(local_tag, e)
-                                            if logger.isEnabledFor(logging.DEBUG):
-                                                logger.debug(
-                                                    "Error parsing fragment of type %s%s: %s",
-                                                    local_tag,
-                                                    urn_info,
-                                                    e,
-                                                    exc_info=True,
-                                                )
-                                            elif not on_error:
-                                                logger.error(
-                                                    "Error parsing fragment of type %s%s: %s",
-                                                    local_tag,
-                                                    urn_info,
-                                                    e,
-                                                )
-                        elem.clear()
-                    elif _is_ddil_resource(elem):
-                        local_tag = elem.tag.rsplit("}", 1)[-1]
                         if filter_set is None or local_tag.lower() in filter_set:
                             if as_elements:
-                                yield elem
+                                yield child
                             else:
                                 cls = TYPE_REGISTRY.get(local_tag)
                                 if cls:
                                     frag_urn = None
-                                    for sub in elem:
+                                    for sub in child:
                                         sub_tag = sub.tag.rsplit("}", 1)[-1]
                                         if sub_tag in ("URN", "urn") and sub.text:
                                             frag_urn = sub.text.strip()
@@ -1172,9 +1179,9 @@ def stream_ddil_fragments(
                                         elif sub_tag in ("ID", "id") and sub.text and frag_urn is None:
                                             frag_urn = sub.text.strip()
 
-                                    _prepare_element_for_model(elem, cls)
+                                    _prepare_element_for_model(child, cls)
                                     try:
-                                        instance = cls.from_element(elem)
+                                        instance = cls.from_element(child)
                                         yield instance
                                     except Exception as e:
                                         urn_info = f" (URN: {frag_urn})" if frag_urn else ""
@@ -1195,8 +1202,169 @@ def stream_ddil_fragments(
                                                 urn_info,
                                                 e,
                                             )
-                        if elem is not root:
+                    elem.clear()
+            else:
+                if elem.tag.rsplit("}", 1)[-1] == "Fragment":
+                    is_fragment_container = True
+                    children = list(elem)
+                    if children:
+                        child = children[0]
+                        local_tag = child.tag.rsplit("}", 1)[-1]
+                        if filter_set is None or local_tag.lower() in filter_set:
+                            if as_elements:
+                                yield child
+                            else:
+                                cls = TYPE_REGISTRY.get(local_tag)
+                                if cls:
+                                    frag_urn = None
+                                    for sub in child:
+                                        sub_tag = sub.tag.rsplit("}", 1)[-1]
+                                        if sub_tag in ("URN", "urn") and sub.text:
+                                            frag_urn = sub.text.strip()
+                                            break
+                                        elif sub_tag in ("ID", "id") and sub.text and frag_urn is None:
+                                            frag_urn = sub.text.strip()
+                                    _prepare_element_for_model(child, cls)
+                                    try:
+                                        instance = cls.from_element(child)
+                                        yield instance
+                                    except Exception as e:
+                                        urn_info = f" (URN: {frag_urn})" if frag_urn else ""
+                                        if on_error:
+                                            on_error(local_tag, e)
+                                        if logger.isEnabledFor(logging.DEBUG):
+                                            logger.debug(
+                                                "Error parsing fragment of type %s%s: %s",
+                                                local_tag,
+                                                urn_info,
+                                                e,
+                                                exc_info=True,
+                                            )
+                                        elif not on_error:
+                                            logger.error(
+                                                "Error parsing fragment of type %s%s: %s",
+                                                local_tag,
+                                                urn_info,
+                                                e,
+                                            )
+                    elem.clear()
+                elif _is_ddil_resource(elem):
+                    local_tag = elem.tag.rsplit("}", 1)[-1]
+                    cls = TYPE_REGISTRY.get(local_tag)
+                    ref_el = None
+
+                    if parent is not None:
+                        parent_tag = parent.tag.rsplit("}", 1)[-1]
+                        parent_cls = TYPE_REGISTRY.get(parent_tag)
+                        if parent_cls:
+                            by_wire = _field_by_wire_name(parent_cls)
+                            ref_field = None
+                            if (local_tag + "Reference") in by_wire:
+                                ref_field = local_tag + "Reference"
+                            elif (
+                                local_tag
+                                in (
+                                    "Sequence",
+                                    "IfThenElse",
+                                    "Loop",
+                                    "ComputationItem",
+                                    "StatementItem",
+                                    "QuestionConstruct",
+                                    "MeasurementConstruct",
+                                )
+                                and "ControlConstructReference" in by_wire
+                            ):
+                                ref_field = "ControlConstructReference"
+                            elif (
+                                local_tag in ("GenerationInstruction", "GeneralInstruction")
+                                and "ProcessingInstructionReference" in by_wire
+                            ):
+                                ref_field = "ProcessingInstructionReference"
+
+                            if ref_field:
+                                _sync_element_identification(elem, is_reference=False)
+                                urn, agency, id_val, version = None, None, None, None
+                                for sub in elem:
+                                    stag = sub.tag.rsplit("}", 1)[-1]
+                                    if stag == "URN":
+                                        urn = sub.text
+                                    elif stag == "Agency":
+                                        agency = sub.text
+                                    elif stag == "ID":
+                                        id_val = sub.text
+                                    elif stag == "Version":
+                                        version = sub.text
+                                if urn or (agency and id_val and version):
+                                    ref_el = ET.Element(f"{{{TARGET_NAMESPACE}}}{ref_field}")
+                                    ref_el.attrib["isReference"] = "true"
+                                    if urn:
+                                        u_el = ET.Element(f"{{{TARGET_NAMESPACE}}}URN")
+                                        u_el.text = urn
+                                        ref_el.append(u_el)
+                                    if agency:
+                                        a_el = ET.Element(f"{{{TARGET_NAMESPACE}}}Agency")
+                                        a_el.text = agency
+                                        ref_el.append(a_el)
+                                    if id_val:
+                                        i_el = ET.Element(f"{{{TARGET_NAMESPACE}}}ID")
+                                        i_el.text = id_val
+                                        ref_el.append(i_el)
+                                    if version:
+                                        v_el = ET.Element(f"{{{TARGET_NAMESPACE}}}Version")
+                                        v_el.text = version
+                                        ref_el.append(v_el)
+                                    t_el = ET.Element(f"{{{TARGET_NAMESPACE}}}TypeOfObject")
+                                    t_el.text = local_tag
+                                    ref_el.append(t_el)
+
+                    if filter_set is None or local_tag.lower() in filter_set:
+                        if as_elements:
+                            yield elem
+                        else:
+                            if cls:
+                                frag_urn = None
+                                for sub in elem:
+                                    sub_tag = sub.tag.rsplit("}", 1)[-1]
+                                    if sub_tag in ("URN", "urn") and sub.text:
+                                        frag_urn = sub.text.strip()
+                                        break
+                                    elif sub_tag in ("ID", "id") and sub.text and frag_urn is None:
+                                        frag_urn = sub.text.strip()
+
+                                _prepare_element_for_model(elem, cls)
+                                try:
+                                    instance = cls.from_element(elem)
+                                    yield instance
+                                except Exception as e:
+                                    urn_info = f" (URN: {frag_urn})" if frag_urn else ""
+                                    if on_error:
+                                        on_error(local_tag, e)
+                                    if logger.isEnabledFor(logging.DEBUG):
+                                        logger.debug(
+                                            "Error parsing fragment of type %s%s: %s",
+                                            local_tag,
+                                            urn_info,
+                                            e,
+                                            exc_info=True,
+                                        )
+                                    elif not on_error:
+                                        logger.error(
+                                            "Error parsing fragment of type %s%s: %s",
+                                            local_tag,
+                                            urn_info,
+                                            e,
+                                        )
+
+                    if parent is not None:
+                        try:
+                            idx = list(parent).index(elem)
+                            parent.remove(elem)
+                            if ref_el is not None:
+                                parent.insert(idx, ref_el)
+                        except ValueError:
                             elem.clear()
+                    elif elem is not root:
+                        elem.clear()
 
     except ET.ParseError as pe:
         logger.error("XML parse error in %s: %s", source, pe)

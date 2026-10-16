@@ -765,7 +765,9 @@ ddici18nmerge = ddic_i18nmerge
 def ddil324(
     xmlfile: Annotated[
         Path,
-        typer.Argument(help="DDI-Lifecycle 3.x FragmentInstance XML file", exists=True, dir_okay=False),
+        typer.Argument(
+            help="DDI-Lifecycle 3.x XML file (FragmentInstance or DDIInstance)", exists=True, dir_okay=False
+        ),
     ],
     output: Annotated[
         Path | None,
@@ -824,7 +826,7 @@ def ddil324(
     loglevel: Annotated[LogLevel, typer.Option(help="Log level")] = LogLevel.info,
 ):
     """
-    Transforms DDI-Lifecycle 3.x FragmentInstance XML files into DDI 4.0 RC1 (JSON or XML).
+    Transforms DDI-Lifecycle 3.x XML files (FragmentInstance or DDIInstance) into DDI 4.0 RC1 (JSON or XML).
     """
     setup_logging(loglevel)
     from dartfx.ddi.ddilifecycle import utils as lc_utils

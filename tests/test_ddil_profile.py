@@ -1601,7 +1601,7 @@ def test_analyze_ddil_profile_hierarchical_file():
 
     assert profile.summary.total_resources == 12
     assert profile.summary.total_classes == 10
-    assert profile.summary.total_reference_instances == 4
+    assert profile.summary.total_reference_instances == 15
     assert profile.summary.resolution_rate == 1.0
 
     # Key resource classes must be present
