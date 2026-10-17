@@ -326,14 +326,14 @@ HTML Dashboard Features
 * **Executive Header & Badge**: Prominently displays the quality grade (``A``–``F``) with adaptive color coding (emerald, amber, rose), total score (0–100), and study metadata.
 * **KPI Metrics Grid**: Quick-glance cards for Variables, Data Files, Categories, XML Elements, Primary Language, and Status.
 * **Tabbed Explorer**:
-  * **🎯 Quality Assessment**: Dimension score cards, progress bars, and actionable findings with remediation badges.
-  * **📊 Coverage & Dictionary**: Variable type distributions, category analytics, and completeness metrics.
-  * **📋 Detailed Variables**: Sortable, searchable inventory table with labels, types, categories, formats, and missing codes.
-  * **📁 Data Files & Groups**: Physical file specifications, record counts, and variable group memberships.
-  * **📖 Study Information**: Study title, abstract, citation, producers, and temporal/geographic scope checklist.
-  * **🌲 Coverage Tree**: Hierarchical metadata presence tree with expandable child insights.
-  * **🔍 XML Structure**: Interactive BaseX-style structural path viewer.
-  * **⚙️ Raw JSON**: Built-in JSON viewer with one-click copy.
+  * **Quality Assessment**: Dimension score cards, progress bars, and actionable findings with remediation badges.
+  * **Coverage & Dictionary**: Variable type distributions, category analytics, and completeness metrics.
+  * **Detailed Variables**: Sortable, searchable inventory table with labels, types, categories, formats, and missing codes.
+  * **Data Files & Groups**: Physical file specifications, record counts, and variable group memberships.
+  * **Study Information**: Study title, abstract, citation, producers, and temporal/geographic scope checklist.
+  * **Coverage Tree**: Hierarchical metadata presence tree with expandable child insights.
+  * **XML Structure**: Interactive BaseX-style structural path viewer.
+  * **Raw JSON**: Built-in JSON viewer with one-click copy.
 
 Command-Line Interface (`dartfx-ddi ddic-profile`)
 --------------------------------------------------

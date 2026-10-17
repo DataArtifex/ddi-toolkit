@@ -33,7 +33,7 @@ Overview & Core Capabilities
    * - **Multi-Hop Path Discovery**
      - Traces direct and indirect lineage paths between any pair of resource classes, highlighting structural bottlenecks.
    * - **Tabbed HTML Explorer**
-     - Standalone, dark-themed interactive HTML5 web application with dual views: **🕸️ Graph Explorer** (Vis.js canvas) and **📊 Summary Dashboard** (8 KPI cards, tables, deep linking).
+     - Standalone, dark-themed interactive HTML5 web application with dual views: **Graph Explorer** (Vis.js canvas) and **Summary Dashboard** (8 KPI cards, tables, deep linking).
    * - **Canonical JSON Caching**
      - Automatically saves and reuses ``<stem>.profile.json`` for instant subsequent analyses and CLI commands.
    * - **Multi-Format Exports**
@@ -253,7 +253,7 @@ Segmented Tab Navigation
 
 The top navigation header features a segmented control toggling between two dedicated views:
 
-1. **🕸️ Graph Explorer**:
+1. **Graph Explorer**:
    * **Interactive Vis.js Canvas**: Force-directed network diagram with colored functional domain nodes and edge cardinality badges.
    * **Physics & Layout Controls**: Toggle live physics simulation; switch between organic force-directed, **Hierarchical Left → Right** (``LR``), or **Hierarchical Top → Down** (``UD``) tree layouts.
    * **Sidebar Node & Edge Inspector**: Click any node or edge to inspect instance counts, incoming/outgoing connections, child element frequencies, user attributes, language tags, and referencing mechanisms.
@@ -261,7 +261,7 @@ The top navigation header features a segmented control toggling between two dedi
    * **High-Contrast Dark PNG Export**: Offscreen canvas export on a rich dark radial gradient (``#111827`` → ``#090d16``) ensuring crisp white text and vivid node colors.
    * **Fullscreen Mode**: Expand to full viewport for presentations and structural audits.
 
-2. **📊 Summary Dashboard**:
+2. **Summary Dashboard**:
    * **Executive Header**: Specification badges (``DDI-Lifecycle 3.3``), source file path, and title.
    * **8 KPI Metric Cards**: Total Resources, Total Classes, Total References, Local Resolution Rate, Graph Density, Connected Components, Max Dependency Depth, and References/Source Ratio.
    * **Referencing Mechanisms Distribution**: Visual breakdown of ``urn``, ``canonical_id``, ``both``, and ``typeofobject_only``.

@@ -132,6 +132,21 @@ html_css_files = [
     "custom.css",
 ]
 
+# -- Options for LaTeX output ------------------------------------------------
+latex_elements = {
+    "papersize": "letterpaper",
+    "pointsize": "10pt",
+    "preamble": r"""
+\DeclareUnicodeCharacter{2190}{\ensuremath{\leftarrow}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\rightarrow}}
+\DeclareUnicodeCharacter{2193}{\ensuremath{\downarrow}}
+\DeclareUnicodeCharacter{2194}{\ensuremath{\leftrightarrow}}
+\DeclareUnicodeCharacter{00B2}{\ensuremath{^2}}
+\DeclareUnicodeCharacter{00BD}{\ensuremath{1/2}}
+\DeclareUnicodeCharacter{FB01}{fi}
+""",
+}
+
 # -- Custom Setup -----------------------------------------------------------
 
 

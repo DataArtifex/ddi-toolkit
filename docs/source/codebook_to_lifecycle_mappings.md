@@ -8,34 +8,35 @@ This document provides the definitive specification and reference crosswalk for 
 
 The conversion pipeline converts document-oriented DDI-Codebook metadata into modular, relational DDI-Lifecycle objects:
 
-```
-                  ┌──────────────────────────────┐
-                  │    DDI-Codebook 2.5 / 2.6    │
-                  │       (codeBookType)         │
-                  └──────────────┬───────────────┘
-                                 │
-                                 ▼
-                  ┌──────────────────────────────┐
-                  │      ConversionContext       │
-                  │  (Agency, Version, ID cascade│
-                  │   ID Strategy, Harmonization)│
-                  └──────────────┬───────────────┘
-                                 │
-                                 ▼
-                  ┌──────────────────────────────┐
-                  │  ConvertedLifecycleDocument  │
-                  │  (Intermediate normalized    │
-                  │   Lifecycle metadata model)  │
-                  └──────┬───────────────┬───────┘
-                         │               │
-        ┌────────────────┘               └────────────────┐
-        ▼                                                 ▼
-┌──────────────────────────────┐          ┌──────────────────────────────┐
-│       DDI 4.0 RC1            │          │      DDI-Lifecycle 3.3       │
-│  - StudyUnit Pydantic Model  │          │  - Canonical DDIInstance XML │
-│  - DDI 4.0 JSON Export       │          │  - FragmentInstance XML Stream│
-│  - DDI 4.0 XML Export        │          │  - URN-only or Sequence XML  │
-└──────────────────────────────┘          └──────────────────────────────┘
+```text
+                  +------------------------------+
+                  |    DDI-Codebook 2.5 / 2.6    |
+                  |       (codeBookType)         |
+                  +--------------+---------------+
+                                 |
+                                 v
+                  +------------------------------+
+                  |      ConversionContext       |
+                  |  (Agency, Version, ID cascade|
+                  |   ID Strategy, Harmonization)|
+                  +--------------+---------------+
+                                 |
+                                 v
+                  +------------------------------+
+                  |  ConvertedLifecycleDocument  |
+                  |  (Intermediate normalized    |
+                  |   Lifecycle metadata model)  |
+                  +------+---------------+-------+
+                         |               |
+        +----------------+               +----------------+
+        |                                                 |
+        v                                                 v
++------------------------------+          +------------------------------+
+|       DDI 4.0 RC1            |          |      DDI-Lifecycle 3.3       |
+|  - StudyUnit Pydantic Model  |          |  - Canonical DDIInstance XML |
+|  - DDI 4.0 JSON Export       |          |  - FragmentInstance XML Stream|
+|  - DDI 4.0 XML Export        |          |  - URN-only or Sequence XML  |
++------------------------------+          +------------------------------+
 ```
 
 ---
