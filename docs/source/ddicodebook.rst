@@ -134,6 +134,9 @@ Validation & Profile Engine
 
 The DDI-Codebook validation engine decouples base XML Schema conformance from community and workflow-specific profiling rules. In the DDI-Codebook 2.6 schema, almost all attributes and major elements (including ``@ID`` and ``fileDscr``) are optional. Validation profiles allow archives and pipelines to enforce custom rules and recommendations without misclassifying valid XML documents as invalid schema errors.
 
+.. seealso::
+   For the complete end-to-end user guide with full CLI reference (``dartfx-ddi ddic-profile``), Quality Assurance 5-tier grading (A–F), BaseX-style XML structural tree analysis, interactive HTML dashboard, and Data Dictionary analytics, see the dedicated :doc:`ddicodebook_profile` guide.
+
 Built-in Profiles
 ^^^^^^^^^^^^^^^^^
 
