@@ -137,6 +137,9 @@ DDI-Lifecycle datasets are rich relational networks where resources reference ea
 
 The **Resource Profile Engine** provides automated structural analysis, dependency mapping, referencing mechanism profiling, multi-hop path discovery, multiplicity classification, and rich interactive visualizations across entire DDI-L XML files.
 
+.. seealso::
+   For the complete end-to-end user guide with full CLI reference, interactive Vis.js HTML tabbed dashboard documentation, user attributes, language profiling, and reporting workflows, see the dedicated :doc:`ddilifecycle_profile` guide.
+
 Standard & Version Identification
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

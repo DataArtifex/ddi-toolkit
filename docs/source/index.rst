@@ -133,6 +133,7 @@ Resource Bank Ingestion & Sub-Linear Candidate Blocking::
    installation
    quickstart
    examples
+   ddilifecycle_profile
    codebook_i18n_merge
    codebook_to_cdi_mappings
    codebook_to_lifecycle_mappings
