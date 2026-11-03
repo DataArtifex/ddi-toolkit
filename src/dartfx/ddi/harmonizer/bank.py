@@ -12,7 +12,10 @@ from collections.abc import Sequence
 from enum import StrEnum
 from typing import Any
 
-import polars as pl
+try:
+    import polars as pl
+except ImportError:
+    pl = None  # type: ignore[assignment]
 from pydantic import BaseModel, ConfigDict, Field
 
 from .models import ComparableResource, HarmonizationMatch, MatchType
@@ -60,8 +63,10 @@ class BatchIngestionReport(BaseModel):
         reused = self.exact_reused + self.facet_matched
         return reused / self.total_processed if self.total_processed > 0 else 0.0
 
-    def to_polars(self) -> pl.DataFrame:
+    def to_polars(self) -> Any:
         """Exports ingestion records to a Polars DataFrame for downstream analytics."""
+        if pl is None:
+            raise ImportError("polars is required for DataFrame export. Install it with: pip install polars")
         if not self.records:
             return pl.DataFrame(
                 schema={

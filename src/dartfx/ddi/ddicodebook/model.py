@@ -951,17 +951,25 @@ class codeBookType(baseElementType):
                         var_qstn = var.qstn[0]
                         qstn_info = {}
                         if var_qstn.preQTxt:
-                            qstn_info["pre"] = var_qstn.preQTxt.content
+                            first_pre = var_qstn.preQTxt[0] if isinstance(var_qstn.preQTxt, list) else var_qstn.preQTxt
+                            qstn_info["pre"] = first_pre.content
                         if var_qstn.qstnLit:
-                            qstn_info["literal"] = var_qstn.qstnLit.content
+                            first_lit = var_qstn.qstnLit[0] if isinstance(var_qstn.qstnLit, list) else var_qstn.qstnLit
+                            qstn_info["literal"] = first_lit.content
                         if var_qstn.postQTxt:
-                            qstn_info["post"] = var_qstn.postQTxt.content
+                            first_post = (
+                                var_qstn.postQTxt[0] if isinstance(var_qstn.postQTxt, list) else var_qstn.postQTxt
+                            )
+                            qstn_info["post"] = first_post.content
                         if var_qstn.forward:
                             qstn_info["forward"] = var_qstn.forward.content
                         if var_qstn.backward:
                             qstn_info["backward"] = var_qstn.backward.content
                         if var_qstn.ivuInstr:
-                            qstn_info["instructions"] = var_qstn.ivuInstr.content
+                            first_ivu = (
+                                var_qstn.ivuInstr[0] if isinstance(var_qstn.ivuInstr, list) else var_qstn.ivuInstr
+                            )
+                            qstn_info["instructions"] = first_ivu.content
                         var_info["question"] = qstn_info
                     # add to dictionary
                     value[var.id] = var_info
@@ -1660,12 +1668,12 @@ class qualityStatementType(baseElementType):
 
 
 class qstnType(baseElementType):
-    preQTxt: simpleTextType | None = None
-    qstnLit: qstnLitType | None = None
-    postQTxt: simpleTextType | None = None
+    preQTxt: list[simpleTextType] = Field(default_factory=list)
+    qstnLit: list[qstnLitType] = Field(default_factory=list)
+    postQTxt: list[simpleTextType] = Field(default_factory=list)
     forward: forwardType | None = None
     backward: backwardType | None = None
-    ivuInstr: simpleTextType | None = None
+    ivuInstr: list[simpleTextType] = Field(default_factory=list)
 
     qstn: str | None = None
     var: str | None = None

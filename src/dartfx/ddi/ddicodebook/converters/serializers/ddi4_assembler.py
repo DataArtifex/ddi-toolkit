@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+from dataclasses import asdict
 from typing import Any
 
 from dartfx.ddi.ddilifecycle import model_4_0_rc1 as m4
@@ -113,6 +115,21 @@ class Ddi4ModelAssembler:
             if q_lang_strings:
                 q_text_elements.append(m4.DynamicTextType(text_content=[m4.LiteralTextType(text=q_lang_strings)]))
 
+            q_uaps: list[m4.StandardKeyValuePairType] = []
+            if q.interviewer_instructions or q.interviewer_instruction:
+                instr_pairs = q.interviewer_instructions or [(self.doc.language or "en", q.interviewer_instruction)]
+                q_uaps.append(
+                    m4.StandardKeyValuePairType(
+                        attribute_key=m4.CodeValueType(string_value="ddi:interviewer_instructions"),
+                        attribute_value=m4.CodeValueType(
+                            string_value=json.dumps(
+                                [{"language": lng, "value": val} for lng, val in instr_pairs if val],
+                                ensure_ascii=False,
+                            )
+                        ),
+                    )
+                )
+
             m4_q = m4.QuestionItem(
                 id=q.id,
                 agency=q.agency,
@@ -120,6 +137,7 @@ class Ddi4ModelAssembler:
                 urn=q.urn,
                 question_item_name=self._to_lang_strings(q.question_names, q.question_name),
                 question_text=q_text_elements,
+                user_attribute_pair=q_uaps,
             )
             m4_questions[q.id] = m4_q
 
@@ -176,6 +194,47 @@ class Ddi4ModelAssembler:
             if v.question_id and v.question_id in m4_questions:
                 q_ref_list.append(m4_questions[v.question_id])
 
+            v_uaps: list[m4.StandardKeyValuePairType] = []
+            if v.file_id:
+                v_uaps.append(
+                    m4.StandardKeyValuePairType(
+                        attribute_key=m4.CodeValueType(string_value="ddi:file_id"),
+                        attribute_value=m4.CodeValueType(string_value=v.file_id),
+                    )
+                )
+            if v.concept:
+                v_uaps.append(
+                    m4.StandardKeyValuePairType(
+                        attribute_key=m4.CodeValueType(string_value="ddi:concept"),
+                        attribute_value=m4.CodeValueType(string_value=v.concept),
+                    )
+                )
+            if v.universe:
+                v_uaps.append(
+                    m4.StandardKeyValuePairType(
+                        attribute_key=m4.CodeValueType(string_value="ddi:universe"),
+                        attribute_value=m4.CodeValueType(string_value=v.universe),
+                    )
+                )
+            if v.statistics:
+                v_uaps.append(
+                    m4.StandardKeyValuePairType(
+                        attribute_key=m4.CodeValueType(string_value="ddi:summary_statistics"),
+                        attribute_value=m4.CodeValueType(
+                            string_value=json.dumps([asdict(s) for s in v.statistics], ensure_ascii=False)
+                        ),
+                    )
+                )
+            if v.category_statistics:
+                v_uaps.append(
+                    m4.StandardKeyValuePairType(
+                        attribute_key=m4.CodeValueType(string_value="ddi:category_statistics"),
+                        attribute_value=m4.CodeValueType(
+                            string_value=json.dumps([asdict(cs) for cs in v.category_statistics], ensure_ascii=False)
+                        ),
+                    )
+                )
+
             m4_v = m4.Variable(
                 id=v.id,
                 agency=v.agency,
@@ -186,6 +245,7 @@ class Ddi4ModelAssembler:
                 description=self._to_lang_strings(v.descriptions, v.description),
                 variable_representation=var_rep,
                 question_reference=q_ref_list,
+                user_attribute_pair=v_uaps,
             )
             m4_variables[v.id] = m4_v
 
@@ -236,12 +296,42 @@ class Ddi4ModelAssembler:
             data_file_id = m4.DataFileIdentificationType(
                 data_file_uri=m4.URIType(any_uri_value=pi.file_uri) if pi.file_uri else None
             )
+            pi_uaps: list[m4.StandardKeyValuePairType] = []
+            if pi.file_id:
+                pi_uaps.append(
+                    m4.StandardKeyValuePairType(
+                        attribute_key=m4.CodeValueType(string_value="ddi:file_id"),
+                        attribute_value=m4.CodeValueType(string_value=pi.file_id),
+                    )
+                )
+            if pi.file_name:
+                pi_uaps.append(
+                    m4.StandardKeyValuePairType(
+                        attribute_key=m4.CodeValueType(string_value="ddi:file_name"),
+                        attribute_value=m4.CodeValueType(string_value=pi.file_name),
+                    )
+                )
+            if pi.case_count is not None:
+                pi_uaps.append(
+                    m4.StandardKeyValuePairType(
+                        attribute_key=m4.CodeValueType(string_value="ddi:case_count"),
+                        attribute_value=m4.CodeValueType(string_value=str(pi.case_count)),
+                    )
+                )
+            if pi.var_count is not None:
+                pi_uaps.append(
+                    m4.StandardKeyValuePairType(
+                        attribute_key=m4.CodeValueType(string_value="ddi:var_count"),
+                        attribute_value=m4.CodeValueType(string_value=str(pi.var_count)),
+                    )
+                )
             m4_pi = m4.PhysicalInstance(
                 id=pi.id,
                 agency=pi.agency,
                 version=pi.version,
                 urn=pi.urn,
                 data_file_identification=[data_file_id],
+                user_attribute_pair=pi_uaps,
             )
             m4_phys_instances.append(m4_pi)
 
@@ -290,3 +380,56 @@ class Ddi4ModelAssembler:
     def to_dict(self) -> dict[str, Any]:
         study_unit = self.assemble()
         return study_unit.to_dict()
+
+    def iter_resource_dicts(self) -> list[dict[str, Any]]:
+        """Yields flat DDI 4.0 RC1 resource dictionaries for line-by-line JSONL streaming."""
+        study_unit = self.assemble()
+        items: list[dict[str, Any]] = []
+        seen_urns: set[str] = set()
+
+        def _collect(item: Any) -> None:
+            if item is None or not hasattr(item, "to_dict"):
+                return
+            d = item.to_dict()
+            urn = d.get("URN") or d.get("ID")
+            if urn and urn in seen_urns:
+                return
+            if urn:
+                seen_urns.add(urn)
+            items.append(d)
+
+        for lp in study_unit.logical_product_reference or []:
+            if isinstance(lp, m4.LogicalProduct):
+                for cs in lp.category_scheme_reference or []:
+                    for cat in cs.category_reference or []:
+                        _collect(cat)
+                    _collect(cs)
+                for cls in lp.code_list_scheme_reference or []:
+                    for cl in cls.code_list_reference or []:
+                        _collect(cl)
+                    _collect(cls)
+                for vs in lp.variable_scheme_reference or []:
+                    for v in vs.variable_reference or []:
+                        _collect(v)
+                    for vg in vs.variable_group_reference or []:
+                        _collect(vg)
+                    _collect(vs)
+            _collect(lp)
+
+        for dc in study_unit.data_collection_reference or []:
+            for qs in dc.question_scheme_reference or []:
+                for q in qs.question_item_reference or []:
+                    _collect(q)
+                _collect(qs)
+            _collect(dc)
+
+        for pi in study_unit.physical_instance_reference or []:
+            _collect(pi)
+
+        _collect(study_unit)
+        return items
+
+    def to_jsonl(self) -> str:
+        """Serializes flat DDI 4.0 RC1 resources to JSON Lines (.jsonl) format."""
+        lines = [json.dumps(item, ensure_ascii=False) for item in self.iter_resource_dicts()]
+        return "\n".join(lines) + ("\n" if lines else "")

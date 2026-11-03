@@ -42,6 +42,7 @@ class LogLevel(StrEnum):
 
 class LifecycleOutputFormat(StrEnum):
     ddi4_json = "ddi4-json"
+    ddi4_jsonl = "ddi4-jsonl"
     ddi4_xml = "ddi4-xml"
     ddi33_xml = "ddi33-xml"
     ddi33_fragments = "ddi33-fragments"
@@ -50,6 +51,7 @@ class LifecycleOutputFormat(StrEnum):
     def extension(self) -> str:
         mapping = {
             LifecycleOutputFormat.ddi4_json: ".ddi40.json",
+            LifecycleOutputFormat.ddi4_jsonl: ".ddi40.jsonl",
             LifecycleOutputFormat.ddi4_xml: ".ddi40.xml",
             LifecycleOutputFormat.ddi33_xml: ".ddi33.xml",
             LifecycleOutputFormat.ddi33_fragments: ".fragments.xml",
@@ -82,6 +84,7 @@ class ValidationReportFormat(StrEnum):
 
 class StreamOutputFormat(StrEnum):
     json = "json"
+    jsonl = "jsonl"
     xml = "xml"
 
 
@@ -162,7 +165,10 @@ def ddic2l(
     ] = None,
     id_strategy: Annotated[
         str,
-        typer.Option("--id-strategy", help="ID generation strategy: hierarchical, prefix, original, uuid, sequential"),
+        typer.Option(
+            "--id-strategy",
+            help="ID generation strategy: hierarchical, prefix, original, uuid, sequential, content_hash",
+        ),
     ] = "hierarchical",
     harmonize_codes: Annotated[
         bool,
@@ -208,6 +214,8 @@ def ddic2l(
 
     if format == LifecycleOutputFormat.ddi4_json:
         serialized = converter.to_ddi4_json(indent=2 if pretty else 0)
+    elif format == LifecycleOutputFormat.ddi4_jsonl:
+        serialized = converter.to_ddi4_jsonl()
     elif format == LifecycleOutputFormat.ddi4_xml:
         study_unit = converter.to_ddi4()
         serialized = study_unit.to_xml(xml_declaration=True)

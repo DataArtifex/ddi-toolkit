@@ -44,6 +44,7 @@ class IdStrategy(StrEnum):
     ORIGINAL = "original"  # Existing: preserves raw DDI-C @ID
     UUID = "uuid"  # Generated: deterministic UUIDv5-based identifiers
     SEQUENTIAL = "sequential"  # Generated: sequential numeric IDs (e.g. VARIABLE_000001)
+    CONTENT_HASH = "content_hash"  # Generated: deterministic content-hash based IDs
 
 
 @dataclass
@@ -251,7 +252,13 @@ class ConversionContext:
             return f"SCHEME_{scheme_name.upper()}"
         return sanitize_ncname(f"{self.codebook_id}-{scheme_name}")
 
-    def make_item_id(self, item_type: str, item_id: str, scheme_name: str | None = None) -> str:
+    def make_item_id(
+        self,
+        item_type: str,
+        item_id: str,
+        scheme_name: str | None = None,
+        content_hash: str | None = None,
+    ) -> str:
         """Construct item identifier using configured IdStrategy (preserving raw IDs when available)."""
         prefix_map = {
             "variable": "v",
@@ -266,7 +273,17 @@ class ConversionContext:
         }
         clean_raw_id = sanitize_ncname(str(item_id).strip(), prefix=f"{item_type}_")
 
-        if self.strategy == IdStrategy.HIERARCHICAL:
+        if self.strategy == IdStrategy.CONTENT_HASH:
+            import hashlib
+
+            pfx = prefix_map.get(item_type, item_type[:2])
+            if content_hash:
+                short_hash = content_hash[:12]
+            else:
+                digest = hashlib.sha256(f"{self.codebook_id}:{item_type}:{clean_raw_id}".encode()).hexdigest()
+                short_hash = digest[:12]
+            return sanitize_ncname(f"{pfx}_{self.language}_{short_hash}")
+        elif self.strategy == IdStrategy.HIERARCHICAL:
             scheme = scheme_name or f"{item_type}s"
             return sanitize_ncname(f"{self.codebook_id}-{scheme}.{clean_raw_id}")
         elif self.strategy == IdStrategy.ORIGINAL:

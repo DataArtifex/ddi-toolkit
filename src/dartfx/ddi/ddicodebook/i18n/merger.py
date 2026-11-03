@@ -507,22 +507,31 @@ def execute_merge(
             for q in v.qstn:
                 if not q.xml_lang:
                     q.xml_lang = lang_can
-                if hasattr(q, "qstnLit") and q.qstnLit and not q.qstnLit.xml_lang:
-                    q.qstnLit.xml_lang = lang_can
+                if hasattr(q, "qstnLit") and q.qstnLit:
+                    qlits = q.qstnLit if isinstance(q.qstnLit, list) else [q.qstnLit]
+                    for qlit in qlits:
+                        if hasattr(qlit, "xml_lang") and not qlit.xml_lang:
+                            qlit.xml_lang = lang_can
 
             if tra_v and tra_v.qstn:
                 for tq in tra_v.qstn:
                     new_q = copy.deepcopy(tq)
                     new_q.xml_lang = lang_tra
                     if hasattr(new_q, "qstnLit") and new_q.qstnLit:
-                        new_q.qstnLit.xml_lang = lang_tra
+                        qlits = new_q.qstnLit if isinstance(new_q.qstnLit, list) else [new_q.qstnLit]
+                        for qlit in qlits:
+                            if hasattr(qlit, "xml_lang"):
+                                qlit.xml_lang = lang_tra
                     v.qstn.append(new_q)
             elif v.qstn and strat.on_missing_translation == "use_canonical":
                 for cq in list(v.qstn):
                     new_q = copy.deepcopy(cq)
                     new_q.xml_lang = lang_tra
                     if hasattr(new_q, "qstnLit") and new_q.qstnLit:
-                        new_q.qstnLit.xml_lang = lang_tra
+                        qlits = new_q.qstnLit if isinstance(new_q.qstnLit, list) else [new_q.qstnLit]
+                        for qlit in qlits:
+                            if hasattr(qlit, "xml_lang"):
+                                qlit.xml_lang = lang_tra
                     v.qstn.append(new_q)
 
             # 5c. Categories (catgry)

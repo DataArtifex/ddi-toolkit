@@ -11,6 +11,15 @@ class ConvertedStatistic:
 
 
 @dataclass
+class ConvertedCategoryStatistic:
+    code_value: str
+    type: str = "freq"
+    value: float = 0.0
+    is_weighted: bool = False
+    weight_var: str | None = None
+
+
+@dataclass
 class ConvertedCode:
     id: str
     value: str
@@ -85,6 +94,7 @@ class ConvertedVariable:
     universe: str | None = None
     concept: str | None = None
     statistics: list[ConvertedStatistic] = field(default_factory=list)
+    category_statistics: list[ConvertedCategoryStatistic] = field(default_factory=list)
     file_id: str | None = None
     start_pos: int | None = None
     end_pos: int | None = None

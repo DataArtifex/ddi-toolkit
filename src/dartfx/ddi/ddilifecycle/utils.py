@@ -1405,8 +1405,8 @@ def ddil324(
         Dictionary containing execution statistics (counts, errors, elapsed_seconds, speed, success rate).
     """
     format_lower = str(format).lower()
-    if format_lower not in ("json", "xml"):
-        raise ValueError(f"Unsupported format: '{format}'. Expected 'json' or 'xml'.")
+    if format_lower not in ("json", "jsonl", "xml"):
+        raise ValueError(f"Unsupported format: '{format}'. Expected 'json', 'jsonl', or 'xml'.")
 
     json_style_lower = str(json_style).lower()
     if json_style_lower not in (
@@ -1427,7 +1427,12 @@ def ddil324(
     if output_file is None:
         if isinstance(input_file, (str, os.PathLike)):
             input_path = Path(input_file)
-            target_ext = ".json" if format_lower == "json" else ".xml"
+            if format_lower == "json":
+                target_ext = ".json"
+            elif format_lower == "jsonl":
+                target_ext = ".jsonl"
+            else:
+                target_ext = ".xml"
             name = input_path.name
 
             if re.search(r"\.ddi3\d*(?:\.\d+)?\.xml$", name, re.IGNORECASE):
@@ -1488,7 +1493,7 @@ def ddil324(
             processed_count += 1
 
             if limit <= 0 or processed_count <= limit:
-                if format_lower == "json":
+                if format_lower in ("json", "jsonl"):
                     if hasattr(resource, "_to_dict_with_context"):
                         data = resource._to_dict_with_context(context)
                     else:
@@ -1499,17 +1504,20 @@ def ddil324(
                     if json_style_lower in ("substitutions", "substitution", "elements", "element"):
                         data = transform_to_substitution_json(data)
 
-                    if not first_json:
-                        out_f.write(",\n" if pretty else ",")
+                    if format_lower == "jsonl":
+                        out_f.write(_json_dump_value(data) + "\n")
                     else:
-                        first_json = False
+                        if not first_json:
+                            out_f.write(",\n" if pretty else ",")
+                        else:
+                            first_json = False
 
-                    if pretty:
-                        formatted = _json_dump_value(data, indent=2)
-                        indented = "\n".join("    " + line for line in formatted.splitlines())
-                        out_f.write(indented)
-                    else:
-                        out_f.write(_json_dump_value(data))
+                        if pretty:
+                            formatted = _json_dump_value(data, indent=2)
+                            indented = "\n".join("    " + line for line in formatted.splitlines())
+                            out_f.write(indented)
+                        else:
+                            out_f.write(_json_dump_value(data))
                 elif format_lower == "xml":
                     if hasattr(resource, "_to_element_with_context"):
                         elem = resource._to_element_with_context(r_type, context)
@@ -1552,7 +1560,7 @@ def ddil324(
         "input_file": str(input_file) if isinstance(input_file, (str, os.PathLike)) else None,
         "output_file": str(output_target) if isinstance(output_target, (str, os.PathLike)) else None,
         "format": format_lower,
-        "json_style": json_style_lower if format_lower == "json" else None,
+        "json_style": json_style_lower if format_lower in ("json", "jsonl") else None,
         "counts": dict(counts),
         "total_resources": total_resources,
         "resource_errors": dict(resource_errors),
@@ -2069,6 +2077,17 @@ class ClassNode(BaseModel):
         return self
 
 
+class DdiLifecycleQaFinding(BaseModel):
+    """Represents a content-level quality assurance or readiness finding."""
+
+    severity: str = "warning"  # "error", "warning", "info"
+    code: str
+    class_name: str | None = None
+    message: str
+    count: int = 0
+    samples: list[str] = Field(default_factory=list)
+
+
 class DdiLifecycleProfileSummary(BaseModel):
     """Summary metrics of the DDI-Lifecycle resource profile graph."""
 
@@ -2100,6 +2119,14 @@ class DdiLifecycleProfileSummary(BaseModel):
     unique_languages: int = 0
     primary_language: str | None = None
     languages: dict[str, LanguageUsageProfile] = Field(default_factory=dict)
+    urn_coverage_rate: float = 1.0
+    text_coverage_by_class: dict[str, float] = Field(default_factory=dict)
+    multilingual_parity: dict[str, float] = Field(default_factory=dict)
+    variable_representation_rate: float = 1.0
+    codelist_completeness_rate: float = 1.0
+    quality_score: float = 100.0
+    quality_grade: str = "A"
+    qa_findings: list[DdiLifecycleQaFinding] = Field(default_factory=list)
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
@@ -2856,9 +2883,48 @@ class DdiLifecycleProfile(BaseModel):
         if g.summary.domain_distribution:
             dom_str = ", ".join(f"{k}: {v:.1%}" for k, v in g.summary.domain_distribution.items())
             lines.append(f"- **Domain Distribution:** {dom_str}")
+        lines.append(
+            f"- **Content Quality Score:** **{g.summary.quality_score:.1f}/100** (Grade `{g.summary.quality_grade}`, "
+            f"URN Coverage: {g.summary.urn_coverage_rate:.1%})"
+        )
         lines.append("")
         lines.append("[↑ Back to Table of Contents](#table-of-contents)")
         lines.append("")
+
+        if g.summary.qa_findings or g.summary.text_coverage_by_class:
+            lines.extend(
+                [
+                    "## Content Quality & Readiness Assessment",
+                    "",
+                    (
+                        f"- **Overall Quality Score:** `{g.summary.quality_score:.1f}/100` "
+                        f"(Grade `{g.summary.quality_grade}`)"
+                    ),
+                    f"- **URN Coverage Rate:** `{g.summary.urn_coverage_rate:.1%}`",
+                    f"- **Variable Representation Rate:** `{g.summary.variable_representation_rate:.1%}`",
+                    f"- **CodeList Completeness Rate:** `{g.summary.codelist_completeness_rate:.1%}`",
+                ]
+            )
+            if g.summary.text_coverage_by_class:
+                txt_cov_parts = [f"`{k}`: {v:.1%}" for k, v in g.summary.text_coverage_by_class.items()]
+                lines.append(f"- **Text/Label Coverage by Class:** {', '.join(txt_cov_parts)}")
+            if g.summary.multilingual_parity:
+                parity_parts = [f"`{k}`: {v:.1%}" for k, v in g.summary.multilingual_parity.items()]
+                lines.append(f"- **Multilingual Parity:** {', '.join(parity_parts)}")
+            lines.append("")
+            if g.summary.qa_findings:
+                lines.extend(
+                    [
+                        "| Severity | Code | Class | Count | Message |",
+                        "| :--- | :--- | :--- | :--- | :--- |",
+                    ]
+                )
+                for f in g.summary.qa_findings:
+                    cls_label = f"`{f.class_name}`" if f.class_name else "-"
+                    lines.append(f"| `{f.severity.upper()}` | `{f.code}` | {cls_label} | {f.count:,} | {f.message} |")
+                lines.append("")
+            lines.append("[↑ Back to Table of Contents](#table-of-contents)")
+            lines.append("")
 
         if g.connecting_paths:
             path_count_str = (
@@ -6221,10 +6287,99 @@ def analyze_ddil_profile(
         lambda: {"count": 0, "instance_count": 0, "min": 0, "max": 0, "classes": Counter()}
     )
 
+    # Content-level QA tracking
+    text_bearing_classes = {
+        "Category",
+        "QuestionItem",
+        "Variable",
+        "RepresentedVariable",
+        "ConceptualVariable",
+        "InstanceVariable",
+        "Concept",
+        "StudyUnit",
+        "CodeList",
+        "VariableGroup",
+    }
+    text_element_tags = {
+        "Label",
+        "QuestionText",
+        "Title",
+        "Description",
+        "Content",
+        "String",
+        "MultilingualStringValue",
+        "LiteralText",
+        "Text",
+    }
+    urn_present_count = 0
+    missing_urn_samples: list[str] = []
+    class_text_present: Counter[str] = Counter()
+    missing_text_by_class: dict[str, list[str]] = defaultdict(list)
+    text_bearing_lang_counts: Counter[str] = Counter()
+    text_bearing_total_instances = 0
+    var_total = 0
+    var_with_rep = 0
+    missing_rep_samples: list[str] = []
+    cl_total = 0
+    cl_complete = 0
+    incomplete_cl_samples: list[str] = []
+
     for res_elem in _get_stream(pass_progress=_pass1_progress if has_progress else None):
         c_name, agency, rid, ver, urn = _extract_resource_identifiers(res_elem)
         class_counts[c_name] += 1
         inst_key = urn or f"{agency}:{rid}:{ver}"
+        if urn or (agency and rid):
+            urn_present_count += 1
+        else:
+            if len(missing_urn_samples) < 5:
+                missing_urn_samples.append(f"{c_name}({rid or 'no-id'})")
+
+        if c_name in text_bearing_classes:
+            has_non_empty_text = False
+            for sub in res_elem.iter():
+                stag = sub.tag.rsplit("}", 1)[-1]
+                if stag in text_element_tags and sub.text and sub.text.strip():
+                    has_non_empty_text = True
+                    break
+            if has_non_empty_text:
+                class_text_present[c_name] += 1
+            else:
+                if len(missing_text_by_class[c_name]) < 5:
+                    missing_text_by_class[c_name].append(inst_key)
+
+        if c_name in ("Variable", "RepresentedVariable", "InstanceVariable"):
+            var_total += 1
+            has_rep = any(
+                sub.tag.rsplit("}", 1)[-1]
+                in (
+                    "VariableRepresentation",
+                    "Representation",
+                    "ValueRepresentation",
+                    "CodeListReference",
+                    "ResponseDomain",
+                    "CodeDomain",
+                    "NumericDomain",
+                    "TextDomain",
+                    "DateTimeDomain",
+                )
+                for sub in res_elem.iter()
+            )
+            if has_rep:
+                var_with_rep += 1
+            elif len(missing_rep_samples) < 5:
+                missing_rep_samples.append(inst_key)
+
+        if c_name == "CodeList":
+            cl_total += 1
+            codes = [sub for sub in res_elem if sub.tag.rsplit("}", 1)[-1] == "Code"]
+            if codes and all(
+                any(c.tag.rsplit("}", 1)[-1] in ("CategoryReference", "Value") for c in code_el.iter())
+                for code_el in codes
+            ):
+                cl_complete += 1
+            elif len(incomplete_cl_samples) < 5:
+                incomplete_cl_samples.append(inst_key)
+
         defined_instances[c_name].add(inst_key)
         all_defined_instance_keys.add(inst_key)
         if agency and rid:
@@ -6284,6 +6439,10 @@ def analyze_ddil_profile(
 
         # Collect Language statistics for this resource instance
         inst_langs = _extract_element_languages(res_elem)
+        if c_name in text_bearing_classes and inst_langs:
+            text_bearing_total_instances += 1
+            for l_code in inst_langs:
+                text_bearing_lang_counts[l_code] += 1
         for l_code, l_cnt in inst_langs.items():
             c_entry = class_lang_stats[c_name][l_code]
             c_entry["count"] += l_cnt
@@ -6557,6 +6716,116 @@ def analyze_ddil_profile(
     unique_langs = len(global_lang_profiles)
     global_primary_lang = next(iter(global_lang_profiles.keys()), None)
 
+    # Finalize content-level QA metrics & findings
+    urn_cov = round(urn_present_count / tot_resources, 4) if tot_resources > 0 else 1.0
+    text_cov_by_class: dict[str, float] = {}
+    qa_findings: list[DdiLifecycleQaFinding] = []
+
+    if urn_cov < 1.0 and tot_resources > 0:
+        missing_cnt = tot_resources - urn_present_count
+        qa_findings.append(
+            DdiLifecycleQaFinding(
+                severity="error",
+                code="DDIL-URN-001",
+                message=f"{missing_cnt} resource(s) lack a valid URN or Agency+ID pair.",
+                count=missing_cnt,
+                samples=missing_urn_samples,
+            )
+        )
+
+    for c_name in sorted(class_counts.keys()):
+        if c_name in text_bearing_classes and class_counts[c_name] > 0:
+            cov = round(class_text_present[c_name] / class_counts[c_name], 4)
+            text_cov_by_class[c_name] = cov
+            missing_txt_cnt = class_counts[c_name] - class_text_present[c_name]
+            if missing_txt_cnt > 0:
+                sev = "error" if c_name in ("QuestionItem", "Category") else "warning"
+                qa_findings.append(
+                    DdiLifecycleQaFinding(
+                        severity=sev,
+                        code="DDIL-TXT-001",
+                        class_name=c_name,
+                        message=f"{missing_txt_cnt} `{c_name}` resource(s) have empty or missing text/label content.",
+                        count=missing_txt_cnt,
+                        samples=missing_text_by_class.get(c_name, []),
+                    )
+                )
+
+    multilingual_parity: dict[str, float] = {}
+    if text_bearing_total_instances > 0:
+        for l_code in global_lang_profiles:
+            parity = round(min(1.0, text_bearing_lang_counts[l_code] / text_bearing_total_instances), 4)
+            multilingual_parity[l_code] = parity
+            if unique_langs > 1 and parity < 0.9:
+                missing_lang_cnt = text_bearing_total_instances - text_bearing_lang_counts[l_code]
+                qa_findings.append(
+                    DdiLifecycleQaFinding(
+                        severity="warning",
+                        code="DDIL-LANG-001",
+                        message=(
+                            f"Language `{l_code}` has {parity:.1%} parity across text-bearing resources "
+                            f"({missing_lang_cnt} resource(s) missing `{l_code}` translations)."
+                        ),
+                        count=missing_lang_cnt,
+                    )
+                )
+
+    var_rep_rate = round(var_with_rep / var_total, 4) if var_total > 0 else 1.0
+    if var_rep_rate < 1.0 and var_total > 0:
+        missing_rep_cnt = var_total - var_with_rep
+        qa_findings.append(
+            DdiLifecycleQaFinding(
+                severity="warning",
+                code="DDIL-VAR-001",
+                class_name="Variable",
+                message=f"{missing_rep_cnt} Variable(s) lack a value representation or CodeList reference.",
+                count=missing_rep_cnt,
+                samples=missing_rep_samples,
+            )
+        )
+
+    cl_comp_rate = round(cl_complete / cl_total, 4) if cl_total > 0 else 1.0
+    if cl_comp_rate < 1.0 and cl_total > 0:
+        incomp_cnt = cl_total - cl_complete
+        qa_findings.append(
+            DdiLifecycleQaFinding(
+                severity="error",
+                code="DDIL-CL-001",
+                class_name="CodeList",
+                message=f"{incomp_cnt} CodeList(s) have no codes or codes missing CategoryReference/Value.",
+                count=incomp_cnt,
+                samples=incomplete_cl_samples,
+            )
+        )
+
+    if external_ref_count > 0:
+        qa_findings.append(
+            DdiLifecycleQaFinding(
+                severity="info",
+                code="DDIL-REF-001",
+                message=(
+                    f"{external_ref_count} reference(s) point to external resources not defined inside this document."
+                ),
+                count=external_ref_count,
+            )
+        )
+
+    avg_text_cov = sum(text_cov_by_class.values()) / len(text_cov_by_class) if text_cov_by_class else 1.0
+    quality_score = round(
+        (urn_cov * 30.0) + (res_rate * 25.0) + (avg_text_cov * 25.0) + (var_rep_rate * 10.0) + (cl_comp_rate * 10.0),
+        1,
+    )
+    if quality_score >= 90.0:
+        quality_grade = "A"
+    elif quality_score >= 80.0:
+        quality_grade = "B"
+    elif quality_score >= 70.0:
+        quality_grade = "C"
+    elif quality_score >= 60.0:
+        quality_grade = "D"
+    else:
+        quality_grade = "F"
+
     summary = DdiLifecycleProfileSummary(
         ddi_standard="DDI-Lifecycle",
         standard_version="3.3",
@@ -6586,6 +6855,14 @@ def analyze_ddil_profile(
         unique_languages=unique_langs,
         primary_language=global_primary_lang,
         languages=global_lang_profiles,
+        urn_coverage_rate=urn_cov,
+        text_coverage_by_class=text_cov_by_class,
+        multilingual_parity=multilingual_parity,
+        variable_representation_rate=var_rep_rate,
+        codelist_completeness_rate=cl_comp_rate,
+        quality_score=quality_score,
+        quality_grade=quality_grade,
+        qa_findings=qa_findings,
     )
 
     profile = DdiLifecycleProfile(

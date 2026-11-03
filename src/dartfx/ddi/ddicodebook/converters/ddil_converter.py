@@ -107,6 +107,11 @@ class CodebookToLifecycleConverter:
         assembler = Ddi4ModelAssembler(self.document)
         return assembler.to_json(indent=indent)
 
+    def to_ddi4_jsonl(self) -> str:
+        """Serialize converted lifecycle model to flat DDI 4.0 JSON Lines (.jsonl)."""
+        assembler = Ddi4ModelAssembler(self.document)
+        return assembler.to_jsonl()
+
     def to_ddi4_xml(self) -> str:
         """Serialize converted lifecycle model to DDI 4.0 XML."""
         assembler = Ddi4ModelAssembler(self.document)

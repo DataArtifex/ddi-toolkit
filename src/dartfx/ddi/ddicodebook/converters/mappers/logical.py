@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import urllib.parse
 from typing import TYPE_CHECKING, Any
 
@@ -11,6 +12,7 @@ from ....harmonizer import (
 )
 from ..models import (
     ConvertedCategory,
+    ConvertedCategoryStatistic,
     ConvertedCode,
     ConvertedCodeList,
     ConvertedQuestionItem,
@@ -55,29 +57,60 @@ def map_questions(codebook: codeBookType, context: ConversionContext) -> list[Co
             if not raw_q_id:
                 raw_q_id = f"{var.id or var.name or 'v'}_q{idx}"
 
-            q_id = context.make_item_id("question", raw_q_id, "questions")
-            if q_id in seen_q_ids:
-                continue
-            seen_q_ids.add(q_id)
-
             q_name = raw_q_id
             q_text = ""
             q_texts: list[tuple[str, str]] = []
-            if qstn.qstnLit and qstn.qstnLit.content:
-                q_text = qstn.qstnLit.content.strip()
-                q_texts.append((qstn.qstnLit.xml_lang or qstn.xml_lang or context.language, q_text))
-            elif qstn.content:
+
+            q_lit_list = qstn.qstnLit if isinstance(qstn.qstnLit, list) else ([qstn.qstnLit] if qstn.qstnLit else [])
+            for lit in q_lit_list:
+                if lit and getattr(lit, "content", None):
+                    txt = lit.content.strip()
+                    lng = getattr(lit, "xml_lang", None) or getattr(qstn, "xml_lang", None) or context.language
+                    q_texts.append((lng, txt))
+                    if not q_text:
+                        q_text = txt
+
+            if not q_texts and qstn.content:
                 q_text = qstn.content.strip()
-                q_texts.append((qstn.xml_lang or context.language, q_text))
+                q_texts.append((getattr(qstn, "xml_lang", None) or context.language, q_text))
 
             ivu_instr = None
             ivu_instrs: list[tuple[str, str]] = []
-            if qstn.ivuInstr and qstn.ivuInstr.content:
-                ivu_instr = qstn.ivuInstr.content.strip()
-                ivu_instrs.append((qstn.ivuInstr.xml_lang or qstn.xml_lang or context.language, ivu_instr))
+            ivu_list = qstn.ivuInstr if isinstance(qstn.ivuInstr, list) else ([qstn.ivuInstr] if qstn.ivuInstr else [])
+            for ivu in ivu_list:
+                if ivu and getattr(ivu, "content", None):
+                    txt = ivu.content.strip()
+                    lng = getattr(ivu, "xml_lang", None) or getattr(qstn, "xml_lang", None) or context.language
+                    ivu_instrs.append((lng, txt))
+                    if not ivu_instr:
+                        ivu_instr = txt
 
             if not q_texts and q_text:
                 q_texts.append((context.language, q_text))
+
+            q_hash_payload = "|".join(f"{lng}:{txt}" for lng, txt in sorted(q_texts)) or raw_q_id
+            q_hash = hashlib.sha256(q_hash_payload.encode()).hexdigest()
+
+            q_id = context.make_item_id("question", raw_q_id, "questions", content_hash=q_hash)
+            if q_id in seen_q_ids:
+                context.question_id_map[raw_q_id] = q_id
+                if var.id:
+                    context.question_id_map[var.id] = q_id
+                existing_q = next((q for q in questions if q.id == q_id), None)
+                if existing_q and q_texts:
+                    existing_langs = {lng for lng, _ in existing_q.question_texts or []}
+                    for lng, txt in q_texts:
+                        if lng not in existing_langs:
+                            existing_q.question_texts = list(existing_q.question_texts or []) + [(lng, txt)]
+                if existing_q and ivu_instrs:
+                    existing_ivu_langs = {lng for lng, _ in existing_q.interviewer_instructions or []}
+                    for lng, txt in ivu_instrs:
+                        if lng not in existing_ivu_langs:
+                            existing_q.interviewer_instructions = list(existing_q.interviewer_instructions or []) + [
+                                (lng, txt)
+                            ]
+                continue
+            seen_q_ids.add(q_id)
 
             q_urn = context.make_urn(q_id)
             context.question_id_map[raw_q_id] = q_id
@@ -212,6 +245,7 @@ def map_variables_and_codes(
         max_val = None
         max_len = width
         date_fmt = None
+        category_statistics: list[ConvertedCategoryStatistic] = []
 
         if var.n_catgry > 0:
             rep_type = "code"
@@ -225,6 +259,23 @@ def map_variables_and_codes(
                     raw_val = catgry.catValu.content.strip()
                 elif catgry.content:
                     raw_val = catgry.content.strip()
+
+                if catgry.catStat:
+                    for cstat in catgry.catStat:
+                        cstat_val = _parse_float_safe(cstat.content)
+                        if cstat_val is not None:
+                            cstat_type = (cstat.type or "freq").lower()
+                            is_wgtd = str(cstat.wgtd or "").lower() in ("y", "yes", "true", "1")
+                            wgt_var = cstat.wgt_var or cstat.weight
+                            category_statistics.append(
+                                ConvertedCategoryStatistic(
+                                    code_value=raw_val,
+                                    type=cstat_type,
+                                    value=cstat_val,
+                                    is_weighted=is_wgtd,
+                                    weight_var=wgt_var,
+                                )
+                            )
 
                 cat_label = raw_val
                 cat_labels: list[tuple[str, str]] = []
@@ -295,7 +346,7 @@ def map_variables_and_codes(
                                 cat_obj.descriptions.append((lang, text))
                                 existing_desc_langs.add(lang)
                     else:
-                        cat_id = context.make_item_id("category", cat_slug, "categories")
+                        cat_id = context.make_item_id("category", cat_slug, "categories", content_hash=cat_hash)
                         cat_urn = context.make_urn(cat_id)
                         cat_obj = ConvertedCategory(
                             id=cat_id,
@@ -346,7 +397,7 @@ def map_variables_and_codes(
                     context.codelist_id_map[raw_var_id] = cl_id
                 else:
                     cl_slug = f"cl_{raw_var_id}"
-                    cl_id = context.make_item_id("codelist", cl_slug, "codelists")
+                    cl_id = context.make_item_id("codelist", cl_slug, "codelists", content_hash=cl_hash)
                     cl_urn = context.make_urn(cl_id)
                     new_cl = ConvertedCodeList(
                         id=cl_id,
@@ -473,6 +524,7 @@ def map_variables_and_codes(
                 universe=universe_val,
                 concept=concept_val,
                 statistics=statistics,
+                category_statistics=category_statistics,
                 file_id=file_id,
                 start_pos=start_pos,
                 end_pos=end_pos,
