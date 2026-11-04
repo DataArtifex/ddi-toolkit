@@ -233,6 +233,20 @@ def ddic2l(
     logging.info(f"Writing output to {output}")
     output.write_text(serialized, encoding="utf-8")
 
+    stats_file: Path | None = None
+    if format in (LifecycleOutputFormat.ddi4_json, LifecycleOutputFormat.ddi4_jsonl):
+        summary_peek = converter.get_summary()
+        if summary_peek.get("variable_statistics_count", 0) > 0:
+            stats_name = output.name.replace(".ddi40.jsonl", ".stats.ddi40.json").replace(
+                ".ddi40.json", ".stats.ddi40.json"
+            )
+            stats_file = output.with_name(stats_name)
+            if stats_file == output:
+                stats_file = output.with_suffix(".stats.ddi40.json")
+            logging.info(f"Writing empirical statistics to {stats_file}")
+            stats_content = converter.to_ddi4_stats_json(indent=2 if pretty else 0)
+            stats_file.write_text(stats_content, encoding="utf-8")
+
     if stats:
         summary = converter.get_summary()
         typer.echo("\nConversion Summary:")
@@ -240,11 +254,31 @@ def ddic2l(
         typer.echo(f"  Version: {summary['version']}")
         typer.echo(f"  Study Title: {summary['title']}")
         typer.echo(f"  Variables: {summary['variable_count']}")
-        typer.echo(f"  CodeLists: {summary['codelist_count']}")
-        typer.echo(f"  Categories: {summary['category_count']}")
+
+        cl_str = f"{summary['codelist_count']}"
+        if summary.get("codelist_duplicates_removed", 0) > 0:
+            cl_rem = summary["codelist_duplicates_removed"]
+            cl_pct = summary["codelist_reduction_pct"]
+            cl_str += f" ({cl_rem} duplicates removed, {cl_pct:.1f}% reduction)"
+        typer.echo(f"  CodeLists: {cl_str}")
+
+        cat_str = f"{summary['category_count']}"
+        if summary.get("category_duplicates_removed", 0) > 0:
+            cat_rem = summary["category_duplicates_removed"]
+            cat_pct = summary["category_reduction_pct"]
+            cat_str += f" ({cat_rem} duplicates removed, {cat_pct:.1f}% reduction)"
+        typer.echo(f"  Categories: {cat_str}")
+
         typer.echo(f"  Questions: {summary['question_count']}")
         typer.echo(f"  Variable Groups: {summary['variable_group_count']}")
         typer.echo(f"  Physical Instances: {summary['physical_instance_count']}")
+        if summary.get("variable_statistics_count", 0) > 0:
+            vs_cnt = summary["variable_statistics_count"]
+            f_cnt = summary.get("total_frequencies_count", 0)
+            s_cnt = summary.get("total_summary_statistics_count", 0)
+            typer.echo(f"  Variable Statistics: {vs_cnt} ({f_cnt} frequencies, {s_cnt} summary stats)")
+            if stats_file:
+                typer.echo(f"  Statistics File: {stats_file}")
 
 
 @app.command(name="ddic-dump", no_args_is_help=True)
