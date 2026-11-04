@@ -14,6 +14,8 @@ class Ddi4ModelAssembler:
 
     def __init__(self, doc: ConvertedLifecycleDocument) -> None:
         self.doc = doc
+        self._assembled_study_unit: m4.StudyUnit | None = None
+        self._assembled_items: list[m4.CogsItem] = []
 
     def _to_lang_strings(
         self,
@@ -293,8 +295,9 @@ class Ddi4ModelAssembler:
         # 6. Physical Instances
         m4_phys_instances: list[m4.PhysicalInstance] = []
         for pi in self.doc.physical_instances:
+            valid_uri = pi.file_uri if pi.file_uri and m4._is_valid_uri_reference(pi.file_uri) else None
             data_file_id = m4.DataFileIdentificationType(
-                data_file_uri=m4.URIType(any_uri_value=pi.file_uri) if pi.file_uri else None
+                data_file_uri=m4.URIType(any_uri_value=valid_uri) if valid_uri else None
             )
             pi_uaps: list[m4.StandardKeyValuePairType] = []
             if pi.file_id:
@@ -309,6 +312,20 @@ class Ddi4ModelAssembler:
                     m4.StandardKeyValuePairType(
                         attribute_key=m4.CodeValueType(string_value="ddi:file_name"),
                         attribute_value=m4.CodeValueType(string_value=pi.file_name),
+                    )
+                )
+            if pi.file_uri and not valid_uri:
+                pi_uaps.append(
+                    m4.StandardKeyValuePairType(
+                        attribute_key=m4.CodeValueType(string_value="ddi:raw_file_uri"),
+                        attribute_value=m4.CodeValueType(string_value=pi.file_uri),
+                    )
+                )
+            if getattr(pi, "file_description", None):
+                pi_uaps.append(
+                    m4.StandardKeyValuePairType(
+                        attribute_key=m4.CodeValueType(string_value="ddi:file_description"),
+                        attribute_value=m4.CodeValueType(string_value=pi.file_description),
                     )
                 )
             if pi.case_count is not None:
@@ -367,67 +384,58 @@ class Ddi4ModelAssembler:
             physical_instance_reference=m4_phys_instances,
         )
 
+        # Collect ordered concrete items for ItemContainer and resource streams
+        items: list[m4.CogsItem] = [m4_study_unit]
+        if m4_logical_product:
+            items.append(m4_logical_product)
+        if m4_categories:
+            items.append(m4_category_scheme)
+            items.extend(m4_categories.values())
+        if m4_codelists:
+            items.append(m4_codelist_scheme)
+            items.extend(m4_codelists.values())
+        if m4_variables:
+            items.append(m4_variable_scheme)
+            items.extend(m4_variables.values())
+            items.extend(m4_groups)
+        if m4_data_collection:
+            items.append(m4_data_collection)
+            if m4_question_scheme:
+                items.append(m4_question_scheme)
+                items.extend(m4_questions.values())
+        items.extend(m4_phys_instances)
+        self._assembled_study_unit = m4_study_unit
+        self._assembled_items = items
+
         return m4_study_unit
 
-    def to_json(self, indent: int = 2) -> str:
+    def assemble_container(self) -> m4.ItemContainer:
+        """Assemble a complete DDI 4.0 RC1 ItemContainer with all child items."""
         study_unit = self.assemble()
-        return study_unit.to_json(indent=indent)
+        container = m4.ItemContainer()
+        container.top_level_references.append(study_unit)
+        container.items = list(self._assembled_items)
+        return container
 
-    def to_xml(self) -> str:
-        study_unit = self.assemble()
-        return study_unit.to_xml()
+    def to_json(self, indent: int = 2) -> str:
+        """Serialize converted lifecycle model to canonical DDI 4.0 ItemContainer JSON."""
+        container = self.assemble_container()
+        return container.to_json(indent=indent)
+
+    def to_xml(self, xml_declaration: bool = True) -> str:
+        """Serialize converted lifecycle model to canonical DDI 4.0 ItemContainer XML."""
+        container = self.assemble_container()
+        return container.to_xml(xml_declaration=xml_declaration)
 
     def to_dict(self) -> dict[str, Any]:
-        study_unit = self.assemble()
-        return study_unit.to_dict()
+        """Serialize converted lifecycle model to Python dictionary with topLevelReferences and items."""
+        container = self.assemble_container()
+        return container.to_dict()
 
     def iter_resource_dicts(self) -> list[dict[str, Any]]:
         """Yields flat DDI 4.0 RC1 resource dictionaries for line-by-line JSONL streaming."""
-        study_unit = self.assemble()
-        items: list[dict[str, Any]] = []
-        seen_urns: set[str] = set()
-
-        def _collect(item: Any) -> None:
-            if item is None or not hasattr(item, "to_dict"):
-                return
-            d = item.to_dict()
-            urn = d.get("URN") or d.get("ID")
-            if urn and urn in seen_urns:
-                return
-            if urn:
-                seen_urns.add(urn)
-            items.append(d)
-
-        for lp in study_unit.logical_product_reference or []:
-            if isinstance(lp, m4.LogicalProduct):
-                for cs in lp.category_scheme_reference or []:
-                    for cat in cs.category_reference or []:
-                        _collect(cat)
-                    _collect(cs)
-                for cls in lp.code_list_scheme_reference or []:
-                    for cl in cls.code_list_reference or []:
-                        _collect(cl)
-                    _collect(cls)
-                for vs in lp.variable_scheme_reference or []:
-                    for v in vs.variable_reference or []:
-                        _collect(v)
-                    for vg in vs.variable_group_reference or []:
-                        _collect(vg)
-                    _collect(vs)
-            _collect(lp)
-
-        for dc in study_unit.data_collection_reference or []:
-            for qs in dc.question_scheme_reference or []:
-                for q in qs.question_item_reference or []:
-                    _collect(q)
-                _collect(qs)
-            _collect(dc)
-
-        for pi in study_unit.physical_instance_reference or []:
-            _collect(pi)
-
-        _collect(study_unit)
-        return items
+        container_dict = self.to_dict()
+        return container_dict.get("items", [])
 
     def to_jsonl(self) -> str:
         """Serializes flat DDI 4.0 RC1 resources to JSON Lines (.jsonl) format."""

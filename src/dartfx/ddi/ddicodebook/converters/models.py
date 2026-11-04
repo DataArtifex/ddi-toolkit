@@ -128,6 +128,7 @@ class ConvertedPhysicalInstance:
     file_id: str
     file_name: str
     file_uri: str | None = None
+    file_description: str | None = None
     case_count: int | None = None
     var_count: int | None = None
     fingerprint: str | None = None

@@ -46,8 +46,13 @@ def test_codebook_to_lifecycle_simple_yndk():
     # 3. DDI 4.0 JSON & XML
     json_str = converter.to_ddi4_json()
     parsed_json = json.loads(json_str)
-    assert parsed_json.get("ID") == "simple_yndk-study" or parsed_json.get("id") == "simple_yndk-study"
-    assert parsed_json.get("Agency") == "int.dartfx" or parsed_json.get("agency") == "int.dartfx"
+    top_ref = parsed_json.get("topLevelReferences", [{}])[0] if "topLevelReferences" in parsed_json else parsed_json
+    assert top_ref.get("ID") == "simple_yndk-study" or top_ref.get("id") == "simple_yndk-study"
+    assert top_ref.get("Agency") == "int.dartfx" or top_ref.get("agency") == "int.dartfx"
+    assert "items" in parsed_json
+    assert any(it.get("$type") == "Variable" for it in parsed_json["items"])
+    assert any(it.get("$type") == "CodeList" for it in parsed_json["items"])
+    assert any(it.get("$type") == "Category" for it in parsed_json["items"])
 
     with open(os.path.join(outputs_dir(), "simple_yndk.ddi4.json"), "w", encoding="utf-8") as f:
         f.write(json_str)
@@ -280,7 +285,8 @@ def test_cli_ddic2l(tmp_path):
     assert result_json.exit_code == 0
     assert out_json.exists()
     content_json = json.loads(out_json.read_text(encoding="utf-8"))
-    assert content_json.get("Agency") == "test.agency" or content_json.get("agency") == "test.agency"
+    top_ref = content_json.get("topLevelReferences", [{}])[0] if "topLevelReferences" in content_json else content_json
+    assert top_ref.get("Agency") == "test.agency" or top_ref.get("agency") == "test.agency"
     assert "OVERRIDE_ID" in json.dumps(content_json)
 
     # Test DDI 3.3 XML with --urn-only

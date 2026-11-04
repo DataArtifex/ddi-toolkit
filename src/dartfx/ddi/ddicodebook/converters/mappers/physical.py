@@ -31,6 +31,7 @@ def map_physical_instances(codebook: codeBookType, context: ConversionContext) -
 
         file_name = raw_f_id
         file_uri = getattr(fd, "URI", None)
+        file_description = None
         case_cnt = None
         var_cnt = None
         fingerprint = None
@@ -41,7 +42,7 @@ def map_physical_instances(codebook: codeBookType, context: ConversionContext) -
             if ft.fileName and ft.fileName[0].content:
                 file_name = ft.fileName[0].content.strip()
             if ft.fileCont and ft.fileCont[0].content:
-                file_uri = ft.fileCont[0].content.strip()
+                file_description = ft.fileCont[0].content.strip()
             if ft.dimensns:
                 dims = ft.dimensns
                 if dims.caseQnty and dims.caseQnty[0].content:
@@ -65,6 +66,7 @@ def map_physical_instances(codebook: codeBookType, context: ConversionContext) -
                 file_id=raw_f_id,
                 file_name=file_name,
                 file_uri=file_uri,
+                file_description=file_description,
                 case_count=case_cnt,
                 var_count=var_cnt,
                 fingerprint=fingerprint,

@@ -102,6 +102,11 @@ class CodebookToLifecycleConverter:
         assembler = Ddi4ModelAssembler(self.document)
         return assembler.assemble()
 
+    def to_ddi4_container(self) -> m4.ItemContainer:
+        """Assemble and return strongly-typed DDI 4.0 RC1 ItemContainer model."""
+        assembler = Ddi4ModelAssembler(self.document)
+        return assembler.assemble_container()
+
     def to_ddi4_json(self, indent: int = 2) -> str:
         """Serialize converted lifecycle model to DDI 4.0 JSON."""
         assembler = Ddi4ModelAssembler(self.document)
