@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import asdict
+from decimal import Decimal
 from typing import Any
 
 from dartfx.ddi.ddilifecycle import model_4_0_rc1 as m4
@@ -292,7 +293,19 @@ class Ddi4ModelAssembler:
             variable_scheme_reference=[m4_variable_scheme],
         )
 
-        # 6. Physical Instances
+        # 6. Physical Instances & Statistical Summary
+        stats_items = self.assemble_statistics()
+        stats_stubs: list[m4.VariableStatistics] = [
+            m4.VariableStatistics(
+                id=vs.id,
+                agency=vs.agency,
+                version=vs.version,
+                urn=vs.urn,
+            )
+            for vs in stats_items
+        ]
+        m4_stat_summary = m4.StatisticalSummaryType(variable_statistics_reference=stats_stubs) if stats_stubs else None
+
         m4_phys_instances: list[m4.PhysicalInstance] = []
         for pi in self.doc.physical_instances:
             valid_uri = pi.file_uri if pi.file_uri and m4._is_valid_uri_reference(pi.file_uri) else None
@@ -348,6 +361,7 @@ class Ddi4ModelAssembler:
                 version=pi.version,
                 urn=pi.urn,
                 data_file_identification=[data_file_id],
+                statistical_summary=m4_stat_summary,
                 user_attribute_pair=pi_uaps,
             )
             m4_phys_instances.append(m4_pi)
@@ -441,3 +455,114 @@ class Ddi4ModelAssembler:
         """Serializes flat DDI 4.0 RC1 resources to JSON Lines (.jsonl) format."""
         lines = [json.dumps(item, ensure_ascii=False) for item in self.iter_resource_dicts()]
         return "\n".join(lines) + ("\n" if lines else "")
+
+    def assemble_statistics(self) -> list[m4.VariableStatistics]:
+        """Assemble native DDI 4.0 RC1 VariableStatistics for all variables carrying empirical stats."""
+        stats_list: list[m4.VariableStatistics] = []
+        for v in self.doc.variables:
+            if not v.statistics and not v.category_statistics:
+                continue
+
+            sum_stats: list[m4.SummaryStatisticType] = []
+            for s in v.statistics:
+                try:
+                    s_val = Decimal(str(s.value))
+                except Exception:
+                    s_val = None
+                if s_val is not None:
+                    sum_stats.append(
+                        m4.SummaryStatisticType(
+                            type_of_summary_statistic=m4.CodeValueType(string_value=s.type),
+                            statistic=m4.StatisticType(
+                                decimal_value=s_val,
+                                is_weighted=s.is_weighted,
+                            ),
+                        )
+                    )
+
+            unfiltered_cat_stats: list[m4.UnfilteredCategoryStatisticsType] = []
+            if v.category_statistics:
+                var_cats: list[m4.VariableCategoryType] = []
+                for cs in v.category_statistics:
+                    try:
+                        cs_val = Decimal(str(cs.value))
+                    except Exception:
+                        cs_val = None
+                    if cs_val is not None:
+                        var_cats.append(
+                            m4.VariableCategoryType(
+                                category_value=m4.CategoryValueType(value=m4.ValueType(string_value=cs.code_value)),
+                                category_statistic=[
+                                    m4.CategoryStatisticType(
+                                        type_of_category_statistic=m4.CodeValueType(string_value=cs.type),
+                                        statistic=m4.StatisticType(
+                                            decimal_value=cs_val,
+                                            is_weighted=cs.is_weighted,
+                                        ),
+                                    )
+                                ],
+                            )
+                        )
+                if var_cats:
+                    unfiltered_cat_stats.append(m4.UnfilteredCategoryStatisticsType(variable_category=var_cats))
+
+            total_responses: int | None = None
+            for s in v.statistics:
+                if s.type in ("vald", "valid"):
+                    try:
+                        total_responses = int(round(float(s.value)))
+                    except Exception:
+                        pass
+            if total_responses is None and v.category_statistics:
+                try:
+                    total_responses = int(round(sum(float(cs.value) for cs in v.category_statistics)))
+                except Exception:
+                    pass
+
+            vs_id = f"vs_{v.id}"
+            vs_urn = f"urn:ddi:{v.agency}:{vs_id}:{v.version}"
+            vs = m4.VariableStatistics(
+                id=vs_id,
+                agency=v.agency,
+                version=v.version,
+                urn=vs_urn,
+                variable_reference=m4.Variable(
+                    id=v.id,
+                    agency=v.agency,
+                    version=v.version,
+                    urn=v.urn,
+                ),
+                total_responses=total_responses,
+                summary_statistic=sum_stats,
+                unfiltered_category_statistics=unfiltered_cat_stats,
+            )
+            stats_list.append(vs)
+
+        return stats_list
+
+    def assemble_stats_container(self) -> m4.ItemContainer:
+        """Assemble a dedicated DDI 4.0 RC1 ItemContainer with all VariableStatistics."""
+        stats_list = self.assemble_statistics()
+        container = m4.ItemContainer()
+        if self.doc.physical_instances:
+            pi = self.doc.physical_instances[0]
+            container.top_level_references.append(
+                m4.PhysicalInstance(
+                    id=pi.id,
+                    agency=pi.agency,
+                    version=pi.version,
+                    urn=pi.urn,
+                )
+            )
+        container.items = list(stats_list)
+        return container
+
+    def to_stats_json(self, indent: int = 2) -> str:
+        """Serialize dedicated empirical statistics container to DDI 4.0 JSON."""
+        container = self.assemble_stats_container()
+        return container.to_json(indent=indent)
+
+    def to_stats_dict(self) -> dict[str, Any]:
+        """Serialize dedicated empirical statistics container to Python dictionary."""
+        container = self.assemble_stats_container()
+        return container.to_dict()

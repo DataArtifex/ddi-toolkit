@@ -176,6 +176,12 @@ class ConvertedLifecycleDocument:
     variable_groups: list[ConvertedVariableGroup] = field(default_factory=list)
     physical_instances: list[ConvertedPhysicalInstance] = field(default_factory=list)
     diagnostics: list[dict[str, str]] = field(default_factory=list)
+    raw_codelist_count: int = 0
+    raw_category_count: int = 0
+    codelist_duplicates_removed: int = 0
+    category_duplicates_removed: int = 0
+    codelist_reduction_pct: float = 0.0
+    category_reduction_pct: float = 0.0
     logical_product_id: str = ""
     logical_product_urn: str = ""
     category_scheme_id: str = ""

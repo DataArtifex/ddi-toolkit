@@ -575,3 +575,87 @@ def test_codebook_to_lifecycle_multilingual():
     assert "Libellé en français" in xml_33
     assert "Oui" in xml_33
     assert "Non" in xml_33
+
+
+def test_deduplication_metrics_and_stats_export():
+    xml_data = """<?xml version="1.0" encoding="UTF-8"?>
+<codeBook xmlns="ddi:codebook:2_5" ID="stats_test">
+  <docDscr><citation><titlStmt><titl>Stats Test</titl></titlStmt></citation></docDscr>
+  <stdyDscr><citation><titlStmt><titl>Stats Study</titl></titlStmt></citation></stdyDscr>
+  <fileDscr ID="F1">
+    <fileTxt>
+      <fileName>stats_data.csv</fileName>
+    </fileTxt>
+  </fileDscr>
+  <dataDscr>
+    <var ID="v1" name="Q1">
+      <labl>Question 1</labl>
+      <sumStat type="vald">100</sumStat>
+      <sumStat type="invd">5</sumStat>
+      <catgry ID="C1">
+        <catValu>1</catValu>
+        <labl>Agree</labl>
+        <catStat type="freq">60</catStat>
+      </catgry>
+      <catgry ID="C2">
+        <catValu>2</catValu>
+        <labl>Disagree</labl>
+        <catStat type="freq">40</catStat>
+      </catgry>
+    </var>
+    <var ID="v2" name="Q2">
+      <labl>Question 2</labl>
+      <sumStat type="vald">100</sumStat>
+      <catgry ID="C3">
+        <catValu>1</catValu>
+        <labl>Agree</labl>
+        <catStat type="freq">70</catStat>
+      </catgry>
+      <catgry ID="C4">
+        <catValu>2</catValu>
+        <labl>Disagree</labl>
+        <catStat type="freq">30</catStat>
+      </catgry>
+    </var>
+  </dataDscr>
+</codeBook>"""
+
+    cb = ddicodebook.loadxmlstring(xml_data)
+    converter = cb_utils.codebook_to_lifecycle(cb, harmonize_codes=True)
+    summary = converter.get_summary()
+
+    # Deduplication metrics:
+    # 2 variables with identical (1=Agree, 2=Disagree)
+    # Raw codelists: 2 -> Deduplicated: 1 (1 duplicate removed, 50% reduction)
+    # Raw categories: 4 -> Deduplicated: 2 (2 duplicates removed, 50% reduction)
+    assert summary["raw_codelist_count"] == 2
+    assert summary["codelist_count"] == 1
+    assert summary["codelist_duplicates_removed"] == 1
+    assert summary["codelist_reduction_pct"] == 50.0
+
+    assert summary["raw_category_count"] == 4
+    assert summary["category_count"] == 2
+    assert summary["category_duplicates_removed"] == 2
+    assert summary["category_reduction_pct"] == 50.0
+
+    assert summary["variable_statistics_count"] == 2
+    assert summary["total_frequencies_count"] == 4
+    assert summary["total_summary_statistics_count"] == 3
+
+    # Primary DDI4 JSON has PhysicalInstance referencing VariableStatistics
+    primary_json = converter.to_ddi4_json()
+    assert "StatisticalSummary" in primary_json
+    assert "VariableStatistics" in primary_json
+
+    # Dedicated secondary statistics DDI4 JSON
+    stats_json = converter.to_ddi4_stats_json()
+    stats_data = json.loads(stats_json)
+    assert "items" in stats_data
+    assert len(stats_data["items"]) == 2
+    item1 = stats_data["items"][0]
+    assert item1["$type"] == "VariableStatistics"
+    assert item1["TotalResponses"] == 100
+    assert len(item1["SummaryStatistic"]) >= 1
+    assert len(item1["UnfilteredCategoryStatistics"]) == 1
+    var_cats = item1["UnfilteredCategoryStatistics"][0]["VariableCategory"]
+    assert len(var_cats) == 2

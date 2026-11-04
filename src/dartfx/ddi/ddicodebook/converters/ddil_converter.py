@@ -79,6 +79,12 @@ class CodebookToLifecycleConverter:
             variable_groups=variable_groups,
             physical_instances=physical_instances,
             diagnostics=self.context.diagnostics,
+            raw_codelist_count=self.context.raw_codelist_count,
+            raw_category_count=self.context.raw_category_count,
+            codelist_duplicates_removed=self.context.codelist_duplicates_removed,
+            category_duplicates_removed=self.context.category_duplicates_removed,
+            codelist_reduction_pct=self.context.codelist_reduction_pct,
+            category_reduction_pct=self.context.category_reduction_pct,
             logical_product_id=lp_id,
             logical_product_urn=self.context.make_urn(lp_id),
             category_scheme_id=cs_id,
@@ -127,6 +133,21 @@ class CodebookToLifecycleConverter:
         assembler = Ddi4ModelAssembler(self.document)
         return assembler.to_dict()
 
+    def to_ddi4_stats_container(self) -> m4.ItemContainer:
+        """Assemble and return strongly-typed DDI 4.0 RC1 ItemContainer with VariableStatistics."""
+        assembler = Ddi4ModelAssembler(self.document)
+        return assembler.assemble_stats_container()
+
+    def to_ddi4_stats_json(self, indent: int = 2) -> str:
+        """Serialize empirical frequencies and summary statistics to a dedicated DDI 4.0 JSON file."""
+        assembler = Ddi4ModelAssembler(self.document)
+        return assembler.to_stats_json(indent=indent)
+
+    def to_ddi4_stats_dict(self) -> dict[str, Any]:
+        """Serialize empirical frequencies and summary statistics to a Python dictionary."""
+        assembler = Ddi4ModelAssembler(self.document)
+        return assembler.to_stats_dict()
+
     def to_ddi33_xml(self, pretty: bool = True, urn_only: bool = False) -> str:
         """Generate canonical DDI-Lifecycle 3.3 XML document (<ddi:DDIInstance>)."""
         builder = Ddi33XmlBuilder(self.document, urn_only=urn_only)
@@ -151,4 +172,15 @@ class CodebookToLifecycleConverter:
             "variable_group_count": len(self.document.variable_groups),
             "physical_instance_count": len(self.document.physical_instances),
             "diagnostic_count": len(self.document.diagnostics),
+            "raw_codelist_count": self.document.raw_codelist_count,
+            "raw_category_count": self.document.raw_category_count,
+            "codelist_duplicates_removed": self.document.codelist_duplicates_removed,
+            "category_duplicates_removed": self.document.category_duplicates_removed,
+            "codelist_reduction_pct": self.document.codelist_reduction_pct,
+            "category_reduction_pct": self.document.category_reduction_pct,
+            "variable_statistics_count": sum(
+                1 for v in self.document.variables if v.statistics or v.category_statistics
+            ),
+            "total_frequencies_count": sum(len(v.category_statistics) for v in self.document.variables),
+            "total_summary_statistics_count": sum(len(v.statistics) for v in self.document.variables),
         }

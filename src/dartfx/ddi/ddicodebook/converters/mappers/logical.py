@@ -152,6 +152,9 @@ def map_variables_and_codes(
     if codebook.fileDscr and len(codebook.fileDscr) == 1 and codebook.fileDscr[0].id:
         default_file_id = codebook.fileDscr[0].id
 
+    raw_codelist_count = 0
+    raw_category_count = 0
+
     for var in codebook.search_variables():
         raw_var_id = var.id or var.name or "var"
         var_id = context.make_item_id("variable", raw_var_id, "variables")
@@ -248,6 +251,8 @@ def map_variables_and_codes(
         category_statistics: list[ConvertedCategoryStatistic] = []
 
         if var.n_catgry > 0:
+            raw_codelist_count += 1
+            raw_category_count += len(var.catgry)
             rep_type = "code"
             var_code_entries: list[
                 tuple[str, str, str | None, bool, int, list[tuple[str, str]], list[tuple[str, str]]]
@@ -536,6 +541,23 @@ def map_variables_and_codes(
                 universes=var_universes,
             )
         )
+
+    context.raw_codelist_count = raw_codelist_count
+    context.raw_category_count = raw_category_count
+    if context.harmonize_codes:
+        context.codelist_duplicates_removed = max(0, raw_codelist_count - len(codelists))
+        context.category_duplicates_removed = max(0, raw_category_count - len(categories))
+        context.codelist_reduction_pct = (
+            (context.codelist_duplicates_removed / raw_codelist_count * 100.0) if raw_codelist_count > 0 else 0.0
+        )
+        context.category_reduction_pct = (
+            (context.category_duplicates_removed / raw_category_count * 100.0) if raw_category_count > 0 else 0.0
+        )
+    else:
+        context.codelist_duplicates_removed = 0
+        context.category_duplicates_removed = 0
+        context.codelist_reduction_pct = 0.0
+        context.category_reduction_pct = 0.0
 
     return variables, codelists, categories
 
