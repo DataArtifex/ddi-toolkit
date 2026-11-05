@@ -69,6 +69,7 @@ class ConvertedQuestionItem:
     question_names: list[tuple[str, str]] = field(default_factory=list)
     question_texts: list[tuple[str, str]] = field(default_factory=list)
     interviewer_instructions: list[tuple[str, str]] = field(default_factory=list)
+    user_attributes: list[tuple[str, str]] = field(default_factory=list)
 
 
 @dataclass
@@ -178,10 +179,13 @@ class ConvertedLifecycleDocument:
     diagnostics: list[dict[str, str]] = field(default_factory=list)
     raw_codelist_count: int = 0
     raw_category_count: int = 0
+    raw_question_count: int = 0
     codelist_duplicates_removed: int = 0
     category_duplicates_removed: int = 0
+    question_duplicates_removed: int = 0
     codelist_reduction_pct: float = 0.0
     category_reduction_pct: float = 0.0
+    question_reduction_pct: float = 0.0
     logical_product_id: str = ""
     logical_product_urn: str = ""
     category_scheme_id: str = ""

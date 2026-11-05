@@ -30,6 +30,7 @@ class CodebookToLifecycleConverter:
         identifier: str | None = None,
         id_strategy: IdStrategy | str = IdStrategy.HIERARCHICAL,
         harmonize_codes: bool = True,
+        harmonize_questions: bool = True,
         strict: bool = False,
     ) -> None:
         self.codebook = codebook
@@ -40,6 +41,7 @@ class CodebookToLifecycleConverter:
             explicit_id=identifier,
             id_strategy=id_strategy,
             harmonize_codes=harmonize_codes,
+            harmonize_questions=harmonize_questions,
             strict=strict,
         )
         self.document = self._convert()
@@ -81,10 +83,13 @@ class CodebookToLifecycleConverter:
             diagnostics=self.context.diagnostics,
             raw_codelist_count=self.context.raw_codelist_count,
             raw_category_count=self.context.raw_category_count,
+            raw_question_count=self.context.raw_question_count,
             codelist_duplicates_removed=self.context.codelist_duplicates_removed,
             category_duplicates_removed=self.context.category_duplicates_removed,
+            question_duplicates_removed=self.context.question_duplicates_removed,
             codelist_reduction_pct=self.context.codelist_reduction_pct,
             category_reduction_pct=self.context.category_reduction_pct,
+            question_reduction_pct=self.context.question_reduction_pct,
             logical_product_id=lp_id,
             logical_product_urn=self.context.make_urn(lp_id),
             category_scheme_id=cs_id,
@@ -174,10 +179,13 @@ class CodebookToLifecycleConverter:
             "diagnostic_count": len(self.document.diagnostics),
             "raw_codelist_count": self.document.raw_codelist_count,
             "raw_category_count": self.document.raw_category_count,
+            "raw_question_count": self.document.raw_question_count,
             "codelist_duplicates_removed": self.document.codelist_duplicates_removed,
             "category_duplicates_removed": self.document.category_duplicates_removed,
+            "question_duplicates_removed": self.document.question_duplicates_removed,
             "codelist_reduction_pct": self.document.codelist_reduction_pct,
             "category_reduction_pct": self.document.category_reduction_pct,
+            "question_reduction_pct": self.document.question_reduction_pct,
             "variable_statistics_count": sum(
                 1 for v in self.document.variables if v.statistics or v.category_statistics
             ),

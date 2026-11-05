@@ -133,6 +133,14 @@ class Ddi4ModelAssembler:
                     )
                 )
 
+            for k, v in getattr(q, "user_attributes", []):
+                q_uaps.append(
+                    m4.StandardKeyValuePairType(
+                        attribute_key=m4.CodeValueType(string_value=k),
+                        attribute_value=m4.CodeValueType(string_value=v),
+                    )
+                )
+
             m4_q = m4.QuestionItem(
                 id=q.id,
                 agency=q.agency,

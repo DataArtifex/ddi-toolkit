@@ -221,6 +221,8 @@ class Ddi33XmlBuilder:
                 for q in self.doc.questions:
                     qi_el = ET.SubElement(qs_el, f"{{{NS_DATACOLL}}}QuestionItem", {"isUniversallyUnique": "true"})
                     self._add_ident(qi_el, q.agency, q.id, q.version, q.urn)
+                    if getattr(q, "user_attributes", None):
+                        self._add_user_attributes(qi_el, q.user_attributes)
                     self._add_lang_strings(
                         qi_el, f"{{{NS_DATACOLL}}}QuestionItemName", q.question_names, q.question_name
                     )

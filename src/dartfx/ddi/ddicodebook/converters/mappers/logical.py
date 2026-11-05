@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import urllib.parse
 from typing import TYPE_CHECKING, Any
 
@@ -9,6 +8,7 @@ from ....harmonizer import (
     Code,
     CodeList,
     HarmonizationRegistry,
+    Question,
 )
 from ..models import (
     ConvertedCategory,
@@ -46,13 +46,17 @@ def _parse_int_safe(value: Any) -> int | None:
 
 def map_questions(codebook: codeBookType, context: ConversionContext) -> list[ConvertedQuestionItem]:
     questions: list[ConvertedQuestionItem] = []
+    q_registry: HarmonizationRegistry[Question] = HarmonizationRegistry()
+    q_obj_map: dict[str, ConvertedQuestionItem] = {}
     seen_q_ids: set[str] = set()
+    raw_question_count = 0
 
     for var in codebook.search_variables():
         if not var.qstn:
             continue
 
         for idx, qstn in enumerate(var.qstn, start=1):
+            raw_question_count += 1
             raw_q_id = getattr(qstn, "id", None) or getattr(qstn, "qstn", None)
             if not raw_q_id:
                 raw_q_id = f"{var.id or var.name or 'v'}_q{idx}"
@@ -74,6 +78,20 @@ def map_questions(codebook: codeBookType, context: ConversionContext) -> list[Co
                 q_text = qstn.content.strip()
                 q_texts.append((getattr(qstn, "xml_lang", None) or context.language, q_text))
 
+            pre_list = (
+                qstn.preQTxt
+                if isinstance(getattr(qstn, "preQTxt", None), list)
+                else ([qstn.preQTxt] if getattr(qstn, "preQTxt", None) else [])
+            )
+            pre_text = pre_list[0].content.strip() if pre_list and getattr(pre_list[0], "content", None) else None
+
+            post_list = (
+                qstn.postQTxt
+                if isinstance(getattr(qstn, "postQTxt", None), list)
+                else ([qstn.postQTxt] if getattr(qstn, "postQTxt", None) else [])
+            )
+            post_text = post_list[0].content.strip() if post_list and getattr(post_list[0], "content", None) else None
+
             ivu_instr = None
             ivu_instrs: list[tuple[str, str]] = []
             ivu_list = qstn.ivuInstr if isinstance(qstn.ivuInstr, list) else ([qstn.ivuInstr] if qstn.ivuInstr else [])
@@ -88,37 +106,86 @@ def map_questions(codebook: codeBookType, context: ConversionContext) -> list[Co
             if not q_texts and q_text:
                 q_texts.append((context.language, q_text))
 
-            q_hash_payload = "|".join(f"{lng}:{txt}" for lng, txt in sorted(q_texts)) or raw_q_id
-            q_hash = hashlib.sha256(q_hash_payload.encode()).hexdigest()
+            if context.harmonize_questions:
+                harm_q = Question(
+                    question_text=q_text,
+                    pre_question_text=pre_text,
+                    post_question_text=post_text,
+                    instructions=ivu_instr,
+                    language=getattr(qstn, "xml_lang", None) or context.language,
+                )
+                canon_q, _ = q_registry.register(harm_q)
+                q_hash = canon_q.fingerprint.digest
 
-            q_id = context.make_item_id("question", raw_q_id, "questions", content_hash=q_hash)
-            if q_id in seen_q_ids:
+                if q_hash in q_obj_map:
+                    shared_q = q_obj_map[q_hash]
+                    context.question_id_map[raw_q_id] = shared_q.id
+                    if var.id:
+                        context.question_id_map[var.id] = shared_q.id
+                    if q_texts:
+                        existing_langs = {lng for lng, _ in shared_q.question_texts or []}
+                        for lng, txt in q_texts:
+                            if lng not in existing_langs:
+                                shared_q.question_texts = list(shared_q.question_texts or []) + [(lng, txt)]
+                                existing_langs.add(lng)
+                    if ivu_instrs:
+                        existing_ivu_langs = {lng for lng, _ in shared_q.interviewer_instructions or []}
+                        for lng, txt in ivu_instrs:
+                            if lng not in existing_ivu_langs:
+                                shared_q.interviewer_instructions = list(shared_q.interviewer_instructions or []) + [
+                                    (lng, txt)
+                                ]
+                                existing_ivu_langs.add(lng)
+                    continue
+
+                q_slug = f"qi_{raw_q_id}"
+                q_id = context.make_item_id("question", q_slug, "questions", content_hash=q_hash)
+                q_urn = context.make_urn(q_id)
+                new_q = ConvertedQuestionItem(
+                    id=q_id,
+                    agency=context.agency,
+                    version=context.version,
+                    urn=q_urn,
+                    question_name=q_name,
+                    question_text=q_text,
+                    interviewer_instruction=ivu_instr,
+                    question_texts=q_texts,
+                    interviewer_instructions=ivu_instrs,
+                    user_attributes=[
+                        ("harmonization:question_hash", q_hash),
+                        ("harmonization:signature", canon_q.fingerprint.signature),
+                    ],
+                )
+                q_obj_map[q_hash] = new_q
+                questions.append(new_q)
                 context.question_id_map[raw_q_id] = q_id
                 if var.id:
                     context.question_id_map[var.id] = q_id
-                existing_q = next((q for q in questions if q.id == q_id), None)
-                if existing_q and q_texts:
-                    existing_langs = {lng for lng, _ in existing_q.question_texts or []}
-                    for lng, txt in q_texts:
-                        if lng not in existing_langs:
-                            existing_q.question_texts = list(existing_q.question_texts or []) + [(lng, txt)]
-                if existing_q and ivu_instrs:
-                    existing_ivu_langs = {lng for lng, _ in existing_q.interviewer_instructions or []}
-                    for lng, txt in ivu_instrs:
-                        if lng not in existing_ivu_langs:
-                            existing_q.interviewer_instructions = list(existing_q.interviewer_instructions or []) + [
-                                (lng, txt)
-                            ]
-                continue
-            seen_q_ids.add(q_id)
-
-            q_urn = context.make_urn(q_id)
-            context.question_id_map[raw_q_id] = q_id
-            if var.id:
-                context.question_id_map[var.id] = q_id
-
-            questions.append(
-                ConvertedQuestionItem(
+            else:
+                q_id = context.make_item_id("question", raw_q_id, "questions")
+                if q_id in seen_q_ids:
+                    context.question_id_map[raw_q_id] = q_id
+                    if var.id:
+                        context.question_id_map[var.id] = q_id
+                    existing_q = next((q for q in questions if q.id == q_id), None)
+                    if existing_q and q_texts:
+                        existing_langs = {lng for lng, _ in existing_q.question_texts or []}
+                        for lng, txt in q_texts:
+                            if lng not in existing_langs:
+                                existing_q.question_texts = list(existing_q.question_texts or []) + [(lng, txt)]
+                                existing_langs.add(lng)
+                    if existing_q and ivu_instrs:
+                        existing_ivu_langs = {lng for lng, _ in existing_q.interviewer_instructions or []}
+                        for lng, txt in ivu_instrs:
+                            if lng not in existing_ivu_langs:
+                                cur_instrs = list(existing_q.interviewer_instructions or [])
+                                cur_instrs.append((lng, txt))
+                                existing_q.interviewer_instructions = cur_instrs
+                                existing_ivu_langs.add(lng)
+                    continue
+                seen_q_ids.add(q_id)
+                q_urn = context.make_urn(q_id)
+                new_q = ConvertedQuestionItem(
                     id=q_id,
                     agency=context.agency,
                     version=context.version,
@@ -129,7 +196,20 @@ def map_questions(codebook: codeBookType, context: ConversionContext) -> list[Co
                     question_texts=q_texts,
                     interviewer_instructions=ivu_instrs,
                 )
-            )
+                questions.append(new_q)
+                context.question_id_map[raw_q_id] = q_id
+                if var.id:
+                    context.question_id_map[var.id] = q_id
+
+    context.raw_question_count = raw_question_count
+    if context.harmonize_questions:
+        context.question_duplicates_removed = max(0, raw_question_count - len(questions))
+        context.question_reduction_pct = (
+            (context.question_duplicates_removed / raw_question_count * 100.0) if raw_question_count > 0 else 0.0
+        )
+    else:
+        context.question_duplicates_removed = 0
+        context.question_reduction_pct = 0.0
 
     return questions
 

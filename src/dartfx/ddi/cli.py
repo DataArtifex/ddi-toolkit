@@ -177,6 +177,13 @@ def ddic2l(
             help="Aggregate and reuse identical codelists and categories across variables",
         ),
     ] = True,
+    harmonize_questions: Annotated[
+        bool,
+        typer.Option(
+            "--harmonize-questions/--no-harmonize-questions",
+            help="Aggregate and reuse identical questions across variables using Merkle fingerprints",
+        ),
+    ] = True,
     urn_only: Annotated[
         bool,
         typer.Option(
@@ -209,6 +216,7 @@ def ddic2l(
         identifier=identifier,
         id_strategy=id_strategy,
         harmonize_codes=harmonize_codes,
+        harmonize_questions=harmonize_questions,
         strict=strict,
     )
 
@@ -269,7 +277,12 @@ def ddic2l(
             cat_str += f" ({cat_rem} duplicates removed, {cat_pct:.1f}% reduction)"
         typer.echo(f"  Categories: {cat_str}")
 
-        typer.echo(f"  Questions: {summary['question_count']}")
+        q_str = f"{summary['question_count']}"
+        if summary.get("question_duplicates_removed", 0) > 0:
+            q_rem = summary["question_duplicates_removed"]
+            q_pct = summary["question_reduction_pct"]
+            q_str += f" ({q_rem} duplicates removed, {q_pct:.1f}% reduction)"
+        typer.echo(f"  Questions: {q_str}")
         typer.echo(f"  Variable Groups: {summary['variable_group_count']}")
         typer.echo(f"  Physical Instances: {summary['physical_instance_count']}")
         if summary.get("variable_statistics_count", 0) > 0:

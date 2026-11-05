@@ -659,3 +659,102 @@ def test_deduplication_metrics_and_stats_export():
     assert len(item1["UnfilteredCategoryStatistics"]) == 1
     var_cats = item1["UnfilteredCategoryStatistics"][0]["VariableCategory"]
     assert len(var_cats) == 2
+
+
+def test_question_harmonization_and_deduplication():
+    """Verify that identical questions across variables are harmonized using Merkle fingerprints."""
+    xml_data = """<?xml version="1.0" encoding="UTF-8"?>
+<codeBook version="2.6" ID="CB_Q_HARM" xml:lang="en" xmlns="ddi:codebook:2_6">
+  <stdyDscr>
+    <citation>
+      <titlStmt>
+        <titl>Question Harmonization Test</titl>
+      </titlStmt>
+    </citation>
+  </stdyDscr>
+  <dataDscr>
+    <var ID="V1" name="AGE_R">
+      <labl>Age of respondent</labl>
+      <qstn>
+        <preQTxt>Next we have a few background questions.</preQTxt>
+        <qstnLit>How old were you on your last birthday?</qstnLit>
+        <ivuInstr>Enter whole years only.</ivuInstr>
+      </qstn>
+    </var>
+    <var ID="V2" name="AGE_S">
+      <labl>Age of spouse</labl>
+      <qstn>
+        <preQTxt>Next we have a few background questions.</preQTxt>
+        <qstnLit>How old were you on your last birthday?</qstnLit>
+        <ivuInstr>Enter whole years only.</ivuInstr>
+      </qstn>
+    </var>
+    <var ID="V3" name="GENDER">
+      <labl>Gender of respondent</labl>
+      <qstn>
+        <qstnLit>What is your gender?</qstnLit>
+      </qstn>
+    </var>
+  </dataDscr>
+</codeBook>"""
+
+    cb = ddicodebook.loadxmlstring(xml_data)
+
+    # 1. Harmonized Mode (default)
+    converter = cb_utils.codebook_to_lifecycle(cb, harmonize_questions=True)
+    summary = converter.get_summary()
+
+    # 3 raw question occurrences -> 2 unique questions (1 duplicate removed, 33.3% reduction)
+    assert summary["raw_question_count"] == 3
+    assert summary["question_count"] == 2
+    assert summary["question_duplicates_removed"] == 1
+    assert round(summary["question_reduction_pct"], 1) == 33.3
+
+    # Variables V1 and V2 reference the exact same question
+    v1 = next(v for v in converter.document.variables if v.name == "AGE_R")
+    v2 = next(v for v in converter.document.variables if v.name == "AGE_S")
+    v3 = next(v for v in converter.document.variables if v.name == "GENDER")
+
+    assert v1.question_id is not None
+    assert v1.question_id == v2.question_id
+    assert v1.question_urn == v2.question_urn
+    assert v3.question_id != v1.question_id
+
+    # Verify Merkle user attributes on ConvertedQuestionItem
+    shared_q = next(q for q in converter.document.questions if q.id == v1.question_id)
+    q_hashes = dict(shared_q.user_attributes)
+    assert "harmonization:question_hash" in q_hashes
+    assert "harmonization:signature" in q_hashes
+    assert len(q_hashes["harmonization:question_hash"]) == 16
+
+    # Verify DDI 4.0 RC1 Model includes Merkle user attributes
+    study_unit = converter.to_ddi4()
+    assert len(study_unit.data_collection_reference) == 1
+    dc = study_unit.data_collection_reference[0]
+    assert len(dc.question_scheme_reference) == 1
+    qs = dc.question_scheme_reference[0]
+    assert len(qs.question_item_reference) == 2
+
+    m4_shared_q = next(q for q in qs.question_item_reference if q.id == v1.question_id)
+    uap_dict = {
+        uap.attribute_key.string_value: uap.attribute_value.string_value for uap in m4_shared_q.user_attribute_pair
+    }
+    assert "harmonization:question_hash" in uap_dict
+
+    # Verify DDI 3.3 XML serializes deduplicated QuestionItem and UserAttributePair
+    xml_33 = converter.to_ddi33_xml()
+    assert xml_33.count("<d:QuestionItem ") == 2
+    assert "harmonization:question_hash" in xml_33
+
+    # 2. Non-Harmonized Mode
+    conv_no_harm = cb_utils.codebook_to_lifecycle(cb, harmonize_questions=False)
+    sum_no_harm = conv_no_harm.get_summary()
+
+    assert sum_no_harm["raw_question_count"] == 3
+    assert sum_no_harm["question_count"] == 3
+    assert sum_no_harm["question_duplicates_removed"] == 0
+    assert sum_no_harm["question_reduction_pct"] == 0.0
+
+    v1_no = next(v for v in conv_no_harm.document.variables if v.name == "AGE_R")
+    v2_no = next(v for v in conv_no_harm.document.variables if v.name == "AGE_S")
+    assert v1_no.question_id != v2_no.question_id

@@ -60,6 +60,7 @@ class ConversionContext:
     explicit_id: str | None = None
     id_strategy: IdStrategy | str = IdStrategy.HIERARCHICAL
     harmonize_codes: bool = True
+    harmonize_questions: bool = True
     default_agency: str = "int.dartfx"
     default_version: str = "1.0.0"
     strict: bool = False
@@ -79,10 +80,13 @@ class ConversionContext:
     diagnostics: list[dict[str, str]] = field(default_factory=list)
     raw_codelist_count: int = 0
     raw_category_count: int = 0
+    raw_question_count: int = 0
     codelist_duplicates_removed: int = 0
     category_duplicates_removed: int = 0
+    question_duplicates_removed: int = 0
     codelist_reduction_pct: float = 0.0
     category_reduction_pct: float = 0.0
+    question_reduction_pct: float = 0.0
     _counters: dict[str, int] = field(default_factory=dict)
     _item_seq_map: dict[str, str] = field(default_factory=dict)
 

@@ -105,6 +105,16 @@ class Question(BaseModel):
         return fingerprinter.fingerprint_compound(components, prefix="QUESTION")
 
     @property
+    def signature(self) -> str:
+        """Canonical signature string."""
+        return self.fingerprint.signature
+
+    @property
+    def question_hash(self) -> str:
+        """Convenience property for 16-character hexadecimal hash."""
+        return self.fingerprint.digest
+
+    @property
     def hashes(self) -> HashesPayload:
         """Serialized hashes and sub-facets for database storage and indexing."""
         fp = self.fingerprint
@@ -147,6 +157,45 @@ class Question(BaseModel):
                 question_text=str(source.question_text),
                 instructions=getattr(source, "interviewer_instruction", None) or getattr(source, "instructions", None),
                 urn=getattr(source, "urn", None) or getattr(source, "id", None),
+            )
+
+        if hasattr(source, "qstnLit") or hasattr(source, "preQTxt") or hasattr(source, "ivuInstr"):
+            q_lit_list = getattr(source, "qstnLit", None) or []
+            if not isinstance(q_lit_list, list):
+                q_lit_list = [q_lit_list]
+            q_text = ""
+            for lit in q_lit_list:
+                if lit and getattr(lit, "content", None):
+                    q_text = lit.content.strip()
+                    break
+            if not q_text and getattr(source, "content", None):
+                q_text = str(source.content).strip()
+
+            pre_list = getattr(source, "preQTxt", None) or []
+            if not isinstance(pre_list, list):
+                pre_list = [pre_list]
+            pre_text = pre_list[0].content.strip() if pre_list and getattr(pre_list[0], "content", None) else None
+
+            post_list = getattr(source, "postQTxt", None) or []
+            if not isinstance(post_list, list):
+                post_list = [post_list]
+            post_text = post_list[0].content.strip() if post_list and getattr(post_list[0], "content", None) else None
+
+            ivu_list = getattr(source, "ivuInstr", None) or []
+            if not isinstance(ivu_list, list):
+                ivu_list = [ivu_list]
+            instr = ivu_list[0].content.strip() if ivu_list and getattr(ivu_list[0], "content", None) else None
+
+            urn = getattr(source, "urn", None) or getattr(source, "id", None) or getattr(source, "ID", None)
+            lang = getattr(source, "xml_lang", None) or "en"
+
+            return cls(
+                question_text=q_text,
+                pre_question_text=pre_text,
+                post_question_text=post_text,
+                instructions=instr,
+                urn=urn,
+                language=lang,
             )
 
         if hasattr(source, "find"):
