@@ -309,3 +309,70 @@ def test_fsd2961_loads_and_validates_without_unexpected_child_errors():
     _, report = cb_utils.validate_codebook_xml(eng_path)
     error_codes = [e["code"] for e in report["errors"]]
     assert "xml.unexpected_child_element" not in error_codes
+
+
+def test_usage_type_specific_elements_roundtrip():
+    xml_content = """<?xml version="1.0" encoding="UTF-8"?>
+<codeBook xmlns="ddi:codebook:2_6" version="2.6" ID="CB_USAGE_TEST">
+  <docDscr>
+    <controlledVocabUsed>
+      <codeListID>CL_TIME_METH</codeListID>
+      <usage>
+        <specificElements refs="ICPSR4328timeMeth" authorizedCodeValue="CrossSection"/>
+        <attribute>type</attribute>
+      </usage>
+    </controlledVocabUsed>
+  </docDscr>
+</codeBook>"""
+
+    cb = ddicodebook.loadxmlstring(xml_content)
+    assert len(cb.docDscr[0].controlledVocabUsed) == 1
+    cv = cb.docDscr[0].controlledVocabUsed[0]
+    assert len(cv.usage) == 1
+    usage = cv.usage[0]
+
+    # Verify specificElements is correctly parsed
+    assert usage.specificElements is not None
+    assert isinstance(usage.specificElements, ddicodebook.specificElementsType)
+    assert usage.specificElements.refs == "ICPSR4328timeMeth"
+    assert usage.specificElements.authorizedCodeValue == "CrossSection"
+
+    # Verify attribute is parsed
+    assert usage.attribute is not None
+    assert usage.attribute.content == "type"
+
+    # Roundtrip serialization
+    xml_out = cb.to_xml_string()
+    assert "<specificElements" in xml_out
+    assert 'refs="ICPSR4328timeMeth"' in xml_out
+    assert 'authorizedCodeValue="CrossSection"' in xml_out
+    assert "<attribute>type</attribute>" in xml_out
+
+    # Validate against DDI 2.6 XML schema
+    is_valid, report = cb_utils.validate_codebook_xml(xml_out, profile="schema")
+    assert is_valid is True
+    assert report["valid"] is True
+
+
+def test_usage_type_selector_roundtrip():
+    xml_content = """<?xml version="1.0" encoding="UTF-8"?>
+<codeBook xmlns="ddi:codebook:2_6" version="2.6" ID="CB_USAGE_SEL_TEST">
+  <docDscr>
+    <controlledVocabUsed>
+      <codeListID>CL_TIME_METH</codeListID>
+      <usage>
+        <selector>/codeBook/stdyDscr/method/dataColl/timeMeth</selector>
+      </usage>
+    </controlledVocabUsed>
+  </docDscr>
+</codeBook>"""
+
+    cb = ddicodebook.loadxmlstring(xml_content)
+    cv = cb.docDscr[0].controlledVocabUsed[0]
+    usage = cv.usage[0]
+    assert usage.selector is not None
+    assert usage.selector.content == "/codeBook/stdyDscr/method/dataColl/timeMeth"
+    assert usage.specificElements is None
+
+    xml_out = cb.to_xml_string()
+    assert "<selector>/codeBook/stdyDscr/method/dataColl/timeMeth</selector>" in xml_out

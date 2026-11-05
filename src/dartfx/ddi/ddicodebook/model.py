@@ -1798,7 +1798,7 @@ class sourcesType(baseElementType):
     typeOfDataSrc: list[conceptType] = Field(default_factory=list)  # DDI 2.6
 
 
-class specificElementType(stringType):
+class specificElementsType(baseElementType):
     refs: str | None = None
     authorizedCodeValue: str | None = None
 
@@ -1928,9 +1928,11 @@ class unitTypeType(conceptualTextType):  # DDI 2.6: was stringType
 
 
 class usageType(baseElementType):
-    # Note: this does not derive from baseElementType in the schema
+    # In DDI 2.6 schema, usageType is a sequence with a choice between
+    # selector and specificElements, followed by optional attribute.
+    # Note: usageType does not derive from baseElementType in the XML schema.
     selector: selectorType | None = None
-    specificElement: specificElementType | None = None
+    specificElements: specificElementsType | None = None
     attribute: attributeType | None = None
 
 
