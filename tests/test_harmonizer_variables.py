@@ -288,6 +288,46 @@ def test_compare_variables_category_recoding_advice():
     assert recode_advice.mapping == {"1": "M", "2": "F"}
 
 
+def test_compare_variables_same_concept_divergent_domain():
+    """Verifies SAME_CONCEPT_DIVERGENT_DOMAIN when question/label matches but response scales diverge."""
+    from dartfx.ddi.harmonizer import Category, Code, CodeList
+
+    # 1. Setup 5-point scale CodeList
+    codes_5pt = [Code(value=str(i), category=Category(label=f"Level {i}")) for i in range(1, 6)]
+    cl_5pt = CodeList(name="CL_TRUST_5PT", codes=codes_5pt)
+
+    # 2. Setup 10-point scale CodeList
+    codes_10pt = [Code(value=str(i), category=Category(label=f"Scale {i}")) for i in range(1, 11)]
+    cl_10pt = CodeList(name="CL_TRUST_10PT", codes=codes_10pt)
+
+    # 3. Setup variables with identical question and label
+    q = Question(question_text="Dans quelle mesure faites-vous confiance au parlement national ?")
+    v_5pt = Variable(
+        name="TRUST_PARL_2014",
+        label="Confiance dans le parlement national",
+        data_type=DataType.from_ddi_cv("Integer"),
+        value_domain=ValueDomain.from_codelist(cl_5pt),
+        question=q,
+    )
+    v_10pt = Variable(
+        name="TRUST_PARL_2015",
+        label="Confiance dans le parlement national",
+        data_type=DataType.from_ddi_cv("Integer"),
+        value_domain=ValueDomain.from_codelist(cl_10pt),
+        question=q,
+    )
+
+    res = compare_variables(v_5pt, v_10pt, profile=ComparisonProfile.SURVEY_INSTRUMENT)
+    assert res.match_type == MatchType.SAME_CONCEPT_DIVERGENT_DOMAIN
+    assert res.has_category(MatchType.SAME_CONCEPT_DIVERGENT_DOMAIN) is True
+    assert res.has_category(MatchType.FACET_EXACT) is True
+    assert res.score <= 0.88
+
+    advice = next((a for a in res.transformation_advice if a.action == TransformationAction.RECODE_VALUES), None)
+    assert advice is not None
+    assert "divergent response scales" in advice.description
+
+
 def test_compare_variables_question_mode_drift():
     """Verifies survey instrument question construct evaluation across survey waves."""
     q_capi = Question(

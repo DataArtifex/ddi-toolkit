@@ -408,6 +408,131 @@ The ``HarmonizationRegistry[T]`` acts as the high-performance repository contain
 * Support for ``CuratedCrosswalk`` explicit approved overrides and blocked pairs.
 * Automatic escalation of borderline candidates to ``HumanReviewQueue``.
 
+
+Comparison Categorization & Multi-Match Architecture
+----------------------------------------------------
+
+The framework implements a standard-agnostic, multi-tier taxonomy of comparison categories via the ``MatchType`` enum, accompanied by native **multi-categorization** and language-specific normalization presets.
+
+Comprehensive MatchType Taxonomy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. list-table::
+   :widths: 30 15 55
+   :header-rows: 1
+
+   * - MatchType
+     - Base Score
+     - Description & Governance Semantics
+   * - **``EXACT_IDENTICAL``**
+     - 1.00
+     - Bit-for-bit identical raw content.
+   * - **``NORMALIZED_EXACT``**
+     - 1.00
+     - 100% identical after Unicode NFKC, accent stripping, case-folding, and whitespace collapsing.
+   * - **``FACET_EXACT``**
+     - 0.95
+     - Exact match on sub-component Merkle facet collision across all present languages (e.g. question prompt or variable atomic triple).
+   * - **``IDENTIFIER_EXACT_CONTENT_EXACT``**
+     - 1.00
+     - Same identifier/URN and identical content hash (reused canonical resource).
+   * - **``IDENTIFIER_EXACT_CONTENT_DRIFT``**
+     - Variable
+     - Same identifier/URN but divergent content hash (indicates metadata drift; triggers quarantine review).
+   * - **``CONTENT_EXACT_DIFFERENT_IDENTIFIER``**
+     - 1.00
+     - Identical content under distinct URNs/identifiers (deduplication candidate for aliasing/absorption).
+   * - **``MULTILINGUAL_OVERLAP``**
+     - 0.90 - 0.92
+     - Exact match in shared language(s) with complementary translations in one resource, or complementary language labels on matching code values.
+   * - **``NEAR_EXACT``**
+     - 0.96 - 0.98
+     - High syntactic similarity (:math:`\ge 0.98`) or identical after loose punctuation normalization.
+   * - **``INCLUSIVE_WRITING_VARIANT``**
+     - 0.98
+     - Identical after stripping language-specific inclusive gender/plural markers (e.g. French ``·e·s`` or ``(e)``).
+   * - **``PHRASING_VARIANT``**
+     - 0.92 - 0.94
+     - Stylistic or pronominal phrasing variation (e.g. leading pronoun shifts like ``"Je refuse de répondre"`` vs. ``"Refuse de répondre"``).
+   * - **``TYPOGRAPHICAL_VARIANT``**
+     - 0.95 - 0.96
+     - Single-token typographical error or grammatical concord discrepancy in multi-word text (e.g. ``"Ma mère..."`` vs. ``"Mon mère..."``).
+   * - **``SHARED_STEM``**
+     - 0.88
+     - Common prompt, question, category, or variable battery stem with divergent sub-items (alias: ``SHARED_STEM_GRID``).
+   * - **``SAME_CONCEPT_DIVERGENT_DOMAIN``**
+     - 0.85 - 0.88
+     - Equivalent conceptual construct or question wording but divergent response scales or value domains (alias: ``SAME_CONCEPT_DIFFERENT_SCALE``). Action downgraded to semantic link to protect value domain integrity.
+   * - **``SUBSTANTIVE_EXACT``**
+     - 1.00
+     - Substantive domain items match bit-for-bit while sentinel/missing value schemes differ.
+   * - **``SUBSTANTIVE_PERMUTATION``**
+     - 0.88
+     - Substantive domain items match regardless of order while missing schemes differ.
+   * - **``CATEGORIES_EXACT_CODES_DIFFERENT``**
+     - 0.85 - 1.00
+     - Identical category concepts (same semantic universe) with recoded/different code values.
+   * - **``PERMUTATION``**
+     - 1.00
+     - Order-independent collection match (same items in permuted sequence).
+   * - **``UNIT_CONVERSION_REQUIRED``**
+     - Variable
+     - Same physical quantity kind (e.g. Mass) measured in convertible units (e.g. lbs vs. kg).
+   * - **``QUESTION_EQUIVALENT_LABEL_DIFFERENT``**
+     - Variable
+     - Identical underlying questionnaire item but divergent variable mnemonic labels.
+   * - **``CONCEPTUAL_MATCH_DIFFERENT_DOMAIN``**
+     - Variable
+     - Same abstract concept but divergent representations (e.g. continuous Age vs. discrete brackets).
+   * - **``DIMENSION_INCOMPATIBLE``**
+     - 0.00
+     - Conflicting physical dimensions (e.g. Mass vs. Currency).
+   * - **``TYPE_INCOMPATIBLE``**
+     - 0.00
+     - Structurally incompatible data types (e.g. Boolean vs. DateTime).
+   * - **``SYNTACTIC_SIMILAR``**
+     - 0.75 - 0.91
+     - General normalized string similarity (Levenshtein, Gestalt, or Jaccard).
+   * - **``SEMANTIC_SIMILAR``**
+     - 0.70 - 0.95
+     - High vector embedding cosine similarity.
+   * - **``AGENT_EVALUATED``**
+     - Variable
+     - Evaluated and classified via LLM / Agent reasoning.
+   * - **``HUMAN_CURATED``**
+     - 1.00
+     - Verified or asserted by human curator via curated crosswalk.
+
+Multi-Categorization & Facet Matches
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In rich survey metadata, comparisons frequently exhibit multiple simultaneous characteristics (e.g., a question battery that shares a common stem *and* exhibits inclusive writing variations). Both ``ComparisonResult`` and ``HarmonizationMatch`` support concurrent multi-label classification:
+
+.. code-block:: python
+
+   from dartfx.ddi.harmonizer import ComparisonResult, MatchType
+
+   result = ComparisonResult(
+       score=0.98,
+       match_type=MatchType.INCLUSIVE_WRITING_VARIANT,
+       secondary_match_types=[MatchType.NEAR_EXACT, MatchType.SHARED_STEM],
+       facet_matches={"question_text": MatchType.INCLUSIVE_WRITING_VARIANT, "stem": MatchType.SHARED_STEM},
+   )
+
+   # Check categories
+   assert result.has_category(MatchType.SHARED_STEM) is True
+   assert result.has_category("SHARED_STEM_GRID") is True  # Backward-compatible alias
+   assert len(result.all_match_types) == 3
+
+Language Presets
+~~~~~~~~~~~~~~~~
+
+Text normalization is governed by pluggable ``LanguagePreset`` implementations:
+
+* **``FrenchLanguagePreset``**: Normalizes French typography (e.g., non-breaking space before ``?``, ``!``, ``:``, ``;``), strips midpoint and parenthetical inclusive writing markers (``confronté(e)``, ``ouvrier·e·s``), and resolves possessive concord (``"Ma mère"`` vs. ``"Mon mère"``).
+* **``EnglishLanguagePreset``**: Handles English contractions, trailing punctuation, and pronominal variations.
+* **``GenericLanguagePreset``**: Language-agnostic Unicode NFKC normalization and whitespace collapsing.
+
 Domain Resource Models
 ----------------------
 

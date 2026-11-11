@@ -6,11 +6,17 @@ by weighting sub-attributes and combining individual attribute similarity scores
 
 from __future__ import annotations
 
+import difflib
 from typing import Any
 
 from ..models import MatchType
+from ..normalizer import TextNormalizer
 from .base import ComparisonResult, ContentComparator
-from .syntactic import SequenceMatcherComparator
+from .syntactic import (
+    SequenceMatcherComparator,
+    TextVariantComparator,
+    detect_shared_stem,
+)
 
 
 class WeightedAttributeComparator:
@@ -153,16 +159,190 @@ class QuestionComparator:
         elif isinstance(source, dict):
             s_dict = dict(source)
         else:
-            s_dict = {"question_text": str(source)}
+            s_dict = {"question_text": source}
 
         if hasattr(target, "model_dump"):
             t_dict = target.model_dump()
         elif isinstance(target, dict):
             t_dict = dict(target)
         else:
-            t_dict = {"question_text": str(target)}
+            t_dict = {"question_text": target}
+
+        # Check for multilingual question text in either source or target
+        s_q = s_dict.get("question_text")
+        t_q = t_dict.get("question_text")
+        if isinstance(s_q, (dict, list)) or isinstance(t_q, (dict, list)):
+            ml_res = compare_multilingual_texts(s_q, t_q, threshold=self.match_threshold)
+            if ml_res.match_type != MatchType.DISTINCT:
+                return ml_res
+
+        # Check for shared stem across question literals
+        stem_res = detect_shared_stem(str(s_q or ""), str(t_q or ""), context="question_grid")
+        if stem_res is not None:
+            return ComparisonResult(
+                score=0.88,
+                match_type=MatchType.SHARED_STEM,
+                sub_scores={"stem_similarity": stem_res.stem_similarity, "stem_ratio": stem_res.stem_ratio},
+                rationale=f"Questions share common stem: '{stem_res.shared_stem[:40]}...'",
+                metadata=stem_res.model_dump(),
+            )
 
         return self._weighted_comparator.compare_attributes(s_dict, t_dict)
+
+
+def compare_multilingual_texts(
+    ml_a: Any,
+    ml_b: Any,
+    threshold: float = 0.75,
+    normalizer: TextNormalizer | None = None,
+) -> ComparisonResult:
+    """Compares two multilingual text dictionaries or LangString lists.
+
+    Returns ComparisonResult with fine-grained classification:
+    - FACET_EXACT: All normalized language texts match exactly
+    - MULTILINGUAL_OVERLAP: Exact match on shared language(s) with complementary translations
+    - NEAR_EXACT: Loose punctuation equivalence or >= 0.98 sequence similarity
+    - INCLUSIVE_WRITING_VARIANT: Identical after stripping gender/plural inclusive markers
+    - PHRASING_VARIANT: Identical after stripping leading pronouns
+    - TYPOGRAPHICAL_VARIANT: Single-token typo or grammatical divergence
+    - SHARED_STEM: Common battery/question/category stem detected
+    - SYNTACTIC_SIMILAR: General string similarity >= threshold
+    - DISTINCT: Below similarity threshold
+    """
+    norm = normalizer or TextNormalizer()
+    raw_a = norm.extract_multilingual_dict(ml_a, normalize_spacing=True, lowercase=False)
+    raw_b = norm.extract_multilingual_dict(ml_b, normalize_spacing=True, lowercase=False)
+    na = {k: v.lower() for k, v in raw_a.items()}
+    nb = {k: v.lower() for k, v in raw_b.items()}
+
+    if not na and not nb:
+        return ComparisonResult(
+            score=1.0, match_type=MatchType.NORMALIZED_EXACT, rationale="Both multilingual texts are empty"
+        )
+    if not na or not nb:
+        return ComparisonResult(score=0.0, match_type=MatchType.DISTINCT, rationale="One multilingual text is empty")
+
+    if na == nb:
+        return ComparisonResult(
+            score=0.95,
+            match_type=MatchType.FACET_EXACT,
+            sub_scores={"multilingual_exact": 1.0},
+            facet_matches=dict.fromkeys(na, MatchType.FACET_EXACT),
+            rationale=f"Exact match across all present languages ({', '.join(sorted(na.keys()))})",
+            metadata={"languages": list(na.keys())},
+        )
+
+    shared_langs = sorted(set(na.keys()) & set(nb.keys()))
+    if shared_langs:
+        exact_shared = [lng for lng in shared_langs if na[lng] == nb[lng]]
+        if exact_shared:
+            new_langs_in_a = sorted(set(na.keys()) - set(nb.keys()))
+            new_langs_in_b = sorted(set(nb.keys()) - set(na.keys()))
+            return ComparisonResult(
+                score=0.92,
+                match_type=MatchType.MULTILINGUAL_OVERLAP,
+                secondary_match_types=[MatchType.FACET_EXACT],
+                facet_matches=dict.fromkeys(exact_shared, MatchType.FACET_EXACT),
+                rationale=(
+                    f"Exact match in shared languages ({', '.join(exact_shared)}) with complementary translations"
+                ),
+                metadata={
+                    "matched_languages": exact_shared,
+                    "source_extra_languages": new_langs_in_a,
+                    "target_extra_languages": new_langs_in_b,
+                },
+            )
+
+        best_lang = max(shared_langs, key=lambda lng: difflib.SequenceMatcher(None, na[lng], nb[lng]).ratio())
+        best_sim = round(difflib.SequenceMatcher(None, na[best_lang], nb[best_lang]).ratio(), 4)
+        ra = raw_a[best_lang]
+        rb = raw_b[best_lang]
+
+        # 1. Loose punctuation equivalence
+        loose_a = norm.normalize_loose(ra, lang=best_lang)
+        loose_b = norm.normalize_loose(rb, lang=best_lang)
+        if loose_a and loose_a == loose_b:
+            canonical = ra if rb.endswith("?") and not ra.endswith("?") else rb
+            discarded = rb if canonical == ra else ra
+            return ComparisonResult(
+                score=0.98,
+                match_type=MatchType.NEAR_EXACT,
+                sub_scores={"loose_equality": 1.0, "best_lang_sim": best_sim},
+                rationale=f"Identical in language '{best_lang}' after loose punctuation normalization",
+                metadata={
+                    "shared_languages": shared_langs,
+                    "similarity": best_sim,
+                    "variant_type": "punctuation",
+                    "punctuation_variant": True,
+                    "canonical_text": {best_lang: canonical},
+                    "preserved_variants": [],
+                    "discarded_variants": [discarded],
+                },
+            )
+
+        # 2. Inclusive writing, phrasing, or typographical variant
+        variant_cmp = TextVariantComparator(normalizer=norm, language=best_lang)
+        var_res = variant_cmp.compare(ra, rb)
+        if var_res is not None:
+            meta = dict(var_res.metadata)
+            if "canonical_text" in meta and isinstance(meta["canonical_text"], str):
+                meta["canonical_text"] = {best_lang: meta["canonical_text"]}
+            return ComparisonResult(
+                score=var_res.score,
+                match_type=var_res.match_type,
+                sub_scores={"variant_score": var_res.score, "best_lang_sim": best_sim},
+                rationale=f"{var_res.rationale} in language '{best_lang}'",
+                metadata={
+                    "shared_languages": shared_langs,
+                    "similarity": best_sim,
+                    **meta,
+                },
+            )
+
+        # 3. Shared stem detection
+        stem_res = detect_shared_stem(ra, rb, lang=best_lang)
+        if stem_res is not None:
+            return ComparisonResult(
+                score=0.88,
+                match_type=MatchType.SHARED_STEM,
+                secondary_match_types=[MatchType.SYNTACTIC_SIMILAR] if best_sim >= threshold else [],
+                sub_scores={"stem_similarity": stem_res.stem_similarity, "stem_ratio": stem_res.stem_ratio},
+                rationale=f"Shared stem detected in language '{best_lang}' ({stem_res.context})",
+                metadata={
+                    "shared_languages": shared_langs,
+                    "similarity": best_sim,
+                    **stem_res.model_dump(),
+                },
+            )
+
+        # 4. High-similarity NEAR_EXACT (>= 0.98)
+        if best_sim >= 0.98:
+            return ComparisonResult(
+                score=round(max(0.96, best_sim), 4),
+                match_type=MatchType.NEAR_EXACT,
+                sub_scores={"best_lang_sim": best_sim},
+                rationale=f"High-similarity near-exact match ({best_sim:.4f}) in language '{best_lang}'",
+                metadata={
+                    "shared_languages": shared_langs,
+                    "similarity": best_sim,
+                    "variant_type": "near_exact",
+                    "canonical_text": {best_lang: rb},
+                    "preserved_variants": [],
+                    "discarded_variants": [ra],
+                },
+            )
+
+        # 5. General SYNTACTIC_SIMILAR (threshold <= best_sim < 0.98)
+        if best_sim >= threshold:
+            return ComparisonResult(
+                score=round(min(0.91, best_sim), 4),
+                match_type=MatchType.SYNTACTIC_SIMILAR,
+                sub_scores={"best_lang_sim": best_sim},
+                rationale=f"Syntactic similarity ({best_sim:.4f}) in language '{best_lang}'",
+                metadata={"shared_languages": shared_langs, "similarity": best_sim},
+            )
+
+    return ComparisonResult(score=0.0, match_type=MatchType.DISTINCT, rationale="No matching language content found")
 
 
 def compare_questions(
@@ -241,6 +421,31 @@ def compare_codelists(
                 sub_scores={"category_set": 1.0, "value_set": 0.0},
                 rationale="Identical category concepts (same semantic universe) with recoded code values",
             )
+
+    # 5. Check if code values match with complementary multilingual translations
+    codes_1 = getattr(codelist1, "codes", None) or getattr(codelist1, "items", None)
+    codes_2 = getattr(codelist2, "codes", None) or getattr(codelist2, "items", None)
+    if isinstance(codes_1, list) and isinstance(codes_2, list) and len(codes_1) == len(codes_2) and codes_1:
+        vals_1 = [getattr(c, "value", str(c)) for c in codes_1]
+        vals_2 = [getattr(c, "value", str(c)) for c in codes_2]
+        if vals_1 == vals_2:
+            norm = TextNormalizer()
+            text_1 = getattr(codelist1, "label", None) or getattr(codelist1, "name", None)
+            text_2 = getattr(codelist2, "label", None) or getattr(codelist2, "name", None)
+            ml_1 = norm.extract_multilingual_dict(text_1)
+            ml_2 = norm.extract_multilingual_dict(text_2)
+            if ml_1 and ml_2 and set(ml_1.keys()) != set(ml_2.keys()):
+                return ComparisonResult(
+                    score=0.90,
+                    match_type=MatchType.MULTILINGUAL_OVERLAP,
+                    sub_scores={"code_values": 1.0},
+                    rationale="Identical code values with complementary multilingual translations",
+                    metadata={
+                        "code_values": vals_1,
+                        "source_languages": sorted(ml_1.keys()),
+                        "target_languages": sorted(ml_2.keys()),
+                    },
+                )
 
     # Fallback string signature comparison
     sig1 = getattr(codelist1, "signature", str(codelist1))

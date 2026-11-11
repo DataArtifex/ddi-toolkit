@@ -258,7 +258,10 @@ class Ddi33XmlBuilder:
             self._add_lang_string(cs_el, f"{{{NS_LOGICAL}}}CategorySchemeName", f"Category Scheme for {self.doc.id}")
 
             for cat in self.doc.categories:
-                c_el = ET.SubElement(cs_el, f"{{{NS_LOGICAL}}}Category", {"isUniversallyUnique": "true"})
+                cat_attrs = {"isUniversallyUnique": "true"}
+                if cat.is_missing:
+                    cat_attrs["isMissing"] = "true"
+                c_el = ET.SubElement(cs_el, f"{{{NS_LOGICAL}}}Category", cat_attrs)
                 self._add_ident(c_el, cat.agency, cat.id, cat.version, cat.urn)
                 if cat.user_attributes:
                     self._add_user_attributes(c_el, cat.user_attributes)

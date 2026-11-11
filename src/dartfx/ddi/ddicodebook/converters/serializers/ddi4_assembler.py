@@ -47,6 +47,7 @@ class Ddi4ModelAssembler:
                 urn=cat.urn,
                 label=self._to_lang_strings(cat.labels, cat.label),
                 description=self._to_lang_strings(cat.descriptions, cat.description),
+                is_missing=True if cat.is_missing else None,
                 user_attribute_pair=cat_uaps,
             )
             m4_categories[cat.id] = m4_cat
@@ -69,12 +70,21 @@ class Ddi4ModelAssembler:
             m4_codes: list[m4.CodeType] = []
             for c in cl.codes:
                 cat_ref = m4_categories.get(c.category_id)
+                code_uaps: list[m4.StandardKeyValuePairType] = []
+                if c.is_missing:
+                    code_uaps.append(
+                        m4.StandardKeyValuePairType(
+                            attribute_key=m4.CodeValueType(string_value="ddi:is_missing"),
+                            attribute_value=m4.CodeValueType(string_value="true"),
+                        )
+                    )
                 m4_code = m4.CodeType(
                     id=c.id,
                     urn=f"urn:ddi:{cl.agency}:{c.id}:{cl.version}",
                     value=m4.ValueType(string_value=c.value),
                     category_reference=cat_ref,
                     is_discrete=True,
+                    user_attribute_pair=code_uaps,
                 )
                 m4_codes.append(m4_code)
 
@@ -187,9 +197,22 @@ class Ddi4ModelAssembler:
                 code_rep = m4.CodeRepresentationBaseType(code_list_reference=cl_ref)
                 var_rep = m4.VariableRepresentationType(value_representation=code_rep)
             elif v.representation_type == "numeric":
+                num_range = None
+                if v.min_value is not None or v.max_value is not None:
+                    num_range = [
+                        m4.NumberRangeType(
+                            low=m4.NumberRangeValueType(decimal_value=Decimal(str(v.min_value)))
+                            if v.min_value is not None
+                            else None,
+                            high=m4.NumberRangeValueType(decimal_value=Decimal(str(v.max_value)))
+                            if v.max_value is not None
+                            else None,
+                        )
+                    ]
                 num_rep = m4.NumericRepresentationBaseType(
                     numeric_type_code=m4.CodeValueType(string_value=v.numeric_type or "integer"),
                     decimal_positions=v.decimal_places,
+                    number_range=num_range or [],
                 )
                 var_rep = m4.VariableRepresentationType(value_representation=num_rep)
             elif v.representation_type == "datetime":

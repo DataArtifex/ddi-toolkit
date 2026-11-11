@@ -11,6 +11,7 @@ from .concepts import (
 )
 from .questions import (
     Question,
+    QuestionGrid,
 )
 from .variables import (
     CanonicalDataType,
@@ -33,6 +34,7 @@ __all__ = [
     "CodeList",
     "Concept",
     "Question",
+    "QuestionGrid",
     "Variable",
     "ValueDomain",
     "NumericDomain",

@@ -414,6 +414,11 @@ class ValueDomain(BaseModel):
     numeric_domain: NumericDomain | None = None
     text_domain: TextDomain | None = None
 
+    @classmethod
+    def from_codelist(cls, codelist: CodeList) -> ValueDomain:
+        """Creates an ENUMERATED ValueDomain from a CodeList."""
+        return cls(kind=ValueDomainKind.ENUMERATED, codelist=codelist)
+
     @property
     def domain_digest(self) -> str:
         """Computes Merkle digest for the value domain."""

@@ -102,6 +102,19 @@ def map_study_unit(codebook: codeBookType, context: ConversionContext) -> Conver
                     if start_date or end_date:
                         temporal_coverage = (start_date or end_date, end_date or start_date)
 
+                if not temporal_coverage and getattr(sum_dscr, "collDate", None):
+                    start_date = ""
+                    end_date = ""
+                    for cd in sum_dscr.collDate:
+                        date_val = getattr(cd, "date", None) or cd.content or ""
+                        event = (getattr(cd, "event", None) or "").lower()
+                        if "start" in event or not start_date:
+                            start_date = date_val
+                        if "end" in event:
+                            end_date = date_val
+                    if start_date or end_date:
+                        temporal_coverage = (start_date or end_date, end_date or start_date)
+
                 if sum_dscr.nation:
                     for nat in sum_dscr.nation:
                         if nat.content:

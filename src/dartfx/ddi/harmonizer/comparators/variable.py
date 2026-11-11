@@ -475,6 +475,29 @@ class VariableComparator:
         composite_score = round(weighted_sum / total_weight, 4) if total_weight > 0 else 0.0
 
         # Determine Final Match Classification
+        secondary_matches: list[MatchType] = []
+        facet_matches: dict[str, MatchType] = {}
+
+        if lbl_res.score == 1.0:
+            facet_matches["label"] = MatchType.NORMALIZED_EXACT
+        elif lbl_res.score >= 0.85:
+            facet_matches["label"] = MatchType.SYNTACTIC_SIMILAR
+
+        if sub_scores.get("question", 0.0) == 1.0:
+            facet_matches["question"] = MatchType.FACET_EXACT
+        elif sub_scores.get("question", 0.0) >= 0.85:
+            facet_matches["question"] = MatchType.SYNTACTIC_SIMILAR
+
+        is_concept_match = (
+            sub_scores.get("question", 0.0) >= 0.85 or lbl_res.score >= 0.85 or sub_scores.get("concept", 0.0) >= 0.85
+        )
+        is_domain_divergent = (
+            var_a.value_domain is not None
+            and var_b.value_domain is not None
+            and domain_match_type not in (MatchType.EXACT_IDENTICAL, MatchType.NORMALIZED_EXACT)
+            and sub_scores.get("value_domain", 1.0) < 0.85
+        )
+
         if unit_match_type == MatchType.DIMENSION_INCOMPATIBLE:
             final_match_type = MatchType.DIMENSION_INCOMPATIBLE
             composite_score = 0.0
@@ -482,6 +505,25 @@ class VariableComparator:
             final_match_type = MatchType.TYPE_INCOMPATIBLE
         elif unit_match_type == MatchType.UNIT_CONVERSION_REQUIRED and composite_score >= self.match_threshold:
             final_match_type = MatchType.UNIT_CONVERSION_REQUIRED
+        elif is_concept_match and is_domain_divergent:
+            final_match_type = MatchType.SAME_CONCEPT_DIVERGENT_DOMAIN
+            composite_score = round(min(composite_score, 0.88), 4)
+            is_exact_concept = (
+                facet_matches.get("question") == MatchType.FACET_EXACT
+                or facet_matches.get("label") == MatchType.NORMALIZED_EXACT
+            )
+            if is_exact_concept:
+                secondary_matches.append(MatchType.FACET_EXACT)
+            advice_list.append(
+                TransformationAdvice(
+                    action=TransformationAction.RECODE_VALUES,
+                    facet="value_domain",
+                    description=(
+                        "Represented variables share question/label semantics but use divergent "
+                        "response scales (ValueDomain). Action should be downgraded to link_semantic."
+                    ),
+                )
+            )
         elif (
             domain_match_type == MatchType.CATEGORIES_EXACT_CODES_DIFFERENT and composite_score >= self.match_threshold
         ):
@@ -513,6 +555,8 @@ class VariableComparator:
         return VariableComparisonResult(
             score=composite_score,
             match_type=final_match_type,
+            secondary_match_types=secondary_matches,
+            facet_matches=facet_matches,
             sub_scores=sub_scores,
             rationale=rationale,
             transformation_advice=advice_list,

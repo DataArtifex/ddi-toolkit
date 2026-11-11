@@ -737,6 +737,130 @@ BUILTIN_SEED_CASES: list[dict[str, Any]] = [
         "expected_score_min": 1.0,
         "expected_score_max": 1.0,
     },
+    {
+        "id": "case_question_grid_shared_stem",
+        "title": "Question Grid Shared Prompt Stem & Sub-Item Decomposition",
+        "domain": "question",
+        "difficulty": "intermediate",
+        "real_world_context": "Longitudinal Battery / Matrix Questions across Waves",
+        "story": (
+            "Two questionnaire items share an extensive prompt stem ('Êtes-vous confronté(e) à un ou plusieurs "
+            "des problèmes suivants concernant votre quartier ?') but diverge on their trailing sub-item "
+            "choice ('Manque d’espaces verts' vs. 'Manque de sécurité'). Instead of naively rejecting the "
+            "pair or misclassifying them as fuzzy syntactic matches, the StemComparator detects the shared battery "
+            "stem with 100% prefix ratio and isolates the sub-items for declarative grouping."
+        ),
+        "learning_objective": (
+            "Detect SHARED_STEM relationships across question batteries to automate group creation and matrix modeling."
+        ),
+        "source_resource": {
+            "question_text": (
+                "Êtes-vous confronté(e) à un ou plusieurs des problèmes suivants concernant votre quartier ? "
+                "Manque d'espaces verts"
+            ),
+        },
+        "candidate_resource": {
+            "question_text": (
+                "Êtes-vous confronté(e) à un ou plusieurs des problèmes suivants concernant votre quartier ? "
+                "Manque de sécurité"
+            ),
+        },
+        "preset": "STANDARD",
+        "comparator": "QuestionComparator",
+        "comparator_threshold": 0.75,
+        "expected_match": True,
+        "expected_match_type": "SHARED_STEM",
+        "expected_score_min": 0.85,
+        "expected_score_max": 0.95,
+    },
+    {
+        "id": "case_variable_same_concept_divergent_domain",
+        "title": "Variable Concept Preservation with Divergent Response Domain",
+        "domain": "variable",
+        "difficulty": "edge_case",
+        "real_world_context": "ESS vs. National Survey Response Scale Harmonization",
+        "story": (
+            "Two statistical variables measure the identical social science concept ('Trust in National Parliament') "
+            "and share equivalent question phrasing. However, Survey A measures trust on a 5-point Likert scale, "
+            "whereas Survey B measures trust on a 10-point numeric scale. Direct aliasing would corrupt the value "
+            "domains. The VariableComparator detects SAME_CONCEPT_DIVERGENT_DOMAIN and recommends semantic linkage "
+            "rather than entity replacement."
+        ),
+        "learning_objective": (
+            "Enforce DDI / ISO 11404 variable cascade integrity by downgrading scale-divergent pairs to link_semantic."
+        ),
+        "source_resource": {
+            "name": "TRUST_PARL_5PT",
+            "label": "Trust in national parliament",
+            "question_text": "Please tell me how much you personally trust the national parliament.",
+            "data_type": "Integer",
+            "codelist": {
+                "name": "CL_TRUST_5PT",
+                "codes": [
+                    {"value": "1", "label": "No trust at all"},
+                    {"value": "2", "label": "Little trust"},
+                    {"value": "3", "label": "Some trust"},
+                    {"value": "4", "label": "A lot of trust"},
+                    {"value": "5", "label": "Complete trust"},
+                ],
+            },
+        },
+        "candidate_resource": {
+            "name": "TRUST_PARL_10PT",
+            "label": "Trust in national parliament",
+            "question_text": "Please tell me how much you personally trust the national parliament.",
+            "data_type": "Integer",
+            "codelist": {
+                "name": "CL_TRUST_10PT",
+                "codes": [
+                    {"value": "0", "label": "No trust at all"},
+                    {"value": "10", "label": "Complete trust"},
+                ],
+            },
+        },
+        "preset": "STANDARD",
+        "comparator": "VariableComparator",
+        "comparator_threshold": 0.75,
+        "expected_match": True,
+        "expected_match_type": "SAME_CONCEPT_DIVERGENT_DOMAIN",
+        "expected_score_min": 0.85,
+        "expected_score_max": 0.90,
+    },
+    {
+        "id": "case_multilingual_overlap_complementary",
+        "title": "Multilingual Overlap with Complementary Language Translations",
+        "domain": "question",
+        "difficulty": "basic",
+        "real_world_context": "Cross-National Bilingual Archive Ingestion",
+        "story": (
+            "Resource A contains questions in English and French. Resource B contains questions in French and German. "
+            "The French texts match bit-for-bit. Rather than treating them as separate or non-identical questions, "
+            "the multilingual comparator classifies them as MULTILINGUAL_OVERLAP, enabling automated multilingual "
+            "dictionary merging to produce a complete tri-lingual (EN, FR, DE) canonical question."
+        ),
+        "learning_objective": (
+            "Identify exact matches in shared languages to automate multilingual catalog enrichment."
+        ),
+        "source_resource": {
+            "question_text": [
+                {"lang": "en", "value": "Do you trust the National Assembly?"},
+                {"lang": "fr", "value": "Faites-vous confiance à l'Assemblée ?"},
+            ],
+        },
+        "candidate_resource": {
+            "question_text": [
+                {"lang": "fr", "value": "Faites-vous confiance à l'Assemblée ?"},
+                {"lang": "de", "value": "Vertrauen Sie der Nationalversammlung?"},
+            ],
+        },
+        "preset": "STANDARD",
+        "comparator": "QuestionComparator",
+        "comparator_threshold": 0.75,
+        "expected_match": True,
+        "expected_match_type": "MULTILINGUAL_OVERLAP",
+        "expected_score_min": 0.90,
+        "expected_score_max": 0.95,
+    },
 ]
 
 

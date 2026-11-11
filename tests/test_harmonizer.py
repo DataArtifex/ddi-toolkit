@@ -10,6 +10,7 @@ from dartfx.ddi.harmonizer import (
     Code,
     CodeList,
     ComparableResource,
+    ComparisonResult,
     Concept,
     CuratedCrosswalk,
     DataType,
@@ -23,9 +24,11 @@ from dartfx.ddi.harmonizer import (
     LineageRelation,
     MatchType,
     MultilingualAgentComparator,
+    NearExactComparator,
     NormalizationPreset,
     Question,
     QuestionComparator,
+    QuestionGrid,
     ResourceBank,
     ResourceFingerprinter,
     ResourceLineageEntry,
@@ -34,8 +37,10 @@ from dartfx.ddi.harmonizer import (
     SemanticVectorComparator,
     SentinelType,
     SequenceMatcherComparator,
+    StemComparator,
     TextNormalizer,
     TextSanitizer,
+    TextVariantComparator,
     TokenBlocker,
     TokenJaccardComparator,
     TranslationService,
@@ -43,9 +48,11 @@ from dartfx.ddi.harmonizer import (
     Variable,
     WeightedAttributeComparator,
     compare_codelists,
+    compare_multilingual_texts,
     compare_questions,
     compare_resources,
     compare_variables,
+    detect_shared_stem,
     generate_bank_schema_ddl,
     generate_tiered_matching_cte_query,
     parse_identifier,
@@ -1263,3 +1270,157 @@ def test_sql_generators() -> None:
     assert "tier3_facet_exact AS" in cte
     assert "tier4_fuzzy_trgm AS" in cte
     assert "FROM custom_question_bank" in cte
+
+
+def test_near_exact_comparator_and_punctuation() -> None:
+    """Verifies NearExactComparator detects loose punctuation, trailing mark, and high-similarity variants."""
+    cmp = NearExactComparator(language="fr")
+
+    # 1. Trailing question mark with French spacing
+    res_punct = cmp.compare(
+        "Ouvrier(e) qualifié(e) ou hautement qualifié(e), technicien(ne) d'atelier ?",
+        "Ouvrier(e) qualifié(e) ou hautement qualifié(e), technicien(ne) d'atelier",
+    )
+    assert res_punct.score == 0.98
+    assert res_punct.match_type == MatchType.NEAR_EXACT
+    assert res_punct.metadata["punctuation_variant"] is True
+    assert res_punct.has_category(MatchType.NEAR_EXACT)
+
+    # 2. High-similarity near exact (>= 0.98 sequence similarity)
+    res_sim = cmp.compare(
+        "Avez-vous confiance dans le parlement national de votre pays ?",
+        "Avez vous confiance dans le parlement national de votre pays ?",
+    )
+    assert res_sim.score >= 0.98
+    assert res_sim.match_type == MatchType.NEAR_EXACT
+
+
+def test_shared_stem_detector_and_comparator() -> None:
+    """Verifies detect_shared_stem and StemComparator on question grids and category hierarchies."""
+    # 1. Question battery grid
+    stem_prefix = "Êtes-vous confronté(e) à un ou plusieurs des problèmes suivants concernant votre quartier ?"
+    q1 = f"{stem_prefix} Manque d'espaces verts"
+    q2 = f"{stem_prefix} Manque de sécurité"
+
+    stem_res = detect_shared_stem(q1, q2, lang="fr")
+    assert stem_res is not None
+    assert "concernant votre quartier ?" in stem_res.shared_stem
+    assert {stem_res.sub_item_a, stem_res.sub_item_b} == {"Manque d'espaces verts", "Manque de sécurité"}
+    assert stem_res.stem_similarity >= 0.90
+    assert stem_res.context == "question_grid"
+
+    # StemComparator
+    s_cmp = StemComparator(language="fr")
+    comp_res = s_cmp.compare(q1, q2)
+    assert comp_res.score == 0.88
+    assert comp_res.match_type == MatchType.SHARED_STEM
+    assert comp_res.has_category(MatchType.SHARED_STEM)
+
+    # 2. Category hierarchy with delimiter prefix
+    c1 = "Cadres supérieurs : Secteur public"
+    c2 = "Cadres supérieurs : Secteur privé"
+    stem_cat = detect_shared_stem(c1, c2, context="category_hierarchy")
+    assert stem_cat is not None
+    assert stem_cat.shared_stem == "Cadres supérieurs :"
+    assert {stem_cat.sub_item_a, stem_cat.sub_item_b} == {"Secteur public", "Secteur privé"}
+
+
+def test_text_variant_comparator() -> None:
+    """Verifies TextVariantComparator detects inclusive writing, phrasing shifts, and typographical errors."""
+    var_cmp = TextVariantComparator(language="fr")
+
+    # 1. Inclusive writing variant
+    res_inc = var_cmp.compare(
+        "Êtes-vous confronté(e) à ces problèmes ?",
+        "Êtes-vous confronté à ces problèmes ?",
+    )
+    assert res_inc is not None
+    assert res_inc.match_type == MatchType.INCLUSIVE_WRITING_VARIANT
+    assert res_inc.metadata["canonical_text"] == "Êtes-vous confronté(e) à ces problèmes ?"
+
+    # 2. Stylistic/pronominal phrasing shift
+    res_phr = var_cmp.compare(
+        "Je refuse de répondre",
+        "Refuse de répondre",
+    )
+    assert res_phr is not None
+    assert res_phr.match_type == MatchType.PHRASING_VARIANT
+    assert res_phr.metadata["canonical_text"] == "Je refuse de répondre"
+
+    # 3. Single-word typographical / grammar error before feminine noun
+    res_typo = var_cmp.compare(
+        "Mon mère était déjà décédée à l'époque",
+        "Ma mère était déjà décédée à l'époque",
+    )
+    assert res_typo is not None
+    assert res_typo.match_type == MatchType.TYPOGRAPHICAL_VARIANT
+    assert res_typo.metadata["canonical_text"] == "Ma mère était déjà décédée à l'époque"
+    assert "Mon mère était déjà décédée à l'époque" in res_typo.metadata["discarded_variants"]
+
+
+def test_compare_multilingual_texts() -> None:
+    """Verifies compare_multilingual_texts cross-lingual matching and tier classification."""
+    # 1. Facet exact
+    ml1 = {"fr": "Confiance dans le parlement", "en": "Trust in parliament"}
+    ml2 = {"fr": "Confiance dans le parlement", "en": "Trust in parliament"}
+    res1 = compare_multilingual_texts(ml1, ml2)
+    assert res1.match_type == MatchType.FACET_EXACT
+    assert res1.score == 0.95
+
+    # 2. Multilingual overlap (complementary translations)
+    ml_fr_only = {"fr": "Confiance dans le parlement"}
+    res2 = compare_multilingual_texts(ml_fr_only, ml2)
+    assert res2.match_type == MatchType.MULTILINGUAL_OVERLAP
+    assert res2.score == 0.92
+    assert res2.has_category(MatchType.FACET_EXACT)
+    assert "en" in res2.metadata["target_extra_languages"]
+
+    # 3. Punctuation variant in shared language
+    ml3 = {"fr": "Confiance dans le parlement ?"}
+    res3 = compare_multilingual_texts(ml_fr_only, ml3)
+    assert res3.match_type == MatchType.NEAR_EXACT
+    assert res3.score == 0.98
+
+    # 4. Shared stem in shared language
+    ml4_a = {"fr": "Quartier ? Espaces verts"}
+    ml4_b = {"fr": "Quartier ? Sécurité"}
+    res4 = compare_multilingual_texts(ml4_a, ml4_b)
+    assert res4.match_type == MatchType.SHARED_STEM
+
+
+def test_question_grid_domain_model() -> None:
+    """Verifies QuestionGrid creation, fingerprinting, and Merkle hashes."""
+    grid = QuestionGrid(
+        shared_stem="Êtes-vous confronté(e) aux problèmes suivants concernant votre quartier ?",
+        sub_items=["Manque d'espaces verts", "Manque de sécurité", "Pollution sonore"],
+        language="fr",
+        urn="urn:ddi:agency:GRID_QUARTIER_01:1.0.0",
+    )
+
+    assert grid.shared_stem.startswith("Êtes-vous")
+    assert len(grid.sub_items) == 3
+    assert grid.fingerprint.digest is not None
+    assert "stem" in grid.hashes.facets
+    assert "sub_items" in grid.hashes.facets
+    assert len(grid.hashes.tokens) > 5
+
+
+def test_multi_categorization_methods() -> None:
+    """Verifies all_match_types and has_category on ComparisonResult and HarmonizationMatch."""
+    comp = ComparisonResult(
+        score=0.88,
+        match_type=MatchType.SHARED_STEM,
+        secondary_match_types=[MatchType.INCLUSIVE_WRITING_VARIANT, MatchType.NEAR_EXACT],
+        facet_matches={"question": MatchType.FACET_EXACT},
+    )
+
+    assert comp.all_match_types == [
+        MatchType.SHARED_STEM,
+        MatchType.INCLUSIVE_WRITING_VARIANT,
+        MatchType.NEAR_EXACT,
+    ]
+    assert comp.has_category(MatchType.SHARED_STEM) is True
+    assert comp.has_category(MatchType.INCLUSIVE_WRITING_VARIANT) is True
+    assert comp.has_category(MatchType.FACET_EXACT) is True
+    assert comp.has_category("FACET_EXACT") is True
+    assert comp.has_category(MatchType.DISTINCT) is False

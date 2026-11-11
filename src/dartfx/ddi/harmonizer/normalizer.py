@@ -15,7 +15,7 @@ import hashlib
 import re
 import unicodedata
 from enum import StrEnum
-from typing import Literal, cast
+from typing import Any, Literal, cast
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -86,12 +86,111 @@ class NormalizationPreset(StrEnum):
     AGGRESSIVE = "AGGRESSIVE"  # STANDARD + punctuation completely removed
 
 
+class LanguagePreset:
+    """Base definition of language-specific orthography rules for normalizers and comparators."""
+
+    code: str = "generic"
+    inclusive_pattern: re.Pattern[str] | None = None
+    leading_pronoun_pattern: re.Pattern[str] | None = None
+    punctuation_spacing: bool = False
+    feminine_nouns_after_possessive: set[str] = set()
+    possessive_pairs: set[str] = set()
+
+    def normalize_punctuation(self, text: str) -> str:
+        """Applies language-specific punctuation normalization rules."""
+        return text
+
+    def strip_inclusive_markers(self, text: str) -> str:
+        """Strips language-specific gender/plural inclusive markers."""
+        if self.inclusive_pattern:
+            cleaned = self.inclusive_pattern.sub("", text)
+            return " ".join(cleaned.split())
+        return text
+
+    def has_inclusive_markers(self, text: str) -> bool:
+        """Returns True if text contains language-specific inclusive markers."""
+        return bool(self.inclusive_pattern.search(text)) if self.inclusive_pattern else False
+
+    def strip_leading_pronouns(self, text: str) -> str:
+        """Strips leading pronouns (e.g. 'je refuse' -> 'refuse')."""
+        if self.leading_pronoun_pattern:
+            cleaned = self.leading_pronoun_pattern.sub("", text)
+            return cleaned.strip()
+        return text
+
+
+class FrenchLanguagePreset(LanguagePreset):
+    """French-specific orthography, punctuation spacing, inclusive markers, and grammar rules."""
+
+    code: str = "fr"
+    inclusive_pattern = re.compile(
+        r"\(\s*(?:e|es|s|ne|nes|ve|ves|trice|trices|ère|ères|se|ses|x)\s*\)"
+        r"|[\u00b7\u22c5\.]\s*(?:e|es|s|ne|nes)\b",
+        re.IGNORECASE,
+    )
+    leading_pronoun_pattern = re.compile(
+        r"^(?:je\s+|j['’]\s*|moi\s*,?\s+|nous\s+|on\s+)",
+        re.IGNORECASE,
+    )
+    punctuation_spacing: bool = True
+    feminine_nouns_after_possessive: set[str] = {
+        "mère",
+        "mere",
+        "soeur",
+        "sœur",
+        "fille",
+        "femme",
+        "tante",
+        "grand-mère",
+        "grand-mere",
+        "famille",
+        "maison",
+        "voiture",
+        "santé",
+        "sante",
+        "vie",
+    }
+    possessive_pairs: set[str] = {"ma", "mon", "mes", "ta", "ton", "sa", "son"}
+
+    def normalize_punctuation(self, text: str) -> str:
+        text = re.sub(r"\s+([?!:;])", r"\1", text)
+        return text
+
+
+class EnglishLanguagePreset(LanguagePreset):
+    """English-specific orthography rules."""
+
+    code: str = "en"
+    inclusive_pattern = re.compile(r"/(?:s?he|they)\b", re.IGNORECASE)
+    leading_pronoun_pattern = re.compile(r"^(?:i\s+|we\s+)", re.IGNORECASE)
+    punctuation_spacing: bool = False
+
+
+class GenericLanguagePreset(LanguagePreset):
+    """Language-agnostic defaults."""
+
+    code: str = "generic"
+
+
+_BUILTIN_LANGUAGE_PRESETS: dict[str, LanguagePreset] = {
+    "fr": FrenchLanguagePreset(),
+    "fra": FrenchLanguagePreset(),
+    "en": EnglishLanguagePreset(),
+    "eng": EnglishLanguagePreset(),
+    "generic": GenericLanguagePreset(),
+}
+
+
 class TextNormalizer:
     """Canonicalizes text strings for comparison, deduplication, and hashing."""
 
     _PUNCT_RE = re.compile(r"[^\w\s]", re.UNICODE)
     _WHITESPACE_RE = re.compile(r"\s+", re.UNICODE)
     _TOKEN_RE = re.compile(r"\b\w+\b", re.UNICODE)
+    _LOOSE_PUNCT_TAIL_RE = re.compile(r"[\s\?\!\.\:\;\,\…\"\'\«\»\(\)\[\]]+$")
+    _LOOSE_PUNCT_HEAD_RE = re.compile(r"^[\s\?\!\.\:\;\,\…\"\'\«\»\(\)\[\]]+")
+    _NBSP_RE = re.compile(r"[\u00A0\u202F\u2007\u2060\u2027\u00B7]")
+    _ELLIPSIS_RE = re.compile(r"\.{3,}|\u2026")
 
     def __init__(
         self,
@@ -198,3 +297,103 @@ class TextNormalizer:
             digest=digest,
             tokens=tokens,
         )
+
+    def get_language_preset(self, lang: str | None = None) -> LanguagePreset:
+        """Resolves language preset by ISO 639-1 code or defaults to generic."""
+        if not lang:
+            return _BUILTIN_LANGUAGE_PRESETS["generic"]
+        code = str(lang).strip().lower()
+        return _BUILTIN_LANGUAGE_PRESETS.get(code, _BUILTIN_LANGUAGE_PRESETS["generic"])
+
+    def normalize_loose(self, text: str | None, lang: str | None = None) -> str:
+        """Strip trailing/leading punctuation, quotes, and language-specific punctuation spacing."""
+        if not text:
+            return ""
+        preset = self.get_language_preset(lang)
+        cleaned = unicodedata.normalize("NFKC", str(text))
+        cleaned = self._NBSP_RE.sub(" ", cleaned)
+        cleaned = (
+            cleaned.replace("«", '"')
+            .replace("»", '"')
+            .replace("\u201c", '"')
+            .replace("\u201d", '"')
+            .replace("\u2018", "'")
+            .replace("\u2019", "'")
+            .replace("\u2013", "-")
+            .replace("\u2014", "-")
+        )
+        cleaned = self._ELLIPSIS_RE.sub("...", cleaned)
+        cleaned = preset.normalize_punctuation(cleaned)
+        cleaned = cleaned.lower()
+        cleaned = self._LOOSE_PUNCT_TAIL_RE.sub("", cleaned)
+        cleaned = self._LOOSE_PUNCT_HEAD_RE.sub("", cleaned)
+        return " ".join(cleaned.split())
+
+    def strip_inclusive_markers(self, text: str | None, lang: str | None = None) -> str:
+        """Removes language-specific parenthetical or midpoint inclusive gender/plural markers."""
+        if not text:
+            return ""
+        preset = self.get_language_preset(lang)
+        return preset.strip_inclusive_markers(str(text))
+
+    def has_inclusive_markers(self, text: str | None, lang: str | None = None) -> bool:
+        """Returns True if text contains language-specific inclusive gender/plural markers."""
+        if not text:
+            return False
+        preset = self.get_language_preset(lang)
+        return preset.has_inclusive_markers(str(text))
+
+    def strip_leading_pronouns(self, text: str | None, lang: str | None = None) -> str:
+        """Strips leading pronominal prefixes (e.g. 'je refuse' -> 'refuse')."""
+        if not text:
+            return ""
+        preset = self.get_language_preset(lang)
+        return preset.strip_leading_pronouns(str(text))
+
+    @staticmethod
+    def extract_multilingual_dict(
+        source: Any,
+        normalize_spacing: bool = True,
+        lowercase: bool = False,
+    ) -> dict[str, str]:
+        """Extracts language-keyed dictionary from dict, list of {lang, value}, or model."""
+        if not source:
+            return {}
+        res: dict[str, str] = {}
+        if isinstance(source, list):
+            for item in source:
+                if isinstance(item, dict):
+                    lang = (
+                        item.get("lang") or item.get("@lang") or item.get("language") or item.get("@language") or "en"
+                    )
+                    val = item.get("value") or item.get("@value") or item.get("text") or item.get("content") or ""
+                elif hasattr(item, "language") and hasattr(item, "value"):
+                    lang = item.language or "en"
+                    val = item.value or ""
+                elif hasattr(item, "lang") and hasattr(item, "value"):
+                    lang = item.lang or "en"
+                    val = item.value or ""
+                else:
+                    lang = "en"
+                    val = str(item)
+                val_str = " ".join(str(val).split()) if normalize_spacing else str(val)
+                if lowercase:
+                    val_str = val_str.lower()
+                if val_str:
+                    res[str(lang).lower()] = val_str
+            return res
+        if isinstance(source, dict):
+            for k, v in source.items():
+                if v is not None and str(v).strip():
+                    val_str = " ".join(str(v).split()) if normalize_spacing else str(v)
+                    if lowercase:
+                        val_str = val_str.lower()
+                    if val_str:
+                        res[str(k).lower()] = val_str
+            return res
+        if isinstance(source, str) and source.strip():
+            val_str = " ".join(source.split()) if normalize_spacing else source
+            if lowercase:
+                val_str = val_str.lower()
+            return {"en": val_str}
+        return {}

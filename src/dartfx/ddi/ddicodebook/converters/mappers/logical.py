@@ -440,6 +440,7 @@ def map_variables_and_codes(
                             urn=cat_urn,
                             label=cat_label,
                             description=cat_desc,
+                            is_missing=is_missing,
                             labels=list(cat_labels),
                             descriptions=list(cat_descriptions),
                             user_attributes=[
@@ -533,6 +534,7 @@ def map_variables_and_codes(
                                 urn=cat_urn,
                                 label=cat_label,
                                 description=cat_desc,
+                                is_missing=is_missing,
                                 labels=list(cat_labels),
                                 descriptions=list(cat_descriptions),
                             )

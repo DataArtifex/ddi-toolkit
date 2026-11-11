@@ -51,6 +51,23 @@ class MatchType(StrEnum):
     FACET_EXACT = (
         "FACET_EXACT"  # Exact sub-component Merkle facet collision (e.g. Question literal or Variable atomic triple)
     )
+    NEAR_EXACT = "NEAR_EXACT"  # High similarity (>= 0.98) or loose punctuation variant
+    SHARED_STEM = "SHARED_STEM"  # Common prompt, label, or concept stem with divergent sub-items
+    SHARED_STEM_GRID = "SHARED_STEM"  # Backward-compatible alias for SHARED_STEM in question batteries
+    SAME_CONCEPT_DIVERGENT_DOMAIN = (
+        "SAME_CONCEPT_DIVERGENT_DOMAIN"  # Equivalent concept/question but divergent value domains or response scales
+    )
+    SAME_CONCEPT_DIFFERENT_SCALE = "SAME_CONCEPT_DIVERGENT_DOMAIN"  # Backward-compatible alias
+    MULTILINGUAL_OVERLAP = (
+        "MULTILINGUAL_OVERLAP"  # Exact match in at least one shared language with complementary translations
+    )
+    INCLUSIVE_WRITING_VARIANT = (
+        "INCLUSIVE_WRITING_VARIANT"  # Gender/plural inclusive writing variant (parenthetical or midpoint)
+    )
+    TYPOGRAPHICAL_VARIANT = (
+        "TYPOGRAPHICAL_VARIANT"  # Single-token typographical or grammatical error divergence in multi-word text
+    )
+    PHRASING_VARIANT = "PHRASING_VARIANT"  # Minor stylistic or pronominal phrasing variation
     DISTINCT = "DISTINCT"  # Below match threshold
 
 
@@ -126,7 +143,15 @@ class HarmonizationMatch[T](BaseModel):
         le=1.0,
         description="Overall similarity score from 0.0 (completely distinct) to 1.0 (100% same)",
     )
-    match_type: MatchType = Field(description="Classification of the match result")
+    match_type: MatchType = Field(description="Primary classification of the match result")
+    secondary_match_types: list[MatchType] = Field(
+        default_factory=list,
+        description="Concurrent secondary match classifications (e.g. SHARED_STEM, INCLUSIVE_WRITING_VARIANT)",
+    )
+    facet_matches: dict[str, MatchType] = Field(
+        default_factory=dict,
+        description="Fine-grained match classification per attribute facet (e.g. {'question': FACET_EXACT})",
+    )
     identifier_matched: bool = Field(
         default=False,
         description="Whether candidate and canonical share identical identifiers/URNs",
@@ -159,3 +184,21 @@ class HarmonizationMatch[T](BaseModel):
         default_factory=dict,
         description="Arbitrary additional metadata, confidence scores, or agent notes",
     )
+
+    @property
+    def all_match_types(self) -> list[MatchType]:
+        """Returns ordered list of all unique match types (primary followed by secondary)."""
+        seen = {self.match_type}
+        result = [self.match_type]
+        for mt in self.secondary_match_types:
+            if mt not in seen:
+                seen.add(mt)
+                result.append(mt)
+        return result
+
+    def has_category(self, category: MatchType | str) -> bool:
+        """Returns True if category matches primary, secondary, or any facet match."""
+        val = category.value if isinstance(category, MatchType) else str(category)
+        if self.match_type.value == val or any(m.value == val for m in self.secondary_match_types):
+            return True
+        return any(fm.value == val for fm in self.facet_matches.values())

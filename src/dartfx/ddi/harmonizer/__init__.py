@@ -26,10 +26,14 @@ from .comparators import (
     EmbeddingProvider,
     ExactComparator,
     LevenshteinComparator,
+    NearExactComparator,
     QuestionComparator,
     RuleBasedMockAgentComparator,
     SemanticVectorComparator,
     SequenceMatcherComparator,
+    StemComparator,
+    StemResult,
+    TextVariantComparator,
     TokenJaccardComparator,
     TransformationAction,
     TransformationAdvice,
@@ -38,9 +42,11 @@ from .comparators import (
     VariableComparisonWeights,
     WeightedAttributeComparator,
     compare_codelists,
+    compare_multilingual_texts,
     compare_questions,
     compare_resources,
     compare_variables,
+    detect_shared_stem,
 )
 from .crosswalk import (
     DatasetCrosswalk,
@@ -59,6 +65,7 @@ from .domains import (
     NumericDomain,
     QuantityKind,
     Question,
+    QuestionGrid,
     SentinelType,
     TextDomain,
     UnitOfMeasure,
@@ -75,6 +82,15 @@ from .identifiers import (
     ResourceIdentifier,
     parse_identifier,
 )
+from .llm import (
+    GeneratedStory,
+    LLMConfig,
+    LLMProvider,
+    NarrativeStyle,
+    StoryKind,
+    generate_all_stories,
+    generate_collection_story,
+)
 from .models import (
     ComparableResource,
     ContentFingerprint,
@@ -84,12 +100,24 @@ from .models import (
     MatchType,
 )
 from .normalizer import (
+    EnglishLanguagePreset,
+    FrenchLanguagePreset,
+    GenericLanguagePreset,
+    LanguagePreset,
     NormalizationPreset,
     NormalizerConfig,
     TextNormalizer,
     UnicodeForm,
 )
 from .registry import HarmonizationRegistry
+from .reporting import (
+    CollectionComparisonReport,
+    analyze_collection,
+    load_survey_bundle,
+    render_collection_report_markdown,
+    resolve_input_files,
+)
+from .reporting_html import render_collection_explorer_html
 from .review import CuratedCrosswalk, HumanReviewQueue, ReviewItem
 from .sanitizer import SanitizerConfig, TextSanitizer
 from .sql import generate_bank_schema_ddl, generate_tiered_matching_cte_query
@@ -101,6 +129,20 @@ from .translation import (
 )
 
 __all__ = [
+    # Collection Reporting & Phase 2 LLM Narratives
+    "CollectionComparisonReport",
+    "GeneratedStory",
+    "LLMConfig",
+    "LLMProvider",
+    "NarrativeStyle",
+    "StoryKind",
+    "analyze_collection",
+    "generate_all_stories",
+    "generate_collection_story",
+    "load_survey_bundle",
+    "render_collection_explorer_html",
+    "render_collection_report_markdown",
+    "resolve_input_files",
     # Comparators & Algorithms
     "AgentComparator",
     "AgentComparisonResult",
@@ -112,10 +154,14 @@ __all__ = [
     "EmbeddingProvider",
     "ExactComparator",
     "LevenshteinComparator",
+    "NearExactComparator",
     "QuestionComparator",
     "RuleBasedMockAgentComparator",
     "SemanticVectorComparator",
     "SequenceMatcherComparator",
+    "StemComparator",
+    "StemResult",
+    "TextVariantComparator",
     "TokenJaccardComparator",
     "TransformationAction",
     "TransformationAdvice",
@@ -124,9 +170,11 @@ __all__ = [
     "VariableComparisonWeights",
     "WeightedAttributeComparator",
     "compare_codelists",
+    "compare_multilingual_texts",
     "compare_questions",
     "compare_resources",
     "compare_variables",
+    "detect_shared_stem",
     # Crosswalks & Reconciliation
     "DatasetCrosswalk",
     "DatasetHarmonizer",
@@ -139,6 +187,7 @@ __all__ = [
     "Concept",
     "NumericDomain",
     "Question",
+    "QuestionGrid",
     "TextDomain",
     "Universe",
     "ValueDomain",
@@ -176,6 +225,10 @@ __all__ = [
     "HashesPayload",
     "HumanReviewQueue",
     "IdentifierKind",
+    "LanguagePreset",
+    "FrenchLanguagePreset",
+    "EnglishLanguagePreset",
+    "GenericLanguagePreset",
     "MatchType",
     "NormalizationPreset",
     "NormalizerConfig",

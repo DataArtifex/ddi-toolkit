@@ -172,3 +172,297 @@ def compare_cmd(
     table.add_row("Token Jaccard", "-", "-", f"{jaccard_comp.compare(text1, text2).score:.4f}")
 
     console.print(table)
+
+
+@harmonizer_cli.command(
+    name="report",
+    help=(
+        "Phase 1: Compare a collection (2+) of DDI datasets and generate JSON, Markdown, and Interactive HTML reports."
+    ),
+)
+def report_cmd(
+    inputs: Annotated[
+        list[Path],
+        typer.Argument(
+            help="DDI files (.ddic.xml, .ddi40.json, .xml) or directories containing DDI files.",
+        ),
+    ],
+    output_dir: Annotated[
+        Path,
+        typer.Option(
+            "--output-dir",
+            "-o",
+            help=(
+                "Output directory for collection_report.json, collection_report.md, "
+                "collection_explorer.html, and cache/."
+            ),
+        ),
+    ] = Path("collection_report_out"),
+    pattern: Annotated[
+        str,
+        typer.Option(
+            "--pattern",
+            "-p",
+            help="Glob pattern when scanning directories (e.g. '*.ddic.xml').",
+        ),
+    ] = "*.ddic.xml",
+    title: Annotated[
+        str,
+        typer.Option(
+            "--title",
+            "-t",
+            help="Report title.",
+        ),
+    ] = "DDI Multi-Dataset Harmonization & Longitudinal Comparison Report",
+    order_by: Annotated[
+        str,
+        typer.Option(
+            "--order-by",
+            help=(
+                "Ordering strategy for waves: 'auto' (detect chronological year/wave) or 'input' (preserve CLI order)."
+            ),
+        ),
+    ] = "auto",
+    refresh_cache: Annotated[
+        bool,
+        typer.Option(
+            "--refresh-cache",
+            help="Recompute intermediate DDI 4.0 and bundle caches even if unchanged.",
+        ),
+    ] = False,
+    narrate: Annotated[
+        bool,
+        typer.Option(
+            "--narrate/--no-narrate",
+            help="Also run Phase 2 narrative story generation into <output_dir>/stories/.",
+        ),
+    ] = False,
+    provider: Annotated[
+        str,
+        typer.Option(
+            "--provider",
+            help="Phase 2 LLM provider when --narrate is enabled: ollama, openai, gemini, anthropic, or template.",
+        ),
+    ] = "ollama",
+    model: Annotated[
+        str | None,
+        typer.Option(
+            "--model",
+            "-m",
+            help="LLM model name override for Phase 2 (e.g. 'qwen3.8:27b-mlx', 'gemma4:e2b-mlx', 'gemini-3.8-flash').",
+        ),
+    ] = None,
+    style: Annotated[
+        str,
+        typer.Option(
+            "--style",
+            "-S",
+            help="Narrative tone when --narrate is enabled: 'technical' or 'journalistic'.",
+        ),
+    ] = "technical",
+    temperature: Annotated[
+        float | None,
+        typer.Option(
+            "--temperature",
+            help="Sampling temperature override (defaults to 0.2 technical / 0.55 journalistic).",
+        ),
+    ] = None,
+    base_url: Annotated[
+        str | None,
+        typer.Option(
+            "--base-url",
+            help="Custom API base URL for Ollama or OpenAI-compatible endpoints.",
+        ),
+    ] = None,
+) -> None:
+    """Runs Phase 1 multi-dataset comparison (and optionally Phase 2 LLM narratives)."""
+    from dartfx.ddi.harmonizer.llm import LLMConfig, LLMProvider, NarrativeStyle, generate_all_stories
+    from dartfx.ddi.harmonizer.reporting import analyze_collection, resolve_input_files
+    from dartfx.ddi.harmonizer.reporting_html import render_collection_explorer_html
+
+    files = resolve_input_files(list(inputs), pattern=pattern)
+    if len(files) < 2:
+        console.print(f"[bold red]Error:[/bold red] Please provide at least 2 DDI datasets (found {len(files)}).")
+        raise typer.Exit(code=1)
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    cache_dir = output_dir / "cache"
+
+    console.print(f"[bold cyan]Analyzing {len(files)} DDI datasets...[/bold cyan]")
+    report = analyze_collection(
+        files=files,
+        title=title,
+        cache_dir=cache_dir,
+        order_by=order_by,
+        refresh_cache=refresh_cache,
+    )
+
+    json_path = output_dir / "collection_report.json"
+    md_path = output_dir / "collection_report.md"
+    html_path = output_dir / "collection_explorer.html"
+
+    json_path.write_text(report.model_dump_json(indent=2), encoding="utf-8")
+    md_path.write_text(report.to_markdown(), encoding="utf-8")
+    render_collection_explorer_html(report, output_path=html_path)
+
+    # Summary Table
+    keys_str = ", ".join(report.ordered_survey_keys)
+    summary_tbl = Table(
+        title=f"Collection Harmonization Summary ({report.collection_size} Surveys: {keys_str})",
+        show_header=True,
+        header_style="bold magenta",
+    )
+    summary_tbl.add_column("Wave", style="cyan", no_wrap=True)
+    summary_tbl.add_column("Standard", style="dim")
+    summary_tbl.add_column("Vars (Raw → RepVar)", justify="right")
+    summary_tbl.add_column("Questions (Raw → Uniq)", justify="right")
+    summary_tbl.add_column("CodeLists (Raw → Uniq)", justify="right")
+    summary_tbl.add_column("Categories (Raw → Uniq)", justify="right")
+    summary_tbl.add_column("Sentinels (Doc / Undoc)", justify="right")
+
+    for s in report.surveys:
+        summary_tbl.add_row(
+            s.survey_key,
+            s.ddi_flavor,
+            f"{s.raw_variable_count} → {s.unique_represented_variable_count} (-{s.variable_reduction_pct:.1f}%)",
+            f"{s.raw_question_count} → {s.unique_question_count} (-{s.question_reduction_pct:.1f}%)",
+            f"{s.raw_codelist_count} → {s.unique_codelist_count} (-{s.codelist_reduction_pct:.1f}%)",
+            f"{s.raw_category_count} → {s.unique_category_count} (-{s.category_reduction_pct:.1f}%)",
+            f"{s.explicit_sentinel_category_count} / {s.inferred_undocumented_sentinel_category_count}",
+        )
+    console.print(summary_tbl)
+
+    console.print(f"[bold green]✔[/bold green] JSON Report:         [bold cyan]{json_path.resolve()}[/bold cyan]")
+    console.print(f"[bold green]✔[/bold green] Markdown Report:     [bold cyan]{md_path.resolve()}[/bold cyan]")
+    console.print(f"[bold green]✔[/bold green] Interactive HTML:    [bold cyan]{html_path.resolve()}[/bold cyan]")
+    console.print(f"[bold green]✔[/bold green] DDI 4.0 & Cache Dir: [bold cyan]{cache_dir.resolve()}[/bold cyan]")
+
+    if narrate:
+        nav_style = NarrativeStyle(style.lower())
+        cfg = LLMConfig(
+            provider=LLMProvider(provider.lower()),
+            model=model,
+            style=nav_style,
+            temperature=temperature,
+            base_url=base_url,
+        )
+        stories = generate_all_stories(report, output_dir=output_dir, config=cfg)
+        subdir = "stories_journalistic" if nav_style == NarrativeStyle.JOURNALISTIC else "stories"
+        for st in stories:
+            console.print(
+                f"[bold green]✔[/bold green] Story [bold]{st.story_kind.value}[/bold] "
+                f"(via [cyan]{st.provider_used}[/cyan] / `{st.model_used}` · {st.style_used})"
+            )
+        console.print(
+            f"[bold green]✔[/bold green] Generated {len(stories)} Phase 2 Narrative Stories in: "
+            f"[bold cyan]{(output_dir / subdir).resolve()}[/bold cyan]"
+        )
+
+
+@harmonizer_cli.command(
+    name="narrate",
+    help="Phase 2: Generate AI-powered narrative reports and stories from a Phase 1 collection_report.json file.",
+)
+def narrate_cmd(
+    report_json: Annotated[
+        Path,
+        typer.Argument(
+            help="Path to Phase 1 collection_report.json file.",
+            exists=True,
+            dir_okay=False,
+        ),
+    ],
+    output_dir: Annotated[
+        Path | None,
+        typer.Option(
+            "--output-dir",
+            "-o",
+            help="Directory to write generated Markdown stories (defaults to <report_json.parent>).",
+        ),
+    ] = None,
+    provider: Annotated[
+        str,
+        typer.Option(
+            "--provider",
+            "-p",
+            help="LLM provider: ollama, openai, gemini, anthropic, or template.",
+        ),
+    ] = "ollama",
+    model: Annotated[
+        str | None,
+        typer.Option(
+            "--model",
+            "-m",
+            help="Model name (e.g. 'qwen3.8:27b-mlx', 'gemma4:e2b-mlx', 'gemini-3.8-flash', 'gpt-4o-mini').",
+        ),
+    ] = None,
+    style: Annotated[
+        str,
+        typer.Option(
+            "--style",
+            "-S",
+            help="Narrative tone: 'technical' (methodological brief) or 'journalistic' (storytelling feature).",
+        ),
+    ] = "technical",
+    temperature: Annotated[
+        float | None,
+        typer.Option(
+            "--temperature",
+            help="Sampling temperature override (defaults to 0.2 technical / 0.55 journalistic).",
+        ),
+    ] = None,
+    stories_dir: Annotated[
+        str | None,
+        typer.Option(
+            "--stories-dir",
+            help="Subdirectory name under output-dir (defaults to 'stories' or 'stories_journalistic').",
+        ),
+    ] = None,
+    base_url: Annotated[
+        str | None,
+        typer.Option(
+            "--base-url",
+            help="Custom API base URL for Ollama or OpenAI-compatible servers.",
+        ),
+    ] = None,
+    story: Annotated[
+        str,
+        typer.Option(
+            "--story",
+            "-s",
+            help="Story type: 'all', 'highlights', 'longitudinal', 'quality-anomalies', or 'harmonization-playbook'.",
+        ),
+    ] = "all",
+) -> None:
+    """Runs Phase 2 LLM narrative generation from a saved Phase 1 JSON report."""
+    from dartfx.ddi.harmonizer.llm import LLMConfig, LLMProvider, NarrativeStyle, StoryKind, generate_all_stories
+    from dartfx.ddi.harmonizer.reporting import CollectionComparisonReport
+
+    report = CollectionComparisonReport.model_validate_json(report_json.read_text(encoding="utf-8"))
+    target_dir = output_dir or report_json.parent
+    nav_style = NarrativeStyle(style.lower())
+    cfg = LLMConfig(
+        provider=LLMProvider(provider.lower()),
+        model=model,
+        style=nav_style,
+        temperature=temperature,
+        base_url=base_url,
+    )
+    kinds: list[StoryKind] | None = None
+    if story.lower() != "all":
+        kinds = [StoryKind(story.lower())]
+
+    subdir = stories_dir or ("stories_journalistic" if nav_style == NarrativeStyle.JOURNALISTIC else "stories")
+    stories = generate_all_stories(
+        report,
+        output_dir=target_dir,
+        config=cfg,
+        story_kinds=kinds,
+        stories_subdir=subdir,
+    )
+    for st in stories:
+        console.print(
+            f"[bold green]✔[/bold green] Story [bold]{st.story_kind.value}[/bold] "
+            f"(via [cyan]{st.provider_used}[/cyan] / `{st.model_used}` · {st.style_used}) saved to "
+            f"[bold cyan]{(target_dir / subdir / f'story_{st.story_kind.value}.md').resolve()}[/bold cyan]"
+        )

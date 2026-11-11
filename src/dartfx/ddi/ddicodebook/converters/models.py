@@ -38,6 +38,7 @@ class ConvertedCategory:
     urn: str
     label: str
     description: str | None = None
+    is_missing: bool = False
     labels: list[tuple[str, str]] = field(default_factory=list)
     descriptions: list[tuple[str, str]] = field(default_factory=list)
     user_attributes: list[tuple[str, str]] = field(default_factory=list)

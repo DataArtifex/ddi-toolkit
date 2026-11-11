@@ -320,3 +320,64 @@ class Question(BaseModel):
             )
 
         raise ValueError(f"Cannot extract Question from unsupported source: {type(source)}")
+
+
+class QuestionGrid(BaseModel):
+    """Generic question grid / battery structure capturing common stem and sub-items.
+
+    Aligned with DDI-Lifecycle 3.3 QuestionGrid and DDI-CDI QuestionBlock.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    shared_stem: str = Field(description="The overarching prompt, battery question, or lead-in statement")
+    sub_items: list[str] = Field(default_factory=list, description="Sub-questions, dimensions, or prompt items")
+    instructions: str | None = Field(default=None, description="Interviewer or self-completion guidance")
+    response_domain_digest: str | None = Field(default=None, description="Digest of shared response domain/scale")
+    urn: str | None = Field(default=None, description="Optional URN or unique identifier")
+    language: str = Field(default="en", description="BCP 47 or ISO 639-1 language code")
+    grid_type: str = Field(default="question_grid", description="Grid classification")
+
+    @property
+    def identifier(self) -> ResourceIdentifier | None:
+        return parse_identifier(self.urn)
+
+    @property
+    def is_random_guid(self) -> bool:
+        return self.identifier.is_random_guid if self.identifier else False
+
+    @property
+    def fingerprint(self) -> ContentFingerprint:
+        fingerprinter = ResourceFingerprinter()
+        components: dict[str, str] = {
+            "stem": fingerprinter.fingerprint_atomic(self.shared_stem).digest,
+        }
+        if self.sub_items:
+            sub_digests = [fingerprinter.fingerprint_atomic(sub).digest for sub in self.sub_items]
+            components["sub_items"] = fingerprinter.fingerprint_ordered_sequence(sub_digests)
+        if self.instructions:
+            components["instructions"] = fingerprinter.fingerprint_atomic(self.instructions).digest
+        if self.response_domain_digest:
+            components["response_domain"] = self.response_domain_digest
+        if self.language and self.language.lower() != "en":
+            components["lang"] = fingerprinter.fingerprint_atomic(self.language.lower()).digest
+
+        return fingerprinter.fingerprint_compound(components, prefix="QUESTION_GRID")
+
+    @property
+    def signature(self) -> str:
+        return self.fingerprint.signature
+
+    @property
+    def hashes(self) -> HashesPayload:
+        fp = self.fingerprint
+        tokens = [t for t in self.shared_stem.split() if t]
+        for sub in self.sub_items:
+            tokens.extend([t for t in sub.split() if t])
+        return HashesPayload(
+            root=fp.digest,
+            signature=fp.signature,
+            unordered=fp.unordered_digest,
+            facets=dict(fp.component_digests),
+            tokens=tokens,
+        )

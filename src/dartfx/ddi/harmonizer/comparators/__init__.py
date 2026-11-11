@@ -6,6 +6,7 @@ from .composite import (
     QuestionComparator,
     WeightedAttributeComparator,
     compare_codelists,
+    compare_multilingual_texts,
     compare_questions,
     compare_resources,
 )
@@ -17,8 +18,13 @@ from .semantic import (
 from .syntactic import (
     ExactComparator,
     LevenshteinComparator,
+    NearExactComparator,
     SequenceMatcherComparator,
+    StemComparator,
+    StemResult,
+    TextVariantComparator,
     TokenJaccardComparator,
+    detect_shared_stem,
 )
 from .variable import (
     ComparisonProfile,
@@ -41,10 +47,14 @@ __all__ = [
     "EmbeddingProvider",
     "ExactComparator",
     "LevenshteinComparator",
+    "NearExactComparator",
     "QuestionComparator",
     "RuleBasedMockAgentComparator",
     "SemanticVectorComparator",
     "SequenceMatcherComparator",
+    "StemComparator",
+    "StemResult",
+    "TextVariantComparator",
     "TokenJaccardComparator",
     "TransformationAction",
     "TransformationAdvice",
@@ -53,7 +63,9 @@ __all__ = [
     "VariableComparisonWeights",
     "WeightedAttributeComparator",
     "compare_codelists",
+    "compare_multilingual_texts",
     "compare_questions",
     "compare_resources",
     "compare_variables",
+    "detect_shared_stem",
 ]
