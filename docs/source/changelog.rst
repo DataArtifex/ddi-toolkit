@@ -6,6 +6,15 @@ All notable changes to this project will be documented in this file.
 Version 0.4.0 (Current)
 -----------------------
 
+Multi-Dataset Collection Reporting & AI Narrative Generation (``harmonizer.reporting``, ``harmonizer.llm``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- **Two-Phase Collection Reporting Architecture**: Added programmatic multi-dataset comparison engine (``analyze_collection``, ``CollectionComparisonReport``) and AI-powered narrative generator (``generate_all_stories``, ``generate_collection_story``) spanning DDI-Codebook 1.2.2/2.5/2.6 and DDI 4.0 RC1 ``ItemContainer`` JSON collections with chronological wave ordering (``order_by="auto"``) and disk bundle caching (``CACHE_SCHEMA_VERSION = "v2"``).
+- **Cross-Survey Resource & Variable-Cascade Deep Dives**: Added intra-survey deduplication summaries, inclusive-vs-exclusive sentinel CodeList comparisons (``additional_merges_when_excluding_sentinels``), recode detection with mapping tables, multi-faceted ``RepresentedVariable`` synthesis (CodeList, canonical data type, numeric range, decimals, unit, text length, universe), ``FalseFriendVariableFinding`` collision tracking, routing artifact & sentinel consistency auditing, shared-stem batteries, wave transitions, and longitudinal continuity matrices.
+- **Interactive 6-Tab Collection Explorer HTML (``render_collection_explorer_html``)**: Added standalone zero-dependency HTML5 explorer with light/dark mode toggle, JSON export, live filtering, and dedicated views across Overview, Longitudinal Continuity, Questions, CodeLists & Sentinels, Categories, and Variable Cascade / False Friends.
+- **Technical & Journalistic AI Storytelling (``NarrativeStyle``)**: Added ``technical`` (``stories/``) and ``journalistic`` (``stories_journalistic/``) editorial styles with compact lossless evidence slicing and support for local Ollama (auto-discovery via ``/api/tags``, ``think=False`` reasoning bypass, default ``qwen3.8:27b-mlx``), OpenAI & OpenAI-compatible servers (``--base-url``), Gemini (default ``gemini-3.8-flash`` with thought-part filtering), Anthropic, and deterministic offline template fallback (``deterministic-narrator-v1``).
+- **CLI Integration**: Added ``dartfx-ddi harmonizer report`` (with ``--narrate``, ``--provider``, ``--style``, ``--refresh-cache``) and ``dartfx-ddi harmonizer narrate`` (with ``--provider``, ``--model``, ``--style``, ``--story``, ``--stories-dir``, ``--temperature``, ``--base-url``).
+
 DDI-Codebook Multilingual Assessment, Planning & Merging (``ddicodebook.i18n``)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

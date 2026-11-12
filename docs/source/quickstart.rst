@@ -375,12 +375,18 @@ CLI exploration workbench:
    # Compare two text strings directly in the terminal
    dartfx-ddi harmonizer compare "Employment Status" "Current employment status"
 
+   # Generate Phase 1 multi-dataset comparison reports (JSON, Markdown, HTML explorer)
+   dartfx-ddi harmonizer report /path/to/surveys -o ./report_out
+
+   # Generate Phase 2 journalistic narratives from the JSON report
+   dartfx-ddi harmonizer narrate ./report_out/collection_report.json -p ollama -S journalistic
+
 Next Steps
 ----------
 
 * Learn about the core :doc:`ddicdi` implementation.
 * Explore the :doc:`ddicodebook` API reference and the :doc:`codebook_i18n_merge` User Guide.
 * Learn about :doc:`ddilifecycle` fragment streaming, DDI 4.0 models, and resource profile analysis.
-* Read the comprehensive :doc:`harmonizer` framework documentation.
+* Read the comprehensive :doc:`harmonizer` framework documentation and the :doc:`collection_reporting` guide.
 * Explore the optional :doc:`basex` XML database and reporting extension.
 * See :doc:`examples` for more detailed use cases.

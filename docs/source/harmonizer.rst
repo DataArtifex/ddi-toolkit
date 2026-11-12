@@ -1287,3 +1287,22 @@ The DDI Toolkit's DDI-Codebook to DDI-Lifecycle converter (``dartfx.ddi.ddicodeb
   * ``harmonization:signature``
   * ``harmonization:codelist_hash``
   * ``harmonization:member_count``
+
+Multi-Dataset Collection Reporting & AI Storytelling
+----------------------------------------------------
+
+Beyond pairwise checks and single-bank ingestion, ``dartfx.ddi.harmonizer`` includes a complete **two-phase multi-dataset comparison and narrative workflow** across collections of two or more DDI datasets (such as longitudinal survey waves):
+
+1. **Phase 1 — Programmatic Comparison (``dartfx-ddi harmonizer report``)**: Runs per-survey deduplication & DDI-L caching, cross-wave Category/CodeList/Question/Variable-Cascade deep dives (including sentinel-inclusive vs. sentinel-exclusive CodeList merges, scale recodes, spelling/inclusive-writing variants, shared-stem batteries, representation drift, and false-friend variable names), and wave-to-wave longitudinal continuity tracking—exporting ``collection_report.json``, ``collection_report.md``, and a 6-tab interactive ``collection_explorer.html``.
+2. **Phase 2 — AI Narrative & Story Generation (``dartfx-ddi harmonizer narrate``)**: Transforms ``collection_report.json`` into four focused Markdown reports (``highlights``, ``longitudinal``, ``quality-anomalies``, ``harmonization-playbook``) in either ``technical`` or ``journalistic`` style via Ollama (default ``qwen3.8:27b-mlx``), Gemini (default ``gemini-3.8-flash``), OpenAI / OpenAI-compatible servers, Anthropic, or zero-network deterministic templates.
+
+.. code-block:: bash
+
+   # Phase 1: Programmatic JSON, Markdown, and 6-tab HTML explorer
+   uv run dartfx-ddi harmonizer report /path/to/surveys -o ./report_out
+
+   # Phase 2: Generate journalistic data stories via Ollama or Gemini
+   uv run dartfx-ddi harmonizer narrate ./report_out/collection_report.json -p ollama -S journalistic
+   uv run dartfx-ddi harmonizer narrate ./report_out/collection_report.json -p gemini -S journalistic
+
+For the complete architecture, CLI reference, Python API examples, and data model breakdown, see the dedicated :doc:`collection_reporting` guide.

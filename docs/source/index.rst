@@ -34,6 +34,7 @@ Key Features
 * **RDF Integration**: Generate and validate RDF representations using the `DataArtifex RDF Toolkit <https://github.com/DataArtifex/rdf-toolkit>`_.
 * **Cross-Format Conversion**: Transform between DDI-Codebook and DDI-CDI formats aligned with the CDIF profile.
 * **Resource Harmonization, Variable & Dataset Comparison**: Multi-attribute compound variable comparison, metrology & unit conversion scaling, categorical value recoding, schema crosswalks with automated Polars pipeline execution, and an interactive standalone HTML Harmonization Workbench (``dartfx-ddi harmonizer explore``).
+* **Multi-Dataset Collection Reporting & AI Storytelling**: End-to-end longitudinal audit across 2+ DDI surveys combining Stage 1 per-wave deduplication, inclusive-vs-exclusive sentinel CodeList comparisons, variable-cascade and false-friend detection, a 6-tab HTML Collection Explorer (``dartfx-ddi harmonizer report``), and technical or journalistic LLM narrative generation (``dartfx-ddi harmonizer narrate`` via Ollama, OpenAI, Gemini, Anthropic, or deterministic templates).
 * **Resource Banks, Sub-Linear Candidate Blocking & Batch Ingestion**: Institutional catalog management (``ResourceBank``), token & :math:`n`-gram candidate blocking (``TokenBlocker``), batch ingestion audit reporting (``BatchIngestionReport`` with Polars and Markdown export), and revision lineage tracking (``ResourceLineageEntry``).
 * **Multilingual Harmonization & Pivot Hashing**: Cross-lingual Merkle facet collisions via canonical pivot translation (``pivot_literal``), cached translation bridges (``CachedTranslationBridge``), and multilingual agent comparators.
 * **Database Persistence & SQL Generation**: Production-ready PostgreSQL DDL (``generate_bank_schema_ddl``) and tiered matching CTE query generators (``generate_tiered_matching_cte_query``) leveraging expression B-Tree and GIN trigram indexes.
@@ -139,6 +140,7 @@ Resource Bank Ingestion & Sub-Linear Candidate Blocking::
    codebook_to_cdi_mappings
    codebook_to_lifecycle_mappings
    harmonizer
+   collection_reporting
 
 .. toctree::
    :maxdepth: 2
