@@ -30,7 +30,10 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
-import httpx
+try:
+    import httpx
+except ImportError:
+    httpx = None  # type: ignore[assignment]
 from pydantic import BaseModel, ConfigDict
 
 from .reporting import (
@@ -190,6 +193,8 @@ def _resolve_ollama_model(ollama_root_url: str, configured_model: str | None) ->
     if configured_model:
         return configured_model
     default_model = DEFAULT_MODELS[LLMProvider.OLLAMA]
+    if httpx is None:
+        return default_model
     tags_url = f"{ollama_root_url.removesuffix('/v1').rstrip('/')}/api/tags"
     try:
         with httpx.Client(timeout=3.0) as client:
@@ -1086,6 +1091,12 @@ def _call_llm_api(
 
     Returns `(markdown_text, resolved_model_name)`.
     """
+    if httpx is None:
+        raise ImportError(
+            f"Remote LLM provider '{config.provider.value}' requires the 'httpx' library. "
+            "Install it with: pip install httpx"
+        )
+
     provider = config.provider
     model = config.resolved_model
     temp = config.resolved_temperature

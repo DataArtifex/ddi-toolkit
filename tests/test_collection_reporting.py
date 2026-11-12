@@ -5,6 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
+import pytest
+
 from dartfx.ddi.harmonizer.llm import (
     LLMConfig,
     LLMProvider,
@@ -302,3 +304,43 @@ def test_phase2_llm_narrative_generation(tmp_path: Path) -> None:
         st_ollama = generate_collection_story(report, StoryKind.HIGHLIGHTS, config=cfg_ollama)
         assert st_ollama.provider_used == "ollama"
         assert st_ollama.model_used == "gemma4:e2b-mlx"
+
+    # 5. Missing httpx graceful handling and fallback
+    with patch("dartfx.ddi.harmonizer.llm.httpx", None):
+        from dartfx.ddi.harmonizer.llm import _resolve_ollama_model
+
+        resolved = _resolve_ollama_model("http://localhost:11434", None)
+        assert resolved == "qwen3.8:27b-mlx"
+
+        # Template provider requires zero network / zero httpx
+        st_no_httpx_tpl = generate_collection_story(
+            report,
+            StoryKind.HIGHLIGHTS,
+            config=LLMConfig(provider=LLMProvider.TEMPLATE),
+        )
+        assert st_no_httpx_tpl.provider_used == "template"
+
+        # Remote provider without fallback raises ImportError
+        with pytest.raises(ImportError, match="requires the 'httpx' library"):
+            generate_collection_story(
+                report,
+                StoryKind.HIGHLIGHTS,
+                config=LLMConfig(
+                    provider=LLMProvider.OPENAI,
+                    api_key="sk-test",
+                    fallback_to_template=False,
+                ),
+            )
+
+        # Remote provider with fallback falls back to template
+        st_no_httpx_fb = generate_collection_story(
+            report,
+            StoryKind.HIGHLIGHTS,
+            config=LLMConfig(
+                provider=LLMProvider.OPENAI,
+                api_key="sk-test",
+                fallback_to_template=True,
+            ),
+        )
+        assert st_no_httpx_fb.provider_used == "openai->template_fallback"
+        assert "requires the 'httpx' library" in st_no_httpx_fb.markdown_content
