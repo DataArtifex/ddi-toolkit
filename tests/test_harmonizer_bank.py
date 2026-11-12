@@ -18,6 +18,7 @@ from dartfx.ddi.harmonizer import (
     LevenshteinComparator,
     MatchType,
     Question,
+    QuestionComparator,
     SanitizerConfig,
     SemanticVectorComparator,
     SequenceMatcherComparator,
@@ -43,6 +44,8 @@ def _get_comparator(name: str, threshold: float, normalizer: TextNormalizer):
         return SemanticVectorComparator(threshold=threshold)
     elif name == "Agent":
         return RuleBasedMockAgentComparator()
+    elif name == "QuestionComparator":
+        return QuestionComparator(match_threshold=threshold)
     else:  # SequenceMatcher
         return SequenceMatcherComparator(normalizer=normalizer, threshold=threshold)
 
@@ -129,46 +132,63 @@ def test_harmonizer_use_case_from_bank(case: HarmonizerTestCase):
         match = reg_cl.match(cl_cand, threshold=case.comparator_threshold)
 
     elif case.domain == "question":
-        q_src = Question(**case.source_resource)
-        q_cand = Question(**case.candidate_resource)
-        assert q_src.question_text
-        assert q_cand.question_text
-
-        # Multi-attribute comparison
-        cmp = WeightedAttributeComparator(
-            attribute_weights={
-                "question_text": 0.65,
-                "instructions": 0.15,
-                "pre_question_text": 0.10,
-                "intent": 0.10,
-            },
-            base_comparator=comparator,
-            match_threshold=case.comparator_threshold,
-        )
-        if case.source_resource.get("urn") and case.source_resource.get("urn") == case.candidate_resource.get("urn"):
-            reg_q: HarmonizationRegistry[Question] = HarmonizationRegistry(
-                comparator=comparator,
-            )
-            reg_q.register(q_src)
-            match = reg_q.match(q_cand, threshold=case.comparator_threshold)
-        else:
-            comp_res = cmp.compare_attributes(
+        if isinstance(comparator, QuestionComparator):
+            comp_res = comparator.compare(
                 case.source_resource,
                 case.candidate_resource,
             )
-            match_type = comp_res.match_type
-            if case.comparator == "Semantic" and comp_res.score >= case.comparator_threshold:
-                match_type = MatchType.SEMANTIC_SIMILAR
-
             match = type(
                 "QuestionMatchResult",
                 (),
                 {
                     "matched": comp_res.score >= case.comparator_threshold,
                     "score": comp_res.score,
-                    "match_type": match_type,
+                    "match_type": comp_res.match_type,
                 },
             )()
+        else:
+            q_src = Question(**case.source_resource)
+            q_cand = Question(**case.candidate_resource)
+            assert q_src.question_text
+            assert q_cand.question_text
+
+            # Multi-attribute comparison
+            cmp = WeightedAttributeComparator(
+                attribute_weights={
+                    "question_text": 0.65,
+                    "instructions": 0.15,
+                    "pre_question_text": 0.10,
+                    "intent": 0.10,
+                },
+                base_comparator=comparator,
+                match_threshold=case.comparator_threshold,
+            )
+            if case.source_resource.get("urn") and case.source_resource.get("urn") == case.candidate_resource.get(
+                "urn"
+            ):
+                reg_q: HarmonizationRegistry[Question] = HarmonizationRegistry(
+                    comparator=comparator,
+                )
+                reg_q.register(q_src)
+                match = reg_q.match(q_cand, threshold=case.comparator_threshold)
+            else:
+                comp_res = cmp.compare_attributes(
+                    case.source_resource,
+                    case.candidate_resource,
+                )
+                match_type = comp_res.match_type
+                if case.comparator == "Semantic" and comp_res.score >= case.comparator_threshold:
+                    match_type = MatchType.SEMANTIC_SIMILAR
+
+                match = type(
+                    "QuestionMatchResult",
+                    (),
+                    {
+                        "matched": comp_res.score >= case.comparator_threshold,
+                        "score": comp_res.score,
+                        "match_type": match_type,
+                    },
+                )()
 
     elif case.domain == "conceptual":
         c_src = Concept(**case.source_resource)

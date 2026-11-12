@@ -663,6 +663,32 @@ class Variable(BaseModel):
                 unit=uom,
             )
             vdomain = ValueDomain(kind=ValueDomainKind.CONTINUOUS_NUMERIC, numeric_domain=num_dom)
+        elif "codelist" in data:
+            cl_raw = data["codelist"]
+            if isinstance(cl_raw, CodeList):
+                vdomain = ValueDomain(kind=ValueDomainKind.ENUMERATED, codelist=cl_raw)
+            elif isinstance(cl_raw, dict):
+                raw_codes = cl_raw.get("codes") or cl_raw.get("categories") or []
+                code_items = []
+                for c in raw_codes:
+                    if isinstance(c, Code):
+                        code_items.append(c)
+                    elif isinstance(c, dict):
+                        val = str(c.get("value", ""))
+                        lbl = str(c.get("label", val))
+                        is_m = bool(c.get("is_missing", False))
+                        st = c.get("sentinel_type")
+                        cat = Category(label=lbl, is_missing=is_m, sentinel_type=st)
+                        code_items.append(
+                            Code(
+                                value=val,
+                                category=cat,
+                                is_missing_override=is_m,
+                                sentinel_type_override=st,
+                            )
+                        )
+                cl = CodeList(name=cl_raw.get("name", f"CL_{name}"), codes=code_items)
+                vdomain = ValueDomain(kind=ValueDomainKind.ENUMERATED, codelist=cl)
         elif "categories" in data or "codes" in data or "value_labels" in data:
             val_labels = data.get("value_labels", data.get("categories", data.get("codes", {})))
             missings = set(data.get("missing_values", []))
@@ -713,6 +739,8 @@ class Variable(BaseModel):
                 q = Question(**q_val)
             elif isinstance(q_val, str):
                 q = Question(question_text=q_val)
+        elif "question_text" in data and data["question_text"]:
+            q = Question(question_text=str(data["question_text"]))
 
         return cls(
             name=str(name),

@@ -42,6 +42,11 @@ class ComparisonResult(BaseModel):
     )
 
     @property
+    def matched(self) -> bool:
+        """Returns True if comparison result represents a non-distinct match."""
+        return self.score > 0.0 and self.match_type != MatchType.DISTINCT
+
+    @property
     def all_match_types(self) -> list[MatchType]:
         """Returns ordered list of all unique match types (primary followed by secondary)."""
         seen = {self.match_type}
