@@ -3099,9 +3099,20 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
             "## 1. Per-Survey Deduplication & DDI-Lifecycle Upgrade Summary",
             "",
             (
-                "Each survey dataset was upgraded to DDI-Lifecycle 4.0 and analyzed for intra-survey "
-                "redundancy across Categories, CodeLists, Questions, and Variables "
-                "(`InstanceVariable` → `RepresentedVariable`)."
+                "**What is reported:** This section provides an audit of each individual survey dataset before "
+                "cross-survey harmonization begins. It quantifies the raw counts versus unique deduplicated counts "
+                "for Variables (`InstanceVariable` → `RepresentedVariable`), Questions (`QuestionItem`), "
+                "CodeLists, and Categories, along with the inventory of explicit documented sentinels "
+                "(`missing='Y'`) and inferred undocumented missing values."
+            ),
+            "",
+            (
+                "**How it works:** Legacy formats such as DDI-Codebook store metadata redundantly on each variable. "
+                "During ingestion, the engine upgrades each dataset to a structured DDI-Lifecycle 4.0 model by "
+                "extracting questions, categories, and response scales into discrete, first-class metadata resources. "
+                "Cryptographic Merkle hashing (`ContentFingerprint`) computes canonical digests across these items, "
+                "identifying exact intra-survey duplicates and calculating the redundancy reduction achieved by "
+                "adopting a reusable metadata architecture."
             ),
             "",
             (
@@ -3150,6 +3161,20 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
         [
             "## 2. Questions (`QuestionItem`) Harmonization & Representation Analysis",
             "",
+            (
+                "**What is reported:** This section evaluates survey questionnaire instruments across the collection, "
+                "inventorying total question instances, global unique question literals, cross-wave reuse rates, "
+                "near-matches, and questions linked to divergent variable representations or shared-stem batteries."
+            ),
+            "",
+            (
+                "**How it works:** Survey questions are normalized and fingerprinted to distinguish verbatim "
+                "cross-wave question reuse from wording revisions. Multi-tiered text comparators (syntactic "
+                "SequenceMatcher, Levenshtein edit distance, and token analyzers) detect phrasing variations and "
+                "question batteries (`[...]` shared stems), establishing whether questions remained consistent "
+                "throughout fieldwork waves."
+            ),
+            "",
             f"- **Total Intra-Survey Unique Question Instances:** `{qs.total_question_instances_across_surveys}`",
             (
                 f"- **Global Unique Exact Question Literals:** `{qs.unique_exact_questions_global}` "
@@ -3175,6 +3200,20 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
             [
                 "### 2.1 Illustrative Question Spelling, Inclusive Writing & Typographical Variations",
                 "",
+                (
+                    "**What is reported:** Pairs of questions across survey waves that share identical "
+                    "communicative intent but display minor orthographic discrepancies, typographical errors, "
+                    "punctuation shifts, or French inclusive writing inflections (e.g., `·e·s`, `(e)s`, or brackets)."
+                ),
+                "",
+                (
+                    "**How it works:** The engine routes question strings through a `TextSanitizer` and Unicode NFKD "
+                    "deaccenting pipeline to isolate non-substantive stylistic and typographical differences. Pairs "
+                    "meeting high syntactic similarity thresholds (≥ 0.90) are categorized by variation type, "
+                    "allowing survey methodologists to harmonize question labels across waves without distorting "
+                    "question semantics."
+                ),
+                "",
                 "| Variation Type | Score | Question A (Waves / Vars) | Question B (Waves / Vars) | Details |",
                 "| :--- | :--- | :--- | :--- | :--- |",
             ]
@@ -3194,6 +3233,21 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
         lines.extend(
             [
                 "### 2.2 Same Question Text with Different Variable Representations",
+                "",
+                (
+                    "**What is reported:** Questions where the field prompt presented to respondents was worded "
+                    "identically across waves, but the data collection format or response schema was altered in "
+                    "the resulting dataset (e.g., shifting from a 5-point Likert scale to an open-ended numeric "
+                    "integer, or changing category codes)."
+                ),
+                "",
+                (
+                    "**How it works:** By grouping variables by their normalized question text and comparing their "
+                    "underlying representation signatures (`representation_signature_strict`), the system flags "
+                    "measurement discrepancies where the field stimulus was held constant but the resulting data "
+                    "capture structure diverged, highlighting potential comparability breaks in longitudinal "
+                    "analysis."
+                ),
                 "",
                 (
                     "| Question Text | Representation A (Waves / Vars) | "
@@ -3222,6 +3276,19 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
             [
                 "### 2.3 Question Near-Match Harmonization Candidates",
                 "",
+                (
+                    "**What is reported:** Candidate pairs of questions that exhibit substantial wording similarity "
+                    "(0.80 ≤ score < 0.95) and likely represent longitudinal revisions, modified lead-ins, or "
+                    "adapted question stems across survey rounds."
+                ),
+                "",
+                (
+                    "**How it works:** A syntactic token blocker filters question pairs by shared vocabulary, "
+                    "followed by order-aware Gestalt pattern matching (`SequenceMatcher`). The algorithm identifies "
+                    "substantive phrasing shifts and extracts divergence rationales, providing survey curators with a "
+                    "curated review list for longitudinal question harmonization."
+                ),
+                "",
                 "| Score | Question A (Waves) | Question B (Waves) | Rationale |",
                 "| :--- | :--- | :--- | :--- |",
             ]
@@ -3242,6 +3309,19 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
     lines.extend(
         [
             "## 3. CodeLists (`CodeList`) & Sentinel/Missing Values Analysis",
+            "",
+            (
+                "**What is reported:** This section analyzes categorical response domains across datasets. It compares "
+                "full codelists (including non-substantive missing values) against pure substantive measurement "
+                "scales, revealing category recodes, order permutations, and longitudinal scale evolution."
+            ),
+            "",
+            (
+                "**How it works:** Codelists are decomposed into two Merkle partitions: a full sequence "
+                "digest (all codes and categories) and a substantive core digest (valid response items only). "
+                "Isolating substantive concepts from methodological sentinel conventions (e.g., 'Don\\'t know', "
+                "'Refusal') unlocks latent cross-wave equivalence and quantifies scale stability across survey waves."
+            ),
             "",
             f"- **Total Intra-Survey Unique CodeLists:** `{cls.total_codelist_instances_across_surveys}`",
             (
@@ -3272,6 +3352,19 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
                 "### 3.1 Substantive-Identical CodeLists with Divergent Sentinel/Missing Values",
                 "",
                 (
+                    "**What is reported:** Response scales whose substantive categories and codes match 100% across "
+                    "waves, but whose sentinel missing value schemes diverge (e.g., one wave using `98 = Don't know`, "
+                    "while another wave adds `99 = Refusal` or omits sentinels)."
+                ),
+                "",
+                (
+                    "**How it works:** By evaluating metadata `is_missing` flags and lexicon-based missingness "
+                    "patterns, the engine separates valid answer categories from non-substantive sentinels. "
+                    "Matching the substantive core while isolating missing-value codes allows cross-wave scale "
+                    "alignment that would otherwise be blocked by conflicting missingness schemes."
+                ),
+                "",
+                (
                     "| Substantive Scale | Variant A Sentinels (Waves / Vars) | "
                     "Variant B Sentinels (Waves / Vars) | Explanation |"
                 ),
@@ -3300,6 +3393,19 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
             [
                 "### 3.2 Same Categories with Different Codes (`CATEGORIES_EXACT_CODES_DIFFERENT`)",
                 "",
+                (
+                    "**What is reported:** Scale recodings where survey waves employed identical semantic categories "
+                    "in the questionnaire, but assigned different numerical codes in the data files (e.g., shifting "
+                    "from 1-based indexing to 0-based indexing, or inverting scale polarity)."
+                ),
+                "",
+                (
+                    "**How it works:** The engine computes an order-independent set hash of category concepts "
+                    "(`category_set_digest`). When two codelists share identical category sets but have differing "
+                    "code assignments, the algorithm automatically extracts a value-by-value recode translation "
+                    "dictionary (`A → B`) to enable automated data harmonization."
+                ),
+                "",
                 "| CodeList A (Waves / Vars) | CodeList B (Waves / Vars) | Recode Mapping (`A → B`) |",
                 "| :--- | :--- | :--- |",
             ]
@@ -3318,6 +3424,18 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
         lines.extend(
             [
                 "### 3.3 Same Codes with Minor Category Label Variations",
+                "",
+                (
+                    "**What is reported:** Codelists that preserve identical numerical code values and category "
+                    "ordering across surveys, but exhibit minor cosmetic variations in category wording, "
+                    "capitalization, or inclusive phrasing."
+                ),
+                "",
+                (
+                    "**How it works:** Pairwise code-by-code inspection verifies that numeric code values remain "
+                    "synchronized across waves while computing string similarity on the corresponding category "
+                    "labels. It documents cosmetic wording revisions that do not impact numerical coding consistency."
+                ),
                 "",
                 "| CodeList A (Waves) | CodeList B (Waves) | Label Differences |",
                 "| :--- | :--- | :--- |",
@@ -3338,6 +3456,19 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
     lines.extend(
         [
             "## 4. Categories (`Category`) & Missingness Curation Analysis",
+            "",
+            (
+                "**What is reported:** This section provides a global curation audit of individual category labels "
+                "across the collection. It tracks category reuse rates, orthographic/inclusive-writing variants, "
+                "missingness flag parity, and leaked questionnaire routing filter artifacts."
+            ),
+            "",
+            (
+                "**How it works:** Category labels are analyzed through multi-stage text normalization (NFKC, "
+                "deaccenting, case-folding) and regex pattern matching against standardized multilingual missingness "
+                "lexicons. Cross-referencing explicit DDI `missing='Y'` attributes against lexical indicators surfaces "
+                "inconsistencies and quality issues across survey archives."
+            ),
             "",
             f"- **Total Intra-Survey Unique Categories:** `{cats.total_category_instances_across_surveys}`",
             (
@@ -3367,6 +3498,18 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
             [
                 "### 4.1 Category Spelling, Inclusive Writing & Typographical Variations",
                 "",
+                (
+                    "**What is reported:** Pairs of category labels across survey waves that share identical "
+                    "substantive meaning but differ in punctuation, diacritics, ligature encodings, or French "
+                    "inclusive writing forms (e.g., `Employé·e` vs `Employé(e)`)."
+                ),
+                "",
+                (
+                    "**How it works:** Normalized string matching and typo sanitization cluster near-identical "
+                    "labels, classifying the nature of the variation. This enables data archives to systematically "
+                    "curate and standardize historical response categories into a single controlled ontology."
+                ),
+                "",
                 "| Variation Type | Score | Canonical Label (Waves) | Variant Label (Waves) | Explanation |",
                 "| :--- | :--- | :--- | :--- | :--- |",
             ]
@@ -3385,6 +3528,20 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
         lines.extend(
             [
                 "### 4.2 Sentinel / Missingness Flag Consistency Audit",
+                "",
+                (
+                    "**What is reported:** Category labels representing non-substantive responses (e.g., "
+                    "'Ne sait pas', 'Refus de répondre', 'Non concerné') that are inconsistently documented across "
+                    "survey files—flagged as `missing='Y'` in some waves but recorded as substantive valid data "
+                    "in others."
+                ),
+                "",
+                (
+                    "**How it works:** The system catalogs all occurrences of category labels across waves and "
+                    "checks the consistency of the `is_missing_explicit` property. Inconsistent entries and "
+                    "undocumented missing values matching standard multilingual patterns are flagged with "
+                    "remediation recommendations."
+                ),
                 "",
                 (
                     "| Category Label | Finding Type | Flagged `missing='Y'` In | "
@@ -3408,6 +3565,18 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
             [
                 "### 4.3 Questionnaire Routing Filter Artifacts Leaked into Category Labels",
                 "",
+                (
+                    "**What is reported:** Technical data quality anomalies where questionnaire routing "
+                    "skip-patterns or filter expressions (e.g., `b2-b3-b5-b5d` or `q12=1`) were inadvertently "
+                    "stored in category label fields during CAPI/CAWI data export."
+                ),
+                "",
+                (
+                    "**How it works:** Regular expression detectors identify leaked filter routing syntax, boolean "
+                    "expressions, and variable ID chains stored inside category text fields. This highlights metadata "
+                    "debt that requires cleaning before public data dissemination."
+                ),
+                "",
                 "| Corrupted Category Label | Surveys Affected | Occurrences |",
                 "| :--- | :--- | :--- |",
             ]
@@ -3423,6 +3592,20 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
     lines.extend(
         [
             "## 5. Variable Cascade (`InstanceVariable` → `RepresentedVariable`) Analysis",
+            "",
+            (
+                "**What is reported:** This section models the DDI-Lifecycle variable cascade by grouping file-level "
+                "physical variables (`InstanceVariable`) into reusable conceptual variables (`RepresentedVariable`). "
+                "It tracks shared cross-wave variables, representation drift, and dangerous 'false friend' variable "
+                "name collisions."
+            ),
+            "",
+            (
+                "**How it works:** In accordance with DDI 3.3/4.0 and DDI-CDI, an `InstanceVariable` binds data to a "
+                "specific file column, while a `RepresentedVariable` couples a concept/question anchor with a "
+                "substantive value domain. The engine hashes representation attributes (codelist, data type, numeric "
+                "range, decimals, unit) to cluster identical measurements and track their lineage over time."
+            ),
             "",
             f"- **Total `InstanceVariable`s Across Collection:** `{vs.total_instance_variables_across_surveys}`",
             (
@@ -3455,6 +3638,19 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
                 "### 5.1 Top Shared `RepresentedVariable`s Across Waves",
                 "",
                 (
+                    "**What is reported:** The most persistent `RepresentedVariable`s in the collection, showcasing "
+                    "measurement schemas that remain stable across multiple survey waves alongside their physical "
+                    "variable names and question anchors."
+                ),
+                "",
+                (
+                    "**How it works:** Clusters sharing identical conceptual anchors and representation signatures are "
+                    "ranked by wave coverage. For each cluster, the engine synthesizes a canonical "
+                    "`RepresentedVariable` identifier and details the underlying `InstanceVariable` lineage across "
+                    "files."
+                ),
+                "",
+                (
                     "| RepVar ID | Question / Concept Anchor | Representation & Domain | "
                     "Waves (`InstanceVariable` Lineage) | Strict / Sentinel Note |"
                 ),
@@ -3478,6 +3674,19 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
             [
                 "### 5.2 Concept / Question Lineages with Representation Drift Across Waves",
                 "",
+                (
+                    "**What is reported:** Measurement drift where survey waves continued to measure the same "
+                    "underlying question or concept, but altered the data representation (e.g., changing scale width, "
+                    "switching from numeric integer to category codes, or modifying valid ranges)."
+                ),
+                "",
+                (
+                    "**How it works:** Variables sharing a common question text or concept anchor are tracked across "
+                    "consecutive waves. The system compares their representation signatures (`strict_sig` and "
+                    "`subst_sig`), diagnosing whether the discrepancy is limited to missing-value conventions or "
+                    "represents structural measurement drift."
+                ),
+                "",
                 "| Question / Concept | Drift Types | Representation Variants Across Waves |",
                 "| :--- | :--- | :--- |",
             ]
@@ -3500,6 +3709,19 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
             [
                 "### 5.3 'False Friend' `InstanceVariable` Names Reused for Different Concepts",
                 "",
+                (
+                    "**What is reported:** An essential warning for data analysts: variable identifiers that share "
+                    "the exact same short column name across waves (e.g., `Q10` or `V05`) but measure completely "
+                    "different concepts or questions in different survey rounds."
+                ),
+                "",
+                (
+                    "**How it works:** Physical variable names are indexed across datasets and cross-referenced "
+                    "against their associated question texts and category concepts. The engine flags collisions "
+                    "where merging datasets on column name alone would silently join incompatible data, preventing "
+                    "serious methodological errors."
+                ),
+                "",
                 "| Variable Name | Distinct Concepts | Wave-by-Wave Meaning Collision |",
                 "| :--- | :--- | :--- |",
             ]
@@ -3518,6 +3740,18 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
         [
             "## 6. Longitudinal Evolution & Wave-over-Wave Continuity",
             "",
+            (
+                "**What is reported:** This section assesses the macro-level longitudinal design of the survey "
+                "collection. It classifies measurement lineages into persistence tiers (core permanent, rotating "
+                "modules, pair-wave, and one-off topical) and measures retention rates across survey rounds."
+            ),
+            "",
+            (
+                "**How it works:** By tracking question and concept lineages through chronologically ordered waves, "
+                "the engine evaluates the continuity of survey instruments, measuring the proportion of variables "
+                "retained verbatim, modified, introduced, or retired across the lifecycle of the collection."
+            ),
+            "",
             f"- **Total Concept/Question Lineages Tracked:** `{ls.total_concept_lineages}`",
             f"- **Core Permanent Items (≥ 80% of waves):** `{ls.core_permanent_lineages_count}`",
             f"- **Rotating / Intermittent Modules (3 to <80% of waves):** `{ls.rotating_module_lineages_count}`",
@@ -3531,6 +3765,19 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
         lines.extend(
             [
                 "### 6.1 Wave-over-Wave Transition Matrix ($W_{t-1} \\rightarrow W_t$)",
+                "",
+                (
+                    "**What is reported:** Continuity dynamics between consecutive survey waves, detailing how many "
+                    "concepts were retained with identical representations, retained with minor sentinel or wording "
+                    "drift, newly introduced, or dropped from the questionnaire."
+                ),
+                "",
+                (
+                    "**How it works:** Transition metrics are computed between sequential waves $W_{t-1}$ and $W_t$. "
+                    "The engine computes the net continuity rate "
+                    "($(\\text{retained} / \\text{total}_{W_{t-1}}) \\times 100\\%$), "
+                    "providing an objective measure of questionnaire stability across waves."
+                ),
                 "",
                 (
                     "| Transition | Concepts ($W_{t-1} \\rightarrow W_t$) | Retained Exact Rep | "
@@ -3555,6 +3802,19 @@ def render_collection_report_markdown(report: CollectionComparisonReport) -> str
         lines.extend(
             [
                 "### 6.2 Longitudinal Continuity Matrix (Top Lineages)",
+                "",
+                (
+                    "**What is reported:** A bird's-eye view of key measurement lineages across all survey waves "
+                    "in chronological order, showing which items were asked and whether their representations were "
+                    "preserved."
+                ),
+                "",
+                (
+                    "**How it works:** A matrix maps persistent concept lineages against survey waves using "
+                    "standardized status indicators (✅ Exact representation, 🟡 Sentinel variation, 🟠 Structural "
+                    "representation drift, or — absent), giving researchers an immediate visual overview of "
+                    "longitudinal comparability."
+                ),
                 "",
                 f"| Lineage | Question / Concept | Tier | Waves | {survey_headers} |",
                 f"| :--- | :--- | :--- | :---: | {survey_sep} |",

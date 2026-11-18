@@ -197,7 +197,7 @@ def report_cmd(
                 "collection_explorer.html, and cache/."
             ),
         ),
-    ] = Path("collection_report_out"),
+    ] = Path("report_out"),
     pattern: Annotated[
         str,
         typer.Option(
