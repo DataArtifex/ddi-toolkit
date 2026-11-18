@@ -24,7 +24,7 @@ import re
 import unicodedata
 import xml.etree.ElementTree as ET
 from collections import Counter, defaultdict
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
 from difflib import SequenceMatcher
 from pathlib import Path
@@ -850,13 +850,18 @@ def _load_from_ddi_codebook(
     file_sha: str,
     cache_dir: Path | None,
     write_ddi40_artifacts: bool = True,
+    progress_callback: Callable[[str], None] | None = None,
 ) -> SurveyBundle:
     """Upgrades a DDI-Codebook XML file via CodebookToLifecycleConverter and builds a SurveyBundle."""
     from ..ddicodebook.converters import CodebookToLifecycleConverter
     from ..ddicodebook.model import loadxml
 
+    if progress_callback:
+        progress_callback(f"Reading XML '{path.name}'...")
     flavor = _detect_ddi_codebook_flavor(path)
     codebook = loadxml(str(path))
+    if progress_callback:
+        progress_callback(f"Converting '{path.name}' ({flavor}) to DDI-Lifecycle 4.0...")
     converter = CodebookToLifecycleConverter(
         codebook=codebook,
         harmonize_codes=True,
@@ -1470,6 +1475,7 @@ def load_survey_bundle(
     cache_dir: Path | None = None,
     refresh_cache: bool = False,
     write_ddi40_artifacts: bool = True,
+    progress_callback: Callable[[str], None] | None = None,
 ) -> SurveyBundle:
     """Loads any supported DDI file into a normalized SurveyBundle, utilizing disk caching."""
     file_sha = _compute_file_sha256(path)
@@ -1481,6 +1487,8 @@ def load_survey_bundle(
             try:
                 cached = SurveyBundle.model_validate_json(bundle_cache_file.read_text(encoding="utf-8"))
                 if cached.cache_version == CACHE_SCHEMA_VERSION:
+                    if progress_callback:
+                        progress_callback(f"Loaded {path.name} from cache ({cached.survey_key})")
                     return cached
             except Exception:
                 pass
@@ -1494,6 +1502,7 @@ def load_survey_bundle(
             file_sha=file_sha,
             cache_dir=cache_dir,
             write_ddi40_artifacts=write_ddi40_artifacts,
+            progress_callback=progress_callback,
         )
 
     if bundle_cache_file is not None:
@@ -2973,22 +2982,35 @@ def analyze_collection(
     order_by: str = "auto",
     refresh_cache: bool = False,
     write_ddi40_artifacts: bool = True,
+    progress_callback: Callable[[str], None] | None = None,
 ) -> CollectionComparisonReport:
     """Executes Stage 1 (per-survey deduplication & DDI-L upgrade) and Stage 2/3
     (cross-survey comparison of Categories, CodeLists, Questions, Variables, and Longitudinal evolution).
     """
     cache_path = Path(cache_dir) if cache_dir is not None else None
     raw_bundles: list[SurveyBundle] = []
-    for f in files:
+    total_files = len(files)
+    for idx, f in enumerate(files, 1):
         fpath = Path(f)
+        if progress_callback:
+            progress_callback(f"[{idx}/{total_files}] Ingesting {fpath.name}...")
         bundle = load_survey_bundle(
             path=fpath,
             cache_dir=cache_path,
             refresh_cache=refresh_cache,
             write_ddi40_artifacts=write_ddi40_artifacts,
+            progress_callback=progress_callback,
         )
+        if progress_callback:
+            progress_callback(
+                f"[{idx}/{total_files}] Ready {bundle.survey_key} ({bundle.ddi_flavor}): "
+                f"{bundle.raw_variable_count} vars, {len(bundle.categories)} categories, "
+                f"{len(bundle.codelists)} codelists, {len(bundle.questions)} questions"
+            )
         raw_bundles.append(bundle)
 
+    if progress_callback:
+        progress_callback("Ordering surveys and building intra-survey deduplication summaries...")
     bundles = _order_bundles(raw_bundles, order_by=order_by)
     normalizer = TextNormalizer()
 
@@ -3027,9 +3049,19 @@ def analyze_collection(
         for b in bundles
     ]
 
+    if progress_callback:
+        progress_callback(f"Cross-survey analysis: comparing categories across {len(bundles)} surveys...")
     cat_section = _analyze_categories(bundles, normalizer)
+    if progress_callback:
+        progress_callback(f"Cross-survey analysis: comparing codelists across {len(bundles)} surveys...")
     cl_section = _analyze_codelists(bundles, normalizer)
+    if progress_callback:
+        progress_callback(f"Cross-survey analysis: comparing questions across {len(bundles)} surveys...")
     q_section = _analyze_questions(bundles, normalizer)
+    if progress_callback:
+        progress_callback(
+            f"Cross-survey analysis: comparing variables & longitudinal evolution across {len(bundles)} surveys..."
+        )
     var_section, long_section = _analyze_variables_and_longitudinal(bundles, normalizer)
 
     return CollectionComparisonReport(

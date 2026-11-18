@@ -274,6 +274,14 @@ def report_cmd(
             help="Custom API base URL for Ollama or OpenAI-compatible endpoints.",
         ),
     ] = None,
+    verbose: Annotated[
+        bool,
+        typer.Option(
+            "--verbose",
+            "-v",
+            help="Show detailed progress steps during collection ingestion and comparison.",
+        ),
+    ] = False,
 ) -> None:
     """Runs Phase 1 multi-dataset comparison (and optionally Phase 2 LLM narratives)."""
     from dartfx.ddi.harmonizer.llm import LLMConfig, LLMProvider, NarrativeStyle, generate_all_stories
@@ -288,14 +296,25 @@ def report_cmd(
     output_dir.mkdir(parents=True, exist_ok=True)
     cache_dir = output_dir / "cache"
 
-    console.print(f"[bold cyan]Analyzing {len(files)} DDI datasets...[/bold cyan]")
-    report = analyze_collection(
-        files=files,
-        title=title,
-        cache_dir=cache_dir,
-        order_by=order_by,
-        refresh_cache=refresh_cache,
-    )
+    console.print(f"[bold cyan]Comparing {len(files)} DDI datasets across collection...[/bold cyan]")
+
+    with console.status("[bold cyan]Analyzing DDI collection...[/bold cyan]", spinner="dots") as status:
+
+        def status_cb(msg: str) -> None:
+            status.update(f"[bold cyan]{msg}[/bold cyan]")
+            if verbose:
+                console.print(f"  [dim]•[/dim] {msg}")
+
+        report = analyze_collection(
+            files=files,
+            title=title,
+            cache_dir=cache_dir,
+            order_by=order_by,
+            refresh_cache=refresh_cache,
+            progress_callback=status_cb,
+        )
+
+    console.print("[bold green]✔[/bold green] Cross-survey analysis complete.")
 
     json_path = output_dir / "collection_report.json"
     md_path = output_dir / "collection_report.md"

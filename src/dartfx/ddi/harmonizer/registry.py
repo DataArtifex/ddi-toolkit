@@ -13,7 +13,7 @@ from collections.abc import Callable, Sequence
 
 from .blocker import TokenBlocker
 from .comparators.base import ContentComparator
-from .comparators.syntactic import SequenceMatcherComparator
+from .comparators.syntactic import LevenshteinComparator, SequenceMatcherComparator
 from .models import ComparableResource, HarmonizationMatch, MatchType
 from .review import CuratedCrosswalk, HumanReviewQueue
 
@@ -346,6 +346,24 @@ class HarmonizationRegistry[T: ComparableResource]:
 
         # 8. Comparator search across canonical items
         if self._canonical_list:
+            if (
+                threshold >= 1.0
+                and self.review_queue is None
+                and isinstance(self.comparator, (SequenceMatcherComparator, LevenshteinComparator))
+            ):
+                return HarmonizationMatch(
+                    matched=False,
+                    canonical_resource=None,
+                    candidate_resource=candidate,
+                    score=0.0,
+                    match_type=MatchType.DISTINCT,
+                    identifier_matched=False,
+                    content_matched=False,
+                    identifier_kind=cand_ident_kind,
+                    is_random_guid=cand_is_guid,
+                    reason="No matching canonical resource found",
+                )
+
             search_pool: Sequence[T]
             if self.blocker is not None and len(self._canonical_list) > 10:
                 search_pool = self.blocker.get_candidates(candidate, min_shared_tokens=1)
