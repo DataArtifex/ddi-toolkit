@@ -191,6 +191,12 @@ dartfx-ddi ddil324 my_study.ddi33.xml --format xml --pretty
 # Cap fragment output count (default: 0 / unlimited)
 dartfx-ddi ddil324 my_study.ddi33.xml --limit 100
 
+# Profile a DDI document (Codebook or Lifecycle; produces <stem>.profile.md by default, same as --output .)
+dartfx-ddi profile my_study.xml
+
+# Stream profile report to stdout explicitly with -o -
+dartfx-ddi profile my_study.xml -o -
+
 # Analyze resource profile and export Markdown, HTML, JSON, Mermaid, DOT, Turtle
 dartfx-ddi ddil-profile my_study.ddi33.xml --format all --output-dir ./reports/
 

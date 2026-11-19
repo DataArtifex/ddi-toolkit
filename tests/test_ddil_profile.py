@@ -348,10 +348,26 @@ def test_to_networkx():
         pass
 
 
+def test_cli_ddil_profile_default_output_markdown(tmp_path: Path):
+    xml_path = sample_xml_path()
+    filename = Path(xml_path).name
+    stem = Path(xml_path).stem
+    with runner.isolated_filesystem(temp_dir=tmp_path):
+        result = runner.invoke(app, ["ddil-profile", xml_path, "--target-class", "QuestionItem"])
+        assert result.exit_code == 0
+        md_file = Path(f"{stem}.profile.md")
+        assert md_file.exists()
+        content = md_file.read_text(encoding="utf-8")
+        assert f"# DDI-Lifecycle Resource Profile: {filename}" in content
+        assert f"- **Source File:** `{filename}`" in content
+        assert "QuestionItem" in content
+        assert "QuestionConstruct" in content
+
+
 def test_cli_ddil_profile_markdown():
     xml_path = sample_xml_path()
     filename = Path(xml_path).name
-    result = runner.invoke(app, ["ddil-profile", xml_path, "--target-class", "QuestionItem"])
+    result = runner.invoke(app, ["ddil-profile", xml_path, "--target-class", "QuestionItem", "-o", "-"])
     assert result.exit_code == 0
     assert f"# DDI-Lifecycle Resource Profile: {filename}" in result.stdout
     assert f"- **Source File:** `{filename}`" in result.stdout
@@ -444,7 +460,7 @@ def test_cli_ddil_profile_turtle(tmp_path: Path):
 
 def test_cli_ddil_profile_mermaid():
     xml_path = sample_xml_path()
-    result = runner.invoke(app, ["ddil-profile", xml_path, "--format", "mermaid", "--min-count", "100"])
+    result = runner.invoke(app, ["ddil-profile", xml_path, "--format", "mermaid", "--min-count", "100", "-o", "-"])
     assert result.exit_code == 0
     assert "graph LR" in result.stdout
 
@@ -460,6 +476,8 @@ def test_cli_ddil_profile_custom_title():
             "QuestionItem",
             "--title",
             "Custom Study Profile Network",
+            "-o",
+            "-",
         ],
     )
     assert result.exit_code == 0
@@ -584,6 +602,8 @@ def test_cli_ddil_profile_repeatable_between():
             "QuestionItem,OutParameter",
             "-b",
             "Sequence,Category",
+            "-o",
+            "-",
         ],
     )
     assert result.exit_code == 0

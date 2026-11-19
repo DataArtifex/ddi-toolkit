@@ -429,7 +429,11 @@ def ddic_profile(
     ] = "recommended",
     output: Annotated[
         Path | None,
-        typer.Option("--output", "-o", help="Write report to output file path (or base prefix for multi-format)"),
+        typer.Option(
+            "--output",
+            "-o",
+            help="Write report to output file path, directory, or '-' for stdout (default: '.')",
+        ),
     ] = None,
     output_dir: Annotated[
         Path | None,
@@ -508,6 +512,12 @@ def ddic_profile(
             seen.add(f)
             deduped_formats.append(f)
     requested_formats = deduped_formats or ["md"]
+
+    is_stdout = bool(output and str(output) == "-")
+    if is_stdout:
+        output = None
+    elif output is None and output_dir is None:
+        output = Path(".")
 
     # Determine canonical JSON cache location
     if output_dir is not None:
@@ -600,10 +610,15 @@ def ddic_profile(
             return tree_text, ".xml-tree.txt"
         return full_profile.to_markdown(detailed_variables=detailed), ".md"
 
-    # Single-format stdout when output and output_dir are omitted
-    if output is None and output_dir is None and len(requested_formats) == 1:
-        content, _ = _render(requested_formats[0])
-        typer.echo(content)
+    # Single-format or multi-format stdout when output is omitted or explicitly directed to '-'
+    if output is None and output_dir is None:
+        if len(requested_formats) == 1:
+            content, _ = _render(requested_formats[0])
+            typer.echo(content)
+        else:
+            for f in requested_formats:
+                content, ext = _render(f)
+                typer.echo(f"<!-- Format: {f.upper()} ({ext}) -->\n{content}\n")
     else:
         for f in requested_formats:
             content, ext = _render(f)
@@ -1055,7 +1070,11 @@ def ddil_profile(
     ] = 0,
     output: Annotated[
         Path | None,
-        typer.Option("--output", "-o", help="Write report to output file path (or base prefix for multi-format)"),
+        typer.Option(
+            "--output",
+            "-o",
+            help="Write report to output file path, directory, or '-' for stdout (default: '.')",
+        ),
     ] = None,
     output_dir: Annotated[
         Path | None,
@@ -1123,6 +1142,12 @@ def ddil_profile(
             seen.add(f)
             deduped_formats.append(f)
     requested_formats = deduped_formats or ["md"]
+
+    is_stdout = bool(output and str(output) == "-")
+    if is_stdout:
+        output = None
+    elif output is None and output_dir is None:
+        output = Path(".")
 
     # Determine canonical JSON cache location
     if output_dir is not None:
@@ -1329,6 +1354,247 @@ def ddil_profile(
                 else:
                     sep = f"/* Format: {fmt.upper()} ({ext}) */\n"
                 typer.echo(sep + content + "\n\n" + ("=" * 60) + "\n")
+
+
+def _detect_ddi_xml_standard(xmlfile: Path) -> str:
+    """Detects whether an XML file is DDI-Codebook or DDI-Lifecycle."""
+    import xml.etree.ElementTree as ET
+
+    try:
+        for _, elem in ET.iterparse(str(xmlfile), events=("start",)):
+            tag = elem.tag
+            tag_name = tag.split("}", 1)[1] if "}" in tag else tag
+            tag_lower = tag_name.lower()
+            if tag_lower in ("codebook", "codebooktype") or "codebook" in tag.lower():
+                return "ddic"
+            if (
+                tag_lower in ("fragmentinstance", "ddiinstance", "fragment")
+                or "instance:3_" in tag.lower()
+                or "lifecycle" in tag.lower()
+            ):
+                return "ddil"
+            break
+    except Exception:
+        pass
+    name = xmlfile.name.lower()
+    if "codebook" in name or ".ddic." in name:
+        return "ddic"
+    return "ddil"
+
+
+@app.command(name="profile", no_args_is_help=True)
+def profile(
+    xmlfile: Annotated[
+        Path,
+        typer.Argument(
+            help="DDI XML file (DDI-Codebook 2.5/2.6 or DDI-Lifecycle 3.x FragmentInstance/DDIInstance)",
+            exists=True,
+            dir_okay=False,
+        ),
+    ],
+    format: Annotated[
+        list[str] | None,
+        typer.Option(
+            "--format",
+            "-f",
+            help=(
+                "Output format: 'md', 'json', 'mermaid', 'html', 'dot', 'ttl', or 'all'. Repeatable / comma-separated."
+            ),
+        ),
+    ] = None,
+    output: Annotated[
+        Path | None,
+        typer.Option(
+            "--output",
+            "-o",
+            help="Write report to output file path, directory, or '-' for stdout (default: '.')",
+        ),
+    ] = None,
+    output_dir: Annotated[
+        Path | None,
+        typer.Option(
+            "--output-dir",
+            "-od",
+            help="Directory where reports will be saved (e.g. <stem>.profile.md, .json, .html)",
+        ),
+    ] = None,
+    title: Annotated[
+        str | None,
+        typer.Option("--title", help="Custom title for the profile report"),
+    ] = None,
+    refresh: Annotated[
+        bool,
+        typer.Option(
+            "--refresh",
+            "-r",
+            help="Force re-parsing XML and refresh cached JSON profile (default: False)",
+        ),
+    ] = False,
+    # DDI-Codebook specific options
+    validation_profile: Annotated[
+        str,
+        typer.Option(
+            "--profile",
+            "-p",
+            help=(
+                "[Codebook] Validation profile: 'recommended' (default), 'cdif', 'schema', custom YAML path, or 'none'"
+            ),
+        ),
+    ] = "recommended",
+    detailed: Annotated[
+        bool,
+        typer.Option(
+            "--detailed/--summary",
+            help="[Codebook] Include detailed variable inventory in report (default: detailed)",
+        ),
+    ] = True,
+    strict: Annotated[
+        bool,
+        typer.Option(
+            "--strict/--no-strict",
+            help="[Codebook] Treat validation warnings as errors",
+        ),
+    ] = False,
+    xml_tree: Annotated[
+        bool,
+        typer.Option(
+            "--xml-tree",
+            help="[Codebook] Print only the BaseX-style XML structural tree analysis to console",
+        ),
+    ] = False,
+    min_grade: Annotated[
+        str | None,
+        typer.Option(
+            "--min-grade",
+            help="[Codebook] Minimum required quality grade (e.g. 'A', 'B', 'C'). Exits with code 1 if failed.",
+        ),
+    ] = None,
+    # DDI-Lifecycle specific options
+    target_class: Annotated[
+        str | None,
+        typer.Option("--target-class", "-t", help="[Lifecycle] Filter by target class (e.g. QuestionItem, Variable)"),
+    ] = None,
+    source_class: Annotated[
+        str | None,
+        typer.Option(
+            "--source-class", "-s", help="[Lifecycle] Filter by source class (e.g. QuestionConstruct, Sequence)"
+        ),
+    ] = None,
+    include: Annotated[
+        list[str] | None,
+        typer.Option(
+            "--include",
+            "-inc",
+            "--include-class",
+            help="[Lifecycle] Include specific resource classes. Repeatable / comma-separated.",
+        ),
+    ] = None,
+    exclude: Annotated[
+        list[str] | None,
+        typer.Option(
+            "--exclude",
+            "-exc",
+            "--exclude-class",
+            help="[Lifecycle] Exclude specific resource classes. Repeatable / comma-separated.",
+        ),
+    ] = None,
+    between: Annotated[
+        list[str] | None,
+        typer.Option(
+            "--between",
+            "-b",
+            "--between-classes",
+            help="[Lifecycle] Find connecting paths between class pairs. Repeatable.",
+        ),
+    ] = None,
+    from_class: Annotated[
+        list[str] | None,
+        typer.Option(
+            "--from",
+            "--from-class",
+            help="[Lifecycle] Discover all paths originating from class(es). Repeatable.",
+        ),
+    ] = None,
+    to_class: Annotated[
+        list[str] | None,
+        typer.Option(
+            "--to",
+            "--to-class",
+            help="[Lifecycle] Discover all paths leading into class(es). Repeatable.",
+        ),
+    ] = None,
+    max_hops: Annotated[
+        int,
+        typer.Option("--max-hops", help="[Lifecycle] Maximum path length/hops between classes"),
+    ] = 5,
+    directed: Annotated[
+        bool | None,
+        typer.Option(
+            "--directed/--undirected",
+            help="[Lifecycle] Enforce directed or undirected reference traversal",
+        ),
+    ] = None,
+    min_count: Annotated[
+        int,
+        typer.Option("--min-count", "-m", help="[Lifecycle] Minimum reference count threshold to include"),
+    ] = 0,
+    mermaid: Annotated[
+        bool,
+        typer.Option("--mermaid/--no-mermaid", help="[Lifecycle] Include Mermaid diagram in Markdown report"),
+    ] = False,
+    progress: Annotated[
+        bool,
+        typer.Option(
+            "--progress/--no-progress",
+            "-pgr/-npgr",
+            help="Display live progress bar while streaming",
+        ),
+    ] = True,
+    loglevel: Annotated[LogLevel, typer.Option(help="Log level")] = LogLevel.info,
+):
+    """
+    Profiles a DDI document (DDI-Codebook or DDI-Lifecycle).
+    Auto-detects the DDI specification and generates a Markdown profile report by default
+    (written to current directory, same as --output .).
+    """
+    standard = _detect_ddi_xml_standard(xmlfile)
+    if standard == "ddic":
+        ddic_profile(
+            xmlfile=xmlfile,
+            format=format,
+            profile=validation_profile,
+            output=output,
+            output_dir=output_dir,
+            title=title,
+            refresh=refresh,
+            detailed=detailed,
+            strict=strict,
+            xml_tree=xml_tree,
+            min_grade=min_grade,
+            loglevel=loglevel,
+        )
+    else:
+        ddil_profile(
+            xmlfile=xmlfile,
+            format=format,
+            target_class=target_class,
+            source_class=source_class,
+            include=include,
+            exclude=exclude,
+            between=between,
+            from_class=from_class,
+            to_class=to_class,
+            max_hops=max_hops,
+            directed=directed,
+            min_count=min_count,
+            output=output,
+            output_dir=output_dir,
+            mermaid=mermaid,
+            title=title,
+            refresh=refresh,
+            progress=progress,
+            loglevel=loglevel,
+        )
 
 
 def main():

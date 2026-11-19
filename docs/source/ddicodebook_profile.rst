@@ -340,11 +340,17 @@ Command-Line Interface (`dartfx-ddi ddic-profile`)
 
 The ``dartfx-ddi ddic-profile`` command provides terminal access to all profiling and QA capabilities:
 
-Basic Markdown report to stdout:
+Generate executive Markdown report file (default behavior, equivalent to ``--output .``):
 
 .. code-block:: bash
 
    dartfx-ddi ddic-profile mycodebook.xml
+
+Stream Markdown report directly to stdout:
+
+.. code-block:: bash
+
+   dartfx-ddi ddic-profile mycodebook.xml -o -
 
 Generate all formats (Markdown, JSON, HTML) in an output directory:
 

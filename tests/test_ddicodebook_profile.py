@@ -145,10 +145,23 @@ def test_profile_html_rendering():
     assert "switchTab" in html_content
 
 
+def test_cli_ddic_profile_default_output_markdown(tmp_path):
+    xml_path = tmp_path / "simple_yndk.xml"
+    xml_path.write_bytes((data_dir() / "simple_yndk.xml").read_bytes())
+    with runner.isolated_filesystem(temp_dir=tmp_path):
+        result = runner.invoke(app, ["ddic-profile", str(xml_path)])
+        assert result.exit_code == 0
+        md_file = Path("simple_yndk.profile.md")
+        assert md_file.exists()
+        content = md_file.read_text(encoding="utf-8")
+        assert "# DDI-Codebook Profile:" in content
+        assert "Quality Assurance & Conformance" in content
+
+
 def test_cli_ddic_profile_stdout(tmp_path):
     xml_path = tmp_path / "simple_yndk.xml"
     xml_path.write_bytes((data_dir() / "simple_yndk.xml").read_bytes())
-    result = runner.invoke(app, ["ddic-profile", str(xml_path)])
+    result = runner.invoke(app, ["ddic-profile", str(xml_path), "-o", "-"])
     assert result.exit_code == 0
     assert "# DDI-Codebook Profile:" in result.stdout
     assert "Quality Assurance & Conformance" in result.stdout

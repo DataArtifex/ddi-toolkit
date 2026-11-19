@@ -318,11 +318,17 @@ Command-Line Interface (`dartfx-ddi ddil-profile`)
 
 The ``dartfx-ddi ddil-profile`` CLI command provides comprehensive terminal access to all profiling features:
 
-Generate Markdown report to stdout:
+Generate executive Markdown report file (default behavior, equivalent to ``--output .``):
 
 .. code-block:: bash
 
    dartfx-ddi ddil-profile my_study.ddi33.xml
+
+Stream Markdown report directly to stdout:
+
+.. code-block:: bash
+
+   dartfx-ddi ddil-profile my_study.ddi33.xml -o -
 
 Generate all output formats (HTML, Markdown, JSON, Mermaid, DOT, Turtle RDF):
 
