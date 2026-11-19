@@ -273,36 +273,36 @@ def test_cli_ddic_validate_profiles(tmp_path):
     assert "INVALID" in res_cdif.stdout
 
 
-def test_cli_profile_codebook_default_markdown(tmp_path):
+def test_cli_profile_codebook_default_markdown(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
     cb_path = os.path.join(data_dir(), "codebook/simple_yndk.xml")
-    with runner.isolated_filesystem(temp_dir=tmp_path):
-        res = runner.invoke(app, ["profile", cb_path])
-        assert res.exit_code == 0
-        md_file = Path("simple_yndk.profile.md")
-        assert md_file.exists()
-        content = md_file.read_text(encoding="utf-8")
-        assert "# DDI-Codebook Profile:" in content
-        assert "Quality Assurance & Conformance" in content
+    res = runner.invoke(app, ["profile", cb_path])
+    assert res.exit_code == 0
+    md_file = tmp_path / "simple_yndk.profile.md"
+    assert md_file.exists()
+    content = md_file.read_text(encoding="utf-8")
+    assert "# DDI-Codebook Profile:" in content
+    assert "Quality Assurance & Conformance" in content
 
 
-def test_cli_profile_lifecycle_default_markdown(tmp_path):
+def test_cli_profile_lifecycle_default_markdown(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
     lc_path = sample_xml_path()
     stem = Path(lc_path).stem
-    with runner.isolated_filesystem(temp_dir=tmp_path):
-        res = runner.invoke(app, ["profile", lc_path, "--no-progress"])
-        assert res.exit_code == 0
-        md_file = Path(f"{stem}.profile.md")
-        assert md_file.exists()
-        content = md_file.read_text(encoding="utf-8")
-        assert "# DDI-Lifecycle Resource Profile:" in content
+    res = runner.invoke(app, ["profile", lc_path, "--no-progress"])
+    assert res.exit_code == 0
+    md_file = tmp_path / f"{stem}.profile.md"
+    assert md_file.exists()
+    content = md_file.read_text(encoding="utf-8")
+    assert "# DDI-Lifecycle Resource Profile:" in content
 
 
-def test_cli_profile_stdout(tmp_path):
+def test_cli_profile_stdout(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
     cb_path = os.path.join(data_dir(), "codebook/simple_yndk.xml")
-    with runner.isolated_filesystem(temp_dir=tmp_path):
-        res = runner.invoke(app, ["profile", cb_path, "-o", "-"])
-        assert res.exit_code == 0
-        assert "# DDI-Codebook Profile:" in res.stdout
+    res = runner.invoke(app, ["profile", cb_path, "-o", "-"])
+    assert res.exit_code == 0
+    assert "# DDI-Codebook Profile:" in res.stdout
 
 
 def test_cli_profile_output_dir(tmp_path):

@@ -348,20 +348,20 @@ def test_to_networkx():
         pass
 
 
-def test_cli_ddil_profile_default_output_markdown(tmp_path: Path):
+def test_cli_ddil_profile_default_output_markdown(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.chdir(tmp_path)
     xml_path = sample_xml_path()
     filename = Path(xml_path).name
     stem = Path(xml_path).stem
-    with runner.isolated_filesystem(temp_dir=tmp_path):
-        result = runner.invoke(app, ["ddil-profile", xml_path, "--target-class", "QuestionItem"])
-        assert result.exit_code == 0
-        md_file = Path(f"{stem}.profile.md")
-        assert md_file.exists()
-        content = md_file.read_text(encoding="utf-8")
-        assert f"# DDI-Lifecycle Resource Profile: {filename}" in content
-        assert f"- **Source File:** `{filename}`" in content
-        assert "QuestionItem" in content
-        assert "QuestionConstruct" in content
+    result = runner.invoke(app, ["ddil-profile", xml_path, "--target-class", "QuestionItem"])
+    assert result.exit_code == 0
+    md_file = tmp_path / f"{stem}.profile.md"
+    assert md_file.exists()
+    content = md_file.read_text(encoding="utf-8")
+    assert f"# DDI-Lifecycle Resource Profile: {filename}" in content
+    assert f"- **Source File:** `{filename}`" in content
+    assert "QuestionItem" in content
+    assert "QuestionConstruct" in content
 
 
 def test_cli_ddil_profile_markdown():
