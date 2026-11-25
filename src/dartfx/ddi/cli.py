@@ -184,6 +184,13 @@ def ddic2l(
             help="Aggregate and reuse identical questions across variables using Merkle fingerprints",
         ),
     ] = True,
+    category_scheme_mode: Annotated[
+        str,
+        typer.Option(
+            "--category-scheme-mode",
+            help="CategoryScheme grouping when deduplicating: 'single' or 'per-codelist'",
+        ),
+    ] = "single",
     urn_only: Annotated[
         bool,
         typer.Option(
@@ -217,6 +224,7 @@ def ddic2l(
         id_strategy=id_strategy,
         harmonize_codes=harmonize_codes,
         harmonize_questions=harmonize_questions,
+        category_scheme_mode=category_scheme_mode,
         strict=strict,
     )
 

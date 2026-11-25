@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 from .context import ConversionContext, IdStrategy
 from .mappers import (
@@ -31,6 +31,7 @@ class CodebookToLifecycleConverter:
         id_strategy: IdStrategy | str = IdStrategy.HIERARCHICAL,
         harmonize_codes: bool = True,
         harmonize_questions: bool = True,
+        category_scheme_mode: Literal["single", "per_codelist"] = "single",
         strict: bool = False,
     ) -> None:
         self.codebook = codebook
@@ -42,6 +43,7 @@ class CodebookToLifecycleConverter:
             id_strategy=id_strategy,
             harmonize_codes=harmonize_codes,
             harmonize_questions=harmonize_questions,
+            category_scheme_mode=category_scheme_mode,
             strict=strict,
         )
         self.document = self._convert()
@@ -76,6 +78,8 @@ class CodebookToLifecycleConverter:
             language=self.context.language,
             questions=questions,
             categories=categories,
+            category_schemes=list(self.context.category_schemes),
+            category_scheme_mode=str(self.context.category_scheme_mode),
             codelists=codelists,
             variables=variables,
             variable_groups=variable_groups,
@@ -173,6 +177,8 @@ class CodebookToLifecycleConverter:
             "variable_count": len(self.document.variables),
             "codelist_count": len(self.document.codelists),
             "category_count": len(self.document.categories),
+            "category_scheme_count": len(self.document.category_schemes),
+            "category_scheme_mode": self.document.category_scheme_mode,
             "question_count": len(self.document.questions),
             "variable_group_count": len(self.document.variable_groups),
             "physical_instance_count": len(self.document.physical_instances),

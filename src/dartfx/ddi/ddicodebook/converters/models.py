@@ -39,9 +39,22 @@ class ConvertedCategory:
     label: str
     description: str | None = None
     is_missing: bool = False
+    category_scheme_id: str | None = None
+    category_scheme_urn: str | None = None
     labels: list[tuple[str, str]] = field(default_factory=list)
     descriptions: list[tuple[str, str]] = field(default_factory=list)
     user_attributes: list[tuple[str, str]] = field(default_factory=list)
+
+
+@dataclass
+class ConvertedCategoryScheme:
+    id: str
+    agency: str
+    version: str
+    urn: str
+    name: str
+    category_ids: list[str] = field(default_factory=list)
+    codelist_id: str | None = None
 
 
 @dataclass
@@ -52,6 +65,8 @@ class ConvertedCodeList:
     urn: str
     name: str
     label: str
+    category_scheme_id: str | None = None
+    category_scheme_urn: str | None = None
     codes: list[ConvertedCode] = field(default_factory=list)
     labels: list[tuple[str, str]] = field(default_factory=list)
     names: list[tuple[str, str]] = field(default_factory=list)
@@ -173,6 +188,8 @@ class ConvertedLifecycleDocument:
     language: str = "en"
     questions: list[ConvertedQuestionItem] = field(default_factory=list)
     categories: list[ConvertedCategory] = field(default_factory=list)
+    category_schemes: list[ConvertedCategoryScheme] = field(default_factory=list)
+    category_scheme_mode: str = "single"
     codelists: list[ConvertedCodeList] = field(default_factory=list)
     variables: list[ConvertedVariable] = field(default_factory=list)
     variable_groups: list[ConvertedVariableGroup] = field(default_factory=list)

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import urllib.parse
 from typing import TYPE_CHECKING, Any
 
@@ -12,6 +13,7 @@ from ....harmonizer import (
 )
 from ..models import (
     ConvertedCategory,
+    ConvertedCategoryScheme,
     ConvertedCategoryStatistic,
     ConvertedCode,
     ConvertedCodeList,
@@ -225,8 +227,13 @@ def map_variables_and_codes(
     cat_registry: HarmonizationRegistry[Category] = HarmonizationRegistry()
     cl_registry: HarmonizationRegistry[CodeList] = HarmonizationRegistry()
     cat_obj_map: dict[str, ConvertedCategory] = {}
+    scoped_cat_obj_map: dict[tuple[str, str], ConvertedCategory] = {}
     cl_obj_map: dict[str, ConvertedCodeList] = {}
     seen_cat_ids: set[str] = set()
+    category_schemes: list[ConvertedCategoryScheme] = []
+
+    single_cs_id = context.make_scheme_id("categories")
+    single_cs_urn = context.make_urn(single_cs_id)
 
     default_file_id = None
     if codebook.fileDscr and len(codebook.fileDscr) == 1 and codebook.fileDscr[0].id:
@@ -388,8 +395,21 @@ def map_variables_and_codes(
                 )
 
             if context.harmonize_codes:
-                # 1. Harmonized Categories
-                cl_codes: list[ConvertedCode] = []
+                # Build canonical Category & Code structures first so CodeList hash is known
+                pending_cats: list[
+                    tuple[
+                        str,
+                        str,
+                        str,
+                        str | None,
+                        bool,
+                        int,
+                        list[tuple[str, str]],
+                        list[tuple[str, str]],
+                        Category,
+                        str,
+                    ]
+                ] = []
                 harm_codes: list[Code] = []
 
                 for (
@@ -411,63 +431,27 @@ def map_variables_and_codes(
                         is_missing=is_missing,
                     )
                     canon_cat, _ = cat_registry.register(harm_cat)
+                    harm_codes.append(Code(value=raw_val, category=canon_cat))
 
                     slug_base = f"{raw_val_clean}_{cat_label_clean[:20]}".strip("_")
                     if not slug_base:
                         slug_base = f"cat_{idx}"
                     cat_slug = urllib.parse.quote_plus(slug_base.replace(" ", "_"))
-
-                    cat_hash = canon_cat.category_hash
-                    if cat_hash in cat_obj_map:
-                        cat_obj = cat_obj_map[cat_hash]
-                        existing_lbl_langs = {lng for lng, _ in cat_obj.labels}
-                        for lang, text in cat_labels:
-                            if lang not in existing_lbl_langs:
-                                cat_obj.labels.append((lang, text))
-                                existing_lbl_langs.add(lang)
-                        existing_desc_langs = {lng for lng, _ in cat_obj.descriptions}
-                        for lang, text in cat_descriptions:
-                            if lang not in existing_desc_langs:
-                                cat_obj.descriptions.append((lang, text))
-                                existing_desc_langs.add(lang)
-                    else:
-                        cat_id = context.make_item_id("category", cat_slug, "categories", content_hash=cat_hash)
-                        cat_urn = context.make_urn(cat_id)
-                        cat_obj = ConvertedCategory(
-                            id=cat_id,
-                            agency=context.agency,
-                            version=context.version,
-                            urn=cat_urn,
-                            label=cat_label,
-                            description=cat_desc,
-                            is_missing=is_missing,
-                            labels=list(cat_labels),
-                            descriptions=list(cat_descriptions),
-                            user_attributes=[
-                                ("harmonization:category_hash", cat_hash),
-                                ("harmonization:signature", canon_cat.signature),
-                            ],
-                        )
-                        cat_obj_map[cat_hash] = cat_obj
-                        categories.append(cat_obj)
-
-                    harm_code = Code(value=raw_val, category=canon_cat)
-                    harm_codes.append(harm_code)
-
-                    code_id = context.make_item_id("code", f"code_{cat_slug}", "codelists")
-                    cl_codes.append(
-                        ConvertedCode(
-                            id=code_id,
-                            value=raw_val,
-                            category_id=cat_obj.id,
-                            category_urn=cat_obj.urn,
-                            label=cat_label,
-                            labels=list(cat_labels),
-                            is_missing=is_missing,
+                    pending_cats.append(
+                        (
+                            raw_val,
+                            cat_label,
+                            cat_slug,
+                            cat_desc,
+                            is_missing,
+                            idx,
+                            cat_labels,
+                            cat_descriptions,
+                            canon_cat,
+                            canon_cat.category_hash,
                         )
                     )
 
-                # 2. Harmonized CodeLists
                 harm_cl = CodeList(
                     name=f"CL_{var_name}",
                     label=var_label,
@@ -476,39 +460,256 @@ def map_variables_and_codes(
                 canon_cl, _ = cl_registry.register(harm_cl)
                 cl_hash = canon_cl.codelist_hash
 
-                if cl_hash in cl_obj_map:
-                    shared_cl = cl_obj_map[cl_hash]
-                    cl_id = shared_cl.id
-                    cl_urn = shared_cl.urn
-                    context.codelist_id_map[raw_var_id] = cl_id
+                if context.category_scheme_mode == "per_codelist":
+                    if cl_hash in cl_obj_map:
+                        shared_cl = cl_obj_map[cl_hash]
+                        cl_id = shared_cl.id
+                        cl_urn = shared_cl.urn
+                        context.codelist_id_map[raw_var_id] = cl_id
+                        for (
+                            _raw_val,
+                            _cat_label,
+                            _cat_slug,
+                            _cat_desc,
+                            _is_missing,
+                            _idx,
+                            cat_labels,
+                            cat_descriptions,
+                            _canon_cat,
+                            cat_hash,
+                        ) in pending_cats:
+                            existing_cat = scoped_cat_obj_map.get((cl_hash, cat_hash))
+                            if existing_cat is not None:
+                                existing_lbl_langs = {lng for lng, _ in existing_cat.labels}
+                                for lang, text in cat_labels:
+                                    if lang not in existing_lbl_langs:
+                                        existing_cat.labels.append((lang, text))
+                                        existing_lbl_langs.add(lang)
+                                existing_desc_langs = {lng for lng, _ in existing_cat.descriptions}
+                                for lang, text in cat_descriptions:
+                                    if lang not in existing_desc_langs:
+                                        existing_cat.descriptions.append((lang, text))
+                                        existing_desc_langs.add(lang)
+                    else:
+                        cl_slug = f"cl_{raw_var_id}"
+                        cl_id = context.make_item_id("codelist", cl_slug, "codelists", content_hash=cl_hash)
+                        cl_urn = context.make_urn(cl_id)
+
+                        cs_id = context.make_item_id(
+                            "category_scheme",
+                            f"cs_{raw_var_id}",
+                            "categories",
+                            content_hash=cl_hash,
+                        )
+                        cs_urn = context.make_urn(cs_id)
+                        scheme_cat_ids: list[str] = []
+                        cl_codes = []
+
+                        for (
+                            raw_val,
+                            cat_label,
+                            cat_slug,
+                            cat_desc,
+                            is_missing,
+                            _idx,
+                            cat_labels,
+                            cat_descriptions,
+                            canon_cat,
+                            cat_hash,
+                        ) in pending_cats:
+                            scoped_key = (cl_hash, cat_hash)
+                            if scoped_key in scoped_cat_obj_map:
+                                cat_obj = scoped_cat_obj_map[scoped_key]
+                                existing_lbl_langs = {lng for lng, _ in cat_obj.labels}
+                                for lang, text in cat_labels:
+                                    if lang not in existing_lbl_langs:
+                                        cat_obj.labels.append((lang, text))
+                                        existing_lbl_langs.add(lang)
+                                existing_desc_langs = {lng for lng, _ in cat_obj.descriptions}
+                                for lang, text in cat_descriptions:
+                                    if lang not in existing_desc_langs:
+                                        cat_obj.descriptions.append((lang, text))
+                                        existing_desc_langs.add(lang)
+                            else:
+                                scoped_hash = hashlib.sha256(f"{cl_hash}:{cat_hash}".encode()).hexdigest()[:16]
+                                cat_id = context.make_item_id(
+                                    "category",
+                                    f"{raw_var_id}_{cat_slug}",
+                                    "categories",
+                                    content_hash=scoped_hash,
+                                )
+                                cat_urn = context.make_urn(cat_id)
+                                cat_obj = ConvertedCategory(
+                                    id=cat_id,
+                                    agency=context.agency,
+                                    version=context.version,
+                                    urn=cat_urn,
+                                    label=cat_label,
+                                    description=cat_desc,
+                                    is_missing=is_missing,
+                                    category_scheme_id=cs_id,
+                                    category_scheme_urn=cs_urn,
+                                    labels=list(cat_labels),
+                                    descriptions=list(cat_descriptions),
+                                    user_attributes=[
+                                        ("harmonization:category_hash", cat_hash),
+                                        ("harmonization:signature", canon_cat.signature),
+                                    ],
+                                )
+                                scoped_cat_obj_map[scoped_key] = cat_obj
+                                categories.append(cat_obj)
+                                scheme_cat_ids.append(cat_obj.id)
+
+                            code_id = context.make_item_id("code", f"code_{raw_var_id}_{cat_slug}", "codelists")
+                            cl_codes.append(
+                                ConvertedCode(
+                                    id=code_id,
+                                    value=raw_val,
+                                    category_id=cat_obj.id,
+                                    category_urn=cat_obj.urn,
+                                    label=cat_label,
+                                    labels=list(cat_labels),
+                                    is_missing=is_missing,
+                                )
+                            )
+
+                        category_schemes.append(
+                            ConvertedCategoryScheme(
+                                id=cs_id,
+                                agency=context.agency,
+                                version=context.version,
+                                urn=cs_urn,
+                                name=f"Category Scheme for CL_{var_name}",
+                                category_ids=scheme_cat_ids,
+                                codelist_id=cl_id,
+                            )
+                        )
+                        new_cl = ConvertedCodeList(
+                            id=cl_id,
+                            agency=context.agency,
+                            version=context.version,
+                            urn=cl_urn,
+                            name=f"CL_{var_name}",
+                            label=var_label,
+                            category_scheme_id=cs_id,
+                            category_scheme_urn=cs_urn,
+                            codes=cl_codes,
+                            labels=list(var_labels),
+                            user_attributes=[
+                                ("harmonization:codelist_hash", cl_hash),
+                                ("harmonization:member_count", str(canon_cl.member_count)),
+                                ("harmonization:signature", canon_cl.signature),
+                            ],
+                        )
+                        cl_obj_map[cl_hash] = new_cl
+                        codelists.append(new_cl)
+                        context.codelist_id_map[raw_var_id] = cl_id
                 else:
-                    cl_slug = f"cl_{raw_var_id}"
-                    cl_id = context.make_item_id("codelist", cl_slug, "codelists", content_hash=cl_hash)
-                    cl_urn = context.make_urn(cl_id)
-                    new_cl = ConvertedCodeList(
-                        id=cl_id,
-                        agency=context.agency,
-                        version=context.version,
-                        urn=cl_urn,
-                        name=f"CL_{var_name}",
-                        label=var_label,
-                        codes=cl_codes,
-                        labels=list(var_labels),
-                        user_attributes=[
-                            ("harmonization:codelist_hash", cl_hash),
-                            ("harmonization:member_count", str(canon_cl.member_count)),
-                            ("harmonization:signature", canon_cl.signature),
-                        ],
-                    )
-                    cl_obj_map[cl_hash] = new_cl
-                    codelists.append(new_cl)
-                    context.codelist_id_map[raw_var_id] = cl_id
+                    # Single study-wide CategoryScheme (global category deduplication)
+                    cl_codes = []
+                    for (
+                        raw_val,
+                        cat_label,
+                        cat_slug,
+                        cat_desc,
+                        is_missing,
+                        _idx,
+                        cat_labels,
+                        cat_descriptions,
+                        canon_cat,
+                        cat_hash,
+                    ) in pending_cats:
+                        if cat_hash in cat_obj_map:
+                            cat_obj = cat_obj_map[cat_hash]
+                            existing_lbl_langs = {lng for lng, _ in cat_obj.labels}
+                            for lang, text in cat_labels:
+                                if lang not in existing_lbl_langs:
+                                    cat_obj.labels.append((lang, text))
+                                    existing_lbl_langs.add(lang)
+                            existing_desc_langs = {lng for lng, _ in cat_obj.descriptions}
+                            for lang, text in cat_descriptions:
+                                if lang not in existing_desc_langs:
+                                    cat_obj.descriptions.append((lang, text))
+                                    existing_desc_langs.add(lang)
+                        else:
+                            cat_id = context.make_item_id("category", cat_slug, "categories", content_hash=cat_hash)
+                            cat_urn = context.make_urn(cat_id)
+                            cat_obj = ConvertedCategory(
+                                id=cat_id,
+                                agency=context.agency,
+                                version=context.version,
+                                urn=cat_urn,
+                                label=cat_label,
+                                description=cat_desc,
+                                is_missing=is_missing,
+                                category_scheme_id=single_cs_id,
+                                category_scheme_urn=single_cs_urn,
+                                labels=list(cat_labels),
+                                descriptions=list(cat_descriptions),
+                                user_attributes=[
+                                    ("harmonization:category_hash", cat_hash),
+                                    ("harmonization:signature", canon_cat.signature),
+                                ],
+                            )
+                            cat_obj_map[cat_hash] = cat_obj
+                            categories.append(cat_obj)
+
+                        code_id = context.make_item_id("code", f"code_{cat_slug}", "codelists")
+                        cl_codes.append(
+                            ConvertedCode(
+                                id=code_id,
+                                value=raw_val,
+                                category_id=cat_obj.id,
+                                category_urn=cat_obj.urn,
+                                label=cat_label,
+                                labels=list(cat_labels),
+                                is_missing=is_missing,
+                            )
+                        )
+
+                    if cl_hash in cl_obj_map:
+                        shared_cl = cl_obj_map[cl_hash]
+                        cl_id = shared_cl.id
+                        cl_urn = shared_cl.urn
+                        context.codelist_id_map[raw_var_id] = cl_id
+                    else:
+                        cl_slug = f"cl_{raw_var_id}"
+                        cl_id = context.make_item_id("codelist", cl_slug, "codelists", content_hash=cl_hash)
+                        cl_urn = context.make_urn(cl_id)
+                        new_cl = ConvertedCodeList(
+                            id=cl_id,
+                            agency=context.agency,
+                            version=context.version,
+                            urn=cl_urn,
+                            name=f"CL_{var_name}",
+                            label=var_label,
+                            category_scheme_id=single_cs_id,
+                            category_scheme_urn=single_cs_urn,
+                            codes=cl_codes,
+                            labels=list(var_labels),
+                            user_attributes=[
+                                ("harmonization:codelist_hash", cl_hash),
+                                ("harmonization:member_count", str(canon_cl.member_count)),
+                                ("harmonization:signature", canon_cl.signature),
+                            ],
+                        )
+                        cl_obj_map[cl_hash] = new_cl
+                        codelists.append(new_cl)
+                        context.codelist_id_map[raw_var_id] = cl_id
             else:
                 # Non-harmonized: 1-to-1 codelist and categories per variable
                 cl_id = context.make_item_id("codelist", f"cl_{raw_var_id}", "codelists")
                 cl_urn = context.make_urn(cl_id)
                 context.codelist_id_map[raw_var_id] = cl_id
 
+                if context.category_scheme_mode == "per_codelist":
+                    var_cs_id = context.make_item_id("category_scheme", f"cs_{raw_var_id}", "categories")
+                    var_cs_urn = context.make_urn(var_cs_id)
+                else:
+                    var_cs_id = single_cs_id
+                    var_cs_urn = single_cs_urn
+
+                var_scheme_cat_ids: list[str] = []
                 cl_codes = []
                 for (
                     raw_val,
@@ -535,10 +736,13 @@ def map_variables_and_codes(
                                 label=cat_label,
                                 description=cat_desc,
                                 is_missing=is_missing,
+                                category_scheme_id=var_cs_id,
+                                category_scheme_urn=var_cs_urn,
                                 labels=list(cat_labels),
                                 descriptions=list(cat_descriptions),
                             )
                         )
+                        var_scheme_cat_ids.append(cat_id)
 
                     code_id = context.make_item_id("code", f"{raw_var_id}_{code_uid}", "codelists")
                     cl_codes.append(
@@ -553,6 +757,19 @@ def map_variables_and_codes(
                         )
                     )
 
+                if context.category_scheme_mode == "per_codelist":
+                    category_schemes.append(
+                        ConvertedCategoryScheme(
+                            id=var_cs_id,
+                            agency=context.agency,
+                            version=context.version,
+                            urn=var_cs_urn,
+                            name=f"Category Scheme for {var_name}",
+                            category_ids=var_scheme_cat_ids,
+                            codelist_id=cl_id,
+                        )
+                    )
+
                 codelists.append(
                     ConvertedCodeList(
                         id=cl_id,
@@ -561,6 +778,8 @@ def map_variables_and_codes(
                         urn=cl_urn,
                         name=var_name,
                         label=var_label,
+                        category_scheme_id=var_cs_id,
+                        category_scheme_urn=var_cs_urn,
                         codes=cl_codes,
                         labels=list(var_labels),
                     )
@@ -640,6 +859,21 @@ def map_variables_and_codes(
         context.category_duplicates_removed = 0
         context.codelist_reduction_pct = 0.0
         context.category_reduction_pct = 0.0
+
+    if context.category_scheme_mode == "single" and categories:
+        category_schemes = [
+            ConvertedCategoryScheme(
+                id=single_cs_id,
+                agency=context.agency,
+                version=context.version,
+                urn=single_cs_urn,
+                name=f"Category Scheme for {context.codebook_id}",
+                category_ids=[c.id for c in categories],
+                codelist_id=None,
+            )
+        ]
+
+    context.category_schemes = category_schemes
 
     return variables, codelists, categories
 

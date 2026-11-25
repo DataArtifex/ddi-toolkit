@@ -4,7 +4,7 @@ import re
 import uuid
 from dataclasses import dataclass, field
 from enum import StrEnum
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from ..model import codeBookType
@@ -61,6 +61,7 @@ class ConversionContext:
     id_strategy: IdStrategy | str = IdStrategy.HIERARCHICAL
     harmonize_codes: bool = True
     harmonize_questions: bool = True
+    category_scheme_mode: Literal["single", "per_codelist"] = "single"
     default_agency: str = "int.dartfx"
     default_version: str = "1.0.0"
     strict: bool = False
@@ -77,6 +78,7 @@ class ConversionContext:
     codelist_id_map: dict[str, str] = field(default_factory=dict)
     category_id_map: dict[str, str] = field(default_factory=dict)
     file_id_map: dict[str, str] = field(default_factory=dict)
+    category_schemes: list[Any] = field(default_factory=list)
     diagnostics: list[dict[str, str]] = field(default_factory=list)
     raw_codelist_count: int = 0
     raw_category_count: int = 0
@@ -91,6 +93,13 @@ class ConversionContext:
     _item_seq_map: dict[str, str] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
+        norm_mode = str(self.category_scheme_mode or "single").strip().lower().replace("-", "_")
+        if norm_mode not in ("single", "per_codelist"):
+            raise ValueError(
+                f"Invalid category_scheme_mode '{self.category_scheme_mode}'. Expected 'single' or 'per_codelist'."
+            )
+        self.category_scheme_mode = norm_mode  # type: ignore[assignment]
+
         if isinstance(self.id_strategy, str):
             try:
                 self.strategy = IdStrategy(self.id_strategy.lower())
@@ -273,6 +282,7 @@ class ConversionContext:
         prefix_map = {
             "variable": "v",
             "category": "cat",
+            "category_scheme": "cs",
             "codelist": "cl",
             "code": "code",
             "question": "qi",

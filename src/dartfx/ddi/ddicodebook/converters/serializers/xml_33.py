@@ -249,25 +249,53 @@ class Ddi33XmlBuilder:
         lp_urn = self.doc.logical_product_urn or f"urn:ddi:{self.doc.agency}:{lp_id}:{self.doc.version}"
         self._add_ident(lp_el, self.doc.agency, lp_id, self.doc.version, lp_urn)
 
-        # CategoryScheme
+        # CategoryScheme(s)
         if self.doc.categories:
-            cs_el = ET.SubElement(lp_el, f"{{{NS_LOGICAL}}}CategoryScheme", {"isUniversallyUnique": "true"})
-            cs_id = self.doc.category_scheme_id or f"cs_{self.doc.id}"
-            cs_urn = self.doc.category_scheme_urn or f"urn:ddi:{self.doc.agency}:{cs_id}:{self.doc.version}"
-            self._add_ident(cs_el, self.doc.agency, cs_id, self.doc.version, cs_urn)
-            self._add_lang_string(cs_el, f"{{{NS_LOGICAL}}}CategorySchemeName", f"Category Scheme for {self.doc.id}")
+            cat_by_id = {cat.id: cat for cat in self.doc.categories}
+            schemes_to_emit = self.doc.category_schemes if self.doc.category_schemes else []
+            if schemes_to_emit:
+                for cs in schemes_to_emit:
+                    cs_el = ET.SubElement(lp_el, f"{{{NS_LOGICAL}}}CategoryScheme", {"isUniversallyUnique": "true"})
+                    self._add_ident(cs_el, cs.agency, cs.id, cs.version, cs.urn)
+                    self._add_lang_string(cs_el, f"{{{NS_LOGICAL}}}CategorySchemeName", cs.name)
+                    for cid in cs.category_ids:
+                        cat = cat_by_id.get(cid)
+                        if cat is None:
+                            continue
+                        cat_attrs = {"isUniversallyUnique": "true"}
+                        if cat.is_missing:
+                            cat_attrs["isMissing"] = "true"
+                        c_el = ET.SubElement(cs_el, f"{{{NS_LOGICAL}}}Category", cat_attrs)
+                        self._add_ident(c_el, cat.agency, cat.id, cat.version, cat.urn)
+                        if cat.user_attributes:
+                            self._add_user_attributes(c_el, cat.user_attributes)
+                        self._add_content_strings(c_el, f"{{{NS_REUSABLE}}}Label", cat.labels, cat.label)
+                        if cat.descriptions or cat.description:
+                            self._add_content_strings(
+                                c_el, f"{{{NS_REUSABLE}}}Description", cat.descriptions, cat.description
+                            )
+            else:
+                cs_el = ET.SubElement(lp_el, f"{{{NS_LOGICAL}}}CategoryScheme", {"isUniversallyUnique": "true"})
+                cs_id = self.doc.category_scheme_id or f"cs_{self.doc.id}"
+                cs_urn = self.doc.category_scheme_urn or f"urn:ddi:{self.doc.agency}:{cs_id}:{self.doc.version}"
+                self._add_ident(cs_el, self.doc.agency, cs_id, self.doc.version, cs_urn)
+                self._add_lang_string(
+                    cs_el, f"{{{NS_LOGICAL}}}CategorySchemeName", f"Category Scheme for {self.doc.id}"
+                )
 
-            for cat in self.doc.categories:
-                cat_attrs = {"isUniversallyUnique": "true"}
-                if cat.is_missing:
-                    cat_attrs["isMissing"] = "true"
-                c_el = ET.SubElement(cs_el, f"{{{NS_LOGICAL}}}Category", cat_attrs)
-                self._add_ident(c_el, cat.agency, cat.id, cat.version, cat.urn)
-                if cat.user_attributes:
-                    self._add_user_attributes(c_el, cat.user_attributes)
-                self._add_content_strings(c_el, f"{{{NS_REUSABLE}}}Label", cat.labels, cat.label)
-                if cat.descriptions or cat.description:
-                    self._add_content_strings(c_el, f"{{{NS_REUSABLE}}}Description", cat.descriptions, cat.description)
+                for cat in self.doc.categories:
+                    cat_attrs = {"isUniversallyUnique": "true"}
+                    if cat.is_missing:
+                        cat_attrs["isMissing"] = "true"
+                    c_el = ET.SubElement(cs_el, f"{{{NS_LOGICAL}}}Category", cat_attrs)
+                    self._add_ident(c_el, cat.agency, cat.id, cat.version, cat.urn)
+                    if cat.user_attributes:
+                        self._add_user_attributes(c_el, cat.user_attributes)
+                    self._add_content_strings(c_el, f"{{{NS_REUSABLE}}}Label", cat.labels, cat.label)
+                    if cat.descriptions or cat.description:
+                        self._add_content_strings(
+                            c_el, f"{{{NS_REUSABLE}}}Description", cat.descriptions, cat.description
+                        )
 
         # CodeListScheme
         if self.doc.codelists:
@@ -284,6 +312,18 @@ class Ddi33XmlBuilder:
                     self._add_user_attributes(cl_el, cl.user_attributes)
                 self._add_lang_strings(cl_el, f"{{{NS_LOGICAL}}}CodeListName", cl.names, cl.name)
                 self._add_content_strings(cl_el, f"{{{NS_REUSABLE}}}Label", cl.labels, cl.label)
+                if cl.category_scheme_id and (
+                    self.doc.category_scheme_mode == "per_codelist" or len(self.doc.category_schemes) > 1
+                ):
+                    self._add_reference(
+                        cl_el,
+                        f"{{{NS_REUSABLE}}}CategorySchemeReference",
+                        cl.agency,
+                        cl.category_scheme_id,
+                        cl.version,
+                        "CategoryScheme",
+                        urn=cl.category_scheme_urn,
+                    )
 
                 for code in cl.codes:
                     attrs = {"isDiscrete": "true"}

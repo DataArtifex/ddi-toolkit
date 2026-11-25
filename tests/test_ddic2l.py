@@ -758,3 +758,96 @@ def test_question_harmonization_and_deduplication():
     v1_no = next(v for v in conv_no_harm.document.variables if v.name == "AGE_R")
     v2_no = next(v for v in conv_no_harm.document.variables if v.name == "AGE_S")
     assert v1_no.question_id != v2_no.question_id
+
+
+def test_category_scheme_mode_single_vs_per_codelist(tmp_path):
+    """Verify single vs per_codelist CategoryScheme modes in DDI 4.0 and DDI 3.3."""
+    xml_data = """<?xml version="1.0" encoding="UTF-8"?>
+<codeBook xmlns="ddi:codebook:2_5" ID="CB_CS_MODE">
+  <stdyDscr><citation><titlStmt><titl>CS Mode Study</titl></titlStmt></citation></stdyDscr>
+  <dataDscr>
+    <var ID="V1" name="Q1">
+      <labl>Var 1</labl>
+      <catgry><catValu>1</catValu><labl>Yes</labl></catgry>
+      <catgry><catValu>2</catValu><labl>No</labl></catgry>
+    </var>
+    <var ID="V2" name="Q2">
+      <labl>Var 2 (identical CL to V1)</labl>
+      <catgry><catValu>1</catValu><labl>Yes</labl></catgry>
+      <catgry><catValu>2</catValu><labl>No</labl></catgry>
+    </var>
+    <var ID="V3" name="Q3">
+      <labl>Var 3 (different CL sharing Yes)</labl>
+      <catgry><catValu>1</catValu><labl>Yes</labl></catgry>
+      <catgry><catValu>2</catValu><labl>No</labl></catgry>
+      <catgry><catValu>3</catValu><labl>Maybe</labl></catgry>
+    </var>
+  </dataDscr>
+</codeBook>"""
+    cb = ddicodebook.loadxmlstring(xml_data)
+
+    # 1. Single CategoryScheme mode (default): shared Yes & No collapsed across codelists
+    conv_single = cb_utils.codebook_to_lifecycle(cb, harmonize_codes=True, category_scheme_mode="single")
+    sum_single = conv_single.get_summary()
+    assert sum_single["category_scheme_mode"] == "single"
+    assert sum_single["codelist_count"] == 2
+    assert sum_single["category_scheme_count"] == 1
+    assert sum_single["category_count"] == 3  # Yes, No, Maybe
+
+    su_single = conv_single.to_ddi4()
+    lp_single = su_single.logical_product_reference[0]
+    assert len(lp_single.category_scheme_reference) == 1
+    assert len(lp_single.category_scheme_reference[0].category_reference) == 3
+
+    # 2. per_codelist mode: strict 1:1 between deduplicated CodeList and CategoryScheme
+    conv_per = cb_utils.codebook_to_lifecycle(cb, harmonize_codes=True, category_scheme_mode="per_codelist")
+    sum_per = conv_per.get_summary()
+    assert sum_per["category_scheme_mode"] == "per_codelist"
+    assert sum_per["codelist_count"] == 2  # V1 & V2 share CL1; V3 gets CL2
+    assert sum_per["category_scheme_count"] == 2  # 1:1 with unique codelists
+    assert sum_per["category_count"] == 5  # 2 in CL1 + 3 in CL2 (Yes/No not collapsed across CLs)
+
+    su_per = conv_per.to_ddi4()
+    lp_per = su_per.logical_product_reference[0]
+    assert len(lp_per.category_scheme_reference) == 2
+    cls_list = lp_per.code_list_scheme_reference[0].code_list_reference
+    assert len(cls_list) == 2
+    assert cls_list[0].category_scheme_reference is not None
+    assert cls_list[1].category_scheme_reference is not None
+    assert cls_list[0].category_scheme_reference.urn != cls_list[1].category_scheme_reference.urn
+    assert len(cls_list[0].category_scheme_reference.category_reference) == 2
+    assert len(cls_list[1].category_scheme_reference.category_reference) == 3
+
+    # Verify JSONL container includes both CategorySchemes and all 5 distinct Categories
+    jsonl_items = [json.loads(line) for line in conv_per.to_ddi4_jsonl().splitlines() if line.strip()]
+    cs_items = [it for it in jsonl_items if it.get("$type") == "CategoryScheme"]
+    cat_items = [it for it in jsonl_items if it.get("$type") == "Category"]
+    assert len(cs_items) == 2
+    assert len(cat_items) == 5
+    assert len({c["URN"] for c in cat_items}) == 5
+
+    # Verify DDI 3.3 XML output emits 2 CategorySchemes and CategorySchemeReference on CodeLists
+    xml_per = conv_per.to_ddi33_xml()
+    assert xml_per.count("<l:CategoryScheme ") == 2
+    assert xml_per.count("<r:CategorySchemeReference>") == 2
+
+    # Verify CLI --category-scheme-mode per-codelist
+    runner = CliRunner()
+    cb_file = tmp_path / "cs_mode.xml"
+    cb_file.write_text(xml_data, encoding="utf-8")
+    out_json = tmp_path / "cs_mode.ddi40.json"
+    res = runner.invoke(
+        app,
+        [
+            "ddic2l",
+            str(cb_file),
+            "-o",
+            str(out_json),
+            "--category-scheme-mode",
+            "per-codelist",
+        ],
+    )
+    assert res.exit_code == 0
+    parsed = json.loads(out_json.read_text(encoding="utf-8"))
+    cs_in_json = [it for it in parsed["items"] if it.get("$type") == "CategoryScheme"]
+    assert len(cs_in_json) == 2

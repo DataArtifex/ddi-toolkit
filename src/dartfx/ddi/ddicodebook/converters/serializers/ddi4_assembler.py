@@ -52,17 +52,31 @@ class Ddi4ModelAssembler:
             )
             m4_categories[cat.id] = m4_cat
 
-        # CategoryScheme
-        cs_id = self.doc.category_scheme_id or f"cs_{self.doc.id}"
-        cs_urn = self.doc.category_scheme_urn or f"urn:ddi:{self.doc.agency}:{cs_id}:{self.doc.version}"
-        m4_category_scheme = m4.CategoryScheme(
-            id=cs_id,
-            agency=self.doc.agency,
-            version=self.doc.version,
-            urn=cs_urn,
-            category_scheme_name=self._to_lang_strings(None, f"Category Scheme for {self.doc.id}"),
-            category_reference=list(m4_categories.values()),
-        )
+        # CategoryScheme(s)
+        m4_category_schemes: dict[str, m4.CategoryScheme] = {}
+        if self.doc.category_schemes:
+            for cs in self.doc.category_schemes:
+                cs_cats = [m4_categories[cid] for cid in cs.category_ids if cid in m4_categories]
+                m4_category_schemes[cs.id] = m4.CategoryScheme(
+                    id=cs.id,
+                    agency=cs.agency,
+                    version=cs.version,
+                    urn=cs.urn,
+                    category_scheme_name=self._to_lang_strings(None, cs.name),
+                    category_reference=cs_cats,
+                )
+        if not m4_category_schemes:
+            cs_id = self.doc.category_scheme_id or f"cs_{self.doc.id}"
+            cs_urn = self.doc.category_scheme_urn or f"urn:ddi:{self.doc.agency}:{cs_id}:{self.doc.version}"
+            m4_category_schemes[cs_id] = m4.CategoryScheme(
+                id=cs_id,
+                agency=self.doc.agency,
+                version=self.doc.version,
+                urn=cs_urn,
+                category_scheme_name=self._to_lang_strings(None, f"Category Scheme for {self.doc.id}"),
+                category_reference=list(m4_categories.values()),
+            )
+        default_category_scheme = next(iter(m4_category_schemes.values()))
 
         # 2. CodeLists
         m4_codelists: dict[str, m4.CodeList] = {}
@@ -95,6 +109,11 @@ class Ddi4ModelAssembler:
                 )
                 for k, v in cl.user_attributes
             ]
+            cl_cs = (
+                m4_category_schemes.get(cl.category_scheme_id, default_category_scheme)
+                if cl.category_scheme_id
+                else default_category_scheme
+            )
             m4_cl = m4.CodeList(
                 id=cl.id,
                 agency=cl.agency,
@@ -102,7 +121,7 @@ class Ddi4ModelAssembler:
                 urn=cl.urn,
                 code_list_name=self._to_lang_strings(cl.names, cl.name),
                 label=self._to_lang_strings(cl.labels, cl.label),
-                category_scheme_reference=m4_category_scheme,
+                category_scheme_reference=cl_cs,
                 code=m4_codes,
                 user_attribute_pair=cl_uaps,
             )
@@ -319,7 +338,7 @@ class Ddi4ModelAssembler:
             agency=self.doc.agency,
             version=self.doc.version,
             urn=lp_urn,
-            category_scheme_reference=[m4_category_scheme] if m4_categories else [],
+            category_scheme_reference=list(m4_category_schemes.values()) if m4_categories else [],
             code_list_scheme_reference=[m4_codelist_scheme] if m4_codelists else [],
             variable_scheme_reference=[m4_variable_scheme],
         )
@@ -434,7 +453,7 @@ class Ddi4ModelAssembler:
         if m4_logical_product:
             items.append(m4_logical_product)
         if m4_categories:
-            items.append(m4_category_scheme)
+            items.extend(m4_category_schemes.values())
             items.extend(m4_categories.values())
         if m4_codelists:
             items.append(m4_codelist_scheme)

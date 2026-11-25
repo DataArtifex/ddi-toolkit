@@ -677,6 +677,7 @@ def codebook_to_lifecycle(
     id_strategy: str = "hierarchical",
     harmonize_codes: bool = True,
     harmonize_questions: bool = True,
+    category_scheme_mode: str = "single",
     strict: bool = False,
 ) -> CodebookToLifecycleConverter:
     """Converts a DDI-Codebook document into a CodebookToLifecycleConverter instance."""
@@ -690,6 +691,7 @@ def codebook_to_lifecycle(
         id_strategy=id_strategy,
         harmonize_codes=harmonize_codes,
         harmonize_questions=harmonize_questions,
+        category_scheme_mode=category_scheme_mode,  # type: ignore[arg-type]
         strict=strict,
     )
 
@@ -702,6 +704,7 @@ def codebook_to_ddi4(
     id_strategy: str = "hierarchical",
     harmonize_codes: bool = True,
     harmonize_questions: bool = True,
+    category_scheme_mode: str = "single",
     strict: bool = False,
 ) -> Any:
     """Converts a DDI-Codebook document into a DDI 4.0 RC1 StudyUnit Pydantic model."""
@@ -713,6 +716,7 @@ def codebook_to_ddi4(
         id_strategy=id_strategy,
         harmonize_codes=harmonize_codes,
         harmonize_questions=harmonize_questions,
+        category_scheme_mode=category_scheme_mode,
         strict=strict,
     )
     return converter.to_ddi4()
@@ -726,6 +730,7 @@ def codebook_to_ddi4_json(
     id_strategy: str = "hierarchical",
     harmonize_codes: bool = True,
     harmonize_questions: bool = True,
+    category_scheme_mode: str = "single",
     strict: bool = False,
     indent: int = 2,
 ) -> str:
@@ -738,6 +743,7 @@ def codebook_to_ddi4_json(
         id_strategy=id_strategy,
         harmonize_codes=harmonize_codes,
         harmonize_questions=harmonize_questions,
+        category_scheme_mode=category_scheme_mode,
         strict=strict,
     )
     return converter.to_ddi4_json(indent=indent)
@@ -751,6 +757,7 @@ def codebook_to_ddi4_xml(
     id_strategy: str = "hierarchical",
     harmonize_codes: bool = True,
     harmonize_questions: bool = True,
+    category_scheme_mode: str = "single",
     strict: bool = False,
 ) -> str:
     """Converts a DDI-Codebook document into a DDI 4.0 RC1 XML string."""
@@ -762,6 +769,7 @@ def codebook_to_ddi4_xml(
         id_strategy=id_strategy,
         harmonize_codes=harmonize_codes,
         harmonize_questions=harmonize_questions,
+        category_scheme_mode=category_scheme_mode,
         strict=strict,
     )
     return converter.to_ddi4_xml()
@@ -775,6 +783,7 @@ def codebook_to_ddi33_xml(
     id_strategy: str = "hierarchical",
     harmonize_codes: bool = True,
     harmonize_questions: bool = True,
+    category_scheme_mode: str = "single",
     strict: bool = False,
     urn_only: bool = False,
     pretty: bool = True,
@@ -788,6 +797,7 @@ def codebook_to_ddi33_xml(
         id_strategy=id_strategy,
         harmonize_codes=harmonize_codes,
         harmonize_questions=harmonize_questions,
+        category_scheme_mode=category_scheme_mode,
         strict=strict,
     )
     return converter.to_ddi33_xml(pretty=pretty, urn_only=urn_only)
@@ -801,6 +811,7 @@ def codebook_to_ddi33_fragments(
     id_strategy: str = "hierarchical",
     harmonize_codes: bool = True,
     harmonize_questions: bool = True,
+    category_scheme_mode: str = "single",
     strict: bool = False,
     urn_only: bool = False,
     pretty: bool = True,
@@ -814,6 +825,7 @@ def codebook_to_ddi33_fragments(
         id_strategy=id_strategy,
         harmonize_codes=harmonize_codes,
         harmonize_questions=harmonize_questions,
+        category_scheme_mode=category_scheme_mode,
         strict=strict,
     )
     return converter.to_ddi33_fragments(pretty=pretty, urn_only=urn_only)
